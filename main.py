@@ -5,6 +5,7 @@ from rich import print
 from system.menu.main_menu import main_menu
 from system.telegram_actions.telegram_actions import deleting_files_by_dictionary
 
+# Логирование программы
 logger.add("setting_user/log/log.log", rotation="1 MB", compression="zip")
 
 
