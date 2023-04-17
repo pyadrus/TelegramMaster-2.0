@@ -1,0 +1,187 @@
+2023-02-08 19:13:35.433 | ERROR    | __main__:<module>:110 - The number of file parts is invalid (caused by SendMediaRequest)
+Traceback (most recent call last):
+
+> File "F:\с sd флешки\telegram_bot_smm\main.py", line 108, in <module>
+    main()
+    └ <function main at 0x00000241E4C55360>
+
+  File "F:\с sd флешки\telegram_bot_smm\main.py", line 86, in main
+    sending_messages_to_a_personal_account_chat()
+    └ <function sending_messages_to_a_personal_account_chat at 0x00000241E4446EF0>
+
+  File "F:\с sd флешки\telegram_bot_smm\system\menu\sending_messages_menu.py", line 58, in sending_messages_to_a_personal_account_chat
+    sending_messages_to_a_personal_account_chat()  # После отработки функции перезапускам скрипт
+    └ <function sending_messages_to_a_personal_account_chat at 0x00000241E4446EF0>
+
+  File "F:\с sd флешки\telegram_bot_smm\system\menu\sending_messages_menu.py", line 67, in sending_messages_to_a_personal_account_chat
+    sending_files_via_chats()
+    └ <function sending_files_via_chats at 0x00000241E4447490>
+
+  File "F:\с sd флешки\telegram_bot_smm\system\actions\send_mess_chat\chat_dialog.py", line 52, in sending_files_via_chats
+    client.send_file(groups_wr, f"setting_user/files_to_send/{link_to_the_file}")
+    │      │         └ 'https://t.me/dev_tg_pro'
+    │      └ <function UploadMethods.send_file at 0x00000241E37A1090>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x00000241E46EBA90>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UploadMethods.send_file at 0x00000241E46A55B0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x00000241E23F9AB0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 646, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-105' coro=<UploadMethods.send_file() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\uploads.py", line 412, in send_file
+    return self._get_response_message(request, await self(request), entity)
+           │    │                     │              │    │         └ <telethon.tl.types.InputPeerChannel object at 0x00000241E46EB4F0>
+           │    │                     │              │    └ <telethon.tl.functions.messages.SendMediaRequest object at 0x00000241E46EB190>
+           │    │                     │              └ <telethon.client.telegramclient.TelegramClient object at 0x00000241E46EBA90>
+           │    │                     └ <telethon.tl.functions.messages.SendMediaRequest object at 0x00000241E46EB190>
+           │    └ <function MessageParseMethods._get_response_message at 0x00000241E3026830>
+           └ <telethon.client.telegramclient.TelegramClient object at 0x00000241E46EBA90>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.SendMediaRequest object at 0x00000241E46EB190>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000241E46EB5B0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000241E46EBA90>
+                 │    └ <function UserMethods._call at 0x00000241E3027C70>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000241E46EBA90>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 84, in _call
+    result = await future
+                   └ <Future finished exception=FilePartsInvalidError('The number of file parts is invalid (caused by SendMediaRequest)')>
+
+telethon.errors.rpcerrorlist.FilePartsInvalidError: The number of file parts is invalid (caused by SendMediaRequest)
+2023-03-08 20:51:03.420 | ERROR    | __main__:<module>:21 - parameters are of unsupported type
+Traceback (most recent call last):
+
+> File "G:\с sd флешки\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000202B8761870>
+
+  File "G:\с sd флешки\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x00000202B87615A0>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\menu\main_menu.py", line 84, in main_menu
+    program_settings()
+    └ <function program_settings at 0x00000202B87617E0>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\menu\main_menu.py", line 440, in program_settings
+    proxy_data = creating_the_main_window_for_proxy_data_entry()
+                 └ <function creating_the_main_window_for_proxy_data_entry at 0x00000202B855C940>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 51, in writing_proxy_data_to_the_database
+    cursor.executemany("INSERT INTO proxy(proxy_type, addr, port, username, password, rdns) "
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x00000202B8D8FEC0>
+
+ValueError: parameters are of unsupported type
+2023-03-08 20:51:03.420 | ERROR    | __main__:<module>:21 - parameters are of unsupported type
+Traceback (most recent call last):
+
+> File "G:\с sd флешки\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000202B8761870>
+
+  File "G:\с sd флешки\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x00000202B87615A0>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\menu\main_menu.py", line 84, in main_menu
+    program_settings()
+    └ <function program_settings at 0x00000202B87617E0>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\menu\main_menu.py", line 440, in program_settings
+    proxy_data = creating_the_main_window_for_proxy_data_entry()
+                 └ <function creating_the_main_window_for_proxy_data_entry at 0x00000202B855C940>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 51, in writing_proxy_data_to_the_database
+    cursor.executemany("INSERT INTO proxy(proxy_type, addr, port, username, password, rdns) "
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x00000202B8D8FEC0>
+
+ValueError: parameters are of unsupported type
+2023-03-08 20:51:46.165 | ERROR    | __main__:<module>:21 - parameters are of unsupported type
+Traceback (most recent call last):
+
+> File "G:\с sd флешки\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001BBC8C41870>
+
+  File "G:\с sd флешки\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001BBC8C415A0>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\menu\main_menu.py", line 84, in main_menu
+    program_settings()
+    └ <function program_settings at 0x000001BBC8C417E0>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\menu\main_menu.py", line 441, in program_settings
+    writing_proxy_data_to_the_database(proxy=proxy_data)
+    │                                        └ None
+    └ <function writing_proxy_data_to_the_database at 0x000001BBC7DFC430>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 51, in writing_proxy_data_to_the_database
+    cursor.executemany("INSERT INTO proxy(proxy_type, addr, port, username, password, rdns) "
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x000001BBC926FC40>
+
+ValueError: parameters are of unsupported type
+2023-03-08 21:01:19.085 | ERROR    | __main__:<module>:21 - parameters are of unsupported type
+Traceback (most recent call last):
+
+> File "G:\с sd флешки\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001D3258B1990>
+
+  File "G:\с sd флешки\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001D3258B16C0>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\menu\main_menu.py", line 84, in main_menu
+    program_settings()
+    └ <function program_settings at 0x000001D3258B1900>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\menu\main_menu.py", line 441, in program_settings
+    writing_proxy_data_to_the_database(proxy=proxy_data)
+    │                                        └ None
+    └ <function writing_proxy_data_to_the_database at 0x000001D324A64550>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 51, in writing_proxy_data_to_the_database
+    cursor.executemany("INSERT INTO proxy(proxy_type, addr, port, username, password, rdns) "
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x000001D325EEFCC0>
+
+ValueError: parameters are of unsupported type
+2023-03-08 21:01:19.085 | ERROR    | __main__:<module>:21 - parameters are of unsupported type
+Traceback (most recent call last):
+
+> File "G:\с sd флешки\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001D3258B1990>
+
+  File "G:\с sd флешки\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001D3258B16C0>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\menu\main_menu.py", line 84, in main_menu
+    program_settings()
+    └ <function program_settings at 0x000001D3258B1900>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\menu\main_menu.py", line 441, in program_settings
+    writing_proxy_data_to_the_database(proxy=proxy_data)
+    │                                        └ None
+    └ <function writing_proxy_data_to_the_database at 0x000001D324A64550>
+
+  File "G:\с sd флешки\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 51, in writing_proxy_data_to_the_database
+    cursor.executemany("INSERT INTO proxy(proxy_type, addr, port, username, password, rdns) "
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x000001D325EEFCC0>
+
+ValueError: parameters are of unsupported type
