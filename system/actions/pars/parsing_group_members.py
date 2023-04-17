@@ -3,7 +3,6 @@ from tkinter import *
 
 from rich import print
 from telethon import types
-from telethon.errors import *
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import ChannelParticipantsSearch
@@ -12,12 +11,12 @@ from telethon.tl.types import UserStatusLastMonth
 from telethon.tl.types import UserStatusLastWeek
 from telethon.tl.types import UserStatusOffline
 from telethon.tl.types import UserStatusRecently
+
 from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
-from system.error.telegram_errors import recording_actions_in_the_db
-from system.auxiliary_functions.auxiliary_functions import creating_and_writing_to_a_temporary_file, \
-    we_interrupt_the_code_and_write_the_data_to_the_database
+from system.auxiliary_functions.auxiliary_functions import creating_and_writing_to_a_temporary_file
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.global_variables import console
+from system.error.telegram_errors import handle_exceptions
 from system.menu.baner import program_version, date_of_program_change
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import cleaning_list_of_participants_who_do_not_have_username
@@ -81,6 +80,20 @@ def parsing_mass_parsing_of_groups() -> None:
     app_notifications(notification_text="Список успешно сформирован!")
 
 
+@handle_exceptions
+def group_parsing(client, groups_wr, phone) -> None:
+    """
+    Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
+    @handle_exceptions для отлавливания ошибок и записи их в базу данных setting_user/software_database.db.
+    """
+    with console.status("[bold green]Работа над задачами...", spinner_style="time") as _:
+        all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+        # Записываем parsing данные в файл setting_user/software_database.db
+        entities = all_participants_user(all_participants)
+        write_parsed_chat_participants_to_db(entities)
+
+
+@handle_exceptions
 def choosing_a_group_from_the_subscribed_ones_for_parsing() -> None:
     """Выбираем группу из подписанных для parsing"""
     records: list = open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
@@ -88,22 +101,14 @@ def choosing_a_group_from_the_subscribed_ones_for_parsing() -> None:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         tg_tar = output_a_list_of_groups_new(client)
-        event: str = f"Parsing: {tg_tar}"
-        description_action = f"channel / group: {tg_tar}"
-        try:
-            all_participants_list = parsing_of_users_from_the_selected_group(client, tg_tar)
-            # Записываем parsing данные в файл setting_user/software_database.db
-            entities = all_participants_user(all_participants_list)
-            write_parsed_chat_participants_to_db(entities)
-            cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
-            delete_duplicates(table_name="members", column_name="id")  # Чистка дублирующих username по столбцу id
-            client.disconnect()  # Разрываем соединение telegram
-        except ChatAdminRequiredError:
-            actions: str = "Требуются права администратора."
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
-        except ChannelPrivateError:
-            actions: str = "Указанный канал является приватным, или вам запретили подписываться."
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+
+        all_participants_list = parsing_of_users_from_the_selected_group(client, tg_tar)
+        # Записываем parsing данные в файл setting_user/software_database.db
+        entities = all_participants_user(all_participants_list)
+        write_parsed_chat_participants_to_db(entities)
+        cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
+        delete_duplicates(table_name="members", column_name="id")  # Чистка дублирующих username по столбцу id
+        client.disconnect()  # Разрываем соединение telegram
 
 
 def parsing_of_users_from_the_selected_group(client, target_group) -> list:
@@ -121,26 +126,6 @@ def parsing_of_users_from_the_selected_group(client, target_group) -> list:
         if len(participants.users) < 1:
             while_condition = False
     return all_participants
-
-
-def group_parsing(client, groups_wr, phone) -> None:
-    """Parsing группы, предварительно на них подписавшись"""
-    event: str = f"Parsing: {groups_wr}"
-    description_action = f"channel / group: {groups_wr}"
-    try:
-        with console.status("[bold green]Работа над задачами...", spinner_style="time") as _:
-            all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
-            # Записываем parsing данные в файл setting_user/software_database.db
-            entities = all_participants_user(all_participants)
-            write_parsed_chat_participants_to_db(entities)
-    except ChatAdminRequiredError:
-        actions: str = "Требуются права администратора."
-        recording_actions_in_the_db(phone, description_action, event, actions)
-    except ChannelPrivateError:
-        actions: str = "Указанный канал является приватным, или вам запретили подписываться."
-        recording_actions_in_the_db(phone, description_action, event, actions)
-        # Удаляем отработанную группу или канал
-        delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
 
 
 def output_a_list_of_groups_new(client):

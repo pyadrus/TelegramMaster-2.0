@@ -3,6 +3,7 @@ import datetime
 import os
 
 from rich import print
+from telethon.errors import ChatAdminRequiredError, ChannelPrivateError
 
 from system.sqlite_working_tools.sqlite_working_tools import delete_row_db
 from system.sqlite_working_tools.sqlite_working_tools import writing_data_to_the_db
@@ -39,3 +40,33 @@ def telegram_phone_number_banned_error(client, phone):
         os.remove(f"setting_user/accounts/{phone}.session")  # Находим и удаляем сессию
     except FileNotFoundError:
         print(f"[green]Файл {phone}.session был ранее удален")  # Если номер не найден, то выводим сообщение
+
+
+def handle_exceptions(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ChatAdminRequiredError:
+            phone = args[2]
+            groups_wr = args[1]
+            event: str = f"Parsing: {groups_wr}"
+            description_action = f"channel / group: {groups_wr}"
+            actions: str = "Требуются права администратора."
+            recording_actions_in_the_db(phone, description_action, event, actions)
+            # Прерываем работу и меняем аккаунт
+            return None
+        except ChannelPrivateError:
+            phone = args[2]
+            groups_wr = args[1]
+            event: str = f"Parsing: {groups_wr}"
+            description_action = f"channel / group: {groups_wr}"
+            actions: str = "Указанный канал является приватным, или вам запретили подписываться."
+            recording_actions_in_the_db(phone, description_action, event, actions)
+            # Удаляем отработанную группу или канал
+            delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
+            return None
+    return wrapper
+
+
+
+
