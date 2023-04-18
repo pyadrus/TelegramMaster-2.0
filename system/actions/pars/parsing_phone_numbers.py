@@ -1,12 +1,12 @@
 import random
-import sys
 import time
 
 from rich import print
 from telethon import functions
 from telethon import types
-from telethon.errors import FloodWaitError
+
 from system.auxiliary_functions.global_variables import console
+from system.error.telegram_errors import handle_exceptions_pars
 from system.sqlite_working_tools.sqlite_working_tools import delete_row_db
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
 from system.sqlite_working_tools.sqlite_working_tools import writing_data_to_the_db
@@ -36,18 +36,16 @@ def we_record_phone_numbers_in_the_db() -> None:
             writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
 
 
+@handle_exceptions_pars
 def show_account_contact_list() -> None:
     """Показать список контактов аккаунтов и запись результатов в файл"""
     # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
-        try:
-            # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            client, phone = connect_to_telegram_account_and_output_name(row)
-            parsing_and_recording_contacts_in_the_database(client)
-            client.disconnect()  # Разрываем соединение telegram
-        except KeyError:
-            sys.exit(1)
+        # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
+        client, phone = connect_to_telegram_account_and_output_name(row)
+        parsing_and_recording_contacts_in_the_database(client)
+        client.disconnect()  # Разрываем соединение telegram
 
 
 def parsing_and_recording_contacts_in_the_database(client) -> None:
@@ -92,6 +90,7 @@ def we_show_and_delete_the_contact_of_the_phone_book(entities, client, user) -> 
     time.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
 
 
+@handle_exceptions_pars
 def delete_contact() -> None:
     """Удаляем контакты с аккаунтов"""
     # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
@@ -99,19 +98,11 @@ def delete_contact() -> None:
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
-        try:
-            we_get_the_account_id(client)
-            client.disconnect()  # Разрываем соединение telegram
-        except FloodWaitError as e:
-            print(f'Спим {e.seconds} секунд')
-            time.sleep(e.seconds)
-            delete_contact()
-        except KeyError:
-            sys.exit(1)
-        finally:
-            client.disconnect()  # Разрываем соединение telegram
+        we_get_the_account_id(client)
+        client.disconnect()  # Разрываем соединение telegram
 
 
+@handle_exceptions_pars
 def inviting_contact() -> None:
     """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
     # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
@@ -120,13 +111,7 @@ def inviting_contact() -> None:
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
-        try:
-            adding_a_contact_to_the_phone_book(client)
-        except FloodWaitError as e:
-            print(f'Спим {e.seconds} секунд')
-            time.sleep(e.seconds)
-        except KeyError:
-            sys.exit(1)
+        adding_a_contact_to_the_phone_book(client)
 
 
 def adding_a_contact_to_the_phone_book(client) -> None:

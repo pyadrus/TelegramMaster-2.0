@@ -16,7 +16,7 @@ from system.actions.subscription.subscription import subscribe_to_the_group_and_
 from system.auxiliary_functions.auxiliary_functions import creating_and_writing_to_a_temporary_file
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.global_variables import console
-from system.error.telegram_errors import handle_exceptions
+from system.error.telegram_errors import handle_exceptions_pars
 from system.menu.baner import program_version, date_of_program_change
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import cleaning_list_of_participants_who_do_not_have_username
@@ -66,8 +66,7 @@ def parsing_mass_parsing_of_groups() -> None:
         client, phone = connect_to_telegram_account_and_output_name(row)
         # Открываем базу с группами для дальнейшего parsing
         records: list = open_the_db_and_read_the_data(name_database_table="writing_group_links")
-        # Поочередно выводим записанные группы
-        for groups in records:
+        for groups in records:  # Поочередно выводим записанные группы
             groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
             group_parsing(client, groups_wr, phone)  # Parsing групп
             # Удаляем отработанную группу или канал
@@ -80,7 +79,7 @@ def parsing_mass_parsing_of_groups() -> None:
     app_notifications(notification_text="Список успешно сформирован!")
 
 
-@handle_exceptions
+@handle_exceptions_pars
 def group_parsing(client, groups_wr, phone) -> None:
     """
     Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
@@ -93,7 +92,7 @@ def group_parsing(client, groups_wr, phone) -> None:
         write_parsed_chat_participants_to_db(entities)
 
 
-@handle_exceptions
+@handle_exceptions_pars
 def choosing_a_group_from_the_subscribed_ones_for_parsing() -> None:
     """Выбираем группу из подписанных для parsing"""
     records: list = open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)

@@ -4,6 +4,7 @@ import time
 from rich import print
 
 from system.actions.subscription.subscription import subscribe_to_group_or_channel
+from system.error.telegram_errors import handle_exceptions_pars
 from system.sqlite_working_tools.sqlite_working_tools import delete_duplicates
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data_lim
 from system.sqlite_working_tools.sqlite_working_tools import writing_data_to_the_db
@@ -13,17 +14,15 @@ creating_a_table = "CREATE TABLE IF NOT EXISTS members_active (username, id, acc
 writing_data_to_a_table = "INSERT INTO members_active (username, id, access_hash, name) VALUES (?, ?, ?, ?)"
 
 
+@handle_exceptions_pars
 def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, limit_active_user) -> None:
     """Получаем данные участников группы которые писали сообщения"""
-    try:
-        for message in client.iter_messages(chat, limit=int(limit_active_user)):
-            from_user = client.get_entity(message.from_id.user_id)  # Получаем отправителя по ИД
-            name = f"{from_user.first_name} {from_user.last_name}"
-            entities = [from_user.username, from_user.id, from_user.access_hash, name]
-            print(entities)
-            writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
-    except AttributeError:
-        print("Парсинг закончен!")
+    for message in client.iter_messages(chat, limit=int(limit_active_user)):
+        from_user = client.get_entity(message.from_id.user_id)  # Получаем отправителя по ИД
+        name = f"{from_user.first_name} {from_user.last_name}"
+        entities = [from_user.username, from_user.id, from_user.access_hash, name]
+        print(entities)
+        writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
 
 
 def parsing_of_active_participants(chat_input, limit_active_user) -> None:
