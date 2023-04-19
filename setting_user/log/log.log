@@ -185,3 +185,489 @@ Traceback (most recent call last):
     └ <sqlite3.Cursor object at 0x000001D325EEFCC0>
 
 ValueError: parameters are of unsupported type
+2023-04-20 00:00:57.798 | ERROR    | __main__:<module>:22 - Error binding parameter 0 - probably unsupported type.
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001AA9EC2E4D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001AA9EC2E170>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000001AA9EC2E0E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x000001AA9E45F520>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 28, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link)'
+    └ <function writing_data_to_the_db at 0x000001AA9E0E2F80>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x000001AA9E5FEBC0>
+
+sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
+2023-04-20 00:00:57.798 | ERROR    | __main__:<module>:22 - Error binding parameter 0 - probably unsupported type.
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001AA9EC2E4D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001AA9EC2E170>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000001AA9EC2E0E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x000001AA9E45F520>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 28, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link)'
+    └ <function writing_data_to_the_db at 0x000001AA9E0E2F80>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x000001AA9E5FEBC0>
+
+sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
+2023-04-20 00:02:54.714 | ERROR    | __main__:<module>:22 - unrecognized token: ":"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000283411167A0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000028341116440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x00000283411163B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x000002834094F5B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 28, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?::text)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link)'
+    └ <function writing_data_to_the_db at 0x00000283405D2DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?::text)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x0000028340AE2A40>
+
+sqlite3.OperationalError: unrecognized token: ":"
+2023-04-20 00:02:54.714 | ERROR    | __main__:<module>:22 - unrecognized token: ":"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000283411167A0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000028341116440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x00000283411163B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x000002834094F5B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 28, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?::text)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link)'
+    └ <function writing_data_to_the_db at 0x00000283405D2DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?::text)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x0000028340AE2A40>
+
+sqlite3.OperationalError: unrecognized token: ":"
+2023-04-20 00:05:15.767 | ERROR    | __main__:<module>:22 - Error binding parameter 0 - probably unsupported type.
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000019BA5F36710>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000019BA5F363B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000019BA5F36320>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x0000019BA576F520>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 28, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link)'
+    └ <function writing_data_to_the_db at 0x0000019BA53F2DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x0000019BA5902AC0>
+
+sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
+2023-04-20 00:05:15.767 | ERROR    | __main__:<module>:22 - Error binding parameter 0 - probably unsupported type.
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000019BA5F36710>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000019BA5F363B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000019BA5F36320>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x0000019BA576F520>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 28, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link)'
+    └ <function writing_data_to_the_db at 0x0000019BA53F2DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x0000019BA5902AC0>
+
+sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
+2023-04-20 00:07:23.021 | ERROR    | __main__:<module>:22 - Error binding parameter 0 - probably unsupported type.
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000026D9FCE6680>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000026D9FCE6320>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000026D9FCE6290>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x0000026D9F523520>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 28, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link)'
+    └ <function writing_data_to_the_db at 0x0000026D9F1A2DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x0000026D9F6B2AC0>
+
+sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
+2023-04-20 00:07:23.021 | ERROR    | __main__:<module>:22 - Error binding parameter 0 - probably unsupported type.
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000026D9FCE6680>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000026D9FCE6320>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000026D9FCE6290>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x0000026D9F523520>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 28, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link)'
+    └ <function writing_data_to_the_db at 0x0000026D9F1A2DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x0000026D9F6B2AC0>
+
+sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
+2023-04-20 00:23:52.627 | ERROR    | __main__:<module>:22 - Error binding parameter 0 - probably unsupported type.
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000025E98B267A0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000025E98B26440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000025E98B263B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x0000025E9834F5B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 28, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id INTEGER, title TEXT, about TEXT, link TEXT)'
+    └ <function writing_data_to_the_db at 0x0000025E97FD2DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x0000025E984E29C0>
+
+sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
+2023-04-20 00:23:52.627 | ERROR    | __main__:<module>:22 - Error binding parameter 0 - probably unsupported type.
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000025E98B267A0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000025E98B26440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000025E98B263B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x0000025E9834F5B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 28, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id INTEGER, title TEXT, about TEXT, link TEXT)'
+    └ <function writing_data_to_the_db at 0x0000025E97FD2DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x0000025E984E29C0>
+
+sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
+2023-04-20 00:31:04.892 | ERROR    | __main__:<module>:22 - Binding 1 has no name, but you supplied a dictionary (which has only names).
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001C615EA6830>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001C615EA64D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000001C615EA6440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x000001C6156DF5B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 27, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ {-1001545235329: {'title': 'Барановичский район', 'about': 'Барановичский районный исполнительный комитет', 'link': 'https://...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id INTEGER, title TEXT, about TEXT, link TEXT)'
+    └ <function writing_data_to_the_db at 0x000001C615362DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ {-1001545235329: {'title': 'Барановичский район', 'about': 'Барановичский районный исполнительный комитет', 'link': 'https://...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x000001C6158729C0>
+
+sqlite3.ProgrammingError: Binding 1 has no name, but you supplied a dictionary (which has only names).
+2023-04-20 00:31:04.892 | ERROR    | __main__:<module>:22 - Binding 1 has no name, but you supplied a dictionary (which has only names).
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001C615EA6830>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001C615EA64D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000001C615EA6440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x000001C6156DF5B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 27, in parsing_of_groups_to_which_the_account_is_subscribed
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups)
+    │                      │                 │                        └ {-1001545235329: {'title': 'Барановичский район', 'about': 'Барановичский районный исполнительный комитет', 'link': 'https://...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id INTEGER, title TEXT, about TEXT, link TEXT)'
+    └ <function writing_data_to_the_db at 0x000001C615362DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ {-1001545235329: {'title': 'Барановичский район', 'about': 'Барановичский районный исполнительный комитет', 'link': 'https://...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x000001C6158729C0>
+
+sqlite3.ProgrammingError: Binding 1 has no name, but you supplied a dictionary (which has only names).
+2023-04-20 00:34:29.789 | ERROR    | __main__:<module>:22 - Error binding parameter 0 - probably unsupported type.
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001F1197B6680>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001F1197B6320>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000001F1197B6290>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x000001F118FF3520>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 27, in parsing_of_groups_to_which_the_account_is_subscribed
+    forming_a_list_of_groups(client)
+    │                        └ <telethon.client.telegramclient.TelegramClient object at 0x000001F1191D3400>
+    └ <function forming_a_list_of_groups at 0x000001F118FF35B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 51, in forming_a_list_of_groups
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link)'
+    └ <function writing_data_to_the_db at 0x000001F118C72DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x000001F119182A40>
+
+sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
+2023-04-20 00:34:29.789 | ERROR    | __main__:<module>:22 - Error binding parameter 0 - probably unsupported type.
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 20, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001F1197B6680>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 15, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001F1197B6320>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 61, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000001F1197B6290>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 194, in telegram_parsing_menu
+    parsing_of_groups_to_which_the_account_is_subscribed()
+    └ <function parsing_of_groups_to_which_the_account_is_subscribed at 0x000001F118FF3520>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 27, in parsing_of_groups_to_which_the_account_is_subscribed
+    forming_a_list_of_groups(client)
+    │                        └ <telethon.client.telegramclient.TelegramClient object at 0x000001F1191D3400>
+    └ <function forming_a_list_of_groups at 0x000001F118FF35B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_account_groups_and_channels.py", line 51, in forming_a_list_of_groups
+    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
+    │                      │                 │                        └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │                      │                 └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │                      └ 'CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link)'
+    └ <function writing_data_to_the_db at 0x000001F118C72DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 72, in writing_data_to_the_db
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    │      │           │                         └ [[-1001545235329, 'Барановичский район', 'Барановичский районный исполнительный комитет', 'https://t.me/barrai'], [-100173236...
+    │      │           └ 'INSERT INTO groups_and_channels (id, title, about, link) VALUES (?, ?, ?, ?)'
+    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x000001F119182A40>
+
+sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
