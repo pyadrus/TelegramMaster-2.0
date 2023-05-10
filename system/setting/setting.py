@@ -8,7 +8,7 @@ import tkinter as tk
 from system.auxiliary_functions.global_variables import console
 from system.menu.baner import program_version, date_of_program_change
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import writing_data_to_the_db, save_proxy_data_to_db
+from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db, save_proxy_data_to_db
 from tkinter import ttk
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 
@@ -73,7 +73,7 @@ def connecting_new_account() -> None:
     api_id_data, api_hash_data = reading_the_id_and_hash()
     phone_data = console.input("[bold green][+] Введите номер телефона : ")  # Вводим номер телефона
     entities = (api_id_data, api_hash_data, phone_data)
-    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
+    write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
     # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
     client = telegram_connect(phone_data, api_id_data, api_hash_data)
     client.disconnect()  # Разрываем соединение telegram

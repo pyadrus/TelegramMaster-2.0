@@ -11,7 +11,7 @@ from rich.progress import track
 
 from system.auxiliary_functions.global_variables import time_inviting_1, time_changing_accounts_1, \
     time_changing_accounts_2, time_inviting_2
-from system.error.telegram_errors import recording_actions_in_the_db
+from system.error.telegram_errors import record_account_actions
 from system.menu.baner import banner
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data, delete_row_db
 from system.sqlite_working_tools.sqlite_working_tools import write_to_single_column_table
@@ -28,14 +28,15 @@ def display_progress_bar(time_range_1, time_range_2, message):
 
 def record_inviting_results(username, phone, description_action, event, actions) -> None:
     """Запись результатов inviting, отправка сообщений в базу данных"""
-    recording_actions_in_the_db(phone, description_action, event, actions)
+    record_account_actions(phone, description_action, event, actions)
     delete_row_db(table="members", column="id", value=username['id'])
     # Смена username через случайное количество секунд
     display_progress_bar(time_inviting_1, time_inviting_2, "Переход к новому username")
 
 
-def we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event):
-    recording_actions_in_the_db(phone, description_action, event, actions)
+def record_and_interrupt(actions, phone, description_action, event):
+    """Запись данных в базу данных и прерывание выполнения кода"""
+    record_account_actions(phone, description_action, event, actions)
     # Смена аккаунта через случайное количество секунд
     display_progress_bar(time_changing_accounts_1, time_changing_accounts_2, "Ожидайте смены аккаунта")
 

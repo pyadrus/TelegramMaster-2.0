@@ -4,7 +4,7 @@ from rich import box
 from rich.table import Table
 
 from system.actions.actions_with_account.account_verification import *
-from system.actions.invite.inviting_participants_by_time_telegram import *
+from system.actions.invite.telegram_invite_scheduler import *
 from system.actions.invite.inviting_participants_telegram import *
 from system.actions.pars.parsing_account_groups_and_channels import *
 from system.actions.pars.parsing_active_participants import *
@@ -120,7 +120,7 @@ def inviting_groups() -> None:
     if user_input == "1":
         """Inviting по списку software_database.db"""
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        invitation_from_all_accounts_program_body(name_database_table="members")
+        invite_members(name_database_table="members")
     elif user_input == "2":
         """Inviting по списку software_database.db, с лимитами"""
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
@@ -128,15 +128,15 @@ def inviting_groups() -> None:
     elif user_input == "3":
         """Inviting по времени"""
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        launching_an_invite_by_time()
+        schedule_invite()
     elif user_input == "4":
         """Inviting активных участников чата оп ранее parsing списку"""
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        invitation_from_all_accounts_program_body(name_database_table="members_active")
+        invite_members(name_database_table="members_active")
     elif user_input == "5":
         """Inviting по сформированному списку контактов"""
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        invitation_from_all_accounts_program_body(name_database_table="members_contacts")
+        invite_members(name_database_table="members_contacts")
     elif user_input == "0":
         """Вернуться назад"""
         main_menu()  # После отработки функции переходим в начальное меню

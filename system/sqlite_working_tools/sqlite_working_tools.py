@@ -64,7 +64,7 @@ def delete_row_db(table, column, value) -> None:
     cursor.close()  # cursor_members.close() – закрытие соединения с БД.
 
 
-def writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities) -> None:
+def write_data_to_db(creating_a_table, writing_data_to_a_table, entities) -> None:
     """Запись действий аккаунта в базу данных"""
     sqlite_connection, cursor = connecting_to_the_database()
     cursor.execute(creating_a_table)  # Считываем таблицу

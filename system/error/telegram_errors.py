@@ -7,27 +7,25 @@ from rich import print
 from telethon.errors import ChatAdminRequiredError, ChannelPrivateError, FloodWaitError
 
 from system.sqlite_working_tools.sqlite_working_tools import delete_row_db
-from system.sqlite_working_tools.sqlite_working_tools import writing_data_to_the_db
+from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
 
 """Действия с username"""
 
 
-def recording_actions_in_the_db(phone, description_action, event, actions):
-    """Запись действий аккаунта в базу данных"""
-    print(f"[red][!] {actions}")
-    creating_a_table = "CREATE TABLE IF NOT EXISTS account_actions" \
-                       "(phone, date, description_action, event, actions)"
-    writing_data_to_a_table = "INSERT INTO  account_actions " \
-                              "(phone, date, description_action, event, actions) " \
-                              "VALUES (?, ?, ?, ?, ?)"
-    date = datetime.datetime.now()
-    # phone - номер телефона аккаунта,
-    # str(date) - дата и время действия,
-    # description_action - данные над которыми производятся действия,
-    # event - действия которе производим,
-    # actions - результат выполнения действий.
-    entities = [phone, str(date), description_action, event, actions]
-    writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
+def record_account_actions(phone_number, action_description, event, action_result) -> None:
+    """Записывает действия аккаунта в базу данных
+    phone_number - номер телефона аккаунта,
+    action_description - описание действия,
+    event - действие, которое производится,
+    action_result - результат выполнения действия."""
+    print(f"[red][!] {action_result}")
+    creating_a_table = """CREATE TABLE IF NOT EXISTS account_actions 
+                          (phone, date, description_action, event, actions)"""
+    writing_data_to_a_table = """INSERT INTO  account_actions 
+                                 (phone, date, description_action, event, actions) VALUES (?, ?, ?, ?, ?)"""
+    date = datetime.datetime.now()  # Получаем текущую дату
+    entities = [phone_number, str(date), action_description, event, action_result]  # Формируем словарь
+    write_data_to_db(creating_a_table, writing_data_to_a_table, entities)  # Запись данных в базу данных
 
 
 """Действия с аккаунтами"""
@@ -48,28 +46,25 @@ def handle_exceptions_pars(func):
         try:
             return func(*args, **kwargs)
         except ChatAdminRequiredError:
-            # Если для парсинга нужны права администратора в чате
-            phone = args[2]
-            groups_wr = args[1]
+            # Если для parsing нужны права администратора в чате
+            phone, groups_wr = args[2], args[1]
             event: str = f"Parsing: {groups_wr}"
             description_action = f"channel / group: {groups_wr}"
             actions: str = "Требуются права администратора."
-            recording_actions_in_the_db(phone, description_action, event, actions)
-            # Прерываем работу и меняем аккаунт
-            return
+            record_account_actions(phone, description_action, event, actions)
+            return  # Прерываем работу и меняем аккаунт
         except ChannelPrivateError:
             # Если указанный канал является приватным, или вам запретили подписываться.
-            phone = args[2]
-            groups_wr = args[1]
+            phone, groups_wr = args[2], args[1]
             event: str = f"Parsing: {groups_wr}"
             description_action = f"channel / group: {groups_wr}"
             actions: str = "Указанный канал является приватным, или вам запретили подписываться."
-            recording_actions_in_the_db(phone, description_action, event, actions)
+            record_account_actions(phone, description_action, event, actions)
             # Удаляем отработанную группу или канал
             delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
-            return
+            return  # Прерываем работу и меняем аккаунт
         except AttributeError:
-            # Если произошла ошибка во время парсинга
+            # Если произошла ошибка во время parsing
             print("Парсинг закончен!")
         except KeyError:
             # Если произошла ошибка, связанная с ключом словаря

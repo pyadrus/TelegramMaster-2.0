@@ -5,8 +5,8 @@ from telethon.tl.functions.channels import InviteToChannelRequest
 from telethon.tl.types import InputPeerUser
 from telethon.tl.functions.channels import LeaveChannelRequest
 from system.actions.subscription.subscription import subscribe_to_group_or_channel
-from system.auxiliary_functions.auxiliary_functions import we_interrupt_the_code_and_write_the_data_to_the_database, \
-    record_inviting_results
+from system.auxiliary_functions.auxiliary_functions import record_inviting_results
+from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import limits
 from system.auxiliary_functions.global_variables import target_group_entity
 from system.notification.notification import app_notifications
@@ -39,7 +39,6 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
         # записываем действия в software_database.db
         print(target_group_entity)
         subscribe_to_group_or_channel(client, target_group_entity, phone)
-        # records: list = open_the_db_and_read_the_data_lim(name_database_table, number_of_accounts=20)
         records: list = open_the_db_and_read_the_data(name_database_table)
         # Количество аккаунтов на данный момент в работе
         print(f"[bold red]Всего username: {len(records)}")
@@ -48,9 +47,9 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
     app_notifications(notification_text=f"Работа с группой {target_group_entity} окончена!")
 
 
-def unsubscribe_from_the_group(client, target_group_entity):
+def unsubscribe_from_the_group(client, group_link):
     """Отписываемся от группы"""
-    entity = client.get_entity(target_group_entity)
+    entity = client.get_entity(group_link)
     if entity:
         client(LeaveChannelRequest(entity))
     client.disconnect()
@@ -86,15 +85,15 @@ def inviting(client, phone, records) -> None:
             inviting_to_a_group(client, username, user_id, access_hash)  # Inviting user в группу
         except AuthKeyDuplicatedError:
             actions: str = "Аккаунт запущен еще на одном устройстве!"
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
             actions: str = f'Flood! wait for {e.seconds} seconds'
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт
         except PeerFloodError:
             actions: str = "Предупреждение о Flood от telegram."
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт
         except UserPrivacyRestrictedError:
             actions: str = f"Настройки конфиденциальности {username}, id: {user_id} не позволяют вам inviting"
@@ -104,12 +103,12 @@ def inviting(client, phone, records) -> None:
             record_inviting_results(user, phone, description_action, event, actions)
         except UserBannedInChannelError:
             actions: str = "Вам запрещено отправлять сообщения в супергруппу."
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт
         except ChatWriteForbiddenError:
             actions: str = "Настройки в чате не дают добавлять людей в чат, возможно стоит бот админ и " \
                            "нужно подписаться на другие проекты "
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт
         except BotGroupsBlockedError:
             actions: str = "Вы не можете добавить бота в группу."
@@ -125,7 +124,7 @@ def inviting(client, phone, records) -> None:
             record_inviting_results(user, phone, description_action, event, actions)
         except ChannelPrivateError:
             actions: str = "Чат является приватным, или закрыт доступ добавления участников."
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт
         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
             actions: str = f"Не корректное имя {username}, id: {user_id}"
@@ -134,11 +133,11 @@ def inviting(client, phone, records) -> None:
             continue  # Записываем ошибку в software_database.db и продолжаем работу
         except InviteRequestSentError:
             actions: str = "Действия будут доступны после одобрения администратором на вступление в группу"
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action)
+            record_inviting_results(user, phone, description_action, event, actions)
             break  # Прерываем работу и меняем аккаунт
         except TypeNotFoundError:
             actions: str = f"Аккаунт {phone} не может добавить в группу {target_group_entity}"
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт
         except KeyboardInterrupt:
             """Закрытие окна программы"""

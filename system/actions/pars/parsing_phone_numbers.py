@@ -9,7 +9,7 @@ from system.auxiliary_functions.global_variables import console
 from system.error.telegram_errors import handle_exceptions_pars
 from system.sqlite_working_tools.sqlite_working_tools import delete_row_db
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
-from system.sqlite_working_tools.sqlite_working_tools import writing_data_to_the_db
+from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
 creating_a_table = "CREATE TABLE IF NOT EXISTS members_contacts(username, id, access_hash, name, user_phone,online_at)"
@@ -33,7 +33,7 @@ def we_record_phone_numbers_in_the_db() -> None:
             entities = [lines]
             creating_a_table = "CREATE TABLE IF NOT EXISTS contact(phone)"
             writing_data_to_a_table = "INSERT INTO contact(phone) VALUES (?)"
-            writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
+            write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
 
 
 @handle_exceptions_pars
@@ -55,7 +55,7 @@ def parsing_and_recording_contacts_in_the_database(client) -> None:
     all_participants.extend(result.users)  # Печатаем результат
     for contact in all_participants:  # Выводим результат parsing
         entities = formation_of_account_data(contact)
-        writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
+        write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
 
 
 def formation_of_account_data(user) -> list:
@@ -131,7 +131,7 @@ def adding_a_contact_to_the_phone_book(client) -> None:
             entities: list = formation_of_account_data(contact)
             print(f"[bold green][+] Контакт с добавлен в телефонную книгу!")
             # Запись результатов parsing в файл members_contacts.db, для дальнейшего inviting
-            writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
+            write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
             # После работы с номером телефона, программа удаляет номер со списка
             delete_row_db(table="contact", column="phone", value=user['phone'])
         except ValueError:

@@ -6,7 +6,7 @@ from telethon.errors import *
 from telethon.tl.types import InputPeerUser
 
 from system.actions.invite.inviting_participants_telegram import record_inviting_results
-from system.auxiliary_functions.auxiliary_functions import we_interrupt_the_code_and_write_the_data_to_the_database
+from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console
 from system.menu.baner import program_version, date_of_program_change
 from system.notification.notification import app_notifications
@@ -76,11 +76,11 @@ def sending_files_to_a_personal_account() -> None:
                     record_inviting_results(user, phone, description_action, event, actions)
                 except FloodWaitError as e:
                     actions = f'Flood! wait for {e.seconds} seconds'
-                    we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, description_action, event)
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:
                     actions = "Предупреждение о Flood от telegram."
-                    we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, description_action, event)
                     break  # Прерываем работу и меняем аккаунт
                 except UserNotMutualContactError:
                     actions = "User не является взаимным контактом."
@@ -90,7 +90,7 @@ def sending_files_to_a_personal_account() -> None:
                     record_inviting_results(username, phone, description_action, event, actions)
                 except ChatWriteForbiddenError:
                     actions = "Вам запрещено писать в супергруппу / канал."
-                    we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, description_action, event)
                     break  # Прерываем работу и меняем аккаунт
                 except (TypeError, UnboundLocalError):
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -129,11 +129,11 @@ def we_send_a_message_from_all_accounts(message_text) -> None:
                     record_inviting_results(user, phone, description_action, event, actions)
                 except FloodWaitError as e:
                     actions = f'Flood! wait for {e.seconds} seconds'
-                    we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, description_action, event)
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:
                     actions = "Предупреждение о Flood от telegram."
-                    we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, description_action, event)
                     break  # Прерываем работу и меняем аккаунт
                 except UserNotMutualContactError:
                     actions = "User не является взаимным контактом."
@@ -143,7 +143,7 @@ def we_send_a_message_from_all_accounts(message_text) -> None:
                     record_inviting_results(username, phone, description_action, event, actions)
                 except ChatWriteForbiddenError:
                     actions = "Вам запрещено писать в супергруппу / канал."
-                    we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, description_action, event)
                     break  # Прерываем работу и меняем аккаунт
                 except (TypeError, UnboundLocalError):
                     continue  # Записываем ошибку в software_database.db и продолжаем работу

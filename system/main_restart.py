@@ -4,7 +4,7 @@ from rich import print
 
 from system.menu.main_menu import main_menu
 
-logger.add("setting_user/log/log.log", rotation="1 MB", compression="zip")
+logger.add("setting_user/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 
 def main_restart():

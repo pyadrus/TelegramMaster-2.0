@@ -1,9 +1,9 @@
 from telethon import functions
-from system.error.telegram_errors import recording_actions_in_the_db
+from system.error.telegram_errors import record_account_actions
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import delete_duplicates
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
-from system.sqlite_working_tools.sqlite_working_tools import writing_data_to_the_db
+from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 import time
@@ -26,7 +26,7 @@ def parsing_of_groups_to_which_the_account_is_subscribed() -> None:
         client, phone = connect_to_telegram_account_and_output_name(row)
         description_action = "Parsing: groups and channels"
         actions = "Parsing групп / каналов"
-        recording_actions_in_the_db(phone, description_action, event, actions)
+        record_account_actions(phone, description_action, event, actions)
         forming_a_list_of_groups(client)
         client.disconnect()  # Разрываем соединение telegram
     # Чистка дубликатов в базе данных
@@ -53,7 +53,7 @@ def forming_a_list_of_groups(client):
             parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             print(dialog_id, chs_title, chat_about, f"https://t.me/{username}", members_count, parsing_time)
             entities = [dialog_id, chs_title, chat_about, f"https://t.me/{username}", members_count, parsing_time]
-            writing_data_to_the_db(creating_a_table, writing_data_to_a_table, entities)
+            write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
         except TypeError:
             continue  # Записываем ошибку в software_database.db и продолжаем работу
 

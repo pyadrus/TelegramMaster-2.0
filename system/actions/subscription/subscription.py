@@ -9,15 +9,15 @@ from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
 
 from system.auxiliary_functions.auxiliary_functions import creating_and_writing_to_a_temporary_file, \
-    we_interrupt_the_code_and_write_the_data_to_the_database
+    record_and_interrupt
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.global_variables import time_subscription_1
 from system.auxiliary_functions.global_variables import time_subscription_2
-from system.error.telegram_errors import recording_actions_in_the_db
+from system.error.telegram_errors import record_account_actions
 from system.menu.baner import program_version, date_of_program_change
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
-from system.sqlite_working_tools.sqlite_working_tools import writing_data_to_the_db
+from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
 creating_a_table = """SELECT * from writing_group_links"""
@@ -93,7 +93,7 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
             client(JoinChannelRequest(groups_wrs))
             print(f"[green] Аккаунт подписался на группу: {groups_wrs}")
             # Записываем данные о действии аккаунта в базу данных
-            recording_actions_in_the_db(phone, description_action, event, actions)
+            record_account_actions(phone, description_action, event, actions)
         except ChannelsTooMuchError:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             for dialog in client.iter_dialogs():
@@ -103,23 +103,23 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
             print('[green][+] Список почистили, и в файл записали.')
         except ChannelPrivateError:
             actions: str = "Указанный канал является приватным, или вам запретили подписываться."
-            recording_actions_in_the_db(phone, description_action, event, actions)
+            record_account_actions(phone, description_action, event, actions)
         except (UsernameInvalidError, ValueError, TypeError):
             actions: str = f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}"
-            recording_actions_in_the_db(phone, description_action, event, actions)
-            writing_data_to_the_db(creating_a_table, writing_data_to_a_table, groups_wrs)
+            record_account_actions(phone, description_action, event, actions)
+            write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wrs)
         except PeerFloodError:
             actions: str = "Предупреждение о Flood от Telegram."
-            recording_actions_in_the_db(phone, description_action, event, actions)
+            record_account_actions(phone, description_action, event, actions)
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
             actions: str = f'Flood! wait for {e.seconds} seconds'
             print(f"[red][!] {actions}")
-            we_interrupt_the_code_and_write_the_data_to_the_database(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт
         except InviteRequestSentError:
             actions: str = "Действия будут доступны после одобрения администратором на вступление в группу"
-            recording_actions_in_the_db(phone, description_action, event, actions)
+            record_account_actions(phone, description_action, event, actions)
 
 
 def subscribe_to_the_group_and_send_the_link(client, groups, phone):
