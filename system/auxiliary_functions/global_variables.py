@@ -5,7 +5,7 @@ console = Console()
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 
 config.read('setting_user/config.ini')
-target_group_entity = config['link_to_the_group']['target_group_entity']
+link_group = config['link_to_the_group']['target_group_entity']
 
 time_subscription_1 = int(config['time_subscription']['time_subscription_1'])
 time_subscription_2 = int(config['time_subscription']['time_subscription_2'])
