@@ -8,7 +8,7 @@ from telethon.tl.types import InputPeerUser
 from system.actions.invite.inviting_participants_telegram import record_inviting_results
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console
-from system.menu.baner import program_version, date_of_program_change
+from system.menu.gui_program import program_window
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
@@ -23,11 +23,7 @@ def we_send_a_message_by_members() -> None:
           "текста используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык "
           "должен быть переключен на английский")
 
-    root = Tk()  # Создаем программу
-    root.title(f"Telegram_BOT_SMM: {program_version} от {date_of_program_change}")
-    # Создаем окно ввода текста, width=50, height=25 выбираем размер программы
-    text = Text(width=50, height=25)
-    text.pack()  # Создаем поле ввода
+    root, text = program_window()
 
     def output_values_from_the_input_field() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""

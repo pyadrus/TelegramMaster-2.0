@@ -2,8 +2,25 @@ import time
 
 import schedule
 
+from system.actions.invite.inviting_participants_telegram import invitation_from_all_accounts_program_body
 from system.auxiliary_functions.global_variables import console
 from system.telegram_actions.telegram_actions import deleting_files_by_dictionary
+
+
+def schedule_member_invitation():
+    """Запуск inviting"""
+    invitation_from_all_accounts_program_body(name_database_table="members")
+
+
+def launching_an_invite_once_an_hour():
+    """Запуск inviting 1 раз в час"""
+    # Запускаем автоматизацию
+    schedule.every().hour.at(":00").do(schedule_member_invitation)
+    # Запускаем бесконечный цикл, который будет проверять, есть ли задачи для выполнения, и ждать одну секунду перед
+    # следующей проверкой
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 def invite_members() -> None:

@@ -146,7 +146,6 @@ def creating_the_main_window_for_proxy_data_entry() -> None:
     password_type.pack()
     password_type_entry = tk.Entry(root, width=45)
     password_type_entry.pack()
-
     # Создаем кнопку
     button = tk.Button(root, text="Готово", command=lambda: save_proxy_data_to_db(proxy=recording_proxy_data()))
     button.pack()

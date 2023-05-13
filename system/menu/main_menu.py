@@ -78,9 +78,10 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
     # Выводим текст в таблице
     table.add_row("1", f"Inviting {link_group}", "Inviting по списку members")
     table.add_row("2", f"Inviting {link_group}, с лимитами", "Inviting по списку members, с лимитами на аккаунт")
-    table.add_row("3", f"Inviting time {link_group}", "Inviting по списку members (запуск по времени)")
-    table.add_row("4", f"Inviting активных участников в чат {link_group}", "Inviting активных участников чата")
-    table.add_row("5", f"Inviting contact {link_group}", "Inviting по списку контактов members")
+    table.add_row("3", f"Inviting {link_group} 1 раз в час", "Inviting по списку members с запуском 1 рав в час")
+    table.add_row("4", f"Inviting time {link_group}", "Inviting по списку members (запуск по времени)")
+    table.add_row("5", f"Inviting активных участников в чат {link_group}", "Inviting активных участников чата")
+    table.add_row("6", f"Inviting contact {link_group}", "Inviting по списку контактов members")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[bold red][+] Введите номер: ")
@@ -88,12 +89,15 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
         invitation_from_all_accounts_program_body(name_database_table="members")
     elif user_input == "2":  # Inviting по списку software_database.db, с лимитами
         invite_from_multiple_accounts_with_limits(name_database_table="members")
-    elif user_input == "3":  # Inviting по времени
+    elif user_input == "3":  # Inviting по времени 1 раз в час
+        clearing_console_showing_banner()  # Чистим консоль, выводим банер
+        launching_an_invite_once_an_hour()
+    elif user_input == "4":  # Inviting по времени
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         schedule_invite()
-    elif user_input == "4":  # Inviting активных участников чата оп ранее parsing списку
+    elif user_input == "5":  # Inviting активных участников чата оп ранее parsing списку
         invitation_from_all_accounts_program_body(name_database_table="members_active")
-    elif user_input == "5":  # Inviting по сформированному списку контактов
+    elif user_input == "6":  # Inviting по сформированному списку контактов
         invitation_from_all_accounts_program_body(name_database_table="members_contacts")
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
@@ -225,7 +229,7 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
     elif user_input == "4":  # Рассылка сообщений по чатам по времени
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         message_entry_window_time()
-        mesage_time()
+        message_time()
     elif user_input == "5":  # Рассылка файлов по чатам
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         sending_files_via_chats()

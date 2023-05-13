@@ -8,13 +8,13 @@ from rich.progress import track
 from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
 
-from system.auxiliary_functions.auxiliary_functions import creating_and_writing_to_a_temporary_file, \
-    record_and_interrupt
+from system.auxiliary_functions.auxiliary_functions import creating_and_writing_to_a_temporary_file
+from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.global_variables import time_subscription_1
 from system.auxiliary_functions.global_variables import time_subscription_2
 from system.error.telegram_errors import record_account_actions
-from system.menu.baner import program_version, date_of_program_change
+from system.menu.gui_program import program_window
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
@@ -29,11 +29,8 @@ def writing_group_links_to_file() -> None:
     print("[bold red][+] Введите ссылки чатов на которые нужно подписаться, для вставки в графическое окно "
           "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
           "быть переключен на английский")
-    root = Tk()  # Создаем программу
-    root.title(f"Telegram_BOT_SMM: {program_version} от {date_of_program_change}")
-    # Создаем окно ввода текста, width=50, height=25 выбираем размер программы
-    text = Text(width=50, height=25)
-    text.pack()  # Создаем поле ввода
+
+    root, text = program_window()
 
     def output_values_from_the_input_field() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""

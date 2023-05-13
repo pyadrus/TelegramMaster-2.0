@@ -7,20 +7,21 @@ from rich import print
 from telethon.errors import *
 
 from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
-from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available, \
-    record_and_interrupt
+from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
+from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console
 from system.error.telegram_errors import record_account_actions
-from system.menu.baner import program_version, date_of_program_change
+from system.menu.gui_program import program_window
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
-from system.sqlite_working_tools.sqlite_working_tools import write_to_single_column_table
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
+from system.sqlite_working_tools.sqlite_working_tools import write_to_single_column_table
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
 folder, files = "setting_user", "members_group.csv"
 creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
+event: str = f"Рассылаем сообщение по чатам Telegram"
 
 
 def sending_files_via_chats() -> None:
@@ -28,7 +29,6 @@ def sending_files_via_chats() -> None:
     # Спрашиваем у пользователя, через какое время будем отправлять сообщения
     link_to_the_file: str = console.input("[bold red][+] Введите название файла с папки setting_user/files_to_send: ")
     message_text_time: str = console.input("[bold red][+] Введите время, через какое время будем отправлять файлы: ")
-    event = f"Рассылаем сообщение по чатам Telegram"
     # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
     app_notifications(notification_text=event)
     # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
@@ -40,8 +40,7 @@ def sending_files_via_chats() -> None:
         try:
             records: list = open_the_db_and_read_the_data(name_database_table="writing_group_links")
             print(f"[bold red]Всего групп: {len(records)}")
-            # Поочередно выводим записанные группы
-            for groups in records:
+            for groups in records:  # Поочередно выводим записанные группы
                 groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
                 description_action = f"Sending messages to a group: {groups_wr}"
                 try:
@@ -81,12 +80,7 @@ def sending_files_via_chats() -> None:
 
 def sending_messages_files_via_chats() -> None:
     """Рассылка сообщений + файлов по чатам"""
-
-    root = Tk()  # Создаем программу
-    root.title(f"Telegram_BOT_SMM: {program_version} от {date_of_program_change}")
-    # Создаем окно ввода текста, width=50, height=25 выбираем размер программы
-    text = Text(width=50, height=25)
-    text.pack()  # Создаем поле ввода
+    root, text = program_window()
 
     def output_values_from_the_input_field() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
@@ -111,8 +105,7 @@ def sending_messages_files_via_chats() -> None:
                 # Открываем базу данных
                 records: list = open_the_db_and_read_the_data(name_database_table="writing_group_links")
                 print(f"[bold red]Всего групп: {len(records)}")
-                # Поочередно выводим записанные группы
-                for groups in records:
+                for groups in records:  # Поочередно выводим записанные группы
                     groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
                     description_action = f"Sending messages to a group: {groups_wr}"
                     try:
@@ -166,7 +159,6 @@ def sending_messages_via_chats_time(message_text) -> None:
     # Спрашиваем у пользователя, через какое время будем отправлять сообщения
     message_text_time: str = console.input(
         "[bold red][+] Введите время, через какое время будем отправлять сообщения: ")
-    event: str = f"Рассылаем сообщение по чатам Telegram"
     # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
     app_notifications(notification_text=event)
     # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
@@ -179,8 +171,7 @@ def sending_messages_via_chats_time(message_text) -> None:
             # Открываем базу данных
             records: list = open_the_db_and_read_the_data(name_database_table="writing_group_links")
             print(f"[bold red]Всего групп: {len(records)}")
-            # Поочередно выводим записанные группы
-            for groups in records:
+            for groups in records:  # Поочередно выводим записанные группы
                 groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
                 description_action = f"Sending messages to a group: {groups_wr}"
                 try:
@@ -225,11 +216,7 @@ def message_entry_window() -> None:
           "текста используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык "
           "должен быть переключен на английский")
 
-    root = Tk()  # Создаем программу
-    root.title(f"Telegram_BOT_SMM: {program_version} от {date_of_program_change}")
-    # Создаем окно ввода текста, width=50, height=25 выбираем размер программы
-    text = Text(width=50, height=25)
-    text.pack()  # Создаем поле ввода
+    root, text = program_window()
 
     def output_values_from_the_input_field() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
@@ -254,11 +241,7 @@ def output_the_input_field() -> None:
           "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
           "быть переключен на английский")
 
-    root = Tk()  # Создаем программу
-    root.title(f"Telegram_BOT_SMM: {program_version} от {date_of_program_change}")
-    # Создаем окно ввода текста, width=50, height=25 выбираем размер программы
-    text = Text(width=50, height=25)
-    text.pack()  # Создаем поле ввода
+    root, text = program_window()
 
     def output_values_from_the_input_field() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
@@ -271,8 +254,7 @@ def output_the_input_field() -> None:
             name_database = "writing_group_links"
             open_the_db_and_read_the_data(name_database)  # Удаление списка с группами
             write_to_single_column_table(name_database, recorded_data)
-        # Удаляем файл после работы
-        deleting_files_if_available(folder, files)
+        deleting_files_if_available(folder, files)  # Удаляем файл после работы
 
     def closing_the_input_field() -> None:
         """Закрываем программу"""

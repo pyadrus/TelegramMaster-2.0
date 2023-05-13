@@ -671,3 +671,107 @@ Traceback (most recent call last):
     └ <sqlite3.Cursor object at 0x000001F119182A40>
 
 sqlite3.InterfaceError: Error binding parameter 0 - probably unsupported type.
+2023-05-13 21:20:25.014 | ERROR    | __main__:<module>:21 - emojize() takes from 1 to 6 positional arguments but 10 were given
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000002B07BF371C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000002B07BF36E60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 60, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000002B07BF37010>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 261, in working_with_the_reaction
+    users_choice_of_reaction()
+    └ <function users_choice_of_reaction at 0x000002B07B7757E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 33, in users_choice_of_reaction
+    print(emoji.emojize("[bold green][0] Поднятый большой палец :thumbs_up:\n",
+    │     │     └ <function emojize at 0x000002B07BF35000>
+    │     └ <module 'emoji' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\emoji\\__init__.py'>
+    └ <function print at 0x000002B07954B520>
+
+TypeError: emojize() takes from 1 to 6 positional arguments but 10 were given
+2023-05-13 21:20:25.014 | ERROR    | __main__:<module>:21 - emojize() takes from 1 to 6 positional arguments but 10 were given
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000002B07BF371C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000002B07BF36E60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 60, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000002B07BF37010>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 261, in working_with_the_reaction
+    users_choice_of_reaction()
+    └ <function users_choice_of_reaction at 0x000002B07B7757E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 33, in users_choice_of_reaction
+    print(emoji.emojize("[bold green][0] Поднятый большой палец :thumbs_up:\n",
+    │     │     └ <function emojize at 0x000002B07BF35000>
+    │     └ <module 'emoji' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\emoji\\__init__.py'>
+    └ <function print at 0x000002B07954B520>
+
+TypeError: emojize() takes from 1 to 6 positional arguments but 10 were given
+2023-05-13 21:23:24.989 | ERROR    | __main__:<module>:21 - emojize() takes from 1 to 6 positional arguments but 10 were given
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000029C04503250>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000029C04502EF0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 60, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x0000029C045030A0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 261, in working_with_the_reaction
+    users_choice_of_reaction()
+    └ <function users_choice_of_reaction at 0x0000029C03D49AB0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 33, in users_choice_of_reaction
+    print(emoji.emojize("[bold green][0] Поднятый большой палец :thumbs_up:\n",
+    │     │     └ <function emojize at 0x0000029C04501090>
+    │     └ <module 'emoji' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\emoji\\__init__.py'>
+    └ <function print at 0x0000029C01B1B490>
+
+TypeError: emojize() takes from 1 to 6 positional arguments but 10 were given
+2023-05-13 21:23:24.989 | ERROR    | __main__:<module>:21 - emojize() takes from 1 to 6 positional arguments but 10 were given
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000029C04503250>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000029C04502EF0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 60, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x0000029C045030A0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 261, in working_with_the_reaction
+    users_choice_of_reaction()
+    └ <function users_choice_of_reaction at 0x0000029C03D49AB0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 33, in users_choice_of_reaction
+    print(emoji.emojize("[bold green][0] Поднятый большой палец :thumbs_up:\n",
+    │     │     └ <function emojize at 0x0000029C04501090>
+    │     └ <module 'emoji' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\emoji\\__init__.py'>
+    └ <function print at 0x0000029C01B1B490>
+
+TypeError: emojize() takes from 1 to 6 positional arguments but 10 were given

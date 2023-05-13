@@ -90,8 +90,7 @@ def connecting_account_sessions():
             более одной точки.
             """
             file = os.path.splitext(x)[0]
-            # Выводим имена найденных аккаунтов
-            print(f"Найденные аккаунты: {file}.session")
+            print(f"Найденные аккаунты: {file}.session")  # Выводим имена найденных аккаунтов
             api_id_data, api_hash_data = reading_the_id_and_hash()  # Файл с настройками
             entities.append([api_id_data, api_hash_data, file])
     return entities
@@ -99,8 +98,7 @@ def connecting_account_sessions():
 
 def renaming_a_session(client, phone_old, phone):
     """Переименование session файлов"""
-    # Отключаемся от аккаунта для освобождения session файла
-    client.disconnect()
+    client.disconnect()  # Отключаемся от аккаунта для освобождения session файла
     try:
         # Переименование session файла
         os.rename(f"setting_user/accounts/{phone_old}.session", f"setting_user/accounts/{phone}.session")
@@ -119,7 +117,6 @@ def session_converter():
         phone_old, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)
         proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
         try:
-            # client = TelegramClient(f"setting_user/accounts/{phone_old}", api_id, api_hash)
             client = TelegramClient(f"setting_user/accounts/{phone_old}", api_id, api_hash, proxy=proxy)
             try:
                 client.connect()  # Подсоединяемся к Telegram
@@ -132,8 +129,7 @@ def session_converter():
                     first_name, last_name, phone = account_name(client, name_account="me")
                     # Выводим результат полученного имени и номера телефона
                     print(f"[bold red][!] Account connect {first_name} {last_name} {phone}")
-                    # Переименование session файла
-                    renaming_a_session(client, phone_old, phone)
+                    renaming_a_session(client, phone_old, phone)  # Переименование session файла
                 except ConnectionError:
                     continue
             except AuthKeyDuplicatedError:
@@ -164,8 +160,7 @@ def session_converter():
 
 def deleting_files_by_dictionary():
     """Удаление файлов по словарю"""
-    # Проверка proxy
-    checking_the_proxy_for_work()
+    checking_the_proxy_for_work()  # Проверка proxy
     writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
     error_sessions = session_converter()
     for row in error_sessions:

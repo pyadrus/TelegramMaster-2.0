@@ -17,7 +17,7 @@ from system.auxiliary_functions.auxiliary_functions import creating_and_writing_
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.global_variables import console
 from system.error.telegram_errors import handle_exceptions_pars
-from system.menu.baner import program_version, date_of_program_change
+from system.menu.gui_program import program_window
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import cleaning_list_of_participants_who_do_not_have_username
 from system.sqlite_working_tools.sqlite_working_tools import delete_duplicates
@@ -156,11 +156,8 @@ def mass_parsing_of_group() -> None:
     print("[bold red][+] Введите ссылки чатов которые будем parsing, для вставки в графическое окно "
           "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
           "быть переключен на английский")
-    root = Tk()  # Создаем программу
-    root.title(f"Telegram_BOT_SMM: {program_version} от {date_of_program_change}")
-    # Создаем окно ввода текста, width=50, height=25 выбираем размер программы
-    text = Text(width=50, height=25)
-    text.pack()  # Создаем поле ввода
+
+    root, text = program_window()
 
     def output_values_from_the_input_field() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
