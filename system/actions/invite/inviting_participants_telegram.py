@@ -41,8 +41,7 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
         print(link_group)
         subscribe_to_group_or_channel(client, link_group, phone)
         records: list = open_the_db_and_read_the_data(name_database_table)
-        # Количество аккаунтов на данный момент в работе
-        print(f"[bold red]Всего username: {len(records)}")
+        print(f"[bold red]Всего username: {len(records)}")  # Количество аккаунтов на данный момент в работе
         inviting(client, phone, records)
     # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
     app_notifications(notification_text=f"Работа с группой {link_group} окончена!")

@@ -18,8 +18,7 @@ def check_account_for_spam() -> None:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         try:
-            # Находим спам бот, и вводим команду /start
-            client.send_message('SpamBot', '/start')
+            client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
             message_bot = client.get_messages('SpamBot')
             for message in message_bot:
                 print(f"[bold green]{phone} {message.message}")

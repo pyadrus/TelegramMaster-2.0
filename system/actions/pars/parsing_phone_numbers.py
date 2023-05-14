@@ -50,12 +50,26 @@ def show_account_contact_list() -> None:
 
 def parsing_and_recording_contacts_in_the_database(client) -> None:
     """Парсинг и запись контактов в базу данных"""
-    all_participants: list = []
-    result = client(functions.contacts.GetContactsRequest(hash=0))
-    all_participants.extend(result.users)  # Печатаем результат
+    all_participants = get_and_parse_contacts(client)
     for contact in all_participants:  # Выводим результат parsing
         entities = formation_of_account_data(contact)
         write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
+
+
+def we_get_the_account_id(client) -> None:
+    """Получаем id аккаунта"""
+    all_participants = get_and_parse_contacts(client)
+    for user in all_participants:  # Выводим результат parsing
+        entities = formation_of_account_data(user)
+        we_show_and_delete_the_contact_of_the_phone_book(entities, client, user)
+
+
+def get_and_parse_contacts(client) -> list:
+    all_participants: list = []
+    result = client(functions.contacts.GetContactsRequest(hash=0))
+    print(result)  # Печатаем результат
+    all_participants.extend(result.users)
+    return all_participants
 
 
 def formation_of_account_data(user) -> list:
@@ -68,18 +82,6 @@ def formation_of_account_data(user) -> list:
     name = (first_name + ' ' + last_name).strip()
     entities = [username, user.id, user.access_hash, name, user_phone, online_at]
     return entities
-
-
-def we_get_the_account_id(client) -> None:
-    """Получаем id аккаунта"""
-    all_participants: list = []
-    result = client(functions.contacts.GetContactsRequest(hash=0))
-    print(result)  # Печатаем результат
-    all_participants.extend(result.users)
-    # Выводим результат parsing
-    for user in all_participants:
-        entities = formation_of_account_data(user)
-        we_show_and_delete_the_contact_of_the_phone_book(entities, client, user)
 
 
 def we_show_and_delete_the_contact_of_the_phone_book(entities, client, user) -> None:

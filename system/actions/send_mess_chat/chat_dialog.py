@@ -49,8 +49,7 @@ def sending_files_via_chats() -> None:
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
         description_action = f"Sending messages to a group: {groups_wr}"
         try:
-            # Рассылаем файлов по чатам
-            client.send_file(groups_wr, f"setting_user/files_to_send/{link_to_the_file}")
+            client.send_file(groups_wr, f"setting_user/files_to_send/{link_to_the_file}")  # Рассылаем файлов по чатам
             # Работу записываем в лог файл, для удобства слежения, за изменениями
             time.sleep(int(message_text_time))
             actions: str = f"[bold red]Сообщение в группу {groups_wr} написано!"
@@ -101,8 +100,7 @@ def sending_messages_files_via_chats() -> None:
             groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
             description_action = f"Sending messages to a group: {groups_wr}"
             try:
-                # Рассылаем сообщение по чатам
-                client.send_message(entity=groups_wr, message=message_text)
+                client.send_message(entity=groups_wr, message=message_text)  # Рассылаем сообщение по чатам
                 # Рассылаем файлов по чатам
                 client.send_file(groups_wr, f"setting_user/files_to_send/{link_to_the_file}")
                 # Работу записываем в лог файл, для удобства слежения, за изменениями
@@ -154,8 +152,7 @@ def sending_messages_via_chats_time(message_text) -> None:
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
         description_action = f"Sending messages to a group: {groups_wr}"
         try:
-            # Рассылаем сообщение по чатам
-            client.send_message(entity=groups_wr, message=message_text)
+            client.send_message(entity=groups_wr, message=message_text)  # Рассылаем сообщение по чатам
             # Работу записываем в лог файл, для удобства слежения, за изменениями
             time.sleep(int(message_text_time))
             actions = f"[bold red]Сообщение в группу {groups_wr} написано!"
@@ -224,8 +221,7 @@ def output_the_input_field() -> None:
         closing_the_input_field()
         with open(f'{folder}/{files}', "w") as res_as:
             res_as.write(res)
-        # Записываем данные с файла в базу данных
-        with open(f'{folder}/{files}', 'r') as recorded_data:
+        with open(f'{folder}/{files}', 'r') as recorded_data:  # Записываем данные с файла в базу данных
             name_database = "writing_group_links"
             open_the_db_and_read_the_data(name_database)  # Удаление списка с группами
             write_to_single_column_table(name_database, recorded_data)

@@ -100,7 +100,6 @@ def choosing_a_group_from_the_subscribed_ones_for_parsing() -> None:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         tg_tar = output_a_list_of_groups_new(client)
-
         all_participants_list = parsing_of_users_from_the_selected_group(client, tg_tar)
         # Записываем parsing данные в файл setting_user/software_database.db
         entities = all_participants_user(all_participants_list)
