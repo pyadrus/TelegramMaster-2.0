@@ -14,6 +14,7 @@ from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_rea
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data_lim
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 from system.telegram_actions.telegram_actions import we_get_username_user_id_access_hash
+import datetime
 
 event: str = f"Inviting в группу {link_group}"  # Событие, которое записываем в базу данных
 
@@ -42,7 +43,13 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
         subscribe_to_group_or_channel(client, link_group, phone)
         records: list = open_the_db_and_read_the_data(name_database_table)
         print(f"[bold red]Всего username: {len(records)}")  # Количество аккаунтов на данный момент в работе
-        inviting(client, phone, records)
+        try:
+            inviting(client, phone, records)
+        except FloodWaitError as e:
+            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=float(e)))} seconds'
+            print(actions)
+            # record_and_interrupt(actions, phone, description_action, event)
+            continue  # Прерываем работу и меняем аккаунт
     # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
     app_notifications(notification_text=f"Работа с группой {link_group} окончена!")
 

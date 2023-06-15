@@ -775,3 +775,410 @@ Traceback (most recent call last):
     └ <function print at 0x0000029C01B1B490>
 
 TypeError: emojize() takes from 1 to 6 positional arguments but 10 were given
+2023-05-15 22:00:27.414 | ERROR    | __main__:<module>:21 - A wait of 65711 seconds is required (caused by ResolveUsernameRequest)
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000017989D0B910>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000017989D0B400>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 46, in main_menu
+    inviting_groups()
+    └ <function inviting_groups at 0x0000017989D0B640>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 89, in inviting_groups
+    invitation_from_all_accounts_program_body(name_database_table="members")
+    └ <function invitation_from_all_accounts_program_body at 0x0000017989CF7D00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 45, in invitation_from_all_accounts_program_body
+    inviting(client, phone, records)
+    │        │       │      └ [('busi_i_igrushki', 846923706, -1882406672564347946, 'Анастасия', 'Суханова', 'Номер телефона скрыт', 'Был(а) недавно', 'Пол...
+    │        │       └ '17177233800'
+    │        └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+    └ <function inviting at 0x0000017989CF7EB0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 152, in inviting
+    unsubscribe_from_the_group(client, link_group)
+    │                          │       └ 'https://t.me/buyeringchat'
+    │                          └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+    └ <function unsubscribe_from_the_group at 0x0000017989CF7D90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 52, in unsubscribe_from_the_group
+    entity = client.get_entity(group_link)
+             │      │          └ 'https://t.me/buyeringchat'
+             │      └ <function UserMethods.get_entity at 0x0000017989960CA0>
+             └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.get_entity at 0x000001798A1A9930>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000017987926830>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 649, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-446' coro=<UserMethods.get_entity() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\P...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 330, in get_entity
+    result.append(await self._get_entity_from_string(x))
+    │      │            │    │                       └ 'https://t.me/buyeringchat'
+    │      │            │    └ <function UserMethods._get_entity_from_string at 0x0000017988CFAF80>
+    │      │            └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+    │      └ <method 'append' of 'list' objects>
+    └ []
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 548, in _get_entity_from_string
+    result = await self(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.contacts.ResolveUsernameRequest object at 0x000001798A2EB580>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001798A2EAA70>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+                 │    └ <function UserMethods._call at 0x0000017988CFAA70>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 52, in _call
+    raise errors.FloodWaitError(request=r, capture=diff)
+          │      │                      │          └ 65711
+          │      │                      └ <telethon.tl.functions.contacts.ResolveUsernameRequest object at 0x000001798A2EB580>
+          │      └ <class 'telethon.errors.rpcerrorlist.FloodWaitError'>
+          └ <module 'telethon.errors' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\telethon\\...
+
+telethon.errors.rpcerrorlist.FloodWaitError: A wait of 65711 seconds is required (caused by ResolveUsernameRequest)
+2023-05-15 22:00:27.414 | ERROR    | __main__:<module>:21 - A wait of 65711 seconds is required (caused by ResolveUsernameRequest)
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000017989D0B910>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000017989D0B400>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 46, in main_menu
+    inviting_groups()
+    └ <function inviting_groups at 0x0000017989D0B640>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 89, in inviting_groups
+    invitation_from_all_accounts_program_body(name_database_table="members")
+    └ <function invitation_from_all_accounts_program_body at 0x0000017989CF7D00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 45, in invitation_from_all_accounts_program_body
+    inviting(client, phone, records)
+    │        │       │      └ [('busi_i_igrushki', 846923706, -1882406672564347946, 'Анастасия', 'Суханова', 'Номер телефона скрыт', 'Был(а) недавно', 'Пол...
+    │        │       └ '17177233800'
+    │        └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+    └ <function inviting at 0x0000017989CF7EB0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 152, in inviting
+    unsubscribe_from_the_group(client, link_group)
+    │                          │       └ 'https://t.me/buyeringchat'
+    │                          └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+    └ <function unsubscribe_from_the_group at 0x0000017989CF7D90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 52, in unsubscribe_from_the_group
+    entity = client.get_entity(group_link)
+             │      │          └ 'https://t.me/buyeringchat'
+             │      └ <function UserMethods.get_entity at 0x0000017989960CA0>
+             └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.get_entity at 0x000001798A1A9930>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000017987926830>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 649, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-446' coro=<UserMethods.get_entity() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\P...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 330, in get_entity
+    result.append(await self._get_entity_from_string(x))
+    │      │            │    │                       └ 'https://t.me/buyeringchat'
+    │      │            │    └ <function UserMethods._get_entity_from_string at 0x0000017988CFAF80>
+    │      │            └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+    │      └ <method 'append' of 'list' objects>
+    └ []
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 548, in _get_entity_from_string
+    result = await self(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.contacts.ResolveUsernameRequest object at 0x000001798A2EB580>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001798A2EAA70>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+                 │    └ <function UserMethods._call at 0x0000017988CFAA70>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000017989DAAAD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 52, in _call
+    raise errors.FloodWaitError(request=r, capture=diff)
+          │      │                      │          └ 65711
+          │      │                      └ <telethon.tl.functions.contacts.ResolveUsernameRequest object at 0x000001798A2EB580>
+          │      └ <class 'telethon.errors.rpcerrorlist.FloodWaitError'>
+          └ <module 'telethon.errors' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\telethon\\...
+
+telethon.errors.rpcerrorlist.FloodWaitError: A wait of 65711 seconds is required (caused by ResolveUsernameRequest)
+2023-05-15 22:47:43.568 | ERROR    | __main__:<module>:21 - A wait of 62875 seconds is required (caused by ResolveUsernameRequest)
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000237A1BCB9A0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x00000237A1BCB490>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 46, in main_menu
+    inviting_groups()
+    └ <function inviting_groups at 0x00000237A1BCB6D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 91, in inviting_groups
+    invite_from_multiple_accounts_with_limits(name_database_table="members")
+    └ <function invite_from_multiple_accounts_with_limits at 0x00000237A1BB7EB0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 80, in invite_from_multiple_accounts_with_limits
+    inviting(client, phone, records)
+    │        │       │      └ [('busi_i_igrushki', 846923706, -1882406672564347946, 'Анастасия', 'Суханова', 'Номер телефона скрыт', 'Был(а) недавно', 'Пол...
+    │        │       └ '17177233800'
+    │        └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+    └ <function inviting at 0x00000237A1BB7F40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 158, in inviting
+    unsubscribe_from_the_group(client, link_group)
+    │                          │       └ 'https://t.me/buyeringchat'
+    │                          └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+    └ <function unsubscribe_from_the_group at 0x00000237A1BB7E20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 58, in unsubscribe_from_the_group
+    entity = client.get_entity(group_link)
+             │      │          └ 'https://t.me/buyeringchat'
+             │      └ <function UserMethods.get_entity at 0x00000237A1820CA0>
+             └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.get_entity at 0x00000237A1D19CB0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000002379F7F6830>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 649, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-2209' coro=<UserMethods.get_entity() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 330, in get_entity
+    result.append(await self._get_entity_from_string(x))
+    │      │            │    │                       └ 'https://t.me/buyeringchat'
+    │      │            │    └ <function UserMethods._get_entity_from_string at 0x00000237A0BBAF80>
+    │      │            └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+    │      └ <method 'append' of 'list' objects>
+    └ []
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 548, in _get_entity_from_string
+    result = await self(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.contacts.ResolveUsernameRequest object at 0x00000237A1D0AC20>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000237A1D0A500>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+                 │    └ <function UserMethods._call at 0x00000237A0BBAA70>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 52, in _call
+    raise errors.FloodWaitError(request=r, capture=diff)
+          │      │                      │          └ 62875
+          │      │                      └ <telethon.tl.functions.contacts.ResolveUsernameRequest object at 0x00000237A1D0AC20>
+          │      └ <class 'telethon.errors.rpcerrorlist.FloodWaitError'>
+          └ <module 'telethon.errors' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\telethon\\...
+
+telethon.errors.rpcerrorlist.FloodWaitError: A wait of 62875 seconds is required (caused by ResolveUsernameRequest)
+2023-05-15 22:47:43.568 | ERROR    | __main__:<module>:21 - A wait of 62875 seconds is required (caused by ResolveUsernameRequest)
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000237A1BCB9A0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x00000237A1BCB490>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 46, in main_menu
+    inviting_groups()
+    └ <function inviting_groups at 0x00000237A1BCB6D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 91, in inviting_groups
+    invite_from_multiple_accounts_with_limits(name_database_table="members")
+    └ <function invite_from_multiple_accounts_with_limits at 0x00000237A1BB7EB0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 80, in invite_from_multiple_accounts_with_limits
+    inviting(client, phone, records)
+    │        │       │      └ [('busi_i_igrushki', 846923706, -1882406672564347946, 'Анастасия', 'Суханова', 'Номер телефона скрыт', 'Был(а) недавно', 'Пол...
+    │        │       └ '17177233800'
+    │        └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+    └ <function inviting at 0x00000237A1BB7F40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 158, in inviting
+    unsubscribe_from_the_group(client, link_group)
+    │                          │       └ 'https://t.me/buyeringchat'
+    │                          └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+    └ <function unsubscribe_from_the_group at 0x00000237A1BB7E20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 58, in unsubscribe_from_the_group
+    entity = client.get_entity(group_link)
+             │      │          └ 'https://t.me/buyeringchat'
+             │      └ <function UserMethods.get_entity at 0x00000237A1820CA0>
+             └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.get_entity at 0x00000237A1D19CB0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000002379F7F6830>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 649, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-2209' coro=<UserMethods.get_entity() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 330, in get_entity
+    result.append(await self._get_entity_from_string(x))
+    │      │            │    │                       └ 'https://t.me/buyeringchat'
+    │      │            │    └ <function UserMethods._get_entity_from_string at 0x00000237A0BBAF80>
+    │      │            └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+    │      └ <method 'append' of 'list' objects>
+    └ []
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 548, in _get_entity_from_string
+    result = await self(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.contacts.ResolveUsernameRequest object at 0x00000237A1D0AC20>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000237A1D0A500>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+                 │    └ <function UserMethods._call at 0x00000237A0BBAA70>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000237A2237FD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 52, in _call
+    raise errors.FloodWaitError(request=r, capture=diff)
+          │      │                      │          └ 62875
+          │      │                      └ <telethon.tl.functions.contacts.ResolveUsernameRequest object at 0x00000237A1D0AC20>
+          │      └ <class 'telethon.errors.rpcerrorlist.FloodWaitError'>
+          └ <module 'telethon.errors' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\telethon\\...
+
+telethon.errors.rpcerrorlist.FloodWaitError: A wait of 62875 seconds is required (caused by ResolveUsernameRequest)
+2023-05-27 23:25:23.015 | ERROR    | __main__:<module>:21 - database or disk is full
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000020344CFE560>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x0000020344C8D6C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
+    └ <function writing_names_found_files_to_the_db at 0x0000020344C8D480>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 68, in writing_names_found_files_to_the_db
+    cleaning_db(name_database_table="config")  # Чистим базу данных с аккаунтами
+    └ <function cleaning_db at 0x00000203449575B0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 119, in cleaning_db
+    cursor.execute(f'DELETE FROM {name_database_table};')
+    │      └ <method 'execute' of 'sqlite3.Cursor' objects>
+    └ <sqlite3.Cursor object at 0x0000020344CB3CC0>
+
+sqlite3.OperationalError: database or disk is full
+2023-06-09 13:31:17.037 | ERROR    | __main__:<module>:21 - [Errno 2] No such file or directory: 'setting_user/1.txt'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x000001F2E23731C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    -> <function main_menu at 0x000001F2E2372C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    main_menu()
+    -> <function main_menu at 0x000001F2E2372C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    -> <function telegram_parsing_menu at 0x000001F2E2372F80>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 141, in telegram_parsing_menu
+    main_menu()  # ����� ��������� ������� ��������� � ��������� ����
+    -> <function main_menu at 0x000001F2E2372C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 50, in main_menu
+    working_tools_contacts()
+    -> <function working_tools_contacts at 0x000001F2E2372DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 162, in working_tools_contacts
+    we_record_phone_numbers_in_the_db()
+    -> <function we_record_phone_numbers_in_the_db at 0x000001F2E2370EE0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_phone_numbers.py", line 28, in we_record_phone_numbers_in_the_db
+    with open(f"setting_user/{file_name_input}.txt", "r") as file_contact:
+
+FileNotFoundError: [Errno 2] No such file or directory: 'setting_user/1.txt'
+2023-06-09 13:31:17.037 | ERROR    | __main__:<module>:21 - [Errno 2] No such file or directory: 'setting_user/1.txt'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x000001F2E23731C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    -> <function main_menu at 0x000001F2E2372C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    main_menu()
+    -> <function main_menu at 0x000001F2E2372C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    -> <function telegram_parsing_menu at 0x000001F2E2372F80>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 141, in telegram_parsing_menu
+    main_menu()  # ����� ��������� ������� ��������� � ��������� ����
+    -> <function main_menu at 0x000001F2E2372C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 50, in main_menu
+    working_tools_contacts()
+    -> <function working_tools_contacts at 0x000001F2E2372DD0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 162, in working_tools_contacts
+    we_record_phone_numbers_in_the_db()
+    -> <function we_record_phone_numbers_in_the_db at 0x000001F2E2370EE0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_phone_numbers.py", line 28, in we_record_phone_numbers_in_the_db
+    with open(f"setting_user/{file_name_input}.txt", "r") as file_contact:
+
+FileNotFoundError: [Errno 2] No such file or directory: 'setting_user/1.txt'
