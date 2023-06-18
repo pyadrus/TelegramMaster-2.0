@@ -45,7 +45,7 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
         try:
             inviting(client, phone, records)
         except FloodWaitError as e:
-            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=float(e)))} seconds'
+            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
             print(actions)
             continue  # Прерываем работу и меняем аккаунт
     # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
@@ -92,7 +92,7 @@ def inviting(client, phone, records) -> None:
             record_and_interrupt(actions, phone, f"username : {username}", event)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
-            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=float(e)))} seconds'
+            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
             record_and_interrupt(actions, phone, f"username : {username}", event)
             break  # Прерываем работу и меняем аккаунт
         except PeerFloodError:

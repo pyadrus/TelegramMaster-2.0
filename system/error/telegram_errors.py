@@ -3,6 +3,7 @@ import datetime
 import os
 import sys
 import time
+
 from rich import print
 from telethon.errors import ChatAdminRequiredError, ChannelPrivateError, FloodWaitError
 
@@ -69,9 +70,9 @@ def handle_exceptions_pars(func):
         except KeyError:
             # Если произошла ошибка, связанная с ключом словаря
             sys.exit(1)
-        except FloodWaitError as e:
-            # Если возникла ошибка FloodWaitError
-            print(f'Спим {e.seconds} секунд')
+        except FloodWaitError as e: # Если возникла ошибка FloodWaitError
+            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
+            print(actions)
             time.sleep(e.seconds)
 
     return wrapper

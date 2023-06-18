@@ -3,7 +3,7 @@ from tkinter import *
 
 from rich import print
 from telethon.errors import *
-
+import datetime
 from system.actions.invite.inviting_participants_telegram import record_inviting_results
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console
@@ -67,7 +67,7 @@ def sending_files_to_a_personal_account() -> None:
                     actions = "Сообщение отправлено"
                     record_inviting_results(user, phone, f"username : {username}", event, actions)
                 except FloodWaitError as e:
-                    actions = f'Flood! wait for {e.seconds} seconds'
+                    actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
                     record_and_interrupt(actions, phone, f"username : {username}", event)
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:
@@ -117,7 +117,7 @@ def we_send_a_message_from_all_accounts(message_text) -> None:
                     actions = "Сообщение отправлено"
                     record_inviting_results(user, phone, f"username : {username}", event, actions)
                 except FloodWaitError as e:
-                    actions = f'Flood! wait for {e.seconds} seconds'
+                    actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
                     record_and_interrupt(actions, phone, f"username : {username}", event)
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:

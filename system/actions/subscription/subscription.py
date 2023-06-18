@@ -2,7 +2,7 @@
 import random
 import time
 from tkinter import *
-
+import datetime
 from rich import print
 from rich.progress import track
 from telethon.errors import *
@@ -62,8 +62,9 @@ def subscription_all() -> None:
                 time.sleep(random.randrange(int(time_subscription_1), int(time_subscription_2)))
             # Переносим FloodWaitError в функцию подписки для избежания срабатывания в других функциях программы
             except FloodWaitError as e:
-                print(f'Flood! wait for {e.seconds} seconds')
-                print(f'Спим {e.seconds} секунд')
+                actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
+                print(actions)
+                # print(f'Спим {e.seconds} секунд')
                 time.sleep(e.seconds)
         client.disconnect()  # Разрываем соединение Telegram
     # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
@@ -103,7 +104,7 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
             record_account_actions(phone, description_action, event, actions)
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
-            actions: str = f'Flood! wait for {e.seconds} seconds'
+            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
             print(f"[red][!] {actions}")
             record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт

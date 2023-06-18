@@ -4,7 +4,7 @@ from tkinter import *
 import schedule
 from rich import print
 from telethon.errors import *
-
+import datetime
 from system.actions.send_mess_chat.chat_dialog import connecting_to_a_telegram_account_and_creating_a_list_of_groups
 from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
@@ -46,7 +46,7 @@ def sending_messages_via_chats_time(message_text) -> None:
             record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
-            actions: str = f'Flood! wait for {e.seconds} seconds'
+            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
             record_account_actions(phone, description_action, event, actions)
             print(f'Спим {e.seconds} секунд')
             time.sleep(e.seconds)
