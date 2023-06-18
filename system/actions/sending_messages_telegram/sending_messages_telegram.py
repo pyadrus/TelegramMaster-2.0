@@ -3,7 +3,6 @@ from tkinter import *
 
 from rich import print
 from telethon.errors import *
-from telethon.tl.types import InputPeerUser
 
 from system.actions.invite.inviting_participants_telegram import record_inviting_results
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
@@ -59,34 +58,31 @@ def sending_files_to_a_personal_account() -> None:
             # Количество аккаунтов на данный момент в работе
             print(f"[bold red]Всего username: {len(records)}")
             for rows in records:
-                username, user_id, access_hash, user = we_get_username_user_id_access_hash(rows)
-                description_action = f"username : {username}, id: {user_id}, hash: {access_hash}"
-                print(f"[bold green][!] Отправляем сообщение: {description_action}")
+                username, user = we_get_username_user_id_access_hash(rows)
+                print(f"[bold green][!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)
-                    if username == "":
-                        user_to_add = InputPeerUser(user_id, access_hash)
                     client.send_file(user_to_add, f"setting_user/files_to_send/{link_to_the_file}")
                     # Записываем данные в базу данных, чистим список кого добавляли или писали сообщение
                     actions = "Сообщение отправлено"
-                    record_inviting_results(user, phone, description_action, event, actions)
+                    record_inviting_results(user, phone, f"username : {username}", event, actions)
                 except FloodWaitError as e:
                     actions = f'Flood! wait for {e.seconds} seconds'
-                    record_and_interrupt(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event)
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:
                     actions = "Предупреждение о Flood от telegram."
-                    record_and_interrupt(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event)
                     break  # Прерываем работу и меняем аккаунт
                 except UserNotMutualContactError:
                     actions = "User не является взаимным контактом."
-                    record_inviting_results(username, phone, description_action, event, actions)
+                    record_inviting_results(username, phone, f"username : {username}", event, actions)
                 except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                     actions = "Не корректное имя user"
-                    record_inviting_results(username, phone, description_action, event, actions)
+                    record_inviting_results(username, phone, f"username : {username}", event, actions)
                 except ChatWriteForbiddenError:
                     actions = "Вам запрещено писать в супергруппу / канал."
-                    record_and_interrupt(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event)
                     break  # Прерываем работу и меняем аккаунт
                 except (TypeError, UnboundLocalError):
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -112,34 +108,31 @@ def we_send_a_message_from_all_accounts(message_text) -> None:
             # Количество аккаунтов на данный момент в работе
             print(f"[bold red]Всего username: {len(records)}")
             for rows in records:
-                username, user_id, access_hash, user = we_get_username_user_id_access_hash(rows)
-                description_action = f"username : {username}, id: {user_id}, hash: {access_hash}"
-                print(f"[bold green][!] Отправляем сообщение: {description_action}")
+                username, user = we_get_username_user_id_access_hash(rows)
+                print(f"[bold green][!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)
-                    if username == "":
-                        user_to_add = InputPeerUser(user_id, access_hash)
                     client.send_message(user_to_add, message_text.format(username))
                     # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
                     actions = "Сообщение отправлено"
-                    record_inviting_results(user, phone, description_action, event, actions)
+                    record_inviting_results(user, phone, f"username : {username}", event, actions)
                 except FloodWaitError as e:
                     actions = f'Flood! wait for {e.seconds} seconds'
-                    record_and_interrupt(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event)
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:
                     actions = "Предупреждение о Flood от telegram."
-                    record_and_interrupt(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event)
                     break  # Прерываем работу и меняем аккаунт
                 except UserNotMutualContactError:
                     actions = "User не является взаимным контактом."
-                    record_inviting_results(username, phone, description_action, event, actions)
+                    record_inviting_results(username, phone, f"username : {username}", event, actions)
                 except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                     actions = "Не корректное имя user"
-                    record_inviting_results(username, phone, description_action, event, actions)
+                    record_inviting_results(username, phone, f"username : {username}", event, actions)
                 except ChatWriteForbiddenError:
                     actions = "Вам запрещено писать в супергруппу / канал."
-                    record_and_interrupt(actions, phone, description_action, event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event)
                     break  # Прерываем работу и меняем аккаунт
                 except (TypeError, UnboundLocalError):
                     continue  # Записываем ошибку в software_database.db и продолжаем работу

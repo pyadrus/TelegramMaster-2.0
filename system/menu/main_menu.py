@@ -117,12 +117,18 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
     table.add_row("3", "Parsing активных участников", "Parsing участников которые которые писали сообщения в группе")
     table.add_row("4", "Parsing списка: групп, каналов аккаунтов", "Программа соберет: группы / каналы аккаунтов")
     table.add_row("5", "Очистка parsing списка", "Очистка списка software_database.db")
+    table.add_row("6", "Формирование списка", "Формирование собственного списка username")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[bold red][+] Введите номер: ")
     if user_input == "1":  # Parsing: группы, групп в список software_database.db (группы вводятся в графическое окно)
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        mass_parsing_of_group()
+        print("[bold red][+] Введите ссылки чатов которые будем parsing, для вставки в графическое окно "
+              "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
+              "быть переключен на английский")
+        name_database = "writing_group_links"
+        writing_group_links_to_file(name_database)
+        parsing_mass_parsing_of_groups()  # Парсинг участников чата
     elif user_input == "2":  # Parsing группы из подписанных
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         choosing_a_group_from_the_subscribed_ones_for_parsing()
@@ -137,6 +143,12 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
     elif user_input == "5":  # Очистка списка software_database.db
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         cleaning_db(name_database_table="members")
+    elif user_input == "6":  # Формирование списка
+        print("[bold red][+] Введите username, для вставки в графическое окно "
+              "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
+              "быть переключен на английский")
+        clearing_console_showing_banner()  # Чистим консоль, выводим банер
+        writing_members()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
@@ -189,7 +201,11 @@ def subscribe_unsubscribe_write_to_file() -> None:  # 4 - Подписка, от
     user_input = console.input("[bold red][+] Введите номер: ")
     if user_input == "1":  # Запись: групп, каналов в файл, данные записываются в файл setting_user/software_database.db
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        writing_group_links_to_file()
+        print("[bold red][+] Введите ссылки чатов на которые нужно подписаться, для вставки в графическое окно "
+              "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
+              "быть переключен на английский")
+        name_database = "writing_group_links"
+        writing_group_links_to_file(name_database)
         subscription_all()
     elif user_input == "2":  # Отписываемся от групп / каналов (работа с несколькими аккаунтами)
         clearing_console_showing_banner()  # Чистим консоль, выводим банер

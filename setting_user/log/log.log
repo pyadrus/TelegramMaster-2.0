@@ -1182,3 +1182,1927 @@ Traceback (most recent call last):
     with open(f"setting_user/{file_name_input}.txt", "r") as file_contact:
 
 FileNotFoundError: [Errno 2] No such file or directory: 'setting_user/1.txt'
+2023-06-18 13:36:35.796 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "h"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x0000017B75654670>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    -> <function main_menu at 0x0000017B75654310>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    -> <function telegram_parsing_menu at 0x0000017B75654280>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # ������� ���������� ����
+    -> <function parsing_mass_parsing_of_groups at 0x0000017B75635750>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 70, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing �����
+    |             |       |          -> '918918203197'
+    |             |       -> 'h'
+    |             -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+    -> <function handle_exceptions_pars.<locals>.wrapper at 0x0000017B75635870>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           |     |       -> {}
+           |     -> (<telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>, 'h', '918918203197')
+           -> <function group_parsing at 0x0000017B756357E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 88, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             |                                        |       -> 'h'
+                             |                                        -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+                             -> <function parsing_of_users_from_the_selected_group at 0x0000017B75635A20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 119, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           |    |                  -> <coroutine object UserMethods.__call__ at 0x0000017B75652A40>
+           |    -> <function BaseEventLoop.run_until_complete at 0x0000017B73105750>
+           -> <ProactorEventLoop running=False closed=False debug=False>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 646, in run_until_complete
+    return future.result()
+           |      -> <method 'result' of '_asyncio.Task' objects>
+           -> <Task finished name='Task-30' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 |    |     |    |        |                -> False
+                 |    |     |    |        -> <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017B756F0280>
+                 |    |     |    -> <telethon.network.mtprotosender.MTProtoSender object at 0x0000017B75699540>
+                 |    |     -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+                 |    -> <function UserMethods._call at 0x0000017B73E40C10>
+                 -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          | |       |     -> <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\telethon\\u...
+          | |       -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+          | -> <function GetParticipantsRequest.resolve at 0x0000017B73A3F1C0>
+          -> <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017B756F0280>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    |    |         |     |                       |      |                |    -> 'h'
+    |    |         |     |                       |      |                -> <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017B756F0280>
+    |    |         |     |                       |      -> <function UserMethods.get_input_entity at 0x0000017B751CDD80>
+    |    |         |     |                       -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+    |    |         |     -> <function get_input_channel at 0x0000017B743D5750>
+    |    |         -> <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\telethon\\u...
+    |    -> 'h'
+    -> <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017B756F0280>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          |    |                       -> 'h'
+          |    -> <function UserMethods._get_entity_from_string at 0x0000017B73E400D0>
+          -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "h"
+2023-06-18 13:36:35.796 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "h"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x0000017B75654670>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    -> <function main_menu at 0x0000017B75654310>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    -> <function telegram_parsing_menu at 0x0000017B75654280>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # ������� ���������� ����
+    -> <function parsing_mass_parsing_of_groups at 0x0000017B75635750>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 70, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing �����
+    |             |       |          -> '918918203197'
+    |             |       -> 'h'
+    |             -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+    -> <function handle_exceptions_pars.<locals>.wrapper at 0x0000017B75635870>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           |     |       -> {}
+           |     -> (<telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>, 'h', '918918203197')
+           -> <function group_parsing at 0x0000017B756357E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 88, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             |                                        |       -> 'h'
+                             |                                        -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+                             -> <function parsing_of_users_from_the_selected_group at 0x0000017B75635A20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 119, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           |    |                  -> <coroutine object UserMethods.__call__ at 0x0000017B75652A40>
+           |    -> <function BaseEventLoop.run_until_complete at 0x0000017B73105750>
+           -> <ProactorEventLoop running=False closed=False debug=False>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 646, in run_until_complete
+    return future.result()
+           |      -> <method 'result' of '_asyncio.Task' objects>
+           -> <Task finished name='Task-30' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 |    |     |    |        |                -> False
+                 |    |     |    |        -> <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017B756F0280>
+                 |    |     |    -> <telethon.network.mtprotosender.MTProtoSender object at 0x0000017B75699540>
+                 |    |     -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+                 |    -> <function UserMethods._call at 0x0000017B73E40C10>
+                 -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          | |       |     -> <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\telethon\\u...
+          | |       -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+          | -> <function GetParticipantsRequest.resolve at 0x0000017B73A3F1C0>
+          -> <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017B756F0280>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    |    |         |     |                       |      |                |    -> 'h'
+    |    |         |     |                       |      |                -> <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017B756F0280>
+    |    |         |     |                       |      -> <function UserMethods.get_input_entity at 0x0000017B751CDD80>
+    |    |         |     |                       -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+    |    |         |     -> <function get_input_channel at 0x0000017B743D5750>
+    |    |         -> <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\telethon\\u...
+    |    -> 'h'
+    -> <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017B756F0280>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          |    |                       -> 'h'
+          |    -> <function UserMethods._get_entity_from_string at 0x0000017B73E400D0>
+          -> <telethon.client.telegramclient.TelegramClient object at 0x0000017B75699720>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "h"
+2023-06-18 13:43:47.345 | ERROR    | __main__:<module>:21 - The key is not registered in the system (caused by GetParticipantsRequest)
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x000001B0CCAD4670>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    -> <function main_menu at 0x000001B0CCAD4310>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    main_menu()
+    -> <function main_menu at 0x000001B0CCAD4310>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    -> <function telegram_parsing_menu at 0x000001B0CCAD4280>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 134, in telegram_parsing_menu
+    choosing_a_group_from_the_subscribed_ones_for_parsing()
+    -> <function handle_exceptions_pars.<locals>.wrapper at 0x000001B0CCAB5990>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           |     |       -> {}
+           |     -> ()
+           -> <function choosing_a_group_from_the_subscribed_ones_for_parsing at 0x000001B0CCAB5900>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 102, in choosing_a_group_from_the_subscribed_ones_for_parsing
+    all_participants_list = parsing_of_users_from_the_selected_group(client, tg_tar)
+                            |                                        |       -> <telethon.tl.types.Channel object at 0x000001B0CCC0EB60>
+                            |                                        -> <telethon.client.telegramclient.TelegramClient object at 0x000001B0CCB70760>
+                            -> <function parsing_of_users_from_the_selected_group at 0x000001B0CCAB5A20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 119, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   -> <telethon.client.telegramclient.TelegramClient object at 0x000001B0CCB70760>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           |    |                  -> <coroutine object UserMethods.__call__ at 0x000001B0CCAD3F40>
+           |    -> <function BaseEventLoop.run_until_complete at 0x000001B0CA5B5750>
+           -> <ProactorEventLoop running=False closed=False debug=False>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 646, in run_until_complete
+    return future.result()
+           |      -> <method 'result' of '_asyncio.Task' objects>
+           -> <Task finished name='Task-26' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 |    |     |    |        |                -> False
+                 |    |     |    |        -> <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000001B0CCC0C130>
+                 |    |     |    -> <telethon.network.mtprotosender.MTProtoSender object at 0x000001B0CCB70E80>
+                 |    |     -> <telethon.client.telegramclient.TelegramClient object at 0x000001B0CCB70760>
+                 |    -> <function UserMethods._call at 0x000001B0CB2C0C10>
+                 -> <telethon.client.telegramclient.TelegramClient object at 0x000001B0CCB70760>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 84, in _call
+    result = await future
+                   -> <Future finished exception=AuthKeyUnregisteredError('The key is not registered in the system (caused by GetParticipantsReques...
+
+telethon.errors.rpcerrorlist.AuthKeyUnregisteredError: The key is not registered in the system (caused by GetParticipantsRequest)
+2023-06-18 13:43:47.345 | ERROR    | __main__:<module>:21 - The key is not registered in the system (caused by GetParticipantsRequest)
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x000001B0CCAD4670>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    -> <function main_menu at 0x000001B0CCAD4310>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    main_menu()
+    -> <function main_menu at 0x000001B0CCAD4310>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    -> <function telegram_parsing_menu at 0x000001B0CCAD4280>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 134, in telegram_parsing_menu
+    choosing_a_group_from_the_subscribed_ones_for_parsing()
+    -> <function handle_exceptions_pars.<locals>.wrapper at 0x000001B0CCAB5990>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           |     |       -> {}
+           |     -> ()
+           -> <function choosing_a_group_from_the_subscribed_ones_for_parsing at 0x000001B0CCAB5900>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 102, in choosing_a_group_from_the_subscribed_ones_for_parsing
+    all_participants_list = parsing_of_users_from_the_selected_group(client, tg_tar)
+                            |                                        |       -> <telethon.tl.types.Channel object at 0x000001B0CCC0EB60>
+                            |                                        -> <telethon.client.telegramclient.TelegramClient object at 0x000001B0CCB70760>
+                            -> <function parsing_of_users_from_the_selected_group at 0x000001B0CCAB5A20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 119, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   -> <telethon.client.telegramclient.TelegramClient object at 0x000001B0CCB70760>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           |    |                  -> <coroutine object UserMethods.__call__ at 0x000001B0CCAD3F40>
+           |    -> <function BaseEventLoop.run_until_complete at 0x000001B0CA5B5750>
+           -> <ProactorEventLoop running=False closed=False debug=False>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 646, in run_until_complete
+    return future.result()
+           |      -> <method 'result' of '_asyncio.Task' objects>
+           -> <Task finished name='Task-26' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 |    |     |    |        |                -> False
+                 |    |     |    |        -> <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000001B0CCC0C130>
+                 |    |     |    -> <telethon.network.mtprotosender.MTProtoSender object at 0x000001B0CCB70E80>
+                 |    |     -> <telethon.client.telegramclient.TelegramClient object at 0x000001B0CCB70760>
+                 |    -> <function UserMethods._call at 0x000001B0CB2C0C10>
+                 -> <telethon.client.telegramclient.TelegramClient object at 0x000001B0CCB70760>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\telethon\client\users.py", line 84, in _call
+    result = await future
+                   -> <Future finished exception=AuthKeyUnregisteredError('The key is not registered in the system (caused by GetParticipantsReques...
+
+telethon.errors.rpcerrorlist.AuthKeyUnregisteredError: The key is not registered in the system (caused by GetParticipantsRequest)
+2023-06-18 19:10:36.673 | ERROR    | __main__:<module>:21 - 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001FE1B7F3A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001FE19216D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 30, in main_menu
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
+    └ <function clearing_console_showing_banner at 0x000001FE1D8F7D80>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\auxiliary_functions\auxiliary_functions.py", line 57, in clearing_console_showing_banner
+    banner()  # Ставим банер программы, для красивого визуального отображения
+    └ <function banner at 0x000001FE1D855120>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\baner.py", line 9, in banner
+    console.print("╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗", style="bold red", justify="center")
+    │       └ <function Console.print at 0x000001FE1D8544A0>
+    └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 1667, in print
+    with self:
+         └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 869, in __exit__
+    self._exit_buffer()
+    │    └ <function Console._exit_buffer at 0x000001FE1D4D6980>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 827, in _exit_buffer
+    self._check_buffer()
+    │    └ <function Console._check_buffer at 0x000001FE1D854900>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 2023, in _check_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    │                     │       │                 │    └ <property object at 0x000001FE1D4DC270>
+    │                     │       │                 └ <console width=79 None>
+    │                     │       └ <class 'rich._win32_console.LegacyWindowsTerm'>
+    │                     └ [Segment('              ', Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)), Segment('╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═...
+    └ <function legacy_windows_render at 0x000001FE1D9340E0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    │    │            │     └ Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)
+    │    │            └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_styled at 0x000001FE1D856200>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001FE1D9423D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 442, in write_styled
+    self.write_text(text)
+    │    │          └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_text at 0x000001FE1D856160>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001FE1D9423D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 403, in write_text
+    self.write(text)
+    │    │     └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <built-in method write of _io.TextIOWrapper object at 0x000001FE18F3FE00>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001FE1D9423D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           │      │              │     │    │      └ <EncodingMap object at 0x000001FE18E45A90>
+           │      │              │     │    └ 'strict'
+           │      │              │     └ <encodings.cp1251.IncrementalEncoder object at 0x000001FE19019190>
+           │      │              └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+           │      └ <built-in function charmap_encode>
+           └ <module 'codecs' (frozen)>
+
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+2023-06-18 19:10:36.673 | ERROR    | __main__:<module>:21 - 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001FE1B7F3A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001FE19216D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 30, in main_menu
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
+    └ <function clearing_console_showing_banner at 0x000001FE1D8F7D80>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\auxiliary_functions\auxiliary_functions.py", line 57, in clearing_console_showing_banner
+    banner()  # Ставим банер программы, для красивого визуального отображения
+    └ <function banner at 0x000001FE1D855120>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\baner.py", line 9, in banner
+    console.print("╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗", style="bold red", justify="center")
+    │       └ <function Console.print at 0x000001FE1D8544A0>
+    └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 1667, in print
+    with self:
+         └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 869, in __exit__
+    self._exit_buffer()
+    │    └ <function Console._exit_buffer at 0x000001FE1D4D6980>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 827, in _exit_buffer
+    self._check_buffer()
+    │    └ <function Console._check_buffer at 0x000001FE1D854900>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 2023, in _check_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    │                     │       │                 │    └ <property object at 0x000001FE1D4DC270>
+    │                     │       │                 └ <console width=79 None>
+    │                     │       └ <class 'rich._win32_console.LegacyWindowsTerm'>
+    │                     └ [Segment('              ', Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)), Segment('╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═...
+    └ <function legacy_windows_render at 0x000001FE1D9340E0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    │    │            │     └ Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)
+    │    │            └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_styled at 0x000001FE1D856200>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001FE1D9423D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 442, in write_styled
+    self.write_text(text)
+    │    │          └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_text at 0x000001FE1D856160>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001FE1D9423D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 403, in write_text
+    self.write(text)
+    │    │     └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <built-in method write of _io.TextIOWrapper object at 0x000001FE18F3FE00>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001FE1D9423D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           │      │              │     │    │      └ <EncodingMap object at 0x000001FE18E45A90>
+           │      │              │     │    └ 'strict'
+           │      │              │     └ <encodings.cp1251.IncrementalEncoder object at 0x000001FE19019190>
+           │      │              └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+           │      └ <built-in function charmap_encode>
+           └ <module 'codecs' (frozen)>
+
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+2023-06-18 19:14:00.434 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "s"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000024986863A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x00000249842D2D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000002498897F600>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x000002498897CD60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 70, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ 's'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x000002498897CEA0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>, 's', '918918203197')
+           └ <function group_parsing at 0x000002498897CE00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 88, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ 's'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+                             └ <function parsing_of_users_from_the_selected_group at 0x000002498897D080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 119, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000002498892A890>
+           │    └ <function BaseEventLoop.run_until_complete at 0x00000249862625C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000249899B6750>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000249899AB1D0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+                 │    └ <function UserMethods._call at 0x0000024987DF9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+          │ └ <function GetParticipantsRequest.resolve at 0x0000024986B84680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000249899B6750>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ 's'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000249899B6750>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x00000249882556C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+    │    │         │     └ <function get_input_channel at 0x0000024987D58C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ 's'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000249899B6750>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ 's'
+          │    └ <function UserMethods._get_entity_from_string at 0x0000024987E89B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "s"
+2023-06-18 19:14:00.434 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "s"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000024986863A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x00000249842D2D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000002498897F600>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x000002498897CD60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 70, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ 's'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x000002498897CEA0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>, 's', '918918203197')
+           └ <function group_parsing at 0x000002498897CE00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 88, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ 's'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+                             └ <function parsing_of_users_from_the_selected_group at 0x000002498897D080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 119, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000002498892A890>
+           │    └ <function BaseEventLoop.run_until_complete at 0x00000249862625C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000249899B6750>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000249899AB1D0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+                 │    └ <function UserMethods._call at 0x0000024987DF9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+          │ └ <function GetParticipantsRequest.resolve at 0x0000024986B84680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000249899B6750>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ 's'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000249899B6750>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x00000249882556C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+    │    │         │     └ <function get_input_channel at 0x0000024987D58C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ 's'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000249899B6750>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ 's'
+          │    └ <function UserMethods._get_entity_from_string at 0x0000024987E89B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x00000249889AEC90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "s"
+2023-06-18 19:20:15.851 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to ":"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000017A42B33A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000017A40572D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000017A44C4B4C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x0000017A44C48C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ ':'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x0000017A44C48D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>, ':', '918918203197')
+           └ <function group_parsing at 0x0000017A44C48CC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ ':'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+                             └ <function parsing_of_users_from_the_selected_group at 0x0000017A44C48F40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000017A45C62200>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000017A425325C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017A45C8BFD0>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000017A45C7B250>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+                 │    └ <function UserMethods._call at 0x0000017A440C9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+          │ └ <function GetParticipantsRequest.resolve at 0x0000017A42E54680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017A45C8BFD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ ':'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017A45C8BFD0>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x0000017A445256C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+    │    │         │     └ <function get_input_channel at 0x0000017A44028C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ ':'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017A45C8BFD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ ':'
+          │    └ <function UserMethods._get_entity_from_string at 0x0000017A44159B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to ":"
+2023-06-18 19:20:15.851 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to ":"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000017A42B33A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000017A40572D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000017A44C4B4C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x0000017A44C48C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ ':'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x0000017A44C48D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>, ':', '918918203197')
+           └ <function group_parsing at 0x0000017A44C48CC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ ':'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+                             └ <function parsing_of_users_from_the_selected_group at 0x0000017A44C48F40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000017A45C62200>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000017A425325C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017A45C8BFD0>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000017A45C7B250>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+                 │    └ <function UserMethods._call at 0x0000017A440C9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+          │ └ <function GetParticipantsRequest.resolve at 0x0000017A42E54680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017A45C8BFD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ ':'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017A45C8BFD0>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x0000017A445256C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+    │    │         │     └ <function get_input_channel at 0x0000017A44028C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ ':'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000017A45C8BFD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ ':'
+          │    └ <function UserMethods._get_entity_from_string at 0x0000017A44159B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x0000017A4418E810>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to ":"
+2023-06-18 19:23:16.988 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "/"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000024F19513A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000024F16FF2D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000024F1B60B4C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x0000024F1B608C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ '/'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x0000024F1B608D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>, '/', '918918203197')
+           └ <function group_parsing at 0x0000024F1B608CC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ '/'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+                             └ <function parsing_of_users_from_the_selected_group at 0x0000024F1B608F40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000024F1B5B2A70>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000024F18F625C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000024F1B63E550>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024F1C636210>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+                 │    └ <function UserMethods._call at 0x0000024F1AAA9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+          │ └ <function GetParticipantsRequest.resolve at 0x0000024F19824680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000024F1B63E550>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ '/'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000024F1B63E550>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x0000024F1AEF56C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+    │    │         │     └ <function get_input_channel at 0x0000024F1AA08C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ '/'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000024F1B63E550>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ '/'
+          │    └ <function UserMethods._get_entity_from_string at 0x0000024F1AB39B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "/"
+2023-06-18 19:23:16.988 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "/"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000024F19513A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000024F16FF2D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000024F1B60B4C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x0000024F1B608C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ '/'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x0000024F1B608D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>, '/', '918918203197')
+           └ <function group_parsing at 0x0000024F1B608CC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ '/'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+                             └ <function parsing_of_users_from_the_selected_group at 0x0000024F1B608F40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000024F1B5B2A70>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000024F18F625C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000024F1B63E550>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024F1C636210>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+                 │    └ <function UserMethods._call at 0x0000024F1AAA9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+          │ └ <function GetParticipantsRequest.resolve at 0x0000024F19824680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000024F1B63E550>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ '/'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000024F1B63E550>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x0000024F1AEF56C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+    │    │         │     └ <function get_input_channel at 0x0000024F1AA08C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ '/'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000024F1B63E550>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ '/'
+          │    └ <function UserMethods._get_entity_from_string at 0x0000024F1AB39B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F1C62FAD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "/"
+2023-06-18 19:23:38.739 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "."
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000015372083A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001536FAA2D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x00000153741A3600>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x00000153741A0D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ '.'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x00000153741A0EA0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>, '.', '918918203197')
+           └ <function group_parsing at 0x00000153741A0E00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ '.'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+                             └ <function parsing_of_users_from_the_selected_group at 0x00000153741A1080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001537414A890>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000015371A825C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000153751CA250>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000153751CB890>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+                 │    └ <function UserMethods._call at 0x0000015373629940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+          │ └ <function GetParticipantsRequest.resolve at 0x00000153723A4680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000153751CA250>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ '.'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000153751CA250>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x0000015373A756C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+    │    │         │     └ <function get_input_channel at 0x0000015373588C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ '.'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000153751CA250>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ '.'
+          │    └ <function UserMethods._get_entity_from_string at 0x00000153736B9B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "."
+2023-06-18 19:23:38.739 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "."
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000015372083A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001536FAA2D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x00000153741A3600>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x00000153741A0D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ '.'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x00000153741A0EA0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>, '.', '918918203197')
+           └ <function group_parsing at 0x00000153741A0E00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ '.'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+                             └ <function parsing_of_users_from_the_selected_group at 0x00000153741A1080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001537414A890>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000015371A825C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000153751CA250>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000153751CB890>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+                 │    └ <function UserMethods._call at 0x0000015373629940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+          │ └ <function GetParticipantsRequest.resolve at 0x00000153723A4680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000153751CA250>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ '.'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000153751CA250>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x0000015373A756C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+    │    │         │     └ <function get_input_channel at 0x0000015373588C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ '.'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x00000153751CA250>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ '.'
+          │    └ <function UserMethods._get_entity_from_string at 0x00000153736B9B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x00000153751C7650>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "."
+2023-06-18 19:24:37.943 | ERROR    | __main__:<module>:21 - 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000022B11863A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000022B0F2D6D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 30, in main_menu
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
+    └ <function clearing_console_showing_banner at 0x0000022B13963C40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\auxiliary_functions\auxiliary_functions.py", line 57, in clearing_console_showing_banner
+    banner()  # Ставим банер программы, для красивого визуального отображения
+    └ <function banner at 0x0000022B138C5120>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\baner.py", line 9, in banner
+    console.print("╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗", style="bold red", justify="center")
+    │       └ <function Console.print at 0x0000022B138C44A0>
+    └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 1667, in print
+    with self:
+         └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 869, in __exit__
+    self._exit_buffer()
+    │    └ <function Console._exit_buffer at 0x0000022B13546980>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 827, in _exit_buffer
+    self._check_buffer()
+    │    └ <function Console._check_buffer at 0x0000022B138C4900>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 2023, in _check_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    │                     │       │                 │    └ <property object at 0x0000022B138C0180>
+    │                     │       │                 └ <console width=79 None>
+    │                     │       └ <class 'rich._win32_console.LegacyWindowsTerm'>
+    │                     └ [Segment('              ', Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)), Segment('╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═...
+    └ <function legacy_windows_render at 0x0000022B1397BF60>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    │    │            │     └ Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)
+    │    │            └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_styled at 0x0000022B138C6200>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x0000022B13999690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 442, in write_styled
+    self.write_text(text)
+    │    │          └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_text at 0x0000022B138C6160>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x0000022B13999690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 403, in write_text
+    self.write(text)
+    │    │     └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <built-in method write of _io.TextIOWrapper object at 0x0000022B0EFFFE00>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x0000022B13999690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           │      │              │     │    │      └ <EncodingMap object at 0x0000022B0ED34710>
+           │      │              │     │    └ 'strict'
+           │      │              │     └ <encodings.cp1251.IncrementalEncoder object at 0x0000022B0F0D9190>
+           │      │              └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+           │      └ <built-in function charmap_encode>
+           └ <module 'codecs' (frozen)>
+
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+2023-06-18 19:24:37.943 | ERROR    | __main__:<module>:21 - 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000022B11863A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000022B0F2D6D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 30, in main_menu
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
+    └ <function clearing_console_showing_banner at 0x0000022B13963C40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\auxiliary_functions\auxiliary_functions.py", line 57, in clearing_console_showing_banner
+    banner()  # Ставим банер программы, для красивого визуального отображения
+    └ <function banner at 0x0000022B138C5120>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\baner.py", line 9, in banner
+    console.print("╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗", style="bold red", justify="center")
+    │       └ <function Console.print at 0x0000022B138C44A0>
+    └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 1667, in print
+    with self:
+         └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 869, in __exit__
+    self._exit_buffer()
+    │    └ <function Console._exit_buffer at 0x0000022B13546980>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 827, in _exit_buffer
+    self._check_buffer()
+    │    └ <function Console._check_buffer at 0x0000022B138C4900>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 2023, in _check_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    │                     │       │                 │    └ <property object at 0x0000022B138C0180>
+    │                     │       │                 └ <console width=79 None>
+    │                     │       └ <class 'rich._win32_console.LegacyWindowsTerm'>
+    │                     └ [Segment('              ', Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)), Segment('╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═...
+    └ <function legacy_windows_render at 0x0000022B1397BF60>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    │    │            │     └ Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)
+    │    │            └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_styled at 0x0000022B138C6200>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x0000022B13999690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 442, in write_styled
+    self.write_text(text)
+    │    │          └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_text at 0x0000022B138C6160>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x0000022B13999690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 403, in write_text
+    self.write(text)
+    │    │     └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <built-in method write of _io.TextIOWrapper object at 0x0000022B0EFFFE00>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x0000022B13999690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           │      │              │     │    │      └ <EncodingMap object at 0x0000022B0ED34710>
+           │      │              │     │    └ 'strict'
+           │      │              │     └ <encodings.cp1251.IncrementalEncoder object at 0x0000022B0F0D9190>
+           │      │              └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+           │      └ <built-in function charmap_encode>
+           └ <module 'codecs' (frozen)>
+
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+2023-06-18 19:24:56.064 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "m"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000020DA0813A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000020D9E262D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000020DA2933600>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x0000020DA2930D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ 'm'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x0000020DA2930EA0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>, 'm', '918918203197')
+           └ <function group_parsing at 0x0000020DA2930E00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ 'm'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+                             └ <function parsing_of_users_from_the_selected_group at 0x0000020DA2931080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000020DA2975C60>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000020DA02125C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000020DA298AE90>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000020DA298B090>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+                 │    └ <function UserMethods._call at 0x0000020DA1DA9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+          │ └ <function GetParticipantsRequest.resolve at 0x0000020DA0B34680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000020DA298AE90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ 'm'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000020DA298AE90>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x0000020DA22056C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+    │    │         │     └ <function get_input_channel at 0x0000020DA1D08C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ 'm'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000020DA298AE90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ 'm'
+          │    └ <function UserMethods._get_entity_from_string at 0x0000020DA1E39B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "m"
+2023-06-18 19:24:56.064 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "m"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000020DA0813A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000020D9E262D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000020DA2933600>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x0000020DA2930D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ 'm'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x0000020DA2930EA0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>, 'm', '918918203197')
+           └ <function group_parsing at 0x0000020DA2930E00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ 'm'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+                             └ <function parsing_of_users_from_the_selected_group at 0x0000020DA2931080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000020DA2975C60>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000020DA02125C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000020DA298AE90>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000020DA298B090>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+                 │    └ <function UserMethods._call at 0x0000020DA1DA9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+          │ └ <function GetParticipantsRequest.resolve at 0x0000020DA0B34680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000020DA298AE90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ 'm'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000020DA298AE90>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x0000020DA22056C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+    │    │         │     └ <function get_input_channel at 0x0000020DA1D08C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ 'm'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000020DA298AE90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ 'm'
+          │    └ <function UserMethods._get_entity_from_string at 0x0000020DA1E39B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x0000020DA2959A90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "m"
+2023-06-18 19:26:12.449 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "e"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001526B513A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000015268F32D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000001526D62B4C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x000001526D628C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ 'e'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x000001526D628D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>, 'e', '918918203197')
+           └ <function group_parsing at 0x000001526D628CC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ 'e'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+                             └ <function parsing_of_users_from_the_selected_group at 0x000001526D628F40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001526E645F30>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001526AF125C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000001526E656790>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001526E65B010>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+                 │    └ <function UserMethods._call at 0x000001526CAA9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+          │ └ <function GetParticipantsRequest.resolve at 0x000001526B834680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000001526E656790>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ 'e'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000001526E656790>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x000001526CF056C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+    │    │         │     └ <function get_input_channel at 0x000001526CA08C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ 'e'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000001526E656790>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ 'e'
+          │    └ <function UserMethods._get_entity_from_string at 0x000001526CB39B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "e"
+2023-06-18 19:26:12.449 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "e"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001526B513A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000015268F32D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000001526D62B4C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x000001526D628C20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ 'e'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x000001526D628D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>, 'e', '918918203197')
+           └ <function group_parsing at 0x000001526D628CC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ 'e'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+                             └ <function parsing_of_users_from_the_selected_group at 0x000001526D628F40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001526E645F30>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001526AF125C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000001526E656790>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001526E65B010>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+                 │    └ <function UserMethods._call at 0x000001526CAA9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+          │ └ <function GetParticipantsRequest.resolve at 0x000001526B834680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000001526E656790>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ 'e'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000001526E656790>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x000001526CF056C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+    │    │         │     └ <function get_input_channel at 0x000001526CA08C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ 'e'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000001526E656790>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ 'e'
+          │    └ <function UserMethods._get_entity_from_string at 0x000001526CB39B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x000001526D657410>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "e"
+2023-06-18 19:27:21.840 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "h"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000021C7D733A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000021C7B162D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000021C7F853600>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x0000021C7F850D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ 'h'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x0000021C7F850EA0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>, 'h', '918918203197')
+           └ <function group_parsing at 0x0000021C7F850E00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ 'h'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+                             └ <function parsing_of_users_from_the_selected_group at 0x0000021C7F851080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000021C7F896020>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000021C7D1325C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000021C7F8BCFD0>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000021C7F8AB3D0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+                 │    └ <function UserMethods._call at 0x0000021C7ECC9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+          │ └ <function GetParticipantsRequest.resolve at 0x0000021C7DA54680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000021C7F8BCFD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ 'h'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000021C7F8BCFD0>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x0000021C7F1256C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+    │    │         │     └ <function get_input_channel at 0x0000021C7EC28C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ 'h'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000021C7F8BCFD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ 'h'
+          │    └ <function UserMethods._get_entity_from_string at 0x0000021C7ED59B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "h"
+2023-06-18 19:27:21.840 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "h"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000021C7D733A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000021C7B162D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x0000021C7F853600>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x0000021C7F850D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ 'h'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x0000021C7F850EA0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>, 'h', '918918203197')
+           └ <function group_parsing at 0x0000021C7F850E00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ 'h'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+                             └ <function parsing_of_users_from_the_selected_group at 0x0000021C7F851080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000021C7F896020>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000021C7D1325C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000021C7F8BCFD0>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000021C7F8AB3D0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+                 │    └ <function UserMethods._call at 0x0000021C7ECC9940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+          │ └ <function GetParticipantsRequest.resolve at 0x0000021C7DA54680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000021C7F8BCFD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ 'h'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000021C7F8BCFD0>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x0000021C7F1256C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+    │    │         │     └ <function get_input_channel at 0x0000021C7EC28C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ 'h'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x0000021C7F8BCFD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ 'h'
+          │    └ <function UserMethods._get_entity_from_string at 0x0000021C7ED59B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x0000021C7F877690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "h"
+2023-06-18 19:30:43.206 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "t"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000002BEF83E3A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000002BEF5E92D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000002BEFA4FB560>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x000002BEFA4F8CC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ 't'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x000002BEFA4F8E00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>, 't', '918918203197')
+           └ <function group_parsing at 0x000002BEFA4F8D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ 't'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+                             └ <function parsing_of_users_from_the_selected_group at 0x000002BEFA4F8FE0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000002BEFB516110>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000002BEF7E025C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000002BEFB535450>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000002BEFB526210>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+                 │    └ <function UserMethods._call at 0x000002BEF9979940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+          │ └ <function GetParticipantsRequest.resolve at 0x000002BEF8704680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000002BEFB535450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ 't'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000002BEFB535450>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x000002BEF9DD56C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+    │    │         │     └ <function get_input_channel at 0x000002BEF98D8C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ 't'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000002BEFB535450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ 't'
+          │    └ <function UserMethods._get_entity_from_string at 0x000002BEF9A09B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "t"
+2023-06-18 19:30:43.206 | ERROR    | __main__:<module>:21 - Cannot find any entity corresponding to "t"
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000002BEF83E3A60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000002BEF5E92D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    telegram_parsing_menu()
+    └ <function telegram_parsing_menu at 0x000002BEFA4FB560>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 131, in telegram_parsing_menu
+    parsing_mass_parsing_of_groups()  # Парсинг участников чата
+    └ <function parsing_mass_parsing_of_groups at 0x000002BEFA4F8CC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 69, in parsing_mass_parsing_of_groups
+    group_parsing(client, groups_wr, phone)  # Parsing групп
+    │             │       │          └ '918918203197'
+    │             │       └ 't'
+    │             └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x000002BEFA4F8E00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 47, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>, 't', '918918203197')
+           └ <function group_parsing at 0x000002BEFA4F8D60>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 87, in group_parsing
+    all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
+                             │                                        │       └ 't'
+                             │                                        └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+                             └ <function parsing_of_users_from_the_selected_group at 0x000002BEFA4F8FE0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 118, in parsing_of_users_from_the_selected_group
+    participants = client(
+                   └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000002BEFB516110>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000002BEF7E025C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-25' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000002BEFB535450>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000002BEFB526210>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+                 │    └ <function UserMethods._call at 0x000002BEF9979940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 39, in _call
+    await r.resolve(self, utils)
+          │ │       │     └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+          │ │       └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+          │ └ <function GetParticipantsRequest.resolve at 0x000002BEF8704680>
+          └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000002BEFB535450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\channels.py", line 1197, in resolve
+    self.channel = utils.get_input_channel(await client.get_input_entity(self.channel))
+    │    │         │     │                       │      │                │    └ 't'
+    │    │         │     │                       │      │                └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000002BEFB535450>
+    │    │         │     │                       │      └ <function UserMethods.get_input_entity at 0x000002BEF9DD56C0>
+    │    │         │     │                       └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+    │    │         │     └ <function get_input_channel at 0x000002BEF98D8C20>
+    │    │         └ <module 'telethon.utils' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\telethon\\u...
+    │    └ 't'
+    └ <telethon.tl.functions.channels.GetParticipantsRequest object at 0x000002BEFB535450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 437, in get_input_entity
+    await self._get_entity_from_string(peer))
+          │    │                       └ 't'
+          │    └ <function UserMethods._get_entity_from_string at 0x000002BEF9A09B20>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x000002BEFB51FB10>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 574, in _get_entity_from_string
+    raise ValueError(
+
+ValueError: Cannot find any entity corresponding to "t"

@@ -13,8 +13,7 @@ from system.auxiliary_functions.global_variables import time_inviting_1, time_ch
     time_changing_accounts_2, time_inviting_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.baner import banner
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data, delete_row_db
-from system.sqlite_working_tools.sqlite_working_tools import write_to_single_column_table
+from system.sqlite_working_tools.sqlite_working_tools import delete_row_db
 
 
 def display_progress_bar(time_range_1, time_range_2, message):
@@ -29,7 +28,7 @@ def display_progress_bar(time_range_1, time_range_2, message):
 def record_inviting_results(username, phone, description_action, event, actions) -> None:
     """Запись результатов inviting, отправка сообщений в базу данных"""
     record_account_actions(phone, description_action, event, actions)
-    delete_row_db(table="members", column="id", value=username['id'])
+    delete_row_db(table="members", column="username", value=username['username'])
     # Смена username через случайное количество секунд
     display_progress_bar(time_inviting_1, time_inviting_2, "Переход к новому username")
 
@@ -56,17 +55,6 @@ def clearing_console_showing_banner() -> None:
     else:
         os.system("clear")  # Чистим консоль (для linux clear)
     banner()  # Ставим банер программы, для красивого визуального отображения
-
-
-def creating_and_writing_to_a_temporary_file(folder_name, files, text) -> None:
-    """Создание и запись во временный файл"""
-    # Печатаем переменную в консоль
-    with open(f'{folder_name}/{files}', "w") as res_as:
-        res_as.write(text)
-    with open(f'{folder_name}/{files}', 'r') as recorded_data:  # Записываем данные с файла в базу данных
-        name_database = "writing_group_links"
-        open_the_db_and_read_the_data(name_database)  # Запись ссылок в базу данных
-        write_to_single_column_table(name_database, recorded_data)
 
 
 def column_names(table) -> None:

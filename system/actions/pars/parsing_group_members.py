@@ -13,13 +13,12 @@ from telethon.tl.types import UserStatusOffline
 from telethon.tl.types import UserStatusRecently
 
 from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
-from system.auxiliary_functions.auxiliary_functions import creating_and_writing_to_a_temporary_file
-from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.global_variables import console
 from system.error.telegram_errors import handle_exceptions_pars
 from system.menu.gui_program import program_window
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import cleaning_list_of_participants_who_do_not_have_username
+from system.sqlite_working_tools.sqlite_working_tools import cleaning_list_of_participants_who_do_not_have_username, \
+    write_members_column_table
 from system.sqlite_working_tools.sqlite_working_tools import delete_duplicates
 from system.sqlite_working_tools.sqlite_working_tools import delete_row_db
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
@@ -58,7 +57,6 @@ def all_participants_user(all_participants):
 
 def parsing_mass_parsing_of_groups() -> None:
     """Parsing групп, ввод в графическое окно списка групп"""
-
     # Открываем базу с аккаунтами и с выставленными лимитами
     records: list = open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
     for row in records:
@@ -150,26 +148,19 @@ def output_a_list_of_groups_new(client):
     return target_group
 
 
-def mass_parsing_of_group() -> None:
+def writing_members() -> None:
     """Запускаем окно программы (большого поля ввода)"""
-    print("[bold red][+] Введите ссылки чатов которые будем parsing, для вставки в графическое окно "
-          "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
-          "быть переключен на английский")
-
     root, text = program_window()
 
     def output_values_from_the_input_field() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
         message_text = text.get("1.0", 'end-1c')
         closing_the_input_field()
-        folder_name, files = "setting_user", "members_group.csv"
-        creating_and_writing_to_a_temporary_file(folder_name, files, message_text)
-        deleting_files_if_available(folder_name, files)  # Удаляем файл после работы
-
-        parsing_mass_parsing_of_groups()  # Парсинг участников чата
+        lines = message_text.split('\n')
+        write_members_column_table(lines)
 
     def closing_the_input_field() -> None:
-        """Закрываем программу поле ввода"""
+        """Закрываем программу"""
         root.destroy()
 
     # Создаем кнопку по нажатии которой выведется поле ввода. После ввода чатов данные запишутся во временный файл
@@ -181,4 +172,3 @@ def mass_parsing_of_group() -> None:
 if __name__ == "__main__":
     choosing_a_group_from_the_subscribed_ones_for_parsing()
     parsing_mass_parsing_of_groups()
-    mass_parsing_of_group()

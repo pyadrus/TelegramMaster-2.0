@@ -75,6 +75,25 @@ def write_data_to_db(creating_a_table, writing_data_to_a_table, entities) -> Non
         cursor.close()  # cursor_members.close() – закрытие соединения с БД.
 
 
+def write_members_column_table(recorded_data) -> None:
+    """Запись данных в таблицу с одной колонкой в базу данных"""
+    sqlite_connection, cursor = connecting_to_the_database()
+
+    # Создание таблицы, если она еще не существует
+    cursor.execute("CREATE TABLE IF NOT EXISTS members (username, id, access_hash, first_name, last_name, "
+                   "user_phone, online_at, photos_id, user_premium)")
+
+    for line in recorded_data:
+        # Записываем значение username
+        username = line.strip()
+        # Вставляем данные в таблицу, используя параметризованный запрос
+        cursor.execute("INSERT INTO members (username) VALUES (?)", (username,))
+        sqlite_connection.commit()
+
+    cursor.close()
+    sqlite_connection.close()  # Закрываем базу данных
+
+
 def write_to_single_column_table(name_database, recorded_data) -> None:
     """Запись данных в таблицу с одной колонкой в базу данных """
     sqlite_connection, cursor = connecting_to_the_database()

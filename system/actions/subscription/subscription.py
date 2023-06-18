@@ -8,15 +8,13 @@ from rich.progress import track
 from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
 
-from system.auxiliary_functions.auxiliary_functions import creating_and_writing_to_a_temporary_file
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.global_variables import time_subscription_1
 from system.auxiliary_functions.global_variables import time_subscription_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.gui_program import program_window
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
+from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data, write_to_single_column_table
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
@@ -24,21 +22,16 @@ creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
 
 
-def writing_group_links_to_file() -> None:
+def writing_group_links_to_file(name_database) -> None:
     """Запускаем окно программы (большого поля ввода)"""
-    print("[bold red][+] Введите ссылки чатов на которые нужно подписаться, для вставки в графическое окно "
-          "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
-          "быть переключен на английский")
-
     root, text = program_window()
 
     def output_values_from_the_input_field() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
         message_text = text.get("1.0", 'end-1c')
         closing_the_input_field()
-        folder_name, files = "setting_user", "members_group.csv"
-        creating_and_writing_to_a_temporary_file(folder_name, files, message_text)
-        deleting_files_if_available(folder_name, files)  # Удаляем файл после работы
+        lines = message_text.split('\n')
+        write_to_single_column_table(name_database, lines)
 
     def closing_the_input_field() -> None:
         """Закрываем программу"""
