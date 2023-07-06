@@ -87,8 +87,7 @@ def send_reaction_request(records, chat, message, reaction_input):
             sys.exit(1)
         finally:
             client.disconnect()  # Разрываем соединение Telegram
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text=f"Работа с группой {chat} окончена!")
+    app_notifications(notification_text=f"Работа с группой {chat} окончена!") # Выводим уведомление
 
 
 if __name__ == "__main__":

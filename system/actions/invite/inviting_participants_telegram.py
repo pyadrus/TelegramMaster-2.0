@@ -29,8 +29,7 @@ def inviting_to_a_group(client, username) -> None:
 def invitation_from_all_accounts_program_body(name_database_table) -> None:
     """Inviting по заранее parsing списку и работа с несколькими аккаунтами"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text=event)
+    app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
@@ -45,11 +44,9 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
         try:
             inviting(client, phone, records)
         except FloodWaitError as e:
-            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
-            print(actions)
+            print(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}')
             continue  # Прерываем работу и меняем аккаунт
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text=f"Работа с группой {link_group} окончена!")
+    app_notifications(notification_text=f"Работа с группой {link_group} окончена!")  # Выводим уведомление
 
 
 def unsubscribe_from_the_group(client, group_link):
@@ -62,8 +59,7 @@ def unsubscribe_from_the_group(client, group_link):
 
 def invite_from_multiple_accounts_with_limits(name_database_table) -> None:
     """Inviting по заранее parsing списку и работа с несколькими аккаунтами и выставленными лимитами"""
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text=event)
+    app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
@@ -77,8 +73,7 @@ def invite_from_multiple_accounts_with_limits(name_database_table) -> None:
         # Количество аккаунтов на данный момент в работе
         print(f"[bold red]Всего username: {len(number_usernames)}. Лимит на аккаунт: {len(records)}")
         inviting(client, phone, records)
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text=f"Работа с группой {link_group} окончена!")
+    app_notifications(notification_text=f"Работа с группой {link_group} окончена!")  # Выводим уведомление
 
 
 def inviting(client, phone, records) -> None:

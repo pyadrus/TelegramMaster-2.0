@@ -10,7 +10,7 @@ from system.auxiliary_functions.auxiliary_functions import deleting_files_if_ava
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console
 from system.error.telegram_errors import record_account_actions
-from system.menu.gui_program import program_window
+from system.menu.gui_program import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
@@ -25,8 +25,7 @@ event: str = f"Рассылаем сообщение по чатам Telegram"
 
 def connecting_to_a_telegram_account_and_creating_a_list_of_groups():
     """Подключение к аккаунту телеграмм и формирование списка групп"""
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text=event)
+    app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     print(f"[bold red]Всего accounts: {len(records)}")
@@ -136,9 +135,7 @@ def sending_messages_files_via_chats() -> None:
         """Закрываем программу"""
         root.destroy()
 
-    # Создаем кнопку по нажатии которой выведется поле ввода. После ввода чатов данные запишутся во временный файл
-    but = Button(root, text="Готово", command=output_values_from_the_input_field)
-    but.pack()
+    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
     root.mainloop()  # Запускаем программу
 
 
@@ -201,9 +198,7 @@ def message_entry_window() -> None:
         """Закрываем программу"""
         root.destroy()
 
-    # Создаем кнопку по нажатии которой выведется поле ввода. После ввода чатов данные запишутся во временный файл
-    but = Button(root, text="Готово", command=output_values_from_the_input_field)
-    but.pack()
+    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
     root.mainloop()  # Запускаем программу
 
 
@@ -231,9 +226,7 @@ def output_the_input_field() -> None:
         """Закрываем программу"""
         root.destroy()
 
-    # Создаем кнопку по нажатии которой выведется поле ввода. После ввода чатов данные запишутся во временный файл
-    but = Button(root, text="Готово", command=output_values_from_the_input_field)
-    but.pack()
+    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
     root.mainloop()  # Запускаем программу
 
 

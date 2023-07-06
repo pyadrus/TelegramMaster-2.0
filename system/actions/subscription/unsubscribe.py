@@ -17,8 +17,7 @@ def unsubscribe_all() -> None:
             print(f"[green]{dialog.name}, {dialog.id}")
             client.delete_dialog(dialog)
             client.disconnect()
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text="Список почистили!")
+    app_notifications(notification_text="Список почистили!")  # Выводим уведомление
 
 
 if __name__ == "__main__":

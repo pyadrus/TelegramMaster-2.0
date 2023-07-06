@@ -2,6 +2,7 @@ from notifypy import Notify
 from notifypy.exceptions import UnsupportedPlatform
 from rich import print
 
+
 # Библиотека для работы с уведомлениями на разных платформах https://github.com/ms7m/notify-py
 
 
@@ -15,5 +16,4 @@ def app_notifications(notification_text) -> None:
         notification.message = f"{notification_text}"
         notification.send()
     except UnsupportedPlatform:
-        # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-        print(f"[red] {notification_text}")
+        print(f"[red] {notification_text}")  # Выводим уведомление

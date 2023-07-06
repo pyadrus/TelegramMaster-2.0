@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 import configparser
 import getpass
+import tkinter as tk
+from tkinter import ttk
+
 from rich import print
 from telethon import TelegramClient
 from telethon.errors import *
-import tkinter as tk
+
 from system.auxiliary_functions.global_variables import console
-from system.menu.baner import program_version, date_of_program_change
+from system.menu.gui_program import program_window_with_dimensions
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db, save_proxy_data_to_db
-from tkinter import ttk
+
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 
 creating_a_table = "CREATE TABLE IF NOT EXISTS config(id, hash, phone)"
@@ -77,8 +80,7 @@ def connecting_new_account() -> None:
     # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
     client = telegram_connect(phone_data, api_id_data, api_hash_data)
     client.disconnect()  # Разрываем соединение telegram
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text="Аккаунт подсоединился!")
+    app_notifications(notification_text="Аккаунт подсоединился!") # Выводим уведомление
 
 
 def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
@@ -117,9 +119,7 @@ def creating_the_main_window_for_proxy_data_entry() -> None:
         root.destroy()
         return proxy
 
-    root = tk.Tk()  # Создаем главное окно
-    root.title("Telegram_BOT_SMM")
-    root.geometry("300x250")  # Устанавливаем размер окна
+    root = program_window_with_dimensions(geometry="300x250")
     root.resizable(False, False)  # Запретить масштабирование окна
     # Создаем первое текстовое поле и связанный с ним текстовый метка
     proxy_type = tk.Label(root, text="Введите тип прокси, например SOCKS5: ")
@@ -183,12 +183,9 @@ def create_main_window(variable) -> None:
             # Если первое время больше второго, выводим сообщение об ошибке
             result_label.config(text="Пожалуйста, введите корректные значения времени!")
 
-    root = tk.Tk()  # Создаем главное окно
-    root.title(f"Telegram_BOT_SMM: {program_version} от {date_of_program_change}")
-    root.geometry("300x110")  # Устанавливаем размер окна
+    root = program_window_with_dimensions(geometry="300x110")
     root.resizable(False, False)  # Запретить масштабирование окна
-    # Установка стиля оформления
-    s = ttk.Style()
+    s = ttk.Style()  # Установка стиля оформления
     s.theme_use('winnative')
     # Создаем первое текстовое поле и связанный с ним текстовый метка
     smaller_time_label = ttk.Label(root, text="Время в секундах (меньшее):")
@@ -200,8 +197,7 @@ def create_main_window(variable) -> None:
     larger_time_label.pack()
     larger_time_entry = ttk.Entry(root, width=45)
     larger_time_entry.pack()
-    # Создаем кнопку
-    button = ttk.Button(root, text="Готово", command=entering_the_time_between_actions)
+    button = ttk.Button(root, text="Готово", command=entering_the_time_between_actions)  # Создаем кнопку
     button.pack()
     result_label = ttk.Label(root, text="")  # Создаем метку для вывода результата
     result_label.pack()
@@ -211,5 +207,4 @@ def create_main_window(variable) -> None:
 if __name__ == "__main__":
     connecting_new_account()
     writing_link_to_the_group()
-    # recording_proxy_data()
     creating_the_main_window_for_proxy_data_entry()

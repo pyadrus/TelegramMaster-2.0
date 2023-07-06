@@ -12,7 +12,7 @@ from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import time_subscription_1
 from system.auxiliary_functions.global_variables import time_subscription_2
 from system.error.telegram_errors import record_account_actions
-from system.menu.gui_program import program_window
+from system.menu.gui_program import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data, write_to_single_column_table
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
@@ -37,9 +37,7 @@ def writing_group_links_to_file(name_database) -> None:
         """Закрываем программу"""
         root.destroy()
 
-    # Создаем кнопку по нажатии которой выведется поле ввода. После ввода чатов данные запишутся во временный файл
-    but = Button(root, text="Готово", command=output_values_from_the_input_field)
-    but.pack()
+    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
     root.mainloop()  # Запускаем программу
 
 
@@ -60,15 +58,11 @@ def subscription_all() -> None:
                 print(f"[bold red][+] Присоединился к группе или чату {groups_wr}")
                 print(f"[bold green][+] Подождите {time_subscription_1}-{time_subscription_2} Секунд...")
                 time.sleep(random.randrange(int(time_subscription_1), int(time_subscription_2)))
-            # Переносим FloodWaitError в функцию подписки для избежания срабатывания в других функциях программы
             except FloodWaitError as e:
-                actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
-                print(actions)
-                # print(f'Спим {e.seconds} секунд')
+                print(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}')
                 time.sleep(e.seconds)
         client.disconnect()  # Разрываем соединение Telegram
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text="На группы подписались!")
+    app_notifications(notification_text="На группы подписались!") # Выводим уведомление
 
 
 def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:

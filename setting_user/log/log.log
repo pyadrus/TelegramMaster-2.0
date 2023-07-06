@@ -3106,3 +3106,177 @@ Traceback (most recent call last):
     raise ValueError(
 
 ValueError: Cannot find any entity corresponding to "t"
+2023-06-27 19:35:12.427 | ERROR    | __main__:<module>:21 - The user has been deleted/deactivated (caused by GetFullUserRequest)
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001F32B2E3060>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001F328D02D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    sending_messages_to_a_personal_account_chat()
+    └ <function sending_messages_to_a_personal_account_chat at 0x000001F32D3FF920>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 260, in sending_messages_to_a_personal_account_chat
+    main_menu()  # После отработки функции переходим в начальное меню
+    └ <function main_menu at 0x000001F328D02D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    sending_messages_to_a_personal_account_chat()
+    └ <function sending_messages_to_a_personal_account_chat at 0x000001F32D3FF920>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 260, in sending_messages_to_a_personal_account_chat
+    main_menu()  # После отработки функции переходим в начальное меню
+    └ <function main_menu at 0x000001F328D02D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    sending_messages_to_a_personal_account_chat()
+    └ <function sending_messages_to_a_personal_account_chat at 0x000001F32D3FF920>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 260, in sending_messages_to_a_personal_account_chat
+    main_menu()  # После отработки функции переходим в начальное меню
+    └ <function main_menu at 0x000001F328D02D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    working_tools_contacts()
+    └ <function working_tools_contacts at 0x000001F32D3FF7E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 175, in working_tools_contacts
+    show_account_contact_list()
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x000001F32D3FD940>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 48, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ ()
+           └ <function show_account_contact_list at 0x000001F32D3FD8A0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 233, in show_account_contact_list
+    client, phone = connect_to_telegram_account_and_output_name(row)
+                    │                                           └ ('7655060', 'cc1290cd733c1f1d407598e5a31be4a8', '447300383073')
+                    └ <function connect_to_telegram_account_and_output_name at 0x000001F32CCF0CC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 28, in connect_to_telegram_account_and_output_name
+    first_name, last_name, phone = account_name(client, name_account="me")
+                                   │            └ <telethon.client.telegramclient.TelegramClient object at 0x000001F32FE734D0>
+                                   └ <function account_name at 0x000001F32CE9EE80>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 36, in account_name
+    full = client(GetFullUserRequest(name_account))
+           │      │                  └ 'me'
+           │      └ <class 'telethon.tl.functions.users.GetFullUserRequest'>
+           └ <telethon.client.telegramclient.TelegramClient object at 0x000001F32FE734D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001F32FE846D0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001F32ACE25C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-43' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.users.GetFullUserRequest object at 0x000001F32FE77790>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001F32FE826D0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001F32FE734D0>
+                 │    └ <function UserMethods._call at 0x000001F32C885940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001F32FE734D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 84, in _call
+    result = await future
+                   └ <Future finished exception=UserDeactivatedBanError('The user has been deleted/deactivated (caused by GetFullUserRequest)')>
+
+telethon.errors.rpcerrorlist.UserDeactivatedBanError: The user has been deleted/deactivated (caused by GetFullUserRequest)
+2023-06-27 19:35:12.427 | ERROR    | __main__:<module>:21 - The user has been deleted/deactivated (caused by GetFullUserRequest)
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001F32B2E3060>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001F328D02D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    sending_messages_to_a_personal_account_chat()
+    └ <function sending_messages_to_a_personal_account_chat at 0x000001F32D3FF920>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 260, in sending_messages_to_a_personal_account_chat
+    main_menu()  # После отработки функции переходим в начальное меню
+    └ <function main_menu at 0x000001F328D02D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    sending_messages_to_a_personal_account_chat()
+    └ <function sending_messages_to_a_personal_account_chat at 0x000001F32D3FF920>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 260, in sending_messages_to_a_personal_account_chat
+    main_menu()  # После отработки функции переходим в начальное меню
+    └ <function main_menu at 0x000001F328D02D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    sending_messages_to_a_personal_account_chat()
+    └ <function sending_messages_to_a_personal_account_chat at 0x000001F32D3FF920>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 260, in sending_messages_to_a_personal_account_chat
+    main_menu()  # После отработки функции переходим в начальное меню
+    └ <function main_menu at 0x000001F328D02D40>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 48, in main_menu
+    working_tools_contacts()
+    └ <function working_tools_contacts at 0x000001F32D3FF7E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 175, in working_tools_contacts
+    show_account_contact_list()
+    └ <function handle_exceptions_pars.<locals>.wrapper at 0x000001F32D3FD940>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\error\telegram_errors.py", line 48, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ ()
+           └ <function show_account_contact_list at 0x000001F32D3FD8A0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\pars\parsing_group_members.py", line 233, in show_account_contact_list
+    client, phone = connect_to_telegram_account_and_output_name(row)
+                    │                                           └ ('7655060', 'cc1290cd733c1f1d407598e5a31be4a8', '447300383073')
+                    └ <function connect_to_telegram_account_and_output_name at 0x000001F32CCF0CC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 28, in connect_to_telegram_account_and_output_name
+    first_name, last_name, phone = account_name(client, name_account="me")
+                                   │            └ <telethon.client.telegramclient.TelegramClient object at 0x000001F32FE734D0>
+                                   └ <function account_name at 0x000001F32CE9EE80>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 36, in account_name
+    full = client(GetFullUserRequest(name_account))
+           │      │                  └ 'me'
+           │      └ <class 'telethon.tl.functions.users.GetFullUserRequest'>
+           └ <telethon.client.telegramclient.TelegramClient object at 0x000001F32FE734D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001F32FE846D0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001F32ACE25C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-43' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.users.GetFullUserRequest object at 0x000001F32FE77790>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001F32FE826D0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001F32FE734D0>
+                 │    └ <function UserMethods._call at 0x000001F32C885940>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001F32FE734D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 84, in _call
+    result = await future
+                   └ <Future finished exception=UserDeactivatedBanError('The user has been deleted/deactivated (caused by GetFullUserRequest)')>
+
+telethon.errors.rpcerrorlist.UserDeactivatedBanError: The user has been deleted/deactivated (caused by GetFullUserRequest)

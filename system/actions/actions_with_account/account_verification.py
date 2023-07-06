@@ -10,8 +10,7 @@ from system.telegram_actions.telegram_actions import connect_to_telegram_account
 def check_account_for_spam() -> None:
     """Проверка аккаунта на спам через @SpamBot"""
     event: str = "Проверка аккаунтов через SpamBot"  # Событие, которое записываем в базу данных
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text=event)
+    app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:

@@ -10,7 +10,7 @@ from system.actions.subscription.subscription import subscribe_to_the_group_and_
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.error.telegram_errors import record_account_actions
-from system.menu.gui_program import program_window
+from system.menu.gui_program import program_window, done_button
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
 
 folder, files = "setting_user", "members_group.csv"
@@ -89,8 +89,7 @@ def message_time() -> None:
         print("[bold red]Пишем сообщения 2 раза в час")
         user_input_minute_1 = input("[+] Введите минуты, публикации: ")
         user_input_minute_2 = input("[+] Введите минуты, публикации: ")
-        # Перебираем часы от 0 до 23
-        for hour in range(24):
+        for hour in range(24):  # Перебираем часы от 0 до 23
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_1}").do(send_mess)
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_2}").do(send_mess)
     elif user_input_mes_hour == "3":  # Пишем сообщения 3 раза в час
@@ -99,8 +98,7 @@ def message_time() -> None:
         user_input_minute_1: str = input("[+] Введите минуты, публикации: ")
         user_input_minute_2: str = input("[+] Введите минуты, публикации: ")
         user_input_minute_3: str = input("[+] Введите минуты, публикации: ")
-        # Перебираем часы от 0 до 23
-        for hour in range(24):
+        for hour in range(24):  # Перебираем часы от 0 до 23
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_1}").do(send_mess)
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_2}").do(send_mess)
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_3}").do(send_mess)
@@ -111,8 +109,7 @@ def message_time() -> None:
         user_input_minute_2: str = input("[+] Введите минуты, публикации: ")
         user_input_minute_3: str = input("[+] Введите минуты, публикации: ")
         user_input_minute_4: str = input("[+] Введите минуты, публикации: ")
-        # Перебираем часы от 0 до 23
-        for hour in range(24):
+        for hour in range(24):  # Перебираем часы от 0 до 23
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_1}").do(send_mess)
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_2}").do(send_mess)
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_3}").do(send_mess)
@@ -125,8 +122,7 @@ def message_time() -> None:
         user_input_minute_3: str = input("[+] Введите минуты, публикации: ")
         user_input_minute_4: str = input("[+] Введите минуты, публикации: ")
         user_input_minute_5: str = input("[+] Введите минуты, публикации: ")
-        # Перебираем часы от 0 до 23
-        for hour in range(24):
+        for hour in range(24):  # Перебираем часы от 0 до 23
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_1}").do(send_mess)
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_2}").do(send_mess)
             schedule.every().day.at(f"{hour:02d}:{user_input_minute_3}").do(send_mess)
@@ -161,9 +157,7 @@ def message_entry_window_time() -> None:
         """Закрываем программу"""
         root.destroy()
 
-    # Создаем кнопку по нажатии которой выведется поле ввода. После ввода чатов данные запишутся во временный файл
-    but = Button(root, text="Готово", command=output_values_from_the_input_field)
-    but.pack()
+    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
     root.mainloop()  # Запускаем программу
 
 

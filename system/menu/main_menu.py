@@ -7,9 +7,7 @@ from system.actions.actions_with_account.account_verification import *
 from system.actions.invite.telegram_invite_scheduler import *
 from system.actions.invite.inviting_participants_telegram import *
 from system.actions.pars.parsing_account_groups_and_channels import *
-from system.actions.pars.parsing_active_participants import *
 from system.actions.pars.parsing_group_members import *
-from system.actions.pars.parsing_phone_numbers import *
 from system.actions.reactions.reactions import *
 from system.actions.send_mess_chat.chat_dialog import *
 from system.actions.send_mess_chat.chat_dialog_mes import *
@@ -96,9 +94,9 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         schedule_invite()
     elif user_input == "5":  # Inviting активных участников чата оп ранее parsing списку
-        invitation_from_all_accounts_program_body(name_database_table="members_active")
+        invitation_from_all_accounts_program_body(name_database_table="members")
     elif user_input == "6":  # Inviting по сформированному списку контактов
-        invitation_from_all_accounts_program_body(name_database_table="members_contacts")
+        invitation_from_all_accounts_program_body(name_database_table="members")
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:

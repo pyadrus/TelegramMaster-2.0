@@ -64,15 +64,12 @@ def handle_exceptions_pars(func):
             # Удаляем отработанную группу или канал
             delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
             return  # Прерываем работу и меняем аккаунт
-        except AttributeError:
-            # Если произошла ошибка во время parsing
+        except AttributeError:  # Если произошла ошибка во время parsing
             print("Парсинг закончен!")
-        except KeyError:
-            # Если произошла ошибка, связанная с ключом словаря
+        except KeyError:  # Если произошла ошибка, связанная с ключом словаря
             sys.exit(1)
-        except FloodWaitError as e: # Если возникла ошибка FloodWaitError
-            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
-            print(actions)
+        except FloodWaitError as e:  # Если возникла ошибка FloodWaitError
+            print(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}')
             time.sleep(e.seconds)
 
     return wrapper

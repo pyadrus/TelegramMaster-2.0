@@ -17,8 +17,7 @@ def parsing_of_groups_to_which_the_account_is_subscribed() -> None:
     """Parsing групп / каналов на которые подписан аккаунт и сохраняем в файл software_database.db"""
     add_columns_to_table()
     event: str = "Parsing групп / каналов на которые подписан аккаунт"  # Событие, которое записываем в базу данных
-    # Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
-    app_notifications(notification_text=event)
+    app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
