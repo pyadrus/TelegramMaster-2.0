@@ -312,6 +312,7 @@ def adding_a_contact_to_the_phone_book(client) -> None:
             contact = client.get_entity(phone)
             getting_user_data(contact, entities)
             print(f"[bold green][+] Контакт с добавлен в телефонную книгу!")
+            time.sleep(4)
             # Запись результатов parsing в файл members_contacts.db, для дальнейшего inviting
             # После работы с номером телефона, программа удаляет номер со списка
             delete_row_db(table="contact", column="phone", value=user['phone'])
