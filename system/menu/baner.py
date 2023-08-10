@@ -1,7 +1,7 @@
 from rich.console import Console
 
 console = Console()
-program_version, date_of_program_change = "0.8.8", "15.06.2023"  # Версия программы, дата изменения
+program_version, date_of_program_change = "0.9.3", "09.08.2023"  # Версия программы, дата изменения
 
 
 def banner() -> None:

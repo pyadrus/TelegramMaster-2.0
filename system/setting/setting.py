@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import configparser
 import getpass
+import time
 import tkinter as tk
 from tkinter import ttk
 
@@ -28,10 +29,34 @@ def record_account_limits() -> configparser.ConfigParser:
     return config
 
 
+def record_device_type() -> configparser.ConfigParser():
+    """Запись типа устройства например: Samsung SGH600, Android 9 (P30), 4.2.1,
+                                        Vivo V9, Android 9 (P30), 4.2.1"""
+    try:
+        device_model = console.input("[bold green][+] Введите модель устройства : ")
+        config.get('device_model', 'device_model')
+        config.set('device_model', 'device_model', device_model)
+    except configparser.NoSectionError:  # Если в setting_user/config.ini нет записи, то создаем ее
+        config['device_model'] = {'device_model': device_model}
+    try:
+        system_version = console.input("[bold green][+] Введите версию операционной системы : ")
+        config.get('system_version', 'system_version')
+        config.set('system_version', 'system_version', system_version)
+    except configparser.NoSectionError:  # Если в setting_user/config.ini нет записи, то создаем ее
+        config['system_version'] = {'system_version': system_version}
+    try:
+        app_version = console.input("[bold green][+] Введите версию приложения : ")
+        config.get('app_version', 'app_version')
+        config.set('app_version', 'app_version', app_version)
+    except configparser.NoSectionError:  # Если в setting_user/config.ini нет записи, то создаем ее
+        config['app_version'] = {'app_version': app_version}
+    return config
+
+
 def writing_settings_to_a_file(config):
     """Запись данных в файл setting_user/config.ini"""
-    with open('setting_user/config.ini', 'w') as setup:
-        config.write(setup)
+    with open('setting_user/config.ini', 'w') as setup:  # Открываем файл в режиме записи
+        config.write(setup)  # Записываем данные в файл
 
 
 def writing_api_id_api_hash() -> configparser.ConfigParser:
@@ -71,6 +96,15 @@ def reading_the_id_and_hash():
     return api_id_data, api_hash_data
 
 
+def reading_device_type():
+    """Считываем тип устройства"""
+    config.read('setting_user/config.ini')  # Файл с настройками
+    device_model = config['device_model']['device_model']  # api_id с файла setting_user/api_id_api_hash.ini
+    system_version = config['system_version']['system_version']  # api_hash с файла setting_user/api_id_api_hash.ini
+    app_version = config['app_version']['app_version']  # api_hash с файла setting_user/api_id_api_hash.ini
+    return device_model, system_version, app_version
+
+
 def connecting_new_account() -> None:
     """Вводим данные в базу данных setting_user/software_database.db"""
     api_id_data, api_hash_data = reading_the_id_and_hash()
@@ -80,12 +114,14 @@ def connecting_new_account() -> None:
     # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
     client = telegram_connect(phone_data, api_id_data, api_hash_data)
     client.disconnect()  # Разрываем соединение telegram
-    app_notifications(notification_text="Аккаунт подсоединился!") # Выводим уведомление
+    app_notifications(notification_text="Аккаунт подсоединился!")  # Выводим уведомление
 
 
 def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
-    client = TelegramClient(f"setting_user/accounts/{phone}", api_id, api_hash)
+    device_model, system_version, app_version = reading_device_type()
+    client = TelegramClient(f"setting_user/accounts/{phone}", api_id, api_hash,
+                            device_model=device_model, system_version=system_version, app_version=app_version)
     client.connect()  # Подсоединяемся к Telegram
     if not client.is_user_authorized():
         client.send_code_request(phone)

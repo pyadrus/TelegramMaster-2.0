@@ -12,7 +12,7 @@ from telethon.tl.functions.users import GetFullUserRequest
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
-from system.setting.setting import reading_the_id_and_hash
+from system.setting.setting import reading_the_id_and_hash, reading_device_type
 from system.sqlite_working_tools.sqlite_working_tools import cleaning_db
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
@@ -115,7 +115,9 @@ def session_converter():
         phone_old, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)
         proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
         try:
-            client = TelegramClient(f"setting_user/accounts/{phone_old}", api_id, api_hash, proxy=proxy)
+            device_model, system_version, app_version = reading_device_type()
+            client = TelegramClient(f"setting_user/accounts/{phone_old}", api_id, api_hash, proxy=proxy,
+                                    device_model=device_model, system_version=system_version, app_version=app_version)
             try:
                 client.connect()  # Подсоединяемся к Telegram
                 # Если аккаунт не авторизирован, то удаляем сессию

@@ -3280,3 +3280,435 @@ Traceback (most recent call last):
                    └ <Future finished exception=UserDeactivatedBanError('The user has been deleted/deactivated (caused by GetFullUserRequest)')>
 
 telethon.errors.rpcerrorlist.UserDeactivatedBanError: The user has been deleted/deactivated (caused by GetFullUserRequest)
+2023-08-09 22:27:33.428 | ERROR    | __main__:<module>:21 - No section: 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000018D575254E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000018D5440EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 60, in main_menu
+    program_settings()
+    └ <function program_settings at 0x0000018D57525940>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 333, in program_settings
+    writing_settings_to_a_file(config=record_device_type())
+    │                                 └ <function record_device_type at 0x0000018D574825C0>
+    └ <function writing_settings_to_a_file at 0x0000018D57482660>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 35, in record_device_type
+    config.get('device_model', 'device_model')
+    │      └ <function RawConfigParser.get at 0x0000018D55FEF240>
+    └ <configparser.ConfigParser object at 0x0000018D560462D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 797, in get
+    d = self._unify_values(section, vars)
+        │    │             │        └ None
+        │    │             └ 'device_model'
+        │    └ <function RawConfigParser._unify_values at 0x0000018D56008220>
+        └ <configparser.ConfigParser object at 0x0000018D560462D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 1168, in _unify_values
+    raise NoSectionError(section) from None
+          │              └ 'device_model'
+          └ <class 'configparser.NoSectionError'>
+
+configparser.NoSectionError: No section: 'device_model'
+2023-08-09 22:27:33.428 | ERROR    | __main__:<module>:21 - No section: 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000018D575254E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000018D5440EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 60, in main_menu
+    program_settings()
+    └ <function program_settings at 0x0000018D57525940>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 333, in program_settings
+    writing_settings_to_a_file(config=record_device_type())
+    │                                 └ <function record_device_type at 0x0000018D574825C0>
+    └ <function writing_settings_to_a_file at 0x0000018D57482660>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 35, in record_device_type
+    config.get('device_model', 'device_model')
+    │      └ <function RawConfigParser.get at 0x0000018D55FEF240>
+    └ <configparser.ConfigParser object at 0x0000018D560462D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 797, in get
+    d = self._unify_values(section, vars)
+        │    │             │        └ None
+        │    │             └ 'device_model'
+        │    └ <function RawConfigParser._unify_values at 0x0000018D56008220>
+        └ <configparser.ConfigParser object at 0x0000018D560462D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 1168, in _unify_values
+    raise NoSectionError(section) from None
+          │              └ 'device_model'
+          └ <class 'configparser.NoSectionError'>
+
+configparser.NoSectionError: No section: 'device_model'
+2023-08-09 22:42:41.460 | ERROR    | __main__:<module>:21 - 'str' object has no attribute 'items'
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 37, in record_device_type
+    config.get('device_model', 'device_model')
+    │      └ <function RawConfigParser.get at 0x000001608906B2E0>
+    └ <configparser.ConfigParser object at 0x000001608910C9D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 797, in get
+    d = self._unify_values(section, vars)
+        │    │             │        └ None
+        │    │             └ 'device_model'
+        │    └ <function RawConfigParser._unify_values at 0x00000160890982C0>
+        └ <configparser.ConfigParser object at 0x000001608910C9D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 1168, in _unify_values
+    raise NoSectionError(section) from None
+          │              └ 'device_model'
+          └ <class 'configparser.NoSectionError'>
+
+configparser.NoSectionError: No section: 'device_model'
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000160895D1580>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001608746EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 60, in main_menu
+    program_settings()
+    └ <function program_settings at 0x00000160895D19E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 333, in program_settings
+    writing_settings_to_a_file(config=record_device_type())
+    │                                 └ <function record_device_type at 0x0000016089532660>
+    └ <function writing_settings_to_a_file at 0x0000016089532700>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 49, in record_device_type
+    config['device_model'] = device_model
+    │                        └ 'LeEco Le Max 2'
+    └ <configparser.ConfigParser object at 0x000001608910C9D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 993, in __setitem__
+    self.read_dict({key: value})
+    │    │          │    └ 'LeEco Le Max 2'
+    │    │          └ 'device_model'
+    │    └ <function RawConfigParser.read_dict at 0x000001608906B1A0>
+    └ <configparser.ConfigParser object at 0x000001608910C9D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 763, in read_dict
+    for key, value in keys.items():
+                      └ 'LeEco Le Max 2'
+
+AttributeError: 'str' object has no attribute 'items'
+2023-08-09 22:42:41.460 | ERROR    | __main__:<module>:21 - 'str' object has no attribute 'items'
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 37, in record_device_type
+    config.get('device_model', 'device_model')
+    │      └ <function RawConfigParser.get at 0x000001608906B2E0>
+    └ <configparser.ConfigParser object at 0x000001608910C9D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 797, in get
+    d = self._unify_values(section, vars)
+        │    │             │        └ None
+        │    │             └ 'device_model'
+        │    └ <function RawConfigParser._unify_values at 0x00000160890982C0>
+        └ <configparser.ConfigParser object at 0x000001608910C9D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 1168, in _unify_values
+    raise NoSectionError(section) from None
+          │              └ 'device_model'
+          └ <class 'configparser.NoSectionError'>
+
+configparser.NoSectionError: No section: 'device_model'
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000160895D1580>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001608746EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 60, in main_menu
+    program_settings()
+    └ <function program_settings at 0x00000160895D19E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 333, in program_settings
+    writing_settings_to_a_file(config=record_device_type())
+    │                                 └ <function record_device_type at 0x0000016089532660>
+    └ <function writing_settings_to_a_file at 0x0000016089532700>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 49, in record_device_type
+    config['device_model'] = device_model
+    │                        └ 'LeEco Le Max 2'
+    └ <configparser.ConfigParser object at 0x000001608910C9D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 993, in __setitem__
+    self.read_dict({key: value})
+    │    │          │    └ 'LeEco Le Max 2'
+    │    │          └ 'device_model'
+    │    └ <function RawConfigParser.read_dict at 0x000001608906B1A0>
+    └ <configparser.ConfigParser object at 0x000001608910C9D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 763, in read_dict
+    for key, value in keys.items():
+                      └ 'LeEco Le Max 2'
+
+AttributeError: 'str' object has no attribute 'items'
+2023-08-09 22:45:12.396 | ERROR    | __main__:<module>:21 - 'charmap' codec can't encode characters in position 17-23: character maps to <undefined>
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000285B00316C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x00000285AFF93100>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 166, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     └ <function session_converter at 0x00000285AFF93060>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 132, in session_converter
+    print(f"[bold red][!] Account connect {first_name} {last_name} {phone}")
+    └ <function print at 0x00000285ADEFADE0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\__init__.py", line 74, in print
+    return write_console.print(*objects, sep=sep, end=end)
+           │             │      │            │        └ '\n'
+           │             │      │            └ ' '
+           │             │      └ ('[bold red][!] Account connect 𝖁𝖎𝖙𝖆𝖑𝖎𝛄 𝖅𝖍𝖆𝖇𝖎𝖓𝖘𝖐𝖎𝛄 79493531398',)
+           │             └ <function Console.print at 0x00000285AFF8BEC0>
+           └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 1672, in print
+    with self:
+         └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 864, in __exit__
+    self._exit_buffer()
+    │    └ <function Console._exit_buffer at 0x00000285AFF8A3E0>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 822, in _exit_buffer
+    self._check_buffer()
+    │    └ <function Console._check_buffer at 0x00000285AFF90360>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 2027, in _check_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    │                     │       │                 │    └ <property object at 0x00000285AFF7ACA0>
+    │                     │       │                 └ <console width=79 None>
+    │                     │       └ <class 'rich._win32_console.LegacyWindowsTerm'>
+    │                     └ [Segment('[', Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)), Segment('!', Style(color=Color('red', Colo...
+    └ <function legacy_windows_render at 0x00000285B0032200>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    │    │            │     └ Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)
+    │    │            └ ' Account connect 𝖁𝖎𝖙𝖆𝖑𝖎𝛄 𝖅𝖍𝖆𝖇𝖎𝖓𝖘𝖐𝖎𝛄 '
+    │    └ <function LegacyWindowsTerm.write_styled at 0x00000285AFF91C60>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x00000285B102A350>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 442, in write_styled
+    self.write_text(text)
+    │    │          └ ' Account connect 𝖁𝖎𝖙𝖆𝖑𝖎𝛄 𝖅𝖍𝖆𝖇𝖎𝖓𝖘𝖐𝖎𝛄 '
+    │    └ <function LegacyWindowsTerm.write_text at 0x00000285AFF91BC0>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x00000285B102A350>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 403, in write_text
+    self.write(text)
+    │    │     └ ' Account connect 𝖁𝖎𝖙𝖆𝖑𝖎𝛄 𝖅𝖍𝖆𝖇𝖎𝖓𝖘𝖐𝖎𝛄 '
+    │    └ <built-in method write of _io.TextIOWrapper object at 0x00000285AB64FE00>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x00000285B102A350>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           │      │              │     │    │      └ <EncodingMap object at 0x00000285AB372610>
+           │      │              │     │    └ 'strict'
+           │      │              │     └ <encodings.cp1251.IncrementalEncoder object at 0x00000285AB729190>
+           │      │              └ ' Account connect 𝖁𝖎𝖙𝖆𝖑𝖎𝛄 𝖅𝖍𝖆𝖇𝖎𝖓𝖘𝖐𝖎𝛄 '
+           │      └ <built-in function charmap_encode>
+           └ <module 'codecs' (frozen)>
+
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 17-23: character maps to <undefined>
+2023-08-09 22:45:12.396 | ERROR    | __main__:<module>:21 - 'charmap' codec can't encode characters in position 17-23: character maps to <undefined>
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000285B00316C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x00000285AFF93100>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 166, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     └ <function session_converter at 0x00000285AFF93060>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 132, in session_converter
+    print(f"[bold red][!] Account connect {first_name} {last_name} {phone}")
+    └ <function print at 0x00000285ADEFADE0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\__init__.py", line 74, in print
+    return write_console.print(*objects, sep=sep, end=end)
+           │             │      │            │        └ '\n'
+           │             │      │            └ ' '
+           │             │      └ ('[bold red][!] Account connect 𝖁𝖎𝖙𝖆𝖑𝖎𝛄 𝖅𝖍𝖆𝖇𝖎𝖓𝖘𝖐𝖎𝛄 79493531398',)
+           │             └ <function Console.print at 0x00000285AFF8BEC0>
+           └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 1672, in print
+    with self:
+         └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 864, in __exit__
+    self._exit_buffer()
+    │    └ <function Console._exit_buffer at 0x00000285AFF8A3E0>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 822, in _exit_buffer
+    self._check_buffer()
+    │    └ <function Console._check_buffer at 0x00000285AFF90360>
+    └ <console width=79 None>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\console.py", line 2027, in _check_buffer
+    legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+    │                     │       │                 │    └ <property object at 0x00000285AFF7ACA0>
+    │                     │       │                 └ <console width=79 None>
+    │                     │       └ <class 'rich._win32_console.LegacyWindowsTerm'>
+    │                     └ [Segment('[', Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)), Segment('!', Style(color=Color('red', Colo...
+    └ <function legacy_windows_render at 0x00000285B0032200>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    │    │            │     └ Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)
+    │    │            └ ' Account connect 𝖁𝖎𝖙𝖆𝖑𝖎𝛄 𝖅𝖍𝖆𝖇𝖎𝖓𝖘𝖐𝖎𝛄 '
+    │    └ <function LegacyWindowsTerm.write_styled at 0x00000285AFF91C60>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x00000285B102A350>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 442, in write_styled
+    self.write_text(text)
+    │    │          └ ' Account connect 𝖁𝖎𝖙𝖆𝖑𝖎𝛄 𝖅𝖍𝖆𝖇𝖎𝖓𝖘𝖐𝖎𝛄 '
+    │    └ <function LegacyWindowsTerm.write_text at 0x00000285AFF91BC0>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x00000285B102A350>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\rich\_win32_console.py", line 403, in write_text
+    self.write(text)
+    │    │     └ ' Account connect 𝖁𝖎𝖙𝖆𝖑𝖎𝛄 𝖅𝖍𝖆𝖇𝖎𝖓𝖘𝖐𝖎𝛄 '
+    │    └ <built-in method write of _io.TextIOWrapper object at 0x00000285AB64FE00>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x00000285B102A350>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           │      │              │     │    │      └ <EncodingMap object at 0x00000285AB372610>
+           │      │              │     │    └ 'strict'
+           │      │              │     └ <encodings.cp1251.IncrementalEncoder object at 0x00000285AB729190>
+           │      │              └ ' Account connect 𝖁𝖎𝖙𝖆𝖑𝖎𝛄 𝖅𝖍𝖆𝖇𝖎𝖓𝖘𝖐𝖎𝛄 '
+           │      └ <built-in function charmap_encode>
+           └ <module 'codecs' (frozen)>
+
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 17-23: character maps to <undefined>
+2023-08-09 22:51:04.106 | ERROR    | __main__:<module>:21 - cannot access local variable 'system_version' where it is not associated with a value
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 37, in record_device_type
+    config.get('device_model', 'device_model')
+    │      └ <function RawConfigParser.get at 0x0000029CC587B240>
+    └ <configparser.ConfigParser object at 0x0000029CC591CF50>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 797, in get
+    d = self._unify_values(section, vars)
+        │    │             │        └ None
+        │    │             └ 'device_model'
+        │    └ <function RawConfigParser._unify_values at 0x0000029CC58A8220>
+        └ <configparser.ConfigParser object at 0x0000029CC591CF50>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 1168, in _unify_values
+    raise NoSectionError(section) from None
+          │              └ 'device_model'
+          └ <class 'configparser.NoSectionError'>
+
+configparser.NoSectionError: No section: 'device_model'
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000029CC5DE14E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000029CC3C2EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 60, in main_menu
+    program_settings()
+    └ <function program_settings at 0x0000029CC5DE1940>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 333, in program_settings
+    writing_settings_to_a_file(config=record_device_type())
+    │                                 └ <function record_device_type at 0x0000029CC5D425C0>
+    └ <function writing_settings_to_a_file at 0x0000029CC5D42660>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 47, in record_device_type
+    config['system_version'] = {'system_version': system_version}
+    └ <configparser.ConfigParser object at 0x0000029CC591CF50>
+
+UnboundLocalError: cannot access local variable 'system_version' where it is not associated with a value
+2023-08-09 22:51:04.106 | ERROR    | __main__:<module>:21 - cannot access local variable 'system_version' where it is not associated with a value
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 37, in record_device_type
+    config.get('device_model', 'device_model')
+    │      └ <function RawConfigParser.get at 0x0000029CC587B240>
+    └ <configparser.ConfigParser object at 0x0000029CC591CF50>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 797, in get
+    d = self._unify_values(section, vars)
+        │    │             │        └ None
+        │    │             └ 'device_model'
+        │    └ <function RawConfigParser._unify_values at 0x0000029CC58A8220>
+        └ <configparser.ConfigParser object at 0x0000029CC591CF50>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\configparser.py", line 1168, in _unify_values
+    raise NoSectionError(section) from None
+          │              └ 'device_model'
+          └ <class 'configparser.NoSectionError'>
+
+configparser.NoSectionError: No section: 'device_model'
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 19, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000029CC5DE14E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 14, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000029CC3C2EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 60, in main_menu
+    program_settings()
+    └ <function program_settings at 0x0000029CC5DE1940>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 333, in program_settings
+    writing_settings_to_a_file(config=record_device_type())
+    │                                 └ <function record_device_type at 0x0000029CC5D425C0>
+    └ <function writing_settings_to_a_file at 0x0000029CC5D42660>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 47, in record_device_type
+    config['system_version'] = {'system_version': system_version}
+    └ <configparser.ConfigParser object at 0x0000029CC591CF50>
+
+UnboundLocalError: cannot access local variable 'system_version' where it is not associated with a value

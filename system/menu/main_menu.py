@@ -293,6 +293,7 @@ def program_settings() -> None:  # 8 - Настройки программы, з
     table.add_row("5", "Время между подпиской", "Запись времени между сменой групп при подписке.")
     table.add_row("6", "Запись proxy", "Запись данных для proxy")
     table.add_row("7", "Лимиты на аккаунт", "Установление лимитов на аккаунт")
+    table.add_row("8", "Смена типа устройства", "Запись данных для смены типа устройства")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[bold red][+] Введите номер: ")
@@ -327,6 +328,9 @@ def program_settings() -> None:  # 8 - Настройки программы, з
     elif user_input == "7":  # Запись лимитов на аккаунт
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         writing_settings_to_a_file(config=record_account_limits())
+    elif user_input == "8":  # Запись типа устройства
+        clearing_console_showing_banner()  # Чистим консоль, выводим банер
+        writing_settings_to_a_file(config=record_device_type())
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
