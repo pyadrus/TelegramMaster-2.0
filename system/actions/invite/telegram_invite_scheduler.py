@@ -9,10 +9,11 @@ from system.telegram_actions.telegram_actions import deleting_files_by_dictionar
 
 def schedule_member_invitation():
     """Запуск inviting"""
+    deleting_files_by_dictionary()
     invitation_from_all_accounts_program_body(name_database_table="members")
 
 
-def launching_an_invite_once_an_hour():
+def launching_an_invite_once_an_hour() -> None:
     """Запуск inviting 1 раз в час"""
     # Запускаем автоматизацию
     schedule.every().hour.at(":00").do(schedule_member_invitation)
@@ -23,11 +24,11 @@ def launching_an_invite_once_an_hour():
         time.sleep(1)
 
 
-def invite_members() -> None:
-    """Отправка приглашений всем участникам из базы данных"""
-    deleting_files_by_dictionary()
-    members_db = "members.db"
-    invite_members(members_db)
+# def invite_members() -> None:
+#     """Отправка приглашений всем участникам из базы данных"""
+#     deleting_files_by_dictionary()
+#     members_db = "members.db"
+#     invite_members(members_db)
 
 
 def schedule_invite() -> None:
@@ -38,11 +39,13 @@ def schedule_invite() -> None:
     minute_user: str = console.input("[bold green]Введите минуты (Пример: 02, 25, 59): ")
     console.print(f"[green]Скрипт будет запускаться каждый день в {hour_user}:{minute_user}")
     # Запускаем автоматизацию
-    schedule.every().day.at(f"{hour_user}:{minute_user}").do(invite_members)
+    schedule.every().day.at(f"{hour_user}:{minute_user}").do(schedule_member_invitation)
     while True:
         schedule.run_pending()
         time.sleep(1)
 
 
 if __name__ == "__main__":
-    invite_members()
+    # invite_members()
+    launching_an_invite_once_an_hour()
+    schedule_invite()
