@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from rich import print
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data

@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 import configparser
 import getpass
-import time
 import tkinter as tk
 from tkinter import ttk
 

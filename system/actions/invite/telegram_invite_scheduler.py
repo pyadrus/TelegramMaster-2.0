@@ -24,13 +24,6 @@ def launching_an_invite_once_an_hour() -> None:
         time.sleep(1)
 
 
-# def invite_members() -> None:
-#     """Отправка приглашений всем участникам из базы данных"""
-#     deleting_files_by_dictionary()
-#     members_db = "members.db"
-#     invite_members(members_db)
-
-
 def schedule_invite() -> None:
     """Запуск автоматической отправки приглашений участникам"""
     # Вводим час запуска программы в формате 03, 06, 23
