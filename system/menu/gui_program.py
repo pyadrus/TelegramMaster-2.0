@@ -21,7 +21,6 @@ def program_window_with_dimensions(geometry):
 
 def program_window():
     """Создаем графическое окно ввода"""
-
     root = Tk()  # Создаем программу
     root.title(f"Telegram_BOT_SMM: {program_version} от {date_of_program_change}")
     text = Text(width=50, height=25)  # Создаем окно ввода текста, width=50, height=25 выбираем размер программы

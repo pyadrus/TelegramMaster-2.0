@@ -3,8 +3,8 @@ from rich import box
 from rich.table import Table
 
 from system.actions.actions_with_account.account_verification import *
-from system.actions.invite.telegram_invite_scheduler import *
 from system.actions.invite.inviting_participants_telegram import *
+from system.actions.invite.telegram_invite_scheduler import *
 from system.actions.pars.parsing_account_groups_and_channels import *
 from system.actions.pars.parsing_group_members import *
 from system.actions.reactions.reactions import *
@@ -23,48 +23,44 @@ logger.add("setting_user/log/log.log", rotation="1 MB", compression="zip")
 
 def main_menu() -> None:  # 1 - Основное меню программы
     """Основное меню программы"""
-    try:
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
+    table = Table(title="[bold red]Основные функции программы!", box=box.HORIZONTALS)  # Выводим таблицу
+    column_names(table)  # Формируем колонки таблицы
+    # Выводим текст в таблице
+    table.add_row("1", f"Inviting {link_group}", "Inviting по времени, по номерам, по parsing списку")
+    table.add_row("2", "Parsing", "Parsing списка или до запись в существующий")
+    table.add_row("3", "Работа с контактами", "Добавляем контакт в телефонную книгу, и создаем список для inviting")
+    table.add_row("4", "Подписка, отписка", "Подписка, отписка  групп / каналов, формирование списка для подписки")
+    table.add_row("5", "Подключение аккаунтов", "Подключение новых аккаунтов")
+    table.add_row("6", "Рассылка сообщений", "Рассылка: в личку, по чатам (потребуется сформировать список чатов)")
+    table.add_row("7", "Работа с реакциями", "Ставим реакции на посты: группе, канале. Потребуется ссылка на пост")
+    table.add_row("8", "Настройки", "Запись ссылки для Inviting, api_id, api_hash, установка времени")
+    table.add_row("9", "Проверка аккаунтов", "Проверка аккаунтов через спам бот")
+    console.print(table, justify="center")  # Отображаем таблицу
+    user_input = console.input("[bold red][+] Введите номер: ")
+    if user_input == "1":  # Inviting в группы
+        inviting_groups()
+    elif user_input == "2":  # Parsing, в новый файл members.db и до записи в файл
+        telegram_parsing_menu()
+    elif user_input == "3":  # Работаем с контактами телефонной книги
+        working_tools_contacts()
+    elif user_input == "4":  # Работаем с подпиской, подписка, отписка, запись ссылок в файл
+        subscribe_unsubscribe_write_to_file()
+    elif user_input == "5":  # Подключение новых аккаунтов, методом ввода нового номера телефона
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        table = Table(title="[bold red]Основные функции программы!", box=box.HORIZONTALS)  # Выводим таблицу
-        column_names(table)  # Формируем колонки таблицы
-        # Выводим текст в таблице
-        table.add_row("1", f"Inviting {link_group}", "Inviting по времени, по номерам, по parsing списку")
-        table.add_row("2", "Parsing", "Parsing списка или до запись в существующий")
-        table.add_row("3", "Работа с контактами", "Добавляем контакт в телефонную книгу, и создаем список для inviting")
-        table.add_row("4", "Подписка, отписка", "Подписка, отписка  групп / каналов, формирование списка для подписки")
-        table.add_row("5", "Подключение аккаунтов", "Подключение новых аккаунтов")
-        table.add_row("6", "Рассылка сообщений", "Рассылка: в личку, по чатам (потребуется сформировать список чатов)")
-        table.add_row("7", "Работа с реакциями", "Ставим реакции на посты: группе, канале. Потребуется ссылка на пост")
-        table.add_row("8", "Настройки", "Запись ссылки для Inviting, api_id, api_hash, установка времени")
-        table.add_row("9", "Проверка аккаунтов", "Проверка аккаунтов через спам бот")
-        console.print(table, justify="center")  # Отображаем таблицу
-        user_input = console.input("[bold red][+] Введите номер: ")
-        if user_input == "1":  # Inviting в группы
-            inviting_groups()
-        elif user_input == "2":  # Parsing, в новый файл members.db и до записи в файл
-            telegram_parsing_menu()
-        elif user_input == "3":  # Работаем с контактами телефонной книги
-            working_tools_contacts()
-        elif user_input == "4":  # Работаем с подпиской, подписка, отписка, запись ссылок в файл
-            subscribe_unsubscribe_write_to_file()
-        elif user_input == "5":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-            clearing_console_showing_banner()  # Чистим консоль, выводим банер
-            connecting_new_account()
-            main_menu()
-        elif user_input == "6":  # Рассылка сообщений по списку members.db
-            sending_messages_to_a_personal_account_chat()
-        elif user_input == "7":  # Работа с реакциями
-            working_with_the_reaction()
-        elif user_input == "8":  # Настройки для программы (прописываем ссылку для inviting, api_id, api_hash)
-            program_settings()
-        elif user_input == "9":  # Проверка аккаунта через спам бот
-            clearing_console_showing_banner()  # Чистим консоль, выводим банер
-            check_account_for_spam()
-        else:
-            main_menu()  # После отработки функции переходим в начальное меню
-    except KeyboardInterrupt:
-        """Закрытие окна программы"""
-        print("[!] Скрипт остановлен!")
+        connecting_new_account()
+        main_menu()
+    elif user_input == "6":  # Рассылка сообщений по списку members.db
+        sending_messages_to_a_personal_account_chat()
+    elif user_input == "7":  # Работа с реакциями
+        working_with_the_reaction()
+    elif user_input == "8":  # Настройки для программы (прописываем ссылку для inviting, api_id, api_hash)
+        program_settings()
+    elif user_input == "9":  # Проверка аккаунта через спам бот
+        clearing_console_showing_banner()  # Чистим консоль, выводим банер
+        check_account_for_spam()
+    else:
+        main_menu()  # После отработки функции переходим в начальное меню
 
 
 def inviting_groups() -> None:  # 1 - Inviting в группы
