@@ -11072,3 +11072,1249 @@ Traceback (most recent call last):
     └ <module 'struct' from 'C:\\Users\\Vitaily OOT i ZP\\AppData\\Local\\Programs\\Python\\Python38-32\\lib\\struct.py'>
 
 struct.error: required argument is not an integer
+2023-08-17 23:18:28.346 | ERROR    | system.actions.reactions.reactions:viewing_posts:237 - required argument is not an integer
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001F9D79F5080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001F9D47FEFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000001F9D79F5440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x000001F9D79EBC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 232, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=posts, increment=True))
+    │      │                            │           └ [<telethon.tl.patched.Message object at 0x000001F9D7A54550>, <telethon.tl.patched.Message object at 0x000001F9D7A54910>, <tel...
+    │      │                            └ <telethon.tl.types.Channel object at 0x000001F9D7A4A910>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D62605D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001F9D7A28B80>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001F9D4292840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-70' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001F9D7A0AB90>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D62605D0>
+                 │    └ <function UserMethods._call at 0x000001F9D5EBAC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D62605D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+             │      └ <function MTProtoSender.send at 0x000001F9D5E5D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001F9D7A0AB90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x000001F9D79FF470>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x000001F9D4C9A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ [<telethon.tl.patched.Message object at 0x000001F9D7A54550>, <telethon.tl.patched.Message object at 0x000001F9D7A54910>, <tel...
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ [<telethon.tl.patched.Message object at 0x000001F9D7A54550>, <telethon.tl.patched.Message object at 0x000001F9D7A54910>, <tel...
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in <genexpr>
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │                                 │      │          │      └ <telethon.tl.patched.Message object at 0x000001F9D7A54550>
+                        │      │                                 │      │          └ <telethon.tl.patched.Message object at 0x000001F9D7A54550>
+                        │      │                                 │      └ <built-in function pack>
+                        │      │                                 └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+struct.error: required argument is not an integer
+2023-08-17 23:18:28.346 | ERROR    | system.actions.reactions.reactions:viewing_posts:237 - required argument is not an integer
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001F9D79F5080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001F9D47FEFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000001F9D79F5440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x000001F9D79EBC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 232, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=posts, increment=True))
+    │      │                            │           └ [<telethon.tl.patched.Message object at 0x000001F9D7A54550>, <telethon.tl.patched.Message object at 0x000001F9D7A54910>, <tel...
+    │      │                            └ <telethon.tl.types.Channel object at 0x000001F9D7A4A910>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D62605D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001F9D7A28B80>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001F9D4292840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-70' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001F9D7A0AB90>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D62605D0>
+                 │    └ <function UserMethods._call at 0x000001F9D5EBAC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D62605D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+             │      └ <function MTProtoSender.send at 0x000001F9D5E5D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001F9D7A0AB90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x000001F9D79FF470>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x000001F9D4C9A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ [<telethon.tl.patched.Message object at 0x000001F9D7A54550>, <telethon.tl.patched.Message object at 0x000001F9D7A54910>, <tel...
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ [<telethon.tl.patched.Message object at 0x000001F9D7A54550>, <telethon.tl.patched.Message object at 0x000001F9D7A54910>, <tel...
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A25150>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in <genexpr>
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │                                 │      │          │      └ <telethon.tl.patched.Message object at 0x000001F9D7A54550>
+                        │      │                                 │      │          └ <telethon.tl.patched.Message object at 0x000001F9D7A54550>
+                        │      │                                 │      └ <built-in function pack>
+                        │      │                                 └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+struct.error: required argument is not an integer
+2023-08-17 23:18:39.271 | ERROR    | system.actions.reactions.reactions:viewing_posts:237 - required argument is not an integer
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001F9D79F5080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001F9D47FEFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000001F9D79F5440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x000001F9D79EBC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 232, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=posts, increment=True))
+    │      │                            │           └ [<telethon.tl.patched.Message object at 0x000001F9D7B72490>, <telethon.tl.patched.Message object at 0x000001F9D7B729D0>, <tel...
+    │      │                            └ <telethon.tl.types.Channel object at 0x000001F9D7B71F10>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D63B4490>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001F9D7A6F100>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001F9D4292840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-87' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001F9D7A3C950>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D63B4490>
+                 │    └ <function UserMethods._call at 0x000001F9D5EBAC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D63B4490>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+             │      └ <function MTProtoSender.send at 0x000001F9D5E5D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001F9D7A3C950>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x000001F9D7B80B30>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x000001F9D4C9A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ [<telethon.tl.patched.Message object at 0x000001F9D7B72490>, <telethon.tl.patched.Message object at 0x000001F9D7B729D0>, <tel...
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ [<telethon.tl.patched.Message object at 0x000001F9D7B72490>, <telethon.tl.patched.Message object at 0x000001F9D7B729D0>, <tel...
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in <genexpr>
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │                                 │      │          │      └ <telethon.tl.patched.Message object at 0x000001F9D7B72490>
+                        │      │                                 │      │          └ <telethon.tl.patched.Message object at 0x000001F9D7B72490>
+                        │      │                                 │      └ <built-in function pack>
+                        │      │                                 └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+struct.error: required argument is not an integer
+2023-08-17 23:18:39.271 | ERROR    | system.actions.reactions.reactions:viewing_posts:237 - required argument is not an integer
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001F9D79F5080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001F9D47FEFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000001F9D79F5440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x000001F9D79EBC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 232, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=posts, increment=True))
+    │      │                            │           └ [<telethon.tl.patched.Message object at 0x000001F9D7B72490>, <telethon.tl.patched.Message object at 0x000001F9D7B729D0>, <tel...
+    │      │                            └ <telethon.tl.types.Channel object at 0x000001F9D7B71F10>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D63B4490>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001F9D7A6F100>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001F9D4292840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-87' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001F9D7A3C950>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D63B4490>
+                 │    └ <function UserMethods._call at 0x000001F9D5EBAC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001F9D63B4490>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+             │      └ <function MTProtoSender.send at 0x000001F9D5E5D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001F9D7A3C950>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x000001F9D7B80B30>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x000001F9D4C9A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ [<telethon.tl.patched.Message object at 0x000001F9D7B72490>, <telethon.tl.patched.Message object at 0x000001F9D7B729D0>, <tel...
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ [<telethon.tl.patched.Message object at 0x000001F9D7B72490>, <telethon.tl.patched.Message object at 0x000001F9D7B729D0>, <tel...
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001F9D7A13390>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in <genexpr>
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │                                 │      │          │      └ <telethon.tl.patched.Message object at 0x000001F9D7B72490>
+                        │      │                                 │      │          └ <telethon.tl.patched.Message object at 0x000001F9D7B72490>
+                        │      │                                 │      └ <built-in function pack>
+                        │      │                                 └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+struct.error: required argument is not an integer
+2023-08-17 23:22:08.650 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - object of type 'int' has no len()
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001DDB75C5080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001DDB436EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000001DDB75C5440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x000001DDB75BBC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=int(number), increment=True))
+    │      │                            │               └ '122'
+    │      │                            └ <telethon.tl.types.Channel object at 0x000001DDB761BF50>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75FF650>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001DDB75F46D0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001DDB3DF2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-69' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB75D7250>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75FF650>
+                 │    └ <function UserMethods._call at 0x000001DDB5A6AC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75FF650>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+             │      └ <function MTProtoSender.send at 0x000001DDB5A0D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB75D7250>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x000001DDB76035B0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x000001DDB485A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ 122
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ 122
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+TypeError: object of type 'int' has no len()
+2023-08-17 23:22:08.650 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - object of type 'int' has no len()
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001DDB75C5080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001DDB436EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000001DDB75C5440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x000001DDB75BBC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=int(number), increment=True))
+    │      │                            │               └ '122'
+    │      │                            └ <telethon.tl.types.Channel object at 0x000001DDB761BF50>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75FF650>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001DDB75F46D0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001DDB3DF2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-69' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB75D7250>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75FF650>
+                 │    └ <function UserMethods._call at 0x000001DDB5A6AC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75FF650>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+             │      └ <function MTProtoSender.send at 0x000001DDB5A0D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB75D7250>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x000001DDB76035B0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x000001DDB485A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ 122
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ 122
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB760DBD0>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+TypeError: object of type 'int' has no len()
+2023-08-17 23:22:19.539 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - object of type 'int' has no len()
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001DDB75C5080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001DDB436EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000001DDB75C5440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x000001DDB75BBC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=int(number), increment=True))
+    │      │                            │               └ '122'
+    │      │                            └ <telethon.tl.types.Channel object at 0x000001DDB77418D0>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75DAA50>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001DDB763F010>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001DDB3DF2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-86' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB7618B10>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75DAA50>
+                 │    └ <function UserMethods._call at 0x000001DDB5A6AC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75DAA50>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+             │      └ <function MTProtoSender.send at 0x000001DDB5A0D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB7618B10>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x000001DDB7744450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x000001DDB485A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ 122
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ 122
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+TypeError: object of type 'int' has no len()
+2023-08-17 23:22:19.539 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - object of type 'int' has no len()
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001DDB75C5080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001DDB436EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000001DDB75C5440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x000001DDB75BBC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=int(number), increment=True))
+    │      │                            │               └ '122'
+    │      │                            └ <telethon.tl.types.Channel object at 0x000001DDB77418D0>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75DAA50>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001DDB763F010>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001DDB3DF2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-86' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB7618B10>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75DAA50>
+                 │    └ <function UserMethods._call at 0x000001DDB5A6AC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75DAA50>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+             │      └ <function MTProtoSender.send at 0x000001DDB5A0D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB7618B10>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x000001DDB7744450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x000001DDB485A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ 122
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ 122
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB7741350>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+TypeError: object of type 'int' has no len()
+2023-08-17 23:22:31.923 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - object of type 'int' has no len()
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001DDB75C5080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001DDB436EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000001DDB75C5440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x000001DDB75BBC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=int(number), increment=True))
+    │      │                            │               └ '122'
+    │      │                            └ <telethon.tl.types.Channel object at 0x000001DDB7625C50>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75E3190>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001DDB763E7A0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001DDB3DF2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-103' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyt...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB7743AD0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75E3190>
+                 │    └ <function UserMethods._call at 0x000001DDB5A6AC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75E3190>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+             │      └ <function MTProtoSender.send at 0x000001DDB5A0D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB7743AD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x000001DDB77454E0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x000001DDB485A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ 122
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ 122
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+TypeError: object of type 'int' has no len()
+2023-08-17 23:22:31.923 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - object of type 'int' has no len()
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001DDB75C5080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x000001DDB436EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x000001DDB75C5440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x000001DDB75BBC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=int(number), increment=True))
+    │      │                            │               └ '122'
+    │      │                            └ <telethon.tl.types.Channel object at 0x000001DDB7625C50>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75E3190>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000001DDB763E7A0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000001DDB3DF2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-103' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyt...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB7743AD0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75E3190>
+                 │    └ <function UserMethods._call at 0x000001DDB5A6AC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000001DDB75E3190>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+             │      └ <function MTProtoSender.send at 0x000001DDB5A0D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x000001DDB7743AD0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x000001DDB77454E0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x000001DDB485A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ 122
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ 122
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x000001DDB75E27D0>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+TypeError: object of type 'int' has no len()
+2023-08-17 23:24:34.710 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - required argument is not an integer
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000024F47CA1080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000024F45A1EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x0000024F47CA1440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x0000024F47C9BC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=number, increment=True))
+    │      │                            │           └ '122'
+    │      │                            └ <telethon.tl.types.Channel object at 0x0000024F48CCBC50>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F48CC0210>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000024F47CD8B80>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000024F454A2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-69' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024F47CD6850>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F48CC0210>
+                 │    └ <function UserMethods._call at 0x0000024F4711AC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F48CC0210>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+             │      └ <function MTProtoSender.send at 0x0000024F470B9300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024F47CD6850>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x0000024F47CE7F60>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x0000024F45F0A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ '122'
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ '122'
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in <genexpr>
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │                                 │      │          │      └ '1'
+                        │      │                                 │      │          └ '1'
+                        │      │                                 │      └ <built-in function pack>
+                        │      │                                 └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+struct.error: required argument is not an integer
+2023-08-17 23:24:34.710 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - required argument is not an integer
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000024F47CA1080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000024F45A1EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x0000024F47CA1440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x0000024F47C9BC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=number, increment=True))
+    │      │                            │           └ '122'
+    │      │                            └ <telethon.tl.types.Channel object at 0x0000024F48CCBC50>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F48CC0210>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000024F47CD8B80>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000024F454A2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-69' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024F47CD6850>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F48CC0210>
+                 │    └ <function UserMethods._call at 0x0000024F4711AC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F48CC0210>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+             │      └ <function MTProtoSender.send at 0x0000024F470B9300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024F47CD6850>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x0000024F47CE7F60>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x0000024F45F0A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ '122'
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ '122'
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F48CD6D90>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in <genexpr>
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │                                 │      │          │      └ '1'
+                        │      │                                 │      │          └ '1'
+                        │      │                                 │      └ <built-in function pack>
+                        │      │                                 └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+struct.error: required argument is not an integer
+2023-08-17 23:24:45.977 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - required argument is not an integer
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000024F47CA1080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000024F45A1EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x0000024F47CA1440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x0000024F47C9BC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=number, increment=True))
+    │      │                            │           └ '122'
+    │      │                            └ <telethon.tl.types.Channel object at 0x0000024F48DF1590>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F47CAA010>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000024F48CF3010>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000024F454A2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-86' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024F48CE0690>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F47CAA010>
+                 │    └ <function UserMethods._call at 0x0000024F4711AC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F47CAA010>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+             │      └ <function MTProtoSender.send at 0x0000024F470B9300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024F48CE0690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x0000024F48E00400>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x0000024F45F0A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ '122'
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ '122'
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in <genexpr>
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │                                 │      │          │      └ '1'
+                        │      │                                 │      │          └ '1'
+                        │      │                                 │      └ <built-in function pack>
+                        │      │                                 └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+struct.error: required argument is not an integer
+2023-08-17 23:24:45.977 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - required argument is not an integer
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000024F47CA1080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000024F45A1EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x0000024F47CA1440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x0000024F47C9BC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=number, increment=True))
+    │      │                            │           └ '122'
+    │      │                            └ <telethon.tl.types.Channel object at 0x0000024F48DF1590>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F47CAA010>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000024F48CF3010>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000024F454A2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-86' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024F48CE0690>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F47CAA010>
+                 │    └ <function UserMethods._call at 0x0000024F4711AC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000024F47CAA010>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+             │      └ <function MTProtoSender.send at 0x0000024F470B9300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024F48CE0690>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x0000024F48E00400>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x0000024F45F0A5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ '122'
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ '122'
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024F47CD61D0>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in <genexpr>
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │                                 │      │          │      └ '1'
+                        │      │                                 │      │          └ '1'
+                        │      │                                 │      └ <built-in function pack>
+                        │      │                                 └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+struct.error: required argument is not an integer
+2023-08-17 23:25:53.537 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - object of type 'int' has no len()
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000024BC2465080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000024BC023EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x0000024BC2465440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x0000024BC245BC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=122, increment=True))
+    │      │                            └ <telethon.tl.types.Channel object at 0x0000024BC348A750>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x0000024BC249B950>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000024BC24949A0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000024BBFCD2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-69' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024BC3480290>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000024BC249B950>
+                 │    └ <function UserMethods._call at 0x0000024BC18EAC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000024BC249B950>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+             │      └ <function MTProtoSender.send at 0x0000024BC188D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024BC3480290>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x0000024BC24A7B00>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x0000024BC06DA5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ 122
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ 122
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+TypeError: object of type 'int' has no len()
+2023-08-17 23:25:53.537 | ERROR    | system.actions.reactions.reactions:viewing_posts:240 - object of type 'int' has no len()
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000024BC2465080>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()
+    └ <function main_menu at 0x0000024BC023EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 56, in main_menu
+    working_with_the_reaction()
+    └ <function working_with_the_reaction at 0x0000024BC2465440>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 268, in working_with_the_reaction
+    viewing_posts()
+    └ <function viewing_posts at 0x0000024BC245BC40>
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\actions\reactions\reactions.py", line 235, in viewing_posts
+    client(GetMessagesViewsRequest(peer=channel, id=122, increment=True))
+    │      │                            └ <telethon.tl.types.Channel object at 0x0000024BC348A750>
+    │      └ <class 'telethon.tl.functions.messages.GetMessagesViewsRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x0000024BC249B950>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x0000024BC24949A0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x0000024BBFCD2840>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-69' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024BC3480290>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x0000024BC249B950>
+                 │    └ <function UserMethods._call at 0x0000024BC18EAC00>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x0000024BC249B950>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+             │      └ <function MTProtoSender.send at 0x0000024BC188D300>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x0000024BC3480290>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 181, in send
+    state = RequestState(request)
+            │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+            └ <class 'telethon.network.requeststate.RequestState'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\requeststate.py", line 17, in __init__
+    self.data = bytes(request)
+    │    │            └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+    │    └ <member 'data' of 'RequestState' objects>
+    └ <telethon.network.requeststate.RequestState object at 0x0000024BC24A7B00>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 194, in __bytes__
+    return self._bytes()
+           │    └ <function GetMessagesViewsRequest._bytes at 0x0000024BC06DA5C0>
+           └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\functions\messages.py", line 2964, in _bytes
+    b'\x15\xc4\xb5\x1c',struct.pack('<i', len(self.id)),b''.join(struct.pack('<i', x) for x in self.id),
+                        │      │              │    │             │      │                      │    └ 122
+                        │      │              │    │             │      │                      └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+                        │      │              │    │             │      └ <built-in function pack>
+                        │      │              │    │             └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+                        │      │              │    └ 122
+                        │      │              └ <telethon.tl.functions.messages.GetMessagesViewsRequest object at 0x0000024BC23F1C90>
+                        │      └ <built-in function pack>
+                        └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
+
+TypeError: object of type 'int' has no len()

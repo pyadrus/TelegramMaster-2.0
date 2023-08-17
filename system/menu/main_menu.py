@@ -252,16 +252,20 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
 def working_with_the_reaction() -> None:  # 7 - Работа с реакциями на посты группы или канала
     """Работа с реакциями на посты группы или канала"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
-    table = Table(title="[bold red]Работа с реакциями!", box=box.HORIZONTALS)  # Выводим таблицу
+    table = Table(title="[bold red]Работа с реакциями / постами!", box=box.HORIZONTALS)  # Выводим таблицу
     column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
     table.add_row("1", "Ставим реакцию на 1 пост", "Ставим реакции на один пост с группе / канале")
+    table.add_row("2", "Накручиваем просмотры постов", "Накручиваем просмотры постов канале")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[bold red][+] Введите номер: ")
     if user_input == "1":  # Ставим реакции на один пост в группе / канале
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         users_choice_of_reaction()
+    elif user_input == "2":  # Накручиваем просмотры постов
+        clearing_console_showing_banner()  # Чистим консоль, выводим банер
+        viewing_posts()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
