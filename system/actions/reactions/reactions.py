@@ -2,7 +2,9 @@ import re
 import sys
 import time
 
+from loguru import logger
 from rich import print
+from telethon import types
 from telethon.tl.functions.messages import SendReactionRequest
 
 from system.actions.subscription.subscription import subscribe_to_group_or_channel
@@ -54,10 +56,8 @@ def reactions_for_groups_and_messages(reaction_input) -> None:
     """Вводим ссылку на группу и ссылку на сообщение"""
     chat = console.input("[bold red][+] Введите ссылку на группу / канал: ")  # Ссылка на группу или канал
     message = console.input("[bold red][+] Введите ссылку на сообщение или пост: ")  # Ссылка на сообщение
-    # Преобразовываем в номер сообщения, с помощью регулярных выражений
-    message_number = re.sub(f'{chat}/', '', f"{message}")
     records: list = choosing_a_number_of_reactions()  # Выбираем лимиты для аккаунтов
-    send_reaction_request(records, chat, int(message_number), reaction_input)  # Ставим реакцию на пост, сообщение
+    send_reaction_request(records, chat, message, reaction_input)  # Ставим реакцию на пост, сообщение
 
 
 def choosing_a_number_of_reactions() -> list:
@@ -74,20 +74,26 @@ def choosing_a_number_of_reactions() -> list:
     return records
 
 
-def send_reaction_request(records, chat, message, reaction_input):
+def send_reaction_request(records, chat, message_url, reaction_input):
     """Ставим реакции на сообщения"""
     for row in records:
-        # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
+        # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         try:
             subscribe_to_group_or_channel(client, chat, phone)  # Подписываемся на группу
-            client(SendReactionRequest(chat, message, reaction=f'{reaction_input}'))  # Ставим реакцию
+            number = re.search(r'/(\d+)$', message_url).group(1)
+            time.sleep(5)
+            client(SendReactionRequest(peer=chat, msg_id=int(number), reaction=[types.ReactionEmoji(emoticon=f'{reaction_input}')]))
             time.sleep(1)
         except KeyError:
             sys.exit(1)
+        except Exception as e:
+            logger.exception(e)
+            print("[bold red][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
         finally:
-            client.disconnect()  # Разрываем соединение Telegram
-    app_notifications(notification_text=f"Работа с группой {chat} окончена!") # Выводим уведомление
+            client.disconnect()
+
+    app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
 
 if __name__ == "__main__":
