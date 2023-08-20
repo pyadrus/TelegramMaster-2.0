@@ -224,7 +224,7 @@ def viewing_posts():
 
             time.sleep(5)
             # Получение последних 10 постов из канала
-            posts = client.get_messages(channel, limit=1)
+            posts = client.get_messages(channel, limit=1361)
             # Вывод информации о постах
             for post in posts:
                 post_link = f"{chat}/{post.id}"  # Ссылка на пост
