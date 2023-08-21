@@ -137,8 +137,7 @@ def inviting(client, phone, records) -> None:
             actions: str = f"Аккаунт {phone} не может добавить в группу {link_group}"
             record_and_interrupt(actions, phone, f"username : {username}", event)
             break  # Прерываем работу и меняем аккаунт
-        except KeyboardInterrupt:
-            """Закрытие окна программы"""
+        except KeyboardInterrupt: # Закрытие окна программы
             client.disconnect()
             print("[!] Скрипт остановлен!")
         else:
