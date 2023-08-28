@@ -10,7 +10,7 @@ logger.add("setting_user/log/log.log", rotation="1 MB", compression="zip")  # Л
 def launching_the_program_with_account_verification():
     """Запуск программы с проверкой аккаунтов"""
     deleting_files_by_dictionary()
-    main_menu() # Основное меню программы
+    main_menu()  # Основное меню программы
 
 
 if __name__ == "__main__":
@@ -18,4 +18,6 @@ if __name__ == "__main__":
         launching_the_program_with_account_verification()
     except Exception as e:
         logger.exception(e)
-        print("[bold red][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+        print(
+            "[bold red][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log"
+        )

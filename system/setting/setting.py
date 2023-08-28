@@ -31,19 +31,19 @@ def record_device_type() -> configparser.ConfigParser():
     """Запись типа устройства например: Samsung SGH600, Android 9 (P30), 4.2.1,
                                         Vivo V9, Android 9 (P30), 4.2.1"""
     try:
-        device_model = console.input("[bold green][+] Введите модель устройства : ")
+        device_model = console.input("[bold green][+] Введите модель устройства: ")
         config.get('device_model', 'device_model')
         config.set('device_model', 'device_model', device_model)
     except configparser.NoSectionError:  # Если в setting_user/config.ini нет записи, то создаем ее
         config['device_model'] = {'device_model': device_model}
     try:
-        system_version = console.input("[bold green][+] Введите версию операционной системы : ")
+        system_version = console.input("[bold green][+] Введите версию операционной системы: ")
         config.get('system_version', 'system_version')
         config.set('system_version', 'system_version', system_version)
     except configparser.NoSectionError:  # Если в setting_user/config.ini нет записи, то создаем ее
         config['system_version'] = {'system_version': system_version}
     try:
-        app_version = console.input("[bold green][+] Введите версию приложения : ")
+        app_version = console.input("[bold green][+] Введите версию приложения: ")
         config.get('app_version', 'app_version')
         config.set('app_version', 'app_version', app_version)
     except configparser.NoSectionError:  # Если в setting_user/config.ini нет записи, то создаем ее

@@ -1,7 +1,7 @@
 certifi==2023.7.22
 charset-normalizer==3.2.0
 colorama==0.4.6
-emoji==2.7.0
+emoji==2.8.0
 idna==3.4
 loguru==0.7.0
 markdown-it-py==3.0.0
@@ -15,6 +15,6 @@ requests==2.31.0
 rich==13.5.2
 rsa==4.9
 schedule==1.2.0
-Telethon==1.29.2
+Telethon==1.29.3
 urllib3==2.0.4
 win32-setctime==1.1.0
