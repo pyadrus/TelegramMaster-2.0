@@ -16,6 +16,19 @@ con.close() – закрытие соединения с БД.
 execute - метод для выполнения одного выражения SQL
 executemany - метод позволяет выполнить одно выражение SQL для последовательности параметров (или для итератора)
 executescript - метод позволяет выполнить несколько выражений SQL за один раз
+
+cursor.close() освобождает память, в которой делали предварительные изменения.
+sqlite_connection.close() освобождает память, нужную для управления связью с базой данных.
+(Эта команда соответствует закрытию файла - «закрывает» базу данных.)
+
+cursor — это объект в памяти компьютера с методами для проведения SQL команд, хранения итогов их 
+выполнения (например части таблицы или (view)) и методов доступа к ним.
+
+Пока работаем с курсором, мы только делаем предварительные изменения 
+(например готовимся что-то изменить в реальной базе данных). 
+Без применения sqlite_connection.commit() итоги предварительные изменения мы потеряем — они не запишутся в 
+реальную базу данных.
+Когда нужно прочитать базу данных, команду sqlite_connection.commit() применять не нужно.
 """
 
 
@@ -23,11 +36,23 @@ def connecting_to_the_database():
     """Подключение к базе данных"""
     with sqlite3.connect('setting_user/software_database.db') as sqlite_connection:
         cursor = sqlite_connection.cursor()
-        """
-        cursor — это объект в памяти компьютера с методами для проведения SQL команд, хранения итогов их 
-        выполнения (например части таблицы или (view)) и методов доступа к ним.
-        """
+
         return sqlite_connection, cursor
+
+
+def add_columns_to_table():
+    """Добавляем новые колонки в базу данных"""
+    sqlite_connection, cursor = connecting_to_the_database()
+    try:
+        # Add the members_count column
+        cursor.execute("ALTER TABLE groups_and_channels ADD COLUMN members_count INTEGER")
+        # Add the parsing_time column
+        cursor.execute("ALTER TABLE groups_and_channels ADD COLUMN parsing_time TEXT")
+        sqlite_connection.commit()
+    except sqlite3.OperationalError:
+        print("Columns already exist")
+    finally:
+        sqlite_connection.close()
 
 
 def write_parsed_chat_participants_to_db(entities) -> None:
@@ -68,21 +93,17 @@ def write_data_to_db(creating_a_table, writing_data_to_a_table, entities) -> Non
     """Запись действий аккаунта в базу данных"""
     sqlite_connection, cursor = connecting_to_the_database()
     cursor.execute(creating_a_table)  # Считываем таблицу
-    try:
-        cursor.executemany(writing_data_to_a_table, (entities,))
-    finally:  # Выполняется в любом случае, было исключение или нет
-        sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
-        cursor.close()  # cursor_members.close() – закрытие соединения с БД.
+    cursor.executemany(writing_data_to_a_table, (entities,))
+    sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
+    cursor.close()  # cursor_members.close() – закрытие соединения с БД.
 
 
 def write_members_column_table(recorded_data) -> None:
     """Запись данных в таблицу с одной колонкой в базу данных"""
     sqlite_connection, cursor = connecting_to_the_database()
-
     # Создание таблицы, если она еще не существует
     cursor.execute("CREATE TABLE IF NOT EXISTS members (username, id, access_hash, first_name, last_name, "
                    "user_phone, online_at, photos_id, user_premium)")
-
     for line in recorded_data:
         # Записываем значение username
         username = line.strip()
@@ -136,19 +157,7 @@ def cleaning_db(name_database_table) -> None:
     # Удаляем таблицу members, функция execute отвечает за SQL-запрос DELETE FROM - команда удаления базы данных
     # name_database_table - название таблицы в базе данных
     cursor.execute(f'DELETE FROM {name_database_table};')
-    """
-    Пока работаем с курсором, мы только делаем предварительные изменения 
-    (например готовимся что-то изменить в реальной базе данных). 
-    Без применения sqlite_connection.commit() итоги предварительные изменения мы потеряем — они не запишутся в 
-    реальную базу данных.
-    Когда нужно прочитать базу данных, команду sqlite_connection.commit() применять не нужно.
-    """
     sqlite_connection.commit()
-    """
-    cursor.close() освобождает память, в которой делали предварительные изменения.
-    sqlite_connection.close() освобождает память, нужную для управления связью с базой данных.
-    (Эта команда соответствует закрытию файла - «закрывает» базу данных.)
-    """
     cursor.close()
     sqlite_connection.close()  # Закрываем базу данных
 
@@ -170,7 +179,7 @@ def cleaning_list_of_participants_who_do_not_have_username() -> None:
             sqlite_connection.commit()
 
 
-def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns):
+def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns) -> None:
     """Удаляем не рабочий proxy с software_database.db, таблица proxy """
     sqlite_connection, cursor = connecting_to_the_database()
     cursor.execute(f"DELETE FROM proxy WHERE proxy_type='{proxy_type}' AND addr='{addr}' AND port='{port}' AND "
@@ -198,3 +207,4 @@ def delete_duplicates(table_name, column_name) -> None:
 
 if __name__ == "__main__":
     cleaning_list_of_participants_who_do_not_have_username()
+    add_columns_to_table()

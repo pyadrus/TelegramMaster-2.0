@@ -1,13 +1,14 @@
+import time
+
 from telethon import functions
+
 from system.error.telegram_errors import record_account_actions
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import delete_duplicates
+from system.sqlite_working_tools.sqlite_working_tools import delete_duplicates, add_columns_to_table
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
-import time
-import sqlite3
 
 creating_a_table = "CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link, members_count, parsing_time)"
 writing_data_to_a_table = "INSERT INTO groups_and_channels (id, title, about, link, members_count, parsing_time) VALUES (?, ?, ?, ?, ?, ?)"
@@ -28,8 +29,7 @@ def parsing_of_groups_to_which_the_account_is_subscribed() -> None:
         record_account_actions(phone, description_action, event, actions)
         forming_a_list_of_groups(client)
         client.disconnect()  # Разрываем соединение telegram
-    # Чистка дубликатов в базе данных
-    delete_duplicates(table_name="groups_and_channels", column_name="id")
+    delete_duplicates(table_name="groups_and_channels", column_name="id")  # Чистка дубликатов в базе данных
 
 
 def forming_a_list_of_groups(client):
@@ -55,22 +55,6 @@ def forming_a_list_of_groups(client):
             write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
         except TypeError:
             continue  # Записываем ошибку в software_database.db и продолжаем работу
-
-
-def add_columns_to_table():
-    """Добавляем новые колонки в базу данных"""
-    conn = sqlite3.connect("setting_user/software_database.db")
-    c = conn.cursor()
-    try:
-        # Add the members_count column
-        c.execute("ALTER TABLE groups_and_channels ADD COLUMN members_count INTEGER")
-        # Add the parsing_time column
-        c.execute("ALTER TABLE groups_and_channels ADD COLUMN parsing_time TEXT")
-        conn.commit()
-    except sqlite3.OperationalError:
-        print("Columns already exist")
-    finally:
-        conn.close()
 
 
 if __name__ == "__main__":
