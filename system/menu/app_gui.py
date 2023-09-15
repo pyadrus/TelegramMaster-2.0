@@ -1,6 +1,6 @@
 from tkinter import *
 import tkinter as tk
-from system.menu.baner import program_version, date_of_program_change
+from system.menu.app_banner import program_version, date_of_program_change
 
 
 def done_button(root, output_values_from_the_input_field):

@@ -1,9 +1,9 @@
 from loguru import logger
 from rich import print
 
-from system.menu.main_menu import main_menu
+from system.menu.main_menu_interface import main_menu
 
-logger.add("setting_user/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
+logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 
 def main_restart():

@@ -11,7 +11,7 @@ def app_notifications(notification_text) -> None:
     try:
         notification = Notify()
         notification.title = "Telegram_BOT_SMM"
-        notification.icon = "system/ico/custom.ico"
+        notification.icon = "system/ico/app_icon.ico"
         notification.application_name = "Telegram_BOT_SMM"
         notification.message = f"{notification_text}"
         notification.send()

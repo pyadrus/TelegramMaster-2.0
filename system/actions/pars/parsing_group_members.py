@@ -17,7 +17,7 @@ from system.actions.subscription.subscription import subscribe_to_group_or_chann
 from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.global_variables import console
 from system.error.telegram_errors import handle_exceptions_pars
-from system.menu.gui_program import program_window, done_button
+from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import cleaning_list_of_participants_who_do_not_have_username, \
     write_members_column_table
@@ -54,7 +54,7 @@ def getting_user_data(user, entities):
 
 
 def all_participants_user(all_participants):
-    """Формируем список setting_user/software_database.db"""
+    """Формируем список user_settings/software_database.db"""
     entities = []  # Создаем словарь
     for user in all_participants:
         getting_user_data(user, entities)
@@ -85,11 +85,11 @@ def parsing_mass_parsing_of_groups() -> None:
 def group_parsing(client, groups_wr, phone) -> None:
     """
     Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
-    @handle_exceptions для отлавливания ошибок и записи их в базу данных setting_user/software_database.db.
+    @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
     """
     with console.status("[bold green]Работа над задачами...", spinner_style="time") as _:
         all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
-        # Записываем parsing данные в файл setting_user/software_database.db
+        # Записываем parsing данные в файл user_settings/software_database.db
         entities = all_participants_user(all_participants)
         write_parsed_chat_participants_to_db(entities)
 
@@ -103,7 +103,7 @@ def choosing_a_group_from_the_subscribed_ones_for_parsing() -> None:
         client, phone = connect_to_telegram_account_and_output_name(row)
         tg_tar = output_a_list_of_groups_new(client)
         all_participants_list = parsing_of_users_from_the_selected_group(client, tg_tar)
-        # Записываем parsing данные в файл setting_user/software_database.db
+        # Записываем parsing данные в файл user_settings/software_database.db
         entities = all_participants_user(all_participants_list)
         write_parsed_chat_participants_to_db(entities)
         cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
@@ -208,12 +208,12 @@ def parsing_of_active_participants(chat_input, limit_active_user) -> None:
 def we_record_phone_numbers_in_the_db() -> None:
     """Записываем номера телефонов в базу данных"""
     print("[bold green]Контакты которые были добавлены в телефонную книгу, будем записывать с файл "
-          "software_database.db, в папке setting_user")
+          "software_database.db, в папке user_settings")
     # Вводим имя файла с которым будем работать
     file_name_input = console.input("[bold green][+] Введите имя файла с контактами, в папке contacts, имя вводим без "
                                     "txt: ")
     # Открываем файл с которым будем работать
-    with open(f"setting_user/{file_name_input}.txt", "r") as file_contact:
+    with open(f"user_settings/{file_name_input}.txt", "r") as file_contact:
         for line in file_contact.readlines():
             print(line.strip())
             # strip() - удаляет с конца и начала строки лишние пробелы, в том числе символ окончания строки
@@ -227,7 +227,7 @@ def we_record_phone_numbers_in_the_db() -> None:
 @handle_exceptions_pars
 def show_account_contact_list() -> None:
     """Показать список контактов аккаунтов и запись результатов в файл"""
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
@@ -273,7 +273,7 @@ def we_show_and_delete_the_contact_of_the_phone_book(client, user) -> None:
 @handle_exceptions_pars
 def delete_contact() -> None:
     """Удаляем контакты с аккаунтов"""
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
@@ -285,7 +285,7 @@ def delete_contact() -> None:
 @handle_exceptions_pars
 def inviting_contact() -> None:
     """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     print(f"[bold red]Всего accounts: {len(records)}")
     for row in records:
@@ -296,7 +296,7 @@ def inviting_contact() -> None:
 
 def adding_a_contact_to_the_phone_book(client) -> None:
     """Добавляем контакт в телефонную книгу"""
-    # Открываем сформированный список setting_user/software_database.db
+    # Открываем сформированный список user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="contact")
     print(f"[bold red]Всего номеров: {len(records)}")
     entities = []  # Создаем список сущностей

@@ -6,7 +6,7 @@ from system.telegram_actions.telegram_actions import connect_to_telegram_account
 
 def unsubscribe_all() -> None:
     """Отписываемся от групп, каналов, личных сообщений"""
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     print(f"[bold red]Всего accounts: {len(records)}")
     for row in records:

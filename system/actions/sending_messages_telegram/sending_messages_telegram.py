@@ -1,13 +1,13 @@
+import datetime
 import sys
-from tkinter import *
 
 from rich import print
 from telethon.errors import *
-import datetime
+
 from system.actions.invite.inviting_participants_telegram import record_inviting_results
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console
-from system.menu.gui_program import program_window, done_button
+from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
@@ -40,16 +40,16 @@ def we_send_a_message_by_members() -> None:
 def sending_files_to_a_personal_account() -> None:
     """Отправка файлов в личку"""
     # Просим пользователя ввести расширение сообщения
-    link_to_the_file: str = console.input("[bold red][+] Введите название файла с папки setting_user/files_to_send: ")
+    link_to_the_file: str = console.input("[bold red][+] Введите название файла с папки user_settings/files_to_send: ")
     event: str = f"Отправляем сообщение"
     app_notifications(notification_text=event)  # Выводим уведомление
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         try:
-            # Открываем parsing список setting_user/software_database.db для inviting в группу
+            # Открываем parsing список user_settings/software_database.db для inviting в группу
             records: list = open_the_db_and_read_the_data(name_database_table="members")
             # Количество аккаунтов на данный момент в работе
             print(f"[bold red]Всего username: {len(records)}")
@@ -58,7 +58,7 @@ def sending_files_to_a_personal_account() -> None:
                 print(f"[bold green][!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)
-                    client.send_file(user_to_add, f"setting_user/files_to_send/{link_to_the_file}")
+                    client.send_file(user_to_add, f"user_settings/files_to_send/{link_to_the_file}")
                     # Записываем данные в базу данных, чистим список кого добавляли или писали сообщение
                     actions = "Сообщение отправлено"
                     record_inviting_results(user, phone, f"username : {username}", event, actions)
@@ -91,13 +91,13 @@ def we_send_a_message_from_all_accounts(message_text) -> None:
     """Отправка сообщений в личку"""
     event: str = f"Отправляем сообщение в личку пользователям Telegram"
     app_notifications(notification_text=event)  # Выводим уведомление
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         try:
-            # Открываем parsing список setting_user/software_database.db для inviting в группу
+            # Открываем parsing список user_settings/software_database.db для inviting в группу
             records: list = open_the_db_and_read_the_data(name_database_table="members")
             # Количество аккаунтов на данный момент в работе
             print(f"[bold red]Всего username: {len(records)}")

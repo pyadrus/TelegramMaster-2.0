@@ -34,7 +34,7 @@ cursor — это объект в памяти компьютера с мето�
 
 def connecting_to_the_database():
     """Подключение к базе данных"""
-    with sqlite3.connect('setting_user/software_database.db') as sqlite_connection:
+    with sqlite3.connect('user_settings/software_database.db') as sqlite_connection:
         cursor = sqlite_connection.cursor()
 
         return sqlite_connection, cursor
@@ -59,7 +59,7 @@ def write_parsed_chat_participants_to_db(entities) -> None:
     """Запись результатов parsing участников чата"""
     sqlite_connection, cursor = connecting_to_the_database()
     for line in entities:
-        # Записываем ссылку на группу для parsing в файл setting_user/software_database.db"""
+        # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
         cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
                        "user_phone, online_at, photos_id, user_premium)")
         cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
@@ -119,7 +119,7 @@ def write_to_single_column_table(name_database, recorded_data) -> None:
     """Запись данных в таблицу с одной колонкой в базу данных """
     sqlite_connection, cursor = connecting_to_the_database()
     for line in recorded_data:
-        # Записываем ссылку на группу для parsing в файл setting_user/software_database.db"""
+        # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
         cursor.execute(f"CREATE TABLE IF NOT EXISTS {name_database}({name_database})")
         # strip() - удаляет с конца и начала строки лишние пробелы, в том числе символ окончания строки
         lines = line.strip()
@@ -202,7 +202,7 @@ def delete_duplicates(table_name, column_name) -> None:
     cursor.execute(f"DELETE FROM {table_name} WHERE row{column_name} NOT IN (SELECT MIN(row{column_name}) "
                    f"FROM {table_name} GROUP BY {column_name})")
     sqlite_connection.commit()  # Сохранить изменения в базе данных
-    sqlite_connection.close()  # Закрыть соединение с базой данных setting_user/software_database.db
+    sqlite_connection.close()  # Закрыть соединение с базой данных user_settings/software_database.db
 
 
 if __name__ == "__main__":

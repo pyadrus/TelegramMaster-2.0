@@ -8,7 +8,7 @@ from system.actions.invite.telegram_invite_scheduler import *
 from system.actions.pars.parsing_account_groups_and_channels import *
 from system.actions.pars.parsing_group_members import *
 from system.actions.reactions.reactions import *
-from system.actions.send_mess_chat.chat_dialog import *
+from system.actions.send_mess_chat.telegram_chat_dialog import *
 from system.actions.send_mess_chat.chat_dialog_mes import *
 from system.actions.sending_messages_telegram.sending_messages_telegram import *
 from system.actions.subscription.subscription import *
@@ -18,7 +18,7 @@ from system.auxiliary_functions.global_variables import *
 from system.setting.setting import *
 from system.sqlite_working_tools.sqlite_working_tools import *
 
-logger.add("setting_user/log/log.log", rotation="1 MB", compression="zip")
+logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")
 
 
 def main_menu() -> None:  # 1 - Основное меню программы
@@ -186,7 +186,7 @@ def subscribe_unsubscribe_write_to_file() -> None:  # 4 - Подписка, от
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[bold red][+] Введите номер: ")
-    if user_input == "1":  # Запись: групп, каналов в файл, данные записываются в файл setting_user/software_database.db
+    if user_input == "1":  # Запись: групп, каналов в файл, данные записываются в файл user_settings/software_database.db
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         print("[bold red][+] Введите ссылки чатов на которые нужно подписаться, для вставки в графическое окно "
               "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
@@ -211,7 +211,7 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
     column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
     table.add_row("1", "Отправка сообщений в личку", "Отправка сообщений в личку по parsing списку")
-    table.add_row("2", "Отправка файлов в личку", "Отправка файлов в личку по списку setting_user/software_database.db")
+    table.add_row("2", "Отправка файлов в личку", "Отправка файлов в личку по списку user_settings/software_database.db")
     table.add_row("3", "Рассылка сообщений по чатам", "Рассылка сообщений по чатам, потребуется сформировать список")
     table.add_row("4", "Рассылка сообщений по чатам, по времени", "Потребуется заранее сформировать список чатов")
     table.add_row("5", "Рассылка файлов по чатам", "Рассылка файлов по чатам, потребуется заранее записать чаты в файл")
@@ -220,10 +220,10 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[bold red][+] Введите номер: ")
-    if user_input == "1":  # Отправка сообщений в личку по parsing списку setting_user/software_database.db
+    if user_input == "1":  # Отправка сообщений в личку по parsing списку user_settings/software_database.db
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         we_send_a_message_by_members()
-    elif user_input == "2":  # Отправка файлов в личку по parsing списку setting_user/software_database.db
+    elif user_input == "2":  # Отправка файлов в личку по parsing списку user_settings/software_database.db
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         sending_files_to_a_personal_account()
     elif user_input == "3":  # Рассылка сообщений по чатам

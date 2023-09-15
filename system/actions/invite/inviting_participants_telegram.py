@@ -29,7 +29,7 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
     """Inviting по заранее parsing списку и работа с несколькими аккаунтами"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     app_notifications(notification_text=event)  # Выводим уведомление
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
@@ -59,7 +59,7 @@ def unsubscribe_from_the_group(client, group_link):
 def invite_from_multiple_accounts_with_limits(name_database_table) -> None:
     """Inviting по заранее parsing списку и работа с несколькими аккаунтами и выставленными лимитами"""
     app_notifications(notification_text=event)  # Выводим уведомление
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал

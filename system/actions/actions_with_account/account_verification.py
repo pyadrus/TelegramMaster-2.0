@@ -11,7 +11,7 @@ def check_account_for_spam() -> None:
     """Проверка аккаунта на спам через @SpamBot"""
     event: str = "Проверка аккаунтов через SpamBot"  # Событие, которое записываем в базу данных
     app_notifications(notification_text=event)  # Выводим уведомление
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал

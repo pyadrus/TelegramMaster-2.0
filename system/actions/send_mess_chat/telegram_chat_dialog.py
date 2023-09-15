@@ -1,6 +1,6 @@
-import time
-from tkinter import *
 import datetime
+import time
+
 from rich import print
 from telethon.errors import *
 
@@ -9,14 +9,14 @@ from system.auxiliary_functions.auxiliary_functions import deleting_files_if_ava
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console
 from system.error.telegram_errors import record_account_actions
-from system.menu.gui_program import program_window, done_button
+from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
 from system.sqlite_working_tools.sqlite_working_tools import write_to_single_column_table
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
-folder, files = "setting_user", "members_group.csv"
+folder, files = "user_settings", "members_group.csv"
 creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
 event: str = f"Рассылаем сообщение по чатам Telegram"
@@ -25,7 +25,7 @@ event: str = f"Рассылаем сообщение по чатам Telegram"
 def connecting_to_a_telegram_account_and_creating_a_list_of_groups():
     """Подключение к аккаунту телеграмм и формирование списка групп"""
     app_notifications(notification_text=event)  # Выводим уведомление
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     print(f"[bold red]Всего accounts: {len(records)}")
     for row in records:
@@ -40,14 +40,14 @@ def connecting_to_a_telegram_account_and_creating_a_list_of_groups():
 def sending_files_via_chats() -> None:
     """Рассылка файлов по чатам"""
     # Спрашиваем у пользователя, через какое время будем отправлять сообщения
-    link_to_the_file: str = console.input("[bold red][+] Введите название файла с папки setting_user/files_to_send: ")
+    link_to_the_file: str = console.input("[bold red][+] Введите название файла с папки user_settings/files_to_send: ")
     message_text_time: str = console.input("[bold red][+] Введите время, через какое время будем отправлять файлы: ")
     client, phone, records = connecting_to_a_telegram_account_and_creating_a_list_of_groups()
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
         description_action = f"Sending messages to a group: {groups_wr}"
         try:
-            client.send_file(groups_wr, f"setting_user/files_to_send/{link_to_the_file}")  # Рассылаем файлов по чатам
+            client.send_file(groups_wr, f"user_settings/files_to_send/{link_to_the_file}")  # Рассылаем файлов по чатам
             # Работу записываем в лог файл, для удобства слежения, за изменениями
             time.sleep(int(message_text_time))
             actions: str = f"[bold red]Сообщение в группу {groups_wr} написано!"
@@ -88,7 +88,7 @@ def sending_messages_files_via_chats() -> None:
         closing_the_input_field()
         print("[bold red][+] Введите текс сообщения которое будем отправлять в чаты: ")
         link_to_the_file: str = console.input(
-            "[bold red][+] Введите название файла с папки setting_user/files_to_send: ")
+            "[bold red][+] Введите название файла с папки user_settings/files_to_send: ")
         # Спрашиваем у пользователя, через какое время будем отправлять сообщения
         message_text_time: str = console.input(
             "[bold red][+] Введите время, через какое время будем отправлять сообщения: ")
@@ -100,7 +100,7 @@ def sending_messages_files_via_chats() -> None:
             try:
                 client.send_message(entity=groups_wr, message=message_text)  # Рассылаем сообщение по чатам
                 # Рассылаем файлов по чатам
-                client.send_file(groups_wr, f"setting_user/files_to_send/{link_to_the_file}")
+                client.send_file(groups_wr, f"user_settings/files_to_send/{link_to_the_file}")
                 # Работу записываем в лог файл, для удобства слежения, за изменениями
                 time.sleep(int(message_text_time))
                 actions: str = f"[bold red]Сообщение в группу {groups_wr} написано!"

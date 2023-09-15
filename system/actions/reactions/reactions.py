@@ -173,11 +173,11 @@ def reactions_for_groups_and_messages(reaction_input) -> None:
 def choosing_a_number_of_reactions() -> list:
     """Выбираем лимиты для аккаунтов"""
     print("[bold red]Введите количество с которых будут поставлены реакции")
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     # Количество аккаунтов на данный момент в работе
     print(f"[bold red]Всего accounts: {len(records)}")
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     number_of_accounts = console.input("[bold red][+] Введите количество аккаунтов для выставления реакций: ")
     records: list = open_the_db_and_read_the_data_lim(name_database_table="config",
                                                       number_of_accounts=int(number_of_accounts))
@@ -211,7 +211,7 @@ def viewing_posts():
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     # Количество аккаунтов на данный момент в работе
     print(f"[bold red]Всего accounts: {len(records)}")
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     number_of_accounts = console.input("[bold red][+] Введите количество аккаунтов для просмотра постов: ")
     records: list = open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=int(number_of_accounts))
     for row in records:
@@ -243,8 +243,6 @@ def viewing_posts():
             client.disconnect()
 
     app_notifications(notification_text=f"Работа с каналом {chat} окончена!")
-
-
 
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ def connect_to_telegram_account_and_output_name(row):
     """Подключаемся телеграмм аккаунту и выводим имя"""
     phone, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)  # Получаем со списка phone, api_id, api_hash
     proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
-    client = TelegramClient(f"setting_user/accounts/{phone}", api_id, api_hash, proxy=proxy)
+    client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, proxy=proxy)
     client.connect()  # Подсоединяемся к Telegram
     # Выводим командой print: имя, фамилию, номер телефона аккаунта
     first_name, last_name, phone = account_name(client, name_account="me")
@@ -74,9 +74,9 @@ def connecting_account_sessions():
     entities = []  # Создаем словарь
     """
     Функция listdir() модуля os возвращает список, содержащий имена файлов и директорий в каталоге, заданном путем 
-    path setting_user/accounts
+    path user_settings/accounts
     """
-    for x in os.listdir(path='setting_user/accounts'):
+    for x in os.listdir(path='user_settings/accounts'):
         """
         Функция str.endswith() возвращает True, если строка заканчивается заданным суффиксом (.session), 
         в противном случае возвращает False.
@@ -98,10 +98,10 @@ def renaming_a_session(client, phone_old, phone):
     client.disconnect()  # Отключаемся от аккаунта для освобождения session файла
     try:
         # Переименование session файла
-        os.rename(f"setting_user/accounts/{phone_old}.session", f"setting_user/accounts/{phone}.session")
+        os.rename(f"user_settings/accounts/{phone_old}.session", f"user_settings/accounts/{phone}.session")
     except FileExistsError:
         # Если файл существует, то удаляем дубликат
-        os.remove(f"setting_user/accounts/{phone_old}.session")
+        os.remove(f"user_settings/accounts/{phone_old}.session")
 
 
 def session_converter():
@@ -115,7 +115,7 @@ def session_converter():
         proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
         try:
             device_model, system_version, app_version = reading_device_type()
-            client = TelegramClient(f"setting_user/accounts/{phone_old}", api_id, api_hash, proxy=proxy,
+            client = TelegramClient(f"user_settings/accounts/{phone_old}", api_id, api_hash, proxy=proxy,
                                     device_model=device_model, system_version=system_version, app_version=app_version)
             try:
                 client.connect()  # Подсоединяемся к Telegram
@@ -137,15 +137,15 @@ def session_converter():
                 # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                 client.disconnect()
                 try:
-                    os.replace(f"setting_user/accounts/{phone_old}.session",
-                               f"setting_user/accounts/invalid_account/{phone_old}.session")
+                    os.replace(f"user_settings/accounts/{phone_old}.session",
+                               f"user_settings/accounts/invalid_account/{phone_old}.session")
                 except FileNotFoundError:
                     # Если в папке accounts нет папки invalid_account, то создаем папку invalid_account
                     print("В папке accounts нет папки invalid_account, создаем папку invalid_account")
                     # Создаем папку invalid_account в папке accounts
-                    os.makedirs("setting_user/accounts/invalid_account")
-                    os.replace(f"setting_user/accounts/{phone_old}.session",
-                               f"setting_user/accounts/invalid_account/{phone_old}.session")
+                    os.makedirs("user_settings/accounts/invalid_account")
+                    os.replace(f"user_settings/accounts/{phone_old}.session",
+                               f"user_settings/accounts/invalid_account/{phone_old}.session")
             except (PhoneNumberBannedError, UserDeactivatedBanError):
                 # Удаляем номер телефона с базы данных
                 telegram_phone_number_banned_error(client, phone_old)  # Удаляем номер телефона с базы данных
@@ -165,7 +165,7 @@ def deleting_files_by_dictionary():
     for row in error_sessions:
         try:
             print(f"Удаляем не валидный аккаунт {''.join(row)}.session")
-            os.remove(f"setting_user/accounts/{''.join(row)}.session")
+            os.remove(f"user_settings/accounts/{''.join(row)}.session")
         except PermissionError:
             continue
     writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий

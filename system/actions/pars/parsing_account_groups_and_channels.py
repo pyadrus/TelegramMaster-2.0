@@ -19,7 +19,7 @@ def parsing_of_groups_to_which_the_account_is_subscribed() -> None:
     add_columns_to_table()
     event: str = "Parsing групп / каналов на которые подписан аккаунт"  # Событие, которое записываем в базу данных
     app_notifications(notification_text=event)  # Выводим уведомление
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
@@ -43,12 +43,12 @@ def forming_a_list_of_groups(client):
             chat_about = result.full_chat.about
             chs_title = chs.title
             username = chs.username
-            # Get the number of members in the group or channel
+            # Получение количества участников в группе или канале
             if hasattr(result.full_chat, "participants_count"):
                 members_count = result.full_chat.participants_count
             else:
                 members_count = 0
-            # Record the parsing time
+            # Запишите время синтаксического анализа
             parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             print(dialog_id, chs_title, chat_about, f"https://t.me/{username}", members_count, parsing_time)
             entities = [dialog_id, chs_title, chat_about, f"https://t.me/{username}", members_count, parsing_time]

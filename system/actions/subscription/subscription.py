@@ -11,7 +11,7 @@ from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import time_subscription_1
 from system.auxiliary_functions.global_variables import time_subscription_2
 from system.error.telegram_errors import record_account_actions
-from system.menu.gui_program import program_window, done_button
+from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data, write_to_single_column_table
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
@@ -42,7 +42,7 @@ def writing_group_links_to_file(name_database) -> None:
 
 def subscription_all() -> None:
     """Подписываемся на каналы и группы, работаем по базе данных"""
-    # Открываем базу данных для работы с аккаунтами setting_user/software_database.db
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = open_the_db_and_read_the_data(name_database_table="config")
     print(f"[bold red]Всего accounts: {len(records)}")
     for row in track(records, description='[bold red]Прогресс выполнения работы\n'):

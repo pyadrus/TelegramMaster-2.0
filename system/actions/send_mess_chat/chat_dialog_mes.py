@@ -1,26 +1,26 @@
+import datetime
 import time
-from tkinter import *
 
 import schedule
 from rich import print
 from telethon.errors import *
-import datetime
-from system.actions.send_mess_chat.chat_dialog import connecting_to_a_telegram_account_and_creating_a_list_of_groups
+
+from system.actions.send_mess_chat.telegram_chat_dialog import connecting_to_a_telegram_account_and_creating_a_list_of_groups
 from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.error.telegram_errors import record_account_actions
-from system.menu.gui_program import program_window, done_button
+from system.menu.app_gui import program_window, done_button
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
 
-folder, files = "setting_user", "members_group.csv"
+folder, files = "user_settings", "members_group.csv"
 creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
 event: str = f"Рассылаем сообщение по чатам Telegram"
 
 
 def send_mess() -> None:
-    with open("setting_user/message_text.csv", 'r') as chats:
+    with open("user_settings/message_text.csv", 'r') as chats:
         cursor_members = chats.read()
     sending_messages_via_chats_time(cursor_members)
 
@@ -148,7 +148,7 @@ def message_entry_window_time() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
         message_text = text.get("1.0", 'end-1c')
         closing_the_input_field()
-        folder, file = "setting_user", "message_text.csv"
+        folder, file = "user_settings", "message_text.csv"
         deleting_files_if_available(folder, file)
         with open(f'{folder}/{file}', "w") as res_as:
             res_as.write(message_text)

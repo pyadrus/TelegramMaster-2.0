@@ -8,7 +8,7 @@ from telethon import TelegramClient
 from telethon.errors import *
 
 from system.auxiliary_functions.global_variables import console
-from system.menu.gui_program import program_window_with_dimensions
+from system.menu.app_gui import program_window_with_dimensions
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db, save_proxy_data_to_db
 
@@ -16,7 +16,7 @@ config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=T
 
 creating_a_table = "CREATE TABLE IF NOT EXISTS config(id, hash, phone)"
 writing_data_to_a_table = "INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)"
-config.read('setting_user/config.ini')
+config.read('user_settings/config.ini')
 
 
 def record_account_limits() -> configparser.ConfigParser:
@@ -34,26 +34,26 @@ def record_device_type() -> configparser.ConfigParser():
         device_model = console.input("[bold green][+] Введите модель устройства: ")
         config.get('device_model', 'device_model')
         config.set('device_model', 'device_model', device_model)
-    except configparser.NoSectionError:  # Если в setting_user/config.ini нет записи, то создаем ее
+    except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
         config['device_model'] = {'device_model': device_model}
     try:
         system_version = console.input("[bold green][+] Введите версию операционной системы: ")
         config.get('system_version', 'system_version')
         config.set('system_version', 'system_version', system_version)
-    except configparser.NoSectionError:  # Если в setting_user/config.ini нет записи, то создаем ее
+    except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
         config['system_version'] = {'system_version': system_version}
     try:
         app_version = console.input("[bold green][+] Введите версию приложения: ")
         config.get('app_version', 'app_version')
         config.set('app_version', 'app_version', app_version)
-    except configparser.NoSectionError:  # Если в setting_user/config.ini нет записи, то создаем ее
+    except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
         config['app_version'] = {'app_version': app_version}
     return config
 
 
 def writing_settings_to_a_file(config):
-    """Запись данных в файл setting_user/config.ini"""
-    with open('setting_user/config.ini', 'w') as setup:  # Открываем файл в режиме записи
+    """Запись данных в файл user_settings/config.ini"""
+    with open('user_settings/config.ini', 'w') as setup:  # Открываем файл в режиме записи
         config.write(setup)  # Записываем данные в файл
 
 
@@ -78,7 +78,7 @@ def writing_link_to_the_group() -> configparser.ConfigParser:
 
 
 def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigParser:
-    """Запись данных в файл setting_user/time_inviting.ini"""
+    """Запись данных в файл user_settings/time_inviting.ini"""
     config.get(f'{variable}', f'{variable}_1')
     config.set(f'{variable}', f'{variable}_1', time_1)
     config.get(f'{variable}', f'{variable}_2')
@@ -88,23 +88,23 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
 
 def reading_the_id_and_hash():
     """Считываем id и hash"""
-    config.read('setting_user/config.ini')  # Файл с настройками
-    api_id_data = config['telegram_settings']['id']  # api_id с файла setting_user/api_id_api_hash.ini
-    api_hash_data = config['telegram_settings']['hash']  # api_hash с файла setting_user/api_id_api_hash.ini
+    config.read('user_settings/config.ini')  # Файл с настройками
+    api_id_data = config['telegram_settings']['id']  # api_id с файла user_settings/api_id_api_hash.ini
+    api_hash_data = config['telegram_settings']['hash']  # api_hash с файла user_settings/api_id_api_hash.ini
     return api_id_data, api_hash_data
 
 
 def reading_device_type():
     """Считываем тип устройства"""
-    config.read('setting_user/config.ini')  # Файл с настройками
-    device_model = config['device_model']['device_model']  # api_id с файла setting_user/api_id_api_hash.ini
-    system_version = config['system_version']['system_version']  # api_hash с файла setting_user/api_id_api_hash.ini
-    app_version = config['app_version']['app_version']  # api_hash с файла setting_user/api_id_api_hash.ini
+    config.read('user_settings/config.ini')  # Файл с настройками
+    device_model = config['device_model']['device_model']  # api_id с файла user_settings/api_id_api_hash.ini
+    system_version = config['system_version']['system_version']  # api_hash с файла user_settings/api_id_api_hash.ini
+    app_version = config['app_version']['app_version']  # api_hash с файла user_settings/api_id_api_hash.ini
     return device_model, system_version, app_version
 
 
 def connecting_new_account() -> None:
-    """Вводим данные в базу данных setting_user/software_database.db"""
+    """Вводим данные в базу данных user_settings/software_database.db"""
     api_id_data, api_hash_data = reading_the_id_and_hash()
     phone_data = console.input("[bold green][+] Введите номер телефона : ")  # Вводим номер телефона
     entities = (api_id_data, api_hash_data, phone_data)
@@ -118,7 +118,7 @@ def connecting_new_account() -> None:
 def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
     device_model, system_version, app_version = reading_device_type()
-    client = TelegramClient(f"setting_user/accounts/{phone}", api_id, api_hash,
+    client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash,
                             device_model=device_model, system_version=system_version, app_version=app_version)
     client.connect()  # Подсоединяемся к Telegram
     if not client.is_user_authorized():

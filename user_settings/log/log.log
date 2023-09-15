@@ -12318,3 +12318,477 @@ Traceback (most recent call last):
                         └ <module 'struct' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\struct.py'>
 
 TypeError: object of type 'int' has no len()
+2023-09-01 00:26:37.701 | ERROR    | __main__:<module>:20 - 'NoneType' object has no attribute 'write'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000270CA6551C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()  # Основное меню программы
+    └ <function main_menu at 0x00000270C742EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 58, in main_menu
+    program_settings()
+    └ <function program_settings at 0x00000270CA655620>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 297, in program_settings
+    writing_settings_to_a_file(config=writing_link_to_the_group())
+    │                                 └ <function writing_link_to_the_group at 0x00000270CA5BA520>
+    └ <function writing_settings_to_a_file at 0x00000270CA5BA3E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 57, in writing_settings_to_a_file
+    config.write(setup)  # Записываем данные в файл
+    │            └ <_io.TextIOWrapper name='setting_user/config.ini' mode='w' encoding='cp1251'>
+    └ None
+
+AttributeError: 'NoneType' object has no attribute 'write'
+2023-09-01 00:26:37.701 | ERROR    | __main__:<module>:20 - 'NoneType' object has no attribute 'write'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x00000270CA6551C0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()  # Основное меню программы
+    └ <function main_menu at 0x00000270C742EFC0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 58, in main_menu
+    program_settings()
+    └ <function program_settings at 0x00000270CA655620>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\menu\main_menu.py", line 297, in program_settings
+    writing_settings_to_a_file(config=writing_link_to_the_group())
+    │                                 └ <function writing_link_to_the_group at 0x00000270CA5BA520>
+    └ <function writing_settings_to_a_file at 0x00000270CA5BA3E0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 57, in writing_settings_to_a_file
+    config.write(setup)  # Записываем данные в файл
+    │            └ <_io.TextIOWrapper name='setting_user/config.ini' mode='w' encoding='cp1251'>
+    └ None
+
+AttributeError: 'NoneType' object has no attribute 'write'
+2023-09-01 21:11:12.895 | ERROR    | __main__:<module>:20 - 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x000001E8080E0160>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    -> <function deleting_files_by_dictionary at 0x000001E80805AC20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     -> <function session_converter at 0x000001E80805AB90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 117, in session_converter
+    device_model, system_version, app_version = reading_device_type()
+                                                -> <function reading_device_type at 0x000001E80805A560>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 100, in reading_device_type
+    device_model = config['device_model']['device_model']  # api_id � ����� setting_user/api_id_api_hash.ini
+                   -> <configparser.ConfigParser object at 0x000001E807ED49A0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\configparser.py", line 964, in __getitem__
+    raise KeyError(key)
+                   -> 'device_model'
+
+KeyError: 'device_model'
+2023-09-01 21:11:12.895 | ERROR    | __main__:<module>:20 - 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x000001E8080E0160>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    -> <function deleting_files_by_dictionary at 0x000001E80805AC20>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     -> <function session_converter at 0x000001E80805AB90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 117, in session_converter
+    device_model, system_version, app_version = reading_device_type()
+                                                -> <function reading_device_type at 0x000001E80805A560>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 100, in reading_device_type
+    device_model = config['device_model']['device_model']  # api_id � ����� setting_user/api_id_api_hash.ini
+                   -> <configparser.ConfigParser object at 0x000001E807ED49A0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\configparser.py", line 964, in __getitem__
+    raise KeyError(key)
+                   -> 'device_model'
+
+KeyError: 'device_model'
+2023-09-01 21:11:20.422 | ERROR    | __main__:<module>:20 - 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x0000019A09958550>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    -> <function deleting_files_by_dictionary at 0x0000019A098C6B90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     -> <function session_converter at 0x0000019A098C6B00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 117, in session_converter
+    device_model, system_version, app_version = reading_device_type()
+                                                -> <function reading_device_type at 0x0000019A098C64D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 100, in reading_device_type
+    device_model = config['device_model']['device_model']  # api_id � ����� setting_user/api_id_api_hash.ini
+                   -> <configparser.ConfigParser object at 0x0000019A09744A60>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\configparser.py", line 964, in __getitem__
+    raise KeyError(key)
+                   -> 'device_model'
+
+KeyError: 'device_model'
+2023-09-01 21:11:20.422 | ERROR    | __main__:<module>:20 - 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x0000019A09958550>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    -> <function deleting_files_by_dictionary at 0x0000019A098C6B90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     -> <function session_converter at 0x0000019A098C6B00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 117, in session_converter
+    device_model, system_version, app_version = reading_device_type()
+                                                -> <function reading_device_type at 0x0000019A098C64D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 100, in reading_device_type
+    device_model = config['device_model']['device_model']  # api_id � ����� setting_user/api_id_api_hash.ini
+                   -> <configparser.ConfigParser object at 0x0000019A09744A60>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\configparser.py", line 964, in __getitem__
+    raise KeyError(key)
+                   -> 'device_model'
+
+KeyError: 'device_model'
+2023-09-01 21:11:53.945 | ERROR    | __main__:<module>:20 - 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x000001C33A414550>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    -> <function deleting_files_by_dictionary at 0x000001C33A386B90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     -> <function session_converter at 0x000001C33A386B00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 117, in session_converter
+    device_model, system_version, app_version = reading_device_type()
+                                                -> <function reading_device_type at 0x000001C33A3864D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 100, in reading_device_type
+    device_model = config['device_model']['device_model']  # api_id � ����� setting_user/api_id_api_hash.ini
+                   -> <configparser.ConfigParser object at 0x000001C33A204A60>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\configparser.py", line 964, in __getitem__
+    raise KeyError(key)
+                   -> 'device_model'
+
+KeyError: 'device_model'
+2023-09-01 21:11:53.945 | ERROR    | __main__:<module>:20 - 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x000001C33A414550>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    -> <function deleting_files_by_dictionary at 0x000001C33A386B90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     -> <function session_converter at 0x000001C33A386B00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 117, in session_converter
+    device_model, system_version, app_version = reading_device_type()
+                                                -> <function reading_device_type at 0x000001C33A3864D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 100, in reading_device_type
+    device_model = config['device_model']['device_model']  # api_id � ����� setting_user/api_id_api_hash.ini
+                   -> <configparser.ConfigParser object at 0x000001C33A204A60>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\configparser.py", line 964, in __getitem__
+    raise KeyError(key)
+                   -> 'device_model'
+
+KeyError: 'device_model'
+2023-09-01 21:15:38.613 | ERROR    | __main__:<module>:20 - 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x00000216B5404550>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    -> <function deleting_files_by_dictionary at 0x00000216B5376B90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     -> <function session_converter at 0x00000216B5376B00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 117, in session_converter
+    device_model, system_version, app_version = reading_device_type()
+                                                -> <function reading_device_type at 0x00000216B53764D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 100, in reading_device_type
+    device_model = config['device_model']['device_model']  # api_id � ����� setting_user/api_id_api_hash.ini
+                   -> <configparser.ConfigParser object at 0x00000216B51FC760>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\configparser.py", line 964, in __getitem__
+    raise KeyError(key)
+                   -> 'device_model'
+
+KeyError: 'device_model'
+2023-09-01 21:15:38.613 | ERROR    | __main__:<module>:20 - 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x00000216B5404550>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    -> <function deleting_files_by_dictionary at 0x00000216B5376B90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     -> <function session_converter at 0x00000216B5376B00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 117, in session_converter
+    device_model, system_version, app_version = reading_device_type()
+                                                -> <function reading_device_type at 0x00000216B53764D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 100, in reading_device_type
+    device_model = config['device_model']['device_model']  # api_id � ����� setting_user/api_id_api_hash.ini
+                   -> <configparser.ConfigParser object at 0x00000216B51FC760>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\configparser.py", line 964, in __getitem__
+    raise KeyError(key)
+                   -> 'device_model'
+
+KeyError: 'device_model'
+2023-09-01 21:15:50.147 | ERROR    | __main__:<module>:20 - 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x000001FABB9D8550>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    -> <function deleting_files_by_dictionary at 0x000001FABB946B90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     -> <function session_converter at 0x000001FABB946B00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 117, in session_converter
+    device_model, system_version, app_version = reading_device_type()
+                                                -> <function reading_device_type at 0x000001FABB9464D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 100, in reading_device_type
+    device_model = config['device_model']['device_model']  # api_id � ����� setting_user/api_id_api_hash.ini
+                   -> <configparser.ConfigParser object at 0x000001FABB7C49D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\configparser.py", line 964, in __getitem__
+    raise KeyError(key)
+                   -> 'device_model'
+
+KeyError: 'device_model'
+2023-09-01 21:15:50.147 | ERROR    | __main__:<module>:20 - 'device_model'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    -> <function launching_the_program_with_account_verification at 0x000001FABB9D8550>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    -> <function deleting_files_by_dictionary at 0x000001FABB946B90>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 164, in deleting_files_by_dictionary
+    error_sessions = session_converter()
+                     -> <function session_converter at 0x000001FABB946B00>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 117, in session_converter
+    device_model, system_version, app_version = reading_device_type()
+                                                -> <function reading_device_type at 0x000001FABB9464D0>
+
+  File "C:\Users\zhvit\YandexDisk\telegram_bot_smm\system\setting\setting.py", line 100, in reading_device_type
+    device_model = config['device_model']['device_model']  # api_id � ����� setting_user/api_id_api_hash.ini
+                   -> <configparser.ConfigParser object at 0x000001FABB7C49D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\configparser.py", line 964, in __getitem__
+    raise KeyError(key)
+                   -> 'device_model'
+
+KeyError: 'device_model'
+2023-09-08 21:38:49.889 | ERROR    | __main__:<module>:20 - 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001B6851A4C10>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()  # Основное меню программы
+    └ <function main_menu at 0x000001B6851A4790>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\menu\main_menu.py", line 26, in main_menu
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
+    └ <function clearing_console_showing_banner at 0x000001B68515ED40>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\auxiliary_functions\auxiliary_functions.py", line 56, in clearing_console_showing_banner
+    banner()  # Ставим банер программы, для красивого визуального отображения
+    └ <function banner at 0x000001B6850E69E0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\menu\baner.py", line 9, in banner
+    console.print("╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗", style="bold red", justify="center")
+    │       └ <function Console.print at 0x000001B6850E4550>
+    └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\console.py", line 1646, in print
+    with self:
+         └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\console.py", line 848, in __exit__
+    self._exit_buffer()
+    │    └ <function Console._exit_buffer at 0x000001B6850CEB00>
+    └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\console.py", line 806, in _exit_buffer
+    self._check_buffer()
+    │    └ <function Console._check_buffer at 0x000001B6850E4940>
+    └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\console.py", line 1999, in _check_buffer
+    legacy_windows_render(
+    └ <function legacy_windows_render at 0x000001B6851A4EE0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    │    │            │     └ Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)
+    │    │            └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_styled at 0x000001B6850E5FC0>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001B685176770>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\_win32_console.py", line 442, in write_styled
+    self.write_text(text)
+    │    │          └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_text at 0x000001B6850E5F30>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001B685176770>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\_win32_console.py", line 403, in write_text
+    self.write(text)
+    │    │     └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <built-in method write of _io.TextIOWrapper object at 0x000001B680991150>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001B685176770>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           │      │              │     │    │      └ <EncodingMap object at 0x000001B680524FC0>
+           │      │              │     │    └ 'strict'
+           │      │              │     └ <encodings.cp1251.IncrementalEncoder object at 0x000001B680A48820>
+           │      │              └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+           │      └ <built-in function charmap_encode>
+           └ <module 'codecs' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\codecs.py'>
+
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+2023-09-08 21:38:49.889 | ERROR    | __main__:<module>:20 - 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001B6851A4C10>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()  # Основное меню программы
+    └ <function main_menu at 0x000001B6851A4790>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\menu\main_menu.py", line 26, in main_menu
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
+    └ <function clearing_console_showing_banner at 0x000001B68515ED40>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\auxiliary_functions\auxiliary_functions.py", line 56, in clearing_console_showing_banner
+    banner()  # Ставим банер программы, для красивого визуального отображения
+    └ <function banner at 0x000001B6850E69E0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\menu\baner.py", line 9, in banner
+    console.print("╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗", style="bold red", justify="center")
+    │       └ <function Console.print at 0x000001B6850E4550>
+    └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\console.py", line 1646, in print
+    with self:
+         └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\console.py", line 848, in __exit__
+    self._exit_buffer()
+    │    └ <function Console._exit_buffer at 0x000001B6850CEB00>
+    └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\console.py", line 806, in _exit_buffer
+    self._check_buffer()
+    │    └ <function Console._check_buffer at 0x000001B6850E4940>
+    └ <console width=79 None>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\console.py", line 1999, in _check_buffer
+    legacy_windows_render(
+    └ <function legacy_windows_render at 0x000001B6851A4EE0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\_windows_renderer.py", line 17, in legacy_windows_render
+    term.write_styled(text, style)
+    │    │            │     └ Style(color=Color('red', ColorType.STANDARD, number=1), bold=True)
+    │    │            └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_styled at 0x000001B6850E5FC0>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001B685176770>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\_win32_console.py", line 442, in write_styled
+    self.write_text(text)
+    │    │          └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <function LegacyWindowsTerm.write_text at 0x000001B6850E5F30>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001B685176770>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\site-packages\rich\_win32_console.py", line 403, in write_text
+    self.write(text)
+    │    │     └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+    │    └ <built-in method write of _io.TextIOWrapper object at 0x000001B680991150>
+    └ <rich._win32_console.LegacyWindowsTerm object at 0x000001B685176770>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python310\lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           │      │              │     │    │      └ <EncodingMap object at 0x000001B680524FC0>
+           │      │              │     │    └ 'strict'
+           │      │              │     └ <encodings.cp1251.IncrementalEncoder object at 0x000001B680A48820>
+           │      │              └ '╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗'
+           │      └ <built-in function charmap_encode>
+           └ <module 'codecs' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\codecs.py'>
+
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>

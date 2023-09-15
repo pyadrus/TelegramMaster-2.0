@@ -4,7 +4,7 @@ from rich.console import Console
 console = Console()
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 
-config.read('setting_user/config.ini')
+config.read('user_settings/config.ini')
 link_group = config['link_to_the_group']['target_group_entity']
 
 time_subscription_1 = int(config['time_subscription']['time_subscription_1'])
