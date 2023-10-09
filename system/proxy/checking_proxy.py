@@ -36,7 +36,7 @@ def unpacking_a_dictionary_with_proxy_by_variables(proxy):
     return proxy_type, addr, port, username, password, rdns
 
 
-def checking_the_proxy_for_work():
+def checking_the_proxy_for_work() -> None:
     """Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
     уровня, который используется для демонстрации работы сетевых протоколов. На этом сайте нет никакого контента, но он
     используется для различных тестов."""

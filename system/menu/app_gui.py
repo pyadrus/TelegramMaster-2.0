@@ -3,7 +3,7 @@ import tkinter as tk
 from system.menu.app_banner import program_version, date_of_program_change
 
 
-def done_button(root, output_values_from_the_input_field):
+def done_button(root, output_values_from_the_input_field) -> None:
     """Кнопка готово"""
     # Создаем кнопку по нажатии которой выведется поле ввода. После ввода чатов данные запишутся во временный файл
     but = Button(root, text="Готово", command=output_values_from_the_input_field)

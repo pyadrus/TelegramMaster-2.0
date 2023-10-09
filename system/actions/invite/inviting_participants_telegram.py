@@ -48,7 +48,7 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
     app_notifications(notification_text=f"Работа с группой {link_group} окончена!")  # Выводим уведомление
 
 
-def unsubscribe_from_the_group(client, group_link):
+def unsubscribe_from_the_group(client, group_link) -> None:
     """Отписываемся от группы"""
     entity = client.get_entity(group_link)
     if entity:

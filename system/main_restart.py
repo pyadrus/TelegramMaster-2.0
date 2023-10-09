@@ -6,7 +6,7 @@ from system.menu.main_menu_interface import main_menu
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 
-def main_restart():
+def main_restart() -> None:
     """Запуск программы с проверкой аккаунтов"""
     main_menu()
 

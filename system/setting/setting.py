@@ -51,7 +51,7 @@ def record_device_type() -> configparser.ConfigParser():
     return config
 
 
-def writing_settings_to_a_file(config):
+def writing_settings_to_a_file(config) -> None:
     """Запись данных в файл user_settings/config.ini"""
     with open('user_settings/config.ini', 'w') as setup:  # Открываем файл в режиме записи
         config.write(setup)  # Записываем данные в файл

@@ -32,7 +32,7 @@ def parsing_of_groups_to_which_the_account_is_subscribed() -> None:
     delete_duplicates(table_name="groups_and_channels", column_name="id")  # Чистка дубликатов в базе данных
 
 
-def forming_a_list_of_groups(client):
+def forming_a_list_of_groups(client) -> None:
     """Формируем список групп"""
     for dialog in client.iter_dialogs():
         try:

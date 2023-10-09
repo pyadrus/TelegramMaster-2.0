@@ -3,7 +3,7 @@
   <component name="Black">
     <option name="enabledOnReformat" value="true" />
     <option name="pathToExecutable" value="C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Scripts\black.exe" />
-    <option name="sdkUUID" value="c28e230a-7a12-4df8-a045-b46a5b754cd0" />
+    <option name="sdkName" value="Python 3.11" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11" project-jdk-type="Python SDK" />
 </project>

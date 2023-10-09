@@ -30,7 +30,7 @@ from system.sqlite_working_tools.sqlite_working_tools import write_parsed_chat_p
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
 
-def getting_user_data(user, entities):
+def getting_user_data(user, entities) -> None:
     """Получаем данные пользователя"""
     username = user.username if user.username else "NONE"
     user_phone = user.phone if user.phone else "Номер телефона скрыт"
@@ -53,7 +53,7 @@ def getting_user_data(user, entities):
                      user_premium])
 
 
-def all_participants_user(all_participants):
+def all_participants_user(all_participants) -> list:
     """Формируем список user_settings/software_database.db"""
     entities = []  # Создаем словарь
     for user in all_participants:

@@ -184,7 +184,7 @@ def choosing_a_number_of_reactions() -> list:
     return records
 
 
-def send_reaction_request(records, chat, message_url, reaction_input):
+def send_reaction_request(records, chat, message_url, reaction_input) -> None:
     """Ставим реакции на сообщения"""
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
@@ -205,7 +205,7 @@ def send_reaction_request(records, chat, message_url, reaction_input):
 
     app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
-def viewing_posts():
+def viewing_posts() -> None:
     """Накрутка просмотров постов"""
     chat = console.input("[bold red][+] Введите ссылку на канал: ")  # Ссылка на группу или канал
     records: list = open_the_db_and_read_the_data(name_database_table="config")

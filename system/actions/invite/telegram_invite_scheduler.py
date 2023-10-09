@@ -7,10 +7,7 @@ from system.auxiliary_functions.global_variables import console
 from system.telegram_actions.account_verification import deleting_files_by_dictionary
 
 
-# from system.telegram_actions.telegram_actions import deleting_files_by_dictionary
-
-
-def schedule_member_invitation():
+def schedule_member_invitation() -> None:
     """Запуск inviting"""
     deleting_files_by_dictionary()
     invitation_from_all_accounts_program_body(name_database_table="members")

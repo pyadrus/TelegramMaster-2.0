@@ -32,7 +32,7 @@ cursor — это объект в памяти компьютера с мето�
 """
 
 
-def connecting_to_the_database():
+def connecting_to_the_database() -> tuple[sqlite3.Connection, sqlite3.Cursor]:
     """Подключение к базе данных"""
     with sqlite3.connect('user_settings/software_database.db') as sqlite_connection:
         cursor = sqlite_connection.cursor()
@@ -40,7 +40,7 @@ def connecting_to_the_database():
         return sqlite_connection, cursor
 
 
-def add_columns_to_table():
+def add_columns_to_table() -> None:
     """Добавляем новые колонки в базу данных"""
     sqlite_connection, cursor = connecting_to_the_database()
     try:

@@ -15,7 +15,7 @@ from system.menu.app_banner import banner
 from system.sqlite_working_tools.sqlite_working_tools import delete_row_db
 
 
-def display_progress_bar(time_range_1, time_range_2, message):
+def display_progress_bar(time_range_1, time_range_2, message) -> None:
     """Отображаем время смены аккаунта или username в виде progress bar"""
     # Генерируем случайное число в указанном диапазоне времени
     selected_shift_time = random.randrange(time_range_1, time_range_2)
@@ -32,7 +32,7 @@ def record_inviting_results(username, phone, description_action, event, actions)
     display_progress_bar(time_inviting_1, time_inviting_2, "Переход к новому username")
 
 
-def record_and_interrupt(actions, phone, description_action, event):
+def record_and_interrupt(actions, phone, description_action, event) -> None:
     """Запись данных в базу данных и прерывание выполнения кода"""
     record_account_actions(phone, description_action, event, actions)
     # Смена аккаунта через случайное количество секунд
