@@ -11,8 +11,7 @@ from system.auxiliary_functions.global_variables import console
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
-from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.sqlite_working_tools.sqlite_working_tools import write_to_single_column_table
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
@@ -26,12 +25,13 @@ def connecting_telegram_account_and_creating_list_of_groups():
     """Подключение к аккаунту телеграмм и формирование списка групп"""
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = open_the_db_and_read_the_data(name_database_table="config")
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("config")
     print(f"[bold red]Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
-        records: list = open_the_db_and_read_the_data(name_database_table="writing_group_links")
+        records: list = db_handler.open_and_read_data("writing_group_links")
         print(f"[bold red]Всего групп: {len(records)}")
 
     return client, phone, records
@@ -55,7 +55,8 @@ def sending_files_via_chats() -> None:
         except ChannelPrivateError:
             actions: str = "Указанный канал является приватным, или вам запретили подписываться."
             record_account_actions(phone, description_action, event, actions)
-            write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
+            db_handler = DatabaseHandler()
+            db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
         except PeerFloodError:
             actions: str = "Предупреждение о Flood от Telegram."
             record_and_interrupt(actions, phone, description_action, event)
@@ -108,7 +109,8 @@ def sending_messages_files_via_chats() -> None:
             except ChannelPrivateError:
                 actions: str = "Указанный канал является приватным, или вам запретили подписываться."
                 record_account_actions(phone, description_action, event, actions)
-                write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
+                db_handler = DatabaseHandler()
+                db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
             except PeerFloodError:
                 actions = "Предупреждение о Flood от Telegram."
                 record_and_interrupt(actions, phone, description_action, event)
@@ -156,7 +158,8 @@ def sending_messages_via_chats_time(message_text) -> None:
         except ChannelPrivateError:
             actions = "Указанный канал является приватным, или вам запретили подписываться."
             record_account_actions(phone, description_action, event, actions)
-            write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
+            db_handler = DatabaseHandler
+            db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
         except PeerFloodError:
             actions = "Предупреждение о Flood от Telegram."
             record_and_interrupt(actions, phone, description_action, event)
@@ -216,9 +219,9 @@ def output_the_input_field() -> None:
         with open(f'{folder}/{files}', "w") as res_as:
             res_as.write(res)
         with open(f'{folder}/{files}', 'r') as recorded_data:  # Записываем данные с файла в базу данных
-            name_database = "writing_group_links"
-            open_the_db_and_read_the_data(name_database)  # Удаление списка с группами
-            write_to_single_column_table(name_database, recorded_data)
+            db_handler = DatabaseHandler()
+            db_handler.open_and_read_data("writing_group_links")# Удаление списка с группами
+            write_to_single_column_table("writing_group_links", recorded_data)
         deleting_files_if_available(folder, files)  # Удаляем файл после работы
 
     def closing_the_input_field() -> None:

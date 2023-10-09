@@ -3,8 +3,7 @@ import random
 import requests
 from rich import print
 
-from system.sqlite_working_tools.sqlite_working_tools import deleting_an_invalid_proxy
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
+from system.sqlite_working_tools.sqlite_working_tools import deleting_an_invalid_proxy, DatabaseHandler
 
 
 def reading_proxy_data_from_the_database():
@@ -12,7 +11,8 @@ def reading_proxy_data_from_the_database():
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
     username - логин (например: username), password - пароль (например: password)"""
     try:
-        records: list = open_the_db_and_read_the_data(name_database_table="proxy")
+        db_handler = DatabaseHandler()
+        records: list = db_handler.open_and_read_data("proxy")
         proxy_random_list = random.choice(records)
         print(f"[magenta]{proxy_random_list}")
         proxy = {'proxy_type': (proxy_random_list[0]), 'addr': proxy_random_list[1], 'port': int(proxy_random_list[2]),
@@ -40,7 +40,8 @@ def checking_the_proxy_for_work() -> None:
     """Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
     уровня, который используется для демонстрации работы сетевых протоколов. На этом сайте нет никакого контента, но он
     используется для различных тестов."""
-    records: list = open_the_db_and_read_the_data(name_database_table="proxy")
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("proxy")
     for proxy_dic in records:
         print(proxy_dic)
         # Распаковка словаря с proxy по переменным

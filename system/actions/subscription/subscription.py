@@ -13,8 +13,8 @@ from system.auxiliary_functions.global_variables import time_subscription_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data, write_to_single_column_table
-from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
+from system.sqlite_working_tools.sqlite_working_tools import write_to_single_column_table, DatabaseHandler
+# from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
 creating_a_table = """SELECT * from writing_group_links"""
@@ -43,13 +43,14 @@ def writing_group_links_to_file(name_database) -> None:
 def subscription_all() -> None:
     """Подписываемся на каналы и группы, работаем по базе данных"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = open_the_db_and_read_the_data(name_database_table="config")
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("config")
     print(f"[bold red]Всего accounts: {len(records)}")
     for row in track(records, description='[bold red]Прогресс выполнения работы\n'):
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         # Открываем базу данных
-        records: list = open_the_db_and_read_the_data(name_database_table="writing_group_links")
+        records: list = db_handler.open_and_read_data("writing_group_links")
         print(f"[bold red]Всего групп: {len(records)}")
         for groups in records:  # Поочередно выводим записанные группы
             try:
@@ -91,7 +92,8 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
         except (UsernameInvalidError, ValueError, TypeError):
             actions: str = f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}"
             record_account_actions(phone, description_action, event, actions)
-            write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wrs)
+            db_handler = DatabaseHandler()
+            db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wrs)
         except PeerFloodError:
             actions: str = "Предупреждение о Flood от Telegram."
             record_account_actions(phone, description_action, event, actions)

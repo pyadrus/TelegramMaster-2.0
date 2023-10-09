@@ -6,8 +6,8 @@ import time
 from rich import print
 from telethon.errors import ChatAdminRequiredError, ChannelPrivateError, FloodWaitError
 
-from system.sqlite_working_tools.sqlite_working_tools import delete_row_db
-from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
+from system.sqlite_working_tools.sqlite_working_tools import delete_row_db, DatabaseHandler
+
 
 """Действия с username"""
 
@@ -25,7 +25,8 @@ def record_account_actions(phone_number, action_description, event, action_resul
                                  (phone, date, description_action, event, actions) VALUES (?, ?, ?, ?, ?)"""
     date = datetime.datetime.now()  # Получаем текущую дату
     entities = [phone_number, str(date), action_description, event, action_result]  # Формируем словарь
-    write_data_to_db(creating_a_table, writing_data_to_a_table, entities)  # Запись данных в базу данных
+    db_handler = DatabaseHandler()
+    db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)  # Запись данных в базу данных
 
 
 """Действия с аккаунтами"""

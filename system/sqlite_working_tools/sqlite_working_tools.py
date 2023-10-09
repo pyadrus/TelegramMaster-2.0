@@ -2,35 +2,6 @@ import sqlite3
 
 from rich import print
 
-""" 
-Работа с базой данных sqlite3
-https://proproprogs.ru/modules/podklyuchenie-k-bd-sozdanie-i-udalenie-tablic
-
-IF NOT EXISTS поможет при попытке повторного подключения к базе данных.
-Запрос проверит, существует ли таблица. Если да — проверит, ничего ли не поменялось.
-
-Методы:
-con.commit() – применение всех изменений в таблицах БД;
-con.close() – закрытие соединения с БД.
-
-execute - метод для выполнения одного выражения SQL
-executemany - метод позволяет выполнить одно выражение SQL для последовательности параметров (или для итератора)
-executescript - метод позволяет выполнить несколько выражений SQL за один раз
-
-cursor.close() освобождает память, в которой делали предварительные изменения.
-sqlite_connection.close() освобождает память, нужную для управления связью с базой данных.
-(Эта команда соответствует закрытию файла - «закрывает» базу данных.)
-
-cursor — это объект в памяти компьютера с методами для проведения SQL команд, хранения итогов их 
-выполнения (например части таблицы или (view)) и методов доступа к ним.
-
-Пока работаем с курсором, мы только делаем предварительные изменения 
-(например готовимся что-то изменить в реальной базе данных). 
-Без применения sqlite_connection.commit() итоги предварительные изменения мы потеряем — они не запишутся в 
-реальную базу данных.
-Когда нужно прочитать базу данных, команду sqlite_connection.commit() применять не нужно.
-"""
-
 
 def connecting_to_the_database() -> tuple[sqlite3.Connection, sqlite3.Cursor]:
     """Подключение к базе данных"""
@@ -89,15 +60,6 @@ def delete_row_db(table, column, value) -> None:
     cursor.close()  # cursor_members.close() – закрытие соединения с БД.
 
 
-def write_data_to_db(creating_a_table, writing_data_to_a_table, entities) -> None:
-    """Запись действий аккаунта в базу данных"""
-    sqlite_connection, cursor = connecting_to_the_database()
-    cursor.execute(creating_a_table)  # Считываем таблицу
-    cursor.executemany(writing_data_to_a_table, (entities,))
-    sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
-    cursor.close()  # cursor_members.close() – закрытие соединения с БД.
-
-
 def write_members_column_table(recorded_data) -> None:
     """Запись данных в таблицу с одной колонкой в базу данных"""
     sqlite_connection, cursor = connecting_to_the_database()
@@ -127,28 +89,6 @@ def write_to_single_column_table(name_database, recorded_data) -> None:
         sqlite_connection.commit()
     cursor.close()
     sqlite_connection.close()  # Закрываем базу данных
-
-
-def open_the_db_and_read_the_data(name_database_table) -> list:
-    """Открываем базу считываем данные в качестве аргумента передаем имя таблицы"""
-    sqlite_connection, cursor = connecting_to_the_database()
-    cursor.execute(f"SELECT * from {name_database_table}")
-    # fetchall() – возвращает число записей в виде упорядоченного списка
-    records: list = cursor.fetchall()
-    cursor.close()
-    sqlite_connection.close()  # Закрываем базу данных
-    return records
-
-
-def open_the_db_and_read_the_data_lim(name_database_table, number_of_accounts: int) -> list:
-    """Открытие базы данных для inviting c лимитами"""
-    sqlite_connection, cursor = connecting_to_the_database()
-    cursor.execute(f"SELECT * from {name_database_table}")  # Считываем таблицу
-    # fetchmany(size) – возвращает число записей не более size;
-    records: list = cursor.fetchmany(number_of_accounts)  # number_of_accounts - количество добавляемых username
-    cursor.close()
-    sqlite_connection.close()  # Закрываем базу данных
-    return records
 
 
 def cleaning_db(name_database_table) -> None:
@@ -189,20 +129,58 @@ def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns) 
     cursor.close()  # cursor_members.close() – закрытие соединения с БД.
 
 
-def delete_duplicates(table_name, column_name) -> None:
-    """
-    Этот запрос удаляет все дублирующиеся записи в поле id. Данный запрос использует функцию MIN(), которая возвращает
-    минимальное значение из списка значений. Функция MIN() будет применена к полю rowid, которое является уникальным
-    идентификатором каждой записи в таблице members. Данный запрос сначала выбирает минимальное значение rowid для
-    каждой записи в поле id. Затем он удаляет все записи, у которых rowid не равен минимальному значению.
-    Это позволяет оставить только уникальные значения в поле id.
-    """
-    sqlite_connection, cursor = connecting_to_the_database()
-    # Выполнить запрос на удаление дубликатов из таблицы по заданному столбцу
-    cursor.execute(f"DELETE FROM {table_name} WHERE row{column_name} NOT IN (SELECT MIN(row{column_name}) "
-                   f"FROM {table_name} GROUP BY {column_name})")
-    sqlite_connection.commit()  # Сохранить изменения в базе данных
-    sqlite_connection.close()  # Закрыть соединение с базой данных user_settings/software_database.db
+class DatabaseHandler:
+    def __init__(self, db_file='user_settings/software_database.db'):
+        self.db_file = db_file
+
+    def connect(self) -> None:
+        """Подключение к базе данных"""
+        self.sqlite_connection = sqlite3.connect(self.db_file)
+        self.cursor = self.sqlite_connection.cursor()
+
+    def close(self) -> None:
+        """Закрытие соединения с базой данных"""
+        self.sqlite_connection.close()
+
+    def open_and_read_data(self, table_name) -> list:
+        """Открываем базу и считываем данные из указанной таблицы"""
+        self.connect()
+        self.cursor.execute(f"SELECT * FROM {table_name}")
+        records = self.cursor.fetchall()
+        self.close()
+        return records
+
+    def delete_duplicates(self, table_name, column_name) -> None:
+        """
+        Этот запрос удаляет все дублирующиеся записи в поле id. Данный запрос использует функцию MIN(), которая возвращает
+        минимальное значение из списка значений. Функция MIN() будет применена к полю rowid, которое является уникальным
+        идентификатором каждой записи в таблице members. Данный запрос сначала выбирает минимальное значение rowid для
+        каждой записи в поле id. Затем он удаляет все записи, у которых rowid не равен минимальному значению.
+        Это позволяет оставить только уникальные значения в поле id.
+        """
+        self.connect()
+        self.cursor.execute(f"DELETE FROM {table_name} WHERE row{column_name} NOT IN (SELECT MIN(row{column_name}) "
+                            f"FROM {table_name} GROUP BY {column_name})")
+        self.sqlite_connection.commit()
+        self.close()
+
+    def open_the_db_and_read_the_data_lim(self, name_database_table, number_of_accounts: int) -> list:
+        """Открытие базы данных для inviting c лимитами"""
+        self.connect()
+        self.cursor.execute(f"SELECT * from {name_database_table}")  # Считываем таблицу
+        # fetchmany(size) – возвращает число записей не более size
+        records: list = self.cursor.fetchmany(number_of_accounts)  # number_of_accounts - количество добавляемых username
+        self.cursor.close()
+        self.close()  # Закрываем базу данных
+        return records
+
+    def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities) -> None:
+        """Запись действий аккаунта в базу данных"""
+        self.connect()
+        self.cursor.execute(creating_a_table)  # Считываем таблицу
+        self.cursor.executemany(writing_data_to_a_table, (entities,))
+        self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
+        self.close()  # cursor_members.close() – закрытие соединения с БД.
 
 
 if __name__ == "__main__":

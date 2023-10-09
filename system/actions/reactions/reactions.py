@@ -10,8 +10,7 @@ from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViews
 from system.actions.subscription.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.global_variables import console
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data_lim
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
 
@@ -174,12 +173,13 @@ def choosing_a_number_of_reactions() -> list:
     """Выбираем лимиты для аккаунтов"""
     print("[bold red]Введите количество с которых будут поставлены реакции")
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = open_the_db_and_read_the_data(name_database_table="config")
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("config")
     # Количество аккаунтов на данный момент в работе
     print(f"[bold red]Всего accounts: {len(records)}")
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     number_of_accounts = console.input("[bold red][+] Введите количество аккаунтов для выставления реакций: ")
-    records: list = open_the_db_and_read_the_data_lim(name_database_table="config",
+    records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
                                                       number_of_accounts=int(number_of_accounts))
     return records
 
@@ -208,12 +208,13 @@ def send_reaction_request(records, chat, message_url, reaction_input) -> None:
 def viewing_posts() -> None:
     """Накрутка просмотров постов"""
     chat = console.input("[bold red][+] Введите ссылку на канал: ")  # Ссылка на группу или канал
-    records: list = open_the_db_and_read_the_data(name_database_table="config")
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("config")
     # Количество аккаунтов на данный момент в работе
     print(f"[bold red]Всего accounts: {len(records)}")
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     number_of_accounts = console.input("[bold red][+] Введите количество аккаунтов для просмотра постов: ")
-    records: list = open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=int(number_of_accounts))
+    records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=int(number_of_accounts))
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)

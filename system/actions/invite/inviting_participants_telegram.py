@@ -11,8 +11,7 @@ from system.auxiliary_functions.auxiliary_functions import record_inviting_resul
 from system.auxiliary_functions.global_variables import limits
 from system.auxiliary_functions.global_variables import link_group
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data_lim
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 from system.telegram_actions.telegram_actions import we_get_username_user_id_access_hash
 
@@ -30,7 +29,8 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = open_the_db_and_read_the_data(name_database_table="config")
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
@@ -38,7 +38,8 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
         # записываем действия в software_database.db
         print(link_group)
         subscribe_to_group_or_channel(client, link_group, phone)
-        records: list = open_the_db_and_read_the_data(name_database_table)
+        db_handler = DatabaseHandler()
+        records: list = db_handler.open_and_read_data(name_database_table)
         print(f"[bold red]Всего username: {len(records)}")  # Количество аккаунтов на данный момент в работе
         try:
             inviting(client, phone, records)
@@ -60,15 +61,17 @@ def invite_from_multiple_accounts_with_limits(name_database_table) -> None:
     """Inviting по заранее parsing списку и работа с несколькими аккаунтами и выставленными лимитами"""
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = open_the_db_and_read_the_data(name_database_table="config")
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         # Подписываемся на группу которую будем inviting, если аккаунт новый, то он автоматически подпишется и
         # записываем действия в software_database.db
         subscribe_to_group_or_channel(client, link_group, phone)
-        number_usernames: list = open_the_db_and_read_the_data(name_database_table)
-        records: list = open_the_db_and_read_the_data_lim(name_database_table, number_of_accounts=limits)
+        db_handler = DatabaseHandler()
+        number_usernames: list = db_handler.open_and_read_data(name_database_table)
+        records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table, number_of_accounts=limits)
         # Количество аккаунтов на данный момент в работе
         print(f"[bold red]Всего username: {len(number_usernames)}. Лимит на аккаунт: {len(records)}")
         inviting(client, phone, records)

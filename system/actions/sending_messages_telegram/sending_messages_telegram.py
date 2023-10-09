@@ -9,7 +9,7 @@ from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 from system.telegram_actions.telegram_actions import we_get_username_user_id_access_hash
 
@@ -44,13 +44,14 @@ def sending_files_to_a_personal_account() -> None:
     event: str = f"Отправляем сообщение"
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = open_the_db_and_read_the_data(name_database_table="config")
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         try:
             # Открываем parsing список user_settings/software_database.db для inviting в группу
-            records: list = open_the_db_and_read_the_data(name_database_table="members")
+            records: list = db_handler.open_and_read_data("members")
             # Количество аккаунтов на данный момент в работе
             print(f"[bold red]Всего username: {len(records)}")
             for rows in records:
@@ -92,13 +93,14 @@ def we_send_a_message_from_all_accounts(message_text) -> None:
     event: str = f"Отправляем сообщение в личку пользователям Telegram"
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = open_the_db_and_read_the_data(name_database_table="config")
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         try:
             # Открываем parsing список user_settings/software_database.db для inviting в группу
-            records: list = open_the_db_and_read_the_data(name_database_table="members")
+            records: list = db_handler.open_and_read_data("members")
             # Количество аккаунтов на данный момент в работе
             print(f"[bold red]Всего username: {len(records)}")
             for rows in records:

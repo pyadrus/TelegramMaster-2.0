@@ -7,8 +7,7 @@ from telethon.tl.functions.users import GetFullUserRequest
 
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.setting.setting import reading_the_id_and_hash
-from system.sqlite_working_tools.sqlite_working_tools import cleaning_db
-from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
+from system.sqlite_working_tools.sqlite_working_tools import cleaning_db, DatabaseHandler
 
 
 def connect_to_telegram_account_and_output_name(row):
@@ -60,7 +59,8 @@ def writing_names_found_files_to_the_db() -> None:
     records = connecting_account_sessions()
     for entities in records:
         print(f"Записываем данные аккаунта {entities} в базу данных")
-        write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
+        db_handler = DatabaseHandler()
+        db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
 
 
 def connecting_account_sessions() -> list[list[str]]:

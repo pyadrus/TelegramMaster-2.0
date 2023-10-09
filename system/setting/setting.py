@@ -10,7 +10,7 @@ from telethon.errors import *
 from system.auxiliary_functions.global_variables import console
 from system.menu.app_gui import program_window_with_dimensions
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db, save_proxy_data_to_db
+from system.sqlite_working_tools.sqlite_working_tools import save_proxy_data_to_db, DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 
@@ -108,7 +108,8 @@ def connecting_new_account() -> None:
     api_id_data, api_hash_data = reading_the_id_and_hash()
     phone_data = console.input("[bold green][+] Введите номер телефона : ")  # Вводим номер телефона
     entities = (api_id_data, api_hash_data, phone_data)
-    write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
+    db_handler = DatabaseHandler()
+    db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
     # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
     client = telegram_connect(phone_data, api_id_data, api_hash_data)
     client.disconnect()  # Разрываем соединение telegram

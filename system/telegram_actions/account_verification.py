@@ -10,11 +10,13 @@ from telethon.errors import *
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database, checking_the_proxy_for_work
 from system.setting.setting import reading_device_type
-from system.sqlite_working_tools.sqlite_working_tools import open_the_db_and_read_the_data
-from system.telegram_actions.telegram_actions import account_name, renaming_a_session, writing_names_found_files_to_the_db
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from system.telegram_actions.telegram_actions import account_name, renaming_a_session, \
+    writing_names_found_files_to_the_db
 
 user_folder = "user_settings"
 accounts_folder = "accounts"
+
 
 def deleting_files_by_dictionary() -> None:
     """Удаление файлов по словарю"""
@@ -41,10 +43,10 @@ def account_verification() -> list[list]:
     """Проверка аккаунтов"""
     error_sessions = []  # Создаем словарь, для удаления битых файлов session
     print("[bold red] Проверка аккаунтов!")
-    records: list = open_the_db_and_read_the_data(name_database_table="config")
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Получаем со списка phone (row[2]), api_id (), api_hash
-        # phone_old, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)
         proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
         try:
             client = connecting_telegram_account_with_device_version(row[2], int(row[0]), row[1], proxy)
