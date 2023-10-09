@@ -331,3 +331,5 @@ if __name__ == "__main__":
     show_account_contact_list()
     delete_contact()
     inviting_contact()
+    writing_members()
+    we_record_phone_numbers_in_the_db()

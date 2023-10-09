@@ -3,11 +3,11 @@ from notifypy.exceptions import UnsupportedPlatform
 from rich import print
 
 
-# Библиотека для работы с уведомлениями на разных платформах https://github.com/ms7m/notify-py
-
-
 def app_notifications(notification_text) -> None:
-    """Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль"""
+    """
+    Выводим уведомление, если операционная система windows 7, то выводим уведомление в консоль
+    Библиотека для работы с уведомлениями на разных платформах https://github.com/ms7m/notify-py
+    """
     try:
         notification = Notify()
         notification.title = "Telegram_BOT_SMM"

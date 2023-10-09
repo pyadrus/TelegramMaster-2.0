@@ -2,7 +2,7 @@ from loguru import logger
 from rich import print
 
 from system.menu.main_menu_interface import main_menu
-from system.telegram_actions.telegram_actions import deleting_files_by_dictionary
+from system.telegram_actions.account_verification import deleting_files_by_dictionary
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 

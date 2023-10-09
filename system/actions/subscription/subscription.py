@@ -1,7 +1,7 @@
+import datetime
 import random
 import time
-from tkinter import *
-import datetime
+
 from rich import print
 from rich.progress import track
 from telethon.errors import *
@@ -117,4 +117,4 @@ def subscribe_to_the_group_and_send_the_link(client, groups, phone):
 
 if __name__ == "__main__":
     subscription_all()
-    writing_group_links_to_file()
+    # writing_group_links_to_file()

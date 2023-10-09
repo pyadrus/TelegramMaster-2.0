@@ -5,7 +5,7 @@ import schedule
 from rich import print
 from telethon.errors import *
 
-from system.actions.send_mess_chat.telegram_chat_dialog import connecting_to_a_telegram_account_and_creating_a_list_of_groups
+from system.actions.send_mess_chat.telegram_chat_dialog import connecting_telegram_account_and_creating_list_of_groups
 from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
@@ -27,7 +27,7 @@ def send_mess() -> None:
 
 def sending_messages_via_chats_time(message_text) -> None:
     """Массовая рассылка в чаты"""
-    client, phone, records = connecting_to_a_telegram_account_and_creating_a_list_of_groups()
+    client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
     for groups in records:
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
         description_action = f"Sending messages to a group: {groups_wr}"

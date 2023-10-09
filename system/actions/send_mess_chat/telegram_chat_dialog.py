@@ -19,10 +19,10 @@ from system.telegram_actions.telegram_actions import connect_to_telegram_account
 folder, files = "user_settings", "members_group.csv"
 creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
-event: str = f"Рассылаем сообщение по чатам Telegram"
+event: str = "Рассылаем сообщение по чатам Telegram"
 
 
-def connecting_to_a_telegram_account_and_creating_a_list_of_groups():
+def connecting_telegram_account_and_creating_list_of_groups():
     """Подключение к аккаунту телеграмм и формирование списка групп"""
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
@@ -42,7 +42,7 @@ def sending_files_via_chats() -> None:
     # Спрашиваем у пользователя, через какое время будем отправлять сообщения
     link_to_the_file: str = console.input("[bold red][+] Введите название файла с папки user_settings/files_to_send: ")
     message_text_time: str = console.input("[bold red][+] Введите время, через какое время будем отправлять файлы: ")
-    client, phone, records = connecting_to_a_telegram_account_and_creating_a_list_of_groups()
+    client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
         description_action = f"Sending messages to a group: {groups_wr}"
@@ -93,7 +93,7 @@ def sending_messages_files_via_chats() -> None:
         message_text_time: str = console.input(
             "[bold red][+] Введите время, через какое время будем отправлять сообщения: ")
         event: str = f"Рассылаем сообщение + файлы по чатам Telegram"
-        client, phone, records = connecting_to_a_telegram_account_and_creating_a_list_of_groups()
+        client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
         for groups in records:  # Поочередно выводим записанные группы
             groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
             description_action = f"Sending messages to a group: {groups_wr}"
@@ -143,7 +143,7 @@ def sending_messages_via_chats_time(message_text) -> None:
     # Спрашиваем у пользователя, через какое время будем отправлять сообщения
     message_text_time: str = console.input(
         "[bold red][+] Введите время, через какое время будем отправлять сообщения: ")
-    client, phone, records = connecting_to_a_telegram_account_and_creating_a_list_of_groups()
+    client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
         description_action = f"Sending messages to a group: {groups_wr}"
@@ -232,4 +232,6 @@ def output_the_input_field() -> None:
 if __name__ == "__main__":
     output_the_input_field()
     message_entry_window()
-    connecting_to_a_telegram_account_and_creating_a_list_of_groups()
+    connecting_telegram_account_and_creating_list_of_groups()
+    sending_files_via_chats()
+    sending_messages_files_via_chats()
