@@ -44,7 +44,7 @@ def add_columns_to_table():
     """Добавляем новые колонки в базу данных"""
     sqlite_connection, cursor = connecting_to_the_database()
     try:
-        # Add the members_count column
+        # Добавьте столбец member_count
         cursor.execute("ALTER TABLE groups_and_channels ADD COLUMN members_count INTEGER")
         # Add the parsing_time column
         cursor.execute("ALTER TABLE groups_and_channels ADD COLUMN parsing_time TEXT")

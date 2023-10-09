@@ -93,63 +93,6 @@ def renaming_a_session(client, phone_old, phone) -> None:
         os.remove(f"user_settings/accounts/{phone_old}.session")
 
 
-# def account_verification() -> list[list]:
-#     """Проверка аккаунтов"""
-#     error_sessions = []  # Создаем словарь, для удаления битых файлов session
-#     print("[bold red] Проверка аккаунтов!")
-#     records: list = open_the_db_and_read_the_data(name_database_table="config")
-#     for row in records:
-#         # Получаем со списка phone, api_id, api_hash
-#         phone_old, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)
-#         proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
-#         try:
-#             device_model, system_version, app_version = reading_device_type()
-#             client = TelegramClient(f"user_settings/accounts/{phone_old}", api_id, api_hash, proxy=proxy,
-#                                     device_model=device_model, system_version=system_version, app_version=app_version)
-#             try:
-#                 client.connect()  # Подсоединяемся к Telegram
-#                 # Если аккаунт не авторизирован, то удаляем сессию
-#                 if not client.is_user_authorized():
-#                     telegram_phone_number_banned_error(client, phone_old)  # Удаляем номер телефона с базы данных
-#                 time.sleep(1)
-#                 try:
-#                     # Показываем имя аккаунта с которым будем взаимодействовать
-#                     first_name, last_name, phone = account_name(client, name_account="me")
-#                     # Выводим результат полученного имени и номера телефона
-#                     print(f"[bold red][!] Account connect {first_name} {last_name} {phone}")
-#                     renaming_a_session(client, phone_old, phone)  # Переименование session файла
-#                 except ConnectionError:
-#                     continue
-#             except AuthKeyDuplicatedError:
-#                 # На данный момент аккаунт запущен под другим ip
-#                 print(f"На данный момент аккаунт {phone_old} запущен под другим ip")
-#                 # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-#                 client.disconnect()
-#                 try:
-#                     os.replace(f"user_settings/accounts/{phone_old}.session",
-#                                f"user_settings/accounts/invalid_account/{phone_old}.session")
-#                 except FileNotFoundError:
-#                     # Если в папке accounts нет папки invalid_account, то создаем папку invalid_account
-#                     print("В папке accounts нет папки invalid_account, создаем папку invalid_account")
-#                     # Создаем папку invalid_account в папке accounts
-#                     os.makedirs("user_settings/accounts/invalid_account")
-#                     os.replace(f"user_settings/accounts/{phone_old}.session",
-#                                f"user_settings/accounts/invalid_account/{phone_old}.session")
-#             except (PhoneNumberBannedError, UserDeactivatedBanError):
-#                 # Удаляем номер телефона с базы данных
-#                 telegram_phone_number_banned_error(client, phone_old)  # Удаляем номер телефона с базы данных
-#         except sqlite3.DatabaseError:
-#             # session файл не является базой данных
-#             print(f"Битый файл {phone_old}.session")
-#             # Удаляем не валидную сессию
-#             error_sessions.append([phone_old])
-#     return error_sessions
-
-
-
-
-
 if __name__ == "__main__":
     reading_proxy_data_from_the_database()
     connecting_account_sessions()
-    # deleting_files_by_dictionary()

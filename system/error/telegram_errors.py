@@ -40,10 +40,6 @@ def telegram_phone_number_banned_error(client, phone):
     """Аккаунт banned, удаляем banned аккаунт"""
     client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
     delete_row_db(table="config", column="phone", value=phone)
-    # try:
-    #     os.remove(f"setting_user/accounts/{phone}.session")  # Находим и удаляем сессию
-    # except FileNotFoundError:
-    #     print(f"[green]Файл {phone}.session был ранее удален")  # Если номер не найден, то выводим сообщение
     delete_file(file=f"user_settings/accounts/{phone}.session")
 
 def handle_exceptions_pars(func):
