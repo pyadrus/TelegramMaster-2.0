@@ -13,8 +13,7 @@ from system.auxiliary_functions.global_variables import time_subscription_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import write_to_single_column_table, DatabaseHandler
-# from system.sqlite_working_tools.sqlite_working_tools import write_data_to_db
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
 creating_a_table = """SELECT * from writing_group_links"""
@@ -27,10 +26,11 @@ def writing_group_links_to_file(name_database) -> None:
 
     def output_values_from_the_input_field() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
-        message_text = text.get("1.0", 'end-1c')
+        message_text = text.get("1.0", "end-1c")
         closing_the_input_field()
-        lines = message_text.split('\n')
-        write_to_single_column_table(name_database, lines)
+        lines = message_text.split("\n")
+        db_handler = DatabaseHandler()
+        db_handler.write_to_single_column_table(name_database, lines)
 
     def closing_the_input_field() -> None:
         """Закрываем программу"""
@@ -46,7 +46,7 @@ def subscription_all() -> None:
     db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     print(f"[bold red]Всего accounts: {len(records)}")
-    for row in track(records, description='[bold red]Прогресс выполнения работы\n'):
+    for row in track(records, description="[bold red]Прогресс выполнения работы\n"):
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         # Открываем базу данных
@@ -59,10 +59,10 @@ def subscription_all() -> None:
                 print(f"[bold green][+] Подождите {time_subscription_1}-{time_subscription_2} Секунд...")
                 time.sleep(random.randrange(int(time_subscription_1), int(time_subscription_2)))
             except FloodWaitError as e:
-                print(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}')
+                print(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                 time.sleep(e.seconds)
         client.disconnect()  # Разрываем соединение Telegram
-    app_notifications(notification_text="На группы подписались!") # Выводим уведомление
+    app_notifications(notification_text="На группы подписались!")  # Выводим уведомление
 
 
 def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
@@ -85,9 +85,9 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
                 print(f"[green]{dialog.name}, {dialog.id}")
                 client.delete_dialog(dialog)
                 client.disconnect()
-            print('[green][+] Список почистили, и в файл записали.')
+            print("[green][+] Список почистили, и в файл записали.")
         except ChannelPrivateError:
-            actions: str = "Указанный канал является приватным, или вам запретили подписываться."
+            actions: str = ("Указанный канал является приватным, или вам запретили подписываться.")
             record_account_actions(phone, description_action, event, actions)
         except (UsernameInvalidError, ValueError, TypeError):
             actions: str = f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}"
@@ -99,7 +99,7 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
             record_account_actions(phone, description_action, event, actions)
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
-            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
+            actions: str = (f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
             print(f"[red][!] {actions}")
             record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт
@@ -110,9 +110,9 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
 
 def subscribe_to_the_group_and_send_the_link(client, groups, phone):
     """Подписываемся на группу и передаем ссылку"""
-    group = {'writing_group_links': groups[0]}
+    group = {"writing_group_links": groups[0]}
     # Вытягиваем данные из кортежа, для подстановки
-    groups_wr = group['writing_group_links']
+    groups_wr = group["writing_group_links"]
     subscribe_to_group_or_channel(client, groups_wr, phone)
     return groups_wr
 

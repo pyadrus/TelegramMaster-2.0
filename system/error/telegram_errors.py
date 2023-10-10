@@ -6,13 +6,15 @@ import time
 from rich import print
 from telethon.errors import ChatAdminRequiredError, ChannelPrivateError, FloodWaitError
 
-from system.sqlite_working_tools.sqlite_working_tools import delete_row_db, DatabaseHandler
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
 """Действия с username"""
 
 
-def record_account_actions(phone_number, action_description, event, action_result) -> None:
+def record_account_actions(
+    phone_number, action_description, event, action_result
+) -> None:
     """Записывает действия аккаунта в базу данных
     phone_number - номер телефона аккаунта,
     action_description - описание действия,
@@ -30,6 +32,8 @@ def record_account_actions(phone_number, action_description, event, action_resul
 
 
 """Действия с аккаунтами"""
+
+
 def delete_file(file):
     """Удаление файла"""
     try:
@@ -37,11 +41,14 @@ def delete_file(file):
     except FileNotFoundError:
         print(f"[red][!] Файл {file} не найден!")
 
+
 def telegram_phone_number_banned_error(client, phone):
     """Аккаунт banned, удаляем banned аккаунт"""
     client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-    delete_row_db(table="config", column="phone", value=phone)
+    db_handler = DatabaseHandler()
+    db_handler.delete_row_db(table="config", column="phone", value=phone)
     delete_file(file=f"user_settings/accounts/{phone}.session")
+
 
 def handle_exceptions_pars(func):
     def wrapper(*args, **kwargs):
@@ -60,17 +67,18 @@ def handle_exceptions_pars(func):
             phone, groups_wr = args[2], args[1]
             event: str = f"Parsing: {groups_wr}"
             description_action = f"channel / group: {groups_wr}"
-            actions: str = "Указанный канал является приватным, или вам запретили подписываться."
+            actions: str = ("Указанный канал является приватным, или вам запретили подписываться.")
             record_account_actions(phone, description_action, event, actions)
             # Удаляем отработанную группу или канал
-            delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
+            db_handler = DatabaseHandler()
+            db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
             return  # Прерываем работу и меняем аккаунт
         except AttributeError:  # Если произошла ошибка во время parsing
             print("Парсинг закончен!")
         except KeyError:  # Если произошла ошибка, связанная с ключом словаря
             sys.exit(1)
         except FloodWaitError as e:  # Если возникла ошибка FloodWaitError
-            print(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}')
+            print(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
             time.sleep(e.seconds)
 
     return wrapper

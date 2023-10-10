@@ -12,7 +12,7 @@ from system.auxiliary_functions.global_variables import time_inviting_1, time_ch
     time_changing_accounts_2, time_inviting_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_banner import banner
-from system.sqlite_working_tools.sqlite_working_tools import delete_row_db
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
 def display_progress_bar(time_range_1, time_range_2, message) -> None:
@@ -27,7 +27,8 @@ def display_progress_bar(time_range_1, time_range_2, message) -> None:
 def record_inviting_results(username, phone, description_action, event, actions) -> None:
     """Запись результатов inviting, отправка сообщений в базу данных"""
     record_account_actions(phone, description_action, event, actions)
-    delete_row_db(table="members", column="username", value=username['username'])
+    db_handler = DatabaseHandler()
+    db_handler.delete_row_db(table="members", column="username", value=username['username'])
     # Смена username через случайное количество секунд
     display_progress_bar(time_inviting_1, time_inviting_2, "Переход к новому username")
 

@@ -12,7 +12,6 @@ from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.sqlite_working_tools.sqlite_working_tools import write_to_single_column_table
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
 folder, files = "user_settings", "members_group.csv"
@@ -221,7 +220,7 @@ def output_the_input_field() -> None:
         with open(f'{folder}/{files}', 'r') as recorded_data:  # Записываем данные с файла в базу данных
             db_handler = DatabaseHandler()
             db_handler.open_and_read_data("writing_group_links")# Удаление списка с группами
-            write_to_single_column_table("writing_group_links", recorded_data)
+            db_handler.write_to_single_column_table("writing_group_links", recorded_data)
         deleting_files_if_available(folder, files)  # Удаляем файл после работы
 
     def closing_the_input_field() -> None:

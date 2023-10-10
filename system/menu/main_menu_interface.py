@@ -1,4 +1,3 @@
-from loguru import logger
 from rich import box
 from rich.table import Table
 
@@ -8,8 +7,8 @@ from system.actions.invite.telegram_invite_scheduler import *
 from system.actions.pars.parsing_account_groups_and_channels import *
 from system.actions.pars.parsing_group_members import *
 from system.actions.reactions.reactions import *
-from system.actions.send_mess_chat.telegram_chat_dialog import *
 from system.actions.send_mess_chat.chat_dialog_mes import *
+from system.actions.send_mess_chat.telegram_chat_dialog import *
 from system.actions.sending_messages_telegram.sending_messages_telegram import *
 from system.actions.subscription.subscription import *
 from system.actions.subscription.unsubscribe import *
@@ -129,7 +128,8 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
         parsing_of_groups_to_which_the_account_is_subscribed()
     elif user_input == "5":  # Очистка списка software_database.db
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        cleaning_db(name_database_table="members")
+        db_handler = DatabaseHandler()
+        db_handler.cleaning_db(name_database_table="members")
     elif user_input == "6":  # Формирование списка
         print("[bold red][+] Введите username, для вставки в графическое окно "
               "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "

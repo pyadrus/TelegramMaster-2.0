@@ -4,7 +4,7 @@ from telethon import functions
 
 from system.error.telegram_errors import record_account_actions
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import add_columns_to_table, DatabaseHandler
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
@@ -14,11 +14,11 @@ writing_data_to_a_table = "INSERT INTO groups_and_channels (id, title, about, li
 
 def parsing_of_groups_to_which_the_account_is_subscribed() -> None:
     """Parsing групп / каналов на которые подписан аккаунт и сохраняем в файл software_database.db"""
-    add_columns_to_table()
+    db_handler = DatabaseHandler()
+    db_handler.add_columns_to_table()
     event: str = "Parsing групп / каналов на которые подписан аккаунт"  # Событие, которое записываем в базу данных
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал

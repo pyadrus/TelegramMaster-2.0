@@ -10,61 +10,61 @@ from telethon.errors import *
 from system.auxiliary_functions.global_variables import console
 from system.menu.app_gui import program_window_with_dimensions
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import save_proxy_data_to_db, DatabaseHandler
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 
 creating_a_table = "CREATE TABLE IF NOT EXISTS config(id, hash, phone)"
 writing_data_to_a_table = "INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)"
-config.read('user_settings/config.ini')
+config.read("user_settings/config.ini")
 
 
 def record_account_limits() -> configparser.ConfigParser:
     """Запись лимитов на аккаунт"""
     limits = console.input("[bold green][+] Введите лимит на аккаунт : ")
-    config.get('account_limits', 'limits')
-    config.set('account_limits', 'limits', limits)
+    config.get("account_limits", "limits")
+    config.set("account_limits", "limits", limits)
     return config
 
 
 def record_device_type() -> configparser.ConfigParser():
     """Запись типа устройства например: Samsung SGH600, Android 9 (P30), 4.2.1,
-                                        Vivo V9, Android 9 (P30), 4.2.1"""
+    Vivo V9, Android 9 (P30), 4.2.1"""
     try:
         device_model = console.input("[bold green][+] Введите модель устройства: ")
-        config.get('device_model', 'device_model')
-        config.set('device_model', 'device_model', device_model)
+        config.get("device_model", "device_model")
+        config.set("device_model", "device_model", device_model)
     except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
-        config['device_model'] = {'device_model': device_model}
+        config["device_model"] = {"device_model": device_model}
     try:
         system_version = console.input("[bold green][+] Введите версию операционной системы: ")
-        config.get('system_version', 'system_version')
-        config.set('system_version', 'system_version', system_version)
+        config.get("system_version", "system_version")
+        config.set("system_version", "system_version", system_version)
     except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
-        config['system_version'] = {'system_version': system_version}
+        config["system_version"] = {"system_version": system_version}
     try:
         app_version = console.input("[bold green][+] Введите версию приложения: ")
-        config.get('app_version', 'app_version')
-        config.set('app_version', 'app_version', app_version)
+        config.get("app_version", "app_version")
+        config.set("app_version", "app_version", app_version)
     except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
-        config['app_version'] = {'app_version': app_version}
+        config["app_version"] = {"app_version": app_version}
     return config
 
 
 def writing_settings_to_a_file(config) -> None:
     """Запись данных в файл user_settings/config.ini"""
-    with open('user_settings/config.ini', 'w') as setup:  # Открываем файл в режиме записи
+    with open("user_settings/config.ini", "w") as setup:  # Открываем файл в режиме записи
         config.write(setup)  # Записываем данные в файл
 
 
 def writing_api_id_api_hash() -> configparser.ConfigParser:
     """Записываем api, hash полученный с помощью регистрации приложения на сайте https://my.telegram.org/auth"""
     api_id_data = console.input("[bold green][+] Введите api_id : ")
-    config.get('telegram_settings', 'id')
-    config.set('telegram_settings', 'id', api_id_data)
+    config.get("telegram_settings", "id")
+    config.set("telegram_settings", "id", api_id_data)
     api_hash_data = console.input("[bold green][+] Введите api_hash : ")
-    config.get('telegram_settings', 'hash')
-    config.set('telegram_settings', 'hash', api_hash_data)
+    config.get("telegram_settings", "hash")
+    config.set("telegram_settings", "hash", api_hash_data)
     return config
 
 
@@ -72,34 +72,34 @@ def writing_link_to_the_group() -> configparser.ConfigParser:
     """Записываем ссылку для inviting групп"""
     target_group_entity_user = console.input("[bold green][+] Введите ссылку на группу : ")  # Вводим ссылку на группу
     # Находим ссылку в файле и меняем на свою
-    config.get('link_to_the_group', 'target_group_entity')
-    config.set('link_to_the_group', 'target_group_entity', target_group_entity_user)
+    config.get("link_to_the_group", "target_group_entity")
+    config.set("link_to_the_group", "target_group_entity", target_group_entity_user)
     return config
 
 
 def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigParser:
     """Запись данных в файл user_settings/time_inviting.ini"""
-    config.get(f'{variable}', f'{variable}_1')
-    config.set(f'{variable}', f'{variable}_1', time_1)
-    config.get(f'{variable}', f'{variable}_2')
-    config.set(f'{variable}', f'{variable}_2', time_2)
+    config.get(f"{variable}", f"{variable}_1")
+    config.set(f"{variable}", f"{variable}_1", time_1)
+    config.get(f"{variable}", f"{variable}_2")
+    config.set(f"{variable}", f"{variable}_2", time_2)
     return config
 
 
 def reading_the_id_and_hash():
     """Считываем id и hash"""
-    config.read('user_settings/config.ini')  # Файл с настройками
-    api_id_data = config['telegram_settings']['id']  # api_id с файла user_settings/api_id_api_hash.ini
-    api_hash_data = config['telegram_settings']['hash']  # api_hash с файла user_settings/api_id_api_hash.ini
+    config.read("user_settings/config.ini")  # Файл с настройками
+    api_id_data = config["telegram_settings"]["id"]  # api_id с файла user_settings/api_id_api_hash.ini
+    api_hash_data = config["telegram_settings"]["hash"]  # api_hash с файла user_settings/api_id_api_hash.ini
     return api_id_data, api_hash_data
 
 
 def reading_device_type():
     """Считываем тип устройства"""
-    config.read('user_settings/config.ini')  # Файл с настройками
-    device_model = config['device_model']['device_model']  # api_id с файла user_settings/api_id_api_hash.ini
-    system_version = config['system_version']['system_version']  # api_hash с файла user_settings/api_id_api_hash.ini
-    app_version = config['app_version']['app_version']  # api_hash с файла user_settings/api_id_api_hash.ini
+    config.read("user_settings/config.ini")  # Файл с настройками
+    device_model = config["device_model"]["device_model"]  # api_id с файла user_settings/api_id_api_hash.ini
+    system_version = config["system_version"]["system_version"]  # api_hash с файла user_settings/api_id_api_hash.ini
+    app_version = config["app_version"]["app_version"]  # api_hash с файла user_settings/api_id_api_hash.ini
     return device_model, system_version, app_version
 
 
@@ -119,8 +119,7 @@ def connecting_new_account() -> None:
 def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
     device_model, system_version, app_version = reading_device_type()
-    client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash,
-                            device_model=device_model, system_version=system_version, app_version=app_version)
+    client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, device_model=device_model, system_version=system_version, app_version=app_version)
     client.connect()  # Подсоединяемся к Telegram
     if not client.is_user_authorized():
         client.send_code_request(phone)
@@ -182,7 +181,8 @@ def creating_the_main_window_for_proxy_data_entry() -> None:
     password_type_entry = tk.Entry(root, width=45)
     password_type_entry.pack()
     # Создаем кнопку
-    button = tk.Button(root, text="Готово", command=lambda: save_proxy_data_to_db(proxy=recording_proxy_data()))
+    db_handler = DatabaseHandler()
+    button = tk.Button(root, text="Готово", command=lambda: db_handler.save_proxy_data_to_db(proxy=recording_proxy_data()))
     button.pack()
     result_label = tk.Label(root, text="")  # Создаем метку для вывода результата
     result_label.pack()
@@ -208,9 +208,7 @@ def create_main_window(variable) -> None:
         # Проверяем, что первое время меньше второго
         if smaller_time < larger_time:
             # Если условие прошло проверку, то возвращаем первое и второе время
-            result_label.config(
-                text="Вы ввели:\n{} секунд (меньшее время)\n{} секунд (большее время)".format(smaller_time,
-                                                                                              larger_time))
+            result_label.config(text="Вы ввели:\n{} секунд (меньшее время)\n{} секунд (большее время)".format(smaller_time, larger_time))
             config = recording_limits_file(str(smaller_time), str(larger_time), variable=variable)
             writing_settings_to_a_file(config)
             root.destroy()
@@ -221,7 +219,7 @@ def create_main_window(variable) -> None:
     root = program_window_with_dimensions(geometry="300x110")
     root.resizable(False, False)  # Запретить масштабирование окна
     s = ttk.Style()  # Установка стиля оформления
-    s.theme_use('winnative')
+    s.theme_use("winnative")
     # Создаем первое текстовое поле и связанный с ним текстовый метка
     smaller_time_label = ttk.Label(root, text="Время в секундах (меньшее):")
     smaller_time_label.pack()

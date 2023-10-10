@@ -3,7 +3,7 @@ import random
 import requests
 from rich import print
 
-from system.sqlite_working_tools.sqlite_working_tools import deleting_an_invalid_proxy, DatabaseHandler
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
 def reading_proxy_data_from_the_database():
@@ -64,7 +64,8 @@ def connecting_to_proxy_with_verification(proxy_type, addr, port, username, pass
     # Это может быть из-за недоступности сервера, ошибочного URL или других проблем с соединением.
     except requests.exceptions.RequestException:
         print('[magenta][-] Proxy не рабочий!')
-        deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns)
+        db_handler = DatabaseHandler()
+        db_handler.deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns)
 
 
 if __name__ == "__main__":
