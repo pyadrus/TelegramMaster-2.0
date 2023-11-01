@@ -211,3 +211,151 @@ Traceback (most recent call last):
            └ <module 'codecs' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python310\\lib\\codecs.py'>
 
 UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-6: character maps to <undefined>
+2023-11-01 16:51:38.702 | ERROR    | __main__:<module>:20 - DatabaseHandler.cleaning_db() missing 1 required positional argument: 'self'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001C34B06E0C0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x000001C34B062AC0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 24, in deleting_files_by_dictionary
+    writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
+    └ <function writing_names_found_files_to_the_db at 0x000001C34AFE7740>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 59, in writing_names_found_files_to_the_db
+    db_handler.cleaning_db(name_database_table="config")  # Чистим базу данных с аккаунтами
+    │          └ <function DatabaseHandler.cleaning_db at 0x000001C34994FC40>
+    └ <class 'system.sqlite_working_tools.sqlite_working_tools.DatabaseHandler'>
+
+TypeError: DatabaseHandler.cleaning_db() missing 1 required positional argument: 'self'
+2023-11-01 16:51:38.702 | ERROR    | __main__:<module>:20 - DatabaseHandler.cleaning_db() missing 1 required positional argument: 'self'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001C34B06E0C0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x000001C34B062AC0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 24, in deleting_files_by_dictionary
+    writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
+    └ <function writing_names_found_files_to_the_db at 0x000001C34AFE7740>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 59, in writing_names_found_files_to_the_db
+    db_handler.cleaning_db(name_database_table="config")  # Чистим базу данных с аккаунтами
+    │          └ <function DatabaseHandler.cleaning_db at 0x000001C34994FC40>
+    └ <class 'system.sqlite_working_tools.sqlite_working_tools.DatabaseHandler'>
+
+TypeError: DatabaseHandler.cleaning_db() missing 1 required positional argument: 'self'
+2023-11-01 16:52:19.406 | ERROR    | __main__:<module>:20 - DatabaseHandler.cleaning_db() missing 1 required positional argument: 'self'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000022E8E792520>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x0000022E8E77EE80>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 24, in deleting_files_by_dictionary
+    writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
+    └ <function writing_names_found_files_to_the_db at 0x0000022E8E6FB6A0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 59, in writing_names_found_files_to_the_db
+    db_handler.cleaning_db(name_database_table="config")  # Чистим базу данных с аккаунтами
+    │          └ <function DatabaseHandler.cleaning_db at 0x0000022E8D06FBA0>
+    └ <class 'system.sqlite_working_tools.sqlite_working_tools.DatabaseHandler'>
+
+TypeError: DatabaseHandler.cleaning_db() missing 1 required positional argument: 'self'
+2023-11-01 16:52:19.406 | ERROR    | __main__:<module>:20 - DatabaseHandler.cleaning_db() missing 1 required positional argument: 'self'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x0000022E8E792520>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x0000022E8E77EE80>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 24, in deleting_files_by_dictionary
+    writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
+    └ <function writing_names_found_files_to_the_db at 0x0000022E8E6FB6A0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 59, in writing_names_found_files_to_the_db
+    db_handler.cleaning_db(name_database_table="config")  # Чистим базу данных с аккаунтами
+    │          └ <function DatabaseHandler.cleaning_db at 0x0000022E8D06FBA0>
+    └ <class 'system.sqlite_working_tools.sqlite_working_tools.DatabaseHandler'>
+
+TypeError: DatabaseHandler.cleaning_db() missing 1 required positional argument: 'self'
+2023-11-01 16:59:20.751 | ERROR    | __main__:<module>:20 - incomplete input
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001C694F92520>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x000001C694F7EE80>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 24, in deleting_files_by_dictionary
+    writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
+    └ <function writing_names_found_files_to_the_db at 0x000001C694EFB6A0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 63, in writing_names_found_files_to_the_db
+    db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
+    │          │                │                 │                        └ ['7655060', 'cc1290cd733c1f1d407598e5a31be4a8', '79112613851']
+    │          │                │                 └ 'INSERT INTO config (id, hash, phone) VALUES (?, ?, ?'
+    │          │                └ 'CREATE TABLE IF NOT EXISTS config(id, hash, phone)'
+    │          └ <function DatabaseHandler.write_data_to_db at 0x000001C69387F6A0>
+    └ <system.sqlite_working_tools.sqlite_working_tools.DatabaseHandler object at 0x000001C694F05290>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 55, in write_data_to_db
+    self.cursor.executemany(writing_data_to_a_table, (entities,))
+    │    │      │           │                         └ ['7655060', 'cc1290cd733c1f1d407598e5a31be4a8', '79112613851']
+    │    │      │           └ 'INSERT INTO config (id, hash, phone) VALUES (?, ?, ?'
+    │    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    │    └ <sqlite3.Cursor object at 0x000001C694FA18C0>
+    └ <system.sqlite_working_tools.sqlite_working_tools.DatabaseHandler object at 0x000001C694F05290>
+
+sqlite3.OperationalError: incomplete input
+2023-11-01 16:59:20.751 | ERROR    | __main__:<module>:20 - incomplete input
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000001C694F92520>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x000001C694F7EE80>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 24, in deleting_files_by_dictionary
+    writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
+    └ <function writing_names_found_files_to_the_db at 0x000001C694EFB6A0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 63, in writing_names_found_files_to_the_db
+    db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
+    │          │                │                 │                        └ ['7655060', 'cc1290cd733c1f1d407598e5a31be4a8', '79112613851']
+    │          │                │                 └ 'INSERT INTO config (id, hash, phone) VALUES (?, ?, ?'
+    │          │                └ 'CREATE TABLE IF NOT EXISTS config(id, hash, phone)'
+    │          └ <function DatabaseHandler.write_data_to_db at 0x000001C69387F6A0>
+    └ <system.sqlite_working_tools.sqlite_working_tools.DatabaseHandler object at 0x000001C694F05290>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\sqlite_working_tools\sqlite_working_tools.py", line 55, in write_data_to_db
+    self.cursor.executemany(writing_data_to_a_table, (entities,))
+    │    │      │           │                         └ ['7655060', 'cc1290cd733c1f1d407598e5a31be4a8', '79112613851']
+    │    │      │           └ 'INSERT INTO config (id, hash, phone) VALUES (?, ?, ?'
+    │    │      └ <method 'executemany' of 'sqlite3.Cursor' objects>
+    │    └ <sqlite3.Cursor object at 0x000001C694FA18C0>
+    └ <system.sqlite_working_tools.sqlite_working_tools.DatabaseHandler object at 0x000001C694F05290>
+
+sqlite3.OperationalError: incomplete input

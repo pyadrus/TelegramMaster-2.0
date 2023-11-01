@@ -55,8 +55,8 @@ def writing_names_found_files_to_the_db() -> None:
     """Запись названий найденных файлов в базу данных"""
     creating_a_table = "CREATE TABLE IF NOT EXISTS config(id, hash, phone)"
     writing_data_to_a_table = "INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)"
-    db_handler = DatabaseHandler
-    db_handler.cleaning_db(name_database_table="config")  # Чистим базу данных с аккаунтами
+    db_handler = DatabaseHandler()  # Create an instance of the DatabaseHandler class
+    db_handler.cleaning_db(name_database_table="config")  # Call the method on the instance
     records = connecting_account_sessions()
     for entities in records:
         print(f"Записываем данные аккаунта {entities} в базу данных")
