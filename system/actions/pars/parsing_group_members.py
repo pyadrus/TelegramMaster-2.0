@@ -12,6 +12,9 @@ from telethon.tl.types import UserStatusLastMonth
 from telethon.tl.types import UserStatusLastWeek
 from telethon.tl.types import UserStatusOffline
 from telethon.tl.types import UserStatusRecently
+from telethon.tl.types import UserStatusOnline
+from telethon.tl.types import UserStatusEmpty
+
 
 from system.actions.subscription.subscription import subscribe_to_group_or_channel
 from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
@@ -30,10 +33,9 @@ def getting_user_data(user, entities) -> None:
     first_name = user.first_name if user.first_name else ""
     last_name = user.last_name if user.last_name else ""
     photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
-    online_at = ""
+    online_at = "Был(а) недавно"
     # Статусы пользователя https://core.telegram.org/type/UserStatus
-    if isinstance(
-        user.status(UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth)):
+    if isinstance(user.status, (UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, UserStatusOnline, UserStatusEmpty)):
         if isinstance(user.status, UserStatusOffline):
             online_at = user.status.was_online
         if isinstance(user.status, UserStatusRecently):
@@ -42,6 +44,10 @@ def getting_user_data(user, entities) -> None:
             online_at = "Был(а) на этой неделе"
         if isinstance(user.status, UserStatusLastMonth):
             online_at = "Был(а) в этом месяце"
+        if isinstance(user.status, UserStatusOnline):
+            online_at = user.status.expires
+        if isinstance(user.status, UserStatusEmpty):
+            online_at = "статус пользователя еще не определен"
     user_premium = "Пользователь с premium" if user.premium else ""
     entities.append([username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium])
 
