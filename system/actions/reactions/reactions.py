@@ -180,7 +180,7 @@ def choosing_a_number_of_reactions() -> list:
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     number_of_accounts = console.input("[bold red][+] Введите количество аккаунтов для выставления реакций: ")
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
-                                                      number_of_accounts=int(number_of_accounts))
+                                                                 number_of_accounts=int(number_of_accounts))
     return records
 
 
@@ -193,7 +193,8 @@ def send_reaction_request(records, chat, message_url, reaction_input) -> None:
             subscribe_to_group_or_channel(client, chat, phone)  # Подписываемся на группу
             number = re.search(r'/(\d+)$', message_url).group(1)
             time.sleep(5)
-            client(SendReactionRequest(peer=chat, msg_id=int(number), reaction=[types.ReactionEmoji(emoticon=f'{reaction_input}')]))
+            client(SendReactionRequest(peer=chat, msg_id=int(number),
+                                       reaction=[types.ReactionEmoji(emoticon=f'{reaction_input}')]))
             time.sleep(1)
         except KeyError:
             sys.exit(1)
@@ -205,6 +206,7 @@ def send_reaction_request(records, chat, message_url, reaction_input) -> None:
 
     app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
+
 def viewing_posts() -> None:
     """Накрутка просмотров постов"""
     chat = console.input("[bold red][+] Введите ссылку на канал: ")  # Ссылка на группу или канал
@@ -214,20 +216,18 @@ def viewing_posts() -> None:
     print(f"[bold red]Всего accounts: {len(records)}")
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     number_of_accounts = console.input("[bold red][+] Введите количество аккаунтов для просмотра постов: ")
-    records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=int(number_of_accounts))
+    records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
+                                                                 number_of_accounts=int(number_of_accounts))
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         try:
             subscribe_to_group_or_channel(client, chat, phone)  # Подписываемся на группу
-            # Получение информации о канале
-            channel = client.get_entity(chat)
-
+            channel = client.get_entity(chat)  # Получение информации о канале
             time.sleep(5)
             # Получение последних 10 постов из канала
             posts = client.get_messages(channel, limit=10)
-            # Вывод информации о постах
-            for post in posts:
+            for post in posts:  # Вывод информации о постах
                 post_link = f"{chat}/{post.id}"  # Ссылка на пост
                 print("Ссылка на пост:", post_link)
                 print(f"Date: {post.date}\nText: {post.text}\n")
