@@ -225,8 +225,7 @@ def viewing_posts() -> None:
             subscribe_to_group_or_channel(client, chat, phone)  # Подписываемся на группу
             channel = client.get_entity(chat)  # Получение информации о канале
             time.sleep(5)
-            # Получение последних 10 постов из канала
-            posts = client.get_messages(channel, limit=10)
+            posts = client.get_messages(channel, limit=10)  # Получение последних 10 постов из канала
             for post in posts:  # Вывод информации о постах
                 post_link = f"{chat}/{post.id}"  # Ссылка на пост
                 print("Ссылка на пост:", post_link)
@@ -234,7 +233,6 @@ def viewing_posts() -> None:
                 number = re.search(r"/(\d+)$", post_link).group(1)
                 time.sleep(5)
                 client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))
-
         except KeyError:
             sys.exit(1)
         except Exception as e:
