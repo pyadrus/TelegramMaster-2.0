@@ -1,6 +1,6 @@
 import os
 import os.path
-
+from telethon.errors import TypeNotFoundError
 from rich import print
 from telethon import TelegramClient
 from telethon.tl.functions.users import GetFullUserRequest
@@ -25,12 +25,15 @@ def connect_to_telegram_account_and_output_name(row):
 
 def account_name(client, name_account):
     """Показываем имя аккаунта с которого будем взаимодействовать"""
-    full = client(GetFullUserRequest(name_account))
-    for user in full.users:
-        first_name = user.first_name if user.first_name else ""
-        last_name = user.last_name if user.last_name else ""
-        phone = user.phone if user.phone else ""
-        return first_name, last_name, phone
+    try:
+        full = client(GetFullUserRequest(name_account))
+        for user in full.users:
+            first_name = user.first_name if user.first_name else ""
+            last_name = user.last_name if user.last_name else ""
+            phone = user.phone if user.phone else ""
+            return first_name, last_name, phone
+    except TypeNotFoundError as e:
+        print(f"TypeNotFoundError: {e}")
 
 
 def get_from_the_list_phone_api_id_api_hash(row):

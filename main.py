@@ -15,7 +15,7 @@ def launching_the_program_with_account_verification() -> None:
 
 if __name__ == "__main__":
     try:
-        launching_the_program_with_account_verification()
+        launching_the_program_with_account_verification()  # Проверка аккаунтов
     except Exception as e:
         logger.exception(e)
         print("[bold red][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
