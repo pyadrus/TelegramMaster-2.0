@@ -3,6 +3,7 @@ import os.path
 import sqlite3
 import time
 
+from loguru import logger
 from rich import print
 from telethon import TelegramClient
 from telethon.errors import *
@@ -82,6 +83,9 @@ def account_verification() -> list[list]:
             except (PhoneNumberBannedError, UserDeactivatedBanError):
                 # Удаляем номер телефона с базы данных
                 telegram_phone_number_banned_error(client, row[2])  # Удаляем номер телефона с базы данных
+            except TimedOutError as e:
+                logger.exception(e)
+                time.sleep(2)
         except sqlite3.DatabaseError:
             # session файл не является базой данных
             print(f"Битый файл {row[2]}.session")

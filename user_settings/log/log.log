@@ -1,0 +1,218 @@
+2023-11-23 12:31:56.383 | ERROR    | __main__:<module>:20 - Could not find a matching Constructor ID for the TLObject that was supposed to be read with ID abb5f120. See the FAQ for more details. Remaining bytes: b' \xf1\xb5\xab[\x1c\x00\x00\x10\x00\x00\x00JVvR\x00\x00\x00\x00\x07\xcf~\xfct\xe3b\x9d\x07Jo haab\tItsSevenB\x00\x00\x0c251906138874\x00\x00\x00?p\x8c\x00\xff\xf9^e\xe6)\x0bg\xf8\xe4\x17\xa3\x92\\5\xc8\xea0O]\xa4\xd7\xca1'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000002CA792FB420>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x000002CA792E3E20>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 25, in deleting_files_by_dictionary
+    error_sessions = account_verification()
+                     └ <function account_verification at 0x000002CA792E3F60>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 61, in account_verification
+    first_name, last_name, phone = account_name(client, name_account="me")
+                                   │            └ <telethon.client.telegramclient.TelegramClient object at 0x000002CA793122D0>
+                                   └ <function account_name at 0x000002CA77DDDEE0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 28, in account_name
+    full = client(GetFullUserRequest(name_account))
+           │      │                  └ 'me'
+           │      └ <class 'telethon.tl.functions.users.GetFullUserRequest'>
+           └ <telethon.client.telegramclient.TelegramClient object at 0x000002CA793122D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000002CA793347C0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000002CA75AD9B20>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-11' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.users.GetFullUserRequest object at 0x000002CA74103390>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000002CA79330F50>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000002CA793122D0>
+                 │    └ <function UserMethods._call at 0x000002CA76258EA0>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000002CA793122D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 87, in _call
+    result = await future
+                   └ <Future finished exception=TypeNotFoundError("Could not find a matching Constructor ID for the TLObject that was supposed to ...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 641, in _handle_rpc_result
+    result = state.request.read_result(reader)
+             │     │                   └ <telethon.extensions.binaryreader.BinaryReader object at 0x000002CA7931AF90>
+             │     └ <member 'request' of 'RequestState' objects>
+             └ <telethon.network.requeststate.RequestState object at 0x000002CA79325580>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 219, in read_result
+    return reader.tgread_object()
+           │      └ <function BinaryReader.tgread_object at 0x000002CA772B9C60>
+           └ <telethon.extensions.binaryreader.BinaryReader object at 0x000002CA7931AF90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\extensions\binaryreader.py", line 142, in tgread_object
+    return clazz.from_reader(self)
+           │     │           └ <telethon.extensions.binaryreader.BinaryReader object at 0x000002CA7931AF90>
+           │     └ <classmethod(<function UserFull.from_reader at 0x000002CA76FDCFE0>)>
+           └ <class 'telethon.tl.types.users.UserFull'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\types\users.py", line 52, in from_reader
+    _x = reader.tgread_object()
+         │      └ <function BinaryReader.tgread_object at 0x000002CA772B9C60>
+         └ <telethon.extensions.binaryreader.BinaryReader object at 0x000002CA7931AF90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\extensions\binaryreader.py", line 140, in tgread_object
+    raise error
+          └ TypeNotFoundError("Could not find a matching Constructor ID for the TLObject that was supposed to be read with ID abb5f120. S...
+
+telethon.errors.common.TypeNotFoundError: Could not find a matching Constructor ID for the TLObject that was supposed to be read with ID abb5f120. See the FAQ for more details. Remaining bytes: b' \xf1\xb5\xab[\x1c\x00\x00\x10\x00\x00\x00JVvR\x00\x00\x00\x00\x07\xcf~\xfct\xe3b\x9d\x07Jo haab\tItsSevenB\x00\x00\x0c251906138874\x00\x00\x00?p\x8c\x00\xff\xf9^e\xe6)\x0bg\xf8\xe4\x17\xa3\x92\\5\xc8\xea0O]\xa4\xd7\xca1'
+2023-11-23 12:31:56.383 | ERROR    | __main__:<module>:20 - Could not find a matching Constructor ID for the TLObject that was supposed to be read with ID abb5f120. See the FAQ for more details. Remaining bytes: b' \xf1\xb5\xab[\x1c\x00\x00\x10\x00\x00\x00JVvR\x00\x00\x00\x00\x07\xcf~\xfct\xe3b\x9d\x07Jo haab\tItsSevenB\x00\x00\x0c251906138874\x00\x00\x00?p\x8c\x00\xff\xf9^e\xe6)\x0bg\xf8\xe4\x17\xa3\x92\\5\xc8\xea0O]\xa4\xd7\xca1'
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()
+    └ <function launching_the_program_with_account_verification at 0x000002CA792FB420>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x000002CA792E3E20>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 25, in deleting_files_by_dictionary
+    error_sessions = account_verification()
+                     └ <function account_verification at 0x000002CA792E3F60>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 61, in account_verification
+    first_name, last_name, phone = account_name(client, name_account="me")
+                                   │            └ <telethon.client.telegramclient.TelegramClient object at 0x000002CA793122D0>
+                                   └ <function account_name at 0x000002CA77DDDEE0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\telegram_actions.py", line 28, in account_name
+    full = client(GetFullUserRequest(name_account))
+           │      │                  └ 'me'
+           │      └ <class 'telethon.tl.functions.users.GetFullUserRequest'>
+           └ <telethon.client.telegramclient.TelegramClient object at 0x000002CA793122D0>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x000002CA793347C0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x000002CA75AD9B20>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-11' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Pyth...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.users.GetFullUserRequest object at 0x000002CA74103390>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x000002CA79330F50>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x000002CA793122D0>
+                 │    └ <function UserMethods._call at 0x000002CA76258EA0>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x000002CA793122D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 87, in _call
+    result = await future
+                   └ <Future finished exception=TypeNotFoundError("Could not find a matching Constructor ID for the TLObject that was supposed to ...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 641, in _handle_rpc_result
+    result = state.request.read_result(reader)
+             │     │                   └ <telethon.extensions.binaryreader.BinaryReader object at 0x000002CA7931AF90>
+             │     └ <member 'request' of 'RequestState' objects>
+             └ <telethon.network.requeststate.RequestState object at 0x000002CA79325580>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\tlobject.py", line 219, in read_result
+    return reader.tgread_object()
+           │      └ <function BinaryReader.tgread_object at 0x000002CA772B9C60>
+           └ <telethon.extensions.binaryreader.BinaryReader object at 0x000002CA7931AF90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\extensions\binaryreader.py", line 142, in tgread_object
+    return clazz.from_reader(self)
+           │     │           └ <telethon.extensions.binaryreader.BinaryReader object at 0x000002CA7931AF90>
+           │     └ <classmethod(<function UserFull.from_reader at 0x000002CA76FDCFE0>)>
+           └ <class 'telethon.tl.types.users.UserFull'>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\tl\types\users.py", line 52, in from_reader
+    _x = reader.tgread_object()
+         │      └ <function BinaryReader.tgread_object at 0x000002CA772B9C60>
+         └ <telethon.extensions.binaryreader.BinaryReader object at 0x000002CA7931AF90>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\extensions\binaryreader.py", line 140, in tgread_object
+    raise error
+          └ TypeNotFoundError("Could not find a matching Constructor ID for the TLObject that was supposed to be read with ID abb5f120. S...
+
+telethon.errors.common.TypeNotFoundError: Could not find a matching Constructor ID for the TLObject that was supposed to be read with ID abb5f120. See the FAQ for more details. Remaining bytes: b' \xf1\xb5\xab[\x1c\x00\x00\x10\x00\x00\x00JVvR\x00\x00\x00\x00\x07\xcf~\xfct\xe3b\x9d\x07Jo haab\tItsSevenB\x00\x00\x0c251906138874\x00\x00\x00?p\x8c\x00\xff\xf9^e\xe6)\x0bg\xf8\xe4\x17\xa3\x92\\5\xc8\xea0O]\xa4\xd7\xca1'
+2023-11-23 16:32:11.799 | ERROR    | __main__:<module>:20 - RPCError -503: Timedout (caused by InvokeWithLayerRequest(InitConnectionRequest(GetConfigRequest)))
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()  # Проверка аккаунтов
+    └ <function launching_the_program_with_account_verification at 0x00000164D977B380>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x00000164D975FD80>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 25, in deleting_files_by_dictionary
+    error_sessions = account_verification()
+                     └ <function account_verification at 0x00000164D975FEC0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 54, in account_verification
+    client.connect()  # Подсоединяемся к Telegram
+    │      └ <function TelegramBaseClient.connect at 0x00000164D805AAC0>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x00000164D97F4E90>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object TelegramBaseClient.connect at 0x00000164D9750880>
+           │    └ <function BaseEventLoop.run_until_complete at 0x00000164D5F59B20>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-1021' coro=<TelegramBaseClient.connect() done, defined at C:\Users\zhvit\AppData\Local\Programs\Pyt...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\telegrambaseclient.py", line 593, in connect
+    await self._sender.send(functions.InvokeWithLayerRequest(LAYER, req))
+          │    │       │    │         │                      │      └ <telethon.tl.functions.InitConnectionRequest object at 0x00000164D9832DD0>
+          │    │       │    │         │                      └ 166
+          │    │       │    │         └ <class 'telethon.tl.functions.InvokeWithLayerRequest'>
+          │    │       │    └ <module 'telethon.tl.functions' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\tele...
+          │    │       └ <function MTProtoSender.send at 0x00000164D7B15440>
+          │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000164D9833A50>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x00000164D97F4E90>
+
+telethon.errors.rpcbaseerrors.TimedOutError: RPCError -503: Timedout (caused by InvokeWithLayerRequest(InitConnectionRequest(GetConfigRequest)))
+2023-11-23 16:32:11.799 | ERROR    | __main__:<module>:20 - RPCError -503: Timedout (caused by InvokeWithLayerRequest(InitConnectionRequest(GetConfigRequest)))
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()  # Проверка аккаунтов
+    └ <function launching_the_program_with_account_verification at 0x00000164D977B380>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 12, in launching_the_program_with_account_verification
+    deleting_files_by_dictionary()
+    └ <function deleting_files_by_dictionary at 0x00000164D975FD80>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 25, in deleting_files_by_dictionary
+    error_sessions = account_verification()
+                     └ <function account_verification at 0x00000164D975FEC0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\telegram_actions\account_verification.py", line 54, in account_verification
+    client.connect()  # Подсоединяемся к Telegram
+    │      └ <function TelegramBaseClient.connect at 0x00000164D805AAC0>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x00000164D97F4E90>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object TelegramBaseClient.connect at 0x00000164D9750880>
+           │    └ <function BaseEventLoop.run_until_complete at 0x00000164D5F59B20>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-1021' coro=<TelegramBaseClient.connect() done, defined at C:\Users\zhvit\AppData\Local\Programs\Pyt...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\telegrambaseclient.py", line 593, in connect
+    await self._sender.send(functions.InvokeWithLayerRequest(LAYER, req))
+          │    │       │    │         │                      │      └ <telethon.tl.functions.InitConnectionRequest object at 0x00000164D9832DD0>
+          │    │       │    │         │                      └ 166
+          │    │       │    │         └ <class 'telethon.tl.functions.InvokeWithLayerRequest'>
+          │    │       │    └ <module 'telethon.tl.functions' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\tele...
+          │    │       └ <function MTProtoSender.send at 0x00000164D7B15440>
+          │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000164D9833A50>
+          └ <telethon.client.telegramclient.TelegramClient object at 0x00000164D97F4E90>
+
+telethon.errors.rpcbaseerrors.TimedOutError: RPCError -503: Timedout (caused by InvokeWithLayerRequest(InitConnectionRequest(GetConfigRequest)))
