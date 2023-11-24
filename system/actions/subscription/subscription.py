@@ -84,7 +84,10 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
             for dialog in client.iter_dialogs():
                 print(f"[green]{dialog.name}, {dialog.id}")
                 client.delete_dialog(dialog)
-                client.disconnect()
+                try:
+                    client.disconnect()
+                except ConnectionError as e:
+                    print(e)
             print("[green][+] Список почистили, и в файл записали.")
         except ChannelPrivateError:
             actions: str = ("Указанный канал является приватным, или вам запретили подписываться.")
