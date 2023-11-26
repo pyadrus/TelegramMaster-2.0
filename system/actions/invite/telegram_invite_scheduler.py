@@ -4,6 +4,7 @@ import schedule
 
 from system.actions.invite.inviting_participants_telegram import invitation_from_all_accounts_program_body
 from system.auxiliary_functions.global_variables import console
+from system.setting.setting import reading_hour_minutes_every_day
 from system.telegram_actions.account_verification import deleting_files_by_dictionary
 
 
@@ -11,6 +12,15 @@ def schedule_member_invitation() -> None:
     """Запуск inviting"""
     deleting_files_by_dictionary()
     invitation_from_all_accounts_program_body(name_database_table="members")
+
+
+def launching_an_invite_every_day_at_a_certain_time() -> None:
+    """Запуск inviting каждый день в определенное время выбранное пользователем"""
+    hour, minutes = reading_hour_minutes_every_day()
+    schedule.every().day.at(f"{hour}:{minutes}").do(schedule_member_invitation)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 def launching_an_invite_once_an_hour() -> None:
@@ -39,7 +49,7 @@ def schedule_invite() -> None:
 
 
 if __name__ == "__main__":
-    # invite_members()
     launching_an_invite_once_an_hour()
     schedule_invite()
     schedule_member_invitation()
+    launching_an_invite_every_day_at_a_certain_time()  # Запуск inviting каждый день в определенное время

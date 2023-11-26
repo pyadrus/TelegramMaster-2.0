@@ -13,7 +13,6 @@ pyasn1
 Pygments
 PySocks
 requests
-
 rsa
 schedule
 Telethon

@@ -19,6 +19,58 @@ writing_data_to_a_table = "INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)
 config.read("user_settings/config.ini")
 
 
+def recording_the_time_to_launch_an_invite_every_day():
+    def recoding_time():
+        # Получаем значения из полей ввода
+        hour = hour_time_entry.get()
+        minutes = minutes_time_entry.get()
+        # Проверка на пустой ввод
+        if not hour or not minutes:
+            result_label.config(text="Пожалуйста, введите оба поля!")
+            return
+        # Проверяем, что оба поля были заполнены целыми числами
+        try:
+            hour = int(hour)
+            minutes = int(minutes)
+        except ValueError:
+            # Если пользователь ввел не число, выводим сообщение об ошибке
+            result_label.config(text="Пожалуйста, введите целые числа!")
+            return
+        if not 0 <= hour < 24:
+            # Если часы не в пределах от 0 до 23, выводим сообщение об ошибке
+            result_label.config(text="Пожалуйста, введите часы в пределах от 0 до 23!")
+            return
+        if not 0 <= minutes < 60:
+            # Если минуты не в пределах от 0 до 59, выводим сообщение об ошибке
+            result_label.config(text="Пожалуйста, введите минуты в пределах от 0 до 59!")
+            return
+        config.get("hour_minutes_every_day", "hour")
+        config.set("hour_minutes_every_day", "hour", str(hour))
+        config.get("hour_minutes_every_day", "minutes")
+        config.set("hour_minutes_every_day", "minutes", str(minutes))
+        writing_settings_to_a_file(config)
+        root.destroy()
+
+    root = program_window_with_dimensions(geometry="300x140")
+    root.resizable(False, False)  # Запретить масштабирование окна
+    s = ttk.Style()  # Установка стиля оформления
+    s.theme_use("winnative")
+    hour_time_label = ttk.Label(root, text="Время в часах :")
+    hour_time_label.pack()
+    hour_time_entry = ttk.Entry(root, width=45)
+    hour_time_entry.pack()
+    # Создаем второе текстовое поле и связанный с ним текстовый метка
+    minutes_time_label = ttk.Label(root, text="Время в минутах:")
+    minutes_time_label.pack()
+    minutes_time_entry = ttk.Entry(root, width=45)
+    minutes_time_entry.pack()
+    button = ttk.Button(root, text="Готово", command=recoding_time)  # Создаем кнопку
+    button.pack()
+    result_label = ttk.Label(root, text="")  # Создаем метку для вывода результата
+    result_label.pack()
+    root.mainloop()  # Запускаем главный цикл обработки событий
+
+
 def record_account_limits() -> configparser.ConfigParser:
     """Запись лимитов на аккаунт"""
     limits = console.input("[bold green][+] Введите лимит на аккаунт : ")
@@ -86,20 +138,28 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
     return config
 
 
+def reading_hour_minutes_every_day():
+    """Считываем час и минуты с файла user_settings/config.ini для запуска inviting на каждый день"""
+    config.read("user_settings/config.ini")  # Файл с настройками
+    hour = config["hour_minutes_every_day"]["hour"]  # api_id с файла user_settings/config.ini
+    minutes = config["hour_minutes_every_day"]["minutes"]  # api_hash с файла user_settings/config.ini
+    return hour, minutes
+
+
 def reading_the_id_and_hash():
     """Считываем id и hash"""
     config.read("user_settings/config.ini")  # Файл с настройками
-    api_id_data = config["telegram_settings"]["id"]  # api_id с файла user_settings/api_id_api_hash.ini
-    api_hash_data = config["telegram_settings"]["hash"]  # api_hash с файла user_settings/api_id_api_hash.ini
+    api_id_data = config["telegram_settings"]["id"]  # api_id с файла user_settings/config.ini
+    api_hash_data = config["telegram_settings"]["hash"]  # api_hash с файла user_settings/config.ini
     return api_id_data, api_hash_data
 
 
 def reading_device_type():
     """Считываем тип устройства"""
     config.read("user_settings/config.ini")  # Файл с настройками
-    device_model = config["device_model"]["device_model"]  # api_id с файла user_settings/api_id_api_hash.ini
-    system_version = config["system_version"]["system_version"]  # api_hash с файла user_settings/api_id_api_hash.ini
-    app_version = config["app_version"]["app_version"]  # api_hash с файла user_settings/api_id_api_hash.ini
+    device_model = config["device_model"]["device_model"]  # api_id с файла user_settings/config.ini
+    system_version = config["system_version"]["system_version"]  # api_hash с файла user_settings/config.ini
+    app_version = config["app_version"]["app_version"]  # api_hash с файла user_settings/config.ini
     return device_model, system_version, app_version
 
 
@@ -119,7 +179,8 @@ def connecting_new_account() -> None:
 def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
     device_model, system_version, app_version = reading_device_type()
-    client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, device_model=device_model, system_version=system_version, app_version=app_version)
+    client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, device_model=device_model,
+                            system_version=system_version, app_version=app_version)
     client.connect()  # Подсоединяемся к Telegram
     if not client.is_user_authorized():
         client.send_code_request(phone)
@@ -182,7 +243,8 @@ def creating_the_main_window_for_proxy_data_entry() -> None:
     password_type_entry.pack()
     # Создаем кнопку
     db_handler = DatabaseHandler()
-    button = tk.Button(root, text="Готово", command=lambda: db_handler.save_proxy_data_to_db(proxy=recording_proxy_data()))
+    button = tk.Button(root, text="Готово",
+                       command=lambda: db_handler.save_proxy_data_to_db(proxy=recording_proxy_data()))
     button.pack()
     result_label = tk.Label(root, text="")  # Создаем метку для вывода результата
     result_label.pack()
@@ -208,7 +270,9 @@ def create_main_window(variable) -> None:
         # Проверяем, что первое время меньше второго
         if smaller_time < larger_time:
             # Если условие прошло проверку, то возвращаем первое и второе время
-            result_label.config(text="Вы ввели:\n{} секунд (меньшее время)\n{} секунд (большее время)".format(smaller_time, larger_time))
+            result_label.config(
+                text="Вы ввели:\n{} секунд (меньшее время)\n{} секунд (большее время)".format(smaller_time,
+                                                                                              larger_time))
             config = recording_limits_file(str(smaller_time), str(larger_time), variable=variable)
             writing_settings_to_a_file(config)
             root.destroy()

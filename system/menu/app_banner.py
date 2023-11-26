@@ -1,7 +1,7 @@
 from rich.console import Console
 
 console = Console()
-program_version, date_of_program_change = "0.9.9", "09.11.2023"  # Версия программы, дата изменения
+program_version, date_of_program_change = "0.10.0", "26.11.2023"  # Версия программы, дата изменения
 
 
 def banner() -> None:
@@ -9,7 +9,7 @@ def banner() -> None:
     console.print("╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗", style="bold red", justify="center")
     console.print("║ ║╣ ║  ║╣ ║ ╦╠╦╝╠═╣║║║    ╚═╗║║║║║║    ╠╩╗║ ║ ║", style="bold red", justify="center")
     console.print(" ╩ ╚═╝╩═╝╚═╝╚═╝╩╚═╩ ╩╩ ╩────╚═╝╩ ╩╩ ╩────╚═╝╚═╝ ╩ ", style="bold red", justify="center")
-    console.print("Telegram: https://t.me/PyAdminRUS", style="bold red", justify="center")
+    console.print("Telegram: https://t.me/PyAdminRU", style="bold red", justify="center")
     # Для удобства чтения, разделяем полосками https://rich.readthedocs.io/en/stable/console.html
     # Разнообразие консоли с модулем rich (python -m rich) - возможности модуля
     console.rule(f"[bold red]TELEGRAM_SMM_BOT версия программы: {program_version} "

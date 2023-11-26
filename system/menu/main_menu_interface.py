@@ -72,6 +72,7 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
     table.add_row("2", f"Inviting {link_group}, с лимитами", "Inviting по списку members, с лимитами на аккаунт")
     table.add_row("3", f"Inviting {link_group} 1 раз в час", "Inviting по списку members с запуском 1 рав в час")
     table.add_row("4", f"Inviting time {link_group}", "Inviting по списку members (запуск по времени)")
+    table.add_row("5", f"Inviting time avery day{link_group}", "Inviting по списку members (запуск по времени каждый день)")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[bold red][+] Введите номер: ")
@@ -85,6 +86,9 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
     elif user_input == "4":  # Inviting по времени
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         schedule_invite()
+    elif user_input == "5":  # Inviting по времени каждый день
+        clearing_console_showing_banner()  # Чистим консоль, выводим банер
+        launching_an_invite_every_day_at_a_certain_time()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
@@ -287,6 +291,7 @@ def program_settings() -> None:  # 8 - Настройки программы, з
     table.add_row("6", "Запись proxy", "Запись данных для proxy")
     table.add_row("7", "Лимиты на аккаунт", "Установление лимитов на аккаунт")
     table.add_row("8", "Смена типа устройства", "Запись данных для смены типа устройства")
+    table.add_row("9", "Запись времени", "Запись времени для Inviting один раз в сутки")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[bold red][+] Введите номер: ")
@@ -324,6 +329,12 @@ def program_settings() -> None:  # 8 - Настройки программы, з
     elif user_input == "8":  # Запись типа устройства
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         writing_settings_to_a_file(config=record_device_type())
+    elif user_input == "9":  # Запись времени для запуска inviting в определенное время
+        try:
+            clearing_console_showing_banner()  # Чистим консоль, выводим банер
+            recording_the_time_to_launch_an_invite_every_day()
+        except Exception as e:
+            logger.exception(e)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
