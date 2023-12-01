@@ -418,3 +418,259 @@ Traceback (most recent call last):
     raise ConnectionError('Cannot send requests while disconnected')
 
 ConnectionError: Cannot send requests while disconnected
+2023-11-26 23:43:15.681 | ERROR    | __main__:<module>:20 - Cannot send requests while disconnected
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\actions\subscription\subscription.py", line 78, in subscribe_to_group_or_channel
+    client(JoinChannelRequest(groups_wrs))
+    │      │                  └ 'https://t.me/megadym_community'
+    │      └ <class 'telethon.tl.functions.channels.JoinChannelRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x00000188AC7CE7A0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x00000188A8BCD6C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-3563' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Py...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.JoinChannelRequest object at 0x00000188AC4FFD10>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000188AC6882D0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+                 │    └ <function UserMethods._call at 0x00000188AA618680>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 87, in _call
+    result = await future
+                   └ <Future finished exception=ChannelsTooMuchError('You have joined too many channels/supergroups (caused by JoinChannelRequest)')>
+
+telethon.errors.rpcerrorlist.ChannelsTooMuchError: You have joined too many channels/supergroups (caused by JoinChannelRequest)
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()  # Проверка аккаунтов
+    └ <function launching_the_program_with_account_verification at 0x00000188AC4B5080>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()  # Основное меню программы
+    └ <function main_menu at 0x00000188A6B6CE00>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\menu\main_menu_interface.py", line 41, in main_menu
+    inviting_groups()
+    └ <function inviting_groups at 0x00000188AC4B5120>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\menu\main_menu_interface.py", line 91, in inviting_groups
+    launching_an_invite_every_day_at_a_certain_time()
+    └ <function launching_an_invite_every_day_at_a_certain_time at 0x00000188AC4A5800>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\actions\invite\telegram_invite_scheduler.py", line 22, in launching_an_invite_every_day_at_a_certain_time
+    schedule.run_pending()
+    │        └ <function run_pending at 0x00000188AC4A5260>
+    └ <module 'schedule' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\schedule\\__init_...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\schedule\__init__.py", line 822, in run_pending
+    default_scheduler.run_pending()
+    │                 └ <function Scheduler.run_pending at 0x00000188AC493920>
+    └ <schedule.Scheduler object at 0x00000188AC4A0910>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\schedule\__init__.py", line 100, in run_pending
+    self._run_job(job)
+    │    │        └ Every 1 day at 23:35:00 do schedule_member_invitation() (last run: [never], next run: 2023-11-26 23:35:00)
+    │    └ <function Scheduler._run_job at 0x00000188AC493CE0>
+    └ <schedule.Scheduler object at 0x00000188AC4A0910>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\schedule\__init__.py", line 172, in _run_job
+    ret = job.run()
+          │   └ <function Job.run at 0x00000188AC4A4FE0>
+          └ Every 1 day at 23:35:00 do schedule_member_invitation() (last run: [never], next run: 2023-11-26 23:35:00)
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\schedule\__init__.py", line 693, in run
+    ret = self.job_func()
+          │    └ functools.partial(<function schedule_member_invitation at 0x00000188AC493240>)
+          └ Every 1 day at 23:35:00 do schedule_member_invitation() (last run: [never], next run: 2023-11-26 23:35:00)
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\actions\invite\telegram_invite_scheduler.py", line 14, in schedule_member_invitation
+    invitation_from_all_accounts_program_body(name_database_table="members")
+    └ <function invitation_from_all_accounts_program_body at 0x00000188AC422CA0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 40, in invitation_from_all_accounts_program_body
+    subscribe_to_group_or_channel(client, link_group, phone)
+    │                             │       │           └ '79063079801'
+    │                             │       └ 'https://t.me/megadym_community'
+    │                             └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+    └ <function subscribe_to_group_or_channel at 0x00000188AC492CA0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\actions\subscription\subscription.py", line 86, in subscribe_to_group_or_channel
+    client.delete_dialog(dialog)
+    │      │             └ <telethon.tl.custom.dialog.Dialog object at 0x00000188AC4F8310>
+    │      └ <function DialogMethods.delete_dialog at 0x00000188AAD7C220>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object DialogMethods.delete_dialog at 0x00000188AC4BA8A0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x00000188A8BCD6C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-3570' coro=<DialogMethods.delete_dialog() done, defined at C:\Users\zhvit\AppData\Local\Programs\Py...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\dialogs.py", line 458, in delete_dialog
+    return await self(functions.channels.LeaveChannelRequest(entity))
+                 │    │         │        │                   └ <telethon.tl.types.InputPeerChannel object at 0x00000188AD3202D0>
+                 │    │         │        └ <class 'telethon.tl.functions.channels.LeaveChannelRequest'>
+                 │    │         └ <module 'telethon.tl.functions.channels' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packa...
+                 │    └ <module 'telethon.tl.functions' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\tele...
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.LeaveChannelRequest object at 0x00000188AC4D7E90>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000188AC6882D0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+                 │    └ <function UserMethods._call at 0x00000188AA618680>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.channels.LeaveChannelRequest object at 0x00000188AC4D7E90>
+             │      └ <function MTProtoSender.send at 0x00000188AA75A3E0>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000188AC6882D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 179, in send
+    raise ConnectionError('Cannot send requests while disconnected')
+
+ConnectionError: Cannot send requests while disconnected
+2023-11-26 23:43:15.681 | ERROR    | __main__:<module>:20 - Cannot send requests while disconnected
+Traceback (most recent call last):
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\actions\subscription\subscription.py", line 78, in subscribe_to_group_or_channel
+    client(JoinChannelRequest(groups_wrs))
+    │      │                  └ 'https://t.me/megadym_community'
+    │      └ <class 'telethon.tl.functions.channels.JoinChannelRequest'>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object UserMethods.__call__ at 0x00000188AC7CE7A0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x00000188A8BCD6C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-3563' coro=<UserMethods.__call__() done, defined at C:\Users\zhvit\AppData\Local\Programs\Python\Py...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.JoinChannelRequest object at 0x00000188AC4FFD10>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000188AC6882D0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+                 │    └ <function UserMethods._call at 0x00000188AA618680>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 87, in _call
+    result = await future
+                   └ <Future finished exception=ChannelsTooMuchError('You have joined too many channels/supergroups (caused by JoinChannelRequest)')>
+
+telethon.errors.rpcerrorlist.ChannelsTooMuchError: You have joined too many channels/supergroups (caused by JoinChannelRequest)
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+> File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 18, in <module>
+    launching_the_program_with_account_verification()  # Проверка аккаунтов
+    └ <function launching_the_program_with_account_verification at 0x00000188AC4B5080>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\main.py", line 13, in launching_the_program_with_account_verification
+    main_menu()  # Основное меню программы
+    └ <function main_menu at 0x00000188A6B6CE00>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\menu\main_menu_interface.py", line 41, in main_menu
+    inviting_groups()
+    └ <function inviting_groups at 0x00000188AC4B5120>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\menu\main_menu_interface.py", line 91, in inviting_groups
+    launching_an_invite_every_day_at_a_certain_time()
+    └ <function launching_an_invite_every_day_at_a_certain_time at 0x00000188AC4A5800>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\actions\invite\telegram_invite_scheduler.py", line 22, in launching_an_invite_every_day_at_a_certain_time
+    schedule.run_pending()
+    │        └ <function run_pending at 0x00000188AC4A5260>
+    └ <module 'schedule' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\schedule\\__init_...
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\schedule\__init__.py", line 822, in run_pending
+    default_scheduler.run_pending()
+    │                 └ <function Scheduler.run_pending at 0x00000188AC493920>
+    └ <schedule.Scheduler object at 0x00000188AC4A0910>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\schedule\__init__.py", line 100, in run_pending
+    self._run_job(job)
+    │    │        └ Every 1 day at 23:35:00 do schedule_member_invitation() (last run: [never], next run: 2023-11-26 23:35:00)
+    │    └ <function Scheduler._run_job at 0x00000188AC493CE0>
+    └ <schedule.Scheduler object at 0x00000188AC4A0910>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\schedule\__init__.py", line 172, in _run_job
+    ret = job.run()
+          │   └ <function Job.run at 0x00000188AC4A4FE0>
+          └ Every 1 day at 23:35:00 do schedule_member_invitation() (last run: [never], next run: 2023-11-26 23:35:00)
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\schedule\__init__.py", line 693, in run
+    ret = self.job_func()
+          │    └ functools.partial(<function schedule_member_invitation at 0x00000188AC493240>)
+          └ Every 1 day at 23:35:00 do schedule_member_invitation() (last run: [never], next run: 2023-11-26 23:35:00)
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\actions\invite\telegram_invite_scheduler.py", line 14, in schedule_member_invitation
+    invitation_from_all_accounts_program_body(name_database_table="members")
+    └ <function invitation_from_all_accounts_program_body at 0x00000188AC422CA0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\actions\invite\inviting_participants_telegram.py", line 40, in invitation_from_all_accounts_program_body
+    subscribe_to_group_or_channel(client, link_group, phone)
+    │                             │       │           └ '79063079801'
+    │                             │       └ 'https://t.me/megadym_community'
+    │                             └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+    └ <function subscribe_to_group_or_channel at 0x00000188AC492CA0>
+
+  File "C:\Users\zhvit\YandexDisk\Python\telegram_bot_smm\system\actions\subscription\subscription.py", line 86, in subscribe_to_group_or_channel
+    client.delete_dialog(dialog)
+    │      │             └ <telethon.tl.custom.dialog.Dialog object at 0x00000188AC4F8310>
+    │      └ <function DialogMethods.delete_dialog at 0x00000188AAD7C220>
+    └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\sync.py", line 39, in syncified
+    return loop.run_until_complete(coro)
+           │    │                  └ <coroutine object DialogMethods.delete_dialog at 0x00000188AC4BA8A0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x00000188A8BCD6C0>
+           └ <ProactorEventLoop running=False closed=False debug=False>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           │      └ <method 'result' of '_asyncio.Task' objects>
+           └ <Task finished name='Task-3570' coro=<DialogMethods.delete_dialog() done, defined at C:\Users\zhvit\AppData\Local\Programs\Py...
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\dialogs.py", line 458, in delete_dialog
+    return await self(functions.channels.LeaveChannelRequest(entity))
+                 │    │         │        │                   └ <telethon.tl.types.InputPeerChannel object at 0x00000188AD3202D0>
+                 │    │         │        └ <class 'telethon.tl.functions.channels.LeaveChannelRequest'>
+                 │    │         └ <module 'telethon.tl.functions.channels' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packa...
+                 │    └ <module 'telethon.tl.functions' from 'C:\\Users\\zhvit\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\tele...
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+                 │    │     │    │        │                └ False
+                 │    │     │    │        └ <telethon.tl.functions.channels.LeaveChannelRequest object at 0x00000188AC4D7E90>
+                 │    │     │    └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000188AC6882D0>
+                 │    │     └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+                 │    └ <function UserMethods._call at 0x00000188AA618680>
+                 └ <telethon.client.telegramclient.TelegramClient object at 0x00000188AC4FC450>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\client\users.py", line 67, in _call
+    future = sender.send(request, ordered=ordered)
+             │      │    │                └ False
+             │      │    └ <telethon.tl.functions.channels.LeaveChannelRequest object at 0x00000188AC4D7E90>
+             │      └ <function MTProtoSender.send at 0x00000188AA75A3E0>
+             └ <telethon.network.mtprotosender.MTProtoSender object at 0x00000188AC6882D0>
+  File "C:\Users\zhvit\AppData\Local\Programs\Python\Python311\Lib\site-packages\telethon\network\mtprotosender.py", line 179, in send
+    raise ConnectionError('Cannot send requests while disconnected')
+
+ConnectionError: Cannot send requests while disconnected

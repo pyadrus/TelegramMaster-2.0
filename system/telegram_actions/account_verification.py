@@ -40,7 +40,7 @@ def connecting_telegram_account_with_device_version(phone_old, api_id, api_hash,
     return client
 
 
-def account_verification() -> list[list]:
+def account_verification():
     """Проверка аккаунтов"""
     error_sessions = []  # Создаем словарь, для удаления битых файлов session
     print("[bold red] Проверка аккаунтов!")

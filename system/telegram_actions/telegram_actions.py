@@ -66,7 +66,7 @@ def writing_names_found_files_to_the_db() -> None:
         db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
 
 
-def connecting_account_sessions() -> list[list[str]]:
+def connecting_account_sessions():
     """Подключение сессий аккаунтов
     Функция listdir() модуля os возвращает список, содержащий имена файлов и директорий в каталоге, заданном путем
     path user_settings/accounts
