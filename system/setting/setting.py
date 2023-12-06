@@ -7,7 +7,7 @@ from rich import print
 from telethon import TelegramClient
 from telethon.errors import *
 
-from system.auxiliary_functions.global_variables import console
+from system.auxiliary_functions.global_variables import console, reading_device_type
 from system.menu.app_gui import program_window_with_dimensions
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -154,15 +154,6 @@ def reading_the_id_and_hash():
     return api_id_data, api_hash_data
 
 
-def reading_device_type():
-    """Считываем тип устройства"""
-    config.read("user_settings/config.ini")  # Файл с настройками
-    device_model = config["device_model"]["device_model"]  # api_id с файла user_settings/config.ini
-    system_version = config["system_version"]["system_version"]  # api_hash с файла user_settings/config.ini
-    app_version = config["app_version"]["app_version"]  # api_hash с файла user_settings/config.ini
-    return device_model, system_version, app_version
-
-
 def connecting_new_account() -> None:
     """Вводим данные в базу данных user_settings/software_database.db"""
     api_id_data, api_hash_data = reading_the_id_and_hash()
@@ -180,7 +171,7 @@ def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
     device_model, system_version, app_version = reading_device_type()
     client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, device_model=device_model,
-                            system_version=system_version, app_version=app_version)
+                            system_version=system_version, app_version=app_version, lang_code='en', system_lang_code='ru')
     client.connect()  # Подсоединяемся к Telegram
     if not client.is_user_authorized():
         client.send_code_request(phone)

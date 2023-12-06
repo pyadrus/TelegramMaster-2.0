@@ -17,3 +17,12 @@ time_changing_accounts_1 = int(config['time_changing_accounts']['time_changing_a
 time_changing_accounts_2 = int(config['time_changing_accounts']['time_changing_accounts_2'])
 
 limits = int(config['account_limits']['limits'])
+
+
+def reading_device_type():
+    """Считываем тип устройства"""
+    config.read("user_settings/config.ini")  # Файл с настройками
+    device_model = config["device_model"]["device_model"]  # api_id с файла user_settings/config.ini
+    system_version = config["system_version"]["system_version"]  # api_hash с файла user_settings/config.ini
+    app_version = config["app_version"]["app_version"]  # api_hash с файла user_settings/config.ini
+    return device_model, system_version, app_version
