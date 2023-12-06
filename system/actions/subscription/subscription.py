@@ -83,11 +83,11 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             for dialog in client.iter_dialogs():
                 print(f"[green]{dialog.name}, {dialog.id}")
-                client.delete_dialog(dialog)
                 try:
+                    client.delete_dialog(dialog)
                     client.disconnect()
-                except ConnectionError as e:
-                    print(e)
+                except ConnectionError:
+                    break
             print("[green][+] Список почистили, и в файл записали.")
         except ChannelPrivateError:
             actions: str = ("Указанный канал является приватным, или вам запретили подписываться.")
