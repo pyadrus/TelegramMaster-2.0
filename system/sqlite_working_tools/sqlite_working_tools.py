@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 from rich import print
 
@@ -43,7 +44,8 @@ class DatabaseHandler:
         self.connect()
         self.cursor.execute(f"SELECT * from {name_database_table}")  # Считываем таблицу
         # fetchmany(size) – возвращает число записей не более size
-        records: list = self.cursor.fetchmany(number_of_accounts)  # number_of_accounts - количество добавляемых username
+        records: list = self.cursor.fetchmany(
+            number_of_accounts)  # number_of_accounts - количество добавляемых username
         self.cursor.close()
         self.close()  # Закрываем базу данных
         return records
@@ -52,9 +54,13 @@ class DatabaseHandler:
         """Запись действий аккаунта в базу данных"""
         self.connect()
         self.cursor.execute(creating_a_table)  # Считываем таблицу
-        self.cursor.executemany(writing_data_to_a_table, (entities,))
-        self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
+        try:
+            self.cursor.executemany(writing_data_to_a_table, (entities,))
+            self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
+            self.close()  # cursor_members.close() – закрытие соединения с БД.
+        except sqlite3.ProgrammingError as e:
+            print(e)
+            time.sleep(5)
 
     def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns) -> None:
         """Удаляем не рабочий proxy с software_database.db, таблица proxy"""
@@ -83,7 +89,7 @@ class DatabaseHandler:
             self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
                                 "user_phone, online_at, photos_id, user_premium)")
             self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
-                                         "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",(line,),)
+                                    "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (line,), )
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
@@ -106,7 +112,7 @@ class DatabaseHandler:
         self.connect()
         self.cursor.execute("CREATE TABLE IF NOT EXISTS proxy(proxy_type, addr, port, username, password, rdns)")
         self.cursor.executemany("INSERT INTO proxy(proxy_type, addr, port, username, password, rdns) "
-                                      "VALUES (?, ?, ?, ?, ?, ?)",(proxy,),)
+                                "VALUES (?, ?, ?, ?, ?, ?)", (proxy,), )
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 

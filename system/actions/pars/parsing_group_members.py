@@ -4,6 +4,7 @@ import time
 from rich import print
 from telethon import functions
 from telethon import types
+from loguru import logger
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import ChannelParticipantsSearch
@@ -123,11 +124,16 @@ def parsing_of_users_from_the_selected_group(client, target_group) -> list:
     my_filter = ChannelParticipantsSearch("")
     offset = 0
     while while_condition:
-        participants = client(GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200, hash=0))
-        all_participants.extend(participants.users)
-        offset += len(participants.users)
-        if len(participants.users) < 1:
-            while_condition = False
+        try:
+            participants = client(GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200, hash=0))
+            all_participants.extend(participants.users)
+            offset += len(participants.users)
+            if len(participants.users) < 1:
+                while_condition = False
+        except TypeError:
+            logger.info(f'Ошибка parsing: не верное имя или cсылка {target_group} не является группой / каналом: {target_group}')
+            time.sleep(2)
+            break
     return all_participants
 
 
