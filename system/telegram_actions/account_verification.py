@@ -52,6 +52,7 @@ def account_verification():
         try:
             client = connecting_telegram_account_with_device_version(row[2], int(row[0]), row[1], proxy)
             try:
+                logger.info(f"Подключение аккунта: {row[2]}, {int(row[0])}, {row[1]}")
                 client.connect()  # Подсоединяемся к Telegram
                 # Если аккаунт не авторизирован, то удаляем сессию
                 if not client.is_user_authorized():
@@ -86,6 +87,11 @@ def account_verification():
             except TimedOutError as e:
                 logger.exception(e)
                 time.sleep(2)
+            except AuthKeyNotFound:
+                # session файл не является базой данных
+                print(f"Битый файл {row[2]}.session")
+                # Удаляем не валидную сессию
+                error_sessions.append([row[2]])
         except sqlite3.DatabaseError:
             # session файл не является базой данных
             print(f"Битый файл {row[2]}.session")

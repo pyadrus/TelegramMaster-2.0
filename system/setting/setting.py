@@ -170,8 +170,14 @@ def connecting_new_account() -> None:
 def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
     device_model, system_version, app_version = reading_device_type()
-    client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, device_model=device_model,
-                            system_version=system_version, app_version=app_version, lang_code='en', system_lang_code='ru')
+    client = TelegramClient(f"user_settings/accounts/{phone}",  # Путь к файлу с настройками аккаунта
+                            api_id,  # Идентификатор вашего приложения, предоставленный Telegram API
+                            api_hash,  # Хэш вашего приложения, предоставленный Telegram API
+                            device_model=device_model,  # Модель устройства
+                            system_version=system_version,  # Версия операционной системы
+                            app_version=app_version,  # Версия приложения
+                            lang_code='en',  # Язык интерфейса приложения (английский)
+                            system_lang_code='ru')  # Язык системы устройства (русский)
     client.connect()  # Подсоединяемся к Telegram
     if not client.is_user_authorized():
         client.send_code_request(phone)
