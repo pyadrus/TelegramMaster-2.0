@@ -52,10 +52,9 @@ def account_verification():
         try:
             client = connecting_telegram_account_with_device_version(row[2], int(row[0]), row[1], proxy)
             try:
-                logger.info(f"Подключение аккунта: {row[2]}, {int(row[0])}, {row[1]}")
+                logger.info(f"Подключение аккаунта: {row[2]}, {int(row[0])}, {row[1]}")
                 client.connect()  # Подсоединяемся к Telegram
-                # Если аккаунт не авторизирован, то удаляем сессию
-                if not client.is_user_authorized():
+                if not client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
                     telegram_phone_number_banned_error(client, row[2])  # Удаляем номер телефона с базы данных
                 time.sleep(1)
                 try:

@@ -137,7 +137,12 @@ class DatabaseHandler:
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     def cleaning_db(self, name_database_table) -> None:
-        """Чистка базы данных"""
+        """
+        Очистка указанной таблицы (name_database_table) в базе данных.
+
+        Этот метод устанавливает соединение с базой данных, удаляет все записи из указанной таблицы (name_database_table),
+        затем фиксирует изменения. После этого закрывает соединение с базой данных.
+        """
         self.connect()
         # Удаляем таблицу members, функция execute отвечает за SQL-запрос DELETE FROM - команда удаления базы данных
         # name_database_table - название таблицы в базе данных

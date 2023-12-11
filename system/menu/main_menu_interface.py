@@ -116,8 +116,9 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
         print("[bold red][+] Введите ссылки чатов которые будем parsing, для вставки в графическое окно "
               "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
               "быть переключен на английский")
-        name_database = "writing_group_links"
-        writing_group_links_to_file(name_database)
+        db_handler = DatabaseHandler()
+        db_handler.cleaning_db(name_database_table="writing_group_links")  # Перед началом parsing очистка таблицы writing_group_links
+        writing_group_links_to_file(name_database="writing_group_links")
         parsing_mass_parsing_of_groups()  # Парсинг участников чата
     elif user_input == "2":  # Parsing группы из подписанных
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
