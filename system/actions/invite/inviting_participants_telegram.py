@@ -6,8 +6,9 @@ from telethon.tl.functions.channels import InviteToChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 
 from system.actions.subscription.subscription import subscribe_to_group_or_channel
+from system.auxiliary_functions.auxiliary_functions import clearing_console_showing_banner
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.auxiliary_functions.auxiliary_functions import record_inviting_results, clearing_console_showing_banner
+from system.auxiliary_functions.auxiliary_functions import record_inviting_results
 from system.auxiliary_functions.global_variables import limits
 from system.auxiliary_functions.global_variables import link_group
 from system.notification.notification import app_notifications

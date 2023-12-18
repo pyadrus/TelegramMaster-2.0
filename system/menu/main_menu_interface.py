@@ -2,6 +2,7 @@ from rich import box
 from rich.table import Table
 
 from system.actions.actions_with_account.account_verification import *
+from system.actions.creating.creating import creating_groups_and_chats
 from system.actions.invite.inviting_participants_telegram import *
 from system.actions.invite.telegram_invite_scheduler import *
 from system.actions.pars.parsing_account_groups_and_channels import *
@@ -35,6 +36,7 @@ def main_menu() -> None:  # 1 - Основное меню программы
     table.add_row("7", "Работа с реакциями", "Ставим реакции на посты: группе, канале. Потребуется ссылка на пост")
     table.add_row("8", "Настройки", "Запись ссылки для Inviting, api_id, api_hash, установка времени")
     table.add_row("9", "Проверка аккаунтов", "Проверка аккаунтов через спам бот")
+    table.add_row("10", "Создание групп (чатов)", "Автоматическое создание групп и чатов")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[bold red][+] Введите номер: ")
     if user_input == "1":  # Inviting в группы
@@ -58,6 +60,9 @@ def main_menu() -> None:  # 1 - Основное меню программы
     elif user_input == "9":  # Проверка аккаунта через спам бот
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         check_account_for_spam()
+    elif user_input == "10":  # Создание групп (чатов)
+        clearing_console_showing_banner()  # Чистим консоль, выводим банер
+        creating_groups_and_chats()
     else:
         main_menu()  # После отработки функции переходим в начальное меню
 

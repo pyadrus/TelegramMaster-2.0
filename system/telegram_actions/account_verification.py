@@ -10,10 +10,11 @@ from telethon.errors import *
 
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database, checking_the_proxy_for_work
-from system.setting.setting import reading_device_type
+# from system.setting.setting import reading_device_type
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import account_name, renaming_a_session, \
-    writing_names_found_files_to_the_db
+from system.telegram_actions.telegram_actions import account_name
+from system.telegram_actions.telegram_actions import renaming_a_session
+from system.telegram_actions.telegram_actions import writing_names_found_files_to_the_db
 
 user_folder = "user_settings"
 accounts_folder = "accounts"
@@ -34,9 +35,11 @@ def deleting_files_by_dictionary() -> None:
 
 
 def connecting_telegram_account_with_device_version(phone_old, api_id, api_hash, proxy):
-    device_model, system_version, app_version = reading_device_type()
-    client = TelegramClient(f"{user_folder}/{accounts_folder}/{phone_old}", api_id, api_hash, proxy=proxy,
-                            device_model=device_model, system_version=system_version, app_version=app_version)
+    # device_model, system_version, app_version = reading_device_type()
+    # client = TelegramClient(f"{user_folder}/{accounts_folder}/{phone_old}", api_id, api_hash, proxy=proxy,
+    #                         device_model=device_model, system_version=system_version, app_version=app_version)
+    # Временное решение вылета аккаунтов
+    client = TelegramClient(f"{user_folder}/{accounts_folder}/{phone_old}", api_id, api_hash, system_version="4.16.30-vxCUSTOM")
     return client
 
 

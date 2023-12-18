@@ -1,4 +1,4 @@
-rich
+rich==13.7.0
 certifi
 charset-normalizer
 colorama
@@ -15,6 +15,7 @@ PySocks
 requests
 rsa
 schedule
-Telethon
+Telethon==1.33.1
 urllib3
 win32-setctime
+PySimpleGUI
