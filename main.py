@@ -18,4 +18,4 @@ if __name__ == "__main__":
         launching_the_program_with_account_verification()  # Проверка аккаунтов
     except Exception as e:
         logger.exception(e)
-        print("[bold red][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+        print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")

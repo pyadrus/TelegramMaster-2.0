@@ -73,7 +73,7 @@ def recording_the_time_to_launch_an_invite_every_day():
 
 def record_account_limits() -> configparser.ConfigParser:
     """Запись лимитов на аккаунт"""
-    limits = console.input("[bold green][+] Введите лимит на аккаунт : ")
+    limits = console.input("[magenta][+] Введите лимит на аккаунт : ")
     config.get("account_limits", "limits")
     config.set("account_limits", "limits", limits)
     return config
@@ -83,19 +83,19 @@ def record_device_type() -> configparser.ConfigParser():
     """Запись типа устройства например: Samsung SGH600, Android 9 (P30), 4.2.1,
     Vivo V9, Android 9 (P30), 4.2.1"""
     try:
-        device_model = console.input("[bold green][+] Введите модель устройства: ")
+        device_model = console.input("[magenta][+] Введите модель устройства: ")
         config.get("device_model", "device_model")
         config.set("device_model", "device_model", device_model)
     except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
         config["device_model"] = {"device_model": device_model}
     try:
-        system_version = console.input("[bold green][+] Введите версию операционной системы: ")
+        system_version = console.input("[magenta][+] Введите версию операционной системы: ")
         config.get("system_version", "system_version")
         config.set("system_version", "system_version", system_version)
     except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
         config["system_version"] = {"system_version": system_version}
     try:
-        app_version = console.input("[bold green][+] Введите версию приложения: ")
+        app_version = console.input("[magenta][+] Введите версию приложения: ")
         config.get("app_version", "app_version")
         config.set("app_version", "app_version", app_version)
     except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
@@ -111,10 +111,10 @@ def writing_settings_to_a_file(config) -> None:
 
 def writing_api_id_api_hash() -> configparser.ConfigParser:
     """Записываем api, hash полученный с помощью регистрации приложения на сайте https://my.telegram.org/auth"""
-    api_id_data = console.input("[bold green][+] Введите api_id : ")
+    api_id_data = console.input("[magenta][+] Введите api_id : ")
     config.get("telegram_settings", "id")
     config.set("telegram_settings", "id", api_id_data)
-    api_hash_data = console.input("[bold green][+] Введите api_hash : ")
+    api_hash_data = console.input("[magenta][+] Введите api_hash : ")
     config.get("telegram_settings", "hash")
     config.set("telegram_settings", "hash", api_hash_data)
     return config
@@ -122,7 +122,7 @@ def writing_api_id_api_hash() -> configparser.ConfigParser:
 
 def writing_link_to_the_group() -> configparser.ConfigParser:
     """Записываем ссылку для inviting групп"""
-    target_group_entity_user = console.input("[bold green][+] Введите ссылку на группу : ")  # Вводим ссылку на группу
+    target_group_entity_user = console.input("[magenta][+] Введите ссылку на группу : ")  # Вводим ссылку на группу
     # Находим ссылку в файле и меняем на свою
     config.get("link_to_the_group", "target_group_entity")
     config.set("link_to_the_group", "target_group_entity", target_group_entity_user)
@@ -157,7 +157,7 @@ def reading_the_id_and_hash():
 def connecting_new_account() -> None:
     """Вводим данные в базу данных user_settings/software_database.db"""
     api_id_data, api_hash_data = reading_the_id_and_hash()
-    phone_data = console.input("[bold green][+] Введите номер телефона : ")  # Вводим номер телефона
+    phone_data = console.input("[magenta][+] Введите номер телефона : ")  # Вводим номер телефона
     entities = (api_id_data, api_hash_data, phone_data)
     db_handler = DatabaseHandler()
     db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
@@ -183,7 +183,7 @@ def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
         client.send_code_request(phone)
         try:
             # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
-            client.sign_in(phone, code=console.input("[bold red][+] Введите код: "))
+            client.sign_in(phone, code=console.input("[medium_purple3][+] Введите код: "))
         except SessionPasswordNeededError:
             """
             https://telethonn.readthedocs.io/en/latest/extra/basic/creating-a-client.html#two-factor-authorization-2fa
@@ -191,7 +191,7 @@ def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
             # Если аккаунт имеет password, то просим пользователя ввести пароль
             client.sign_in(password=getpass.getpass())
         except ApiIdInvalidError:
-            print("[bold red][!] Не валидные api_id/api_hash")
+            print("[medium_purple3][!] Не валидные api_id/api_hash")
     return client
 
 

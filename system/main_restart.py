@@ -16,4 +16,4 @@ if __name__ == "__main__":
         main_restart()
     except Exception as e:
         logger.exception(e)
-        print("[bold red][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+        print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")

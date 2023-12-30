@@ -41,7 +41,7 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
         subscribe_to_group_or_channel(client, link_group, phone)
         db_handler = DatabaseHandler()
         records: list = db_handler.open_and_read_data(name_database_table)
-        print(f"[bold red]Всего username: {len(records)}")  # Количество аккаунтов на данный момент в работе
+        print(f"[medium_purple3]Всего username: {len(records)}")  # Количество аккаунтов на данный момент в работе
         try:
             inviting(client, phone, records)
         except FloodWaitError as e:
@@ -74,7 +74,7 @@ def invite_from_multiple_accounts_with_limits(name_database_table) -> None:
         number_usernames: list = db_handler.open_and_read_data(name_database_table)
         records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table, number_of_accounts=limits)
         # Количество аккаунтов на данный момент в работе
-        print(f"[bold red]Всего username: {len(number_usernames)}. Лимит на аккаунт: {len(records)}")
+        print(f"[medium_purple3]Всего username: {len(number_usernames)}. Лимит на аккаунт: {len(records)}")
         inviting(client, phone, records)
     app_notifications(notification_text=f"Работа с группой {link_group} окончена!")  # Выводим уведомление
 
@@ -147,7 +147,7 @@ def inviting(client, phone, records) -> None:
         else:
             # Записываем данные в базу данных, чистим список кого добавляли или писали сообщение
             actions: str = f"Участник {username} добавлен, если не состоит в чате"
-            print(f"[green][+] {actions}")
+            print(f"[magenta][+] {actions}")
             record_inviting_results(user, phone, f"username : {username}", event, actions)
     # Отписываемся от группы, на которую подписались в самом начале
     unsubscribe_from_the_group(client, link_group)

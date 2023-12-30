@@ -22,7 +22,7 @@ def connect_to_telegram_account_and_output_name(row):
     # Выводим командой print: имя, фамилию, номер телефона аккаунта
     first_name, last_name, phone = account_name(client, name_account="me")
     # Выводим результат полученного имени и номера телефона
-    print(f"[bold red][!] Account connect {first_name} {last_name} {phone}")
+    print(f"[medium_purple3][!] Account connect {first_name} {last_name} {phone}")
     return client, phone
 
 

@@ -88,7 +88,7 @@ def group_parsing(client, groups_wr, phone) -> None:
     Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
     @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
     """
-    with console.status("[bold green]Работа над задачами...", spinner_style="time") as _:
+    with console.status("[magenta]Работа над задачами...", spinner_style="time") as _:
         all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
         # Записываем parsing данные в файл user_settings/software_database.db
         entities = all_participants_user(all_participants)
@@ -118,7 +118,7 @@ def choosing_a_group_from_the_subscribed_ones_for_parsing() -> None:
 
 def parsing_of_users_from_the_selected_group(client, target_group) -> list:
     """Собираем данные user и записываем в файл members.db (создание нового файла members.db)"""
-    print("[green][+] Ищем участников... Сохраняем в файл software_database.db...")
+    print("[magenta][+] Ищем участников... Сохраняем в файл software_database.db...")
     all_participants: list = []
     while_condition = True
     my_filter = ChannelParticipantsSearch("")
@@ -152,10 +152,10 @@ def output_a_list_of_groups_new(client):
             continue  # Записываем ошибку в software_database.db и продолжаем работу
     i = 0
     for g in groups:
-        print(f"[bold green][{str(i)}] - {g.title}")
+        print(f"[magenta][{str(i)}] - {g.title}")
         i += 1
     print("")
-    g_index = console.input("[bold red][+] Введите номер : ")
+    g_index = console.input("[medium_purple3][+] Введите номер : ")
     target_group = groups[int(g_index)]
     return target_group
 
@@ -218,10 +218,10 @@ def parsing_of_active_participants(chat_input, limit_active_user) -> None:
 
 def we_record_phone_numbers_in_the_db() -> None:
     """Записываем номера телефонов в базу данных"""
-    print("[bold green]Контакты которые были добавлены в телефонную книгу, будем записывать с файл "
+    print("[magenta]Контакты которые были добавлены в телефонную книгу, будем записывать с файл "
           "software_database.db, в папке user_settings")
     # Вводим имя файла с которым будем работать
-    file_name_input = console.input("[bold green][+] Введите имя файла с контактами, в папке contacts, имя вводим без txt: ")
+    file_name_input = console.input("[magenta][+] Введите имя файла с контактами, в папке contacts, имя вводим без txt: ")
     # Открываем файл с которым будем работать
     with open(f"user_settings/{file_name_input}.txt", "r") as file_contact:
         for line in file_contact.readlines():
@@ -280,7 +280,7 @@ def get_and_parse_contacts(client) -> list:
 def we_show_and_delete_the_contact_of_the_phone_book(client, user) -> None:
     """Показываем и удаляем контакт телефонной книги"""
     client(functions.contacts.DeleteContactsRequest(id=[user.id]))
-    print("[bold green] Подождите 2 - 4 секунды")
+    print("[magenta] Подождите 2 - 4 секунды")
     time.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
 
 
@@ -303,7 +303,7 @@ def inviting_contact() -> None:
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
-    print(f"[bold red]Всего accounts: {len(records)}")
+    print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
@@ -315,7 +315,7 @@ def adding_a_contact_to_the_phone_book(client) -> None:
     # Открываем сформированный список user_settings/software_database.db
     db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("contact")
-    print(f"[bold red]Всего номеров: {len(records)}")
+    print(f"[medium_purple3]Всего номеров: {len(records)}")
     entities = []  # Создаем список сущностей
     for rows in records:
         user = {"phone": rows[0]}
@@ -326,13 +326,13 @@ def adding_a_contact_to_the_phone_book(client) -> None:
             # Получаем данные номера телефона https://docs.telethon.dev/en/stable/concepts/entities.html
             contact = client.get_entity(phone)
             getting_user_data(contact, entities)
-            print(f"[bold green][+] Контакт с добавлен в телефонную книгу!")
+            print(f"[magenta][+] Контакт с добавлен в телефонную книгу!")
             time.sleep(4)
             # Запись результатов parsing в файл members_contacts.db, для дальнейшего inviting
             # После работы с номером телефона, программа удаляет номер со списка
             db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
         except ValueError:
-            print(f"[bold green][+] Контакт с номером {phone} не зарегистрирован или отсутствует "
+            print(f"[magenta][+] Контакт с номером {phone} не зарегистрирован или отсутствует "
                   f"возможность добавить в телефонную книгу!")
             # После работы с номером телефона, программа удаляет номер со списка
             db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])

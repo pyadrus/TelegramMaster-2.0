@@ -45,7 +45,7 @@ def deleting_files_if_available(folder, file) -> None:
     try:
         os.remove(f'{folder}/{file}')
     except FileNotFoundError:
-        print(f"[green]Файл {file} был ранее удален")
+        print(f"[magenta]Файл {file} был ранее удален")
 
 
 def clearing_console_showing_banner() -> None:
@@ -59,9 +59,9 @@ def clearing_console_showing_banner() -> None:
 
 def column_names(table) -> None:
     """Название столбцов, для меню программы"""
-    table.add_column("[bold red]№ функции", justify="center", style="cyan")
-    table.add_column("[bold red]Функция", justify="left", style="green")
-    table.add_column("[bold red]Описание", justify="left", style="cyan")
+    table.add_column("[medium_purple3]№ функции", justify="center", style="cyan")
+    table.add_column("[medium_purple3]Функция", justify="left", style="sandy_brown")
+    table.add_column("[medium_purple3]Описание", justify="left", style="cyan")
 
 
 if __name__ == "__main__":

@@ -17,7 +17,7 @@ from system.telegram_actions.telegram_actions import we_get_username_user_id_acc
 def we_send_a_message_by_members() -> None:
     """Рассылка сообщений по списку software_database.db"""
     # Предупреждаем пользователя о вводе ссылок в графическое окно программы
-    print("[bold red][+] Введите текст который будем рассылать в личку, для вставки в графическое окно готового "
+    print("[medium_purple3][+] Введите текст который будем рассылать в личку, для вставки в графическое окно готового "
           "текста используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык "
           "должен быть переключен на английский")
 
@@ -40,7 +40,7 @@ def we_send_a_message_by_members() -> None:
 def sending_files_to_a_personal_account() -> None:
     """Отправка файлов в личку"""
     # Просим пользователя ввести расширение сообщения
-    link_to_the_file: str = console.input("[bold red][+] Введите название файла с папки user_settings/files_to_send: ")
+    link_to_the_file: str = console.input("[medium_purple3][+] Введите название файла с папки user_settings/files_to_send: ")
     event: str = f"Отправляем сообщение"
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
@@ -53,10 +53,10 @@ def sending_files_to_a_personal_account() -> None:
             # Открываем parsing список user_settings/software_database.db для inviting в группу
             records: list = db_handler.open_and_read_data("members")
             # Количество аккаунтов на данный момент в работе
-            print(f"[bold red]Всего username: {len(records)}")
+            print(f"[medium_purple3]Всего username: {len(records)}")
             for rows in records:
                 username, user = we_get_username_user_id_access_hash(rows)
-                print(f"[bold green][!] Отправляем сообщение: {username}")
+                print(f"[magenta][!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)
                     client.send_file(user_to_add, f"user_settings/files_to_send/{link_to_the_file}")
@@ -102,10 +102,10 @@ def we_send_a_message_from_all_accounts(message_text) -> None:
             # Открываем parsing список user_settings/software_database.db для inviting в группу
             records: list = db_handler.open_and_read_data("members")
             # Количество аккаунтов на данный момент в работе
-            print(f"[bold red]Всего username: {len(records)}")
+            print(f"[medium_purple3]Всего username: {len(records)}")
             for rows in records:
                 username, user = we_get_username_user_id_access_hash(rows)
-                print(f"[bold green][!] Отправляем сообщение: {username}")
+                print(f"[magenta][!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)
                     client.send_message(user_to_add, message_text.format(username))

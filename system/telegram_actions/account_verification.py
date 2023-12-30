@@ -46,7 +46,7 @@ def connecting_telegram_account_with_device_version(phone_old, api_id, api_hash,
 def account_verification():
     """Проверка аккаунтов"""
     error_sessions = []  # Создаем словарь, для удаления битых файлов session
-    print("[bold red] Проверка аккаунтов!")
+    print("[medium_purple3] Проверка аккаунтов!")
     db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     for row in records:
@@ -64,7 +64,7 @@ def account_verification():
                     # Показываем имя аккаунта с которым будем взаимодействовать
                     first_name, last_name, phone = account_name(client, name_account="me")
                     # Выводим результат полученного имени и номера телефона
-                    print(f"[bold red][!] Account connect {first_name} {last_name} {phone}")
+                    print(f"[medium_purple3][!] Account connect {first_name} {last_name} {phone}")
                     renaming_a_session(client, row[2], phone)  # Переименование session файла
                 except ConnectionError:
                     continue

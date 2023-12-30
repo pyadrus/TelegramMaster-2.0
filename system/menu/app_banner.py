@@ -1,19 +1,19 @@
 from rich.console import Console
 
 console = Console()
-program_version, date_of_program_change = "0.10.1", "01.12.2023"  # Версия программы, дата изменения
+program_version, date_of_program_change = "0.10.5", "31.12.2023"  # Версия программы, дата изменения
 
 
 def banner() -> None:
     """Банер программы составлен с помощью https://manytools.org/hacker-tools/ascii-banner/"""
-    console.print("╔╦╗╔═╗╦  ╔═╗╔═╗╦═╗╔═╗╔╦╗    ╔═╗╔╦╗╔╦╗    ╔╗ ╔═╗╔╦╗", style="bold red", justify="center")
-    console.print("║ ║╣ ║  ║╣ ║ ╦╠╦╝╠═╣║║║    ╚═╗║║║║║║    ╠╩╗║ ║ ║", style="bold red", justify="center")
-    console.print(" ╩ ╚═╝╩═╝╚═╝╚═╝╩╚═╩ ╩╩ ╩────╚═╝╩ ╩╩ ╩────╚═╝╚═╝ ╩ ", style="bold red", justify="center")
-    console.print("Telegram: https://t.me/PyAdminRU", style="bold red", justify="center")
+    console.print("╔╦╗┌─┐┬  ┌─┐┌─┐┬─┐┌─┐┌┬┐╔╦╗┌─┐┌─┐┌┬┐┌─┐┬─┐", style="medium_purple3", justify="center")
+    console.print(" ║ ├┤ │  ├┤ │ ┬├┬┘├─┤│││║║║├─┤└─┐ │ ├┤ ├┬┘", style="medium_purple3", justify="center")
+    console.print(" ╩ └─┘┴─┘└─┘└─┘┴└─┴ ┴┴ ┴╩ ╩┴ ┴└─┘ ┴ └─┘┴└─", style="medium_purple3", justify="center")
+    console.print("Telegram: https://t.me/PyAdminRU", style="medium_purple3", justify="center")
     # Для удобства чтения, разделяем полосками https://rich.readthedocs.io/en/stable/console.html
     # Разнообразие консоли с модулем rich (python -m rich) - возможности модуля
-    console.rule(f"[bold red]TELEGRAM_SMM_BOT версия программы: {program_version} "
-                 f"(Дата изменения {date_of_program_change})")
+    console.print(f"TELEGRAM_SMM_BOT версия программы: {program_version} "
+                  f"(Дата изменения {date_of_program_change})", style="cyan", justify="center")
     # Разнообразие консоли с модулем rich (пишем текст посередине)
 
 

@@ -45,18 +45,18 @@ def subscription_all() -> None:
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
-    print(f"[bold red]Всего accounts: {len(records)}")
-    for row in track(records, description="[bold red]Прогресс выполнения работы\n"):
+    print(f"[medium_purple3]Всего accounts: {len(records)}")
+    for row in track(records, description="[medium_purple3]Прогресс выполнения работы\n"):
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         # Открываем базу данных
         records: list = db_handler.open_and_read_data("writing_group_links")
-        print(f"[bold red]Всего групп: {len(records)}")
+        print(f"[medium_purple3]Всего групп: {len(records)}")
         for groups in records:  # Поочередно выводим записанные группы
             try:
                 groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
-                print(f"[bold red][+] Присоединился к группе или чату {groups_wr}")
-                print(f"[bold green][+] Подождите {time_subscription_1}-{time_subscription_2} Секунд...")
+                print(f"[medium_purple3][+] Присоединился к группе или чату {groups_wr}")
+                print(f"[magenta][+] Подождите {time_subscription_1}-{time_subscription_2} Секунд...")
                 time.sleep(random.randrange(int(time_subscription_1), int(time_subscription_2)))
             except FloodWaitError as e:
                 print(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
@@ -76,21 +76,21 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
     for groups_wrs in groups_wra:
         try:
             client(JoinChannelRequest(groups_wrs))
-            print(f"[green] Аккаунт подписался на группу: {groups_wrs}")
+            print(f"[magenta] Аккаунт подписался на группу: {groups_wrs}")
             # Записываем данные о действии аккаунта в базу данных
             record_account_actions(phone, description_action, event, actions)
         except ChannelsTooMuchError:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             for dialog in client.iter_dialogs():
-                print(f"[green]{dialog.name}, {dialog.id}")
+                print(f"[magenta]{dialog.name}, {dialog.id}")
                 try:
                     client.delete_dialog(dialog)
                     client.disconnect()
                 except ConnectionError:
                     break
-            print("[green][+] Список почистили, и в файл записали.")
+            print("[magenta][+] Список почистили, и в файл записали.")
         except ChannelPrivateError:
-            actions: str = ("Указанный канал является приватным, или вам запретили подписываться.")
+            actions: str = "Указанный канал является приватным, или вам запретили подписываться."
             record_account_actions(phone, description_action, event, actions)
         except (UsernameInvalidError, ValueError, TypeError):
             actions: str = f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}"
@@ -102,7 +102,7 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
             record_account_actions(phone, description_action, event, actions)
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
-            actions: str = (f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+            actions: str = f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}"
             print(f"[red][!] {actions}")
             record_and_interrupt(actions, phone, description_action, event)
             break  # Прерываем работу и меняем аккаунт

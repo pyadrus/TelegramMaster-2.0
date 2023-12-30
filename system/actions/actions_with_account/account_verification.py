@@ -21,11 +21,11 @@ def check_account_for_spam() -> None:
             client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
             message_bot = client.get_messages('SpamBot')
             for message in message_bot:
-                print(f"[bold green]{phone} {message.message}")
+                print(f"[magenta]{phone} {message.message}")
                 # Выводим сообщение от спама бота
                 description_action = "Checking: checking account for SpamBot"
                 actions = f"{message.message}"
-                print(f"[green][+] {actions}")
+                print(f"[magenta][+] {actions}")
                 record_account_actions(phone, description_action, event, actions)
         except YouBlockedUserError:
             continue  # Записываем ошибку в software_database.db и продолжаем работу

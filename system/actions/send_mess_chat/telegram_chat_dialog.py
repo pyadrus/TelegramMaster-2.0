@@ -26,12 +26,12 @@ def connecting_telegram_account_and_creating_list_of_groups():
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
-    print(f"[bold red]Всего accounts: {len(records)}")
+    print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         records: list = db_handler.open_and_read_data("writing_group_links")
-        print(f"[bold red]Всего групп: {len(records)}")
+        print(f"[medium_purple3]Всего групп: {len(records)}")
 
     return client, phone, records
 
@@ -39,8 +39,8 @@ def connecting_telegram_account_and_creating_list_of_groups():
 def sending_files_via_chats() -> None:
     """Рассылка файлов по чатам"""
     # Спрашиваем у пользователя, через какое время будем отправлять сообщения
-    link_to_the_file: str = console.input("[bold red][+] Введите название файла с папки user_settings/files_to_send: ")
-    message_text_time: str = console.input("[bold red][+] Введите время, через какое время будем отправлять файлы: ")
+    link_to_the_file: str = console.input("[medium_purple3][+] Введите название файла с папки user_settings/files_to_send: ")
+    message_text_time: str = console.input("[medium_purple3][+] Введите время, через какое время будем отправлять файлы: ")
     client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
@@ -49,7 +49,7 @@ def sending_files_via_chats() -> None:
             client.send_file(groups_wr, f"user_settings/files_to_send/{link_to_the_file}")  # Рассылаем файлов по чатам
             # Работу записываем в лог файл, для удобства слежения, за изменениями
             time.sleep(int(message_text_time))
-            actions: str = f"[bold red]Сообщение в группу {groups_wr} написано!"
+            actions: str = f"[medium_purple3]Сообщение в группу {groups_wr} написано!"
             record_account_actions(phone, description_action, event, actions)
         except ChannelPrivateError:
             actions: str = "Указанный канал является приватным, или вам запретили подписываться."
@@ -86,12 +86,12 @@ def sending_messages_files_via_chats() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
         message_text = text.get("1.0", 'end-1c')
         closing_the_input_field()
-        print("[bold red][+] Введите текс сообщения которое будем отправлять в чаты: ")
+        print("[medium_purple3][+] Введите текс сообщения которое будем отправлять в чаты: ")
         link_to_the_file: str = console.input(
-            "[bold red][+] Введите название файла с папки user_settings/files_to_send: ")
+            "[medium_purple3][+] Введите название файла с папки user_settings/files_to_send: ")
         # Спрашиваем у пользователя, через какое время будем отправлять сообщения
         message_text_time: str = console.input(
-            "[bold red][+] Введите время, через какое время будем отправлять сообщения: ")
+            "[medium_purple3][+] Введите время, через какое время будем отправлять сообщения: ")
         event: str = f"Рассылаем сообщение + файлы по чатам Telegram"
         client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
         for groups in records:  # Поочередно выводим записанные группы
@@ -103,7 +103,7 @@ def sending_messages_files_via_chats() -> None:
                 client.send_file(groups_wr, f"user_settings/files_to_send/{link_to_the_file}")
                 # Работу записываем в лог файл, для удобства слежения, за изменениями
                 time.sleep(int(message_text_time))
-                actions: str = f"[bold red]Сообщение в группу {groups_wr} написано!"
+                actions: str = f"[medium_purple3]Сообщение в группу {groups_wr} написано!"
                 record_account_actions(phone, description_action, event, actions)
             except ChannelPrivateError:
                 actions: str = "Указанный канал является приватным, или вам запретили подписываться."
@@ -143,7 +143,7 @@ def sending_messages_via_chats_time(message_text) -> None:
     """Массовая рассылка в чаты"""
     # Спрашиваем у пользователя, через какое время будем отправлять сообщения
     message_text_time: str = console.input(
-        "[bold red][+] Введите время, через какое время будем отправлять сообщения: ")
+        "[medium_purple3][+] Введите время, через какое время будем отправлять сообщения: ")
     client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
@@ -152,7 +152,7 @@ def sending_messages_via_chats_time(message_text) -> None:
             client.send_message(entity=groups_wr, message=message_text)  # Рассылаем сообщение по чатам
             # Работу записываем в лог файл, для удобства слежения, за изменениями
             time.sleep(int(message_text_time))
-            actions = f"[bold red]Сообщение в группу {groups_wr} написано!"
+            actions = f"[medium_purple3]Сообщение в группу {groups_wr} написано!"
             record_account_actions(phone, description_action, event, actions)
         except ChannelPrivateError:
             actions = "Указанный канал является приватным, или вам запретили подписываться."
@@ -184,7 +184,7 @@ def sending_messages_via_chats_time(message_text) -> None:
 def message_entry_window() -> None:
     """Выводим поле ввода для ввода текста сообщения"""
     # Предупреждаем пользователя о вводе ссылок в графическое окно программы
-    print("""[bold red][+] Введите текст который будем рассылать по чатам, для вставки в графическое окно готового 
+    print("""[medium_purple3][+] Введите текст который будем рассылать по чатам, для вставки в графическое окно готового 
           текста используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен 
           быть переключен на английский")""")
     root, text = program_window()
@@ -206,7 +206,7 @@ def message_entry_window() -> None:
 def output_the_input_field() -> None:
     """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
     # Предупреждаем пользователя о вводе ссылок в графическое окно программы
-    print("""[bold red][+] Введите ссылки чатов в которые будем рассылать сообщения, для вставки в графическое окно 
+    print("""[medium_purple3][+] Введите ссылки чатов в которые будем рассылать сообщения, для вставки в графическое окно 
           используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен быть 
           переключен на английский""")
     root, text = program_window()

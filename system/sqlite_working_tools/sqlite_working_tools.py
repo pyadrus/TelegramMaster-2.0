@@ -158,11 +158,11 @@ class DatabaseHandler:
 
     def cleaning_list_of_participants_who_do_not_have_username(self) -> None:
         """Чистка списка от участников у которых нет username"""
-        print("[bold red]Чищу список software_database.db от участников у которых нет username")
+        print("[medium_purple3]Чищу список software_database.db от участников у которых нет username")
         self.connect()
         self.cursor.execute("""SELECT * from members""")
         records: list = self.cursor.fetchall()
-        print(f"[bold red]Всего username: {len(records)}")
+        print(f"[medium_purple3]Всего username: {len(records)}")
         for rows in records:
             ints_list1 = {"username": rows[0]}
             username = ints_list1["username"]
