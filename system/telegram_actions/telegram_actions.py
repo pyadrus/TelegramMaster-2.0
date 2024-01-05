@@ -49,12 +49,10 @@ def get_from_the_list_phone_api_id_api_hash(row):
     return phone, api_id, api_hash
 
 
-def we_get_username_user_id_access_hash(rows):
-    """Получаем username, user_id, access_hash"""
-    user = {"username": rows[0]}
-    # Вытягиваем данные из кортежа, для подстановки в функцию
-    username = user["username"]
-    return username, user
+def get_username(rows):
+    """Получаем username"""
+    username = rows[0]
+    return username
 
 
 def writing_names_found_files_to_the_db() -> None:

@@ -14,7 +14,7 @@ from system.auxiliary_functions.global_variables import link_group
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
-from system.telegram_actions.telegram_actions import we_get_username_user_id_access_hash
+from system.telegram_actions.telegram_actions import get_username
 
 event: str = f"Inviting в группу {link_group}"  # Событие, которое записываем в базу данных
 
@@ -82,7 +82,7 @@ def invite_from_multiple_accounts_with_limits(name_database_table) -> None:
 def inviting(client, phone, records) -> None:
     """Inviting"""
     for rows in records:
-        username, user = we_get_username_user_id_access_hash(rows)
+        username = get_username(rows)
         try:
             inviting_to_a_group(client, username)  # Inviting user в группу
         except AuthKeyDuplicatedError:
@@ -99,10 +99,10 @@ def inviting(client, phone, records) -> None:
             break  # Прерываем работу и меняем аккаунт
         except UserPrivacyRestrictedError:
             actions: str = f"Настройки конфиденциальности {username} не позволяют вам inviting"
-            record_inviting_results(user, phone, f"username : {username}", event, actions)
+            record_inviting_results(username, phone, f"username : {username}", event, actions)
         except UserChannelsTooMuchError:
             actions: str = "Превышен лимит у user каналов / супергрупп."
-            record_inviting_results(user, phone, f"username : {username}", event, actions)
+            record_inviting_results(username, phone, f"username : {username}", event, actions)
         except UserBannedInChannelError:
             actions: str = "Вам запрещено отправлять сообщения в супергруппу."
             record_and_interrupt(actions, phone, f"username : {username}", event)
@@ -114,28 +114,28 @@ def inviting(client, phone, records) -> None:
             break  # Прерываем работу и меняем аккаунт
         except BotGroupsBlockedError:
             actions: str = "Вы не можете добавить бота в группу."
-            record_inviting_results(user, phone, f"username : {username}", event, actions)
+            record_inviting_results(username, phone, f"username : {username}", event, actions)
         except UserNotMutualContactError:
             actions: str = "User не является взаимным контактом."
-            record_inviting_results(user, phone, f"username : {username}", event, actions)
+            record_inviting_results(username, phone, f"username : {username}", event, actions)
         except ChatAdminRequiredError:
             actions: str = "Требуются права администратора."
-            record_inviting_results(user, phone, f"username : {username}", event, actions)
+            record_inviting_results(username, phone, f"username : {username}", event, actions)
         except UserKickedError:
             actions: str = "Пользователь был удален ранее из супергруппы."
-            record_inviting_results(user, phone, f"username : {username}", event, actions)
+            record_inviting_results(username, phone, f"username : {username}", event, actions)
         except ChannelPrivateError:
             actions: str = "Чат является приватным, или закрыт доступ добавления участников."
             record_and_interrupt(actions, phone, f"username : {username}", event)
             break  # Прерываем работу и меняем аккаунт
         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
             actions: str = f"Не корректное имя {username}"
-            record_inviting_results(user, phone, f"username : {username}", event, actions)
+            record_inviting_results(username, phone, f"username : {username}", event, actions)
         except (TypeError, UnboundLocalError):
             continue  # Записываем ошибку в software_database.db и продолжаем работу
         except InviteRequestSentError:
             actions: str = "Действия будут доступны после одобрения администратором на вступление в группу"
-            record_inviting_results(user, phone, f"username : {username}", event, actions)
+            record_inviting_results(username, phone, f"username : {username}", event, actions)
             break  # Прерываем работу и меняем аккаунт
         except TypeNotFoundError:
             actions: str = f"Аккаунт {phone} не может добавить в группу {link_group}"
@@ -148,7 +148,7 @@ def inviting(client, phone, records) -> None:
             # Записываем данные в базу данных, чистим список кого добавляли или писали сообщение
             actions: str = f"Участник {username} добавлен, если не состоит в чате"
             print(f"[magenta][+] {actions}")
-            record_inviting_results(user, phone, f"username : {username}", event, actions)
+            record_inviting_results(username, phone, f"username : {username}", event, actions)
     # Отписываемся от группы, на которую подписались в самом начале
     unsubscribe_from_the_group(client, link_group)
     client.disconnect()  # Разрываем соединение telegram
