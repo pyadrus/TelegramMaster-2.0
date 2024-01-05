@@ -79,6 +79,14 @@ def record_account_limits() -> configparser.ConfigParser:
     return config
 
 
+def record_message_limits() -> configparser.ConfigParser:
+    """Запись лимитов на сообщения"""
+    limits = console.input("[magenta][+] Введите лимит на аккаунт : ")
+    config.get("message_limits", "message_limits")
+    config.set("message_limits", "message_limits", limits)
+    return config
+
+
 def record_device_type() -> configparser.ConfigParser():
     """Запись типа устройства например: Samsung SGH600, Android 9 (P30), 4.2.1,
     Vivo V9, Android 9 (P30), 4.2.1"""

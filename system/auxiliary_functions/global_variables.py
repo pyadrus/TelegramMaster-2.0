@@ -18,6 +18,8 @@ time_changing_accounts_2 = int(config['time_changing_accounts']['time_changing_a
 
 limits = int(config['account_limits']['limits'])
 
+limits_message = int(config['message_limits']['message_limits'])
+
 
 def reading_device_type():
     """Считываем тип устройства"""

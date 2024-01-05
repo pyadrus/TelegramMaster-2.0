@@ -77,7 +77,8 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
     table.add_row("2", f"Inviting {link_group}, с лимитами", "Inviting по списку members, с лимитами на аккаунт")
     table.add_row("3", f"Inviting {link_group} 1 раз в час", "Inviting по списку members с запуском 1 рав в час")
     table.add_row("4", f"Inviting time {link_group}", "Inviting по списку members (запуск по времени)")
-    table.add_row("5", f"Inviting time avery day{link_group}", "Inviting по списку members (запуск по времени каждый день)")
+    table.add_row("5", f"Inviting time avery day{link_group}",
+                  "Inviting по списку members (запуск по времени каждый день)")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
@@ -123,7 +124,8 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
               "быть переключен на английский")
 
         db_handler = DatabaseHandler()
-        db_handler.cleaning_db(name_database_table="writing_group_links")  # Перед началом parsing очистка таблицы writing_group_links
+        db_handler.cleaning_db(
+            name_database_table="writing_group_links")  # Перед началом parsing очистка таблицы writing_group_links
 
         writing_group_links_to_file(name_database="writing_group_links")
         parsing_mass_parsing_of_groups()  # Парсинг участников чата
@@ -133,8 +135,10 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
         choosing_a_group_from_the_subscribed_ones_for_parsing()
     elif user_input == "3":  # Parsing активных участников группы
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        chat_input: str = console.input("[medium_purple3][+] Введите ссылку на чат с которого будем собирать активных: ")
-        limit_active_user: int = console.input("[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
+        chat_input: str = console.input(
+            "[medium_purple3][+] Введите ссылку на чат с которого будем собирать активных: ")
+        limit_active_user: int = console.input(
+            "[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
         parsing_of_active_participants(chat_input, limit_active_user)
     elif user_input == "4":  # Parsing групп / каналов на которые подписан аккаунт
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
@@ -230,7 +234,8 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
     table.add_row("5", "Рассылка файлов по чатам", "Рассылка файлов по чатам, потребуется заранее записать чаты в файл")
     table.add_row("6", "Рассылка сообщений + файлов по чатам", "Потребуется заранее сформировать список чатов")
     table.add_row("7", "Формирование списка чатов", "Формирование списка чатов для рассылки сообщений по чатам")
-    table.add_row("8", "Отправка сообщений в личку (с лимитами)", "Отправка сообщений в личку по parsing списку (с лимитами)")
+    table.add_row("8", "Отправка сообщений в личку (с лимитами)",
+                  "Отправка сообщений в личку по parsing списку (с лимитами)")
     table.add_row("9", "Отправка файлов в личку (с лимитами)", "Отправка файлов в личку по parsing списку (с лимитами)")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
@@ -252,9 +257,9 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
     elif user_input == "7":  # Запись чатов в файл для рассылки сообщений
         output_the_input_field()
     elif user_input == "8":  # Отправка сообщений в личку (с лимитами)
-        we_send_a_message_by_members(limits=limits)
+        we_send_a_message_by_members(limits=limits_message)
     elif user_input == "9":  # Отправка файлов в личку (с лимитами)
-        sending_files_to_a_personal_account(limits=limits)
+        sending_files_to_a_personal_account(limits=limits_message)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
@@ -301,31 +306,28 @@ def program_settings() -> None:  # 8 - Настройки программы, з
     table.add_row("7", "Лимиты на аккаунт", "Установление лимитов на аккаунт")
     table.add_row("8", "Смена типа устройства", "Запись данных для смены типа устройства")
     table.add_row("9", "Запись времени", "Запись времени для Inviting один раз в сутки")
+    table.add_row("10", "Лимиты на сообщения", "Установление лимитов на сообщения")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Запись ссылки для inviting (Записываем ссылку на группу, которую будем inviting)
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         print("[magenta][!] Давайте запишем ссылку для inviting, ссылка должна быть [medium_purple3]одна! Обратите "
               "внимание, что программа будет заново запущена")
         writing_settings_to_a_file(config=writing_link_to_the_group())
         os.system("python main.py")  # После отработки функции возвращаемся в начальное меню
     elif user_input == "2":  # Запись id, hash в файл
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         print("[medium_purple3][!] Получить api_id, api_hash можно на сайте https://my.telegram.org/auth")
         writing_settings_to_a_file(config=writing_api_id_api_hash())
     if user_input == "3":  # Время между приглашениями Inviting / Рассылка сообщений
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         print("[medium_purple3][+] Введите время между Inviting / Рассылка сообщений! C начала меньшее, потом большее. "
               "НАПРИМЕР: 10 20!")
         create_main_window(variable="time_inviting")
     elif user_input == "4":  # Время между сменой аккаунтов
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         print("[medium_purple3][+] Введите время между сменой аккаунтов в секундах. C начала меньшее, потом большее. "
               "НАПРИМЕР: 10 20!")
         create_main_window(variable="time_changing_accounts")
     elif user_input == "5":  # Время между подпиской групп
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         print("[medium_purple3][+] Введите время между подпиской на группы / каналы в секундах (между приглашениями) C "
               "начала меньшее, потом большее. НАПРИМЕР: 10 20!")
         create_main_window(variable="time_subscription")
@@ -333,17 +335,16 @@ def program_settings() -> None:  # 8 - Настройки программы, з
         creating_the_main_window_for_proxy_data_entry()
         program_settings()
     elif user_input == "7":  # Запись лимитов на аккаунт
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         writing_settings_to_a_file(config=record_account_limits())
     elif user_input == "8":  # Запись типа устройства
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         writing_settings_to_a_file(config=record_device_type())
     elif user_input == "9":  # Запись времени для запуска inviting в определенное время
         try:
-            clearing_console_showing_banner()  # Чистим консоль, выводим банер
             recording_the_time_to_launch_an_invite_every_day()
         except Exception as e:
             logger.exception(e)
+    elif user_input == "10":  # Запись лимитов на количество сообщений
+        writing_settings_to_a_file(config=record_message_limits())
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
