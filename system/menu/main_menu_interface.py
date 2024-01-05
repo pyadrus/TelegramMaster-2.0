@@ -224,37 +224,37 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
     column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
     table.add_row("1", "Отправка сообщений в личку", "Отправка сообщений в личку по parsing списку")
-    table.add_row("2", "Отправка файлов в личку", "Отправка файлов в личку по списку user_settings/software_database.db")
+    table.add_row("2", "Отправка файлов в личку", "Отправка файлов в личку по parsing списку")
     table.add_row("3", "Рассылка сообщений по чатам", "Рассылка сообщений по чатам, потребуется сформировать список")
     table.add_row("4", "Рассылка сообщений по чатам, по времени", "Потребуется заранее сформировать список чатов")
     table.add_row("5", "Рассылка файлов по чатам", "Рассылка файлов по чатам, потребуется заранее записать чаты в файл")
     table.add_row("6", "Рассылка сообщений + файлов по чатам", "Потребуется заранее сформировать список чатов")
     table.add_row("7", "Формирование списка чатов", "Формирование списка чатов для рассылки сообщений по чатам")
+    table.add_row("8", "Отправка сообщений в личку (с лимитами)", "Отправка сообщений в личку по parsing списку (с лимитами)")
+    table.add_row("9", "Отправка файлов в личку (с лимитами)", "Отправка файлов в личку по parsing списку (с лимитами)")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Отправка сообщений в личку по parsing списку user_settings/software_database.db
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        we_send_a_message_by_members()
+        we_send_a_message_by_members(limits=None)
     elif user_input == "2":  # Отправка файлов в личку по parsing списку user_settings/software_database.db
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        sending_files_to_a_personal_account()
+        sending_files_to_a_personal_account(limits=None)
     elif user_input == "3":  # Рассылка сообщений по чатам
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         message_entry_window()
     elif user_input == "4":  # Рассылка сообщений по чатам по времени
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         message_entry_window_time()
         message_time()
     elif user_input == "5":  # Рассылка файлов по чатам
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         sending_files_via_chats()
     elif user_input == "6":  # Рассылка сообщений + файлов по чатам
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         sending_messages_files_via_chats()
     elif user_input == "7":  # Запись чатов в файл для рассылки сообщений
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         output_the_input_field()
+    elif user_input == "8":  # Отправка сообщений в личку (с лимитами)
+        we_send_a_message_by_members(limits=limits)
+    elif user_input == "9":  # Отправка файлов в личку (с лимитами)
+        sending_files_to_a_personal_account(limits=limits)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:

@@ -40,12 +40,21 @@ class DatabaseHandler:
         self.close()
 
     def open_the_db_and_read_the_data_lim(self, name_database_table, number_of_accounts: int) -> list:
-        """Открытие базы данных для inviting c лимитами"""
+        """
+        Открытие базы данных для inviting (рассылка сообщений) c лимитами
+        Если number_of_accounts равно None, возвращаем весь список
+        """
         self.connect()
         self.cursor.execute(f"SELECT * from {name_database_table}")  # Считываем таблицу
-        # fetchmany(size) – возвращает число записей не более size
-        records: list = self.cursor.fetchmany(
-            number_of_accounts)  # number_of_accounts - количество добавляемых username
+        if number_of_accounts is not None:
+            # fetchmany(size) – возвращает число записей не более size
+            records: list = self.cursor.fetchmany(number_of_accounts)
+            # records: list = self.cursor.fetchmany(
+            # number_of_accounts)  # number_of_accounts - количество добавляемых username
+        else:
+            # Если number_of_accounts равно None, возвращаем весь список
+            records: list = self.cursor.fetchall()
+
         self.cursor.close()
         self.close()  # Закрываем базу данных
         return records

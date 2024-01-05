@@ -11,10 +11,10 @@ from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
-from system.telegram_actions.telegram_actions import get_username
+from system.telegram_actions.telegram_actions import get_username  # 152
 
 
-def we_send_a_message_by_members() -> None:
+def we_send_a_message_by_members(limits) -> None:
     """Рассылка сообщений по списку software_database.db"""
     # Предупреждаем пользователя о вводе ссылок в графическое окно программы
     print("[medium_purple3][+] Введите текст который будем рассылать в личку, для вставки в графическое окно готового "
@@ -27,7 +27,7 @@ def we_send_a_message_by_members() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
         message_text = text.get("1.0", 'end-1c')
         closing_the_input_field()
-        we_send_a_message_from_all_accounts(message_text)
+        we_send_a_message_from_all_accounts(message_text, limits)
 
     def closing_the_input_field() -> None:
         """Закрываем программу"""
@@ -37,7 +37,7 @@ def we_send_a_message_by_members() -> None:
     root.mainloop()  # Запускаем программу
 
 
-def sending_files_to_a_personal_account() -> None:
+def sending_files_to_a_personal_account(limits) -> None:
     """Отправка файлов в личку"""
     # Просим пользователя ввести расширение сообщения
     link_to_the_file: str = console.input(
@@ -52,7 +52,7 @@ def sending_files_to_a_personal_account() -> None:
         client, phone = connect_to_telegram_account_and_output_name(row)
         try:
             # Открываем parsing список user_settings/software_database.db для inviting в группу
-            records: list = db_handler.open_and_read_data("members")
+            records: list = db_handler.open_the_db_and_read_the_data_lim("members", number_of_accounts=limits)
             # Количество аккаунтов на данный момент в работе
             print(f"[medium_purple3]Всего username: {len(records)}")
             for rows in records:
@@ -89,11 +89,12 @@ def sending_files_to_a_personal_account() -> None:
     app_notifications(notification_text="Работа окончена!")  # Выводим уведомление
 
 
-def we_send_a_message_from_all_accounts(message_text) -> None:
+def we_send_a_message_from_all_accounts(message_text, limits) -> None:
     """
-    Отправка сообщений в личку Telegram пользователям из базы данных.
+    Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
     Args:
         message_text (str): Текст сообщения, которое будет отправлено каждому пользователю.
+        limits (int): Количество аккаунтов на данный момент в работе
     Returns:
         None
     Raises:
@@ -108,8 +109,7 @@ def we_send_a_message_from_all_accounts(message_text) -> None:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = connect_to_telegram_account_and_output_name(row)
         try:
-            # Открываем parsing список user_settings/software_database.db для рассылки сообщений в личку
-            records: list = db_handler.open_and_read_data("members")
+            records: list = db_handler.open_the_db_and_read_the_data_lim("members", number_of_accounts=limits)
             # Количество аккаунтов на данный момент в работе
             print(f"[medium_purple3]Всего username: {len(records)}")
             for rows in records:
@@ -145,7 +145,3 @@ def we_send_a_message_from_all_accounts(message_text) -> None:
         except KeyError:  # В случае отсутствия ключа в базе данных (нет аккаунтов в базе данных).
             sys.exit(1)
     app_notifications(notification_text="Работа окончена!")  # Выводим уведомление
-
-
-if __name__ == "__main__":
-    we_send_a_message_by_members()
