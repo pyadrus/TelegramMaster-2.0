@@ -39,6 +39,7 @@ def main_menu() -> None:  # 1 - Основное меню программы
     table.add_row("10", "Создание групп (чатов)", "Автоматическое создание групп и чатов")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Inviting в группы
         inviting_groups()
     elif user_input == "2":  # Parsing, в новый файл members.db и до записи в файл
@@ -48,7 +49,6 @@ def main_menu() -> None:  # 1 - Основное меню программы
     elif user_input == "4":  # Работаем с подпиской, подписка, отписка, запись ссылок в файл
         subscribe_unsubscribe_write_to_file()
     elif user_input == "5":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         connecting_new_account()
         main_menu()
     elif user_input == "6":  # Рассылка сообщений по списку members.db
@@ -58,10 +58,8 @@ def main_menu() -> None:  # 1 - Основное меню программы
     elif user_input == "8":  # Настройки для программы (прописываем ссылку для inviting, api_id, api_hash)
         program_settings()
     elif user_input == "9":  # Проверка аккаунта через спам бот
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         check_account_for_spam()
     elif user_input == "10":  # Создание групп (чатов)
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         creating_groups_and_chats()
     else:
         main_menu()  # После отработки функции переходим в начальное меню
@@ -82,18 +80,16 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Inviting по списку software_database.db
         invitation_from_all_accounts_program_body(name_database_table="members")
     elif user_input == "2":  # Inviting по списку software_database.db, с лимитами
         invite_from_multiple_accounts_with_limits(name_database_table="members")
     elif user_input == "3":  # Inviting по времени 1 раз в час
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         launching_an_invite_once_an_hour()
     elif user_input == "4":  # Inviting по времени
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         schedule_invite()
     elif user_input == "5":  # Inviting по времени каждый день
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         launching_an_invite_every_day_at_a_certain_time()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
@@ -117,8 +113,8 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Parsing: группы, групп в список software_database.db (группы вводятся в графическое окно)
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         print("[medium_purple3][+] Введите ссылки чатов которые будем parsing, для вставки в графическое окно "
               "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
               "быть переключен на английский")
@@ -131,27 +127,22 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
         parsing_mass_parsing_of_groups()  # Парсинг участников чата
 
     elif user_input == "2":  # Parsing группы из подписанных
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         choosing_a_group_from_the_subscribed_ones_for_parsing()
     elif user_input == "3":  # Parsing активных участников группы
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         chat_input: str = console.input(
             "[medium_purple3][+] Введите ссылку на чат с которого будем собирать активных: ")
         limit_active_user: int = console.input(
             "[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
         parsing_of_active_participants(chat_input, limit_active_user)
     elif user_input == "4":  # Parsing групп / каналов на которые подписан аккаунт
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         parsing_of_groups_to_which_the_account_is_subscribed()
     elif user_input == "5":  # Очистка списка software_database.db
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         db_handler = DatabaseHandler()
         db_handler.cleaning_db(name_database_table="members")
     elif user_input == "6":  # Формирование списка
         print("[medium_purple3][+] Введите username, для вставки в графическое окно "
               "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
               "быть переключен на английский")
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         writing_members()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
@@ -173,17 +164,14 @@ def working_tools_contacts() -> None:  # 3 - Работаем с контакт�
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Формирование списка контактов
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         we_record_phone_numbers_in_the_db()
     elif user_input == "2":  # Отображение списка контактов
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         show_account_contact_list()
     elif user_input == "3":  # Удаляем все контакты с аккаунтов
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         delete_contact()
     elif user_input == "4":  # Вносим контакты в телефонную книгу
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         inviting_contact()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
@@ -203,6 +191,7 @@ def subscribe_unsubscribe_write_to_file() -> None:  # 4 - Подписка, от
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Запись: групп, каналов в файл, данные записываются в файл user_settings/software_database.db
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
         print("[medium_purple3][+] Введите ссылки чатов на которые нужно подписаться, для вставки в графическое окно "
@@ -212,7 +201,6 @@ def subscribe_unsubscribe_write_to_file() -> None:  # 4 - Подписка, от
         writing_group_links_to_file(name_database)
         subscription_all()
     elif user_input == "2":  # Отписываемся от групп / каналов (работа с несколькими аккаунтами)
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         unsubscribe_all()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
@@ -278,11 +266,10 @@ def working_with_the_reaction() -> None:  # 7 - Работа с реакциям
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
+    clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Ставим реакции на один пост в группе / канале
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         users_choice_of_reaction()
     elif user_input == "2":  # Накручиваем просмотры постов
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
         viewing_posts()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
