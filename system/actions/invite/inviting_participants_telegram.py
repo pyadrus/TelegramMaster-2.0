@@ -1,10 +1,10 @@
 import datetime
-
+# from telethon.tl.functions.messages import AddChatUserRequest
 from rich import print
 from telethon.errors import *
-from telethon.tl.functions.channels import InviteToChannelRequest
+# from telethon.tl.functions.channels import InviteToChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
-
+from loguru import logger
 from system.actions.subscription.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import clearing_console_showing_banner
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
@@ -21,8 +21,13 @@ event: str = f"Inviting в группу {link_group}"  # Событие, кот�
 
 def inviting_to_a_group(client, username) -> None:
     """Inviting в группу"""
-    user_to_add = client.get_input_entity(username)
-    client(InviteToChannelRequest(link_group, [user_to_add]))
+    logger.info(username)
+    # user_to_add = client.get_input_entity(username)
+    # logger.info(user_to_add)
+    try:
+        client(functions.channels.InviteToChannelRequest(channel=link_group, users=[f'{username}']))
+    except UserBlockedError as e:
+        logger.error(e)
 
 
 def invitation_from_all_accounts_program_body(name_database_table) -> None:
@@ -141,7 +146,7 @@ def inviting(client, phone, records) -> None:
             actions: str = f"Аккаунт {phone} не может добавить в группу {link_group}"
             record_and_interrupt(actions, phone, f"username : {username}", event)
             break  # Прерываем работу и меняем аккаунт
-        except KeyboardInterrupt: # Закрытие окна программы
+        except KeyboardInterrupt:  # Закрытие окна программы
             client.disconnect()
             print("[!] Скрипт остановлен!")
         else:

@@ -12,7 +12,7 @@ def banner() -> None:
     console.print("Telegram: https://t.me/PyAdminRU", style="medium_purple3", justify="center")
     # Для удобства чтения, разделяем полосками https://rich.readthedocs.io/en/stable/console.html
     # Разнообразие консоли с модулем rich (python -m rich) - возможности модуля
-    console.print(f"TELEGRAM_SMM_BOT версия программы: {program_version} "
+    console.print(f"TelegramMaster версия программы: {program_version} "
                   f"(Дата изменения {date_of_program_change})", style="cyan", justify="center")
     # Разнообразие консоли с модулем rich (пишем текст посередине)
 

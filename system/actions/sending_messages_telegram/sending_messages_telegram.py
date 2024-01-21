@@ -1,12 +1,13 @@
 import datetime
 import sys
+import time
 
 from rich import print
 from telethon.errors import *
 
 from system.actions.invite.inviting_participants_telegram import record_inviting_results
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.auxiliary_functions.global_variables import console
+from system.auxiliary_functions.global_variables import console, time_inviting_1
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -119,6 +120,7 @@ def we_send_a_message_from_all_accounts(message_text, limits) -> None:
                     user_to_add = client.get_input_entity(username)
                     client.send_message(user_to_add, message_text.format(username))
                     # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
+                    time.sleep(time_inviting_1)
                     actions = "Сообщение отправлено"
                     record_inviting_results(username, phone, f"username : {username}", event, actions)
                 except FloodWaitError as e:

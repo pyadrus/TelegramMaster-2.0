@@ -19,3 +19,4 @@ Telethon==1.33.1
 urllib3==2.1.0
 win32-setctime
 PySimpleGUI
+thefuzz
