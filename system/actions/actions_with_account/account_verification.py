@@ -48,15 +48,11 @@ def check_account_for_spam() -> None:
                                                       "Если пользователь написал Вам первым, Вы сможете ответить, "
                                                       "несмотря на ограничения.")
                 logger.exception(similarity_ratio_ru)
-
                 if similarity_ratio_ru >= 97:
                     print('Аккаунт в бане')
-                    # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                    client.disconnect()
+                    client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                     record_account_actions(phone, description_action, event, actions)
-
                     working_with_accounts(row)  # Перенос аккаунта в папку бан
-
                 similarity_ratio_en: int = fuzz.ratio(f"{message.message}",
                                                       "I’m very sorry that you had to contact me. Unfortunately, "
                                                       "some actions can trigger a harsh response from our anti-spam "
@@ -67,15 +63,11 @@ def check_account_for_spam() -> None:
                                                       "groups and channels. Of course, when people contact you first, "
                                                       "you can always reply to them.")
                 logger.exception(similarity_ratio_en)
-
                 if similarity_ratio_en >= 97:
                     print('Аккаунт в бане')
-                    # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                    client.disconnect()
+                    client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                     record_account_actions(phone, description_action, event, actions)
-
-                    working_with_accounts(row)   # Перенос аккаунта в папку бан
-
+                    working_with_accounts(row)  # Перенос аккаунта в папку бан
                 record_account_actions(phone, description_action, event, actions)
 
         except YouBlockedUserError:
