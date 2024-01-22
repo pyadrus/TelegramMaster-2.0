@@ -2,9 +2,9 @@ rich==13.7.0
 certifi==2023.11.17
 charset-normalizer
 colorama
-emoji==2.9.0
+emoji==2.10.0
 idna==3.6
-loguru
+loguru==0.7.2
 markdown-it-py
 mdurl
 notify-py
