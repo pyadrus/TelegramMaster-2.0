@@ -8,8 +8,10 @@ from sys import platform
 from rich import print
 from rich.progress import track
 
-from system.auxiliary_functions.global_variables import time_inviting_1, time_changing_accounts_1, \
-    time_changing_accounts_2, time_inviting_2
+from system.auxiliary_functions.global_variables import time_changing_accounts_1
+from system.auxiliary_functions.global_variables import time_changing_accounts_2
+from system.auxiliary_functions.global_variables import time_inviting_1
+from system.auxiliary_functions.global_variables import time_inviting_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_banner import banner
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler

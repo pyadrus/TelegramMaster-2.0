@@ -102,6 +102,19 @@ class DatabaseHandler:
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
+    def write_parsed_chat_participants_to_db_active(self, entities) -> None:
+        """Запись результатов parsing участников чата"""
+        self.connect()
+        # for line in entities:
+        # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
+                                "user_phone, online_at, photos_id, user_premium)")
+        self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
+                                    "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                    [entities])
+        self.sqlite_connection.commit()
+        self.close()  # cursor_members.close() – закрытие соединения с БД.
+
     def add_columns_to_table(self) -> None:
         """Добавляем новые колонки в базу данных"""
         self.connect()

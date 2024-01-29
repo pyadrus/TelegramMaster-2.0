@@ -16,10 +16,10 @@ from telethon.tl.types import UserStatusRecently
 from telethon.tl.types import UserStatusOnline
 from telethon.tl.types import UserStatusEmpty
 
-
 from system.actions.subscription.subscription import subscribe_to_group_or_channel
 from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
-from system.auxiliary_functions.global_variables import console
+from system.auxiliary_functions.auxiliary_functions import display_progress_bar
+from system.auxiliary_functions.global_variables import console, time_activity_user_1, time_activity_user_2
 from system.error.telegram_errors import handle_exceptions_pars
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
@@ -36,7 +36,9 @@ def getting_user_data(user, entities) -> None:
     photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
     online_at = "Был(а) недавно"
     # Статусы пользователя https://core.telegram.org/type/UserStatus
-    if isinstance(user.status, (UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, UserStatusOnline, UserStatusEmpty)):
+    if isinstance(user.status, (
+            UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, UserStatusOnline,
+            UserStatusEmpty)):
         if isinstance(user.status, UserStatusOffline):
             online_at = user.status.was_online
         if isinstance(user.status, UserStatusRecently):
@@ -50,7 +52,8 @@ def getting_user_data(user, entities) -> None:
         if isinstance(user.status, UserStatusEmpty):
             online_at = "статус пользователя еще не определен"
     user_premium = "Пользователь с premium" if user.premium else ""
-    entities.append([username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium])
+    entities.append(
+        [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium])
 
 
 def all_participants_user(all_participants) -> list:
@@ -77,7 +80,8 @@ def parsing_mass_parsing_of_groups() -> None:
             # Удаляем отработанную группу или канал
             db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
         db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
-        db_handler.delete_duplicates(table_name="members", column_name="id")  # Чистка дублирующих username по столбцу id
+        db_handler.delete_duplicates(table_name="members",
+                                     column_name="id")  # Чистка дублирующих username по столбцу id
         client.disconnect()  # Разрываем соединение telegram
     app_notifications(notification_text="Список успешно сформирован!")  # Выводим уведомление
 
@@ -125,13 +129,15 @@ def parsing_of_users_from_the_selected_group(client, target_group) -> list:
     offset = 0
     while while_condition:
         try:
-            participants = client(GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200, hash=0))
+            participants = client(
+                GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200, hash=0))
             all_participants.extend(participants.users)
             offset += len(participants.users)
             if len(participants.users) < 1:
                 while_condition = False
         except TypeError:
-            logger.info(f'Ошибка parsing: не верное имя или cсылка {target_group} не является группой / каналом: {target_group}')
+            logger.info(
+                f'Ошибка parsing: не верное имя или cсылка {target_group} не является группой / каналом: {target_group}')
             time.sleep(2)
             break
     return all_participants
@@ -142,7 +148,8 @@ def output_a_list_of_groups_new(client):
     chats = []
     last_date = None
     groups = []
-    result = client(GetDialogsRequest(offset_date=last_date, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+    result = client(
+        GetDialogsRequest(offset_date=last_date, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
     chats.extend(result.chats)
     for chat in chats:
         try:
@@ -180,24 +187,77 @@ def writing_members() -> None:
     root.mainloop()  # Запускаем программу
 
 
-"""Parsing активных участников группы"""
+"""
+Parsing активных участников группы
+
+Парсинг активных участников группы:
+
+1. Добавить прогресс бар на время между перерывами между парсингом
+2. Реализовать запись парсинг данных не посредственно в базу данных
+3. Чистка дубликатов участников в базе данных 
+"""
+
+
+def getting_active_user_data(user):
+    """Получаем данные пользователя"""
+    username = user.username if user.username else "NONE"
+    user_phone = user.phone if user.phone else "Номер телефона скрыт"
+    first_name = user.first_name if user.first_name else ""
+    last_name = user.last_name if user.last_name else ""
+    photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
+    online_at = "Был(а) недавно"
+    # Статусы пользователя https://core.telegram.org/type/UserStatus
+    if isinstance(user.status, (
+            UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, UserStatusOnline,
+            UserStatusEmpty)):
+        if isinstance(user.status, UserStatusOffline):
+            online_at = user.status.was_online
+        if isinstance(user.status, UserStatusRecently):
+            online_at = "Был(а) недавно"
+        if isinstance(user.status, UserStatusLastWeek):
+            online_at = "Был(а) на этой неделе"
+        if isinstance(user.status, UserStatusLastMonth):
+            online_at = "Был(а) в этом месяце"
+        if isinstance(user.status, UserStatusOnline):
+            online_at = user.status.expires
+        if isinstance(user.status, UserStatusEmpty):
+            online_at = "статус пользователя еще не определен"
+    user_premium = "Пользователь с premium" if user.premium else ""
+
+    entity = (username, user.id, user.access_hash,
+              first_name, last_name, user_phone,
+              online_at, photos_id, user_premium)
+
+    return entity
 
 
 @handle_exceptions_pars
 def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, limit_active_user) -> None:
-    """Получаем данные участников группы которые писали сообщения"""
-    entities = []  # Создаем список сущностей
+    """
+    Получаем данные участников группы которые писали сообщения
+
+    Параметры:
+    client: клиент
+    chat: ссылка на чат
+    limit_active_user: лимит активных участников
+    """
     for message in client.iter_messages(chat, limit=int(limit_active_user)):
         from_user = client.get_entity(message.from_id.user_id)  # Получаем отправителя по ИД
-        print(from_user)
-        time.sleep(1)
-        getting_user_data(from_user, entities)
-    db_handler = DatabaseHandler()
-    db_handler.write_parsed_chat_participants_to_db(entities)
+        display_progress_bar(time_activity_user_1, time_activity_user_2, "Выполнение задачи...")
+        entities = getting_active_user_data(from_user)
+        logger.info(entities)
+        db_handler = DatabaseHandler()
+        db_handler.write_parsed_chat_participants_to_db_active(entities)
 
 
 def parsing_of_active_participants(chat_input, limit_active_user) -> None:
-    """Parsing участников, которые пишут в чат"""
+    """
+    Parsing участников, которые пишут в чат (активных участников)
+
+    Параметры:
+    chat_input: ссылка на чат
+    limit_active_user: лимит активных участников
+    """
     # Открываем базу с аккаунтами и с выставленными лимитами
     db_handler = DatabaseHandler()
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
@@ -206,7 +266,7 @@ def parsing_of_active_participants(chat_input, limit_active_user) -> None:
         client, phone = connect_to_telegram_account_and_output_name(row)
         # Подписываемся на чат, с которого будем parsing активных участников
         subscribe_to_group_or_channel(client, chat_input, phone)
-        time.sleep(2)
+        time.sleep(time_activity_user_2)
         we_get_the_data_of_the_group_members_who_wrote_messages(client, chat_input, limit_active_user)
         client.disconnect()  # Разрываем соединение telegram
     db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
@@ -221,7 +281,8 @@ def we_record_phone_numbers_in_the_db() -> None:
     print("[magenta]Контакты которые были добавлены в телефонную книгу, будем записывать с файл "
           "software_database.db, в папке user_settings")
     # Вводим имя файла с которым будем работать
-    file_name_input = console.input("[magenta][+] Введите имя файла с контактами, в папке contacts, имя вводим без txt: ")
+    file_name_input = console.input(
+        "[magenta][+] Введите имя файла с контактами, в папке contacts, имя вводим без txt: ")
     # Открываем файл с которым будем работать
     with open(f"user_settings/{file_name_input}.txt", "r") as file_contact:
         for line in file_contact.readlines():
@@ -287,8 +348,8 @@ def we_show_and_delete_the_contact_of_the_phone_book(client, user) -> None:
 @handle_exceptions_pars
 def delete_contact() -> None:
     """Удаляем контакты с аккаунтов"""
-    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
+
+    db_handler = DatabaseHandler()  # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
@@ -312,8 +373,8 @@ def inviting_contact() -> None:
 
 def adding_a_contact_to_the_phone_book(client) -> None:
     """Добавляем контакт в телефонную книгу"""
-    # Открываем сформированный список user_settings/software_database.db
-    db_handler = DatabaseHandler()
+
+    db_handler = DatabaseHandler()  # Открываем сформированный список user_settings/software_database.db
     records: list = db_handler.open_and_read_data("contact")
     print(f"[medium_purple3]Всего номеров: {len(records)}")
     entities = []  # Создаем список сущностей
@@ -321,7 +382,10 @@ def adding_a_contact_to_the_phone_book(client) -> None:
         user = {"phone": rows[0]}
         phone = user["phone"]
         # Добавляем контакт в телефонную книгу
-        client(functions.contacts.ImportContactsRequest(contacts=[types.InputPhoneContact(client_id=0, phone=phone, first_name="Номер", last_name=phone)]))
+        client(functions.contacts.ImportContactsRequest(contacts=[types.InputPhoneContact(client_id=0,
+                                                                                          phone=phone,
+                                                                                          first_name="Номер",
+                                                                                          last_name=phone)]))
         try:
             # Получаем данные номера телефона https://docs.telethon.dev/en/stable/concepts/entities.html
             contact = client.get_entity(phone)

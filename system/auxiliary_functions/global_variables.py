@@ -20,6 +20,9 @@ limits = int(config['account_limits']['limits'])
 
 limits_message = int(config['message_limits']['message_limits'])
 
+time_activity_user_1 = int(config['time_activity_user']['time_activity_user_1'])
+time_activity_user_2 = int(config['time_activity_user']['time_activity_user_2'])
+
 
 def reading_device_type():
     """Считываем тип устройства"""
