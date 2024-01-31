@@ -24,7 +24,7 @@ def select_from_config_by_phone(phone_value):
     return result
 
 
-def create_gui(account_list):
+def create_gui(account_list) -> None:
     layout = [
         [sg.Text("Выберите Telegram аккаунт в котором будут создаваться группы (чаты):")],
         *[[sg.Checkbox(account, key=account)] for account in account_list],
@@ -63,7 +63,7 @@ def get_from(row):
     return phone
 
 
-def creating_groups_and_chats():
+def creating_groups_and_chats() -> None:
     """Создание групп (чатов) в автоматическом режиме"""
     accounts = get_account_list()
     # Extracting phone numbers from the accounts list

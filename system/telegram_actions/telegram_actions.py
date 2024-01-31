@@ -16,9 +16,9 @@ def connect_to_telegram_account_and_output_name(row):
     phone, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)  # Получаем со списка phone, api_id, api_hash
     proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
     device_model, system_version, app_version = reading_device_type()
-    client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, proxy=proxy, device_model=device_model,
-                            system_version=system_version, app_version=app_version, lang_code='en',
-                            system_lang_code='ru')
+    client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, proxy=proxy,
+                            device_model=device_model, system_version=system_version, app_version=app_version,
+                            lang_code='en', system_lang_code='ru')
     client.connect()  # Подсоединяемся к Telegram
     # Выводим командой print: имя, фамилию, номер телефона аккаунта
     first_name, last_name, phone = account_name(client, name_account="me")
@@ -68,7 +68,7 @@ def writing_names_found_files_to_the_db() -> None:
         db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
 
 
-def connecting_account_sessions():
+def connecting_account_sessions() -> list:
     """Подключение сессий аккаунтов
     Функция listdir() модуля os возвращает список, содержащий имена файлов и директорий в каталоге, заданном путем
     path user_settings/accounts

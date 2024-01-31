@@ -11,6 +11,7 @@ from system.auxiliary_functions.global_variables import console, reading_device_
 from system.menu.app_gui import program_window_with_dimensions
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+import flet as ft
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 
@@ -257,53 +258,39 @@ def creating_the_main_window_for_proxy_data_entry() -> None:
 
 
 def create_main_window(variable) -> None:
-    """Создание главного окна приложения"""
+    """
+    :param variable: название переменной в файле config.ini
+    :return: None
+    """
 
-    def entering_the_time_between_actions() -> None:
-        """Проверка введенных данных"""
-        # Получаем значения из полей ввода
-        smaller_time = smaller_time_entry.get()
-        larger_time = larger_time_entry.get()
-        # Проверяем, что оба поля были заполнены целыми числами
-        try:
-            smaller_time = int(smaller_time)
-            larger_time = int(larger_time)
-        except ValueError:
-            # Если пользователь ввел не число, выводим сообщение об ошибке
-            result_label.config(text="Пожалуйста, введите целые числа!")
-            return
-        # Проверяем, что первое время меньше второго
-        if smaller_time < larger_time:
-            # Если условие прошло проверку, то возвращаем первое и второе время
-            result_label.config(
-                text="Вы ввели:\n{} секунд (меньшее время)\n{} секунд (большее время)".format(smaller_time,
-                                                                                              larger_time))
-            config = recording_limits_file(str(smaller_time), str(larger_time), variable=variable)
-            writing_settings_to_a_file(config)
-            root.destroy()
-        else:
-            # Если первое время больше второго, выводим сообщение об ошибке
-            result_label.config(text="Пожалуйста, введите корректные значения времени!")
+    def main_inviting(page) -> None:
+        page.window_width = 300  # ширина окна
+        page.window_height = 300  # высота окна
+        page.window_resizable = False  # Запрет на изменение размера окна
+        smaller_time = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
+        larger_time = ft.TextField(label="Время в секундах (большее)")
+        greetings = ft.Column()
 
-    root = program_window_with_dimensions(geometry="300x110")
-    root.resizable(False, False)  # Запретить масштабирование окна
-    s = ttk.Style()  # Установка стиля оформления
-    s.theme_use("winnative")
-    # Создаем первое текстовое поле и связанный с ним текстовый метка
-    smaller_time_label = ttk.Label(root, text="Время в секундах (меньшее):")
-    smaller_time_label.pack()
-    smaller_time_entry = ttk.Entry(root, width=45)
-    smaller_time_entry.pack()
-    # Создаем второе текстовое поле и связанный с ним текстовый метка
-    larger_time_label = ttk.Label(root, text="Время в секундах (большее):")
-    larger_time_label.pack()
-    larger_time_entry = ttk.Entry(root, width=45)
-    larger_time_entry.pack()
-    button = ttk.Button(root, text="Готово", command=entering_the_time_between_actions)  # Создаем кнопку
-    button.pack()
-    result_label = ttk.Label(root, text="")  # Создаем метку для вывода результата
-    result_label.pack()
-    root.mainloop()  # Запускаем главный цикл обработки событий
+        def btn_click(e) -> None:
+            try:
+                smaller_times = int(smaller_time.value)
+                larger_times = int(larger_time.value)
+
+                if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
+                    # Если условие прошло проверку, то возвращаем первое и второе время
+                    print(f"Вы ввели:\n{smaller_times} секунд (меньшее время)\n{larger_times} секунд (большее время)")
+                    config = recording_limits_file(str(smaller_times), str(larger_times), variable=variable)
+                    writing_settings_to_a_file(config)
+                    page.window_close()
+            except ValueError:
+                pass
+
+            page.update()
+            smaller_time.focus()
+
+        page.add(smaller_time, larger_time, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
+
+    ft.app(target=main_inviting)
 
 
 if __name__ == "__main__":

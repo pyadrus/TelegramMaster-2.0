@@ -12,9 +12,7 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 """Действия с username"""
 
 
-def record_account_actions(
-    phone_number, action_description, event, action_result
-) -> None:
+def record_account_actions(phone_number, action_description, event, action_result) -> None:
     """Записывает действия аккаунта в базу данных
     phone_number - номер телефона аккаунта,
     action_description - описание действия,
@@ -34,7 +32,7 @@ def record_account_actions(
 """Действия с аккаунтами"""
 
 
-def delete_file(file):
+def delete_file(file) -> None:
     """Удаление файла"""
     try:
         os.remove(f"{file}")
@@ -42,7 +40,7 @@ def delete_file(file):
         print(f"[red][!] Файл {file} не найден!")
 
 
-def telegram_phone_number_banned_error(client, phone):
+def telegram_phone_number_banned_error(client, phone) -> None:
     """Аккаунт banned, удаляем banned аккаунт"""
     client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
     db_handler = DatabaseHandler()

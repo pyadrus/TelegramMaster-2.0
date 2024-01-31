@@ -1,8 +1,6 @@
 import datetime
-# from telethon.tl.functions.messages import AddChatUserRequest
 from rich import print
 from telethon.errors import *
-# from telethon.tl.functions.channels import InviteToChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 from loguru import logger
 from system.actions.subscription.subscription import subscribe_to_group_or_channel

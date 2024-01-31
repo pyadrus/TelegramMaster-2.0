@@ -17,6 +17,7 @@ from system.auxiliary_functions.auxiliary_functions import *
 from system.auxiliary_functions.global_variables import *
 from system.setting.setting import *
 from system.sqlite_working_tools.sqlite_working_tools import *
+import flet as ft
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")
 
@@ -312,7 +313,8 @@ def program_settings() -> None:  # 8 - Настройки программы, з
         create_main_window(variable="time_inviting")
     elif user_input == "4":  # Время между сменой аккаунтов
         print("[medium_purple3][+] Введите время между сменой аккаунтов в секундах. C начала меньшее, потом большее. "
-              "НАПРИМЕР: 10 20!")
+               "НАПРИМЕР: 10 20!")
+        # create_main_window(variable="time_changing_accounts")
         create_main_window(variable="time_changing_accounts")
     elif user_input == "5":  # Время между подпиской групп
         print("[medium_purple3][+] Введите время между подпиской на группы / каналы в секундах (между приглашениями) C "

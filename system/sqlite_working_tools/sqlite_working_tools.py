@@ -47,13 +47,10 @@ class DatabaseHandler:
         self.connect()
         self.cursor.execute(f"SELECT * from {name_database_table}")  # Считываем таблицу
         if number_of_accounts is not None:
-            # fetchmany(size) – возвращает число записей не более size
-            records: list = self.cursor.fetchmany(number_of_accounts)
-            # records: list = self.cursor.fetchmany(
-            # number_of_accounts)  # number_of_accounts - количество добавляемых username
+            records: list = self.cursor.fetchmany(number_of_accounts)  # fetchmany(size) – возвращает число записей
+
         else:
-            # Если number_of_accounts равно None, возвращаем весь список
-            records: list = self.cursor.fetchall()
+            records: list = self.cursor.fetchall()  # Если number_of_accounts равно None, возвращаем весь список
 
         self.cursor.close()
         self.close()  # Закрываем базу данных
@@ -108,10 +105,10 @@ class DatabaseHandler:
         # for line in entities:
         # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
         self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
-                                "user_phone, online_at, photos_id, user_premium)")
+                            "user_phone, online_at, photos_id, user_premium)")
         self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
-                                    "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                    [entities])
+                                "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                [entities])
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
