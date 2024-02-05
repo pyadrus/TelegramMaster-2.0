@@ -1,23 +1,22 @@
 from rich import box
 from rich.table import Table
 
-from system.actions.actions_with_account.account_verification import *
+from system.actions.checking_spam.account_verification import *
 from system.actions.creating.creating import creating_groups_and_chats
-from system.actions.invite.inviting_participants_telegram import *
-from system.actions.invite.telegram_invite_scheduler import *
-from system.actions.pars.parsing_account_groups_and_channels import *
-from system.actions.pars.parsing_group_members import *
+from system.actions.invitation.inviting_participants_telegram import *
+from system.actions.invitation.telegram_invite_scheduler import *
+from system.actions.parsing.parsing_account_groups_and_channels import *
+from system.actions.parsing.parsing_group_members import *
 from system.actions.reactions.reactions import *
 from system.actions.send_mess_chat.chat_dialog_mes import *
 from system.actions.send_mess_chat.telegram_chat_dialog import *
-from system.actions.sending_messages_telegram.sending_messages_telegram import *
+from system.actions.sending_messages.sending_messages_telegram import *
 from system.actions.subscription.subscription import *
-from system.actions.subscription.unsubscribe import *
+from system.actions.unsubscribe.unsubscribe import *
 from system.auxiliary_functions.auxiliary_functions import *
 from system.auxiliary_functions.global_variables import *
 from system.setting.setting import *
 from system.sqlite_working_tools.sqlite_working_tools import *
-import flet as ft
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")
 

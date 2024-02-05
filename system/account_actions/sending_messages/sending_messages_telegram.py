@@ -5,7 +5,7 @@ import time
 from rich import print
 from telethon.errors import *
 
-from system.actions.invite.inviting_participants_telegram import record_inviting_results
+from system.actions.invitation.inviting_participants_telegram import record_inviting_results
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console, time_inviting_1
 from system.menu.app_gui import program_window, done_button
@@ -124,7 +124,7 @@ def we_send_a_message_from_all_accounts(message_text, limits) -> None:
                     actions = "Сообщение отправлено"
                     record_inviting_results(username, phone, f"username : {username}", event, actions)
                 except FloodWaitError as e:
-                    # actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
+                    # account_actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
                     record_and_interrupt(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', phone,
                                          f"username : {username}", event)
                     break  # Прерываем работу и меняем аккаунт

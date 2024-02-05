@@ -55,7 +55,7 @@ def check_account_for_spam() -> None:
                     working_with_accounts(row)  # Перенос аккаунта в папку бан
                 similarity_ratio_en: int = fuzz.ratio(f"{message.message}",
                                                       "I’m very sorry that you had to contact me. Unfortunately, "
-                                                      "some actions can trigger a harsh response from our anti-spam "
+                                                      "some account_actions can trigger a harsh response from our anti-spam "
                                                       "systems. If you think your account was limited by mistake, you "
                                                       "can submit a complaint to our moderators. While the account is "
                                                       "limited, you will not be able to send messages to people who "

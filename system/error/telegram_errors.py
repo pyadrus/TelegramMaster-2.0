@@ -20,9 +20,9 @@ def record_account_actions(phone_number, action_description, event, action_resul
     action_result - результат выполнения действия."""
     print(f"[red][!] {action_result}")
     creating_a_table = """CREATE TABLE IF NOT EXISTS account_actions 
-                          (phone, date, description_action, event, actions)"""
+                          (phone, date, description_action, event, account_actions)"""
     writing_data_to_a_table = """INSERT INTO  account_actions 
-                                 (phone, date, description_action, event, actions) VALUES (?, ?, ?, ?, ?)"""
+                                 (phone, date, description_action, event, account_actions) VALUES (?, ?, ?, ?, ?)"""
     date = datetime.datetime.now()  # Получаем текущую дату
     entities = [phone_number, str(date), action_description, event, action_result]  # Формируем словарь
     db_handler = DatabaseHandler()
