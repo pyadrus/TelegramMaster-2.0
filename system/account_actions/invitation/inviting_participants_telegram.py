@@ -3,7 +3,8 @@ from rich import print
 from telethon.errors import *
 from telethon.tl.functions.channels import LeaveChannelRequest
 from loguru import logger
-from system.actions.subscription.subscription import subscribe_to_group_or_channel
+
+from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import clearing_console_showing_banner
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.auxiliary_functions import record_inviting_results

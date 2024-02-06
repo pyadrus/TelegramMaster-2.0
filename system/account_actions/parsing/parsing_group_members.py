@@ -16,8 +16,8 @@ from telethon.tl.types import UserStatusRecently
 from telethon.tl.types import UserStatusOnline
 from telethon.tl.types import UserStatusEmpty
 
-from system.actions.subscription.subscription import subscribe_to_group_or_channel
-from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
+from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link, \
+    subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import display_progress_bar
 from system.auxiliary_functions.global_variables import console, time_activity_user_1, time_activity_user_2
 from system.error.telegram_errors import handle_exceptions_pars

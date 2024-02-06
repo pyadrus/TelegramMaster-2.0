@@ -5,8 +5,7 @@ import time
 from rich import print
 from telethon.errors import *
 
-from system.actions.invitation.inviting_participants_telegram import record_inviting_results
-from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
+from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, record_inviting_results
 from system.auxiliary_functions.global_variables import console, time_inviting_1
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications

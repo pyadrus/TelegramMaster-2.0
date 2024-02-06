@@ -1,22 +1,31 @@
 from rich import box
 from rich.table import Table
 
-from system.actions.checking_spam.account_verification import *
-from system.actions.creating.creating import creating_groups_and_chats
-from system.actions.invitation.inviting_participants_telegram import *
-from system.actions.invitation.telegram_invite_scheduler import *
-from system.actions.parsing.parsing_account_groups_and_channels import *
-from system.actions.parsing.parsing_group_members import *
-from system.actions.reactions.reactions import *
-from system.actions.send_mess_chat.chat_dialog_mes import *
-from system.actions.send_mess_chat.telegram_chat_dialog import *
-from system.actions.sending_messages.sending_messages_telegram import *
-from system.actions.subscription.subscription import *
-from system.actions.unsubscribe.unsubscribe import *
+from system.account_actions.checking_spam.account_verification import check_account_for_spam
+from system.account_actions.creating.creating import creating_groups_and_chats
+from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body, \
+    invite_from_multiple_accounts_with_limits
+from system.account_actions.invitation.telegram_invite_scheduler import launching_an_invite_once_an_hour, \
+    launching_an_invite_every_day_at_a_certain_time, schedule_invite
+from system.account_actions.parsing.parsing_account_groups_and_channels import \
+    parsing_of_groups_to_which_the_account_is_subscribed
+from system.account_actions.parsing.parsing_group_members import parsing_mass_parsing_of_groups, \
+    parsing_of_active_participants, writing_members, we_record_phone_numbers_in_the_db, show_account_contact_list, \
+    delete_contact, inviting_contact, choosing_a_group_from_the_subscribed_ones_for_parsing
+from system.account_actions.reactions.reactions import users_choice_of_reaction, viewing_posts, reaction_gui, \
+    recording_link_channel, record_the_number_of_accounts, deleting_file
+from system.account_actions.sending_messages.chat_dialog_mes import message_entry_window_time, message_time
+from system.account_actions.sending_messages.sending_messages_telegram import we_send_a_message_by_members, \
+    sending_files_to_a_personal_account
+from system.account_actions.sending_messages.telegram_chat_dialog import message_entry_window, sending_files_via_chats, \
+    sending_messages_files_via_chats, output_the_input_field
+from system.account_actions.subscription.subscription import writing_group_links_to_file, subscription_all
+from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
 from system.auxiliary_functions.auxiliary_functions import *
 from system.auxiliary_functions.global_variables import *
 from system.setting.setting import *
 from system.sqlite_working_tools.sqlite_working_tools import *
+from loguru import logger
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")
 
@@ -271,6 +280,11 @@ def working_with_the_reaction() -> None:  # 7 - Работа с реакциям
         users_choice_of_reaction()
     elif user_input == "2":  # Накручиваем просмотры постов
         viewing_posts()
+    elif user_input == "3":
+        deleting_file()
+        reaction_gui()
+        recording_link_channel()
+        record_the_number_of_accounts()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
@@ -312,7 +326,7 @@ def program_settings() -> None:  # 8 - Настройки программы, з
         create_main_window(variable="time_inviting")
     elif user_input == "4":  # Время между сменой аккаунтов
         print("[medium_purple3][+] Введите время между сменой аккаунтов в секундах. C начала меньшее, потом большее. "
-               "НАПРИМЕР: 10 20!")
+              "НАПРИМЕР: 10 20!")
         # create_main_window(variable="time_changing_accounts")
         create_main_window(variable="time_changing_accounts")
     elif user_input == "5":  # Время между подпиской групп

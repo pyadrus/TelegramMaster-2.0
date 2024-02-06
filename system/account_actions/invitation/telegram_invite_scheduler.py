@@ -2,7 +2,7 @@ import time
 
 import schedule
 
-from system.actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body
+from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body
 from system.auxiliary_functions.global_variables import console
 from system.setting.setting import reading_hour_minutes_every_day
 from system.telegram_actions.account_verification import deleting_files_by_dictionary

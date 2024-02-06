@@ -1,17 +1,188 @@
+import json
+import os
 import re
 import sys
 import time
 
+import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from rich import print
 from telethon import types
 from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
 
-from system.actions.subscription.subscription import subscribe_to_group_or_channel
+from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.global_variables import console
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+
+
+def save_reactions(reactions):
+    # Открываем файл для записи данных в формате JSON
+    with open('user_settings/reactions/reactions.json', 'w') as json_file:
+        # Используем функцию dump для записи данных в файл
+        json.dump(reactions, json_file)
+
+
+def save_link_channel(reactions):
+    # Открываем файл для записи данных в формате JSON
+    with open('user_settings/reactions/link_channel.json', 'w') as json_file:
+        # Используем функцию dump для записи данных в файл
+        json.dump(reactions, json_file)
+
+
+def save_number_of_accounts(reactions):
+    # Открываем файл для записи данных в формате JSON
+    with open('user_settings/reactions/number_accounts.json', 'w') as json_file:
+        # Используем функцию dump для записи данных в файл
+        json.dump(reactions, json_file)
+
+
+def deleting_file():
+    """Удаление файлов с реакциями"""
+    try:
+        os.remove('user_settings/reactions/reactions.json')
+        os.remove('user_settings/reactions/link_channel.json')
+        os.remove('user_settings/reactions/number_accounts.json')
+    except OSError as e:
+        # print(f"Ошибка при удалении файла {file_path}: {e}")
+        pass
+
+
+def record_the_number_of_accounts():
+    """Запись количества аккаунтов проставляющих реакции"""
+    def main_inviting(page) -> None:
+        page.window_width = 300  # ширина окна
+        page.window_height = 300  # высота окна
+        page.window_resizable = False  # Запрет на изменение размера окна
+        smaller_time = ft.TextField(label="Введите количество реакций", autofocus=True)
+        greetings = ft.Column()
+
+        def btn_click(e) -> None:
+            try:
+                page.update()
+                # Extract the text value from the TextField
+                smaller_times = int(smaller_time.value)
+                save_number_of_accounts(smaller_times)  # Pass the text value to the save function
+                page.window_close()
+            except ValueError:
+                pass
+
+        page.add(smaller_time, ft.ElevatedButton("Сохранить", on_click=btn_click), greetings, )
+
+    ft.app(target=main_inviting)
+
+
+def recording_link_channel():
+    """Запись ссылки на канал / группу"""
+    def main_inviting(page) -> None:
+        page.window_width = 300  # ширина окна
+        page.window_height = 300  # высота окна
+        page.window_resizable = False  # Запрет на изменение размера окна
+        smaller_time = ft.TextField(label="Введите ссылку на группу", autofocus=True)
+        greetings = ft.Column()
+
+        def btn_click(e) -> None:
+            page.update()
+            # Extract the text value from the TextField
+            link_text = smaller_time.value
+            save_link_channel(link_text)  # Pass the text value to the save function
+            page.window_close()
+
+        page.add(smaller_time, ft.ElevatedButton("Сохранить", on_click=btn_click), greetings, )
+
+    ft.app(target=main_inviting)
+
+
+def reaction_gui():
+    """Выбираем реакцию с помощью чекбокса"""
+
+    def main(page):
+        """Основное тело программы"""
+
+        page.window_width = 480  # ширина окна
+        page.window_height = 450  # высота окна
+        page.window_resizable = False  # Запрет на изменение размера окна
+
+        def button_clicked(e):
+            """Выбранная реакция"""
+            selected_reactions = []  # Создает пустой список selected_reactions для хранения выбранных реакций.
+            for checkbox in [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, q13, c14, q15, q16, q18, c19, c20, c21, c23,
+                             c24, c25, c26, c27, c28, c29, c30, c31, c32, c33, c34, c35, c36, c37, c38, c39, c41, c42,
+                             c43, c44, c45, c46, q47, c48, c49, c50, c51, q52, c53]:  # Перебирает чекбоксы (c1 - c53).
+                if checkbox.value:  # Проверяет, отмечен ли чекбокс.
+                    # Если чекбокс отмечен, добавляет его текст (метку) в список selected_reactions.
+                    selected_reactions.append(checkbox.label)
+
+            print(f"Выбранные реакции: {selected_reactions}")  # Печатает список выбранных реакций.
+            save_reactions(selected_reactions)
+            page.window_close()
+
+        t = ft.Text(value='Выберите реакцию')  # Создает текстовое поле (t).
+        c1 = ft.Checkbox(label="😀")  # Создает чекбокс c1 с меткой "😀".
+        c2 = ft.Checkbox(label="😎")
+        c3 = ft.Checkbox(label="😍")
+        c4 = ft.Checkbox(label="😂")
+        c5 = ft.Checkbox(label="😡")
+        c6 = ft.Checkbox(label="😱")
+        c7 = ft.Checkbox(label="👍")
+        c8 = ft.Checkbox(label="👎")
+        c9 = ft.Checkbox(label="❤")
+        c10 = ft.Checkbox(label="🔥")
+        c11 = ft.Checkbox(label="🎉")
+        q13 = ft.Checkbox(label="😁")
+        c14 = ft.Checkbox(label="😢")
+        q15 = ft.Checkbox(label="💩")
+        q16 = ft.Checkbox(label="👏")
+        q18 = ft.Checkbox(label="🤷‍♀️")
+        c19 = ft.Checkbox(label="🤷")
+        c20 = ft.Checkbox(label="🤷‍♂️")
+        c21 = ft.Checkbox(label="👾️")
+        c23 = ft.Checkbox(label="🙊")
+        c24 = ft.Checkbox(label="💊")
+        c25 = ft.Checkbox(label="😘")
+        c26 = ft.Checkbox(label="🦄")
+        c27 = ft.Checkbox(label="💘")
+        c28 = ft.Checkbox(label="🆒")
+        c29 = ft.Checkbox(label="🗿")
+        c30 = ft.Checkbox(label="🤪")
+        c31 = ft.Checkbox(label="💅")
+        c32 = ft.Checkbox(label="☃️")
+        c33 = ft.Checkbox(label="🎄")
+        c34 = ft.Checkbox(label="🎅")
+        c35 = ft.Checkbox(label="🤗")
+        c36 = ft.Checkbox(label="🤬")
+        c37 = ft.Checkbox(label="🤮")
+        c38 = ft.Checkbox(label="🤡")
+        c39 = ft.Checkbox(label="🥴")
+        c41 = ft.Checkbox(label="💯")
+        c42 = ft.Checkbox(label="🌭")
+        c43 = ft.Checkbox(label="⚡️")
+        c44 = ft.Checkbox(label="🍌")
+        c45 = ft.Checkbox(label="🖕")
+        c46 = ft.Checkbox(label="💋")
+        q47 = ft.Checkbox(label="👀")
+        c48 = ft.Checkbox(label="🤝")
+        c49 = ft.Checkbox(label="🍾")
+        c50 = ft.Checkbox(label="🏆")
+        c51 = ft.Checkbox(label="🥱")
+        q52 = ft.Checkbox(label="🕊")
+        c53 = ft.Checkbox(label="😭")
+
+        # Кнопка "Готово" (b) и связывает ее с функцией button_clicked.
+        b = ft.ElevatedButton(text="Готово", on_click=button_clicked)
+
+        page.add(ft.Row([t]))  # Добавляет все элементы (c1 - c6, b, t) на страницу (page).
+        page.add(ft.Row([c1, c2, c3, c4, c5, c6, c49]))  # Добавляет все элементы (c1 - c6, b, t) на страницу (page).
+        page.add(ft.Row([c7, c8, c9, c10, c11, c53, c48]))  # Добавляет все элементы (c1 - c6, b, t) на страницу (page).
+        page.add(ft.Row([c19, c20, c21, c23, c24, c51, c46]))
+        page.add(ft.Row([c25, c26, c27, c28, c29, c30, c45]))
+        page.add(ft.Row([c31, c32, c33, c34, c35, c36, c44]))
+        page.add(ft.Row([c37, c38, c39, c41, c42, c50, c43]))
+        page.add(ft.Row([q13, c14, q15, q16, q18, q52, q47]))
+        page.add(ft.Row([b]))  # Добавляет все элементы (c1 - c6, b, t) на страницу (page).
+
+    ft.app(target=main)  # Запускает приложение, используя функцию main в качестве точки входа.
 
 
 def users_choice_of_reaction() -> None:
@@ -247,3 +418,4 @@ def viewing_posts() -> None:
 if __name__ == "__main__":
     users_choice_of_reaction()
     viewing_posts()
+    reaction_gui()

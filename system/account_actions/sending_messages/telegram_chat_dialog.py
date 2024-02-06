@@ -4,7 +4,7 @@ import time
 from rich import print
 from telethon.errors import *
 
-from system.actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
+from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console
