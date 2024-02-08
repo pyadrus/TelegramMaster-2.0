@@ -13,7 +13,7 @@ from system.account_actions.parsing.parsing_group_members import parsing_mass_pa
     parsing_of_active_participants, writing_members, we_record_phone_numbers_in_the_db, show_account_contact_list, \
     delete_contact, inviting_contact, choosing_a_group_from_the_subscribed_ones_for_parsing
 from system.account_actions.reactions.reactions import users_choice_of_reaction, viewing_posts, reaction_gui, \
-    recording_link_channel, record_the_number_of_accounts, deleting_file
+    recording_link_channel, record_the_number_of_accounts, deleting_file, setting_reactions
 from system.account_actions.sending_messages.chat_dialog_mes import message_entry_window_time, message_time
 from system.account_actions.sending_messages.sending_messages_telegram import we_send_a_message_by_members, \
     sending_files_to_a_personal_account
@@ -281,10 +281,11 @@ def working_with_the_reaction() -> None:  # 7 - Работа с реакциям
     elif user_input == "2":  # Накручиваем просмотры постов
         viewing_posts()
     elif user_input == "3":
-        deleting_file()
-        reaction_gui()
-        recording_link_channel()
-        record_the_number_of_accounts()
+        # deleting_file()
+        # reaction_gui()
+        # recording_link_channel()
+        # record_the_number_of_accounts()
+        setting_reactions()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:

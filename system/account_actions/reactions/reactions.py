@@ -1,41 +1,151 @@
 import json
 import os
-import re
+import random
 import sys
 import time
 
 import flet as ft  # Импортируем библиотеку flet
-from loguru import logger
-from rich import print
-from telethon import types
+from loguru import logger  # Импортируем библиотеку loguru для логирования
+from rich import print  # Импортируем библиотеку rich для красивого отображения текста в терминале / консолей (цветного)
+from telethon import events, types
+from telethon.errors import *
+from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
-
+from telethon import TelegramClient
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.global_variables import console
 from system.notification.notification import app_notifications
+from system.proxy.checking_proxy import reading_proxy_data_from_the_database
+from system.setting.setting import reading_the_id_and_hash
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
 
-
-def save_reactions(reactions):
-    # Открываем файл для записи данных в формате JSON
-    with open('user_settings/reactions/reactions.json', 'w') as json_file:
-        # Используем функцию dump для записи данных в файл
-        json.dump(reactions, json_file)
+user_folder = "user_settings"
+accounts_folder = "accounts"
 
 
-def save_link_channel(reactions):
-    # Открываем файл для записи данных в формате JSON
-    with open('user_settings/reactions/link_channel.json', 'w') as json_file:
-        # Используем функцию dump для записи данных в файл
-        json.dump(reactions, json_file)
+async def reactions_for_groups_and_messages_test(number, chat, reaction_input) -> None:
+    """Вводим ссылку на группу и ссылку на сообщение"""
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
+    db_handler = DatabaseHandler()
+    records: list = db_handler.open_and_read_data("config")
+    # Количество аккаунтов на данный момент в работе
+    print(f"[medium_purple3]Всего accounts: {len(records)}")
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
+    number_of_accounts = 3
+    records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
+                                                                 number_of_accounts=int(number_of_accounts))
+    for row in records:
+        # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
+        proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
+        client = TelegramClient(f"{user_folder}/{accounts_folder}/{row[2]}", int(row[0]), row[1],
+                                system_version="4.16.30-vxCUSTOM", proxy=proxy)
+        await client.connect()  # Подсоединяемся к Telegram
+        try:
+            await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
+            time.sleep(5)
+
+            await client(SendReactionRequest(peer=chat, msg_id=int(number),
+                                             reaction=[types.ReactionEmoji(emoticon=f'{reaction_input}')]))
+            time.sleep(1)
+        except KeyError:
+            sys.exit(1)
+        except Exception as e:
+            logger.exception(e)
+            print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+        finally:
+            client.disconnect()
+
+    app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
 
-def save_number_of_accounts(reactions):
-    # Открываем файл для записи данных в формате JSON
-    with open('user_settings/reactions/number_accounts.json', 'w') as json_file:
-        # Используем функцию dump для записи данных в файл
-        json.dump(reactions, json_file)
+def writing_names_found_files_to_the_db_config_reactions() -> None:
+    """Запись названий найденных файлов в базу данных"""
+    creating_a_table = "CREATE TABLE IF NOT EXISTS config_reactions (id, hash, phone)"
+    writing_data_to_a_table = "INSERT INTO config_reactions (id, hash, phone) VALUES (?, ?, ?)"
+    db_handler = DatabaseHandler()  # Create an instance of the DatabaseHandler class
+    db_handler.cleaning_db(name_database_table="config_reactions")  # Call the method on the instance
+    records = connecting_account_sessions_config_reactions()
+    for entities in records:
+        print(f"Записываем данные аккаунта {entities} в базу данных")
+        db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
+
+
+def connecting_account_sessions_config_reactions() -> list:
+    """Подключение сессий аккаунтов
+    Функция listdir() модуля os возвращает список, содержащий имена файлов и директорий в каталоге, заданном путем
+    path user_settings/accounts
+    Функция str.endswith() возвращает True, если строка заканчивается заданным суффиксом (.session), в противном
+    случае возвращает False.
+    Os.path.splitext(path) - разбивает путь на пару (root, ext), где ext начинается с точки и содержит не
+    более одной точки.
+    """
+    entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_settings/accounts
+    for x in os.listdir(path="user_settings/reactions/accounts"):
+        if x.endswith(".session"):
+            file = os.path.splitext(x)[0]
+            print(f"Найденные аккаунты: {file}.session")  # Выводим имена найденных аккаунтов
+            api_id_data, api_hash_data = reading_the_id_and_hash()  # Файл с настройками
+            entities.append([api_id_data, api_hash_data, file])
+    return entities
+
+
+def setting_reactions():
+    """Выставление реакций на новые посты"""
+    writing_names_found_files_to_the_db_config_reactions()
+
+    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
+    db_handler = DatabaseHandler()
+    records_ac: list = db_handler.open_and_read_data("config_reactions")
+    # Количество аккаунтов на данный момент в работе
+    print(f"[medium_purple3]Всего accounts: {len(records_ac)}")
+
+    # Считываем количество аккаунтов, которые будут ставить реакции
+    with open('user_settings/reactions/number_accounts.json', 'r') as json_file:
+        records_ac_json = json.load(json_file)  # Используем функцию load для загрузки данных из файла
+    logger.info(records_ac_json)
+
+    records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config_reactions",
+                                                                 number_of_accounts=int(records_ac_json))
+    logger.info(records)
+
+    for row in records:
+        # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
+        proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
+        client = TelegramClient(f"user_settings/reactions/accounts/{row[2]}", int(row[0]), row[1],
+                                system_version="4.16.30-vxCUSTOM", proxy=proxy)
+        client.connect()
+        # Открываем файл для чтения
+        with open('user_settings/reactions/link_channel.json', 'r') as json_file:
+            chat = json.load(json_file)  # Используем функцию load для загрузки данных из файла
+        logger.info(chat)
+
+        client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
+
+        @client.on(events.NewMessage(chats=chat))
+        async def handler(event):
+
+            message = event.message  # Получаем сообщение из события
+            message_id = message.id  # Получаем id сообщение
+            print(f"Идентификатор сообщения: {message_id}")
+            logger.info(message)
+            # Проверяем, является ли сообщение постом и не является ли оно нашим
+            if message.post and not message.out:
+                with open('user_settings/reactions/reactions.json', 'r') as json_file:
+                    reaction_input = json.load(json_file)  # Используем функцию load для загрузки данных из файла
+
+                random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
+                logger.info(random_value)
+
+                await reactions_for_groups_and_messages_test(message_id, chat, random_value)
+    # Запуск клиента
+    client.run_until_disconnected()
+
+
+def save_reactions(reactions, path_to_the_file):
+    """Открываем файл для записи данных в формате JSON"""
+    with open(f'{path_to_the_file}', 'w') as json_file:
+        json.dump(reactions, json_file)  # Используем функцию dump для записи данных в файл
 
 
 def deleting_file():
@@ -45,12 +155,13 @@ def deleting_file():
         os.remove('user_settings/reactions/link_channel.json')
         os.remove('user_settings/reactions/number_accounts.json')
     except OSError as e:
-        # print(f"Ошибка при удалении файла {file_path}: {e}")
+        logger.error(e)
         pass
 
 
 def record_the_number_of_accounts():
     """Запись количества аккаунтов проставляющих реакции"""
+
     def main_inviting(page) -> None:
         page.window_width = 300  # ширина окна
         page.window_height = 300  # высота окна
@@ -61,9 +172,9 @@ def record_the_number_of_accounts():
         def btn_click(e) -> None:
             try:
                 page.update()
-                # Extract the text value from the TextField
-                smaller_times = int(smaller_time.value)
-                save_number_of_accounts(smaller_times)  # Pass the text value to the save function
+                smaller_times = int(smaller_time.value)  # Extract the text value from the TextField
+                save_reactions(reactions=smaller_times, # Количество аккаунтов для проставления реакций
+                               path_to_the_file='user_settings/reactions/number_accounts.json')
                 page.window_close()
             except ValueError:
                 pass
@@ -75,6 +186,7 @@ def record_the_number_of_accounts():
 
 def recording_link_channel():
     """Запись ссылки на канал / группу"""
+
     def main_inviting(page) -> None:
         page.window_width = 300  # ширина окна
         page.window_height = 300  # высота окна
@@ -84,9 +196,9 @@ def recording_link_channel():
 
         def btn_click(e) -> None:
             page.update()
-            # Extract the text value from the TextField
-            link_text = smaller_time.value
-            save_link_channel(link_text)  # Pass the text value to the save function
+            link_text = smaller_time.value  # Extract the text value from the TextField
+            save_reactions(reactions=link_text,
+                           path_to_the_file='user_settings/reactions/link_channel.json')  # Запись ссылки в json файл
             page.window_close()
 
         page.add(smaller_time, ft.ElevatedButton("Сохранить", on_click=btn_click), greetings, )
@@ -115,7 +227,8 @@ def reaction_gui():
                     selected_reactions.append(checkbox.label)
 
             print(f"Выбранные реакции: {selected_reactions}")  # Печатает список выбранных реакций.
-            save_reactions(selected_reactions)
+            save_reactions(reactions=selected_reactions,
+                           path_to_the_file='user_settings/reactions/reactions.json')  # Сохраняем реакцию в jsone файл
             page.window_close()
 
         t = ft.Text(value='Выберите реакцию')  # Создает текстовое поле (t).

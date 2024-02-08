@@ -9,8 +9,8 @@ from telethon import TelegramClient
 from telethon.errors import *
 
 from system.error.telegram_errors import telegram_phone_number_banned_error
-from system.proxy.checking_proxy import reading_proxy_data_from_the_database, checking_the_proxy_for_work
-# from system.setting.setting import reading_device_type
+from system.proxy.checking_proxy import checking_the_proxy_for_work
+from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import account_name
 from system.telegram_actions.telegram_actions import renaming_a_session
@@ -34,15 +34,6 @@ def deleting_files_by_dictionary() -> None:
     writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
 
 
-def connecting_telegram_account_with_device_version(phone_old, api_id, api_hash, proxy):
-    # device_model, system_version, app_version = reading_device_type()
-    # client = TelegramClient(f"{user_folder}/{accounts_folder}/{phone_old}", api_id, api_hash, proxy=proxy,
-    #                         device_model=device_model, system_version=system_version, app_version=app_version)
-    # Временное решение вылета аккаунтов
-    client = TelegramClient(f"{user_folder}/{accounts_folder}/{phone_old}", api_id, api_hash, system_version="4.16.30-vxCUSTOM")
-    return client
-
-
 def account_verification():
     """Проверка аккаунтов"""
     error_sessions = []  # Создаем словарь, для удаления битых файлов session
@@ -53,7 +44,8 @@ def account_verification():
         # Получаем со списка phone (row[2]), api_id (), api_hash
         proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
         try:
-            client = connecting_telegram_account_with_device_version(row[2], int(row[0]), row[1], proxy)
+            client = TelegramClient(f"{user_folder}/{accounts_folder}/{row[2]}", int(row[0]), row[1],
+                                    system_version="4.16.30-vxCUSTOM", proxy=proxy)
             try:
                 logger.info(f"Подключение аккаунта: {row[2]}, {int(row[0])}, {row[1]}")
                 client.connect()  # Подсоединяемся к Telegram
@@ -84,21 +76,16 @@ def account_verification():
                     os.replace(f"{user_folder}/{accounts_folder}/{row[2]}.session",
                                f"{user_folder}/{accounts_folder}/invalid_account/{row[2]}.session")
             except (PhoneNumberBannedError, UserDeactivatedBanError):
-                # Удаляем номер телефона с базы данных
                 telegram_phone_number_banned_error(client, row[2])  # Удаляем номер телефона с базы данных
             except TimedOutError as e:
                 logger.exception(e)
                 time.sleep(2)
-            except AuthKeyNotFound:
-                # session файл не является базой данных
+            except AuthKeyNotFound:  # session файл не является базой данных
                 print(f"Битый файл {row[2]}.session")
-                # Удаляем не валидную сессию
-                error_sessions.append([row[2]])
-        except sqlite3.DatabaseError:
-            # session файл не является базой данных
+                error_sessions.append([row[2]])  # Удаляем не валидную сессию
+        except sqlite3.DatabaseError:  # session файл не является базой данных
             print(f"Битый файл {row[2]}.session")
-            # Удаляем не валидную сессию
-            error_sessions.append([row[2]])
+            error_sessions.append([row[2]])  # Удаляем не валидную сессию
     return error_sessions
 
 
