@@ -8,7 +8,6 @@ from telethon.errors import ChatAdminRequiredError, ChannelPrivateError, FloodWa
 
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
-
 """Действия с username"""
 
 
@@ -38,6 +37,22 @@ def delete_file(file) -> None:
         os.remove(f"{file}")
     except FileNotFoundError:
         print(f"[red][!] Файл {file} не найден!")
+
+
+def delete_file_bio(file) -> None:
+    """Удаление файла"""
+    try:
+        os.remove(f"{file}")
+    except FileNotFoundError:
+        print(f"[red][!] Файл {file} не найден!")
+
+
+def telegram_phone_number_banned_error_bio(client, phone) -> None:
+    """Аккаунт banned, удаляем banned аккаунт"""
+    client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
+    db_handler = DatabaseHandler()
+    db_handler.delete_row_db(table="config", column="phone", value=phone)
+    delete_file_bio(file=f"user_settings/bio_accounts/accounts/{phone}.session")
 
 
 def telegram_phone_number_banned_error(client, phone) -> None:

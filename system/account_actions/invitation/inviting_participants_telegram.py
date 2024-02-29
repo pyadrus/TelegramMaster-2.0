@@ -21,8 +21,6 @@ event: str = f"Inviting в группу {link_group}"  # Событие, кот�
 def inviting_to_a_group(client, username) -> None:
     """Inviting в группу"""
     logger.info(username)
-    # user_to_add = client.get_input_entity(username)
-    # logger.info(user_to_add)
     try:
         client(functions.channels.InviteToChannelRequest(channel=link_group, users=[f'{username}']))
     except UserBlockedError as e:

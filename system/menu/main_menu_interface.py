@@ -3,6 +3,7 @@ from rich import box
 from rich.table import Table
 
 from system.account_actions.checking_spam.account_verification import check_account_for_spam
+from system.account_actions.creating.account_registration import change_bio_profile
 from system.account_actions.creating.creating import creating_groups_and_chats
 from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body
 from system.account_actions.invitation.inviting_participants_telegram import invite_from_multiple_accounts_with_limits
@@ -56,6 +57,7 @@ def main_menu() -> None:  # 1 - Основное меню программы
     table.add_row("8", "Настройки", "Запись ссылки для Inviting, api_id, api_hash, установка времени")
     table.add_row("9", "Проверка аккаунтов", "Проверка аккаунтов через спам бот")
     table.add_row("10", "Создание групп (чатов)", "Автоматическое создание групп и чатов")
+    table.add_row("11", "Редактирование BIO", "Редактирование описания профиля")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
@@ -80,6 +82,8 @@ def main_menu() -> None:  # 1 - Основное меню программы
         check_account_for_spam()
     elif user_input == "10":  # Создание групп (чатов)
         creating_groups_and_chats()
+    elif user_input == '11':
+        change_bio_profile()  # Редактирование описания профиля
     else:
         main_menu()  # После отработки функции переходим в начальное меню
 
