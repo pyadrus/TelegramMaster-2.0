@@ -20,9 +20,9 @@ def record_account_actions(phone_number, action_description, event, action_resul
     action_result - результат выполнения действия."""
     print(f"[red][!] {action_result}")
     creating_a_table = """CREATE TABLE IF NOT EXISTS account_actions 
-                          (phone, date, description_action, event, account_actions)"""
+                          (phone, date, description_action, event, actions)"""
     writing_data_to_a_table = """INSERT INTO  account_actions 
-                                 (phone, date, description_action, event, account_actions) VALUES (?, ?, ?, ?, ?)"""
+                                 (phone, date, description_action, event, actions) VALUES (?, ?, ?, ?, ?)"""
     date = datetime.datetime.now()  # Получаем текущую дату
     entities = [phone_number, str(date), action_description, event, action_result]  # Формируем словарь
     db_handler = DatabaseHandler()
@@ -65,7 +65,7 @@ def handle_exceptions_pars(func):
             phone, groups_wr = args[2], args[1]
             event: str = f"Parsing: {groups_wr}"
             description_action = f"channel / group: {groups_wr}"
-            actions: str = ("Указанный канал является приватным, или вам запретили подписываться.")
+            actions: str = "Указанный канал является приватным, или вам запретили подписываться."
             record_account_actions(phone, description_action, event, actions)
             # Удаляем отработанную группу или канал
             db_handler = DatabaseHandler()

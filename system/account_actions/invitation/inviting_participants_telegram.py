@@ -55,11 +55,17 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
 
 
 def unsubscribe_from_the_group(client, group_link) -> None:
-    """Отписываемся от группы"""
-    entity = client.get_entity(group_link)
-    if entity:
-        client(LeaveChannelRequest(entity))
-    client.disconnect()
+    """
+    Отписываемся от группы
+    """
+    try:
+        entity = client.get_entity(group_link)
+        if entity:
+            client(LeaveChannelRequest(entity))
+    except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
+        logger.error(f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
+    finally:
+        client.disconnect()  # Разрываем соединение с Telegram
 
 
 def invite_from_multiple_accounts_with_limits(name_database_table) -> None:
