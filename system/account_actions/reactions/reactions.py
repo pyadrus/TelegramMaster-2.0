@@ -23,16 +23,20 @@ from system.telegram_actions.telegram_actions import connect_to_telegram_account
 user_folder = "user_settings"
 accounts_folder = "accounts"
 
+db_handler = DatabaseHandler()
 
-async def reactions_for_groups_and_messages_test(number, chat, reaction_input) -> None:
+
+async def reactions_for_groups_and_messages_test(number, chat) -> None:
     """Вводим ссылку на группу и ссылку на сообщение"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     # Количество аккаунтов на данный момент в работе
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    number_of_accounts = 3
+    with open('user_settings/reactions/number_accounts.json', 'r') as json_file:
+        number_of_accounts = json.load(json_file)  # Используем функцию load для загрузки данных из файла
+
+    logger.info(f'Всего реакций на пост: {number_of_accounts}')
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
                                                                  number_of_accounts=int(number_of_accounts))
     for row in records:
@@ -44,9 +48,13 @@ async def reactions_for_groups_and_messages_test(number, chat, reaction_input) -
         try:
             await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
             time.sleep(5)
+            with open('user_settings/reactions/reactions.json', 'r') as json_file:
+                reaction_input = json.load(json_file)  # Используем функцию load для загрузки данных из файла
 
+            random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
+            logger.info(random_value)
             await client(SendReactionRequest(peer=chat, msg_id=int(number),
-                                             reaction=[types.ReactionEmoji(emoticon=f'{reaction_input}')]))
+                                             reaction=[types.ReactionEmoji(emoticon=f'{random_value}')]))
             time.sleep(1)
         except KeyError:
             sys.exit(1)
@@ -63,7 +71,6 @@ def writing_names_found_files_to_the_db_config_reactions() -> None:
     """Запись названий найденных файлов в базу данных"""
     creating_a_table = "CREATE TABLE IF NOT EXISTS config_reactions (id, hash, phone)"
     writing_data_to_a_table = "INSERT INTO config_reactions (id, hash, phone) VALUES (?, ?, ?)"
-    db_handler = DatabaseHandler()  # Create an instance of the DatabaseHandler class
     db_handler.cleaning_db(name_database_table="config_reactions")  # Call the method on the instance
     records = connecting_account_sessions_config_reactions()
     for entities in records:
@@ -95,7 +102,6 @@ def setting_reactions():
     writing_names_found_files_to_the_db_config_reactions()
 
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
     records_ac: list = db_handler.open_and_read_data("config_reactions")
     # Количество аккаунтов на данный момент в работе
     print(f"[medium_purple3]Всего accounts: {len(records_ac)}")
@@ -131,15 +137,10 @@ def setting_reactions():
             logger.info(message)
             # Проверяем, является ли сообщение постом и не является ли оно нашим
             if message.post and not message.out:
-                with open('user_settings/reactions/reactions.json', 'r') as json_file:
-                    reaction_input = json.load(json_file)  # Используем функцию load для загрузки данных из файла
 
-                random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
-                logger.info(random_value)
+                await reactions_for_groups_and_messages_test(message_id, chat)
 
-                await reactions_for_groups_and_messages_test(message_id, chat, random_value)
-    # Запуск клиента
-    client.run_until_disconnected()
+    client.run_until_disconnected()  # Запуск клиента
 
 
 def save_reactions(reactions, path_to_the_file):
@@ -173,7 +174,7 @@ def record_the_number_of_accounts():
             try:
                 page.update()
                 smaller_times = int(smaller_time.value)  # Extract the text value from the TextField
-                save_reactions(reactions=smaller_times, # Количество аккаунтов для проставления реакций
+                save_reactions(reactions=smaller_times,  # Количество аккаунтов для проставления реакций
                                path_to_the_file='user_settings/reactions/number_accounts.json')
                 page.window_close()
             except ValueError:
@@ -457,7 +458,6 @@ def choosing_a_number_of_reactions() -> list:
     """Выбираем лимиты для аккаунтов"""
     print("[medium_purple3]Введите количество с которых будут поставлены реакции")
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     # Количество аккаунтов на данный момент в работе
     print(f"[medium_purple3]Всего accounts: {len(records)}")
@@ -494,7 +494,6 @@ def send_reaction_request(records, chat, message_url, reaction_input) -> None:
 def viewing_posts() -> None:
     """Накрутка просмотров постов"""
     chat = console.input("[medium_purple3][+] Введите ссылку на канал: ")  # Ссылка на группу или канал
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     # Количество аккаунтов на данный момент в работе
     print(f"[medium_purple3]Всего accounts: {len(records)}")

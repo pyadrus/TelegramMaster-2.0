@@ -14,7 +14,7 @@ def schedule_member_invitation() -> None:
     invitation_from_all_accounts_program_body(name_database_table="members")
 
 
-def launching_an_invite_every_day_at_a_certain_time() -> None:
+def launching_invite_every_day_certain_time() -> None:
     """Запуск inviting каждый день в определенное время выбранное пользователем"""
     hour, minutes = reading_hour_minutes_every_day()
     schedule.every().day.at(f"{hour}:{minutes}").do(schedule_member_invitation)
@@ -52,4 +52,4 @@ if __name__ == "__main__":
     launching_an_invite_once_an_hour()
     schedule_invite()
     schedule_member_invitation()
-    launching_an_invite_every_day_at_a_certain_time()  # Запуск inviting каждый день в определенное время
+    launching_invite_every_day_certain_time()  # Запуск inviting каждый день в определенное время

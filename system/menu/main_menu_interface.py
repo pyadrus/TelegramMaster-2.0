@@ -1,31 +1,41 @@
+from loguru import logger
 from rich import box
 from rich.table import Table
 
 from system.account_actions.checking_spam.account_verification import check_account_for_spam
 from system.account_actions.creating.creating import creating_groups_and_chats
-from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body, \
-    invite_from_multiple_accounts_with_limits
-from system.account_actions.invitation.telegram_invite_scheduler import launching_an_invite_once_an_hour, \
-    launching_an_invite_every_day_at_a_certain_time, schedule_invite
-from system.account_actions.parsing.parsing_account_groups_and_channels import \
-    parsing_of_groups_to_which_the_account_is_subscribed
-from system.account_actions.parsing.parsing_group_members import parsing_mass_parsing_of_groups, \
-    parsing_of_active_participants, writing_members, we_record_phone_numbers_in_the_db, show_account_contact_list, \
-    delete_contact, inviting_contact, choosing_a_group_from_the_subscribed_ones_for_parsing
-from system.account_actions.reactions.reactions import users_choice_of_reaction, viewing_posts, reaction_gui, \
-    recording_link_channel, record_the_number_of_accounts, deleting_file, setting_reactions
+from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body
+from system.account_actions.invitation.inviting_participants_telegram import invite_from_multiple_accounts_with_limits
+from system.account_actions.invitation.telegram_invite_scheduler import launching_an_invite_once_an_hour
+from system.account_actions.invitation.telegram_invite_scheduler import launching_invite_every_day_certain_time
+from system.account_actions.invitation.telegram_invite_scheduler import schedule_invite
+from system.account_actions.parsing.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
+from system.account_actions.parsing.parsing_group_members import choosing_a_group_from_the_subscribed_ones_for_parsing
+from system.account_actions.parsing.parsing_group_members import delete_contact
+from system.account_actions.parsing.parsing_group_members import inviting_contact
+from system.account_actions.parsing.parsing_group_members import parsing_mass_parsing_of_groups
+from system.account_actions.parsing.parsing_group_members import parsing_of_active_participants
+from system.account_actions.parsing.parsing_group_members import show_account_contact_list
+from system.account_actions.parsing.parsing_group_members import we_record_phone_numbers_in_the_db
+from system.account_actions.parsing.parsing_group_members import writing_members
+from system.account_actions.reactions.reactions import reaction_gui
+from system.account_actions.reactions.reactions import record_the_number_of_accounts
+from system.account_actions.reactions.reactions import recording_link_channel
+from system.account_actions.reactions.reactions import setting_reactions
+from system.account_actions.reactions.reactions import users_choice_of_reaction
+from system.account_actions.reactions.reactions import viewing_posts
 from system.account_actions.sending_messages.chat_dialog_mes import message_entry_window_time, message_time
-from system.account_actions.sending_messages.sending_messages_telegram import we_send_a_message_by_members, \
-    sending_files_to_a_personal_account
-from system.account_actions.sending_messages.telegram_chat_dialog import message_entry_window, sending_files_via_chats, \
-    sending_messages_files_via_chats, output_the_input_field
+from system.account_actions.sending_messages.sending_messages_telegram import sending_files_to_a_personal_account
+from system.account_actions.sending_messages.sending_messages_telegram import we_send_a_message_by_members
+from system.account_actions.sending_messages.telegram_chat_dialog import message_entry_window, sending_files_via_chats
+from system.account_actions.sending_messages.telegram_chat_dialog import output_the_input_field
+from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats
 from system.account_actions.subscription.subscription import writing_group_links_to_file, subscription_all
 from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
 from system.auxiliary_functions.auxiliary_functions import *
 from system.auxiliary_functions.global_variables import *
 from system.setting.setting import *
 from system.sqlite_working_tools.sqlite_working_tools import *
-from loguru import logger
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")
 
@@ -99,7 +109,7 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
     elif user_input == "4":  # Inviting по времени
         schedule_invite()
     elif user_input == "5":  # Inviting по времени каждый день
-        launching_an_invite_every_day_at_a_certain_time()
+        launching_invite_every_day_certain_time()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
@@ -144,7 +154,7 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
             "[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
         parsing_of_active_participants(chat_input, limit_active_user)
     elif user_input == "4":  # Parsing групп / каналов на которые подписан аккаунт
-        parsing_of_groups_to_which_the_account_is_subscribed()
+        parsing_groups_which_account_subscribed()
     elif user_input == "5":  # Очистка списка software_database.db
         db_handler = DatabaseHandler()
         db_handler.cleaning_db(name_database_table="members")
@@ -272,6 +282,8 @@ def working_with_the_reaction() -> None:  # 7 - Работа с реакциям
     # Выводим текст в таблице
     table.add_row("1", "Ставим реакцию на 1 пост", "Ставим реакции на один пост с группе / канале")
     table.add_row("2", "Накручиваем просмотры постов", "Накручиваем просмотры постов канале")
+    table.add_row("3", "Автоматическое выставление реакций",
+                  "Автоматическое проставление реакций на посты, требуются настройки программы")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
@@ -281,10 +293,6 @@ def working_with_the_reaction() -> None:  # 7 - Работа с реакциям
     elif user_input == "2":  # Накручиваем просмотры постов
         viewing_posts()
     elif user_input == "3":
-        # deleting_file()
-        # reaction_gui()
-        # recording_link_channel()
-        # record_the_number_of_accounts()
         setting_reactions()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
@@ -301,7 +309,8 @@ def program_settings() -> None:  # 8 - Настройки программы, з
     # Выводим текст в таблице
     table.add_row("1", "Запись ссылки", "Запись ссылки, для Inviting")
     table.add_row("2", "Запись api_id, api_hash", "Запись api_id, api_hash")
-    table.add_row("3", "Время между Inviting, рассылка сообщений", "Запись времени между: Inviting, рассылка сообщений")
+    table.add_row("3", "Время между Inviting, рассылка сообщений",
+                  "Запись времени между: Inviting, рассылка сообщений")
     table.add_row("4", "Смена аккаунтов", "Запись времени между сменой аккаунтов")
     table.add_row("5", "Время между подпиской", "Запись времени между сменой групп при подписке.")
     table.add_row("6", "Запись proxy", "Запись данных для proxy")
@@ -309,6 +318,11 @@ def program_settings() -> None:  # 8 - Настройки программы, з
     table.add_row("8", "Смена типа устройства", "Запись данных для смены типа устройства")
     table.add_row("9", "Запись времени", "Запись времени для Inviting один раз в сутки")
     table.add_row("10", "Лимиты на сообщения", "Установление лимитов на сообщения")
+    table.add_row("11", "Выбор реакций", "Выбор нескольких реакций (gui) для выставления на пост")
+    table.add_row("12", "Запись ссылки для реакций",
+                  "Запись ссылки на канал / группу, для автоматического выставления реакции на новые посты")
+    table.add_row("13", "Запись количества аккаунтов для реакций",
+                  "Количество аккаунтов, которые будут ставить реакции на посты каналов / групп")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
@@ -348,6 +362,12 @@ def program_settings() -> None:  # 8 - Настройки программы, з
             logger.exception(e)
     elif user_input == "10":  # Запись лимитов на количество сообщений
         writing_settings_to_a_file(config=record_message_limits())
+    elif user_input == "11":  # Выбор реакции
+        reaction_gui()  # Вызов функции выбора реакции
+    elif user_input == "12":  # Запись ссылки для реакций
+        recording_link_channel()
+    elif user_input == "13":  # Запись ссылки для рассылки
+        record_the_number_of_accounts()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:

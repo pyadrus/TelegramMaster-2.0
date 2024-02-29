@@ -12,7 +12,7 @@ creating_a_table = "CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, ab
 writing_data_to_a_table = "INSERT INTO groups_and_channels (id, title, about, link, members_count, parsing_time) VALUES (?, ?, ?, ?, ?, ?)"
 
 
-def parsing_of_groups_to_which_the_account_is_subscribed() -> None:
+def parsing_groups_which_account_subscribed() -> None:
     """Parsing групп / каналов на которые подписан аккаунт и сохраняем в файл software_database.db"""
     db_handler = DatabaseHandler()
     db_handler.add_columns_to_table()
@@ -58,4 +58,4 @@ def forming_a_list_of_groups(client) -> None:
 
 
 if __name__ == "__main__":
-    parsing_of_groups_to_which_the_account_is_subscribed()
+    parsing_groups_which_account_subscribed()

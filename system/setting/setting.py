@@ -20,8 +20,8 @@ writing_data_to_a_table = "INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)
 config.read("user_settings/config.ini")
 
 
-def recording_the_time_to_launch_an_invite_every_day():
-    def recoding_time():
+def recording_the_time_to_launch_an_invite_every_day() -> None:
+    def recoding_time() -> None:
         # Получаем значения из полей ввода
         hour = hour_time_entry.get()
         minutes = minutes_time_entry.get()
@@ -297,3 +297,6 @@ if __name__ == "__main__":
     connecting_new_account()
     writing_link_to_the_group()
     creating_the_main_window_for_proxy_data_entry()
+    recording_the_time_to_launch_an_invite_every_day()
+    reading_the_id_and_hash()
+    record_account_limits()
