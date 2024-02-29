@@ -31,7 +31,6 @@ def record_inviting_results(username, phone, description_action, event, actions)
     record_account_actions(phone, description_action, event, actions)
     db_handler = DatabaseHandler()
     db_handler.delete_row_db(table="members", column="username", value=username)
-    # db_handler.delete_row_db(table="members", column="username", value=username['username'])
     # Смена username через случайное количество секунд
     display_progress_bar(time_inviting_1, time_inviting_2, "Переход к новому username")
 
