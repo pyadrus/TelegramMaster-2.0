@@ -14,9 +14,6 @@ from telethon.errors import *
 
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
-user_folder = "user_settings"
-accounts_folder = "accounts"
-
 
 def check_account_for_spam() -> None:
     """Проверка аккаунта на спам через @SpamBot"""
@@ -55,13 +52,13 @@ def check_account_for_spam() -> None:
                     working_with_accounts(row)  # Перенос аккаунта в папку бан
                 similarity_ratio_en: int = fuzz.ratio(f"{message.message}",
                                                       "I’m very sorry that you had to contact me. Unfortunately, "
-                                                      "some account_actions can trigger a harsh response from our anti-spam "
-                                                      "systems. If you think your account was limited by mistake, you "
-                                                      "can submit a complaint to our moderators. While the account is "
-                                                      "limited, you will not be able to send messages to people who "
-                                                      "do not have your number in their phone contacts or add them to "
-                                                      "groups and channels. Of course, when people contact you first, "
-                                                      "you can always reply to them.")
+                                                      "some account_actions can trigger a harsh response from our "
+                                                      "anti-spam systems. If you think your account was limited by "
+                                                      "mistake, you can submit a complaint to our moderators. While "
+                                                      "the account is limited, you will not be able to send messages "
+                                                      "to people who do not have your number in their phone contacts "
+                                                      "or add them to groups and channels. Of course, when people "
+                                                      "contact you first, you can always reply to them.")
                 logger.exception(similarity_ratio_en)
                 if similarity_ratio_en >= 97:
                     print('Аккаунт в бане')
@@ -77,15 +74,15 @@ def check_account_for_spam() -> None:
 def working_with_accounts(row) -> None:
     """Работа с аккаунтами"""
     try:
-        os.replace(f"{user_folder}/{accounts_folder}/{row[2]}.session",
-                   f"{user_folder}/{accounts_folder}/banned/{row[2]}.session")
+        os.replace(f"user_settings/accounts/{row[2]}.session",
+                   f"user_settings/accounts/banned/{row[2]}.session")
     except FileNotFoundError:
         # Если в папке accounts нет папки invalid_account, то создаем папку invalid_account
         print("В папке accounts нет папки invalid_account, создаем папку banned")
         # Создаем папку invalid_account в папке accounts
         os.makedirs("user_settings/accounts/banned")
-        os.replace(f"{user_folder}/{accounts_folder}/{row[2]}.session",
-                   f"{user_folder}/{accounts_folder}/banned/{row[2]}.session")
+        os.replace(f"user_settings/accounts/{row[2]}.session",
+                   f"user_settings/accounts/banned/{row[2]}.session")
 
 
 if __name__ == "__main__":
