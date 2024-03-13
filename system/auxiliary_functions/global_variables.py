@@ -24,6 +24,14 @@ time_activity_user_1 = int(config['time_activity_user']['time_activity_user_1'])
 time_activity_user_2 = int(config['time_activity_user']['time_activity_user_2'])
 
 
+def reading_the_id_and_hash():
+    """Считываем id и hash"""
+    config.read("user_settings/config.ini")  # Файл с настройками
+    api_id_data = config["telegram_settings"]["id"]  # api_id с файла user_settings/config.ini
+    api_hash_data = config["telegram_settings"]["hash"]  # api_hash с файла user_settings/config.ini
+    return api_id_data, api_hash_data
+
+
 def reading_device_type():
     """Считываем тип устройства"""
     config.read("user_settings/config.ini")  # Файл с настройками

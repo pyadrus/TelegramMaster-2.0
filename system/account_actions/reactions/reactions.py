@@ -149,15 +149,15 @@ def save_reactions(reactions, path_to_the_file):
         json.dump(reactions, json_file)  # Используем функцию dump для записи данных в файл
 
 
-def deleting_file():
-    """Удаление файлов с реакциями"""
-    try:
-        os.remove('user_settings/reactions/reactions.json')
-        os.remove('user_settings/reactions/link_channel.json')
-        os.remove('user_settings/reactions/number_accounts.json')
-    except OSError as e:
-        logger.error(e)
-        pass
+# def deleting_file():
+#     """Удаление файлов с реакциями"""
+#     try:
+#         os.remove('user_settings/reactions/reactions.json')
+#         os.remove('user_settings/reactions/link_channel.json')
+#         os.remove('user_settings/reactions/number_accounts.json')
+#     except OSError as e:
+#         logger.error(e)
+#         pass
 
 
 def record_the_number_of_accounts():

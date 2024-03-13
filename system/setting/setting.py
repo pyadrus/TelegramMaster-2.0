@@ -7,7 +7,7 @@ from rich import print
 from telethon import TelegramClient
 from telethon.errors import *
 
-from system.auxiliary_functions.global_variables import console, reading_device_type
+from system.auxiliary_functions.global_variables import console, reading_device_type, reading_the_id_and_hash
 from system.menu.app_gui import program_window_with_dimensions
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -153,14 +153,6 @@ def reading_hour_minutes_every_day():
     hour = config["hour_minutes_every_day"]["hour"]  # api_id с файла user_settings/config.ini
     minutes = config["hour_minutes_every_day"]["minutes"]  # api_hash с файла user_settings/config.ini
     return hour, minutes
-
-
-def reading_the_id_and_hash():
-    """Считываем id и hash"""
-    config.read("user_settings/config.ini")  # Файл с настройками
-    api_id_data = config["telegram_settings"]["id"]  # api_id с файла user_settings/config.ini
-    api_hash_data = config["telegram_settings"]["hash"]  # api_hash с файла user_settings/config.ini
-    return api_id_data, api_hash_data
 
 
 def connecting_new_account() -> None:

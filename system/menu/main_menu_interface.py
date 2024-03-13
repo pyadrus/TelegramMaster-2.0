@@ -1,7 +1,8 @@
 from loguru import logger
 from rich import box
 from rich.table import Table
-
+import asyncio
+from system.account_actions.answering_machine.answering_machine import launching_an_answering_machine
 from system.account_actions.checking_spam.account_verification import check_account_for_spam
 from system.account_actions.creating.account_registration import change_bio_profile
 from system.account_actions.creating.creating import creating_groups_and_chats
@@ -58,6 +59,7 @@ def main_menu() -> None:  # 1 - Основное меню программы
     table.add_row("9", "Проверка аккаунтов", "Проверка аккаунтов через спам бот")
     table.add_row("10", "Создание групп (чатов)", "Автоматическое создание групп и чатов")
     table.add_row("11", "Редактирование BIO", "Редактирование описания профиля")
+    table.add_row("12", "Автоответчик", "Проверка автоответчика")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
@@ -84,6 +86,8 @@ def main_menu() -> None:  # 1 - Основное меню программы
         creating_groups_and_chats()
     elif user_input == '11':
         change_bio_profile()  # Редактирование описания профиля
+    elif user_input == '12':
+        launching_an_answering_machine()  # Проверка автоответчика
     else:
         main_menu()  # После отработки функции переходим в начальное меню
 
@@ -297,7 +301,7 @@ def working_with_the_reaction() -> None:  # 7 - Работа с реакциям
     elif user_input == "2":  # Накручиваем просмотры постов
         viewing_posts()
     elif user_input == "3":
-        setting_reactions()
+        setting_reactions() # Автоматическое выставление реакций
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
