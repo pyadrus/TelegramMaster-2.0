@@ -1,17 +1,20 @@
 import configparser
 import getpass
+import json
 import tkinter as tk
 from tkinter import ttk
 
+import flet as ft
 from rich import print
 from telethon import TelegramClient
 from telethon.errors import *
 
-from system.auxiliary_functions.global_variables import console, reading_device_type, reading_the_id_and_hash
+from system.auxiliary_functions.global_variables import console
+from system.auxiliary_functions.global_variables import reading_device_type
+from system.auxiliary_functions.global_variables import reading_the_id_and_hash
 from system.menu.app_gui import program_window_with_dimensions
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-import flet as ft
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 
@@ -281,6 +284,32 @@ def create_main_window(variable) -> None:
             smaller_time.focus()
 
         page.add(smaller_time, larger_time, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
+
+    ft.app(target=main_inviting)
+
+
+def save_message(reactions, path_to_the_file):
+    """Открываем файл для записи данных в формате JSON"""
+    with open(f'{path_to_the_file}', 'w') as json_file:
+        json.dump(reactions, json_file)  # Используем функцию dump для записи данных в файл
+
+
+def recording_text_for_sending_messages():
+    def main_inviting(page) -> None:
+        page.window_width = 300  # ширина окна
+        page.window_height = 300  # высота окна
+        page.window_resizable = False  # Запрет на изменение размера окна
+        text_to_send = ft.TextField(label="Введите текст сообщения", autofocus=True)
+        greetings = ft.Column()
+
+        def btn_click(e) -> None:
+            print(f"Вы ввели: {text_to_send}")
+            save_message(reactions=text_to_send.value,
+                         path_to_the_file='user_settings/message/message.json')  # Сохраняем в json текст сообщения
+            page.window_close()
+            page.update()
+
+        page.add(text_to_send, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
 
     ft.app(target=main_inviting)
 

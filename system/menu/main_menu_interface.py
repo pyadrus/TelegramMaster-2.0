@@ -1,7 +1,7 @@
 from loguru import logger
 from rich import box
 from rich.table import Table
-import asyncio
+
 from system.account_actions.answering_machine.answering_machine import launching_an_answering_machine
 from system.account_actions.checking_spam.account_verification import check_account_for_spam
 from system.account_actions.creating.account_registration import change_bio_profile
@@ -301,7 +301,7 @@ def working_with_the_reaction() -> None:  # 7 - Работа с реакциям
     elif user_input == "2":  # Накручиваем просмотры постов
         viewing_posts()
     elif user_input == "3":
-        setting_reactions() # Автоматическое выставление реакций
+        setting_reactions()  # Автоматическое выставление реакций
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
@@ -317,8 +317,7 @@ def program_settings() -> None:  # 8 - Настройки программы, з
     # Выводим текст в таблице
     table.add_row("1", "Запись ссылки", "Запись ссылки, для Inviting")
     table.add_row("2", "Запись api_id, api_hash", "Запись api_id, api_hash")
-    table.add_row("3", "Время между Inviting, рассылка сообщений",
-                  "Запись времени между: Inviting, рассылка сообщений")
+    table.add_row("3", "Время между Inviting, рассылка сообщений", "Запись времени между: Inviting, рассылка сообщений")
     table.add_row("4", "Смена аккаунтов", "Запись времени между сменой аккаунтов")
     table.add_row("5", "Время между подпиской", "Запись времени между сменой групп при подписке.")
     table.add_row("6", "Запись proxy", "Запись данных для proxy")
@@ -376,6 +375,8 @@ def program_settings() -> None:  # 8 - Настройки программы, з
         recording_link_channel()
     elif user_input == "13":  # Запись ссылки для рассылки
         record_the_number_of_accounts()
+    elif user_input == "14":  # Запись текста для рассылки
+        recording_text_for_sending_messages()  # Вызов функции записи текста для рассылки
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
