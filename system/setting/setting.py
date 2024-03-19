@@ -1,10 +1,10 @@
 import configparser
 import getpass
 import json
-import shutil
+import os
 import tkinter as tk
 from tkinter import ttk
-import os
+
 import flet as ft
 from rich import print
 from telethon import TelegramClient

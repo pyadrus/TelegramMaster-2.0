@@ -29,7 +29,7 @@ from system.account_actions.reactions.reactions import viewing_posts
 from system.account_actions.sending_messages.chat_dialog_mes import message_entry_window_time, message_time
 from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_account
 from system.account_actions.sending_messages.sending_messages_telegram import we_send_a_message_by_members
-from system.account_actions.sending_messages.telegram_chat_dialog import message_entry_window, sending_files_via_chats
+from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, sending_files_via_chats
 from system.account_actions.sending_messages.telegram_chat_dialog import output_the_input_field
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats
 from system.account_actions.subscription.subscription import writing_group_links_to_file, subscription_all
@@ -261,7 +261,7 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
     elif user_input == "2":  # Отправка файлов в личку по parsing списку user_settings/software_database.db
         send_files_to_personal_account(limits=None)
     elif user_input == "3":  # Рассылка сообщений по чатам
-        message_entry_window()
+        sending_messages_chats()
     elif user_input == "4":  # Рассылка сообщений по чатам по времени
         message_entry_window_time()
         message_time()

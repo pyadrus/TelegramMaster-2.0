@@ -1,9 +1,9 @@
 import datetime
 import time
-
+import os
 from rich import print
 from telethon.errors import *
-
+from loguru import logger
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
@@ -13,6 +13,8 @@ from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
+import json
+import random
 
 folder, files = "user_settings", "members_group.csv"
 creating_a_table = """SELECT * from writing_group_links"""
@@ -141,10 +143,32 @@ def sending_messages_files_via_chats() -> None:
     root.mainloop()  # Запускаем программу
 
 
+def sending_messages_chats() -> None:
+    entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_settings/accounts
+    for x in os.listdir(path="user_settings/message"):
+        if x.endswith(".json"):
+            file = os.path.splitext(x)[0]
+            logger.info(f"Найденные файлы: {file}.json")  # Выводим имена найденных аккаунтов
+            entities.append([file])
+
+    if entities:  # Проверяем, что список не пустой, если он не пустой
+        # Выбираем рандомный файл для чтения
+        random_file = random.choice(entities)
+        logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
+        # Открываем выбранный файл с настройками
+        with open(f"user_settings/message/{random_file[0]}.json", "r", encoding="utf-8") as file:
+            data = json.load(file)
+            logger.info(data)
+
+    time.sleep(300)
+    # sending_messages_via_chats_time(message_text)
+
+
 def sending_messages_via_chats_time(message_text) -> None:
     """Массовая рассылка в чаты"""
     # Спрашиваем у пользователя, через какое время будем отправлять сообщения
-    message_text_time: str = console.input("[medium_purple3][+] Введите время, через какое время будем отправлять сообщения: ")
+    message_text_time: str = console.input(
+        "[medium_purple3][+] Введите время, через какое время будем отправлять сообщения: ")
     client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
@@ -182,28 +206,6 @@ def sending_messages_via_chats_time(message_text) -> None:
     client.disconnect()  # Разрываем соединение Telegram
 
 
-def message_entry_window() -> None:
-    """
-    Отображает поле ввода текста для ввода сообщения.
-
-    Эта функция выводит инструкции для пользователя о том, как вводить текст в графическое окно программы.
-    Пользователей предупреждают о том, что не следует вводить ссылки непосредственно в графическое окно. Вместо этого
-    они должны использовать сочетание клавиш Ctrl + V для вставки текста. Обратите внимание, что при использовании этого
-    сочетания клавиш раскладка клавиатуры должна быть переключена на английский язык.
-
-    Функция инициализирует окно программы и получает введенный текст из поля ввода текста. Затем она закрывает поле ввода
-    и переходит к отправке введенного текста сообщения на несколько чат-платформ.
-
-    Args:
-        None
-
-    Returns:
-        None
-    """
-
-    sending_messages_via_chats_time(message_text)
-
-
 def output_the_input_field() -> None:
     """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
     # Предупреждаем пользователя о вводе ссылок в графическое окно программы
@@ -234,7 +236,7 @@ def output_the_input_field() -> None:
 
 if __name__ == "__main__":
     output_the_input_field()  # Выводим ссылки в поле ввода поле ввода для записи ссылок групп
-    message_entry_window()  # Выводим поле ввода для ввода текста сообщения
+    sending_messages_chats()  # Выводим поле ввода для ввода текста сообщения
     connecting_telegram_account_and_creating_list_of_groups()  # Подключаемся к Telegram и создаем список групп
     sending_files_via_chats()  # Отправляем файлы через чаты
     sending_messages_files_via_chats()  # Отправляем сообщения через чаты
