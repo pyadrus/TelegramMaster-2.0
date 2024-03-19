@@ -7,7 +7,7 @@ from telethon.tl.functions.users import GetFullUserRequest
 from system.auxiliary_functions.global_variables import reading_the_id_and_hash
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 
-time_sleep = 0.1
+# time_sleep = 0.1
 
 
 def launching_an_answering_machine() -> None:

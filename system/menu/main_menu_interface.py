@@ -27,7 +27,7 @@ from system.account_actions.reactions.reactions import setting_reactions
 from system.account_actions.reactions.reactions import users_choice_of_reaction
 from system.account_actions.reactions.reactions import viewing_posts
 from system.account_actions.sending_messages.chat_dialog_mes import message_entry_window_time, message_time
-from system.account_actions.sending_messages.sending_messages_telegram import sending_files_to_a_personal_account
+from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_account
 from system.account_actions.sending_messages.sending_messages_telegram import we_send_a_message_by_members
 from system.account_actions.sending_messages.telegram_chat_dialog import message_entry_window, sending_files_via_chats
 from system.account_actions.sending_messages.telegram_chat_dialog import output_the_input_field
@@ -259,7 +259,7 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
     if user_input == "1":  # Отправка сообщений в личку по parsing списку user_settings/software_database.db
         we_send_a_message_by_members(limits=None)
     elif user_input == "2":  # Отправка файлов в личку по parsing списку user_settings/software_database.db
-        sending_files_to_a_personal_account(limits=None)
+        send_files_to_personal_account(limits=None)
     elif user_input == "3":  # Рассылка сообщений по чатам
         message_entry_window()
     elif user_input == "4":  # Рассылка сообщений по чатам по времени
@@ -274,7 +274,7 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
     elif user_input == "8":  # Отправка сообщений в личку (с лимитами)
         we_send_a_message_by_members(limits=limits_message)
     elif user_input == "9":  # Отправка файлов в личку (с лимитами)
-        sending_files_to_a_personal_account(limits=limits_message)
+        send_files_to_personal_account(limits=limits_message)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:

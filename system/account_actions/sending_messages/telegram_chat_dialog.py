@@ -12,7 +12,7 @@ from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 folder, files = "user_settings", "members_group.csv"
 creating_a_table = """SELECT * from writing_group_links"""
@@ -29,7 +29,7 @@ def connecting_telegram_account_and_creating_list_of_groups():
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         records: list = db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
         print(f"[medium_purple3]Всего групп: {len(records)}")
 
@@ -144,8 +144,7 @@ def sending_messages_files_via_chats() -> None:
 def sending_messages_via_chats_time(message_text) -> None:
     """Массовая рассылка в чаты"""
     # Спрашиваем у пользователя, через какое время будем отправлять сообщения
-    message_text_time: str = console.input(
-        "[medium_purple3][+] Введите время, через какое время будем отправлять сообщения: ")
+    message_text_time: str = console.input("[medium_purple3][+] Введите время, через какое время будем отправлять сообщения: ")
     client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
@@ -201,24 +200,8 @@ def message_entry_window() -> None:
     Returns:
         None
     """
-    # Предупреждаем пользователя о вводе ссылок в графическое окно программы
-    print("""[medium_purple3][+] Введите текст который будем рассылать по чатам, для вставки в графическое окно готового 
-          текста используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен 
-          быть переключен на английский")""")
-    root, text = program_window()
 
-    def output_values_from_the_input_field() -> None:
-        """Выводим значения с поля ввода (то что ввел пользователь)"""
-        message_text = text.get("1.0", 'end-1c')
-        closing_the_input_field()
-        sending_messages_via_chats_time(message_text)
-
-    def closing_the_input_field() -> None:
-        """Закрываем программу"""
-        root.destroy()
-
-    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
-    root.mainloop()  # Запускаем программу
+    sending_messages_via_chats_time(message_text)
 
 
 def output_the_input_field() -> None:

@@ -12,7 +12,7 @@ from system.auxiliary_functions.global_variables import limits
 from system.auxiliary_functions.global_variables import link_group
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 from system.telegram_actions.telegram_actions import get_username
 
 event: str = f"Inviting в группу {link_group}"  # Событие, которое записываем в базу данных
@@ -36,7 +36,7 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         # Подписываемся на группу которую будем inviting, если аккаунт новый, то он автоматически подпишется и
         # записываем действия в software_database.db
         print(link_group)
@@ -74,7 +74,7 @@ def invite_from_multiple_accounts_with_limits(name_database_table) -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         # Подписываемся на группу которую будем inviting, если аккаунт новый, то он автоматически подпишется и
         # записываем действия в software_database.db
         subscribe_to_group_or_channel(client, link_group, phone)

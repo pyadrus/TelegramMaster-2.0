@@ -1,9 +1,10 @@
 import configparser
 import getpass
 import json
+import shutil
 import tkinter as tk
 from tkinter import ttk
-
+import os
 import flet as ft
 from rich import print
 from telethon import TelegramClient
@@ -290,22 +291,34 @@ def create_main_window(variable) -> None:
 
 def save_message(reactions, path_to_the_file):
     """Открываем файл для записи данных в формате JSON"""
-    with open(f'{path_to_the_file}', 'w') as json_file:
-        json.dump(reactions, json_file)  # Используем функцию dump для записи данных в файл
+    with open(f'{path_to_the_file}', 'w', encoding='utf-8') as json_file:
+        json.dump(reactions, json_file, ensure_ascii=False)  # Используем функцию dump для записи данных в файл
+
+
+def get_unique_filename(base_filename):
+    """Функция для получения уникального имени файла"""
+    index = 1
+    while True:
+        new_filename = f"{base_filename}_{index}.json"
+        if not os.path.isfile(new_filename):
+            return new_filename
+        index += 1
 
 
 def recording_text_for_sending_messages():
     def main_inviting(page) -> None:
-        page.window_width = 300  # ширина окна
-        page.window_height = 300  # высота окна
+        page.window_width = 600  # ширина окна
+        page.window_height = 600  # высота окна
         page.window_resizable = False  # Запрет на изменение размера окна
-        text_to_send = ft.TextField(label="Введите текст сообщения", autofocus=True)
+        text_to_send = ft.TextField(label="Введите текст сообщения", multiline=True, max_lines=19)
         greetings = ft.Column()
 
         def btn_click(e) -> None:
             print(f"Вы ввели: {text_to_send}")
+            base_filename = 'user_settings/message/message'
+            unique_filename = get_unique_filename(base_filename)
             save_message(reactions=text_to_send.value,
-                         path_to_the_file='user_settings/message/message.json')  # Сохраняем в json текст сообщения
+                         path_to_the_file=unique_filename)  # Сохраняем данные в файл
             page.window_close()
             page.update()
 

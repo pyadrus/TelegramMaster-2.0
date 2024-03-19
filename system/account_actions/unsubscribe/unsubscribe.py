@@ -1,7 +1,7 @@
 from rich import print
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
 def unsubscribe_all() -> None:
@@ -12,7 +12,7 @@ def unsubscribe_all() -> None:
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         for dialog in client.iter_dialogs():
             print(f"[magenta]{dialog.name}, {dialog.id}")
             client.delete_dialog(dialog)

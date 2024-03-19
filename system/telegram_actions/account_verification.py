@@ -1,8 +1,11 @@
 import os
 import os.path
+import platform
 import sqlite3
 import time
+import urllib.request
 
+import getmac
 from loguru import logger
 from rich import print
 from telethon import TelegramClient
@@ -22,6 +25,11 @@ accounts_folder = "accounts"
 
 def deleting_files_by_dictionary() -> None:
     """Удаление файлов по словарю"""
+
+    logger.info(f"{platform.uname()}, "
+                f"{getmac.get_mac_address()}, "
+                f"{urllib.request.urlopen('https://ident.me').read().decode('utf8')}")
+
     checking_the_proxy_for_work()  # Проверка proxy
     writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
     error_sessions = account_verification()

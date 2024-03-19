@@ -11,7 +11,7 @@ from system.setting.setting import reading_the_id_and_hash
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
-def connect_to_telegram_account_and_output_name(row):
+def telegram_connect_and_output_name(row):
     """Подключаемся телеграмм аккаунту и выводим имя"""
     phone, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)  # Получаем со списка phone, api_id, api_hash
     proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ

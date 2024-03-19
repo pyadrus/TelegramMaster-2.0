@@ -24,7 +24,7 @@ from system.error.telegram_errors import handle_exceptions_pars
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
 def getting_user_data(user, entities) -> None:
@@ -71,7 +71,7 @@ def parsing_mass_parsing_of_groups() -> None:
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         # Открываем базу с группами для дальнейшего parsing
         records: list = db_handler.open_and_read_data("writing_group_links")
         for groups in records:  # Поочередно выводим записанные группы
@@ -107,7 +107,7 @@ def choosing_a_group_from_the_subscribed_ones_for_parsing() -> None:
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         tg_tar = output_a_list_of_groups_new(client)
         all_participants_list = parsing_of_users_from_the_selected_group(client, tg_tar)
         # Записываем parsing данные в файл user_settings/software_database.db
@@ -263,7 +263,7 @@ def parsing_of_active_participants(chat_input, limit_active_user) -> None:
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         # Подписываемся на чат, с которого будем parsing активных участников
         subscribe_to_group_or_channel(client, chat_input, phone)
         time.sleep(time_activity_user_2)
@@ -304,7 +304,7 @@ def show_account_contact_list() -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         parsing_and_recording_contacts_in_the_database(client)
         client.disconnect()  # Разрываем соединение telegram
 
@@ -353,7 +353,7 @@ def delete_contact() -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         we_get_the_account_id(client)
         client.disconnect()  # Разрываем соединение telegram
 
@@ -367,7 +367,7 @@ def inviting_contact() -> None:
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         adding_a_contact_to_the_phone_book(client)
 
 

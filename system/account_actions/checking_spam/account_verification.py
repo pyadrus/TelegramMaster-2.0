@@ -2,7 +2,7 @@ from telethon.sync import TelegramClient  # Не удалять, так как �
 from system.error.telegram_errors import record_account_actions
 from system.notification.notification import app_notifications
 
-from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 from thefuzz import fuzz
 
 import os
@@ -24,7 +24,7 @@ def check_account_for_spam() -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         try:
             client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
             message_bot = client.get_messages('SpamBot')

@@ -6,7 +6,7 @@ from system.error.telegram_errors import record_account_actions
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
-from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 creating_a_table = "CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link, members_count, parsing_time)"
 writing_data_to_a_table = "INSERT INTO groups_and_channels (id, title, about, link, members_count, parsing_time) VALUES (?, ?, ?, ?, ?, ?)"
@@ -22,7 +22,7 @@ def parsing_groups_which_account_subscribed() -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         description_action = "Parsing: groups and channels"
         actions = "Parsing групп / каналов"
         record_account_actions(phone, description_action, event, actions)

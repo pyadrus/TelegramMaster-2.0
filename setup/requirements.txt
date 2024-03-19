@@ -20,4 +20,6 @@ urllib3==2.2.1
 win32-setctime
 PySimpleGUI==4.60.5
 thefuzz==0.22.1
-flet==0.21.1
+flet==0.21.2
+getmac
+notifiers

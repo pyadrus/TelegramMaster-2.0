@@ -14,7 +14,7 @@ from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
@@ -48,7 +48,7 @@ def subscription_all() -> None:
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in track(records, description="[medium_purple3]Прогресс выполнения работы\n"):
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         # Открываем базу данных
         records: list = db_handler.open_and_read_data("writing_group_links")
         print(f"[medium_purple3]Всего групп: {len(records)}")

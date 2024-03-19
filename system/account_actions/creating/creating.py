@@ -3,7 +3,7 @@ import sqlite3
 from telethon import functions
 from loguru import logger
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 import PySimpleGUI as sg
 
 
@@ -43,7 +43,7 @@ def create_gui(account_list) -> None:
             try:
                 for row in result:
                     # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                    client, phone = connect_to_telegram_account_and_output_name(row)
+                    client, phone = telegram_connect_and_output_name(row)
                     # Replace 'username' with the username or user ID of the user you want to add to the group
                     result = client(functions.channels.CreateChannelRequest(title='My awesome title',
                                                                             about='Description for your group',

@@ -18,7 +18,7 @@ from system.notification.notification import app_notifications
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.setting.setting import reading_the_id_and_hash
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 user_folder = "user_settings"
 accounts_folder = "accounts"
@@ -472,7 +472,7 @@ def send_reaction_request(records, chat, message_url, reaction_input) -> None:
     """Ставим реакции на сообщения"""
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         try:
             subscribe_to_group_or_channel(client, chat, phone)  # Подписываемся на группу
             number = re.search(r'/(\d+)$', message_url).group(1)
@@ -503,7 +503,7 @@ def viewing_posts() -> None:
                                                                  number_of_accounts=int(number_of_accounts))
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         try:
             subscribe_to_group_or_channel(client, chat, phone)  # Подписываемся на группу
             channel = client.get_entity(chat)  # Получение информации о канале

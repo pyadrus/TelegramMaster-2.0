@@ -10,7 +10,7 @@ from system.auxiliary_functions.global_variables import console, time_inviting_1
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import connect_to_telegram_account_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 from system.telegram_actions.telegram_actions import get_username  # 152
 
 
@@ -37,7 +37,7 @@ def we_send_a_message_by_members(limits) -> None:
     root.mainloop()  # Запускаем программу
 
 
-def sending_files_to_a_personal_account(limits) -> None:
+def send_files_to_personal_account(limits) -> None:
     """Отправка файлов в личку"""
     # Просим пользователя ввести расширение сообщения
     link_to_the_file: str = console.input(
@@ -49,7 +49,7 @@ def sending_files_to_a_personal_account(limits) -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         try:
             # Открываем parsing список user_settings/software_database.db для inviting в группу
             records: list = db_handler.open_the_db_and_read_the_data_lim("members", number_of_accounts=limits)
@@ -107,7 +107,7 @@ def we_send_a_message_from_all_accounts(message_text, limits) -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = connect_to_telegram_account_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row)
         try:
             records: list = db_handler.open_the_db_and_read_the_data_lim("members", number_of_accounts=limits)
             # Количество аккаунтов на данный момент в работе
