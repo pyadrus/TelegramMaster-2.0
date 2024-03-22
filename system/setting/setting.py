@@ -10,9 +10,8 @@ from rich import print
 from telethon import TelegramClient
 from telethon.errors import *
 
-from system.auxiliary_functions.global_variables import console
-from system.auxiliary_functions.global_variables import reading_device_type
-from system.auxiliary_functions.global_variables import reading_the_id_and_hash
+from system.auxiliary_functions.global_variables import console, api_id_data, api_hash_data, device_model, \
+    system_version, app_version
 from system.menu.app_gui import program_window_with_dimensions
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -161,7 +160,6 @@ def reading_hour_minutes_every_day():
 
 def connecting_new_account() -> None:
     """Вводим данные в базу данных user_settings/software_database.db"""
-    api_id_data, api_hash_data = reading_the_id_and_hash()
     phone_data = console.input("[magenta][+] Введите номер телефона : ")  # Вводим номер телефона
     entities = (api_id_data, api_hash_data, phone_data)
     db_handler = DatabaseHandler()
@@ -174,7 +172,6 @@ def connecting_new_account() -> None:
 
 def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
-    device_model, system_version, app_version = reading_device_type()
     client = TelegramClient(f"user_settings/accounts/{phone}",  # Путь к файлу с настройками аккаунта
                             api_id,  # Идентификатор вашего приложения, предоставленный Telegram API
                             api_hash,  # Хэш вашего приложения, предоставленный Telegram API
@@ -339,7 +336,6 @@ def recording_text_for_sending_messages() -> None:
     Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
     <имя файла>.json и сохраняются в формате JSON.
     """
-
     def main_inviting(page) -> None:
         page.window_width = 600  # ширина окна
         page.window_height = 600  # высота окна
@@ -366,6 +362,5 @@ if __name__ == "__main__":
     writing_link_to_the_group()
     creating_the_main_window_for_proxy_data_entry()
     recording_the_time_to_launch_an_invite_every_day()
-    reading_the_id_and_hash()
     record_account_limits()
     recording_text_for_sending_messages()

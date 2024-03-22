@@ -66,7 +66,9 @@ def check_account_for_spam() -> None:
                     print('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                     record_account_actions(phone, description_action, event, actions)
-                    working_with_accounts(row)  # Перенос аккаунта в папку бан
+                    # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
+                    working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
+                                          new_account_folder=f"user_settings/accounts/banned/{row[2]}.session")
                 record_account_actions(phone, description_action, event, actions)
 
         except YouBlockedUserError:
