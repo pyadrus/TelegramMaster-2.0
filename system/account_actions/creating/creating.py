@@ -1,27 +1,15 @@
-import sqlite3
-
-from telethon import functions
-from loguru import logger
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 import PySimpleGUI as sg
+from loguru import logger
+from telethon import functions
+
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler, select_from_config_by_phone
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
 def get_account_list():
     db_handler = DatabaseHandler()
     records = db_handler.open_and_read_data("config")
     return records
-
-
-def select_from_config_by_phone(phone_value):
-    # Подключение к базе данных
-    conn = sqlite3.connect("user_settings/software_database.db")
-    cursor = conn.cursor()
-    # Выбор данных из таблицы config по заданному номеру телефона
-    cursor.execute('''SELECT id, hash, phone FROM config WHERE phone = ?''', (phone_value,))
-    result = cursor.fetchall()  # Получение результатов запроса
-    conn.close()  # Закрытие соединения
-    return result
 
 
 def create_gui(account_list) -> None:

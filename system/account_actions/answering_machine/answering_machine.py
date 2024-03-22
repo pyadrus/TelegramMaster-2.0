@@ -4,14 +4,11 @@ from telethon import TelegramClient
 from telethon import events
 from telethon.tl.functions.users import GetFullUserRequest
 
-from system.auxiliary_functions.global_variables import reading_the_id_and_hash
+from system.auxiliary_functions.global_variables import api_id_data, api_hash_data
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
-
-# time_sleep = 0.1
 
 
 def launching_an_answering_machine() -> None:
-    api_id_data, api_hash_data = reading_the_id_and_hash()
     # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
     proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
     client = TelegramClient(session=f"user_settings/accounts/sending_messages_chats/79252182362",

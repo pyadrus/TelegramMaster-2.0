@@ -16,9 +16,6 @@ from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
-creating_a_table = """SELECT * from writing_group_links"""
-writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
-
 
 def writing_group_links_to_file(name_database) -> None:
     """Запускаем окно программы (большого поля ввода)"""
@@ -96,6 +93,8 @@ def subscribe_to_group_or_channel(client, groups_wr, phone) -> None:
             actions: str = f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}"
             record_account_actions(phone, description_action, event, actions)
             db_handler = DatabaseHandler()
+            creating_a_table = """SELECT * from writing_group_links"""
+            writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
             db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wrs)
         except PeerFloodError:
             actions: str = "Предупреждение о Flood от Telegram."
@@ -122,4 +121,3 @@ def subscribe_to_the_group_and_send_the_link(client, groups, phone):
 
 if __name__ == "__main__":
     subscription_all()
-    # writing_group_links_to_file()

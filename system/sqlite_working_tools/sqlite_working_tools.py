@@ -4,6 +4,17 @@ import time
 from rich import print
 
 
+def select_from_config_by_phone(phone_value):
+    # Подключение к базе данных
+    conn = sqlite3.connect("user_settings/software_database.db")
+    cursor = conn.cursor()
+    # Выбор данных из таблицы config по заданному номеру телефона
+    cursor.execute('''SELECT id, hash, phone FROM config WHERE phone = ?''', (phone_value,))
+    result = cursor.fetchall()  # Получение результатов запроса
+    conn.close()  # Закрытие соединения
+    return result
+
+
 class DatabaseHandler:
     def __init__(self, db_file="user_settings/software_database.db"):
         self.db_file = db_file

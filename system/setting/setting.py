@@ -253,6 +253,35 @@ def creating_the_main_window_for_proxy_data_entry() -> None:
     root.mainloop()  # Запускаем главный цикл обработки событий
 
 
+def recording_the_time_between_chat_messages(variable):
+    """Запись времени между сообщениями"""
+
+    def main_inviting(page) -> None:
+        page.window_width = 300  # ширина окна
+        page.window_height = 300  # высота окна
+        page.window_resizable = False  # Запрет на изменение размера окна
+        smaller_time = ft.TextField(label="Время в минутах", autofocus=True)
+        greetings = ft.Column()
+
+        def btn_click(e) -> None:
+            try:
+                smaller_times = int(smaller_time.value)
+
+                config.get(f"{variable}", f"{variable}")
+                config.set(f"{variable}", f"{variable}", str(smaller_times))  # Записываем в файл значение
+                writing_settings_to_a_file(config)
+                page.window_close()
+            except ValueError:
+                pass
+
+            page.update()
+            smaller_time.focus()
+
+        page.add(smaller_time, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
+
+    ft.app(target=main_inviting)
+
+
 def create_main_window(variable) -> None:
     """
     :param variable: название переменной в файле config.ini
@@ -305,7 +334,12 @@ def get_unique_filename(base_filename):
         index += 1
 
 
-def recording_text_for_sending_messages():
+def recording_text_for_sending_messages() -> None:
+    """
+    Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
+    <имя файла>.json и сохраняются в формате JSON.
+    """
+
     def main_inviting(page) -> None:
         page.window_width = 600  # ширина окна
         page.window_height = 600  # высота окна
@@ -334,3 +368,4 @@ if __name__ == "__main__":
     recording_the_time_to_launch_an_invite_every_day()
     reading_the_id_and_hash()
     record_account_limits()
+    recording_text_for_sending_messages()

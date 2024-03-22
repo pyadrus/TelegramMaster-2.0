@@ -13,10 +13,9 @@ from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
 from telethon import TelegramClient
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
-from system.auxiliary_functions.global_variables import console
+from system.auxiliary_functions.global_variables import console, api_id_data, api_hash_data
 from system.notification.notification import app_notifications
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
-from system.setting.setting import reading_the_id_and_hash
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
@@ -92,7 +91,6 @@ def connecting_account_sessions_config_reactions() -> list:
         if x.endswith(".session"):
             file = os.path.splitext(x)[0]
             print(f"Найденные аккаунты: {file}.session")  # Выводим имена найденных аккаунтов
-            api_id_data, api_hash_data = reading_the_id_and_hash()  # Файл с настройками
             entities.append([api_id_data, api_hash_data, file])
     return entities
 
@@ -147,17 +145,6 @@ def save_reactions(reactions, path_to_the_file):
     """Открываем файл для записи данных в формате JSON"""
     with open(f'{path_to_the_file}', 'w') as json_file:
         json.dump(reactions, json_file)  # Используем функцию dump для записи данных в файл
-
-
-# def deleting_file():
-#     """Удаление файлов с реакциями"""
-#     try:
-#         os.remove('user_settings/reactions/reactions.json')
-#         os.remove('user_settings/reactions/link_channel.json')
-#         os.remove('user_settings/reactions/number_accounts.json')
-#     except OSError as e:
-#         logger.error(e)
-#         pass
 
 
 def record_the_number_of_accounts():

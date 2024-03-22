@@ -7,7 +7,7 @@ from loguru import logger
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.auxiliary_functions.global_variables import console
+from system.auxiliary_functions.global_variables import console, time_sending_messages
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
@@ -15,6 +15,7 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 import json
 import random
+from rich.progress import track
 
 folder, files = "user_settings", "members_group.csv"
 creating_a_table = """SELECT * from writing_group_links"""
@@ -158,25 +159,27 @@ def sending_messages_chats() -> None:
         # Открываем выбранный файл с настройками
         with open(f"user_settings/message/{random_file[0]}.json", "r", encoding="utf-8") as file:
             data = json.load(file)
-            logger.info(data)
 
-    time.sleep(300)
-    # sending_messages_via_chats_time(message_text)
+    logger.info(data)
+    # time.sleep(300)
+    sending_messages_via_chats_time(data)
 
 
 def sending_messages_via_chats_time(message_text) -> None:
     """Массовая рассылка в чаты"""
-    # Спрашиваем у пользователя, через какое время будем отправлять сообщения
-    message_text_time: str = console.input(
-        "[medium_purple3][+] Введите время, через какое время будем отправлять сообщения: ")
+
     client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
         description_action = f"Sending messages to a group: {groups_wr}"
         try:
             client.send_message(entity=groups_wr, message=message_text)  # Рассылаем сообщение по чатам
-            # Работу записываем в лог файл, для удобства слежения, за изменениями
-            time.sleep(int(message_text_time))
+
+            # Convert time from minutes to seconds
+            time_in_seconds = time_sending_messages * 60
+            for _ in track(range(time_in_seconds), description=f"[red]Спим {time_sending_messages} минуты / минут..."):
+                time.sleep(1)  # Sleep for 1 second
+
             actions = f"[medium_purple3]Сообщение в группу {groups_wr} написано!"
             record_account_actions(phone, description_action, event, actions)
         except ChannelPrivateError:

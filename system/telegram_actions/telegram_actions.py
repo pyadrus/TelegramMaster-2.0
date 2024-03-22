@@ -5,9 +5,9 @@ from rich import print
 from telethon import TelegramClient
 from telethon.tl.functions.users import GetFullUserRequest
 
-from system.auxiliary_functions.global_variables import reading_device_type
+from system.auxiliary_functions.global_variables import device_model, system_version, app_version, api_id_data, \
+    api_hash_data
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
-from system.setting.setting import reading_the_id_and_hash
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -15,7 +15,6 @@ def telegram_connect_and_output_name(row):
     """Подключаемся телеграмм аккаунту и выводим имя"""
     phone, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)  # Получаем со списка phone, api_id, api_hash
     proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
-    device_model, system_version, app_version = reading_device_type()
     client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, proxy=proxy,
                             device_model=device_model, system_version=system_version, app_version=app_version,
                             lang_code='en', system_lang_code='ru')
@@ -82,7 +81,6 @@ def connecting_account_sessions() -> list:
         if x.endswith(".session"):
             file = os.path.splitext(x)[0]
             print(f"Найденные аккаунты: {file}.session")  # Выводим имена найденных аккаунтов
-            api_id_data, api_hash_data = reading_the_id_and_hash()  # Файл с настройками
             entities.append([api_id_data, api_hash_data, file])
     return entities
 
