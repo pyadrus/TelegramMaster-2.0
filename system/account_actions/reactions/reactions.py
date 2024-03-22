@@ -16,16 +16,13 @@ from system.account_actions.subscription.subscription import subscribe_to_group_
 from system.auxiliary_functions.global_variables import console, api_id_data, api_hash_data
 from system.notification.notification import app_notifications
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 user_folder = "user_settings"
 accounts_folder = "accounts"
 
-db_handler = DatabaseHandler()
 
-
-async def reactions_for_groups_and_messages_test(number, chat) -> None:
+async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> None:
     """Вводим ссылку на группу и ссылку на сообщение"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
@@ -66,7 +63,7 @@ async def reactions_for_groups_and_messages_test(number, chat) -> None:
     app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
 
-def writing_names_found_files_to_the_db_config_reactions() -> None:
+def writing_names_found_files_to_the_db_config_reactions(db_handler) -> None:
     """Запись названий найденных файлов в базу данных"""
     creating_a_table = "CREATE TABLE IF NOT EXISTS config_reactions (id, hash, phone)"
     writing_data_to_a_table = "INSERT INTO config_reactions (id, hash, phone) VALUES (?, ?, ?)"
@@ -95,7 +92,7 @@ def connecting_account_sessions_config_reactions() -> list:
     return entities
 
 
-def setting_reactions():
+def setting_reactions(db_handler):
     """Выставление реакций на новые посты"""
     writing_names_found_files_to_the_db_config_reactions()
 
@@ -441,7 +438,7 @@ def reactions_for_groups_and_messages(reaction_input) -> None:
     send_reaction_request(records, chat, message, reaction_input)  # Ставим реакцию на пост, сообщение
 
 
-def choosing_a_number_of_reactions() -> list:
+def choosing_a_number_of_reactions(db_handler) -> list:
     """Выбираем лимиты для аккаунтов"""
     print("[medium_purple3]Введите количество с которых будут поставлены реакции")
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
@@ -478,7 +475,7 @@ def send_reaction_request(records, chat, message_url, reaction_input) -> None:
     app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
 
-def viewing_posts() -> None:
+def viewing_posts(db_handler) -> None:
     """Накрутка просмотров постов"""
     chat = console.input("[medium_purple3][+] Введите ссылку на канал: ")  # Ссылка на группу или канал
     records: list = db_handler.open_and_read_data("config")

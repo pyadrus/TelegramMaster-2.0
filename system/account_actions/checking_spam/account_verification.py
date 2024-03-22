@@ -12,15 +12,12 @@ from loguru import logger
 from rich import print
 from telethon.errors import *
 
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
-
-def check_account_for_spam() -> None:
+def check_account_for_spam(db_handler) -> None:
     """Проверка аккаунта на спам через @SpamBot"""
     event: str = "Проверка аккаунтов через SpamBot"  # Событие, которое записываем в базу данных
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал

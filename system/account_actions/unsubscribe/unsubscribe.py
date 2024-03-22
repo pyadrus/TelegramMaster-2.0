@@ -1,16 +1,15 @@
-from rich import print
-from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
-from telethon.tl.functions.channels import LeaveChannelRequest
 from loguru import logger
+from rich import print
 from telethon.errors import *
+from telethon.tl.functions.channels import LeaveChannelRequest
+
+from system.notification.notification import app_notifications
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
-def unsubscribe_all() -> None:
+def unsubscribe_all(db_handler) -> None:
     """Отписываемся от групп, каналов, личных сообщений"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in records:

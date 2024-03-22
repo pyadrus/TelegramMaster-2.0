@@ -12,7 +12,6 @@ from system.auxiliary_functions.auxiliary_functions import deleting_files_if_ava
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 folder, files = "user_settings", "members_group.csv"
 creating_a_table = """SELECT * from writing_group_links"""
@@ -26,7 +25,7 @@ def send_mess() -> None:
     sending_messages_via_chats_time(cursor_members)
 
 
-def sending_messages_via_chats_time(message_text) -> None:
+def sending_messages_via_chats_time(message_text, db_handler) -> None:
     """Массовая рассылка в чаты"""
     client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
     for groups in records:
@@ -41,7 +40,6 @@ def sending_messages_via_chats_time(message_text) -> None:
         except ChannelPrivateError:
             actions: str = "Указанный канал является приватным, или вам запретили подписываться."
             record_account_actions(phone, description_action, event, actions)
-            db_handler = DatabaseHandler()
             db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
         except PeerFloodError:
             actions: str = "Предупреждение о Flood от Telegram."

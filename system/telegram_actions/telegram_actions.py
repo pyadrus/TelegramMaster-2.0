@@ -1,14 +1,14 @@
 import os
 import os.path
-from telethon.errors import TypeNotFoundError
+
 from rich import print
 from telethon import TelegramClient
+from telethon.errors import TypeNotFoundError
 from telethon.tl.functions.users import GetFullUserRequest
 
 from system.auxiliary_functions.global_variables import device_model, system_version, app_version, api_id_data, \
     api_hash_data
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
 def telegram_connect_and_output_name(row):
@@ -55,11 +55,10 @@ def get_username(rows):
     return username
 
 
-def writing_names_found_files_to_the_db() -> None:
+def writing_names_found_files_to_the_db(db_handler) -> None:
     """Запись названий найденных файлов в базу данных"""
     creating_a_table = "CREATE TABLE IF NOT EXISTS config(id, hash, phone)"
     writing_data_to_a_table = "INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)"
-    db_handler = DatabaseHandler()  # Create an instance of the DatabaseHandler class
     db_handler.cleaning_db(name_database_table="config")  # Call the method on the instance
     records = connecting_account_sessions()
     for entities in records:

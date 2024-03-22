@@ -14,7 +14,6 @@ from system.auxiliary_functions.global_variables import console, api_id_data, ap
     system_version, app_version
 from system.menu.app_gui import program_window_with_dimensions
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 
@@ -150,11 +149,10 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
     return config
 
 
-def connecting_new_account() -> None:
+def connecting_new_account(db_handler) -> None:
     """Вводим данные в базу данных user_settings/software_database.db"""
     phone_data = console.input("[magenta][+] Введите номер телефона : ")  # Вводим номер телефона
     entities = (api_id_data, api_hash_data, phone_data)
-    db_handler = DatabaseHandler()
     db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
     # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
     client = telegram_connect(phone_data, api_id_data, api_hash_data)
@@ -189,7 +187,7 @@ def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
     return client
 
 
-def creating_the_main_window_for_proxy_data_entry() -> None:
+def creating_the_main_window_for_proxy_data_entry(db_handler) -> None:
     """Создание главного окна для ввода дынных proxy"""
     print("Proxy IPV6 - НЕ РАБОТАЮТ")
 
@@ -233,7 +231,6 @@ def creating_the_main_window_for_proxy_data_entry() -> None:
     password_type_entry = tk.Entry(root, width=45)
     password_type_entry.pack()
     # Создаем кнопку
-    db_handler = DatabaseHandler()
     button = tk.Button(root, text="Готово",
                        command=lambda: db_handler.save_proxy_data_to_db(proxy=recording_proxy_data()))
     button.pack()
@@ -350,9 +347,7 @@ def recording_text_for_sending_messages() -> None:
 
 
 if __name__ == "__main__":
-    connecting_new_account()
     writing_link_to_the_group()
-    creating_the_main_window_for_proxy_data_entry()
     recording_the_time_to_launch_an_invite_every_day()
     record_account_limits()
     recording_text_for_sending_messages()

@@ -15,40 +15,38 @@ from system.account_actions.checking_spam.account_verification import working_wi
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import account_name
 from system.telegram_actions.telegram_actions import renaming_a_session
 from system.telegram_actions.telegram_actions import writing_names_found_files_to_the_db
 
 
-def deleting_files_by_dictionary() -> None:
+def deleting_files_by_dictionary(db_handler) -> None:
     """Удаление файлов по словарю"""
 
     logger.info(f"{platform.uname()}, "
                 f"{getmac.get_mac_address()}, "
                 f"{urllib.request.urlopen('https://ident.me').read().decode('utf8')}")
 
-    checking_the_proxy_for_work()  # Проверка proxy
-    writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
-    error_sessions = account_verification()
+    checking_the_proxy_for_work(db_handler)  # Проверка proxy
+    writing_names_found_files_to_the_db(db_handler)  # Сканируем папку с аккаунтами на наличие сессий
+    error_sessions = account_verification(db_handler)
     for row in error_sessions:
         try:
             print(f"Удаляем не валидный аккаунт {''.join(row)}.session")
             os.remove(f"user_settings/accounts/{''.join(row)}.session")
         except PermissionError:
             continue
-    writing_names_found_files_to_the_db()  # Сканируем папку с аккаунтами на наличие сессий
+    writing_names_found_files_to_the_db(db_handler)  # Сканируем папку с аккаунтами на наличие сессий
 
 
-def account_verification():
+def account_verification(db_handler):
     """Проверка аккаунтов"""
     error_sessions = []  # Создаем словарь, для удаления битых файлов session
     print("[medium_purple3] Проверка аккаунтов!")
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Получаем со списка phone (row[2]), api_id (), api_hash
-        proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
+        proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
         try:
             client = TelegramClient(f"user_settings/accounts/{row[2]}", int(row[0]), row[1],
                                     system_version="4.16.30-vxCUSTOM", proxy=proxy)
@@ -56,7 +54,7 @@ def account_verification():
                 logger.info(f"Подключение аккаунта: {row[2]}, {int(row[0])}, {row[1]}")
                 client.connect()  # Подсоединяемся к Telegram
                 if not client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
-                    telegram_phone_number_banned_error(client, row[2])  # Удаляем номер телефона с базы данных
+                    telegram_phone_number_banned_error(client, row[2], db_handler)  # Удаляем номер телефона с базы данных
                 time.sleep(1)
                 try:
                     # Показываем имя аккаунта с которым будем взаимодействовать
@@ -73,7 +71,7 @@ def account_verification():
                 working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
                                       new_account_folder=f"user_settings/accounts/invalid_account/{row[2]}.session")
             except (PhoneNumberBannedError, UserDeactivatedBanError):
-                telegram_phone_number_banned_error(client, row[2])  # Удаляем номер телефона с базы данных
+                telegram_phone_number_banned_error(client, row[2], db_handler)  # Удаляем номер телефона с базы данных
             except TimedOutError as e:
                 logger.exception(e)
                 time.sleep(2)
@@ -84,7 +82,3 @@ def account_verification():
             print(f"Битый файл {row[2]}.session")
             error_sessions.append([row[2]])  # Удаляем не валидную сессию
     return error_sessions
-
-
-if __name__ == "__main__":
-    account_verification()

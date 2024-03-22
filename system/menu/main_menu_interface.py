@@ -65,26 +65,26 @@ def main_menu() -> None:  # 1 - Основное меню программы
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Inviting в группы
-        inviting_groups()
+        inviting_groups(db_handler)
     elif user_input == "2":  # Parsing, в новый файл members.db и до записи в файл
         telegram_parsing_menu(db_handler)
     elif user_input == "3":  # Работаем с контактами телефонной книги
-        working_tools_contacts()
+        working_tools_contacts(db_handler)
     elif user_input == "4":  # Работаем с подпиской, подписка, отписка, запись ссылок в файл
-        subscribe_unsubscribe_write_to_file()
+        subscribe_unsubscribe_write_to_file(db_handler)
     elif user_input == "5":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-        connecting_new_account()
+        connecting_new_account(db_handler)
         main_menu()
     elif user_input == "6":  # Рассылка сообщений по списку members.db
-        sending_messages_to_a_personal_account_chat()
+        sending_messages_to_a_personal_account_chat(db_handler)
     elif user_input == "7":  # Работа с реакциями
-        working_with_the_reaction()
+        working_with_the_reaction(db_handler)
     elif user_input == "8":  # Настройки для программы (прописываем ссылку для inviting, api_id, api_hash)
-        program_settings()
+        program_settings(db_handler)
     elif user_input == "9":  # Проверка аккаунта через спам бот
-        check_account_for_spam()
+        check_account_for_spam(db_handler)
     elif user_input == "10":  # Создание групп (чатов)
-        creating_groups_and_chats()
+        creating_groups_and_chats(db_handler)
     elif user_input == '11':
         change_bio_profile()  # Редактирование описания профиля
     elif user_input == '12':
@@ -93,7 +93,7 @@ def main_menu() -> None:  # 1 - Основное меню программы
         main_menu()  # После отработки функции переходим в начальное меню
 
 
-def inviting_groups() -> None:  # 1 - Inviting в группы
+def inviting_groups(db_handler) -> None:  # 1 - Inviting в группы
     """"Inviting в группы"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     table = Table(title=f"[medium_purple3]Inviting {link_group}!", box=box.HORIZONTALS)  # Выводим таблицу
@@ -110,9 +110,9 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Inviting по списку software_database.db
-        invitation_from_all_accounts_program_body(name_database_table="members")
+        invitation_from_all_accounts_program_body(name_database_table="members", db_handler=db_handler)
     elif user_input == "2":  # Inviting по списку software_database.db, с лимитами
-        invite_from_multiple_accounts_with_limits(name_database_table="members")
+        invite_from_multiple_accounts_with_limits(name_database_table="members", db_handler=db_handler)
     elif user_input == "3":  # Inviting по времени 1 раз в час
         launching_an_invite_once_an_hour()
     elif user_input == "4":  # Inviting по времени
@@ -122,7 +122,7 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
-        inviting_groups()  # Если пользователь ввел не правильный номер, то возвращаемся в начало выбора
+        inviting_groups(db_handler)  # Если пользователь ввел не правильный номер, то возвращаемся в начало выбора
     main_menu()  # После отработки функции переходим в начальное меню
 
 
@@ -150,17 +150,17 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
         # Перед началом parsing очистка таблицы writing_group_links
         db_handler.cleaning_db(name_database_table="writing_group_links")
 
-        writing_group_links_to_file(name_database="writing_group_links")
-        parsing_mass_parsing_of_groups()  # Парсинг участников чата
+        writing_group_links_to_file(name_database="writing_group_links", db_handler=db_handler)
+        parsing_mass_parsing_of_groups(db_handler)  # Парсинг участников чата
 
     elif user_input == "2":  # Parsing группы из подписанных
-        choosing_a_group_from_the_subscribed_ones_for_parsing()
+        choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler)
     elif user_input == "3":  # Parsing активных участников группы
         chat_input: str = console.input(
             "[medium_purple3][+] Введите ссылку на чат с которого будем собирать активных: ")
         limit_active_user: int = console.input(
             "[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
-        parsing_of_active_participants(chat_input, limit_active_user)
+        parsing_of_active_participants(chat_input, limit_active_user, db_handler)
     elif user_input == "4":  # Parsing групп / каналов на которые подписан аккаунт
         parsing_groups_which_account_subscribed(db_handler)
     elif user_input == "5":  # Очистка списка software_database.db
@@ -169,15 +169,15 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
         print("[medium_purple3][+] Введите username, для вставки в графическое окно "
               "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
               "быть переключен на английский")
-        writing_members()
+        writing_members(db_handler)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
-        telegram_parsing_menu()
+        telegram_parsing_menu(db_handler)
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-def working_tools_contacts() -> None:  # 3 - Работаем с контактами телефонной книги
+def working_tools_contacts(db_handler) -> None:  # 3 - Работаем с контактами телефонной книги
     """Работаем с контактами телефонной книги"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Работа с контактами!", box=box.HORIZONTALS)  # Выводим таблицу
@@ -192,21 +192,21 @@ def working_tools_contacts() -> None:  # 3 - Работаем с контакт�
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Формирование списка контактов
-        we_record_phone_numbers_in_the_db()
+        we_record_phone_numbers_in_the_db(db_handler)
     elif user_input == "2":  # Отображение списка контактов
-        show_account_contact_list()
+        show_account_contact_list(db_handler)
     elif user_input == "3":  # Удаляем все контакты с аккаунтов
-        delete_contact()
+        delete_contact(db_handler)
     elif user_input == "4":  # Вносим контакты в телефонную книгу
-        inviting_contact()
+        inviting_contact(db_handler)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
-        working_tools_contacts()
+        working_tools_contacts(db_handler)
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-def subscribe_unsubscribe_write_to_file() -> None:  # 4 - Подписка, отписка, запись в файл групп
+def subscribe_unsubscribe_write_to_file(db_handler) -> None:  # 4 - Подписка, отписка, запись в файл групп
     """Подписка, отписка, запись в файл групп"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Подписываемся / отписываемся!", box=box.HORIZONTALS)  # Выводим таблицу
@@ -224,18 +224,18 @@ def subscribe_unsubscribe_write_to_file() -> None:  # 4 - Подписка, от
               "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
               "быть переключен на английский")
         name_database = "writing_group_links"
-        writing_group_links_to_file(name_database)
-        subscription_all()
+        writing_group_links_to_file(name_database, db_handler)
+        subscription_all(db_handler)
     elif user_input == "2":  # Отписываемся от групп / каналов (работа с несколькими аккаунтами)
-        unsubscribe_all()
+        unsubscribe_all(db_handler)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
-        subscribe_unsubscribe_write_to_file()
+        subscribe_unsubscribe_write_to_file(db_handler)
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылка сообщений в личку
+def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Рассылка сообщений в личку
     """Рассылка сообщений в личку"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Рассылка сообщений в личку!", box=box.HORIZONTALS)  # Выводим таблицу
@@ -256,32 +256,32 @@ def sending_messages_to_a_personal_account_chat() -> None:  # 6 - Рассылк
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Отправка сообщений в личку по parsing списку user_settings/software_database.db
-        we_send_a_message_by_members(limits=None)
+        we_send_a_message_by_members(limits=None, db_handler=db_handler)
     elif user_input == "2":  # Отправка файлов в личку по parsing списку user_settings/software_database.db
-        send_files_to_personal_account(limits=None)
+        send_files_to_personal_account(limits=None, db_handler=db_handler)
     elif user_input == "3":  # Рассылка сообщений по чатам
-        sending_messages_chats()
+        sending_messages_chats(db_handler)
     elif user_input == "4":  # Рассылка сообщений по чатам по времени
         message_entry_window_time()
         message_time()
     elif user_input == "5":  # Рассылка файлов по чатам
-        sending_files_via_chats()
+        sending_files_via_chats(db_handler)
     elif user_input == "6":  # Рассылка сообщений + файлов по чатам
         sending_messages_files_via_chats()
     elif user_input == "7":  # Запись чатов в файл для рассылки сообщений
-        output_the_input_field()
+        output_the_input_field(db_handler)
     elif user_input == "8":  # Отправка сообщений в личку (с лимитами)
-        we_send_a_message_by_members(limits=limits_message)
+        we_send_a_message_by_members(limits=limits_message, db_handler=db_handler)
     elif user_input == "9":  # Отправка файлов в личку (с лимитами)
-        send_files_to_personal_account(limits=limits_message)
+        send_files_to_personal_account(limits=limits_message, db_handler=db_handler)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
-        sending_messages_to_a_personal_account_chat()
+        sending_messages_to_a_personal_account_chat(db_handler)
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-def working_with_the_reaction() -> None:  # 7 - Работа с реакциями на посты группы или канала
+def working_with_the_reaction(db_handler) -> None:  # 7 - Работа с реакциями на посты группы или канала
     """Работа с реакциями на посты группы или канала"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Работа с реакциями / постами!", box=box.HORIZONTALS)  # Выводим таблицу
@@ -298,17 +298,17 @@ def working_with_the_reaction() -> None:  # 7 - Работа с реакциям
     if user_input == "1":  # Ставим реакции на один пост в группе / канале
         users_choice_of_reaction()
     elif user_input == "2":  # Накручиваем просмотры постов
-        viewing_posts()
+        viewing_posts(db_handler)
     elif user_input == "3":
-        setting_reactions()  # Автоматическое выставление реакций
+        setting_reactions(db_handler)  # Автоматическое выставление реакций
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
-        working_with_the_reaction()
+        working_with_the_reaction(db_handler)
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-def program_settings() -> None:  # 8 - Настройки программы, запись времени, api_id, api_hash, запись ссылки для inviting
+def program_settings(db_handler) -> None:  # 8 - Настройки программы, запись времени, api_id, api_hash, запись ссылки для inviting
     """Настройки программы, запись времени задержки, api_id, api_hash, запись ссылки для inviting"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Настройки программы!", box=box.HORIZONTALS)  # Выводим таблицу
@@ -369,8 +369,8 @@ def program_settings() -> None:  # 8 - Настройки программы, з
               "начала меньшее, потом большее. НАПРИМЕР: 10 20!")
         create_main_window(variable="time_subscription")
     elif user_input == "6":  # Запись данных для proxy
-        creating_the_main_window_for_proxy_data_entry()
-        program_settings()
+        creating_the_main_window_for_proxy_data_entry(db_handler)
+        program_settings(db_handler)
     elif user_input == "7":  # Запись лимитов на аккаунт
         writing_settings_to_a_file(config=record_account_limits())
     elif user_input == "8":  # Запись типа устройства
@@ -395,7 +395,7 @@ def program_settings() -> None:  # 8 - Настройки программы, з
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
-        program_settings()
+        program_settings(db_handler)
     main_menu()  # После отработки функции переходим в начальное меню
 
 

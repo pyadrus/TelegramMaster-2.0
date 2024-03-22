@@ -3,15 +3,12 @@ import random
 import requests
 from rich import print
 
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
-
-def reading_proxy_data_from_the_database():
+def reading_proxy_data_from_the_database(db_handler):
     """Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
     username - логин (например: username), password - пароль (например: password)"""
     try:
-        db_handler = DatabaseHandler()
         records: list = db_handler.open_and_read_data("proxy")
         proxy_random_list = random.choice(records)
         print(f"[magenta]{proxy_random_list}")
@@ -36,21 +33,20 @@ def unpacking_a_dictionary_with_proxy_by_variables(proxy):
     return proxy_type, addr, port, username, password, rdns
 
 
-def checking_the_proxy_for_work() -> None:
+def checking_the_proxy_for_work(db_handler) -> None:
     """Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
     уровня, который используется для демонстрации работы сетевых протоколов. На этом сайте нет никакого контента, но он
     используется для различных тестов."""
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("proxy")
     for proxy_dic in records:
         print(proxy_dic)
         # Распаковка словаря с proxy по переменным
         proxy_type, addr, port, username, password, rdns = unpacking_a_dictionary_with_proxy_by_variables(proxy_dic)
         # Подключение к proxy с проверкой на работоспособность
-        connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns)
+        connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler)
 
 
-def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns) -> None:
+def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler) -> None:
     """Подключение к proxy с проверкой на работоспособность где: proxy_type - тип proxy (например: SOCKS5),
     addr - адрес (например: 194.67.248.9), port - порт (например: 9795), username - логин (например: username),
     password - пароль (например: password)"""
@@ -64,10 +60,4 @@ def connecting_to_proxy_with_verification(proxy_type, addr, port, username, pass
     # Это может быть из-за недоступности сервера, ошибочного URL или других проблем с соединением.
     except requests.exceptions.RequestException:
         print('[magenta][-] Proxy не рабочий!')
-        db_handler = DatabaseHandler()
         db_handler.deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns)
-
-
-if __name__ == "__main__":
-    reading_proxy_data_from_the_database()
-    checking_the_proxy_for_work()

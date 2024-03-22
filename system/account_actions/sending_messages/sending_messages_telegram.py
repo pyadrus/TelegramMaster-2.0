@@ -9,12 +9,11 @@ from system.auxiliary_functions.auxiliary_functions import record_and_interrupt,
 from system.auxiliary_functions.global_variables import console, time_inviting_1
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 from system.telegram_actions.telegram_actions import get_username  # 152
 
 
-def we_send_a_message_by_members(limits) -> None:
+def we_send_a_message_by_members(limits, db_handler) -> None:
     """Рассылка сообщений по списку software_database.db"""
     # Предупреждаем пользователя о вводе ссылок в графическое окно программы
     print("[medium_purple3][+] Введите текст который будем рассылать в личку, для вставки в графическое окно готового "
@@ -27,7 +26,7 @@ def we_send_a_message_by_members(limits) -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
         message_text = text.get("1.0", 'end-1c')
         closing_the_input_field()
-        we_send_a_message_from_all_accounts(message_text, limits)
+        we_send_a_message_from_all_accounts(message_text, limits, db_handler)
 
     def closing_the_input_field() -> None:
         """Закрываем программу"""
@@ -37,7 +36,7 @@ def we_send_a_message_by_members(limits) -> None:
     root.mainloop()  # Запускаем программу
 
 
-def send_files_to_personal_account(limits) -> None:
+def send_files_to_personal_account(limits, db_handler) -> None:
     """Отправка файлов в личку"""
     # Просим пользователя ввести расширение сообщения
     link_to_the_file: str = console.input(
@@ -45,7 +44,6 @@ def send_files_to_personal_account(limits) -> None:
     event: str = f"Отправляем сообщение"
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
@@ -89,7 +87,7 @@ def send_files_to_personal_account(limits) -> None:
     app_notifications(notification_text="Работа окончена!")  # Выводим уведомление
 
 
-def we_send_a_message_from_all_accounts(message_text, limits) -> None:
+def we_send_a_message_from_all_accounts(message_text, limits, db_handler) -> None:
     """
     Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
     Args:
@@ -103,7 +101,6 @@ def we_send_a_message_from_all_accounts(message_text, limits) -> None:
     event: str = f"Отправляем сообщение в личку пользователям Telegram"
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал

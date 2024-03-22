@@ -14,7 +14,6 @@ from system.auxiliary_functions.global_variables import time_inviting_1
 from system.auxiliary_functions.global_variables import time_inviting_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_banner import banner
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
 def display_progress_bar(time_range_1, time_range_2, message) -> None:
@@ -26,18 +25,17 @@ def display_progress_bar(time_range_1, time_range_2, message) -> None:
         time.sleep(1)
 
 
-def record_inviting_results(username, phone, description_action, event, actions) -> None:
+def record_inviting_results(username, phone, description_action, event, actions, db_handler) -> None:
     """Запись результатов inviting, отправка сообщений в базу данных"""
-    record_account_actions(phone, description_action, event, actions)
-    db_handler = DatabaseHandler()
+    record_account_actions(phone, description_action, event, actions, db_handler)
     db_handler.delete_row_db(table="members", column="username", value=username)
     # Смена username через случайное количество секунд
     display_progress_bar(time_inviting_1, time_inviting_2, "Переход к новому username")
 
 
-def record_and_interrupt(actions, phone, description_action, event) -> None:
+def record_and_interrupt(actions, phone, description_action, event, db_handler) -> None:
     """Запись данных в базу данных и прерывание выполнения кода"""
-    record_account_actions(phone, description_action, event, actions)
+    record_account_actions(phone, description_action, event, actions, db_handler)
     # Смена аккаунта через случайное количество секунд
     display_progress_bar(time_changing_accounts_1, time_changing_accounts_2, "Ожидайте смены аккаунта")
 

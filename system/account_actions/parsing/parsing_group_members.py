@@ -20,10 +20,8 @@ from system.account_actions.subscription.subscription import subscribe_to_the_gr
     subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import display_progress_bar
 from system.auxiliary_functions.global_variables import console, time_activity_user_1, time_activity_user_2
-from system.error.telegram_errors import handle_exceptions_pars
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
@@ -64,10 +62,9 @@ def all_participants_user(all_participants) -> list:
     return entities  # Возвращаем словарь пользователей
 
 
-def parsing_mass_parsing_of_groups() -> None:
+def parsing_mass_parsing_of_groups(db_handler) -> None:
     """Parsing групп, ввод в графическое окно списка групп"""
     # Открываем базу с аккаунтами и с выставленными лимитами
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
@@ -76,7 +73,7 @@ def parsing_mass_parsing_of_groups() -> None:
         records: list = db_handler.open_and_read_data("writing_group_links")
         for groups in records:  # Поочередно выводим записанные группы
             groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
-            group_parsing(client, groups_wr, phone)  # Parsing групп
+            group_parsing(client, groups_wr, phone, db_handler)  # Parsing групп
             # Удаляем отработанную группу или канал
             db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
         db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
@@ -86,8 +83,7 @@ def parsing_mass_parsing_of_groups() -> None:
     app_notifications(notification_text="Список успешно сформирован!")  # Выводим уведомление
 
 
-@handle_exceptions_pars
-def group_parsing(client, groups_wr, phone) -> None:
+def group_parsing(client, groups_wr, phone, db_handler) -> None:
     """
     Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
     @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
@@ -96,14 +92,11 @@ def group_parsing(client, groups_wr, phone) -> None:
         all_participants: list = parsing_of_users_from_the_selected_group(client, groups_wr)
         # Записываем parsing данные в файл user_settings/software_database.db
         entities = all_participants_user(all_participants)
-        db_handler = DatabaseHandler()
         db_handler.write_parsed_chat_participants_to_db(entities)
 
 
-@handle_exceptions_pars
-def choosing_a_group_from_the_subscribed_ones_for_parsing() -> None:
+def choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler) -> None:
     """Выбираем группу из подписанных для parsing"""
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
@@ -114,9 +107,8 @@ def choosing_a_group_from_the_subscribed_ones_for_parsing() -> None:
         entities = all_participants_user(all_participants_list)
         db_handler.write_parsed_chat_participants_to_db(entities)
         db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
-        db_handler.delete_duplicates(
-            table_name="members", column_name="id"
-        )  # Чистка дублирующих username по столбцу id
+        db_handler.delete_duplicates(table_name="members",
+                                     column_name="id")  # Чистка дублирующих username по столбцу id
         client.disconnect()  # Разрываем соединение telegram
 
 
@@ -167,7 +159,7 @@ def output_a_list_of_groups_new(client):
     return target_group
 
 
-def writing_members() -> None:
+def writing_members(db_handler) -> None:
     """Запускаем окно программы (большого поля ввода)"""
     root, text = program_window()
 
@@ -176,7 +168,6 @@ def writing_members() -> None:
         message_text = text.get("1.0", "end-1c")
         closing_the_input_field()
         lines = message_text.split("\n")
-        db_handler = DatabaseHandler()
         db_handler.write_members_column_table(lines)
 
     def closing_the_input_field() -> None:
@@ -231,8 +222,7 @@ def getting_active_user_data(user):
     return entity
 
 
-@handle_exceptions_pars
-def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, limit_active_user) -> None:
+def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, limit_active_user, db_handler) -> None:
     """
     Получаем данные участников группы которые писали сообщения
 
@@ -246,11 +236,10 @@ def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, limit_
         display_progress_bar(time_activity_user_1, time_activity_user_2, "Выполнение задачи...")
         entities = getting_active_user_data(from_user)
         logger.info(entities)
-        db_handler = DatabaseHandler()
         db_handler.write_parsed_chat_participants_to_db_active(entities)
 
 
-def parsing_of_active_participants(chat_input, limit_active_user) -> None:
+def parsing_of_active_participants(chat_input, limit_active_user, db_handler) -> None:
     """
     Parsing участников, которые пишут в чат (активных участников)
 
@@ -259,7 +248,6 @@ def parsing_of_active_participants(chat_input, limit_active_user) -> None:
     limit_active_user: лимит активных участников
     """
     # Открываем базу с аккаунтами и с выставленными лимитами
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
@@ -267,7 +255,7 @@ def parsing_of_active_participants(chat_input, limit_active_user) -> None:
         # Подписываемся на чат, с которого будем parsing активных участников
         subscribe_to_group_or_channel(client, chat_input, phone)
         time.sleep(time_activity_user_2)
-        we_get_the_data_of_the_group_members_who_wrote_messages(client, chat_input, limit_active_user)
+        we_get_the_data_of_the_group_members_who_wrote_messages(client, chat_input, limit_active_user, db_handler)
         client.disconnect()  # Разрываем соединение telegram
     db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
     db_handler.delete_duplicates(table_name="members", column_name="id")  # Чистка дублирующих username по столбцу id
@@ -276,7 +264,7 @@ def parsing_of_active_participants(chat_input, limit_active_user) -> None:
 """Работа с номерами телефонов"""
 
 
-def we_record_phone_numbers_in_the_db() -> None:
+def we_record_phone_numbers_in_the_db(db_handler) -> None:
     """Записываем номера телефонов в базу данных"""
     print("[magenta]Контакты которые были добавлены в телефонную книгу, будем записывать с файл "
           "software_database.db, в папке user_settings")
@@ -292,41 +280,36 @@ def we_record_phone_numbers_in_the_db() -> None:
             entities = [lines]
             creating_a_table = "CREATE TABLE IF NOT EXISTS contact(phone)"
             writing_data_to_a_table = "INSERT INTO contact(phone) VALUES (?)"
-            db_handler = DatabaseHandler()
             db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
 
 
-@handle_exceptions_pars
-def show_account_contact_list() -> None:
+def show_account_contact_list(db_handler) -> None:
     """Показать список контактов аккаунтов и запись результатов в файл"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row)
-        parsing_and_recording_contacts_in_the_database(client)
+        parsing_and_recording_contacts_in_the_database(client, db_handler)
         client.disconnect()  # Разрываем соединение telegram
 
 
-def parsing_and_recording_contacts_in_the_database(client) -> None:
+def parsing_and_recording_contacts_in_the_database(client, db_handler) -> None:
     """Парсинг и запись контактов в базу данных"""
     entities = []  # Создаем список сущностей
     all_participants = get_and_parse_contacts(client)
     for contact in all_participants:  # Выводим результат parsing
         getting_user_data(contact, entities)
-    db_handler = DatabaseHandler()
     db_handler.write_parsed_chat_participants_to_db(entities)
 
 
-def we_get_the_account_id(client) -> None:
+def we_get_the_account_id(client, db_handler) -> None:
     """Получаем id аккаунта"""
     entities = []  # Создаем список сущностей
     all_participants = get_and_parse_contacts(client)
     for user in all_participants:  # Выводим результат parsing
         getting_user_data(user, entities)
         we_show_and_delete_the_contact_of_the_phone_book(client, user)
-    db_handler = DatabaseHandler()
     db_handler.write_parsed_chat_participants_to_db(entities)
 
 
@@ -345,36 +328,30 @@ def we_show_and_delete_the_contact_of_the_phone_book(client, user) -> None:
     time.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
 
 
-@handle_exceptions_pars
-def delete_contact() -> None:
+def delete_contact(db_handler) -> None:
     """Удаляем контакты с аккаунтов"""
-
-    db_handler = DatabaseHandler()  # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row)
-        we_get_the_account_id(client)
+        we_get_the_account_id(client, db_handler)
         client.disconnect()  # Разрываем соединение telegram
 
 
-@handle_exceptions_pars
-def inviting_contact() -> None:
+def inviting_contact(db_handler) -> None:
     """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    db_handler = DatabaseHandler()
     records: list = db_handler.open_and_read_data("config")
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row)
-        adding_a_contact_to_the_phone_book(client)
+        adding_a_contact_to_the_phone_book(client, db_handler)
 
 
-def adding_a_contact_to_the_phone_book(client) -> None:
+def adding_a_contact_to_the_phone_book(client, db_handler) -> None:
     """Добавляем контакт в телефонную книгу"""
 
-    db_handler = DatabaseHandler()  # Открываем сформированный список user_settings/software_database.db
     records: list = db_handler.open_and_read_data("contact")
     print(f"[medium_purple3]Всего номеров: {len(records)}")
     entities = []  # Создаем список сущностей
@@ -403,13 +380,3 @@ def adding_a_contact_to_the_phone_book(client) -> None:
     client.disconnect()  # Разрываем соединение telegram
     db_handler.write_parsed_chat_participants_to_db(entities)
     db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
-
-
-if __name__ == "__main__":
-    choosing_a_group_from_the_subscribed_ones_for_parsing()
-    parsing_mass_parsing_of_groups()
-    show_account_contact_list()
-    delete_contact()
-    inviting_contact()
-    writing_members()
-    we_record_phone_numbers_in_the_db()
