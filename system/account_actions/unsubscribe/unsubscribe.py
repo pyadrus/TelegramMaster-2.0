@@ -2,6 +2,9 @@ from rich import print
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
+from telethon.tl.functions.channels import LeaveChannelRequest
+from loguru import logger
+from telethon.errors import *
 
 
 def unsubscribe_all() -> None:
@@ -18,6 +21,20 @@ def unsubscribe_all() -> None:
             client.delete_dialog(dialog)
             client.disconnect()
     app_notifications(notification_text="Список почистили!")  # Выводим уведомление
+
+
+def unsubscribe_from_the_group(client, group_link) -> None:
+    """
+    Отписываемся от группы
+    """
+    try:
+        entity = client.get_entity(group_link)
+        if entity:
+            client(LeaveChannelRequest(entity))
+    except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
+        logger.error(f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
+    finally:
+        client.disconnect()  # Разрываем соединение с Telegram
 
 
 if __name__ == "__main__":

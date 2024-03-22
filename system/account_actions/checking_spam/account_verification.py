@@ -49,7 +49,9 @@ def check_account_for_spam() -> None:
                     print('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                     record_account_actions(phone, description_action, event, actions)
-                    working_with_accounts(row)  # Перенос аккаунта в папку бан
+                    # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
+                    working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
+                                          new_account_folder=f"user_settings/accounts/banned/{row[2]}.session")
                 similarity_ratio_en: int = fuzz.ratio(f"{message.message}",
                                                       "I’m very sorry that you had to contact me. Unfortunately, "
                                                       "some account_actions can trigger a harsh response from our "
@@ -71,18 +73,13 @@ def check_account_for_spam() -> None:
             continue  # Записываем ошибку в software_database.db и продолжаем работу
 
 
-def working_with_accounts(row) -> None:
+def working_with_accounts(account_folder, new_account_folder) -> None:
     """Работа с аккаунтами"""
-    try:
-        os.replace(f"user_settings/accounts/{row[2]}.session",
-                   f"user_settings/accounts/banned/{row[2]}.session")
-    except FileNotFoundError:
-        # Если в папке accounts нет папки invalid_account, то создаем папку invalid_account
-        print("В папке accounts нет папки invalid_account, создаем папку banned")
-        # Создаем папку invalid_account в папке accounts
-        os.makedirs("user_settings/accounts/banned")
-        os.replace(f"user_settings/accounts/{row[2]}.session",
-                   f"user_settings/accounts/banned/{row[2]}.session")
+    try:  # Переносим файлы в нужную папку
+        os.replace(account_folder, new_account_folder)
+    except FileNotFoundError:  # Если в папке нет нужной папки, то создаем ее
+        os.makedirs(new_account_folder)
+        os.replace(account_folder, new_account_folder)
 
 
 if __name__ == "__main__":

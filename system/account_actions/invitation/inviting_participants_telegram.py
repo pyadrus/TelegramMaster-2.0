@@ -1,10 +1,11 @@
 import datetime
+
+from loguru import logger
 from rich import print
 from telethon.errors import *
-from telethon.tl.functions.channels import LeaveChannelRequest
-from loguru import logger
 
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
+from system.account_actions.unsubscribe.unsubscribe import unsubscribe_from_the_group
 from system.auxiliary_functions.auxiliary_functions import clearing_console_showing_banner
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.auxiliary_functions import record_inviting_results
@@ -12,8 +13,8 @@ from system.auxiliary_functions.global_variables import limits
 from system.auxiliary_functions.global_variables import link_group
 from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 from system.telegram_actions.telegram_actions import get_username
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 event: str = f"Inviting в группу {link_group}"  # Событие, которое записываем в базу данных
 
@@ -50,20 +51,6 @@ def invitation_from_all_accounts_program_body(name_database_table) -> None:
             print(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}')
             continue  # Прерываем работу и меняем аккаунт
     app_notifications(notification_text=f"Работа с группой {link_group} окончена!")  # Выводим уведомление
-
-
-def unsubscribe_from_the_group(client, group_link) -> None:
-    """
-    Отписываемся от группы
-    """
-    try:
-        entity = client.get_entity(group_link)
-        if entity:
-            client(LeaveChannelRequest(entity))
-    except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
-        logger.error(f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
-    finally:
-        client.disconnect()  # Разрываем соединение с Telegram
 
 
 def invite_from_multiple_accounts_with_limits(name_database_table) -> None:
@@ -150,13 +137,12 @@ def inviting(client, phone, records) -> None:
             record_and_interrupt(actions, phone, f"username : {username}", event)
             break  # Прерываем работу и меняем аккаунт
         except KeyboardInterrupt:  # Закрытие окна программы
-            client.disconnect()
+            client.disconnect()  # Разрываем соединение telegram
             print("[!] Скрипт остановлен!")
         else:
             # Записываем данные в базу данных, чистим список кого добавляли или писали сообщение
             actions: str = f"Участник {username} добавлен, если не состоит в чате"
             print(f"[magenta][+] {actions}")
             record_inviting_results(username, phone, f"username : {username}", event, actions)
-    # Отписываемся от группы, на которую подписались в самом начале
-    unsubscribe_from_the_group(client, link_group)
+    unsubscribe_from_the_group(client, link_group)  # Отписываемся от группы, на которую подписались в самом начале
     client.disconnect()  # Разрываем соединение telegram
