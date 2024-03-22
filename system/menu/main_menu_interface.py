@@ -44,6 +44,7 @@ logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")
 
 def main_menu() -> None:  # 1 - Основное меню программы
     """Основное меню программы"""
+    db_handler = DatabaseHandler()  # Создаем объект для работы с БД
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Основные функции программы!", box=box.HORIZONTALS)  # Выводим таблицу
     column_names(table)  # Формируем колонки таблицы
@@ -66,7 +67,7 @@ def main_menu() -> None:  # 1 - Основное меню программы
     if user_input == "1":  # Inviting в группы
         inviting_groups()
     elif user_input == "2":  # Parsing, в новый файл members.db и до записи в файл
-        telegram_parsing_menu()
+        telegram_parsing_menu(db_handler)
     elif user_input == "3":  # Работаем с контактами телефонной книги
         working_tools_contacts()
     elif user_input == "4":  # Работаем с подпиской, подписка, отписка, запись ссылок в файл
@@ -125,7 +126,7 @@ def inviting_groups() -> None:  # 1 - Inviting в группы
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активных участников группы
+def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и активных участников группы
     """Parsing групп и активных участников группы"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Parsing участников групп!", box=box.HORIZONTALS)  # Выводим таблицу
@@ -146,9 +147,8 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
               "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
               "быть переключен на английский")
 
-        db_handler = DatabaseHandler()
-        db_handler.cleaning_db(
-            name_database_table="writing_group_links")  # Перед началом parsing очистка таблицы writing_group_links
+        # Перед началом parsing очистка таблицы writing_group_links
+        db_handler.cleaning_db(name_database_table="writing_group_links")
 
         writing_group_links_to_file(name_database="writing_group_links")
         parsing_mass_parsing_of_groups()  # Парсинг участников чата
@@ -162,9 +162,8 @@ def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активны
             "[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
         parsing_of_active_participants(chat_input, limit_active_user)
     elif user_input == "4":  # Parsing групп / каналов на которые подписан аккаунт
-        parsing_groups_which_account_subscribed()
+        parsing_groups_which_account_subscribed(db_handler)
     elif user_input == "5":  # Очистка списка software_database.db
-        db_handler = DatabaseHandler()
         db_handler.cleaning_db(name_database_table="members")
     elif user_input == "6":  # Формирование списка
         print("[medium_purple3][+] Введите username, для вставки в графическое окно "
