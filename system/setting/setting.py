@@ -150,14 +150,6 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
     return config
 
 
-def reading_hour_minutes_every_day():
-    """Считываем час и минуты с файла user_settings/config.ini для запуска inviting на каждый день"""
-    config.read("user_settings/config.ini")  # Файл с настройками
-    hour = config["hour_minutes_every_day"]["hour"]  # api_id с файла user_settings/config.ini
-    minutes = config["hour_minutes_every_day"]["minutes"]  # api_hash с файла user_settings/config.ini
-    return hour, minutes
-
-
 def connecting_new_account() -> None:
     """Вводим данные в базу данных user_settings/software_database.db"""
     phone_data = console.input("[magenta][+] Введите номер телефона : ")  # Вводим номер телефона
