@@ -9,21 +9,27 @@ from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 
 def change_profile_descriptions(client):
     """Смена описания профиля"""
-    user_input = input('Введите описание профиля, не более 70 символов: ')
+    user_input: str = input('Введите описание профиля, не более 70 символов: ')
     try:
         result = client(functions.account.UpdateProfileRequest(about=user_input))
-        logger.info(result)
-        logger.info("Профиль успешно обновлен!")
+        logger.info(f'{result}\nПрофиль успешно обновлен!')
         client.disconnect()
     except AuthKeyUnregisteredError:
         logger.error("Ошибка соединения с профилем")
 
 
-def change_bio_profile(db_handler):
-    """Изменение описания профиля"""
-    user_input = input('Введите название файла, без session: ')
+def telegram_connect(db_handler, session) -> TelegramClient:
+    """Подключение к Telegram с помощью proxy"""
     proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
-    client = TelegramClient(f"user_settings/bio_accounts/accounts/{user_input}", api_id_data, api_hash_data,
+    client = TelegramClient(session=session, api_id=api_id_data, api_hash=api_hash_data,
                             system_version="4.16.30-vxCUSTOM", proxy=proxy)
     client.connect()  # Подсоединяемся к Telegram
+
+    return client  # Возвращаем клиент
+
+
+def change_bio_profile(db_handler):
+    """Изменение описания профиля"""
+    user_input: str = input('Введите название файла, без session: ')
+    client = telegram_connect(db_handler, session=f"user_settings/accounts/bio_accounts/{user_input}")
     change_profile_descriptions(client)
