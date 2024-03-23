@@ -37,7 +37,7 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
                                                                  number_of_accounts=int(number_of_accounts))
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-        proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
+        proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
         client = TelegramClient(f"{user_folder}/{accounts_folder}/{row[2]}", int(row[0]), row[1],
                                 system_version="4.16.30-vxCUSTOM", proxy=proxy)
         await client.connect()  # Подсоединяемся к Telegram
@@ -94,7 +94,7 @@ def connecting_account_sessions_config_reactions() -> list:
 
 def setting_reactions(db_handler):
     """Выставление реакций на новые посты"""
-    writing_names_found_files_to_the_db_config_reactions()
+    writing_names_found_files_to_the_db_config_reactions(db_handler)
 
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records_ac: list = db_handler.open_and_read_data("config_reactions")
@@ -112,7 +112,7 @@ def setting_reactions(db_handler):
 
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-        proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
+        proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
         client = TelegramClient(f"user_settings/reactions/accounts/{row[2]}", int(row[0]), row[1],
                                 system_version="4.16.30-vxCUSTOM", proxy=proxy)
         client.connect()
@@ -133,7 +133,7 @@ def setting_reactions(db_handler):
             # Проверяем, является ли сообщение постом и не является ли оно нашим
             if message.post and not message.out:
 
-                await reactions_for_groups_and_messages_test(message_id, chat)
+                await reactions_for_groups_and_messages_test(message_id, chat,db_handler)
 
     client.run_until_disconnected()  # Запуск клиента
 
@@ -283,7 +283,7 @@ def reaction_gui():
     ft.app(target=main)  # Запускает приложение, используя функцию main в качестве точки входа.
 
 
-def users_choice_of_reaction() -> None:
+def users_choice_of_reaction(db_handler) -> None:
     """Выбираем реакцию для выставления в чате / канале"""
     print("[medium_purple3][!] Давайте выберем какую реакцию будем ставить\n",
           "[magenta][0] Поднятый большой палец 👍\n",
@@ -337,105 +337,105 @@ def users_choice_of_reaction() -> None:
     user_input = console.input("[medium_purple3][+] Введите номер: ")
 
     if user_input == "0":
-        reactions_for_groups_and_messages(reaction_input="👍")  # Поднятый большой палец
+        reactions_for_groups_and_messages(reaction_input="👍", db_handler=db_handler)  # Поднятый большой палец
     elif user_input == "1":
-        reactions_for_groups_and_messages(reaction_input="👎")  # Опущенный большой палец
+        reactions_for_groups_and_messages(reaction_input="👎", db_handler=db_handler)  # Опущенный большой палец
     elif user_input == "2":
-        reactions_for_groups_and_messages(reaction_input="❤")  # Красное сердце
+        reactions_for_groups_and_messages(reaction_input="❤", db_handler=db_handler)  # Красное сердце
     elif user_input == "3":
-        reactions_for_groups_and_messages(reaction_input="🔥")  # Огонь
+        reactions_for_groups_and_messages(reaction_input="🔥", db_handler=db_handler)  # Огонь
     elif user_input == "4":
-        reactions_for_groups_and_messages(reaction_input="🎉")  # Хлопушка
+        reactions_for_groups_and_messages(reaction_input="🎉", db_handler=db_handler)  # Хлопушка
     elif user_input == "5":
-        reactions_for_groups_and_messages(reaction_input="😱")  # Лицо, кричащее от страха
+        reactions_for_groups_and_messages(reaction_input="😱", db_handler=db_handler)  # Лицо, кричащее от страха
     elif user_input == "6":
-        reactions_for_groups_and_messages(reaction_input="😁")  # Широко улыбающееся лицо
+        reactions_for_groups_and_messages(reaction_input="😁", db_handler=db_handler)  # Широко улыбающееся лицо
     elif user_input == "7":
-        reactions_for_groups_and_messages(reaction_input="😢")  # Лицо с открытым ртом и в холодном поту
+        reactions_for_groups_and_messages(reaction_input="😢", db_handler=db_handler)  # Лицо с открытым ртом и в холодном поту
     elif user_input == "8":
-        reactions_for_groups_and_messages(reaction_input="💩")  # Фекалии
+        reactions_for_groups_and_messages(reaction_input="💩", db_handler=db_handler)  # Фекалии
     elif user_input == "9":
-        reactions_for_groups_and_messages(reaction_input="👏")  # Аплодирующие руки
+        reactions_for_groups_and_messages(reaction_input="👏", db_handler=db_handler)  # Аплодирующие руки
     elif user_input == "11":
-        reactions_for_groups_and_messages(reaction_input="🤷‍♀️")  # Женщина разводит руками
+        reactions_for_groups_and_messages(reaction_input="🤷‍♀️", db_handler=db_handler)  # Женщина разводит руками
     elif user_input == "12":
-        reactions_for_groups_and_messages(reaction_input="🤷")  # Человек разводит руками
+        reactions_for_groups_and_messages(reaction_input="🤷", db_handler=db_handler)  # Человек разводит руками
     elif user_input == "13":
-        reactions_for_groups_and_messages(reaction_input="🤷‍♂️")  # Мужчина разводит руками
+        reactions_for_groups_and_messages(reaction_input="🤷‍♂️", db_handler=db_handler)  # Мужчина разводит руками
     elif user_input == "14":
-        reactions_for_groups_and_messages(reaction_input="👾️")  # Космический монстр
+        reactions_for_groups_and_messages(reaction_input="👾️", db_handler=db_handler)  # Космический монстр
     elif user_input == "15":
-        reactions_for_groups_and_messages(reaction_input="😎")  # Лицо в темных очках
+        reactions_for_groups_and_messages(reaction_input="😎", db_handler=db_handler)  # Лицо в темных очках
     elif user_input == "16":
-        reactions_for_groups_and_messages(reaction_input="🙊")  # Ничего не скажу
+        reactions_for_groups_and_messages(reaction_input="🙊", db_handler=db_handler)  # Ничего не скажу
     elif user_input == "17":
-        reactions_for_groups_and_messages(reaction_input="💊")  # Таблетка
+        reactions_for_groups_and_messages(reaction_input="💊", db_handler=db_handler)  # Таблетка
     elif user_input == "18":
-        reactions_for_groups_and_messages(reaction_input="😘")  # Воздушный поцелуй
+        reactions_for_groups_and_messages(reaction_input="😘", db_handler=db_handler)  # Воздушный поцелуй
     elif user_input == "19":
-        reactions_for_groups_and_messages(reaction_input="🦄")  # Единорог
+        reactions_for_groups_and_messages(reaction_input="🦄", db_handler=db_handler)  # Единорог
     elif user_input == "20":
-        reactions_for_groups_and_messages(reaction_input="💘")  # Сердце со стрелой
+        reactions_for_groups_and_messages(reaction_input="💘", db_handler=db_handler)  # Сердце со стрелой
     elif user_input == "21":
-        reactions_for_groups_and_messages(reaction_input="🆒")  # Значок круто
+        reactions_for_groups_and_messages(reaction_input="🆒", db_handler=db_handler)  # Значок круто
     elif user_input == "22":
-        reactions_for_groups_and_messages(reaction_input="🗿")  # Каменное лицо
+        reactions_for_groups_and_messages(reaction_input="🗿", db_handler=db_handler)  # Каменное лицо
     elif user_input == "23":
-        reactions_for_groups_and_messages(reaction_input="🤪")  # Глупое лицо
+        reactions_for_groups_and_messages(reaction_input="🤪", db_handler=db_handler)  # Глупое лицо
     elif user_input == "24":
-        reactions_for_groups_and_messages(reaction_input="💅")  # Маникюр
+        reactions_for_groups_and_messages(reaction_input="💅", db_handler=db_handler)  # Маникюр
     elif user_input == "25":
-        reactions_for_groups_and_messages(reaction_input="☃")  # Снеговик
+        reactions_for_groups_and_messages(reaction_input="☃", db_handler=db_handler)  # Снеговик
     elif user_input == "26":
-        reactions_for_groups_and_messages(reaction_input="🎄")  # Елочка
+        reactions_for_groups_and_messages(reaction_input="🎄", db_handler=db_handler)  # Елочка
     elif user_input == "27":
-        reactions_for_groups_and_messages(reaction_input="🎅")  # Дед мороз
+        reactions_for_groups_and_messages(reaction_input="🎅", db_handler=db_handler)  # Дед мороз
     elif user_input == "28":
-        reactions_for_groups_and_messages(reaction_input="🤗")  # Объятия
+        reactions_for_groups_and_messages(reaction_input="🤗", db_handler=db_handler)  # Объятия
     elif user_input == "29":
-        reactions_for_groups_and_messages(reaction_input="🤬")  # Непечатные выражения
+        reactions_for_groups_and_messages(reaction_input="🤬", db_handler=db_handler)  # Непечатные выражения
     elif user_input == "30":
-        reactions_for_groups_and_messages(reaction_input="🤮")  # Тошнота
+        reactions_for_groups_and_messages(reaction_input="🤮", db_handler=db_handler)  # Тошнота
     elif user_input == "31":
-        reactions_for_groups_and_messages(reaction_input="🤡")  # Клоун
+        reactions_for_groups_and_messages(reaction_input="🤡", db_handler=db_handler)  # Клоун
     elif user_input == "32":
-        reactions_for_groups_and_messages(reaction_input="🥴")  # Одурманенное лицо
+        reactions_for_groups_and_messages(reaction_input="🥴", db_handler=db_handler)  # Одурманенное лицо
     elif user_input == "33":
-        reactions_for_groups_and_messages(reaction_input="😍")  # Влюбленный глаза
+        reactions_for_groups_and_messages(reaction_input="😍", db_handler=db_handler)  # Влюбленный глаза
     elif user_input == "34":
-        reactions_for_groups_and_messages(reaction_input="💯")  # Сто балов
+        reactions_for_groups_and_messages(reaction_input="💯", db_handler=db_handler)  # Сто балов
     elif user_input == "35":
-        reactions_for_groups_and_messages(reaction_input="🌭")  # Хот-дог
+        reactions_for_groups_and_messages(reaction_input="🌭", db_handler=db_handler)  # Хот-дог
     elif user_input == "36":
-        reactions_for_groups_and_messages(reaction_input="⚡️")  # Высокое напряжение
+        reactions_for_groups_and_messages(reaction_input="⚡️", db_handler=db_handler)  # Высокое напряжение
     elif user_input == "37":
-        reactions_for_groups_and_messages(reaction_input="🍌")  # Банан
+        reactions_for_groups_and_messages(reaction_input="🍌", db_handler=db_handler)  # Банан
     elif user_input == "38":
-        reactions_for_groups_and_messages(reaction_input="🖕")  # Средний палец
+        reactions_for_groups_and_messages(reaction_input="🖕", db_handler=db_handler)  # Средний палец
     elif user_input == "39":
-        reactions_for_groups_and_messages(reaction_input="💋")  # Поцелуй
+        reactions_for_groups_and_messages(reaction_input="💋", db_handler=db_handler)  # Поцелуй
     elif user_input == "40":
-        reactions_for_groups_and_messages(reaction_input="👀")  # Глаза
+        reactions_for_groups_and_messages(reaction_input="👀", db_handler=db_handler)  # Глаза
     elif user_input == "41":
-        reactions_for_groups_and_messages(reaction_input="🤝")  # Рукопожатие
+        reactions_for_groups_and_messages(reaction_input="🤝", db_handler=db_handler)  # Рукопожатие
     elif user_input == "42":
-        reactions_for_groups_and_messages(reaction_input="🍾")  # Шампанское
+        reactions_for_groups_and_messages(reaction_input="🍾", db_handler=db_handler)  # Шампанское
     elif user_input == "43":
-        reactions_for_groups_and_messages(reaction_input="🏆")  # Кубок
+        reactions_for_groups_and_messages(reaction_input="🏆", db_handler=db_handler)  # Кубок
     elif user_input == "44":
-        reactions_for_groups_and_messages(reaction_input="🥱")  # Зевота
+        reactions_for_groups_and_messages(reaction_input="🥱", db_handler=db_handler)  # Зевота
     elif user_input == "45":
-        reactions_for_groups_and_messages(reaction_input="🕊")  # Голубь мира
+        reactions_for_groups_and_messages(reaction_input="🕊", db_handler=db_handler)  # Голубь мира
     elif user_input == "46":
-        reactions_for_groups_and_messages(reaction_input="😭")  # Слезы рекой
+        reactions_for_groups_and_messages(reaction_input="😭", db_handler=db_handler)  # Слезы рекой
 
 
-def reactions_for_groups_and_messages(reaction_input) -> None:
+def reactions_for_groups_and_messages(reaction_input, db_handler) -> None:
     """Вводим ссылку на группу и ссылку на сообщение"""
     chat = console.input("[medium_purple3][+] Введите ссылку на группу / канал: ")  # Ссылка на группу или канал
     message = console.input("[medium_purple3][+] Введите ссылку на сообщение или пост: ")  # Ссылка на сообщение
-    records: list = choosing_a_number_of_reactions()  # Выбираем лимиты для аккаунтов
-    send_reaction_request(records, chat, message, reaction_input)  # Ставим реакцию на пост, сообщение
+    records: list = choosing_a_number_of_reactions(db_handler)  # Выбираем лимиты для аккаунтов
+    send_reaction_request(records, chat, message, reaction_input, db_handler)  # Ставим реакцию на пост, сообщение
 
 
 def choosing_a_number_of_reactions(db_handler) -> list:
@@ -452,13 +452,13 @@ def choosing_a_number_of_reactions(db_handler) -> list:
     return records
 
 
-def send_reaction_request(records, chat, message_url, reaction_input) -> None:
+def send_reaction_request(records, chat, message_url, reaction_input, db_handler) -> None:
     """Ставим реакции на сообщения"""
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row)
         try:
-            subscribe_to_group_or_channel(client, chat, phone)  # Подписываемся на группу
+            subscribe_to_group_or_channel(client, chat, phone, db_handler)  # Подписываемся на группу
             number = re.search(r'/(\d+)$', message_url).group(1)
             time.sleep(5)
             client(SendReactionRequest(peer=chat, msg_id=int(number),
@@ -489,7 +489,7 @@ def viewing_posts(db_handler) -> None:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row)
         try:
-            subscribe_to_group_or_channel(client, chat, phone)  # Подписываемся на группу
+            subscribe_to_group_or_channel(client, chat, phone,db_handler)  # Подписываемся на группу
             channel = client.get_entity(chat)  # Получение информации о канале
             time.sleep(5)
             posts = client.get_messages(channel, limit=10)  # Получение последних 10 постов из канала
@@ -512,6 +512,4 @@ def viewing_posts(db_handler) -> None:
 
 
 if __name__ == "__main__":
-    users_choice_of_reaction()
-    viewing_posts()
     reaction_gui()

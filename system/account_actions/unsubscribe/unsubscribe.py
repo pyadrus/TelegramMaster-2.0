@@ -14,7 +14,7 @@ def unsubscribe_all(db_handler) -> None:
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row, db_handler)
         for dialog in client.iter_dialogs():
             print(f"[magenta]{dialog.name}, {dialog.id}")
             client.delete_dialog(dialog)
@@ -34,7 +34,3 @@ def unsubscribe_from_the_group(client, group_link) -> None:
         logger.error(f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
     finally:
         client.disconnect()  # Разрываем соединение с Telegram
-
-
-if __name__ == "__main__":
-    unsubscribe_all()

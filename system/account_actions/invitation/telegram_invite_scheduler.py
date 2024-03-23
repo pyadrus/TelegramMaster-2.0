@@ -7,10 +7,10 @@ from system.auxiliary_functions.global_variables import console, hour, minutes
 from system.telegram_actions.account_verification import deleting_files_by_dictionary
 
 
-def schedule_member_invitation() -> None:
+def schedule_member_invitation(db_handler) -> None:
     """Запуск inviting"""
-    deleting_files_by_dictionary()
-    invitation_from_all_accounts_program_body(name_database_table="members")
+    deleting_files_by_dictionary(db_handler)
+    invitation_from_all_accounts_program_body(name_database_table="members", db_handler=db_handler)
 
 
 def launching_invite_every_day_certain_time() -> None:
@@ -49,5 +49,4 @@ def schedule_invite() -> None:
 if __name__ == "__main__":
     launching_an_invite_once_an_hour()
     schedule_invite()
-    schedule_member_invitation()
     launching_invite_every_day_certain_time()  # Запуск inviting каждый день в определенное время

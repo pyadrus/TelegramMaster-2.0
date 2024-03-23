@@ -61,24 +61,24 @@ def send_files_to_personal_account(limits, db_handler) -> None:
                     client.send_file(user_to_add, f"user_settings/files_to_send/{link_to_the_file}")
                     # Записываем данные в базу данных, чистим список кого добавляли или писали сообщение
                     actions = "Сообщение отправлено"
-                    record_inviting_results(username, phone, f"username : {username}", event, actions)
+                    record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
                 except FloodWaitError as e:
                     actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
-                    record_and_interrupt(actions, phone, f"username : {username}", event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:
                     actions = "Предупреждение о Flood от telegram."
-                    record_and_interrupt(actions, phone, f"username : {username}", event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
                     break  # Прерываем работу и меняем аккаунт
                 except UserNotMutualContactError:
                     actions = "User не является взаимным контактом."
-                    record_inviting_results(username, phone, f"username : {username}", event, actions)
+                    record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
                 except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                     actions = "Не корректное имя user"
-                    record_inviting_results(username, phone, f"username : {username}", event, actions)
+                    record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
                 except ChatWriteForbiddenError:
                     actions = "Вам запрещено писать в супергруппу / канал."
-                    record_and_interrupt(actions, phone, f"username : {username}", event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
                     break  # Прерываем работу и меняем аккаунт
                 except (TypeError, UnboundLocalError):
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -90,13 +90,9 @@ def send_files_to_personal_account(limits, db_handler) -> None:
 def we_send_a_message_from_all_accounts(message_text, limits, db_handler) -> None:
     """
     Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
-    Args:
-        message_text (str): Текст сообщения, которое будет отправлено каждому пользователю.
-        limits (int): Количество аккаунтов на данный момент в работе
-    Returns:
-        None
-    Raises:
-        KeyError: В случае отсутствия ключа в базе данных.
+    :arg message_text: (str) Текст сообщения, которое будет отправлено каждому пользователю.
+    :arg limits: (int) количество аккаунтов, которые в данный момент находятся в работе.
+    :arg db_handler: (db_handler) объект, который используется для работы с базой данных.
     """
     event: str = f"Отправляем сообщение в личку пользователям Telegram"
     app_notifications(notification_text=event)  # Выводим уведомление
@@ -118,25 +114,25 @@ def we_send_a_message_from_all_accounts(message_text, limits, db_handler) -> Non
                     # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
                     time.sleep(time_inviting_1)
                     actions = "Сообщение отправлено"
-                    record_inviting_results(username, phone, f"username : {username}", event, actions)
+                    record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
                 except FloodWaitError as e:
                     # account_actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
                     record_and_interrupt(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', phone,
-                                         f"username : {username}", event)
+                                         f"username : {username}", event, db_handler)
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:
                     actions = "Предупреждение о Flood от telegram."
-                    record_and_interrupt(actions, phone, f"username : {username}", event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
                     break  # Прерываем работу и меняем аккаунт
                 except UserNotMutualContactError:
                     actions = "User не является взаимным контактом."
-                    record_inviting_results(username, phone, f"username : {username}", event, actions)
+                    record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
                 except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                     actions = "Не корректное имя user"
-                    record_inviting_results(username, phone, f"username : {username}", event, actions)
+                    record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
                 except ChatWriteForbiddenError:
                     actions = "Вам запрещено писать в супергруппу / канал."
-                    record_and_interrupt(actions, phone, f"username : {username}", event)
+                    record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
                     break  # Прерываем работу и меняем аккаунт
                 except (TypeError, UnboundLocalError):
                     continue  # Записываем ошибку в software_database.db и продолжаем работу

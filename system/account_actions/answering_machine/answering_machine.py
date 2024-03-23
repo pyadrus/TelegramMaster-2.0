@@ -8,9 +8,9 @@ from system.auxiliary_functions.global_variables import api_id_data, api_hash_da
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 
 
-def launching_an_answering_machine() -> None:
+def launching_an_answering_machine(db_handler) -> None:
     # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-    proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
+    proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
     client = TelegramClient(session=f"user_settings/accounts/sending_messages_chats/79252182362",
                             api_id=int(api_id_data),
                             api_hash=api_hash_data,
@@ -39,7 +39,3 @@ def launching_an_answering_machine() -> None:
                 await event.respond(message)
 
     client.run_until_disconnected()  # Запуск клиента
-
-
-if __name__ == "__main__":
-    launching_an_answering_machine()

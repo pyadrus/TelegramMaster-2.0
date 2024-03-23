@@ -11,7 +11,7 @@ def get_account_list(db_handler):
     return records
 
 
-def create_gui(account_list) -> None:
+def create_gui(account_list, db_handler) -> None:
     layout = [
         [sg.Text("Выберите Telegram аккаунт в котором будут создаваться группы (чаты):")],
         *[[sg.Checkbox(account, key=account)] for account in account_list],
@@ -30,7 +30,7 @@ def create_gui(account_list) -> None:
             try:
                 for row in result:
                     # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                    client, phone = telegram_connect_and_output_name(row)
+                    client, phone = telegram_connect_and_output_name(row, db_handler)
                     # Replace 'username' with the username or user ID of the user you want to add to the group
                     result = client(functions.channels.CreateChannelRequest(title='My awesome title',
                                                                             about='Description for your group',
@@ -56,4 +56,4 @@ def creating_groups_and_chats(db_handler) -> None:
     # Extracting phone numbers from the accounts list
     phones = [get_from(rows) for rows in accounts]
     # Passing the entire accounts list to create_gui
-    create_gui(phones)
+    create_gui(phones, db_handler)

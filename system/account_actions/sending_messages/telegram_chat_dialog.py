@@ -48,7 +48,7 @@ def sending_files_via_chats(db_handler) -> None:
         "[medium_purple3][+] Введите время, через какое время будем отправлять файлы: ")
     client, phone, records = connecting_telegram_account_and_creating_list_of_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
-        groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
+        groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
         description_action = f"Sending messages to a group: {groups_wr}"
         try:
             client.send_file(groups_wr, f"user_settings/files_to_send/{link_to_the_file}")  # Рассылаем файлов по чатам
@@ -99,7 +99,7 @@ def sending_messages_files_via_chats() -> None:
         event: str = f"Рассылаем сообщение + файлы по чатам Telegram"
         client, phone, records = connecting_telegram_account_and_creating_list_of_groups(db_handler)
         for groups in records:  # Поочередно выводим записанные группы
-            groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
+            groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
             description_action = f"Sending messages to a group: {groups_wr}"
             try:
                 client.send_message(entity=groups_wr, message=message_text)  # Рассылаем сообщение по чатам
@@ -165,9 +165,9 @@ def sending_messages_chats(db_handler) -> None:
 def sending_messages_via_chats_time(message_text, db_handler) -> None:
     """Массовая рассылка в чаты"""
 
-    client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
+    client, phone, records = connecting_telegram_account_and_creating_list_of_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
-        groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
+        groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
         description_action = f"Sending messages to a group: {groups_wr}"
         try:
             client.send_message(entity=groups_wr, message=message_text)  # Рассылаем сообщение по чатам

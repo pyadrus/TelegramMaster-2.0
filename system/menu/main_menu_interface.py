@@ -86,9 +86,9 @@ def main_menu() -> None:  # 1 - Основное меню программы
     elif user_input == "10":  # Создание групп (чатов)
         creating_groups_and_chats(db_handler)
     elif user_input == '11':
-        change_bio_profile()  # Редактирование описания профиля
+        change_bio_profile(db_handler)  # Редактирование описания профиля
     elif user_input == '12':
-        launching_an_answering_machine()  # Проверка автоответчика
+        launching_an_answering_machine(db_handler)  # Проверка автоответчика
     else:
         main_menu()  # После отработки функции переходим в начальное меню
 
@@ -296,7 +296,7 @@ def working_with_the_reaction(db_handler) -> None:  # 7 - Работа с реа
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Ставим реакции на один пост в группе / канале
-        users_choice_of_reaction()
+        users_choice_of_reaction(db_handler)
     elif user_input == "2":  # Накручиваем просмотры постов
         viewing_posts(db_handler)
     elif user_input == "3":

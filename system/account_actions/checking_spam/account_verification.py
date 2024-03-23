@@ -21,7 +21,7 @@ def check_account_for_spam(db_handler) -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row, db_handler)
         try:
             client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
             message_bot = client.get_messages('SpamBot')
@@ -45,7 +45,7 @@ def check_account_for_spam(db_handler) -> None:
                 if similarity_ratio_ru >= 97:
                     print('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                    record_account_actions(phone, description_action, event, actions)
+                    record_account_actions(phone, description_action, event, actions, db_handler)
                     # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                     working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
                                           new_account_folder=f"user_settings/accounts/banned/{row[2]}.session")
@@ -62,11 +62,11 @@ def check_account_for_spam(db_handler) -> None:
                 if similarity_ratio_en >= 97:
                     print('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                    record_account_actions(phone, description_action, event, actions)
+                    record_account_actions(phone, description_action, event, actions, db_handler)
                     # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                     working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
                                           new_account_folder=f"user_settings/accounts/banned/{row[2]}.session")
-                record_account_actions(phone, description_action, event, actions)
+                record_account_actions(phone, description_action, event, actions, db_handler)
 
         except YouBlockedUserError:
             continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -79,7 +79,3 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
     except FileNotFoundError:  # Если в папке нет нужной папки, то создаем ее
         os.makedirs(new_account_folder)
         os.replace(account_folder, new_account_folder)
-
-
-if __name__ == "__main__":
-    check_account_for_spam()

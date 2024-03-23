@@ -42,7 +42,7 @@ def subscription_all(db_handler) -> None:
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in track(records, description="[medium_purple3]Прогресс выполнения работы\n"):
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row, db_handler)
         # Открываем базу данных
         records: list = db_handler.open_and_read_data("writing_group_links")
         print(f"[medium_purple3]Всего групп: {len(records)}")

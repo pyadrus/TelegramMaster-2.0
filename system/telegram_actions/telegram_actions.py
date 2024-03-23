@@ -11,10 +11,10 @@ from system.auxiliary_functions.global_variables import device_model, system_ver
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 
 
-def telegram_connect_and_output_name(row):
+def telegram_connect_and_output_name(row, db_handler):
     """Подключаемся телеграмм аккаунту и выводим имя"""
     phone, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)  # Получаем со списка phone, api_id, api_hash
-    proxy = reading_proxy_data_from_the_database()  # Proxy IPV6 - НЕ РАБОТАЮТ
+    proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
     client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, proxy=proxy,
                             device_model=device_model, system_version=system_version, app_version=app_version,
                             lang_code='en', system_lang_code='ru')
@@ -96,5 +96,4 @@ def renaming_a_session(client, phone_old, phone) -> None:
 
 
 if __name__ == "__main__":
-    reading_proxy_data_from_the_database()
     connecting_account_sessions()

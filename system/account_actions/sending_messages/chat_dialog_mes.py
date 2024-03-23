@@ -19,44 +19,44 @@ writing_data_to_a_table = """DELETE from writing_group_links where writing_group
 event: str = f"Рассылаем сообщение по чатам Telegram"
 
 
-def send_mess() -> None:
+def send_mess(db_handler) -> None:
     with open("user_settings/message_text.csv", 'r') as chats:
         cursor_members = chats.read()
-    sending_messages_via_chats_time(cursor_members)
+    sending_messages_via_chats_time(cursor_members, db_handler)
 
 
 def sending_messages_via_chats_time(message_text, db_handler) -> None:
     """Массовая рассылка в чаты"""
-    client, phone, records = connecting_telegram_account_and_creating_list_of_groups()
+    client, phone, records = connecting_telegram_account_and_creating_list_of_groups(db_handler)
     for groups in records:
-        groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone)
+        groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
         description_action = f"Sending messages to a group: {groups_wr}"
         try:
             # Рассылаем сообщение по чатам
             client.send_message(entity=groups_wr, message=message_text)
             # Работу записываем в лог файл, для удобства слежения, за изменениями
             actions: str = f"[medium_purple3]Сообщение в группу {groups_wr} написано!"
-            record_account_actions(phone, description_action, event, actions)
+            record_account_actions(phone, description_action, event, actions, db_handler)
         except ChannelPrivateError:
             actions: str = "Указанный канал является приватным, или вам запретили подписываться."
-            record_account_actions(phone, description_action, event, actions)
+            record_account_actions(phone, description_action, event, actions, db_handler)
             db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
         except PeerFloodError:
             actions: str = "Предупреждение о Flood от Telegram."
-            record_and_interrupt(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
             actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
-            record_account_actions(phone, description_action, event, actions)
+            record_account_actions(phone, description_action, event, actions, db_handler)
             print(f'Спим {e.seconds} секунд')
             time.sleep(e.seconds)
         except UserBannedInChannelError:
             actions: str = "Вам запрещено отправлять сообщения в супергруппу."
-            record_and_interrupt(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except ChatWriteForbiddenError:
             actions = "Вам запрещено писать в супергруппу / канал."
-            record_and_interrupt(actions, phone, description_action, event)
+            record_and_interrupt(actions, phone, description_action, event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except (TypeError, UnboundLocalError):
             continue  # Записываем ошибку в software_database.db и продолжаем работу

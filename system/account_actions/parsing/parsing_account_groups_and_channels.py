@@ -20,10 +20,10 @@ def parsing_groups_which_account_subscribed(db_handler) -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row, db_handler)
         description_action = "Parsing: groups and channels"
         actions = "Parsing групп / каналов"
-        record_account_actions(phone, description_action, event, actions)
+        record_account_actions(phone, description_action, event, actions, db_handler)
         forming_a_list_of_groups(client, db_handler)
         client.disconnect()  # Разрываем соединение telegram
     db_handler.delete_duplicates(table_name="groups_and_channels", column_name="id")  # Чистка дубликатов в базе данных
