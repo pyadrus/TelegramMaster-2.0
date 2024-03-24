@@ -18,9 +18,6 @@ from system.notification.notification import app_notifications
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 config.read("user_settings/config.ini")
 
-creating_a_table = "CREATE TABLE IF NOT EXISTS config(id, hash, phone)"
-writing_data_to_a_table = "INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)"
-
 
 def recording_the_time_to_launch_an_invite_every_day() -> None:
     def recoding_time() -> None:
@@ -153,9 +150,11 @@ def connecting_new_account(db_handler) -> None:
     """Вводим данные в базу данных user_settings/software_database.db"""
     phone_data = console.input("[magenta][+] Введите номер телефона : ")  # Вводим номер телефона
     entities = (api_id_data, api_hash_data, phone_data)
-    db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
+    db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS config(id, hash, phone)",
+                                writing_data_to_a_table="INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)",
+                                entities=entities)
     # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
-    client = telegram_connect(phone_data)
+    client = telegram_connect(phone_data, db_handler)
     client.disconnect()  # Разрываем соединение telegram
     app_notifications(notification_text="Аккаунт подсоединился!")  # Выводим уведомление
 
