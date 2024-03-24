@@ -18,11 +18,15 @@ def change_profile_descriptions(client):
         logger.error("Ошибка соединения с профилем")
 
 
-def telegram_connect(db_handler, session) -> TelegramClient:
-    """Подключение к Telegram с помощью proxy"""
+def telegram_connects(db_handler, session) -> TelegramClient:
+    """Подключение к Telegram с помощью proxy
+    :param db_handler: База данных
+    :param session: Сессия Telegram
+    """
     proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
     client = TelegramClient(session=session, api_id=api_id_data, api_hash=api_hash_data,
                             system_version="4.16.30-vxCUSTOM", proxy=proxy)
+    logger.info(f"Подключение аккаунта: session, {api_id_data}, {api_hash_data}")
     client.connect()  # Подсоединяемся к Telegram
 
     return client  # Возвращаем клиент
@@ -31,5 +35,5 @@ def telegram_connect(db_handler, session) -> TelegramClient:
 def change_bio_profile(db_handler):
     """Изменение описания профиля"""
     user_input: str = input('Введите название файла, без session: ')
-    client = telegram_connect(db_handler, session=f"user_settings/accounts/bio_accounts/{user_input}")
+    client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{user_input}")
     change_profile_descriptions(client)

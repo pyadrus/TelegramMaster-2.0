@@ -10,16 +10,16 @@ from rich import print
 from telethon import TelegramClient
 from telethon.errors import *
 
-from system.auxiliary_functions.global_variables import console, api_id_data, api_hash_data, device_model, \
-    system_version, app_version
+from system.account_actions.creating.account_registration import telegram_connects
+from system.auxiliary_functions.global_variables import console, api_id_data, api_hash_data
 from system.menu.app_gui import program_window_with_dimensions
 from system.notification.notification import app_notifications
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
+config.read("user_settings/config.ini")
 
 creating_a_table = "CREATE TABLE IF NOT EXISTS config(id, hash, phone)"
 writing_data_to_a_table = "INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)"
-config.read("user_settings/config.ini")
 
 
 def recording_the_time_to_launch_an_invite_every_day() -> None:
@@ -155,22 +155,16 @@ def connecting_new_account(db_handler) -> None:
     entities = (api_id_data, api_hash_data, phone_data)
     db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
     # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
-    client = telegram_connect(phone_data, api_id_data, api_hash_data)
+    client = telegram_connect(phone_data)
     client.disconnect()  # Разрываем соединение telegram
     app_notifications(notification_text="Аккаунт подсоединился!")  # Выводим уведомление
 
 
-def telegram_connect(phone, api_id, api_hash) -> TelegramClient:
+def telegram_connect(phone, db_handler) -> TelegramClient:
     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
-    client = TelegramClient(f"user_settings/accounts/{phone}",  # Путь к файлу с настройками аккаунта
-                            api_id,  # Идентификатор вашего приложения, предоставленный Telegram API
-                            api_hash,  # Хэш вашего приложения, предоставленный Telegram API
-                            device_model=device_model,  # Модель устройства
-                            system_version=system_version,  # Версия операционной системы
-                            app_version=app_version,  # Версия приложения
-                            lang_code='en',  # Язык интерфейса приложения (английский)
-                            system_lang_code='ru')  # Язык системы устройства (русский)
-    client.connect()  # Подсоединяемся к Telegram
+
+    client = telegram_connects(db_handler, session=f"user_settings/accounts/{phone}")
+
     if not client.is_user_authorized():
         client.send_code_request(phone)
         try:
@@ -325,6 +319,7 @@ def recording_text_for_sending_messages() -> None:
     Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
     <имя файла>.json и сохраняются в формате JSON.
     """
+
     def main_inviting(page) -> None:
         page.window_width = 600  # ширина окна
         page.window_height = 600  # высота окна

@@ -2,23 +2,17 @@ import os
 import os.path
 
 from rich import print
-from telethon import TelegramClient
 from telethon.errors import TypeNotFoundError
 from telethon.tl.functions.users import GetFullUserRequest
 
-from system.auxiliary_functions.global_variables import device_model, system_version, app_version, api_id_data, \
-    api_hash_data
-from system.proxy.checking_proxy import reading_proxy_data_from_the_database
+from system.account_actions.creating.account_registration import telegram_connects
+from system.auxiliary_functions.global_variables import api_id_data, api_hash_data
 
 
 def telegram_connect_and_output_name(row, db_handler):
     """Подключаемся телеграмм аккаунту и выводим имя"""
     phone, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)  # Получаем со списка phone, api_id, api_hash
-    proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
-    client = TelegramClient(f"user_settings/accounts/{phone}", api_id, api_hash, proxy=proxy,
-                            device_model=device_model, system_version=system_version, app_version=app_version,
-                            lang_code='en', system_lang_code='ru')
-    client.connect()  # Подсоединяемся к Telegram
+    client = telegram_connects(db_handler, session=f"user_settings/accounts/{phone}")
     # Выводим командой print: имя, фамилию, номер телефона аккаунта
     first_name, last_name, phone = account_name(client, name_account="me")
     # Выводим результат полученного имени и номера телефона

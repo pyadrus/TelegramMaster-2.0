@@ -12,14 +12,13 @@ from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
 from telethon import TelegramClient
+
+from system.account_actions.creating.account_registration import telegram_connects
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.global_variables import console, api_id_data, api_hash_data
 from system.notification.notification import app_notifications
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
-
-user_folder = "user_settings"
-accounts_folder = "accounts"
 
 
 async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> None:
@@ -38,7 +37,7 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
         proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
-        client = TelegramClient(f"{user_folder}/{accounts_folder}/{row[2]}", int(row[0]), row[1],
+        client = TelegramClient(f"user_settings/accounts/{row[2]}", int(row[0]), row[1],
                                 system_version="4.16.30-vxCUSTOM", proxy=proxy)
         await client.connect()  # Подсоединяемся к Telegram
         try:
@@ -46,7 +45,6 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
             time.sleep(5)
             with open('user_settings/reactions/reactions.json', 'r') as json_file:
                 reaction_input = json.load(json_file)  # Используем функцию load для загрузки данных из файла
-
             random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
             logger.info(random_value)
             await client(SendReactionRequest(peer=chat, msg_id=int(number),
@@ -109,31 +107,22 @@ def setting_reactions(db_handler):
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config_reactions",
                                                                  number_of_accounts=int(records_ac_json))
     logger.info(records)
-
     for row in records:
-        # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-        proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
-        client = TelegramClient(f"user_settings/reactions/accounts/{row[2]}", int(row[0]), row[1],
-                                system_version="4.16.30-vxCUSTOM", proxy=proxy)
-        client.connect()
+        client = telegram_connects(db_handler, session=f"user_settings/reactions/accounts/{row[2]}")
         # Открываем файл для чтения
         with open('user_settings/reactions/link_channel.json', 'r') as json_file:
             chat = json.load(json_file)  # Используем функцию load для загрузки данных из файла
         logger.info(chat)
-
         client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
-
         @client.on(events.NewMessage(chats=chat))
         async def handler(event):
-
             message = event.message  # Получаем сообщение из события
             message_id = message.id  # Получаем id сообщение
             print(f"Идентификатор сообщения: {message_id}")
             logger.info(message)
             # Проверяем, является ли сообщение постом и не является ли оно нашим
             if message.post and not message.out:
-
-                await reactions_for_groups_and_messages_test(message_id, chat,db_handler)
+                await reactions_for_groups_and_messages_test(message_id, chat, db_handler)
 
     client.run_until_disconnected()  # Запуск клиента
 
@@ -351,7 +340,8 @@ def users_choice_of_reaction(db_handler) -> None:
     elif user_input == "6":
         reactions_for_groups_and_messages(reaction_input="😁", db_handler=db_handler)  # Широко улыбающееся лицо
     elif user_input == "7":
-        reactions_for_groups_and_messages(reaction_input="😢", db_handler=db_handler)  # Лицо с открытым ртом и в холодном поту
+        reactions_for_groups_and_messages(reaction_input="😢",
+                                          db_handler=db_handler)  # Лицо с открытым ртом и в холодном поту
     elif user_input == "8":
         reactions_for_groups_and_messages(reaction_input="💩", db_handler=db_handler)  # Фекалии
     elif user_input == "9":
@@ -456,7 +446,7 @@ def send_reaction_request(records, chat, message_url, reaction_input, db_handler
     """Ставим реакции на сообщения"""
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row, db_handler)
         try:
             subscribe_to_group_or_channel(client, chat, phone, db_handler)  # Подписываемся на группу
             number = re.search(r'/(\d+)$', message_url).group(1)
@@ -487,9 +477,9 @@ def viewing_posts(db_handler) -> None:
                                                                  number_of_accounts=int(number_of_accounts))
     for row in records:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row, db_handler)
         try:
-            subscribe_to_group_or_channel(client, chat, phone,db_handler)  # Подписываемся на группу
+            subscribe_to_group_or_channel(client, chat, phone, db_handler)  # Подписываемся на группу
             channel = client.get_entity(chat)  # Получение информации о канале
             time.sleep(5)
             posts = client.get_messages(channel, limit=10)  # Получение последних 10 постов из канала

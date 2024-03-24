@@ -8,13 +8,12 @@ import urllib.request
 import getmac
 from loguru import logger
 from rich import print
-from telethon import TelegramClient
 from telethon.errors import *
 
 from system.account_actions.checking_spam.account_verification import working_with_accounts
+from system.account_actions.creating.account_registration import telegram_connects
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import checking_the_proxy_for_work
-from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.telegram_actions.telegram_actions import account_name
 from system.telegram_actions.telegram_actions import renaming_a_session
 from system.telegram_actions.telegram_actions import writing_names_found_files_to_the_db
@@ -45,14 +44,9 @@ def account_verification(db_handler):
     print("[medium_purple3] Проверка аккаунтов!")
     records: list = db_handler.open_and_read_data("config")
     for row in records:
-        # Получаем со списка phone (row[2]), api_id (), api_hash
-        proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
         try:
-            client = TelegramClient(f"user_settings/accounts/{row[2]}", int(row[0]), row[1],
-                                    system_version="4.16.30-vxCUSTOM", proxy=proxy)
+            client = telegram_connects(db_handler, session=f"user_settings/accounts/{row[2]}")
             try:
-                logger.info(f"Подключение аккаунта: {row[2]}, {int(row[0])}, {row[1]}")
-                client.connect()  # Подсоединяемся к Telegram
                 if not client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
                     telegram_phone_number_banned_error(client, row[2], db_handler)  # Удаляем номер телефона с базы данных
                 time.sleep(1)
