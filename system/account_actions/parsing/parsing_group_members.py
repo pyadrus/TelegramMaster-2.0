@@ -140,14 +140,15 @@ def output_a_list_of_groups_new(client):
     chats = []
     last_date = None
     groups = []
-    result = client(
-        GetDialogsRequest(offset_date=last_date, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+    result = client(GetDialogsRequest(offset_date=last_date, offset_id=0,
+                                      offset_peer=InputPeerEmpty(), limit=200, hash=0))
     chats.extend(result.chats)
     for chat in chats:
         try:
             if chat.megagroup:
                 groups.append(chat)
-        except:
+        except Exception as e:
+            logger.info(f'Ошибка parsing: {e}')  # Ошибка при parsing группы telegram, выводим ошибку
             continue  # Записываем ошибку в software_database.db и продолжаем работу
     i = 0
     for g in groups:

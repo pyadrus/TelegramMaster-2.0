@@ -376,10 +376,7 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     elif user_input == "8":  # Запись типа устройства
         writing_settings_to_a_file(config=record_device_type())
     elif user_input == "9":  # Запись времени для запуска inviting в определенное время
-        try:
-            recording_the_time_to_launch_an_invite_every_day()
-        except Exception as e:
-            logger.exception(e)
+        recording_the_time_to_launch_an_invite_every_day()
     elif user_input == "10":  # Запись лимитов на количество сообщений
         writing_settings_to_a_file(config=record_message_limits())
     elif user_input == "11":  # Выбор реакции
