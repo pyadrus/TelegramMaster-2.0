@@ -4,6 +4,7 @@ import os
 import random
 import time
 
+import flet as ft
 from loguru import logger
 from rich import print
 from rich.progress import track
@@ -12,8 +13,8 @@ from telethon.errors import *
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console, time_sending_messages
-from system.error.telegram_errors import record_account_actions, delete_files
-from system.menu.app_gui import program_window, done_button
+from system.error.telegram_errors import record_account_actions
+from system.menu.app_gui import program_window, done_button, create_window
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
@@ -205,29 +206,22 @@ def sending_messages_via_chats_time(message_text, db_handler) -> None:
 
 def output_the_input_field(db_handler) -> None:
     """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
-    # Предупреждаем пользователя о вводе ссылок в графическое окно программы
-    print("""[medium_purple3][+] Введите ссылки чатов в которые будем рассылать сообщения, для вставки в графическое окно 
-          используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен быть 
-          переключен на английский""")
-    root, text = program_window()
 
-    def output_values_from_the_input_field() -> None:
-        """Выводим значения с поля ввода (то что ввел пользователь)"""
-        res = text.get("1.0", 'end-1c')
-        closing_the_input_field()
-        with open(f'user_settings/members_group.csv', "w") as res_as:
-            res_as.write(res)
-        with open(f'user_settings/members_group.csv', 'r') as recorded_data:  # Записываем данные с файла в базу данных
+    def main_inviting(page) -> None:
+        create_window(page=page, width=600, height=600, resizable=False)  # Создаем окно с размером 600 на 600 пикселей
+        text_to_send = ft.TextField(label="Введите список ссылок на группы", multiline=True, max_lines=19)
+        greetings = ft.Column()
+
+        def btn_click(e) -> None:
+            print(f"Вы ввели: {text_to_send}")
             db_handler.open_and_read_data("writing_group_links")  # Удаление списка с группами
-            db_handler.write_to_single_column_table("writing_group_links", recorded_data)
-        delete_files(file=f"user_settings/message_text.csv")
+            db_handler.write_to_single_column_table("writing_group_links", text_to_send.value.split())
+            page.window_close()
+            page.update()
 
-    def closing_the_input_field() -> None:
-        """Закрываем программу"""
-        root.destroy()
+        page.add(text_to_send, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
 
-    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
-    root.mainloop()  # Запускаем программу
+    ft.app(target=main_inviting)
 
 
 if __name__ == "__main__":

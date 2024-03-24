@@ -1,6 +1,20 @@
-from tkinter import *
 import tkinter as tk
+from tkinter import *
+
 from system.menu.app_banner import program_version, date_of_program_change
+
+
+def create_window(page, width, height, resizable):
+    """
+    Создание окна flet https://flet.dev/docs/
+    :param page: Page для создания окна
+    :param width: ширина окна (по умолчанию 600)
+    :param height: высота окна (по умолчанию 600)
+    :param resizable: Запрет на изменение размера окна (True/False)
+    """
+    page.window_width = width  # ширина окна
+    page.window_height = height  # высота окна
+    page.window_resizable = resizable  # Запрет на изменение размера окна
 
 
 def done_button(root, output_values_from_the_input_field) -> None:

@@ -2,7 +2,6 @@ import configparser
 import getpass
 import json
 import os
-import tkinter as tk
 from tkinter import ttk
 
 import flet as ft
@@ -12,7 +11,7 @@ from telethon.errors import *
 
 from system.account_actions.creating.account_registration import telegram_connects
 from system.auxiliary_functions.global_variables import console, api_id_data, api_hash_data
-from system.menu.app_gui import program_window_with_dimensions
+from system.menu.app_gui import program_window_with_dimensions, create_window
 from system.notification.notification import app_notifications
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
@@ -161,9 +160,7 @@ def connecting_new_account(db_handler) -> None:
 
 def telegram_connect(phone, db_handler) -> TelegramClient:
     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
-
     client = telegram_connects(db_handler, session=f"user_settings/accounts/{phone}")
-
     if not client.is_user_authorized():
         client.send_code_request(phone)
         try:
@@ -184,61 +181,35 @@ def creating_the_main_window_for_proxy_data_entry(db_handler) -> None:
     """Создание главного окна для ввода дынных proxy"""
     print("Proxy IPV6 - НЕ РАБОТАЮТ")
 
-    def recording_proxy_data() -> list:
-        """Запись данных для proxy, Proxy IPV6 - НЕ РАБОТАЮТ"""
-        proxy_types = proxy_type_entry.get()
-        addr_types = addr_type_entry.get()
-        port_types = port_type_entry.get()
-        username_types = username_type_entry.get()
-        password_types = password_type_entry.get()
-        rdns_types = "True"
-        proxy = [proxy_types, addr_types, port_types, username_types, password_types, rdns_types]
-        root.destroy()
-        return proxy
+    def main_inviting(page) -> None:
+        create_window(page=page, width=600, height=600, resizable=False)  # Создаем окно с размером 600 на 600 пикселей
+        proxy_type = ft.TextField(label="Введите тип прокси, например SOCKS5: ", multiline=True, max_lines=19)
+        addr_type = ft.TextField(label="Введите ip адрес, например 194.67.248.9: ", multiline=True, max_lines=19)
+        port_type = ft.TextField(label="Введите порт прокси, например 9795: ", multiline=True, max_lines=19)
+        username_type = ft.TextField(label="Введите username, например NnbjvX: ", multiline=True, max_lines=19)
+        password_type = ft.TextField(label="Введите пароль, например ySfCfk: ", multiline=True, max_lines=19)
+        greetings = ft.Column()
 
-    root = program_window_with_dimensions(geometry="300x250")
-    root.resizable(False, False)  # Запретить масштабирование окна
-    # Создаем первое текстовое поле и связанный с ним текстовый метка
-    proxy_type = tk.Label(root, text="Введите тип прокси, например SOCKS5: ")
-    proxy_type.pack()
-    proxy_type_entry = tk.Entry(root, width=45)
-    proxy_type_entry.pack()
-    # Создаем второе текстовое поле и связанный с ним текстовый метка
-    addr_type = tk.Label(root, text="Введите ip адрес, например 194.67.248.9: ")
-    addr_type.pack()
-    addr_type_entry = tk.Entry(root, width=45)
-    addr_type_entry.pack()
-    # Создаем третье текстовое поле и связанный с ним текстовый метка
-    port_type = tk.Label(root, text="Введите порт прокси, например 9795: ")
-    port_type.pack()
-    port_type_entry = tk.Entry(root, width=45)
-    port_type_entry.pack()
-    # Создаем четвертое текстовое поле и связанный с ним текстовый метка
-    username_type = tk.Label(root, text="Введите username, например NnbjvX: ")
-    username_type.pack()
-    username_type_entry = tk.Entry(root, width=45)
-    username_type_entry.pack()
-    # Создаем пятое текстовое поле и связанный с ним текстовый метка
-    password_type = tk.Label(root, text="Введите password, например ySfCfk: ")
-    password_type.pack()
-    password_type_entry = tk.Entry(root, width=45)
-    password_type_entry.pack()
-    # Создаем кнопку
-    button = tk.Button(root, text="Готово",
-                       command=lambda: db_handler.save_proxy_data_to_db(proxy=recording_proxy_data()))
-    button.pack()
-    result_label = tk.Label(root, text="")  # Создаем метку для вывода результата
-    result_label.pack()
-    root.mainloop()  # Запускаем главный цикл обработки событий
+        def btn_click(e) -> None:
+            print(f"Вы ввели: {proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value}")
+            rdns_types = "True"
+            proxy = [proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
+                     rdns_types]
+            db_handler.save_proxy_data_to_db(proxy=proxy)
+            page.window_close()
+            page.update()
+
+        page.add(proxy_type, addr_type, port_type, username_type, password_type, greetings,
+                 ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
+
+    ft.app(target=main_inviting)  # Создаем окно
 
 
 def recording_the_time_between_chat_messages(variable):
     """Запись времени между сообщениями"""
 
     def main_inviting(page) -> None:
-        page.window_width = 300  # ширина окна
-        page.window_height = 300  # высота окна
-        page.window_resizable = False  # Запрет на изменение размера окна
+        create_window(page=page, width=300, height=300, resizable=False)  # Создаем окно с размером 300 на 300 пикселей
         smaller_time = ft.TextField(label="Время в минутах", autofocus=True)
         greetings = ft.Column()
 
@@ -268,9 +239,7 @@ def create_main_window(variable) -> None:
     """
 
     def main_inviting(page) -> None:
-        page.window_width = 300  # ширина окна
-        page.window_height = 300  # высота окна
-        page.window_resizable = False  # Запрет на изменение размера окна
+        create_window(page=page, width=300, height=300, resizable=False)  # Создаем окно с размером 300 на 300 пикселей
         smaller_time = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
         larger_time = ft.TextField(label="Время в секундах (большее)")
         greetings = ft.Column()
@@ -320,9 +289,7 @@ def recording_text_for_sending_messages() -> None:
     """
 
     def main_inviting(page) -> None:
-        page.window_width = 600  # ширина окна
-        page.window_height = 600  # высота окна
-        page.window_resizable = False  # Запрет на изменение размера окна
+        create_window(page=page, width=600, height=600, resizable=False)  # Создаем окно с размером 600 на 600 пикселей
         text_to_send = ft.TextField(label="Введите текст сообщения", multiline=True, max_lines=19)
         greetings = ft.Column()
 
