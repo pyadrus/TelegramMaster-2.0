@@ -28,16 +28,8 @@ def record_account_actions(phone_number, action_description, event, action_resul
 """Действия с аккаунтами"""
 
 
-def delete_file(file) -> None:
-    """Удаление файла"""
-    try:
-        os.remove(f"{file}")
-    except FileNotFoundError:
-        print(f"[red][!] Файл {file} не найден!")
-
-
-def delete_file_bio(file) -> None:
-    """Удаление файла"""
+def delete_files(file) -> None:
+    """Удаление файлов"""
     try:
         os.remove(f"{file}")
     except FileNotFoundError:
@@ -48,14 +40,14 @@ def telegram_phone_number_banned_error_bio(client, phone, db_handler) -> None:
     """Аккаунт banned, удаляем banned аккаунт"""
     client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
     db_handler.delete_row_db(table="config", column="phone", value=phone)
-    delete_file_bio(file=f"user_settings/bio_accounts/accounts/{phone}.session")
+    delete_files(file=f"user_settings/bio_accounts/accounts/{phone}.session")
 
 
 def telegram_phone_number_banned_error(client, phone, db_handler) -> None:
     """Аккаунт banned, удаляем banned аккаунт"""
     client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
     db_handler.delete_row_db(table="config", column="phone", value=phone)
-    delete_file(file=f"user_settings/accounts/{phone}.session")
+    delete_files(file=f"user_settings/accounts/{phone}.session")
 
 
 # def handle_exceptions_pars(func):

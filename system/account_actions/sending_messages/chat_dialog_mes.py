@@ -5,15 +5,12 @@ import schedule
 from rich import print
 from telethon.errors import *
 
-from system.account_actions.sending_messages.telegram_chat_dialog import \
-    connecting_telegram_account_and_creating_list_of_groups
+from system.account_actions.sending_messages.telegram_chat_dialog import connecting_tg_account_creating_list_groups
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
-from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.error.telegram_errors import record_account_actions
+from system.error.telegram_errors import record_account_actions, delete_files
 from system.menu.app_gui import program_window, done_button
 
-folder, files = "user_settings", "members_group.csv"
 creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
 event: str = f"Рассылаем сообщение по чатам Telegram"
@@ -27,7 +24,7 @@ def send_mess(db_handler) -> None:
 
 def sending_messages_via_chats_time(message_text, db_handler) -> None:
     """Массовая рассылка в чаты"""
-    client, phone, records = connecting_telegram_account_and_creating_list_of_groups(db_handler)
+    client, phone, records = connecting_tg_account_creating_list_groups(db_handler)
     for groups in records:
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
         description_action = f"Sending messages to a group: {groups_wr}"
@@ -148,9 +145,8 @@ def message_entry_window_time() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
         message_text = text.get("1.0", 'end-1c')
         closing_the_input_field()
-        folder, file = "user_settings", "message_text.csv"
-        deleting_files_if_available(folder, file)
-        with open(f'{folder}/{file}', "w") as res_as:
+        delete_files(file=f"user_settings/message_text.csv")
+        with open(f'user_settings/message_text.csv', "w") as res_as:
             res_as.write(message_text)
 
     def closing_the_input_field() -> None:

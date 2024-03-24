@@ -10,21 +10,19 @@ from rich.progress import track
 from telethon.errors import *
 
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
-from system.auxiliary_functions.auxiliary_functions import deleting_files_if_available
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console, time_sending_messages
-from system.error.telegram_errors import record_account_actions
+from system.error.telegram_errors import record_account_actions, delete_files
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
-folder, files = "user_settings", "members_group.csv"
 creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
 event: str = "Рассылаем сообщение по чатам Telegram"
 
 
-def connecting_telegram_account_and_creating_list_of_groups(db_handler):
+def connecting_tg_account_creating_list_groups(db_handler):
     """Подключение к аккаунту телеграмм и формирование списка групп"""
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
@@ -32,7 +30,7 @@ def connecting_telegram_account_and_creating_list_of_groups(db_handler):
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row, db_handler)
         records: list = db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
         print(f"[medium_purple3]Всего групп: {len(records)}")
 
@@ -46,7 +44,7 @@ def sending_files_via_chats(db_handler) -> None:
         "[medium_purple3][+] Введите название файла с папки user_settings/files_to_send: ")
     message_text_time: str = console.input(
         "[medium_purple3][+] Введите время, через какое время будем отправлять файлы: ")
-    client, phone, records = connecting_telegram_account_and_creating_list_of_groups(db_handler)
+    client, phone, records = connecting_tg_account_creating_list_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
         description_action = f"Sending messages to a group: {groups_wr}"
@@ -97,7 +95,7 @@ def sending_messages_files_via_chats() -> None:
         message_text_time: str = console.input(
             "[medium_purple3][+] Введите время, через какое время будем отправлять сообщения: ")
         event: str = f"Рассылаем сообщение + файлы по чатам Telegram"
-        client, phone, records = connecting_telegram_account_and_creating_list_of_groups(db_handler)
+        client, phone, records = connecting_tg_account_creating_list_groups(db_handler)
         for groups in records:  # Поочередно выводим записанные группы
             groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
             description_action = f"Sending messages to a group: {groups_wr}"
@@ -165,7 +163,7 @@ def sending_messages_chats(db_handler) -> None:
 def sending_messages_via_chats_time(message_text, db_handler) -> None:
     """Массовая рассылка в чаты"""
 
-    client, phone, records = connecting_telegram_account_and_creating_list_of_groups(db_handler)
+    client, phone, records = connecting_tg_account_creating_list_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
         description_action = f"Sending messages to a group: {groups_wr}"
@@ -217,12 +215,12 @@ def output_the_input_field(db_handler) -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
         res = text.get("1.0", 'end-1c')
         closing_the_input_field()
-        with open(f'{folder}/{files}', "w") as res_as:
+        with open(f'user_settings/members_group.csv', "w") as res_as:
             res_as.write(res)
-        with open(f'{folder}/{files}', 'r') as recorded_data:  # Записываем данные с файла в базу данных
+        with open(f'user_settings/members_group.csv', 'r') as recorded_data:  # Записываем данные с файла в базу данных
             db_handler.open_and_read_data("writing_group_links")  # Удаление списка с группами
             db_handler.write_to_single_column_table("writing_group_links", recorded_data)
-        deleting_files_if_available(folder, files)  # Удаляем файл после работы
+        delete_files(file=f"user_settings/message_text.csv")
 
     def closing_the_input_field() -> None:
         """Закрываем программу"""

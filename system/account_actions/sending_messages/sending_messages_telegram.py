@@ -47,7 +47,7 @@ def send_files_to_personal_account(limits, db_handler) -> None:
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row, db_handler)
         try:
             # Открываем parsing список user_settings/software_database.db для inviting в группу
             records: list = db_handler.open_the_db_and_read_the_data_lim("members", number_of_accounts=limits)
@@ -100,7 +100,7 @@ def we_send_a_message_from_all_accounts(message_text, limits, db_handler) -> Non
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row)
+        client, phone = telegram_connect_and_output_name(row, db_handler)
         try:
             records: list = db_handler.open_the_db_and_read_the_data_lim("members", number_of_accounts=limits)
             # Количество аккаунтов на данный момент в работе

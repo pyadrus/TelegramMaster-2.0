@@ -5,7 +5,6 @@ import random  # Импортируем модуль random, чтобы гене
 import time  # Импортируем модуль time, чтобы работать с временем
 from sys import platform
 
-from rich import print
 from rich.progress import track
 
 from system.auxiliary_functions.global_variables import time_changing_accounts_1
@@ -38,14 +37,6 @@ def record_and_interrupt(actions, phone, description_action, event, db_handler) 
     record_account_actions(phone, description_action, event, actions, db_handler)
     # Смена аккаунта через случайное количество секунд
     display_progress_bar(time_changing_accounts_1, time_changing_accounts_2, "Ожидайте смены аккаунта")
-
-
-def deleting_files_if_available(folder, file) -> None:
-    """Удаление список groups_and_channels"""
-    try:
-        os.remove(f'{folder}/{file}')
-    except FileNotFoundError:
-        print(f"[magenta]Файл {file} был ранее удален")
 
 
 def clearing_console_showing_banner() -> None:
