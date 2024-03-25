@@ -15,9 +15,9 @@ def telegram_connects(db_handler, session) -> TelegramClient:
     :param session: Сессия Telegram
     """
     proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
-    client = TelegramClient(session=session, api_id=api_id_data, api_hash=api_hash_data,
+    client = TelegramClient(session, api_id=api_id_data, api_hash=api_hash_data,
                             system_version="4.16.30-vxCUSTOM", proxy=proxy)
-    logger.info(f"Подключение аккаунта: session, {api_id_data}, {api_hash_data}")
+    logger.info(f"Подключение аккаунта: {session.split('/')[-1]}, {api_id_data}, {api_hash_data}")
     client.connect()  # Подсоединяемся к Telegram
 
     return client  # Возвращаем клиент
@@ -25,7 +25,6 @@ def telegram_connects(db_handler, session) -> TelegramClient:
 
 def telegram_connect_and_output_name(row, db_handler):
     """Подключаемся телеграмм аккаунту и выводим имя"""
-    # phone = get_from_the_list_phone_api_id_api_hash(row)  # Получаем со списка phone, api_id, api_hash
     print(row[2])
     client = telegram_connects(db_handler, f"user_settings/accounts/{row[2]}")
     # Выводим командой print: имя, фамилию, номер телефона аккаунта

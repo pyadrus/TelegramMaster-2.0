@@ -48,7 +48,7 @@ def account_verification(db_handler):
             client = telegram_connects(db_handler, session=f"user_settings/accounts/{row[2]}")
             try:
                 if not client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
-                    telegram_phone_number_banned_error(client, row[2], db_handler)  # Удаляем номер телефона с базы данных
+                    telegram_phone_number_banned_error(client=client, phone=row[2], db_handler=db_handler)  # Удаляем номер телефона с базы данных
                 time.sleep(1)
                 try:
                     # Показываем имя аккаунта с которым будем взаимодействовать

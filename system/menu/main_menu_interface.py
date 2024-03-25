@@ -29,8 +29,8 @@ from system.account_actions.reactions.reactions import viewing_posts
 from system.account_actions.sending_messages.chat_dialog_mes import message_entry_window_time, message_time
 from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_account
 from system.account_actions.sending_messages.sending_messages_telegram import we_send_a_message_by_members
-from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, sending_files_via_chats
 from system.account_actions.sending_messages.telegram_chat_dialog import output_the_input_field
+from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, sending_files_via_chats
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats
 from system.account_actions.subscription.subscription import subscription_all
 from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
@@ -211,15 +211,13 @@ def subscribe_unsubscribe_write_to_file(db_handler) -> None:  # 4 - Подпис
     table = Table(title="[medium_purple3]Подписываемся / отписываемся!", box=box.HORIZONTALS)  # Выводим таблицу
     column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
-    table.add_row("1", "Формирование списка и подписка", "Запись ссылок в поле ввода и запуск подписки")
+    table.add_row("1", "Подписка", "Подписка на группы / каналы")
     table.add_row("2", "Отписываемся", "Отписываемся от групп / каналов чистим аккаунты")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Запись: групп, каналов в файл, в файл user_settings/software_database.db
-        clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        output_the_input_field(db_handler)
         subscription_all(db_handler)
     elif user_input == "2":  # Отписываемся от групп / каналов (работа с несколькими аккаунтами)
         unsubscribe_all(db_handler)
@@ -242,10 +240,9 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
     table.add_row("4", "Рассылка сообщений по чатам, по времени", "Потребуется заранее сформировать список чатов")
     table.add_row("5", "Рассылка файлов по чатам", "Рассылка файлов по чатам, потребуется заранее записать чаты в файл")
     table.add_row("6", "Рассылка сообщений + файлов по чатам", "Потребуется заранее сформировать список чатов")
-    table.add_row("7", "Формирование списка чатов", "Формирование списка чатов для рассылки сообщений по чатам")
-    table.add_row("8", "Отправка сообщений в личку (с лимитами)",
+    table.add_row("7", "Отправка сообщений в личку (с лимитами)",
                   "Отправка сообщений в личку по parsing списку (с лимитами)")
-    table.add_row("9", "Отправка файлов в личку (с лимитами)", "Отправка файлов в личку по parsing списку (с лимитами)")
+    table.add_row("8", "Отправка файлов в личку (с лимитами)", "Отправка файлов в личку по parsing списку (с лимитами)")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
@@ -263,11 +260,9 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
         sending_files_via_chats(db_handler)
     elif user_input == "6":  # Рассылка сообщений + файлов по чатам
         sending_messages_files_via_chats()
-    elif user_input == "7":  # Запись чатов в файл для рассылки сообщений
-        output_the_input_field(db_handler)
-    elif user_input == "8":  # Отправка сообщений в личку (с лимитами)
+    elif user_input == "7":  # Отправка сообщений в личку (с лимитами)
         we_send_a_message_by_members(limits=limits_message, db_handler=db_handler)
-    elif user_input == "9":  # Отправка файлов в личку (с лимитами)
+    elif user_input == "8":  # Отправка файлов в личку (с лимитами)
         send_files_to_personal_account(limits=limits_message, db_handler=db_handler)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
@@ -303,7 +298,8 @@ def working_with_the_reaction(db_handler) -> None:  # 7 - Работа с реа
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-def program_settings(db_handler) -> None:  # 8 - Настройки программы, запись времени, api_id, api_hash, запись ссылки для inviting
+def program_settings(
+        db_handler) -> None:  # 8 - Настройки программы, запись времени, api_id, api_hash, запись ссылки для inviting
     """Настройки программы, запись времени задержки, api_id, api_hash, запись ссылки для inviting"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Настройки программы!", box=box.HORIZONTALS)  # Выводим таблицу
@@ -339,6 +335,8 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
                   "Запись сообщений для для рассылки сообщений по чатам")
     table.add_row("15", "Запись времени между сообщениями",
                   "Запись времени для рассылки сообщений по чатам между сообщениями")
+    table.add_row("16", "Формирование списка чатов / каналов",
+                  "Формирование списка чатов для рассылки сообщений по чатам, подписки на группы / каналы")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
@@ -384,11 +382,13 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         recording_text_for_sending_messages()  # Вызов функции записи текста для рассылки
     elif user_input == "15":  # Запись времени между сообщениями
         recording_the_time_between_chat_messages(variable="time_sending_messages")
+    elif user_input == "16":  # Формирование списка чатов
+        output_the_input_field(db_handler)  # Вызов функции формирования списка чатов
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
         program_settings(db_handler)
-    main_menu()  # После отработки функции переходим в начальное меню
+    # main_menu()  # После отработки функции переходим в начальное меню
 
 
 if __name__ == "__main__":

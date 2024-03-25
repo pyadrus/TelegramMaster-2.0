@@ -213,11 +213,11 @@ def output_the_input_field(db_handler) -> None:
         greetings = ft.Column()
 
         def btn_click(e) -> None:
+            page.update()
             print(f"Вы ввели: {text_to_send}")
             db_handler.open_and_read_data("writing_group_links")  # Удаление списка с группами
             db_handler.write_to_single_column_table("writing_group_links", text_to_send.value.split())
             page.window_close()
-            page.update()
 
         page.add(text_to_send, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
 

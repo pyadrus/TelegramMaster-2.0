@@ -114,6 +114,7 @@ def setting_reactions(db_handler):
             chat = json.load(json_file)  # Используем функцию load для загрузки данных из файла
         logger.info(chat)
         client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
+
         @client.on(events.NewMessage(chats=chat))
         async def handler(event):
             message = event.message  # Получаем сообщение из события
