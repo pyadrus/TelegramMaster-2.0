@@ -2,7 +2,6 @@ import configparser
 import getpass
 import json
 import os
-from tkinter import ttk
 
 import flet as ft
 from rich import print
@@ -11,7 +10,7 @@ from telethon.errors import *
 
 from system.account_actions.creating.account_registration import telegram_connects
 from system.auxiliary_functions.global_variables import console, api_id_data, api_hash_data
-from system.menu.app_gui import program_window_with_dimensions, create_window
+from system.menu.app_gui import create_window
 from system.notification.notification import app_notifications
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
@@ -19,55 +18,32 @@ config.read("user_settings/config.ini")
 
 
 def recording_the_time_to_launch_an_invite_every_day() -> None:
-    def recoding_time() -> None:
-        # Получаем значения из полей ввода
-        hour = hour_time_entry.get()
-        minutes = minutes_time_entry.get()
-        # Проверка на пустой ввод
-        if not hour or not minutes:
-            result_label.config(text="Пожалуйста, введите оба поля!")
-            return
-        # Проверяем, что оба поля были заполнены целыми числами
-        try:
-            hour = int(hour)
-            minutes = int(minutes)
-        except ValueError:
-            # Если пользователь ввел не число, выводим сообщение об ошибке
-            result_label.config(text="Пожалуйста, введите целые числа!")
-            return
-        if not 0 <= hour < 24:
-            # Если часы не в пределах от 0 до 23, выводим сообщение об ошибке
-            result_label.config(text="Пожалуйста, введите часы в пределах от 0 до 23!")
-            return
-        if not 0 <= minutes < 60:
-            # Если минуты не в пределах от 0 до 59, выводим сообщение об ошибке
-            result_label.config(text="Пожалуйста, введите минуты в пределах от 0 до 59!")
-            return
-        config.get("hour_minutes_every_day", "hour")
-        config.set("hour_minutes_every_day", "hour", str(hour))
-        config.get("hour_minutes_every_day", "minutes")
-        config.set("hour_minutes_every_day", "minutes", str(minutes))
-        writing_settings_to_a_file(config)
-        root.destroy()
+    def main_inviting(page) -> None:
+        create_window(page=page, width=300, height=300, resizable=False)  # Создаем окно с размером 300 на 300 пикселей
+        hour = ft.TextField(label="Время в часах :", autofocus=True)
+        minutes = ft.TextField(label="Время в минутах:")
+        greetings = ft.Column()
 
-    root = program_window_with_dimensions(geometry="300x140")
-    root.resizable(False, False)  # Запретить масштабирование окна
-    s = ttk.Style()  # Установка стиля оформления
-    s.theme_use("winnative")
-    hour_time_label = ttk.Label(root, text="Время в часах :")
-    hour_time_label.pack()
-    hour_time_entry = ttk.Entry(root, width=45)
-    hour_time_entry.pack()
-    # Создаем второе текстовое поле и связанный с ним текстовый метка
-    minutes_time_label = ttk.Label(root, text="Время в минутах:")
-    minutes_time_label.pack()
-    minutes_time_entry = ttk.Entry(root, width=45)
-    minutes_time_entry.pack()
-    button = ttk.Button(root, text="Готово", command=recoding_time)  # Создаем кнопку
-    button.pack()
-    result_label = ttk.Label(root, text="")  # Создаем метку для вывода результата
-    result_label.pack()
-    root.mainloop()  # Запускаем главный цикл обработки событий
+        def btn_click(e) -> None:
+            try:
+                if not 0 <= int(hour.value) < 24:
+                    print('Введите часы в пределах от 0 до 23!')
+                    return
+                if not 0 <= int(minutes.value) < 60:
+                    print('Введите минуты в пределах от 0 до 59!')
+                    return
+                config.get("hour_minutes_every_day", "hour")
+                config.set("hour_minutes_every_day", "hour", str(hour.value))
+                config.get("hour_minutes_every_day", "minutes")
+                config.set("hour_minutes_every_day", "minutes", str(minutes.value))
+                writing_settings_to_a_file(config)
+                page.window_close()  # Закрываем окно
+            except ValueError:
+                pass
+            page.update()  # Обновляем страницу
+        page.add(hour, minutes, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
+
+    ft.app(target=main_inviting)
 
 
 def record_account_limits() -> configparser.ConfigParser:
@@ -191,7 +167,8 @@ def creating_the_main_window_for_proxy_data_entry(db_handler) -> None:
         greetings = ft.Column()
 
         def btn_click(e) -> None:
-            print(f"Вы ввели: {proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value}")
+            print(
+                f"Вы ввели: {proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value}")
             rdns_types = "True"
             proxy = [proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
                      rdns_types]

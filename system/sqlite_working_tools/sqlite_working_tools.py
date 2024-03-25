@@ -146,12 +146,6 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    def creating_table(self, CREATE_TABLE):
-        self.connect()
-        self.cursor.execute(CREATE_TABLE)
-        self.sqlite_connection.commit()
-        self.close()
-
     def write_members_column_table(self, recorded_data) -> None:
         """Запись данных в таблицу с одной колонкой в базу данных"""
         self.connect()

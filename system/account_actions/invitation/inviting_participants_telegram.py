@@ -12,7 +12,6 @@ from system.auxiliary_functions.auxiliary_functions import record_inviting_resul
 from system.auxiliary_functions.global_variables import limits
 from system.auxiliary_functions.global_variables import link_group
 from system.notification.notification import app_notifications
-from system.telegram_actions.telegram_actions import get_username
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 event: str = f"Inviting в группу {link_group}"  # Событие, которое записываем в базу данных
@@ -72,7 +71,7 @@ def invite_from_multiple_accounts_with_limits(name_database_table, db_handler) -
 def inviting(client, phone, records, db_handler) -> None:
     """Inviting"""
     for rows in records:
-        username = get_username(rows)
+        username = rows[0]  # Имя аккаунта пользователя в базе данных user_settings/software_database.db
         try:
             inviting_to_a_group(client, username)  # Inviting user в группу
         except AuthKeyDuplicatedError:

@@ -32,7 +32,7 @@ from system.account_actions.sending_messages.sending_messages_telegram import we
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, sending_files_via_chats
 from system.account_actions.sending_messages.telegram_chat_dialog import output_the_input_field
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats
-from system.account_actions.subscription.subscription import writing_group_links_to_file, subscription_all
+from system.account_actions.subscription.subscription import subscription_all
 from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
 from system.auxiliary_functions.auxiliary_functions import *
 from system.auxiliary_functions.global_variables import *
@@ -143,14 +143,13 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Parsing: группы, групп в список software_database.db (группы вводятся в графическое окно)
+
         print("[medium_purple3][+] Введите ссылки чатов которые будем parsing, для вставки в графическое окно "
               "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
               "быть переключен на английский")
-
         # Перед началом parsing очистка таблицы writing_group_links
         db_handler.cleaning_db(name_database_table="writing_group_links")
-
-        writing_group_links_to_file(name_database="writing_group_links", db_handler=db_handler)
+        output_the_input_field(db_handler)
         parsing_mass_parsing_of_groups(db_handler)  # Парсинг участников чата
 
     elif user_input == "2":  # Parsing группы из подписанных
@@ -218,13 +217,9 @@ def subscribe_unsubscribe_write_to_file(db_handler) -> None:  # 4 - Подпис
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Запись: групп, каналов в файл, данные записываются в файл user_settings/software_database.db
+    if user_input == "1":  # Запись: групп, каналов в файл, в файл user_settings/software_database.db
         clearing_console_showing_banner()  # Чистим консоль, выводим банер
-        print("[medium_purple3][+] Введите ссылки чатов на которые нужно подписаться, для вставки в графическое окно "
-              "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
-              "быть переключен на английский")
-        name_database = "writing_group_links"
-        writing_group_links_to_file(name_database, db_handler)
+        output_the_input_field(db_handler)
         subscription_all(db_handler)
     elif user_input == "2":  # Отписываемся от групп / каналов (работа с несколькими аккаунтами)
         unsubscribe_all(db_handler)

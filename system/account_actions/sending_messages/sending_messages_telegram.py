@@ -10,7 +10,6 @@ from system.auxiliary_functions.global_variables import console, time_inviting_1
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
-from system.telegram_actions.telegram_actions import get_username  # 152
 
 
 def we_send_a_message_by_members(limits, db_handler) -> None:
@@ -54,7 +53,7 @@ def send_files_to_personal_account(limits, db_handler) -> None:
             # Количество аккаунтов на данный момент в работе
             print(f"[medium_purple3]Всего username: {len(records)}")
             for rows in records:
-                username = get_username(rows)
+                username = rows[0] # Получаем имя аккаунта из базы данных user_settings/software_database.db
                 print(f"[magenta][!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)
@@ -106,7 +105,7 @@ def we_send_a_message_from_all_accounts(message_text, limits, db_handler) -> Non
             # Количество аккаунтов на данный момент в работе
             print(f"[medium_purple3]Всего username: {len(records)}")
             for rows in records:
-                username = get_username(rows)
+                username = rows[0]  # Имя аккаунта пользователя в базе данных user_settings/software_database.db
                 print(f"[magenta][!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)

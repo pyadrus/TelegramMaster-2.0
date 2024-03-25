@@ -25,8 +25,9 @@ def telegram_connects(db_handler, session) -> TelegramClient:
 
 def telegram_connect_and_output_name(row, db_handler):
     """Подключаемся телеграмм аккаунту и выводим имя"""
-    phone, api_id, api_hash = get_from_the_list_phone_api_id_api_hash(row)  # Получаем со списка phone, api_id, api_hash
-    client = telegram_connects(db_handler, session=f"user_settings/accounts/{phone}")
+    # phone = get_from_the_list_phone_api_id_api_hash(row)  # Получаем со списка phone, api_id, api_hash
+    print(row[2])
+    client = telegram_connects(db_handler, f"user_settings/accounts/{row[2]}")
     # Выводим командой print: имя, фамилию, номер телефона аккаунта
     first_name, last_name, phone = account_name(client, name_account="me")
     # Выводим результат полученного имени и номера телефона
@@ -45,22 +46,6 @@ def account_name(client, name_account):
             return first_name, last_name, phone
     except TypeNotFoundError as e:
         print(f"TypeNotFoundError: {e}")
-
-
-def get_from_the_list_phone_api_id_api_hash(row):
-    """Получаем со списка phone, api_id, api_hash"""
-    users = {"id": int(row[0]), "hash": row[1], "phone": row[2]}
-    # Вытягиваем данные из кортежа, для подстановки в функцию
-    phone = users["phone"]
-    api_id = users["id"]
-    api_hash = users["hash"]
-    return phone, api_id, api_hash
-
-
-def get_username(rows):
-    """Получаем username"""
-    username = rows[0]
-    return username
 
 
 def writing_names_found_files_to_the_db(db_handler) -> None:

@@ -11,28 +11,8 @@ from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import time_subscription_1
 from system.auxiliary_functions.global_variables import time_subscription_2
 from system.error.telegram_errors import record_account_actions
-from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
-
-
-def writing_group_links_to_file(name_database, db_handler) -> None:
-    """Запускаем окно программы (большого поля ввода)"""
-    root, text = program_window()
-
-    def output_values_from_the_input_field() -> None:
-        """Выводим значения с поля ввода (то что ввел пользователь)"""
-        message_text = text.get("1.0", "end-1c")
-        closing_the_input_field()
-        lines = message_text.split("\n")
-        db_handler.write_to_single_column_table(name_database, lines)
-
-    def closing_the_input_field() -> None:
-        """Закрываем программу"""
-        root.destroy()
-
-    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
-    root.mainloop()  # Запускаем программу
 
 
 def subscription_all(db_handler) -> None:
