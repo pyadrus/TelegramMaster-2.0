@@ -1,63 +1,22 @@
-import datetime
+import os
 import time
 
 import schedule
+from loguru import logger
 from rich import print
-from telethon.errors import *
 
-from system.account_actions.sending_messages.telegram_chat_dialog import connecting_tg_account_creating_list_groups
-from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
-from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.error.telegram_errors import record_account_actions, delete_files
-from system.menu.app_gui import program_window, done_button
-
-creating_a_table = """SELECT * from writing_group_links"""
-writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
-event: str = f"Рассылаем сообщение по чатам Telegram"
+from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_via_chats_times
 
 
 def send_mess(db_handler) -> None:
-    with open("user_settings/message_text.csv", 'r') as chats:
-        cursor_members = chats.read()
-    sending_messages_via_chats_time(cursor_members, db_handler)
+    entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_settings/accounts
+    for x in os.listdir(path="user_settings/message"):
+        if x.endswith(".json"):
+            file = os.path.splitext(x)[0]
+            logger.info(f"Найденные файлы: {file}.json")  # Выводим имена найденных аккаунтов
+            entities.append([file])
 
-
-def sending_messages_via_chats_time(message_text, db_handler) -> None:
-    """Массовая рассылка в чаты"""
-    client, phone, records = connecting_tg_account_creating_list_groups(db_handler)
-    for groups in records:
-        groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
-        description_action = f"Sending messages to a group: {groups_wr}"
-        try:
-            # Рассылаем сообщение по чатам
-            client.send_message(entity=groups_wr, message=message_text)
-            # Работу записываем в лог файл, для удобства слежения, за изменениями
-            actions: str = f"[medium_purple3]Сообщение в группу {groups_wr} написано!"
-            record_account_actions(phone, description_action, event, actions, db_handler)
-        except ChannelPrivateError:
-            actions: str = "Указанный канал является приватным, или вам запретили подписываться."
-            record_account_actions(phone, description_action, event, actions, db_handler)
-            db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
-        except PeerFloodError:
-            actions: str = "Предупреждение о Flood от Telegram."
-            record_and_interrupt(actions, phone, description_action, event, db_handler)
-            break  # Прерываем работу и меняем аккаунт
-        except FloodWaitError as e:
-            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
-            record_account_actions(phone, description_action, event, actions, db_handler)
-            print(f'Спим {e.seconds} секунд')
-            time.sleep(e.seconds)
-        except UserBannedInChannelError:
-            actions: str = "Вам запрещено отправлять сообщения в супергруппу."
-            record_and_interrupt(actions, phone, description_action, event, db_handler)
-            break  # Прерываем работу и меняем аккаунт
-        except ChatWriteForbiddenError:
-            actions = "Вам запрещено писать в супергруппу / канал."
-            record_and_interrupt(actions, phone, description_action, event, db_handler)
-            break  # Прерываем работу и меняем аккаунт
-        except (TypeError, UnboundLocalError):
-            continue  # Записываем ошибку в software_database.db и продолжаем работу
-    client.disconnect()  # Разрываем соединение Telegram
+    sending_messages_via_chats_times(entities, db_handler)
 
 
 def message_time() -> None:
@@ -130,32 +89,3 @@ def message_time() -> None:
     while True:
         schedule.run_pending()
         time.sleep(1)
-
-
-def message_entry_window_time() -> None:
-    """Выводим поле ввода для ввода текста сообщения"""
-    # Предупреждаем пользователя о вводе ссылок в графическое окно программы
-    print("[medium_purple3][+] Введите текст который будем рассылать по чатам, для вставки в графическое окно готового "
-          "текста используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык "
-          "должен быть переключен на английский")
-
-    root, text = program_window()
-
-    def output_values_from_the_input_field() -> None:
-        """Выводим значения с поля ввода (то что ввел пользователь)"""
-        message_text = text.get("1.0", 'end-1c')
-        closing_the_input_field()
-        delete_files(file=f"user_settings/message_text.csv")
-        with open(f'user_settings/message_text.csv', "w") as res_as:
-            res_as.write(message_text)
-
-    def closing_the_input_field() -> None:
-        """Закрываем программу"""
-        root.destroy()
-
-    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
-    root.mainloop()  # Запускаем программу
-
-
-if __name__ == "__main__":
-    message_entry_window_time()

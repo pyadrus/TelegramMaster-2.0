@@ -4,7 +4,6 @@ import os
 import random
 import time
 
-import flet as ft
 from loguru import logger
 from rich import print
 from rich.progress import track
@@ -14,7 +13,7 @@ from system.account_actions.subscription.subscription import subscribe_to_the_gr
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import console, time_sending_messages
 from system.error.telegram_errors import record_account_actions
-from system.menu.app_gui import program_window, done_button, create_window
+from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
@@ -141,7 +140,7 @@ def sending_messages_files_via_chats() -> None:
     root.mainloop()  # Запускаем программу
 
 
-def sending_messages_chats(db_handler) -> None:
+def sending_messages_chats():
     entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_settings/accounts
     for x in os.listdir(path="user_settings/message"):
         if x.endswith(".json"):
@@ -149,33 +148,29 @@ def sending_messages_chats(db_handler) -> None:
             logger.info(f"Найденные файлы: {file}.json")  # Выводим имена найденных аккаунтов
             entities.append([file])
 
-    if entities:  # Проверяем, что список не пустой, если он не пустой
-        # Выбираем рандомный файл для чтения
-        random_file = random.choice(entities)
-        logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
-        # Открываем выбранный файл с настройками
-        with open(f"user_settings/message/{random_file[0]}.json", "r", encoding="utf-8") as file:
-            data = json.load(file)
-
-    logger.info(data)
-    sending_messages_via_chats_time(data, db_handler)
+    return entities  # Возвращаем список json файлов
 
 
-def sending_messages_via_chats_time(message_text, db_handler) -> None:
+def sending_messages_via_chats_times(entities, db_handler) -> None:
     """Массовая рассылка в чаты"""
-
     client, phone, records = connecting_tg_account_creating_list_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
+        logger.info(f"Группа: {groups}")
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
+        if entities:  # Проверяем, что список не пустой, если он не пустой
+            # Выбираем рандомный файл для чтения
+            random_file = random.choice(entities)
+            logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
+            # Открываем выбранный файл с настройками
+            with open(f"user_settings/message/{random_file[0]}.json", "r", encoding="utf-8") as file:
+                data = json.load(file)
         description_action = f"Sending messages to a group: {groups_wr}"
         try:
-            client.send_message(entity=groups_wr, message=message_text)  # Рассылаем сообщение по чатам
-
+            client.send_message(entity=groups_wr, message=data)  # Рассылаем сообщение по чатам
             # Convert time from minutes to seconds
             time_in_seconds = time_sending_messages * 60
             for _ in track(range(time_in_seconds), description=f"[red]Спим {time_sending_messages} минуты / минут..."):
                 time.sleep(1)  # Sleep for 1 second
-
             actions = f"[medium_purple3]Сообщение в группу {groups_wr} написано!"
             record_account_actions(phone, description_action, event, actions, db_handler)
         except ChannelPrivateError:
@@ -202,9 +197,6 @@ def sending_messages_via_chats_time(message_text, db_handler) -> None:
             record_and_interrupt(actions, phone, description_action, event, db_handler)
             break  # Прерываем работу и меняем аккаунт
     client.disconnect()  # Разрываем соединение Telegram
-
-
-
 
 
 if __name__ == "__main__":

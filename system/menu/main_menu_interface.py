@@ -25,10 +25,11 @@ from system.account_actions.reactions.reactions import recording_link_channel
 from system.account_actions.reactions.reactions import setting_reactions
 from system.account_actions.reactions.reactions import users_choice_of_reaction
 from system.account_actions.reactions.reactions import viewing_posts
-from system.account_actions.sending_messages.chat_dialog_mes import message_entry_window_time, message_time
+from system.account_actions.sending_messages.chat_dialog_mes import message_time
 from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_account
 from system.account_actions.sending_messages.sending_messages_telegram import we_send_a_message_by_members
-from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, sending_files_via_chats
+from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, \
+    sending_files_via_chats, sending_messages_via_chats_times
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats
 from system.account_actions.subscription.subscription import subscription_all
 from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
@@ -248,9 +249,10 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
     elif user_input == "2":  # Отправка файлов в личку по parsing списку user_settings/software_database.db
         send_files_to_personal_account(limits=None, db_handler=db_handler)
     elif user_input == "3":  # Рассылка сообщений по чатам
-        sending_messages_chats(db_handler)
+        entities = sending_messages_chats()
+        logger.info(entities)
+        sending_messages_via_chats_times(entities, db_handler)
     elif user_input == "4":  # Рассылка сообщений по чатам по времени
-        message_entry_window_time()
         message_time()
     elif user_input == "5":  # Рассылка файлов по чатам
         sending_files_via_chats(db_handler)
@@ -264,7 +266,7 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
         main_menu()  # После отработки функции переходим в начальное меню
     else:
         sending_messages_to_a_personal_account_chat(db_handler)
-    main_menu()  # После отработки функции переходим в начальное меню
+    # main_menu()  # После отработки функции переходим в начальное меню
 
 
 def working_with_the_reaction(db_handler) -> None:  # 7 - Работа с реакциями на посты группы или канала
@@ -341,7 +343,6 @@ def program_settings(
         print("[magenta][!] Давайте запишем ссылку для inviting, ссылка должна быть [medium_purple3]одна! Обратите "
               "внимание, что программа будет заново запущена")
         writing_settings_to_a_file(config=writing_link_to_the_group())
-        os.system("python main.py")  # После отработки функции возвращаемся в начальное меню
     elif user_input == "2":  # Запись id, hash в файл
         print("[medium_purple3][!] Получить api_id, api_hash можно на сайте https://my.telegram.org/auth")
         writing_settings_to_a_file(config=writing_api_id_api_hash())
@@ -384,7 +385,7 @@ def program_settings(
         main_menu()  # После отработки функции переходим в начальное меню
     else:
         program_settings(db_handler)
-    # main_menu()  # После отработки функции переходим в начальное меню
+    os.system("python main.py")  # После отработки функции возвращаемся в начальное меню
 
 
 if __name__ == "__main__":
