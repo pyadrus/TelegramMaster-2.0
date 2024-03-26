@@ -1,28 +1,60 @@
 import random
 import time
 
+from loguru import logger
 from rich import print
 from telethon import functions
 from telethon import types
-from loguru import logger
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import ChannelParticipantsSearch
 from telethon.tl.types import InputPeerEmpty
+from telethon.tl.types import UserStatusEmpty
 from telethon.tl.types import UserStatusLastMonth
 from telethon.tl.types import UserStatusLastWeek
 from telethon.tl.types import UserStatusOffline
-from telethon.tl.types import UserStatusRecently
 from telethon.tl.types import UserStatusOnline
-from telethon.tl.types import UserStatusEmpty
+from telethon.tl.types import UserStatusRecently
 
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link, \
     subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import display_progress_bar
 from system.auxiliary_functions.global_variables import console, time_activity_user_1, time_activity_user_2
-from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
+
+
+def getting_active_user_data(user):
+    """Получаем данные пользователя"""
+    username = user.username if user.username else "NONE"
+    user_phone = user.phone if user.phone else "Номер телефона скрыт"
+    first_name = user.first_name if user.first_name else ""
+    last_name = user.last_name if user.last_name else ""
+    photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
+    online_at = "Был(а) недавно"
+    # Статусы пользователя https://core.telegram.org/type/UserStatus
+    if isinstance(user.status, (
+            UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, UserStatusOnline,
+            UserStatusEmpty)):
+        if isinstance(user.status, UserStatusOffline):
+            online_at = user.status.was_online
+        if isinstance(user.status, UserStatusRecently):
+            online_at = "Был(а) недавно"
+        if isinstance(user.status, UserStatusLastWeek):
+            online_at = "Был(а) на этой неделе"
+        if isinstance(user.status, UserStatusLastMonth):
+            online_at = "Был(а) в этом месяце"
+        if isinstance(user.status, UserStatusOnline):
+            online_at = user.status.expires
+        if isinstance(user.status, UserStatusEmpty):
+            online_at = "статус пользователя еще не определен"
+    user_premium = "Пользователь с premium" if user.premium else ""
+
+    entity = (username, user.id, user.access_hash,
+              first_name, last_name, user_phone,
+              online_at, photos_id, user_premium)
+
+    return entity
 
 
 def getting_user_data(user, entities) -> None:
@@ -50,6 +82,7 @@ def getting_user_data(user, entities) -> None:
         if isinstance(user.status, UserStatusEmpty):
             online_at = "статус пользователя еще не определен"
     user_premium = "Пользователь с premium" if user.premium else ""
+
     entities.append(
         [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium])
 
@@ -160,67 +193,7 @@ def output_a_list_of_groups_new(client):
     return target_group
 
 
-def writing_members(db_handler) -> None:
-    """Запускаем окно программы (большого поля ввода)"""
-    root, text = program_window()
-
-    def output_values_from_the_input_field() -> None:
-        """Выводим значения с поля ввода (то что ввел пользователь)"""
-        message_text = text.get("1.0", "end-1c")
-        closing_the_input_field()
-        lines = message_text.split("\n")
-        db_handler.write_members_column_table(lines)
-
-    def closing_the_input_field() -> None:
-        """Закрываем программу"""
-        root.destroy()
-
-    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
-    root.mainloop()  # Запускаем программу
-
-
-"""
-Parsing активных участников группы
-
-Парсинг активных участников группы:
-
-1. Добавить прогресс бар на время между перерывами между парсингом
-2. Реализовать запись парсинг данных не посредственно в базу данных
-3. Чистка дубликатов участников в базе данных 
-"""
-
-
-def getting_active_user_data(user):
-    """Получаем данные пользователя"""
-    username = user.username if user.username else "NONE"
-    user_phone = user.phone if user.phone else "Номер телефона скрыт"
-    first_name = user.first_name if user.first_name else ""
-    last_name = user.last_name if user.last_name else ""
-    photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
-    online_at = "Был(а) недавно"
-    # Статусы пользователя https://core.telegram.org/type/UserStatus
-    if isinstance(user.status, (
-            UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, UserStatusOnline,
-            UserStatusEmpty)):
-        if isinstance(user.status, UserStatusOffline):
-            online_at = user.status.was_online
-        if isinstance(user.status, UserStatusRecently):
-            online_at = "Был(а) недавно"
-        if isinstance(user.status, UserStatusLastWeek):
-            online_at = "Был(а) на этой неделе"
-        if isinstance(user.status, UserStatusLastMonth):
-            online_at = "Был(а) в этом месяце"
-        if isinstance(user.status, UserStatusOnline):
-            online_at = user.status.expires
-        if isinstance(user.status, UserStatusEmpty):
-            online_at = "статус пользователя еще не определен"
-    user_premium = "Пользователь с premium" if user.premium else ""
-
-    entity = (username, user.id, user.access_hash,
-              first_name, last_name, user_phone,
-              online_at, photos_id, user_premium)
-
-    return entity
+"""Parsing активных участников группы"""
 
 
 def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, limit_active_user, db_handler) -> None:

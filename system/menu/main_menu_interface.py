@@ -19,7 +19,6 @@ from system.account_actions.parsing.parsing_group_members import parsing_mass_pa
 from system.account_actions.parsing.parsing_group_members import parsing_of_active_participants
 from system.account_actions.parsing.parsing_group_members import show_account_contact_list
 from system.account_actions.parsing.parsing_group_members import we_record_phone_numbers_in_the_db
-from system.account_actions.parsing.parsing_group_members import writing_members
 from system.account_actions.reactions.reactions import reaction_gui
 from system.account_actions.reactions.reactions import record_the_number_of_accounts
 from system.account_actions.reactions.reactions import recording_link_channel
@@ -29,13 +28,13 @@ from system.account_actions.reactions.reactions import viewing_posts
 from system.account_actions.sending_messages.chat_dialog_mes import message_entry_window_time, message_time
 from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_account
 from system.account_actions.sending_messages.sending_messages_telegram import we_send_a_message_by_members
-from system.account_actions.sending_messages.telegram_chat_dialog import output_the_input_field
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, sending_files_via_chats
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats
 from system.account_actions.subscription.subscription import subscription_all
 from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
 from system.auxiliary_functions.auxiliary_functions import *
 from system.auxiliary_functions.global_variables import *
+from system.menu.app_gui import output_the_input_field, writing_members
 from system.setting.setting import *
 from system.sqlite_working_tools.sqlite_working_tools import *
 
@@ -165,15 +164,12 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
     elif user_input == "5":  # Очистка списка software_database.db
         db_handler.cleaning_db(name_database_table="members")
     elif user_input == "6":  # Формирование списка
-        print("[medium_purple3][+] Введите username, для вставки в графическое окно "
-              "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
-              "быть переключен на английский")
         writing_members(db_handler)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
         telegram_parsing_menu(db_handler)
-    main_menu()  # После отработки функции переходим в начальное меню
+    # main_menu()  # После отработки функции переходим в начальное меню
 
 
 def working_tools_contacts(db_handler) -> None:  # 3 - Работаем с контактами телефонной книги

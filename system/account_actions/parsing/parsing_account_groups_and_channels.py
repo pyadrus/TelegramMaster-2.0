@@ -13,7 +13,6 @@ writing_data_to_a_table = "INSERT INTO groups_and_channels (id, title, about, li
 
 def parsing_groups_which_account_subscribed(db_handler) -> None:
     """Parsing групп / каналов на которые подписан аккаунт и сохраняем в файл software_database.db"""
-    db_handler.add_columns_to_table()
     event: str = "Parsing групп / каналов на которые подписан аккаунт"  # Событие, которое записываем в базу данных
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db

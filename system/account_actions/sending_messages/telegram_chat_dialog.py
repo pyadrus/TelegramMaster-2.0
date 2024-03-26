@@ -204,24 +204,7 @@ def sending_messages_via_chats_time(message_text, db_handler) -> None:
     client.disconnect()  # Разрываем соединение Telegram
 
 
-def output_the_input_field(db_handler) -> None:
-    """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
 
-    def main_inviting(page) -> None:
-        create_window(page=page, width=600, height=600, resizable=False)  # Создаем окно с размером 600 на 600 пикселей
-        text_to_send = ft.TextField(label="Введите список ссылок на группы", multiline=True, max_lines=19)
-        greetings = ft.Column()
-
-        def btn_click(e) -> None:
-            page.update()
-            print(f"Вы ввели: {text_to_send}")
-            db_handler.open_and_read_data("writing_group_links")  # Удаление списка с группами
-            db_handler.write_to_single_column_table("writing_group_links", text_to_send.value.split())
-            page.window_close()
-
-        page.add(text_to_send, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
-
-    ft.app(target=main_inviting)
 
 
 if __name__ == "__main__":

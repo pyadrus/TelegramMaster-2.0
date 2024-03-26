@@ -42,18 +42,10 @@ def create_gui(account_list, db_handler) -> None:
     window.close()
 
 
-def get_from(row):
-    """Получаем со списка phone, api_id, api_hash"""
-    users = {"id": int(row[0]), "hash": row[1], "phone": row[2]}
-    # Вытягиваем данные из кортежа, для подстановки в функцию
-    phone = users["phone"]
-    return phone
-
-
 def creating_groups_and_chats(db_handler) -> None:
     """Создание групп (чатов) в автоматическом режиме"""
     accounts = get_account_list(db_handler)
-    # Extracting phone numbers from the accounts list
-    phones = [get_from(rows) for rows in accounts]
+    # Extracting phone (rows[2]) numbers from the accounts list
+    phones = [rows[2] for rows in accounts]
     # Passing the entire accounts list to create_gui
     create_gui(phones, db_handler)

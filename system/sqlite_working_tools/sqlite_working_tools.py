@@ -123,20 +123,6 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    def add_columns_to_table(self) -> None:
-        """Добавляем новые колонки в базу данных"""
-        self.connect()
-        try:
-            # Добавьте столбец member_count
-            self.cursor.execute("ALTER TABLE groups_and_channels ADD COLUMN members_count INTEGER")
-            # Add the parsing_time column
-            self.cursor.execute("ALTER TABLE groups_and_channels ADD COLUMN parsing_time TEXT")
-            self.sqlite_connection.commit()
-        except sqlite3.OperationalError:
-            print("Columns already exist")
-        finally:
-            self.close()  # cursor_members.close() – закрытие соединения с БД.
-
     def save_proxy_data_to_db(self, proxy) -> None:
         """Запись данных proxy в базу данных"""
         self.connect()
@@ -146,29 +132,20 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    def write_members_column_table(self, recorded_data) -> None:
-        """Запись данных в таблицу с одной колонкой в базу данных"""
+    def write_to_single_column_table(self, name_database, database_columns, into_columns, recorded_data) -> None:
+        """Запись данных в таблицу с одной колонкой в базу данных
+        :param name_database: название таблицы
+        :param database_columns: название колон
+        :param into_columns: название колонки в таблице
+        :param recorded_data: данные для записи
+        """
         self.connect()
-        # Создание таблицы, если она еще не существует
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS members (username, id, access_hash, first_name, last_name, "
-                            "user_phone, online_at, photos_id, user_premium)")
+        # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
+        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {name_database}({database_columns})")
         for line in recorded_data:
-            # Записываем значение username
-            username = line.strip()
-            # Вставляем данные в таблицу, используя параметризованный запрос
-            self.cursor.execute("INSERT INTO members (username) VALUES (?)", (username,))
-            self.sqlite_connection.commit()
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
-
-    def write_to_single_column_table(self, name_database, recorded_data) -> None:
-        """Запись данных в таблицу с одной колонкой в базу данных"""
-        self.connect()
-        for line in recorded_data:
-            # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
-            self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {name_database}({name_database})")
             # strip() - удаляет с конца и начала строки лишние пробелы, в том числе символ окончания строки
             lines = line.strip()
-            self.cursor.execute(f"INSERT INTO {name_database} VALUES (?)", (lines,))
+            self.cursor.execute(f"INSERT INTO {into_columns} VALUES (?)", (lines,))
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
