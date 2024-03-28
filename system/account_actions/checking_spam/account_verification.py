@@ -2,11 +2,8 @@ from telethon.sync import TelegramClient  # Не удалять, так как �
 from system.error.telegram_errors import record_account_actions
 from system.notification.notification import app_notifications
 
-from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
+from system.telegram_actions.telegram_actions import telegram_connect_and_output_name, working_with_accounts
 from thefuzz import fuzz
-
-import os
-import os.path
 
 from loguru import logger
 from rich import print
@@ -72,10 +69,4 @@ def check_account_for_spam(db_handler) -> None:
             continue  # Записываем ошибку в software_database.db и продолжаем работу
 
 
-def working_with_accounts(account_folder, new_account_folder) -> None:
-    """Работа с аккаунтами"""
-    try:  # Переносим файлы в нужную папку
-        os.replace(account_folder, new_account_folder)
-    except FileNotFoundError:  # Если в папке нет нужной папки, то создаем ее
-        os.makedirs(new_account_folder)
-        os.replace(account_folder, new_account_folder)
+

@@ -1,12 +1,23 @@
 import os
 import os.path
-from telethon import TelegramClient
-from rich import print
-from telethon.errors import TypeNotFoundError
-from telethon.tl.functions.users import GetFullUserRequest
+
 from loguru import logger
+from rich import print
+from telethon import TelegramClient
+from telethon.errors import *
+from telethon.tl.functions.users import GetFullUserRequest
+
 from system.auxiliary_functions.global_variables import api_id_data, api_hash_data
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
+
+
+def working_with_accounts(account_folder, new_account_folder) -> None:
+    """Работа с аккаунтами"""
+    try:  # Переносим файлы в нужную папку
+        os.replace(account_folder, new_account_folder)
+    except FileNotFoundError:  # Если в папке нет нужной папки, то создаем ее
+        os.makedirs(new_account_folder)
+        os.replace(account_folder, new_account_folder)
 
 
 def telegram_connects(db_handler, session) -> TelegramClient:
@@ -18,9 +29,15 @@ def telegram_connects(db_handler, session) -> TelegramClient:
     client = TelegramClient(session, api_id=api_id_data, api_hash=api_hash_data,
                             system_version="4.16.30-vxCUSTOM", proxy=proxy)
     logger.info(f"Подключение аккаунта: {session.split('/')[-1]}, {api_id_data}, {api_hash_data}")
-    client.connect()  # Подсоединяемся к Telegram
-
-    return client  # Возвращаем клиент
+    try:
+        client.connect()  # Подсоединяемся к Telegram
+        return client  # Возвращаем клиент
+    except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
+        print(f"На данный момент аккаунт {session.split('/')[-1]} запущен под другим ip")
+        # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+        client.disconnect()
+        working_with_accounts(account_folder=f"user_settings/accounts/{session.split('/')[-1]}.session",
+                              new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
 
 
 def telegram_connect_and_output_name(row, db_handler):

@@ -58,6 +58,8 @@ def account_verification(db_handler):
                     renaming_a_session(client, row[2], phone)  # Переименование session файла
                 except ConnectionError:
                     continue
+            except AttributeError:
+                continue
             except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
                 print(f"На данный момент аккаунт {row[2]} запущен под другим ip")
                 # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
