@@ -151,19 +151,24 @@ def sending_messages_chats():
     return entities  # Возвращаем список json файлов
 
 
+def select_and_read_random_file(entities):
+    if entities:  # Проверяем, что список не пустой, если он не пустой
+        # Выбираем рандомный файл для чтения
+        random_file = random.choice(entities)  # Выбираем случайный файл для чтения из списка файлов
+        logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
+        # Открываем выбранный файл с настройками
+        with open(f"user_settings/message/{random_file[0]}.json", "r", encoding="utf-8") as file:
+            data = json.load(file)  # Чтение файла
+    return data  # Возвращаем данные из файла
+
+
 def sending_messages_via_chats_times(entities, db_handler) -> None:
     """Массовая рассылка в чаты"""
     client, phone, records = connecting_tg_account_creating_list_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
         logger.info(f"Группа: {groups}")
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
-        if entities:  # Проверяем, что список не пустой, если он не пустой
-            # Выбираем рандомный файл для чтения
-            random_file = random.choice(entities)
-            logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
-            # Открываем выбранный файл с настройками
-            with open(f"user_settings/message/{random_file[0]}.json", "r", encoding="utf-8") as file:
-                data = json.load(file)
+        data = select_and_read_random_file(entities)  # Выбираем случайное сообщение из файла
         description_action = f"Sending messages to a group: {groups_wr}"
         try:
             client.send_message(entity=groups_wr, message=data)  # Рассылаем сообщение по чатам

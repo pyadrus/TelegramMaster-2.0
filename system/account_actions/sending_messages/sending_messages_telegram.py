@@ -2,37 +2,16 @@ import datetime
 import sys
 import time
 
+from loguru import logger
 from rich import print
 from telethon.errors import *
 
+from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, \
+    select_and_read_random_file
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, record_inviting_results
 from system.auxiliary_functions.global_variables import console, time_inviting_1
-from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
-
-
-def we_send_a_message_by_members(limits, db_handler) -> None:
-    """Рассылка сообщений по списку software_database.db"""
-    # Предупреждаем пользователя о вводе ссылок в графическое окно программы
-    print("[medium_purple3][+] Введите текст который будем рассылать в личку, для вставки в графическое окно готового "
-          "текста используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык "
-          "должен быть переключен на английский")
-
-    root, text = program_window()
-
-    def output_values_from_the_input_field() -> None:
-        """Выводим значения с поля ввода (то что ввел пользователь)"""
-        message_text = text.get("1.0", 'end-1c')
-        closing_the_input_field()
-        we_send_a_message_from_all_accounts(message_text, limits, db_handler)
-
-    def closing_the_input_field() -> None:
-        """Закрываем программу"""
-        root.destroy()
-
-    done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
-    root.mainloop()  # Запускаем программу
 
 
 def send_files_to_personal_account(limits, db_handler) -> None:
@@ -53,8 +32,8 @@ def send_files_to_personal_account(limits, db_handler) -> None:
             # Количество аккаунтов на данный момент в работе
             print(f"[medium_purple3]Всего username: {len(records)}")
             for rows in records:
-                username = rows[0] # Получаем имя аккаунта из базы данных user_settings/software_database.db
-                print(f"[magenta][!] Отправляем сообщение: {username}")
+                username = rows[0]  # Получаем имя аккаунта из базы данных user_settings/software_database.db
+                logger.info(f"[!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)
                     client.send_file(user_to_add, f"user_settings/files_to_send/{link_to_the_file}")
@@ -86,10 +65,9 @@ def send_files_to_personal_account(limits, db_handler) -> None:
     app_notifications(notification_text="Работа окончена!")  # Выводим уведомление
 
 
-def we_send_a_message_from_all_accounts(message_text, limits, db_handler) -> None:
+def we_send_a_message_from_all_accounts(limits, db_handler) -> None:
     """
     Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
-    :arg message_text: (str) Текст сообщения, которое будет отправлено каждому пользователю.
     :arg limits: (int) количество аккаунтов, которые в данный момент находятся в работе.
     :arg db_handler: (db_handler) объект, который используется для работы с базой данных.
     """
@@ -109,29 +87,31 @@ def we_send_a_message_from_all_accounts(message_text, limits, db_handler) -> Non
                 print(f"[magenta][!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)
-                    client.send_message(user_to_add, message_text.format(username))
+                    entities = sending_messages_chats()
+                    logger.info(entities)
+                    data = select_and_read_random_file(entities)  # Выбираем случайное сообщение из файла
+                    client.send_message(user_to_add, data.format(username))
                     # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
                     time.sleep(time_inviting_1)
-                    actions = "Сообщение отправлено"
-                    record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+                    record_inviting_results(username, phone, f"username : {username}",
+                                            event, "Сообщение отправлено", db_handler)
                 except FloodWaitError as e:
-                    # account_actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
                     record_and_interrupt(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', phone,
                                          f"username : {username}", event, db_handler)
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:
-                    actions = "Предупреждение о Flood от telegram."
-                    record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
+                    record_and_interrupt("Предупреждение о Flood от telegram.",
+                                         phone, f"username : {username}", event, db_handler)
                     break  # Прерываем работу и меняем аккаунт
                 except UserNotMutualContactError:
-                    actions = "User не является взаимным контактом."
-                    record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+                    record_inviting_results(username, phone, f"username : {username}",
+                                            event, "User не является взаимным контактом.", db_handler)
                 except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                    actions = "Не корректное имя user"
-                    record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+                    record_inviting_results(username, phone, f"username : {username}",
+                                            event, "Не корректное имя user", db_handler)
                 except ChatWriteForbiddenError:
-                    actions = "Вам запрещено писать в супергруппу / канал."
-                    record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
+                    record_and_interrupt("Вам запрещено писать в супергруппу / канал.",
+                                         phone, f"username : {username}", event, db_handler)
                     break  # Прерываем работу и меняем аккаунт
                 except (TypeError, UnboundLocalError):
                     continue  # Записываем ошибку в software_database.db и продолжаем работу

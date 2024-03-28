@@ -26,8 +26,8 @@ from system.account_actions.reactions.reactions import setting_reactions
 from system.account_actions.reactions.reactions import users_choice_of_reaction
 from system.account_actions.reactions.reactions import viewing_posts
 from system.account_actions.sending_messages.chat_dialog_mes import message_time
-from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_account
-from system.account_actions.sending_messages.sending_messages_telegram import we_send_a_message_by_members
+from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_account, \
+    we_send_a_message_from_all_accounts
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, \
     sending_files_via_chats, sending_messages_via_chats_times
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats
@@ -245,7 +245,7 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Отправка сообщений в личку по parsing списку user_settings/software_database.db
-        we_send_a_message_by_members(limits=None, db_handler=db_handler)
+        we_send_a_message_from_all_accounts(limits=None, db_handler=db_handler)
     elif user_input == "2":  # Отправка файлов в личку по parsing списку user_settings/software_database.db
         send_files_to_personal_account(limits=None, db_handler=db_handler)
     elif user_input == "3":  # Рассылка сообщений по чатам
@@ -259,7 +259,7 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
     elif user_input == "6":  # Рассылка сообщений + файлов по чатам
         sending_messages_files_via_chats()
     elif user_input == "7":  # Отправка сообщений в личку (с лимитами)
-        we_send_a_message_by_members(limits=limits_message, db_handler=db_handler)
+        we_send_a_message_from_all_accounts(limits=limits_message, db_handler=db_handler)
     elif user_input == "8":  # Отправка файлов в личку (с лимитами)
         send_files_to_personal_account(limits=limits_message, db_handler=db_handler)
     elif user_input == "0":  # Вернуться назад
