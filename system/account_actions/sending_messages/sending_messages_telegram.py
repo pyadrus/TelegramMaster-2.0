@@ -65,7 +65,7 @@ def send_files_to_personal_account(limits, db_handler) -> None:
     app_notifications(notification_text="Работа окончена!")  # Выводим уведомление
 
 
-def we_send_a_message_from_all_accounts(limits, db_handler) -> None:
+def send_message_from_all_accounts(limits, db_handler) -> None:
     """
     Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
     :arg limits: (int) количество аккаунтов, которые в данный момент находятся в работе.

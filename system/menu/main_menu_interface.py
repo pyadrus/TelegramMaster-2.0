@@ -1,41 +1,23 @@
-from loguru import logger
 from rich import box
 from rich.table import Table
 
-from system.account_actions.answering_machine.answering_machine import launching_an_answering_machine
-from system.account_actions.checking_spam.account_verification import check_account_for_spam
-from system.account_actions.creating.account_registration import change_bio_profile
-from system.account_actions.creating.creating import creating_groups_and_chats
-from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body
-from system.account_actions.invitation.inviting_participants_telegram import invite_from_multiple_accounts_with_limits
-from system.account_actions.invitation.telegram_invite_scheduler import launching_an_invite_once_an_hour
-from system.account_actions.invitation.telegram_invite_scheduler import launching_invite_every_day_certain_time
-from system.account_actions.invitation.telegram_invite_scheduler import schedule_invite
-from system.account_actions.parsing.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
-from system.account_actions.parsing.parsing_group_members import choosing_a_group_from_the_subscribed_ones_for_parsing
-from system.account_actions.parsing.parsing_group_members import delete_contact
-from system.account_actions.parsing.parsing_group_members import inviting_contact
-from system.account_actions.parsing.parsing_group_members import parsing_mass_parsing_of_groups
-from system.account_actions.parsing.parsing_group_members import parsing_of_active_participants
-from system.account_actions.parsing.parsing_group_members import show_account_contact_list
-from system.account_actions.parsing.parsing_group_members import we_record_phone_numbers_in_the_db
-from system.account_actions.reactions.reactions import reaction_gui
-from system.account_actions.reactions.reactions import record_the_number_of_accounts
-from system.account_actions.reactions.reactions import recording_link_channel
-from system.account_actions.reactions.reactions import setting_reactions
-from system.account_actions.reactions.reactions import users_choice_of_reaction
-from system.account_actions.reactions.reactions import viewing_posts
-from system.account_actions.sending_messages.chat_dialog_mes import message_time
-from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_account, \
-    we_send_a_message_from_all_accounts
-from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, \
-    sending_files_via_chats, sending_messages_via_chats_times
-from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats
-from system.account_actions.subscription.subscription import subscription_all
-from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
+from system.account_actions.answering_machine.answering_machine import *
+from system.account_actions.checking_spam.account_verification import *
+from system.account_actions.creating.account_registration import *
+from system.account_actions.creating.creating import *
+from system.account_actions.invitation.inviting_participants_telegram import *
+from system.account_actions.invitation.telegram_invite_scheduler import *
+from system.account_actions.parsing.parsing_account_groups_and_channels import *
+from system.account_actions.parsing.parsing_group_members import *
+from system.account_actions.reactions.reactions import *
+from system.account_actions.sending_messages.chat_dialog_mes import *
+from system.account_actions.sending_messages.sending_messages_telegram import *
+from system.account_actions.sending_messages.telegram_chat_dialog import *
+from system.account_actions.subscription.subscription import *
+from system.account_actions.unsubscribe.unsubscribe import *
 from system.auxiliary_functions.auxiliary_functions import *
 from system.auxiliary_functions.global_variables import *
-from system.menu.app_gui import output_the_input_field, writing_members
+from system.menu.app_gui import *
 from system.setting.setting import *
 from system.sqlite_working_tools.sqlite_working_tools import *
 
@@ -245,7 +227,7 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Отправка сообщений в личку по parsing списку user_settings/software_database.db
-        we_send_a_message_from_all_accounts(limits=None, db_handler=db_handler)
+        send_message_from_all_accounts(limits=None, db_handler=db_handler)
     elif user_input == "2":  # Отправка файлов в личку по parsing списку user_settings/software_database.db
         send_files_to_personal_account(limits=None, db_handler=db_handler)
     elif user_input == "3":  # Рассылка сообщений по чатам
@@ -259,7 +241,7 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
     elif user_input == "6":  # Рассылка сообщений + файлов по чатам
         sending_messages_files_via_chats()
     elif user_input == "7":  # Отправка сообщений в личку (с лимитами)
-        we_send_a_message_from_all_accounts(limits=limits_message, db_handler=db_handler)
+        send_message_from_all_accounts(limits=limits_message, db_handler=db_handler)
     elif user_input == "8":  # Отправка файлов в личку (с лимитами)
         send_files_to_personal_account(limits=limits_message, db_handler=db_handler)
     elif user_input == "0":  # Вернуться назад
@@ -296,8 +278,7 @@ def working_with_the_reaction(db_handler) -> None:  # 7 - Работа с реа
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-def program_settings(
-        db_handler) -> None:  # 8 - Настройки программы, запись времени, api_id, api_hash, запись ссылки для inviting
+def program_settings(db_handler) -> None:  # 8 - Настройки программы, запись времени, api_id, api_hash, запись ссылки для inviting
     """Настройки программы, запись времени задержки, api_id, api_hash, запись ссылки для inviting"""
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Настройки программы!", box=box.HORIZONTALS)  # Выводим таблицу
