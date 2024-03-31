@@ -11,10 +11,11 @@ from rich import print
 
 def record_account_actions(phone_number, action_description, event, action_result, db_handler) -> None:
     """Записывает действия аккаунта в базу данных
-    phone_number - номер телефона аккаунта,
-    action_description - описание действия,
-    event - действие, которое производится,
-    action_result - результат выполнения действия."""
+    :arg phone_number: номер телефона аккаунта
+    :arg action_description: описание действия
+    :arg event: действие, которое производится
+    :arg action_result: результат выполнения действия.
+    :arg db_handler: База данных для записи действий аккаунта в базу данных"""
     print(f"[red][!] {action_result}")
     creating_a_table = """CREATE TABLE IF NOT EXISTS account_actions 
                           (phone, date, description_action, event, actions)"""

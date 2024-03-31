@@ -1,7 +1,6 @@
 from rich import box
 from rich.table import Table
-
-from system.account_actions.answering_machine.answering_machine import *
+import asyncio
 from system.account_actions.checking_spam.account_verification import *
 from system.account_actions.creating.account_registration import *
 from system.account_actions.creating.creating import *
@@ -42,7 +41,7 @@ def main_menu() -> None:  # 1 - Основное меню программы
     table.add_row("9", "Проверка аккаунтов", "Проверка аккаунтов через спам бот")
     table.add_row("10", "Создание групп (чатов)", "Автоматическое создание групп и чатов")
     table.add_row("11", "Редактирование BIO", "Редактирование описания профиля")
-    table.add_row("12", "Автоответчик", "Проверка автоответчика")
+    # table.add_row("12", "Автоответчик", "Проверка автоответчика")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
@@ -69,8 +68,8 @@ def main_menu() -> None:  # 1 - Основное меню программы
         creating_groups_and_chats(db_handler)
     elif user_input == '11':
         change_bio_profile(db_handler)  # Редактирование описания профиля
-    elif user_input == '12':
-        launching_an_answering_machine(db_handler)  # Проверка автоответчика
+    # elif user_input == '12':
+    #     launching_an_answering_machine(db_handler)  # Проверка автоответчика
     else:
         main_menu()  # После отработки функции переходим в начальное меню
 
@@ -219,8 +218,7 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
     table.add_row("4", "Рассылка сообщений по чатам, по времени", "Потребуется заранее сформировать список чатов")
     table.add_row("5", "Рассылка файлов по чатам", "Рассылка файлов по чатам, потребуется заранее записать чаты в файл")
     table.add_row("6", "Рассылка сообщений + файлов по чатам", "Потребуется заранее сформировать список чатов")
-    table.add_row("7", "Отправка сообщений в личку (с лимитами)",
-                  "Отправка сообщений в личку по parsing списку (с лимитами)")
+    table.add_row("7", "Отправка сообщений в личку (с лимитами)", "Отправка сообщений в личку по parsing списку (с лимитами)")
     table.add_row("8", "Отправка файлов в личку (с лимитами)", "Отправка файлов в личку по parsing списку (с лимитами)")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
@@ -234,8 +232,10 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
         entities = sending_messages_chats()
         logger.info(entities)
         sending_messages_via_chats_times(entities, db_handler)
-    elif user_input == "4":  # Рассылка сообщений по чатам по времени
-        message_time()
+    elif user_input == "4":  # ✅ Рассылка сообщений по чатам по времени
+        # main_s(db_handler)
+        # message_time()
+        mains()
     elif user_input == "5":  # Рассылка файлов по чатам
         sending_files_via_chats(db_handler)
     elif user_input == "6":  # Рассылка сообщений + файлов по чатам
