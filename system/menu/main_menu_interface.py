@@ -1,6 +1,6 @@
 from rich import box
 from rich.table import Table
-import asyncio
+
 from system.account_actions.checking_spam.account_verification import *
 from system.account_actions.creating.account_registration import *
 from system.account_actions.creating.creating import *
@@ -41,7 +41,6 @@ def main_menu() -> None:  # 1 - Основное меню программы
     table.add_row("9", "Проверка аккаунтов", "Проверка аккаунтов через спам бот")
     table.add_row("10", "Создание групп (чатов)", "Автоматическое создание групп и чатов")
     table.add_row("11", "Редактирование BIO", "Редактирование описания профиля")
-    # table.add_row("12", "Автоответчик", "Проверка автоответчика")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
@@ -68,8 +67,6 @@ def main_menu() -> None:  # 1 - Основное меню программы
         creating_groups_and_chats(db_handler)
     elif user_input == '11':
         change_bio_profile(db_handler)  # Редактирование описания профиля
-    # elif user_input == '12':
-    #     launching_an_answering_machine(db_handler)  # Проверка автоответчика
     else:
         main_menu()  # После отработки функции переходим в начальное меню
 
@@ -151,7 +148,6 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
         main_menu()  # После отработки функции переходим в начальное меню
     else:
         telegram_parsing_menu(db_handler)
-    # main_menu()  # После отработки функции переходим в начальное меню
 
 
 def working_tools_contacts(db_handler) -> None:  # 3 - Работаем с контактами телефонной книги
@@ -215,7 +211,7 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
     table.add_row("1", "Отправка сообщений в личку", "Отправка сообщений в личку по parsing списку")
     table.add_row("2", "Отправка файлов в личку", "Отправка файлов в личку по parsing списку")
     table.add_row("3", "Рассылка сообщений по чатам", "Рассылка сообщений по чатам, потребуется сформировать список")
-    table.add_row("4", "Рассылка сообщений по чатам, по времени", "Потребуется заранее сформировать список чатов")
+    table.add_row("4", "Рассылка сообщений по чатам с автоответчиком", "Рассылка сообщений по чатам с автоответчиком. Потребуется заранее сформировать список чатов")
     table.add_row("5", "Рассылка файлов по чатам", "Рассылка файлов по чатам, потребуется заранее записать чаты в файл")
     table.add_row("6", "Рассылка сообщений + файлов по чатам", "Потребуется заранее сформировать список чатов")
     table.add_row("7", "Отправка сообщений в личку (с лимитами)", "Отправка сообщений в личку по parsing списку (с лимитами)")
@@ -233,8 +229,6 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
         logger.info(entities)
         sending_messages_via_chats_times(entities, db_handler)
     elif user_input == "4":  # ✅ Рассылка сообщений по чатам по времени
-        # main_s(db_handler)
-        # message_time()
         mains()
     elif user_input == "5":  # Рассылка файлов по чатам
         sending_files_via_chats(db_handler)
@@ -248,7 +242,6 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
         main_menu()  # После отработки функции переходим в начальное меню
     else:
         sending_messages_to_a_personal_account_chat(db_handler)
-    # main_menu()  # После отработки функции переходим в начальное меню
 
 
 def working_with_the_reaction(db_handler) -> None:  # 7 - Работа с реакциями на посты группы или канала
