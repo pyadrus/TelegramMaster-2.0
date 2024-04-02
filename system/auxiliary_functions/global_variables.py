@@ -23,7 +23,8 @@ limits_message = int(config['message_limits']['message_limits'])
 time_activity_user_1 = int(config['time_activity_user']['time_activity_user_1'])
 time_activity_user_2 = int(config['time_activity_user']['time_activity_user_2'])
 
-time_sending_messages = int(config['time_sending_messages']['time_sending_messages'])
+time_sending_messages_1 = int(config['time_sending_messages']['time_sending_messages_1'])
+time_sending_messages_2 = int(config['time_sending_messages']['time_sending_messages_2'])
 
 api_id_data = config["telegram_settings"]["id"]  # api_id с файла user_settings/config.ini
 api_hash_data = config["telegram_settings"]["hash"]  # api_hash с файла user_settings/config.ini
@@ -34,3 +35,5 @@ app_version = config["app_version"]["app_version"]  # api_hash с файла use
 
 hour = config["hour_minutes_every_day"]["hour"]  # api_id с файла user_settings/config.ini
 minutes = config["hour_minutes_every_day"]["minutes"]  # api_hash с файла user_settings/config.ini
+
+account_name_newsletter = config["account_name_newsletter"]["account_name_newsletter"]

@@ -11,7 +11,7 @@ from telethon.errors import *
 
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.auxiliary_functions.global_variables import console, time_sending_messages
+from system.auxiliary_functions.global_variables import console, time_sending_messages_1, time_sending_messages_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
@@ -171,10 +171,10 @@ def sending_messages_via_chats_times(entities, db_handler) -> None:
         data = select_and_read_random_file(entities)  # Выбираем случайное сообщение из файла
         try:
             client.send_message(entity=groups_wr, message=data)  # Рассылаем сообщение по чатам
-            # Convert time from minutes to seconds
-            time_in_seconds = time_sending_messages * 60
-            for _ in track(range(time_in_seconds), description=f"[red]Спим {time_sending_messages} минуты / минут..."):
-                time.sleep(1)  # Sleep for 1 second
+            selected_shift_time = random.randrange(time_sending_messages_1, time_sending_messages_2)
+            time_in_seconds = selected_shift_time * 60
+            for _ in track(range(time_in_seconds), description=f"[red]Спим {time_in_seconds} минуты / минут..."):
+                time.sleep(1)  # Спим 1 секунду
             record_account_actions(phone, f"Sending messages to a group: {groups_wr}", event,
                                    f"[medium_purple3]Сообщение в группу {groups_wr} написано!", db_handler)
         except ChannelPrivateError:

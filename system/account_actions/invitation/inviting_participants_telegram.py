@@ -75,68 +75,65 @@ def inviting(client, phone, records, db_handler) -> None:
         try:
             inviting_to_a_group(client, username)  # Inviting user в группу
         except AuthKeyDuplicatedError:
-            actions: str = "Аккаунт запущен еще на одном устройстве!"
-            record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
+            record_and_interrupt("Аккаунт запущен еще на одном устройстве!", phone,
+                                 f"username : {username}", event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
-            actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
-            record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
+            record_and_interrupt(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}',
+                                 phone, f"username : {username}", event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except PeerFloodError:
-            actions: str = "Предупреждение о Flood от telegram."
-            record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
+            record_and_interrupt("Предупреждение о Flood от telegram.", phone,
+                                 f"username : {username}", event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except UserPrivacyRestrictedError:
-            actions: str = f"Настройки конфиденциальности {username} не позволяют вам inviting"
-            record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+            record_inviting_results(username, phone, f"username : {username}", event,
+                                    f"Настройки конфиденциальности {username} не позволяют вам inviting", db_handler)
         except UserChannelsTooMuchError:
-            actions: str = "Превышен лимит у user каналов / супергрупп."
-            record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+            record_inviting_results(username, phone, f"username : {username}", event,
+                                    "Превышен лимит у user каналов / супергрупп.", db_handler)
         except UserBannedInChannelError:
-            actions: str = "Вам запрещено отправлять сообщения в супергруппу."
-            record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
+            record_and_interrupt("Вам запрещено отправлять сообщения в супергруппу.", phone,
+                                 f"username : {username}", event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except ChatWriteForbiddenError:
-            actions: str = "Настройки в чате не дают добавлять людей в чат, возможно стоит бот админ и " \
-                           "нужно подписаться на другие проекты "
-            record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
+            record_and_interrupt("Настройки в чате не дают добавлять людей в чат, возможно стоит бот админ и нужно подписаться на другие проекты ", phone, f"username : {username}", event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except BotGroupsBlockedError:
-            actions: str = "Вы не можете добавить бота в группу."
-            record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+            record_inviting_results(username, phone, f"username : {username}", event,
+                                    "Вы не можете добавить бота в группу.", db_handler)
         except UserNotMutualContactError:
-            actions: str = "User не является взаимным контактом."
-            record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+            record_inviting_results(username, phone, f"username : {username}", event,
+                                    "User не является взаимным контактом.", db_handler)
         except ChatAdminRequiredError:
-            actions: str = "Требуются права администратора."
-            record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+            record_inviting_results(username, phone, f"username : {username}", event,
+                                    "Требуются права администратора.", db_handler)
         except UserKickedError:
-            actions: str = "Пользователь был удален ранее из супергруппы."
-            record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+            record_inviting_results(username, phone, f"username : {username}", event,
+                                    "Пользователь был удален ранее из супергруппы.", db_handler)
         except ChannelPrivateError:
-            actions: str = "Чат является приватным, или закрыт доступ добавления участников."
-            record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
+            record_and_interrupt("Чат является приватным, или закрыт доступ добавления участников.",
+                                 phone, f"username : {username}", event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-            actions: str = f"Не корректное имя {username}"
-            record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+            record_inviting_results(username, phone, f"username : {username}", event, f"Не корректное имя {username}", db_handler)
         except (TypeError, UnboundLocalError):
             continue  # Записываем ошибку в software_database.db и продолжаем работу
         except InviteRequestSentError:
-            actions: str = "Действия будут доступны после одобрения администратором на вступление в группу"
-            record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+            record_inviting_results(username, phone, f"username : {username}", event,
+                                    "Действия будут доступны после одобрения администратором на вступление в группу", db_handler)
             break  # Прерываем работу и меняем аккаунт
         except TypeNotFoundError:
-            actions: str = f"Аккаунт {phone} не может добавить в группу {link_group}"
-            record_and_interrupt(actions, phone, f"username : {username}", event, db_handler)
+            record_and_interrupt(f"Аккаунт {phone} не может добавить в группу {link_group}", phone,
+                                 f"username : {username}", event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except KeyboardInterrupt:  # Закрытие окна программы
             client.disconnect()  # Разрываем соединение telegram
             print("[!] Скрипт остановлен!")
         else:
             # Записываем данные в базу данных, чистим список кого добавляли или писали сообщение
-            actions: str = f"Участник {username} добавлен, если не состоит в чате"
-            print(f"[magenta][+] {actions}")
-            record_inviting_results(username, phone, f"username : {username}", event, actions, db_handler)
+            print(f"[magenta][+] Участник {username} добавлен, если не состоит в чате")
+            record_inviting_results(username, phone, f"username : {username}", event,
+                                    f"Участник {username} добавлен, если не состоит в чате", db_handler)
     unsubscribe_from_the_group(client, link_group)  # Отписываемся от группы, на которую подписались в самом начале
     client.disconnect()  # Разрываем соединение telegram

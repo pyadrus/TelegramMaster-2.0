@@ -17,35 +17,6 @@ config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=T
 config.read("user_settings/config.ini")
 
 
-def recording_the_time_to_launch_an_invite_every_day() -> None:
-    def main_inviting(page) -> None:
-        create_window(page=page, width=300, height=300, resizable=False)  # Создаем окно с размером 300 на 300 пикселей
-        hour = ft.TextField(label="Время в часах :", autofocus=True)
-        minutes = ft.TextField(label="Время в минутах:")
-        greetings = ft.Column()
-
-        def btn_click(e) -> None:
-            try:
-                if not 0 <= int(hour.value) < 24:
-                    print('Введите часы в пределах от 0 до 23!')
-                    return
-                if not 0 <= int(minutes.value) < 60:
-                    print('Введите минуты в пределах от 0 до 59!')
-                    return
-                config.get("hour_minutes_every_day", "hour")
-                config.set("hour_minutes_every_day", "hour", str(hour.value))
-                config.get("hour_minutes_every_day", "minutes")
-                config.set("hour_minutes_every_day", "minutes", str(minutes.value))
-                writing_settings_to_a_file(config)
-                page.window_close()  # Закрываем окно
-            except ValueError:
-                pass
-            page.update()  # Обновляем страницу
-        page.add(hour, minutes, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
-
-    ft.app(target=main_inviting)
-
-
 def record_account_limits() -> configparser.ConfigParser:
     """Запись лимитов на аккаунт"""
     limits = console.input("[magenta][+] Введите лимит на аккаунт : ")
@@ -183,28 +154,36 @@ def creating_the_main_window_for_proxy_data_entry(db_handler) -> None:
 
 
 def recording_the_time_between_chat_messages(variable):
-    """Запись времени между сообщениями"""
+    """
+    Запись времени между сообщениями
+    :param variable: название переменной в файле config.ini
+    :return: None
+    """
 
     def main_inviting(page) -> None:
         create_window(page=page, width=300, height=300, resizable=False)  # Создаем окно с размером 300 на 300 пикселей
-        smaller_time = ft.TextField(label="Время в минутах", autofocus=True)
+        smaller_time = ft.TextField(label="Время в минутах (меньшее)", autofocus=True)
+        larger_time = ft.TextField(label="Время в минутах (большее)", autofocus=True)
         greetings = ft.Column()
 
         def btn_click(e) -> None:
             try:
                 smaller_times = int(smaller_time.value)
+                larger_times = int(larger_time.value)
 
-                config.get(f"{variable}", f"{variable}")
-                config.set(f"{variable}", f"{variable}", str(smaller_times))  # Записываем в файл значение
-                writing_settings_to_a_file(config)
-                page.window_close()
+                if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
+                    # Если условие прошло проверку, то возвращаем первое и второе время
+                    print(f"Вы ввели:\n{smaller_times} минут (меньшее время)\n{larger_times} минут (большее время)")
+                    config = recording_limits_file(str(smaller_times), str(larger_times), variable=variable)
+                    writing_settings_to_a_file(config)
+                    page.window_close()
             except ValueError:
                 pass
 
             page.update()
             smaller_time.focus()
 
-        page.add(smaller_time, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
+        page.add(smaller_time, larger_time, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
 
     ft.app(target=main_inviting)
 
@@ -259,6 +238,27 @@ def get_unique_filename(base_filename):
         index += 1
 
 
+def record_account_name_newsletter():
+    def main_inviting(page) -> None:
+        create_window(page=page, width=600, height=600, resizable=False)  # Создаем окно с размером 600 на 600 пикселей
+        text_to_send = ft.TextField(label="Введите название аккаунта для отправки сообщений по чатам",
+                                    multiline=True, max_lines=19)
+        greetings = ft.Column()
+
+        def btn_click(e) -> None:
+            print(f"Вы ввели: {text_to_send}")
+            config.get("account_name_newsletter", "account_name_newsletter")
+            config.set("account_name_newsletter", "account_name_newsletter", text_to_send.value)
+            writing_settings_to_a_file(config)
+
+            page.window_close()
+            page.update()
+
+        page.add(text_to_send, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
+
+    ft.app(target=main_inviting)
+
+
 def recording_text_for_sending_messages() -> None:
     """
     Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
@@ -280,6 +280,36 @@ def recording_text_for_sending_messages() -> None:
             page.update()
 
         page.add(text_to_send, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
+
+    ft.app(target=main_inviting)
+
+
+def recording_the_time_to_launch_an_invite_every_day() -> None:
+    def main_inviting(page) -> None:
+        create_window(page=page, width=300, height=300, resizable=False)  # Создаем окно с размером 300 на 300 пикселей
+        hour = ft.TextField(label="Время в часах :", autofocus=True)
+        minutes = ft.TextField(label="Время в минутах:")
+        greetings = ft.Column()
+
+        def btn_click(e) -> None:
+            try:
+                if not 0 <= int(hour.value) < 24:
+                    print('Введите часы в пределах от 0 до 23!')
+                    return
+                if not 0 <= int(minutes.value) < 60:
+                    print('Введите минуты в пределах от 0 до 59!')
+                    return
+                config.get("hour_minutes_every_day", "hour")
+                config.set("hour_minutes_every_day", "hour", str(hour.value))
+                config.get("hour_minutes_every_day", "minutes")
+                config.set("hour_minutes_every_day", "minutes", str(minutes.value))
+                writing_settings_to_a_file(config)
+                page.window_close()  # Закрываем окно
+            except ValueError:
+                pass
+            page.update()  # Обновляем страницу
+
+        page.add(hour, minutes, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
 
     ft.app(target=main_inviting)
 

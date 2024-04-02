@@ -229,7 +229,7 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
         logger.info(entities)
         sending_messages_via_chats_times(entities, db_handler)
     elif user_input == "4":  # ✅ Рассылка сообщений по чатам по времени
-        mains()
+        mains(DatabaseHandler())
     elif user_input == "5":  # Рассылка файлов по чатам
         sending_files_via_chats(db_handler)
     elif user_input == "6":  # Рассылка сообщений + файлов по чатам
@@ -309,6 +309,8 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
                   "Запись времени для рассылки сообщений по чатам между сообщениями")
     table.add_row("16", "Формирование списка чатов / каналов",
                   "Формирование списка чатов для рассылки сообщений по чатам, подписки на группы / каналы")
+    table.add_row("17", "Запись имени аккаунта",
+                  "Запись имени аккаунта для рассылки по группам Telegram")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
@@ -355,6 +357,8 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         recording_the_time_between_chat_messages(variable="time_sending_messages")
     elif user_input == "16":  # Формирование списка чатов
         output_the_input_field(db_handler)  # Вызов функции формирования списка чатов
+    elif user_input == "17":
+        record_account_name_newsletter()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
