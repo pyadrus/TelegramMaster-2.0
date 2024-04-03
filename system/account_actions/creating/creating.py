@@ -46,6 +46,6 @@ def creating_groups_and_chats(db_handler) -> None:
     """Создание групп (чатов) в автоматическом режиме"""
     accounts = get_account_list(db_handler)
     # Extracting phone (rows[2]) numbers from the accounts list
-    phones = [rows[2] for rows in accounts]
+    phones = [rows[0] for rows in accounts]
     # Passing the entire accounts list to create_gui
     create_gui(phones, db_handler)

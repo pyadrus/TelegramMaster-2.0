@@ -116,20 +116,13 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
     table.add_row("4", "Parsing списка: групп, каналов аккаунтов", "Программа соберет: группы / каналы аккаунтов")
     table.add_row("5", "Очистка parsing списка", "Очистка списка software_database.db")
     table.add_row("6", "Формирование списка", "Формирование собственного списка username")
+    table.add_row("7", "Формирование списка чатов", "Формирование списка чатов под парсинг")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clearing_console_showing_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Parsing: группы, групп в список software_database.db (группы вводятся в графическое окно)
-
-        print("[medium_purple3][+] Введите ссылки чатов которые будем parsing, для вставки в графическое окно "
-              "используйте комбинацию клавиш Ctrl + V, обратите внимание что при использование комбинации язык должен "
-              "быть переключен на английский")
-        # Перед началом parsing очистка таблицы writing_group_links
-        db_handler.cleaning_db(name_database_table="writing_group_links")
-        output_the_input_field(db_handler)
         parsing_mass_parsing_of_groups(db_handler)  # Парсинг участников чата
-
     elif user_input == "2":  # Parsing группы из подписанных
         choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler)
     elif user_input == "3":  # Parsing активных участников группы
@@ -144,6 +137,9 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
         db_handler.cleaning_db(name_database_table="members")
     elif user_input == "6":  # Формирование списка
         writing_members(db_handler)
+    elif user_input == "7":  # Формирование списка чатов под парсинг
+        db_handler.cleaning_db(name_database_table="writing_group_links")
+        output_the_input_field(db_handler)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:

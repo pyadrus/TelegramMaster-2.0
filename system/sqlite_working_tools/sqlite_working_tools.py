@@ -9,7 +9,7 @@ def select_from_config_by_phone(phone_value):
     conn = sqlite3.connect("user_settings/software_database.db")
     cursor = conn.cursor()
     # Выбор данных из таблицы config по заданному номеру телефона
-    cursor.execute('''SELECT id, hash, phone FROM config WHERE phone = ?''', (phone_value,))
+    cursor.execute('''SELECT phone FROM config WHERE phone = ?''', (phone_value,))
     result = cursor.fetchall()  # Получение результатов запроса
     conn.close()  # Закрытие соединения
     return result
