@@ -5,6 +5,7 @@ import random  # Импортируем модуль random, чтобы гене
 import time  # Импортируем модуль time, чтобы работать с временем
 from sys import platform
 
+from loguru import logger
 from rich.progress import track
 
 from system.auxiliary_functions.global_variables import time_changing_accounts_1
@@ -13,6 +14,22 @@ from system.auxiliary_functions.global_variables import time_inviting_1
 from system.auxiliary_functions.global_variables import time_inviting_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_banner import banner
+
+
+def find_files(directory_path, extension) -> list:
+    """Поиск файлов с определенным расширением в директории.
+    :arg directory_path: - путь к директории
+    :arg extension: - расширение файла
+    :return list: - список имен найденных файлов"""
+
+    entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_settings/accounts
+    for x in os.listdir(directory_path):
+        if x.endswith(f".{extension}"):  # Проверяем, заканчивается ли имя файла на заданное расширение
+            file = os.path.splitext(x)[0]  # Разделяем имя файла на имя без расширения и расширение
+            logger.info(f"Найденные файлы: {file}.{extension}")  # Выводим имена найденных аккаунтов
+            entities.append([file])  # Добавляем информацию о файле в список
+
+    return entities  # Возвращаем список json файлов
 
 
 def display_progress_bar(time_range_1, time_range_2, message) -> None:

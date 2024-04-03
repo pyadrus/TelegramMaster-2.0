@@ -45,17 +45,17 @@ def account_verification(db_handler):
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         try:
-            client = telegram_connects(db_handler, session=f"user_settings/accounts/{row[2]}")
+            client = telegram_connects(db_handler, session=f"user_settings/accounts/{row[0]}")
             try:
                 if not client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
-                    telegram_phone_number_banned_error(client=client, phone=row[2], db_handler=db_handler)  # Удаляем номер телефона с базы данных
+                    telegram_phone_number_banned_error(client=client, phone=row[0], db_handler=db_handler)  # Удаляем номер телефона с базы данных
                 time.sleep(1)
                 try:
                     # Показываем имя аккаунта с которым будем взаимодействовать
                     first_name, last_name, phone = account_name(client, name_account="me")
                     # Выводим результат полученного имени и номера телефона
                     print(f"[medium_purple3][!] Account connect {first_name} {last_name} {phone}")
-                    renaming_a_session(client, row[2], phone)  # Переименование session файла
+                    renaming_a_session(client, row[0], phone)  # Переименование session файла
                 except ConnectionError:
                     continue
             except AttributeError:
@@ -64,17 +64,17 @@ def account_verification(db_handler):
                 print(f"На данный момент аккаунт {row[2]} запущен под другим ip")
                 # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                 client.disconnect()
-                working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
-                                      new_account_folder=f"user_settings/accounts/invalid_account/{row[2]}.session")
+                working_with_accounts(account_folder=f"user_settings/accounts/{row[0]}.session",
+                                      new_account_folder=f"user_settings/accounts/invalid_account/{row[0]}.session")
             except (PhoneNumberBannedError, UserDeactivatedBanError):
-                telegram_phone_number_banned_error(client, row[2], db_handler)  # Удаляем номер телефона с базы данных
+                telegram_phone_number_banned_error(client, row[0], db_handler)  # Удаляем номер телефона с базы данных
             except TimedOutError as e:
                 logger.exception(e)
                 time.sleep(2)
             except AuthKeyNotFound:  # session файл не является базой данных
-                print(f"Битый файл {row[2]}.session")
-                error_sessions.append([row[2]])  # Удаляем не валидную сессию
+                print(f"Битый файл {row[0]}.session")
+                error_sessions.append([row[0]])  # Удаляем не валидную сессию
         except sqlite3.DatabaseError:  # session файл не является базой данных
-            print(f"Битый файл {row[2]}.session")
-            error_sessions.append([row[2]])  # Удаляем не валидную сессию
+            print(f"Битый файл {row[0]}.session")
+            error_sessions.append([row[0]])  # Удаляем не валидную сессию
     return error_sessions

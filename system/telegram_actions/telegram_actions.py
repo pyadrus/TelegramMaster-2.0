@@ -7,6 +7,7 @@ from telethon import TelegramClient
 from telethon.errors import *
 from telethon.tl.functions.users import GetFullUserRequest
 
+from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import api_id_data, api_hash_data
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 
@@ -42,8 +43,8 @@ def telegram_connects(db_handler, session) -> TelegramClient:
 
 def telegram_connect_and_output_name(row, db_handler):
     """Подключаемся телеграмм аккаунту и выводим имя"""
-    print(row[2])
-    client = telegram_connects(db_handler, f"user_settings/accounts/{row[2]}")
+    print(row[0])
+    client = telegram_connects(db_handler, f"user_settings/accounts/{row[0]}")
     # Выводим командой print: имя, фамилию, номер телефона аккаунта
     first_name, last_name, phone = account_name(client, name_account="me")
     # Выводим результат полученного имени и номера телефона
@@ -66,31 +67,13 @@ def account_name(client, name_account):
 
 def writing_names_found_files_to_the_db(db_handler) -> None:
     """Запись названий найденных файлов в базу данных"""
-    creating_a_table = "CREATE TABLE IF NOT EXISTS config(id, hash, phone)"
-    writing_data_to_a_table = "INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)"
     db_handler.cleaning_db(name_database_table="config")  # Call the method on the instance
-    records = connecting_account_sessions()
+    records = find_files(directory_path="user_settings/accounts", extension="session")
     for entities in records:
         print(f"Записываем данные аккаунта {entities} в базу данных")
-        db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
-
-
-def connecting_account_sessions() -> list:
-    """Подключение сессий аккаунтов
-    Функция listdir() модуля os возвращает список, содержащий имена файлов и директорий в каталоге, заданном путем
-    path user_settings/accounts
-    Функция str.endswith() возвращает True, если строка заканчивается заданным суффиксом (.session), в противном
-    случае возвращает False.
-    Os.path.splitext(path) - разбивает путь на пару (root, ext), где ext начинается с точки и содержит не
-    более одной точки.
-    """
-    entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_settings/accounts
-    for x in os.listdir(path="user_settings/accounts"):
-        if x.endswith(".session"):
-            file = os.path.splitext(x)[0]
-            print(f"Найденные аккаунты: {file}.session")  # Выводим имена найденных аккаунтов
-            entities.append([api_id_data, api_hash_data, file])
-    return entities
+        db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS config(phone)",
+                                    writing_data_to_a_table="INSERT INTO config (phone) VALUES (?)",
+                                    entities=entities)
 
 
 def renaming_a_session(client, phone_old, phone) -> None:
@@ -102,7 +85,3 @@ def renaming_a_session(client, phone_old, phone) -> None:
     except FileExistsError:
         # Если файл существует, то удаляем дубликат
         os.remove(f"user_settings/accounts/{phone_old}.session")
-
-
-if __name__ == "__main__":
-    connecting_account_sessions()

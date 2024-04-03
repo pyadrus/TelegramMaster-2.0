@@ -1,6 +1,5 @@
 import datetime
 import json
-import os
 import random
 import time
 
@@ -138,17 +137,6 @@ def sending_messages_files_via_chats() -> None:
 
     done_button(root, output_values_from_the_input_field)  # Кнопка "Готово"
     root.mainloop()  # Запускаем программу
-
-
-def sending_messages_chats():
-    entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_settings/accounts
-    for x in os.listdir(path="user_settings/message"):
-        if x.endswith(".json"):
-            file = os.path.splitext(x)[0]
-            logger.info(f"Найденные файлы: {file}.json")  # Выводим имена найденных аккаунтов
-            entities.append([file])
-
-    return entities  # Возвращаем список json файлов
 
 
 def select_and_read_random_file(entities):

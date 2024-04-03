@@ -1,6 +1,5 @@
 import asyncio
 import json
-import os
 import random
 
 from loguru import logger
@@ -9,8 +8,8 @@ from telethon import TelegramClient, events
 from telethon.errors import UserBannedInChannelError
 from telethon.tl.functions.channels import JoinChannelRequest
 
-from system.account_actions.sending_messages.telegram_chat_dialog import select_and_read_random_file, \
-    sending_messages_chats
+from system.account_actions.sending_messages.telegram_chat_dialog import select_and_read_random_file
+from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import api_id_data, api_hash_data, time_sending_messages_1, \
     time_sending_messages_2, account_name_newsletter
 
@@ -28,7 +27,7 @@ def mains(db_handler):
             logger.info(records)
             for chat in records:
                 try:
-                    entities = sending_messages_chats()  # Выбираем случайное сообщение из файла
+                    entities = find_files(directory_path="user_settings/message", extension="json")  # Выбираем случайное сообщение из файла
                     logger.info(entities)  # Выводим список чатов
                     data = select_and_read_random_file(entities)  # Выбираем случайное сообщение из файла
                     await client.send_message(chat[0], f'{data}')
@@ -43,15 +42,7 @@ def mains(db_handler):
             for _ in track(range(time_in_seconds), description=f"[red]Спим {time_in_seconds/60} минуты / минут..."):
                 await asyncio.sleep(1)  # Спим 1 секунду
 
-    def sending_messages_chatss():
-        entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_settings/accounts
-        for x in os.listdir(path="user_settings/answering_machine"):
-            if x.endswith(".json"):
-                file = os.path.splitext(x)[0]
-                logger.info(f"Найденные файлы: {file}.json")  # Выводим имена найденных аккаунтов
-                entities.append([file])
 
-        return entities  # Возвращаем список json файлов
 
     def select_and_read_random_filess(entities):
         if entities:  # Проверяем, что список не пустой, если он не пустой
@@ -68,7 +59,7 @@ def mains(db_handler):
         """Обрабатывает входящие личные сообщения"""
         if event.is_private:  # Проверяем, является ли сообщение личным
             logger.info(f'Входящее сообщение: {event.message.message}')
-            entities = sending_messages_chatss()  # Получаем список аккаунтов
+            entities = find_files(directory_path="user_settings/answering_machine", extension="json")  # Получаем список аккаунтов
             logger.info(entities)  # Выводим список чатов
             data = select_and_read_random_filess(entities)
             logger.info(data)

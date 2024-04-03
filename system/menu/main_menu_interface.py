@@ -225,7 +225,7 @@ def sending_messages_to_a_personal_account_chat(db_handler) -> None:  # 6 - Ра
     elif user_input == "2":  # Отправка файлов в личку по parsing списку user_settings/software_database.db
         send_files_to_personal_account(limits=None, db_handler=db_handler)
     elif user_input == "3":  # Рассылка сообщений по чатам
-        entities = sending_messages_chats()
+        entities = find_files(directory_path="user_settings/message", extension="json")
         logger.info(entities)
         sending_messages_via_chats_times(entities, db_handler)
     elif user_input == "4":  # ✅ Рассылка сообщений по чатам по времени

@@ -1,5 +1,4 @@
 import json
-import os
 import random
 import sys
 import time
@@ -7,15 +6,16 @@ import time
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger  # Импортируем библиотеку loguru для логирования
 from rich import print  # Импортируем библиотеку rich для красивого отображения текста в терминале / консолей (цветного)
+from telethon import TelegramClient
 from telethon import events, types
 from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
-from telethon import TelegramClient
 
 from system.account_actions.creating.account_registration import telegram_connects
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
-from system.auxiliary_functions.global_variables import console, api_id_data, api_hash_data
+from system.auxiliary_functions.auxiliary_functions import find_files
+from system.auxiliary_functions.global_variables import console
 from system.notification.notification import app_notifications
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
@@ -66,28 +66,10 @@ def writing_names_found_files_to_the_db_config_reactions(db_handler) -> None:
     creating_a_table = "CREATE TABLE IF NOT EXISTS config_reactions (id, hash, phone)"
     writing_data_to_a_table = "INSERT INTO config_reactions (id, hash, phone) VALUES (?, ?, ?)"
     db_handler.cleaning_db(name_database_table="config_reactions")  # Call the method on the instance
-    records = connecting_account_sessions_config_reactions()
+    records = find_files(directory_path="user_settings/reactions/accounts", extension='session')
     for entities in records:
         print(f"Записываем данные аккаунта {entities} в базу данных")
         db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
-
-
-def connecting_account_sessions_config_reactions() -> list:
-    """Подключение сессий аккаунтов
-    Функция listdir() модуля os возвращает список, содержащий имена файлов и директорий в каталоге, заданном путем
-    path user_settings/accounts
-    Функция str.endswith() возвращает True, если строка заканчивается заданным суффиксом (.session), в противном
-    случае возвращает False.
-    Os.path.splitext(path) - разбивает путь на пару (root, ext), где ext начинается с точки и содержит не
-    более одной точки.
-    """
-    entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_settings/accounts
-    for x in os.listdir(path="user_settings/reactions/accounts"):
-        if x.endswith(".session"):
-            file = os.path.splitext(x)[0]
-            print(f"Найденные аккаунты: {file}.session")  # Выводим имена найденных аккаунтов
-            entities.append([api_id_data, api_hash_data, file])
-    return entities
 
 
 def setting_reactions(db_handler):

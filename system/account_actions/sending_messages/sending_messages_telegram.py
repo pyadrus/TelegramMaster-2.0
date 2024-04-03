@@ -6,9 +6,9 @@ from loguru import logger
 from rich import print
 from telethon.errors import *
 
-from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_chats, \
-    select_and_read_random_file
-from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, record_inviting_results
+from system.account_actions.sending_messages.telegram_chat_dialog import select_and_read_random_file
+from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, record_inviting_results, \
+    find_files
 from system.auxiliary_functions.global_variables import console, time_inviting_1
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
@@ -87,7 +87,7 @@ def send_message_from_all_accounts(limits, db_handler) -> None:
                 print(f"[magenta][!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)
-                    entities = sending_messages_chats()
+                    entities = find_files(directory_path="user_settings/message", extension="json")
                     logger.info(entities)
                     data = select_and_read_random_file(entities)  # Выбираем случайное сообщение из файла
                     client.send_message(user_to_add, data.format(username))
