@@ -14,7 +14,7 @@ from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViews
 
 from system.account_actions.creating.account_registration import telegram_connects
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
-from system.auxiliary_functions.auxiliary_functions import find_files
+from system.auxiliary_functions.auxiliary_functions import find_files, read_json_file
 from system.auxiliary_functions.global_variables import console
 from system.notification.notification import app_notifications
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
@@ -27,10 +27,7 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
     records: list = db_handler.open_and_read_data("config")
     # Количество аккаунтов на данный момент в работе
     print(f"[medium_purple3]Всего accounts: {len(records)}")
-    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    with open('user_settings/reactions/number_accounts.json', 'r') as json_file:
-        number_of_accounts = json.load(json_file)  # Используем функцию load для загрузки данных из файла
-
+    number_of_accounts = read_json_file(filename='user_settings/reactions/number_accounts.json')
     logger.info(f'Всего реакций на пост: {number_of_accounts}')
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
                                                                  number_of_accounts=int(number_of_accounts))
@@ -43,8 +40,8 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
         try:
             await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
             time.sleep(5)
-            with open('user_settings/reactions/reactions.json', 'r') as json_file:
-                reaction_input = json.load(json_file)  # Используем функцию load для загрузки данных из файла
+            reaction_input = read_json_file(filename='user_settings/reactions/reactions.json')
+
             random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
             logger.info(random_value)
             await client(SendReactionRequest(peer=chat, msg_id=int(number),
@@ -80,20 +77,14 @@ def setting_reactions(db_handler):
     records_ac: list = db_handler.open_and_read_data("config_reactions")
     # Количество аккаунтов на данный момент в работе
     print(f"[medium_purple3]Всего accounts: {len(records_ac)}")
-
-    # Считываем количество аккаунтов, которые будут ставить реакции
-    with open('user_settings/reactions/number_accounts.json', 'r') as json_file:
-        records_ac_json = json.load(json_file)  # Используем функцию load для загрузки данных из файла
+    records_ac_json = read_json_file(filename='user_settings/reactions/number_accounts.json')
     logger.info(records_ac_json)
-
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config_reactions",
                                                                  number_of_accounts=int(records_ac_json))
     logger.info(records)
     for row in records:
         client = telegram_connects(db_handler, session=f"user_settings/reactions/accounts/{row[2]}")
-        # Открываем файл для чтения
-        with open('user_settings/reactions/link_channel.json', 'r') as json_file:
-            chat = json.load(json_file)  # Используем функцию load для загрузки данных из файла
+        chat = read_json_file(filename='user_settings/reactions/link_channel.json')
         logger.info(chat)
         client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
 

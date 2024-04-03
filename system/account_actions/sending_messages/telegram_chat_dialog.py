@@ -1,5 +1,4 @@
 import datetime
-import json
 import random
 import time
 
@@ -9,7 +8,7 @@ from rich.progress import track
 from telethon.errors import *
 
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
-from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
+from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, read_json_file
 from system.auxiliary_functions.global_variables import console, time_sending_messages_1, time_sending_messages_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
@@ -144,9 +143,7 @@ def select_and_read_random_file(entities):
         # Выбираем рандомный файл для чтения
         random_file = random.choice(entities)  # Выбираем случайный файл для чтения из списка файлов
         logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
-        # Открываем выбранный файл с настройками
-        with open(f"user_settings/message/{random_file[0]}.json", "r", encoding="utf-8") as file:
-            data = json.load(file)  # Чтение файла
+        data = read_json_file(filename=f"user_settings/message/{random_file[0]}.json")
     return data  # Возвращаем данные из файла
 
 

@@ -4,7 +4,7 @@ import platform
 import random  # Импортируем модуль random, чтобы генерировать случайное число
 import time  # Импортируем модуль time, чтобы работать с временем
 from sys import platform
-
+import json
 from loguru import logger
 from rich.progress import track
 
@@ -14,6 +14,15 @@ from system.auxiliary_functions.global_variables import time_inviting_1
 from system.auxiliary_functions.global_variables import time_inviting_2
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_banner import banner
+
+
+def read_json_file(filename):
+    """Чтение данных из файла JSON.
+    :param filename: Полный путь к файлу JSON.
+    :return: Данные из файла JSON в виде словаря."""
+    with open(filename, 'r', encoding="utf-8") as file:
+        data = json.load(file)
+    return data
 
 
 def find_files(directory_path, extension) -> list:
