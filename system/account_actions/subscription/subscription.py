@@ -6,7 +6,7 @@ from rich import print
 from rich.progress import track
 from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
-
+from loguru import logger
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import time_subscription_1
 from system.auxiliary_functions.global_variables import time_subscription_2
@@ -33,7 +33,7 @@ def subscription_all(db_handler) -> None:
                 print(f"[magenta][+] Подождите {time_subscription_1}-{time_subscription_2} Секунд...")
                 time.sleep(random.randrange(int(time_subscription_1), int(time_subscription_2)))
             except FloodWaitError as e:
-                print(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                logger.error(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                 time.sleep(e.seconds)
         client.disconnect()  # Разрываем соединение Telegram
     app_notifications(notification_text="На группы подписались!")  # Выводим уведомление
@@ -78,7 +78,7 @@ def subscribe_to_group_or_channel(client, groups_wr, phone, db_handler) -> None:
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
             actions: str = f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}"
-            print(f"[red][!] {actions}")
+            logger.error(f"[!] {actions}")
             record_and_interrupt(actions, phone, description_action, event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except InviteRequestSentError:

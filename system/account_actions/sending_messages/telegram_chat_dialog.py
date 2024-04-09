@@ -63,7 +63,7 @@ def sending_files_via_chats(db_handler) -> None:
         except FloodWaitError as e:
             actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
             record_account_actions(phone, description_action, event, actions, db_handler)
-            print(f'Спим {e.seconds} секунд')
+            logger.error(f'Спим {e.seconds} секунд')
             time.sleep(e.seconds)
         except UserBannedInChannelError:
             actions: str = "Вам запрещено отправлять сообщения в супергруппу."
@@ -116,7 +116,7 @@ def sending_messages_files_via_chats() -> None:
             except FloodWaitError as e:
                 actions: str = f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}'
                 record_account_actions(phone, description_action, event, actions, db_handler)
-                print(f'Спим {e.seconds} секунд')
+                logger.error(f'Спим {e.seconds} секунд')
                 time.sleep(e.seconds)
             except UserBannedInChannelError:
                 actions = "Вам запрещено отправлять сообщения в супергруппу."
@@ -173,7 +173,7 @@ def sending_messages_via_chats_times(entities, db_handler) -> None:
         except FloodWaitError as e:
             record_account_actions(phone, f"Sending messages to a group: {groups_wr}", event,
                                    f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', db_handler)
-            print(f'Спим {e.seconds} секунд')
+            logger.error(f'Спим {e.seconds} секунд')
             time.sleep(e.seconds)
         except UserBannedInChannelError:
             record_and_interrupt("Вам запрещено отправлять сообщения в супергруппу.", phone,

@@ -2,7 +2,7 @@ import datetime
 import os
 # import sys
 # import time
-
+from loguru import logger
 from rich import print
 # from telethon.errors import ChatAdminRequiredError, ChannelPrivateError, FloodWaitError
 
@@ -16,7 +16,7 @@ def record_account_actions(phone_number, action_description, event, action_resul
     :arg event: действие, которое производится
     :arg action_result: результат выполнения действия.
     :arg db_handler: База данных для записи действий аккаунта в базу данных"""
-    print(f"[red][!] {action_result}")
+    logger.error(f"[!] {action_result}")
     creating_a_table = """CREATE TABLE IF NOT EXISTS account_actions 
                           (phone, date, description_action, event, actions)"""
     writing_data_to_a_table = """INSERT INTO  account_actions 

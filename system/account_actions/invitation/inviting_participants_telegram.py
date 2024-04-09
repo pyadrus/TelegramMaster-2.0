@@ -44,7 +44,7 @@ def invitation_from_all_accounts_program_body(name_database_table, db_handler) -
         try:
             inviting(client, phone, records, db_handler)
         except FloodWaitError as e:
-            print(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}')
+            logger.error(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}')
             continue  # Прерываем работу и меняем аккаунт
     app_notifications(notification_text=f"Работа с группой {link_group} окончена!")  # Выводим уведомление
 

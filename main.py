@@ -1,5 +1,4 @@
 from loguru import logger
-from rich import print
 
 from system.menu.main_menu_interface import main_menu
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -19,6 +18,5 @@ if __name__ == "__main__":
     try:
         launch_with_account_verification()  # Проверка аккаунтов
     except Exception as e:
-        logger.exception(e)
-        print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+        logger.exception(f"[!] Произошла ошибка {e}, для подробного изучения проблемы просмотрите файл log.log")
 
