@@ -67,6 +67,3 @@ def check_account_for_spam(db_handler) -> None:
 
         except YouBlockedUserError:
             continue  # Записываем ошибку в software_database.db и продолжаем работу
-
-
-

@@ -6,7 +6,7 @@ from telethon.errors import *
 
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
 from system.account_actions.unsubscribe.unsubscribe import unsubscribe_from_the_group
-from system.auxiliary_functions.auxiliary_functions import clearing_console_showing_banner
+from system.auxiliary_functions.auxiliary_functions import clear_console_and_display_banner
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.auxiliary_functions import record_inviting_results
 from system.auxiliary_functions.global_variables import limits
@@ -28,7 +28,7 @@ def inviting_to_a_group(client, username) -> None:
 
 def invitation_from_all_accounts_program_body(name_database_table, db_handler) -> None:
     """Inviting по заранее parsing списку и работа с несколькими аккаунтами"""
-    clearing_console_showing_banner()  # Чистим консоль, выводим банер
+    clear_console_and_display_banner()  # Чистим консоль, выводим банер
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")

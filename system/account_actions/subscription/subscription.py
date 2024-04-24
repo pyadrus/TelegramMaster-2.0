@@ -64,17 +64,16 @@ def subscribe_to_group_or_channel(client, groups_wr, phone, db_handler) -> None:
                     break
             print("[magenta][+] Список почистили, и в файл записали.")
         except ChannelPrivateError:
-            actions: str = "Указанный канал является приватным, или вам запретили подписываться."
-            record_account_actions(phone, description_action, event, actions, db_handler)
+            record_account_actions(phone, description_action, event,
+                                   "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
         except (UsernameInvalidError, ValueError, TypeError):
-            actions: str = f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}"
-            record_account_actions(phone, description_action, event, actions, db_handler)
+            record_account_actions(phone, description_action, event,
+                                   f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}", db_handler)
             creating_a_table = """SELECT * from writing_group_links"""
             writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
             db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wrs)
         except PeerFloodError:
-            actions: str = "Предупреждение о Flood от Telegram."
-            record_account_actions(phone, description_action, event, actions, db_handler)
+            record_account_actions(phone, description_action, event, "Предупреждение о Flood от Telegram.", db_handler)
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
             actions: str = f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}"
@@ -82,8 +81,8 @@ def subscribe_to_group_or_channel(client, groups_wr, phone, db_handler) -> None:
             record_and_interrupt(actions, phone, description_action, event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except InviteRequestSentError:
-            actions: str = "Действия будут доступны после одобрения администратором на вступление в группу"
-            record_account_actions(phone, description_action, event, actions, db_handler)
+            record_account_actions(phone, description_action, event,
+                                   "Действия будут доступны после одобрения администратором на вступление в группу", db_handler)
 
 
 def subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler):

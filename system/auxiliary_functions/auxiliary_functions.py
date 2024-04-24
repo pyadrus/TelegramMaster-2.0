@@ -65,7 +65,7 @@ def record_and_interrupt(actions, phone, description_action, event, db_handler) 
     display_progress_bar(time_changing_accounts_1, time_changing_accounts_2, "Ожидайте смены аккаунта")
 
 
-def clearing_console_showing_banner() -> None:
+def clear_console_and_display_banner() -> None:
     """Чистим консоль, выводим банер"""
     if platform == 'win32':
         os.system("cls")  # Чистим консоль (для windows cls)
@@ -82,4 +82,4 @@ def column_names(table) -> None:
 
 
 if __name__ == "__main__":
-    clearing_console_showing_banner()
+    clear_console_and_display_banner()

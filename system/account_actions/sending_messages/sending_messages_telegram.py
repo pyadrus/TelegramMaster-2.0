@@ -14,7 +14,7 @@ from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
-def send_files_to_personal_account(limits, db_handler) -> None:
+def send_files_to_personal_chats(limits, db_handler) -> None:
     """Отправка файлов в личку"""
     # Просим пользователя ввести расширение сообщения
     link_to_the_file: str = console.input(
