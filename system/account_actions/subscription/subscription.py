@@ -69,16 +69,13 @@ def subscribe_to_group_or_channel(client, groups_wr, phone, db_handler) -> None:
         except (UsernameInvalidError, ValueError, TypeError):
             record_account_actions(phone, description_action, event,
                                    f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}", db_handler)
-            creating_a_table = """SELECT * from writing_group_links"""
-            writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
-            db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wrs)
+            db_handler.write_data_to_db("""SELECT * from writing_group_links""", """DELETE from writing_group_links where writing_group_links = ?""", groups_wrs)
         except PeerFloodError:
             record_account_actions(phone, description_action, event, "Предупреждение о Flood от Telegram.", db_handler)
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
-            actions: str = f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}"
-            logger.error(f"[!] {actions}")
-            record_and_interrupt(actions, phone, description_action, event, db_handler)
+            logger.error(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+            record_and_interrupt(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}", phone, description_action, event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except InviteRequestSentError:
             record_account_actions(phone, description_action, event,

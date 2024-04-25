@@ -60,13 +60,12 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
 
 def writing_names_found_files_to_the_db_config_reactions(db_handler) -> None:
     """Запись названий найденных файлов в базу данных"""
-    creating_a_table = "CREATE TABLE IF NOT EXISTS config_reactions (id, hash, phone)"
-    writing_data_to_a_table = "INSERT INTO config_reactions (id, hash, phone) VALUES (?, ?, ?)"
     db_handler.cleaning_db(name_database_table="config_reactions")  # Call the method on the instance
     records = find_files(directory_path="user_settings/reactions/accounts", extension='session')
     for entities in records:
         print(f"Записываем данные аккаунта {entities} в базу данных")
-        db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
+        db_handler.write_data_to_db("CREATE TABLE IF NOT EXISTS config_reactions (id, hash, phone)",
+                                    "INSERT INTO config_reactions (id, hash, phone) VALUES (?, ?, ?)", entities)
 
 
 def setting_reactions(db_handler):
@@ -92,8 +91,7 @@ def setting_reactions(db_handler):
         async def handler(event):
             message = event.message  # Получаем сообщение из события
             message_id = message.id  # Получаем id сообщение
-            print(f"Идентификатор сообщения: {message_id}")
-            logger.info(message)
+            logger.info(f"Идентификатор сообщения: {message_id}, {message}")
             # Проверяем, является ли сообщение постом и не является ли оно нашим
             if message.post and not message.out:
                 await reactions_for_groups_and_messages_test(message_id, chat, db_handler)

@@ -252,9 +252,8 @@ def we_record_phone_numbers_in_the_db(db_handler) -> None:
             # strip() - удаляет с конца и начала строки лишние пробелы, в том числе символ окончания строки
             lines = line.strip()
             entities = [lines]
-            creating_a_table = "CREATE TABLE IF NOT EXISTS contact(phone)"
-            writing_data_to_a_table = "INSERT INTO contact(phone) VALUES (?)"
-            db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)
+            db_handler.write_data_to_db("CREATE TABLE IF NOT EXISTS contact(phone)",
+                                        "INSERT INTO contact(phone) VALUES (?)", entities)
 
 
 def show_account_contact_list(db_handler) -> None:

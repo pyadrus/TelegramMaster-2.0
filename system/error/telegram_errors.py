@@ -17,13 +17,9 @@ def record_account_actions(phone_number, action_description, event, action_resul
     :arg action_result: результат выполнения действия.
     :arg db_handler: База данных для записи действий аккаунта в базу данных"""
     logger.error(f"[!] {action_result}")
-    creating_a_table = """CREATE TABLE IF NOT EXISTS account_actions 
-                          (phone, date, description_action, event, actions)"""
-    writing_data_to_a_table = """INSERT INTO  account_actions 
-                                 (phone, date, description_action, event, actions) VALUES (?, ?, ?, ?, ?)"""
     date = datetime.datetime.now()  # Получаем текущую дату
     entities = [phone_number, str(date), action_description, event, action_result]  # Формируем словарь
-    db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, entities)  # Запись данных в базу данных
+    db_handler.write_data_to_db("""CREATE TABLE IF NOT EXISTS account_actions (phone, date, description_action, event, actions)""", """INSERT INTO  account_actions (phone, date, description_action, event, actions) VALUES (?, ?, ?, ?, ?)""", entities)  # Запись данных в базу данных
 
 
 """Действия с аккаунтами"""
