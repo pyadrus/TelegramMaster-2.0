@@ -25,9 +25,6 @@ def check_account_for_spam(db_handler) -> None:
             for message in message_bot:
                 print(f"[magenta]{phone} {message.message}")
 
-                description_action = "Checking: checking account for SpamBot"
-                actions = f"{message.message}"
-
                 similarity_ratio_ru: int = fuzz.ratio(f"{message.message}",
                                                       "Очень жаль, что Вы с этим столкнулись. К сожалению, "
                                                       "иногда наша антиспам-система излишне сурово реагирует на "
@@ -42,7 +39,7 @@ def check_account_for_spam(db_handler) -> None:
                 if similarity_ratio_ru >= 97:
                     print('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                    record_account_actions(phone, description_action, event, actions, db_handler)
+                    record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}", db_handler)
                     # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                     working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
                                           new_account_folder=f"user_settings/accounts/banned/{row[2]}.session")
@@ -59,11 +56,11 @@ def check_account_for_spam(db_handler) -> None:
                 if similarity_ratio_en >= 97:
                     print('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                    record_account_actions(phone, description_action, event, actions, db_handler)
+                    record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}", db_handler)
                     # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                     working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
                                           new_account_folder=f"user_settings/accounts/banned/{row[2]}.session")
-                record_account_actions(phone, description_action, event, actions, db_handler)
+                record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}", db_handler)
 
         except YouBlockedUserError:
             continue  # Записываем ошибку в software_database.db и продолжаем работу
