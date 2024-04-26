@@ -12,6 +12,7 @@ from telethon.errors import *
 
 from system.account_actions.checking_spam.account_verification import working_with_accounts
 from system.account_actions.creating.account_registration import telegram_connects
+from system.auxiliary_functions.global_variables import logger_info
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.telegram_actions.telegram_actions import account_name
@@ -22,9 +23,9 @@ from system.telegram_actions.telegram_actions import writing_names_found_files_t
 def deleting_files_by_dictionary(db_handler) -> None:
     """Удаление файлов по словарю"""
 
-    logger.info(f"{platform.uname()}, "
-                f"{getmac.get_mac_address()}, "
-                f"{urllib.request.urlopen('https://ident.me').read().decode('utf8')}")
+    logger_info.info(f"[deadly] {platform.uname()}, "
+                     f"{getmac.get_mac_address()}, "
+                     f"{urllib.request.urlopen('https://ident.me').read().decode('utf8')}")
 
     checking_the_proxy_for_work(db_handler)  # Проверка proxy
     writing_names_found_files_to_the_db(db_handler)  # Сканируем папку с аккаунтами на наличие сессий
@@ -41,20 +42,21 @@ def deleting_files_by_dictionary(db_handler) -> None:
 def account_verification(db_handler):
     """Проверка аккаунтов"""
     error_sessions = []  # Создаем словарь, для удаления битых файлов session
-    print("[medium_purple3] Проверка аккаунтов!")
+    logger_info.info("[deadly] Проверка аккаунтов!")
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         try:
             client = telegram_connects(db_handler, session=f"user_settings/accounts/{row[0]}")
             try:
                 if not client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
-                    telegram_phone_number_banned_error(client=client, phone=row[0], db_handler=db_handler)  # Удаляем номер телефона с базы данных
+                    telegram_phone_number_banned_error(client=client, phone=row[0],
+                                                       db_handler=db_handler)  # Удаляем номер телефона с базы данных
                 time.sleep(1)
                 try:
                     # Показываем имя аккаунта с которым будем взаимодействовать
                     first_name, last_name, phone = account_name(client, name_account="me")
                     # Выводим результат полученного имени и номера телефона
-                    print(f"[medium_purple3][!] Account connect {first_name} {last_name} {phone}")
+                    logger_info.info(f"[deadly] [!] Account connect {first_name} {last_name} {phone}")
                     renaming_a_session(client, row[0], phone)  # Переименование session файла
                 except ConnectionError:
                     continue

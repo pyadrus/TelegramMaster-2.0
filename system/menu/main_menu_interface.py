@@ -20,8 +20,6 @@ from system.menu.app_gui import *
 from system.setting.setting import *
 from system.sqlite_working_tools.sqlite_working_tools import *
 
-logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")
-
 
 def main_menu() -> None:  # 1 - Основное меню программы
     """Основное меню программы"""
@@ -269,8 +267,7 @@ def working_with_the_reaction(db_handler) -> None:  # 7 - Работа с реа
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-def program_settings(
-        db_handler) -> None:  # 8 - Настройки программы, запись времени, api_id, api_hash, запись ссылки для inviting
+def program_settings(db_handler) -> None:  # 8 - Настройки программы, запись времени, api_id, api_hash, запись ссылки для inviting
     """Настройки программы, запись времени задержки, api_id, api_hash, запись ссылки для inviting"""
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Настройки программы!", box=box.HORIZONTALS)  # Выводим таблицу
@@ -368,7 +365,7 @@ def program_settings(
 def working_with_bio() -> None:  # 11 - Работа с био аккаунта Telegram
     """Работа с реакциями на посты группы или канала"""
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    table = Table(title="[medium_purple3]Работа с реакциями / постами!", box=box.HORIZONTALS)  # Выводим таблицу
+    table = Table(title="[medium_purple3]Редактирование BIO!", box=box.HORIZONTALS)  # Выводим таблицу
     column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
     table.add_row("1", "Изменение username", "Изменение username на аккаунте Telegram")

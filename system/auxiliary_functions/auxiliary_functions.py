@@ -1,10 +1,11 @@
+import json
 import os
 import os.path
 import platform
 import random  # Импортируем модуль random, чтобы генерировать случайное число
 import time  # Импортируем модуль time, чтобы работать с временем
 from sys import platform
-import json
+
 from loguru import logger
 from rich.progress import track
 
@@ -45,8 +46,7 @@ def display_progress_bar(time_range_1, time_range_2, message) -> None:
     """Отображаем время смены аккаунта или username в виде progress bar"""
     # Генерируем случайное число в указанном диапазоне времени
     selected_shift_time = random.randrange(time_range_1, time_range_2)
-    for _ in track(range(selected_shift_time),
-                   description=f"[red]{message} через {selected_shift_time} секунды/секунд..."):
+    for _ in track(range(selected_shift_time), description=f"[red]{message} через {selected_shift_time} секунды/секунд..."):
         time.sleep(1)
 
 
