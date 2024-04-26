@@ -31,7 +31,7 @@ class AccountRIO:
         entities = find_files(directory_path=f"user_settings/accounts/bio_accounts", extension='session')
         for file in entities:
             self.client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
-            user_input: str = input('Введите имя профиля: ')
+            user_input: str = input('Введите имя профиля, не более 64 символов: ')
             try:
                 result = self.client(functions.account.UpdateProfileRequest(first_name=user_input))
                 logger.info(f'{result}\nИмя успешно обновлено!')
@@ -44,7 +44,7 @@ class AccountRIO:
         entities = find_files(directory_path=f"user_settings/accounts/bio_accounts", extension='session')
         for file in entities:
             self.client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
-            user_input: str = input('Введите фамилию профиля: ')
+            user_input: str = input('Введите фамилию профиля, не более 64 символов: ')
             try:
                 result = self.client(functions.account.UpdateProfileRequest(last_name=user_input))
                 logger.info(f'{result}\nФамилия успешно обновлена!')
@@ -71,7 +71,7 @@ class AccountRIO:
         entities = find_files(directory_path=f"user_settings/accounts/bio_accounts", extension='session')
         for file in entities:
             self.client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
-            user_input: str = input('Введите никнейм: ')
+            user_input: str = input('Введите username профиля (не более 32 символов): ')
             try:
                 result = self.client(functions.account.UpdateUsernameRequest(username=user_input))
                 logger.info(f'{result}\nНикнейм успешно обновлен!')
