@@ -13,11 +13,18 @@ class AccountRIO:
 
     def change_bio_profile(self, db_handler):
         """Изменение описания профиля"""
-        entities = find_files(directory_path=f"user_settings/accounts/bio_accounts", extension='session')
+        entities = find_files(directory_path="user_settings/accounts/bio_accounts", extension='session')
         for file in entities:
             logger.info(f'Имя файла: {file[0]}')
             self.client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
-            user_input: str = input('Введите описание профиля, не более 70 символов: ')
+
+            while True:
+                user_input: str = input('Введите описание профиля, не более 70 символов: ')
+                if len(user_input) <= 70:
+                    break
+                else:
+                    print("Описание профиля превышает 70 символов. Пожалуйста, введите снова.")
+
             logger.info(f'Описание профиля: {len(user_input)} символов')
             try:
                 result = self.client(functions.account.UpdateProfileRequest(about=user_input))
