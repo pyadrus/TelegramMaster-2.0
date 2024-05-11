@@ -77,7 +77,7 @@ def inviting_groups(db_handler) -> None:  # 1 - Inviting в группы
     # Выводим текст в таблице
     table.add_row("1", f"Inviting {link_group}", "Inviting по списку members")
     table.add_row("2", f"Inviting {link_group}, с лимитами", "Inviting по списку members, с лимитами на аккаунт")
-    table.add_row("3", f"Inviting {link_group} 1 раз в час", "Inviting по списку members с запуском 1 рав в час")
+    table.add_row("3", f"Inviting {link_group} 1 раз в час", "Inviting по списку members с запуском 1 раз в час")
     table.add_row("4", f"Inviting time {link_group}", "Inviting по списку members (запуск по времени)")
     table.add_row("5", f"Inviting time avery day{link_group}",
                   "Inviting по списку members (запуск по времени каждый день)")
