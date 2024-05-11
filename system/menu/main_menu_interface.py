@@ -72,15 +72,14 @@ def main_menu() -> None:  # 1 - Основное меню программы
 def inviting_groups(db_handler) -> None:  # 1 - Inviting в группы
     """"Inviting в группы"""
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    table = Table(title=f"[medium_purple3]Inviting {link_group}!", box=box.HORIZONTALS)  # Выводим таблицу
+    table = Table(title=f"[medium_purple3]Инвайтинг {link_group}!", box=box.HORIZONTALS)  # Выводим таблицу
     column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
-    table.add_row("1", f"Inviting {link_group}", "Inviting по списку members")
-    table.add_row("2", f"Inviting {link_group}, с лимитами", "Inviting по списку members, с лимитами на аккаунт")
-    table.add_row("3", f"Inviting {link_group} 1 раз в час", "Inviting по списку members с запуском 1 раз в час")
-    table.add_row("4", f"Inviting time {link_group}", "Inviting по списку members (запуск по времени)")
-    table.add_row("5", f"Inviting time avery day{link_group}",
-                  "Inviting по списку members (запуск по времени каждый день)")
+    table.add_row("1", f"Инвайтинг {link_group}", "Инвайтинг без лимитов")
+    table.add_row("2", f"Инвайтинг {link_group}, с лимитами", "Инвайтинг с лимитами")
+    table.add_row("3", f"Инвайтинг {link_group} 1 раз в час", "Инвайтинг 1 раз в час")
+    table.add_row("4", f"Инвайтинг time {link_group}", "Инвайтинг в определенное время")
+    table.add_row("5", f"Инвайтинг time avery day{link_group}", "Инвайтинг каждый день")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
