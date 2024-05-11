@@ -78,8 +78,8 @@ def inviting_groups(db_handler) -> None:  # 1 - Inviting в группы
     table.add_row("1", f"Инвайтинг {link_group}", "Инвайтинг без лимитов")
     table.add_row("2", f"Инвайтинг {link_group}, с лимитами", "Инвайтинг с лимитами")
     table.add_row("3", f"Инвайтинг {link_group} 1 раз в час", "Инвайтинг 1 раз в час")
-    table.add_row("4", f"Инвайтинг time {link_group}", "Инвайтинг в определенное время")
-    table.add_row("5", f"Инвайтинг time avery day{link_group}", "Инвайтинг каждый день")
+    table.add_row("4", f"Инвайтинг {link_group} в определенное время", "Инвайтинг в определенное время")
+    table.add_row("5", f"Инвайтинг {link_group} каждый день", "Инвайтинг каждый день")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
