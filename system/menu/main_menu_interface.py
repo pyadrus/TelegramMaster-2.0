@@ -105,16 +105,16 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
     """Parsing групп и активных участников группы"""
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Parsing участников групп!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names(table)  # Формируем колонки таблицы
+    column_names_3(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
     table.add_row("1", "Парсинг одной группы / групп")
     table.add_row("2", "Парсинг выбранной группы из подписанных пользователем")
     table.add_row("3", "Парсинг активных участников группы")
     table.add_row("4", "Парсинг групп / каналов на которые подписан аккаунт")
     table.add_row("5", "Очистка списка от ранее спарсенных данных")
-    table.add_row("6", "Формирование списка username", "Формирование собственного списка username")
-    table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
-    console.print(table, justify="center")  # Отображаем таблицу
+    table.add_row("6", "Формирование списка username")
+    table.add_row("0", "В начальное меню")
+    console.print(table, justify="left")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер функции: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Парсинг одной группы / групп

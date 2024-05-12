@@ -88,5 +88,11 @@ def column_names_2(table) -> None:
     table.add_column("[medium_purple3]Функция", justify="left", style="sandy_brown")
 
 
+def column_names_3(table) -> None:
+    """Название столбцов, для меню программы"""
+    table.add_column("[medium_purple3]№ функции", justify="left", style="cyan")
+    table.add_column("[medium_purple3]Функция", justify="left", style="sandy_brown")
+
+
 if __name__ == "__main__":
     clear_console_and_display_banner()
