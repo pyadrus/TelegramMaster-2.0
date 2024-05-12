@@ -209,9 +209,9 @@ def personal_account_chat_messages_distribution(db_handler) -> None:  # 6 - Ра
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Отправка сообщений в личку по parsing списку user_settings/software_database.db
+    if user_input == "1":  # Отправка сообщений в личку
         send_message_from_all_accounts(limits=None, db_handler=db_handler)
-    elif user_input == "2":  # Отправка файлов в личку по parsing списку user_settings/software_database.db
+    elif user_input == "2":  # Отправка файлов в личку
         send_files_to_personal_chats(limits=None, db_handler=db_handler)
     elif user_input == "3":  # Рассылка сообщений по чатам
         entities = find_files(directory_path="user_settings/message", extension="json")
@@ -259,7 +259,7 @@ def working_with_the_reaction(db_handler) -> None:  # 7 - Работа с реа
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-def program_settings(db_handler) -> None:  # 8 - Настройки программы, запись времени, api_id, api_hash, запись ссылки для inviting
+def program_settings(db_handler) -> None:  # 8 - Настройки программы
     """Настройки программы, запись времени задержки, api_id, api_hash, запись ссылки для inviting"""
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Настройки программы!", box=box.HORIZONTALS)  # Выводим таблицу
