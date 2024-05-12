@@ -46,7 +46,8 @@ def display_progress_bar(time_range_1, time_range_2, message) -> None:
     """Отображаем время смены аккаунта или username в виде progress bar"""
     # Генерируем случайное число в указанном диапазоне времени
     selected_shift_time = random.randrange(time_range_1, time_range_2)
-    for _ in track(range(selected_shift_time), description=f"[red]{message} через {selected_shift_time} секунды/секунд..."):
+    for _ in track(range(selected_shift_time),
+                   description=f"[red]{message} через {selected_shift_time} секунды/секунд..."):
         time.sleep(1)
 
 
@@ -79,6 +80,12 @@ def column_names(table) -> None:
     table.add_column("[medium_purple3]№ функции", justify="center", style="cyan")
     table.add_column("[medium_purple3]Функция", justify="left", style="sandy_brown")
     table.add_column("[medium_purple3]Описание", justify="left", style="cyan")
+
+
+def column_names_2(table) -> None:
+    """Название столбцов, для меню программы"""
+    table.add_column("[medium_purple3]№ функции", justify="left", style="cyan")
+    table.add_column("[medium_purple3]Функция", justify="left", style="sandy_brown")
 
 
 if __name__ == "__main__":

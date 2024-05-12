@@ -28,8 +28,8 @@ def main_menu() -> None:  # 1 - Основное меню программы
     table = Table(title="[medium_purple3]Основные функции программы!", box=box.HORIZONTALS)  # Выводим таблицу
     column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
-    table.add_row("1", f"Inviting {link_group}", "Inviting по времени, по номерам, по parsing списку")
-    table.add_row("2", "Parsing", "Parsing списка или до запись в существующий")
+    table.add_row("1", f"Инвайтинг {link_group}", "Инвайтинг по времени, по номерам, по parsing списку")
+    table.add_row("2", "Парсинг", "Парсинг списка или до запись в существующий")
     table.add_row("3", "Работа с контактами", "Добавляем контакт в телефонную книгу, и создаем список для inviting")
     table.add_row("4", "Подписка, отписка", "Подписка, отписка  групп / каналов, формирование списка для подписки")
     table.add_row("5", "Подключение аккаунтов", "Подключение новых аккаунтов")
@@ -42,9 +42,9 @@ def main_menu() -> None:  # 1 - Основное меню программы
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Inviting в группы
+    if user_input == "1":  # Инвайтинг
         inviting_groups(db_handler)
-    elif user_input == "2":  # Parsing, в новый файл members.db и до записи в файл
+    elif user_input == "2":  # Парсинг
         telegram_parsing_menu(db_handler)
     elif user_input == "3":  # Работаем с контактами телефонной книги
         working_tools_contacts(db_handler)
@@ -69,30 +69,30 @@ def main_menu() -> None:  # 1 - Основное меню программы
         main_menu()  # После отработки функции переходим в начальное меню
 
 
-def inviting_groups(db_handler) -> None:  # 1 - Inviting в группы
+def inviting_groups(db_handler) -> None:  # 1 - Инвайтинг в группы
     """"Inviting в группы"""
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     table = Table(title=f"[medium_purple3]Инвайтинг {link_group}!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names(table)  # Формируем колонки таблицы
+    column_names_2(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
-    table.add_row("1", f"Инвайтинг {link_group}", "Инвайтинг без лимитов")
-    table.add_row("2", f"Инвайтинг {link_group}, с лимитами", "Инвайтинг с лимитами")
-    table.add_row("3", f"Инвайтинг {link_group} 1 раз в час", "Инвайтинг 1 раз в час")
-    table.add_row("4", f"Инвайтинг {link_group} в определенное время", "Инвайтинг в определенное время")
-    table.add_row("5", f"Инвайтинг {link_group} каждый день", "Инвайтинг каждый день")
-    table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
-    console.print(table, justify="center")  # Отображаем таблицу
-    user_input = console.input("[medium_purple3][+] Введите номер: ")
+    table.add_row("1", "Инвайтинг без лимитов")
+    table.add_row("2", "Инвайтинг с лимитами")
+    table.add_row("3", "Инвайтинг 1 раз в час")
+    table.add_row("4", "Инвайтинг в определенное время")
+    table.add_row("5", "Инвайтинг каждый день")
+    table.add_row("0", "В начальное меню")
+    console.print(table, justify="left")  # Отображаем таблицу
+    user_input = console.input("[medium_purple3][+] Введите номер функции: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Inviting по списку software_database.db
+    if user_input == "1":  # Инвайтинг без лимитов
         invitation_from_all_accounts_program_body(name_database_table="members", db_handler=db_handler)
-    elif user_input == "2":  # Inviting по списку software_database.db, с лимитами
+    elif user_input == "2":  # Инвайтинг с лимитами
         invite_from_multiple_accounts_with_limits(name_database_table="members", db_handler=db_handler)
-    elif user_input == "3":  # Inviting по времени 1 раз в час
+    elif user_input == "3":  # Инвайтинг 1 раз в час
         launching_an_invite_once_an_hour()
-    elif user_input == "4":  # Inviting по времени
+    elif user_input == "4":  # Инвайтинг в определенное время
         schedule_invite()
-    elif user_input == "5":  # Inviting по времени каждый день
+    elif user_input == "5":  # Инвайтинг каждый день
         launching_invite_every_day_certain_time()
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
@@ -107,36 +107,32 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
     table = Table(title="[medium_purple3]Parsing участников групп!", box=box.HORIZONTALS)  # Выводим таблицу
     column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
-    table.add_row("1", "Parsing одной групп", "Parsing в список software_database.db")
-    table.add_row("2", "Выбор группы из подписанных", "Parsing группы из подписанных групп аккаунтом")
-    table.add_row("3", "Parsing активных участников", "Parsing участников которые которые писали сообщения в группе")
-    table.add_row("4", "Parsing списка: групп, каналов аккаунтов", "Программа соберет: группы / каналы аккаунтов")
-    table.add_row("5", "Очистка parsing списка", "Очистка списка software_database.db")
-    table.add_row("6", "Формирование списка", "Формирование собственного списка username")
-    table.add_row("7", "Формирование списка чатов", "Формирование списка чатов под парсинг")
+    table.add_row("1", "Парсинг одной группы / групп")
+    table.add_row("2", "Парсинг выбранной группы из подписанных пользователем")
+    table.add_row("3", "Парсинг активных участников группы")
+    table.add_row("4", "Парсинг групп / каналов на которые подписан аккаунт")
+    table.add_row("5", "Очистка списка от ранее спарсенных данных")
+    table.add_row("6", "Формирование списка username", "Формирование собственного списка username")
     table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
-    user_input = console.input("[medium_purple3][+] Введите номер: ")
+    user_input = console.input("[medium_purple3][+] Введите номер функции: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Parsing: группы, групп в список software_database.db (группы вводятся в графическое окно)
+    if user_input == "1":  # Парсинг одной группы / групп
         parsing_mass_parsing_of_groups(db_handler)  # Парсинг участников чата
-    elif user_input == "2":  # Parsing группы из подписанных
+    elif user_input == "2":  # Парсинг выбранной группы из подписанных пользователем
         choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler)
-    elif user_input == "3":  # Parsing активных участников группы
+    elif user_input == "3":  # Парсинг активных участников группы
         chat_input: str = console.input(
             "[medium_purple3][+] Введите ссылку на чат с которого будем собирать активных: ")
         limit_active_user: int = console.input(
             "[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
         parsing_of_active_participants(chat_input, limit_active_user, db_handler)
-    elif user_input == "4":  # Parsing групп / каналов на которые подписан аккаунт
+    elif user_input == "4":  # Парсинг групп / каналов на которые подписан аккаунт
         parsing_groups_which_account_subscribed(db_handler)
-    elif user_input == "5":  # Очистка списка software_database.db
+    elif user_input == "5":  # Очистка списка от ранее спарсенных данных
         db_handler.cleaning_db(name_database_table="members")
-    elif user_input == "6":  # Формирование списка
+    elif user_input == "6":  # Формирование списка username
         writing_members(db_handler)
-    elif user_input == "7":  # Формирование списка чатов под парсинг
-        db_handler.cleaning_db(name_database_table="writing_group_links")
-        output_the_input_field(db_handler)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
