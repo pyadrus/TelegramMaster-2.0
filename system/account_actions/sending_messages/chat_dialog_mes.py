@@ -14,7 +14,7 @@ from system.auxiliary_functions.global_variables import api_id_data, api_hash_da
 
 
 def mains(db_handler):
-    # phone_number = '77076324730'  # Номер телефона и имя пользователя
+    """Рассылка сообщений в чатам"""
     # Создаем клиент Telegram
     client = TelegramClient(f"user_settings/accounts/{account_name_newsletter}", api_id_data, api_hash_data)
 

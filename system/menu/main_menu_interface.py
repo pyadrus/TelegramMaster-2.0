@@ -285,7 +285,7 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     table.add_row("15", "Запись времени между сообщениями")
     table.add_row("16", "Формирование списка чатов / каналов")
     table.add_row("17", "Запись имени аккаунта")
-    table.add_row("0", "Вернуться назад", "Возвращаемся в начальное меню")
+    table.add_row("0", "В начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
