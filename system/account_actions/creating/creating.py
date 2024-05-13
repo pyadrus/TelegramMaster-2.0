@@ -31,7 +31,7 @@ def create_gui(account_list, db_handler) -> None:
                 for row in result:
                     # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                     client, phone = telegram_connect_and_output_name(row, db_handler)
-                    # Replace 'username' with the username or user ID of the user you want to add to the group
+                    # Замените «имя пользователя» именем пользователя или идентификатором пользователя, которого вы хотите добавить в группу.
                     result = client(functions.channels.CreateChannelRequest(title='My awesome title',
                                                                             about='Description for your group',
                                                                             megagroup=True))
@@ -45,7 +45,5 @@ def create_gui(account_list, db_handler) -> None:
 def creating_groups_and_chats(db_handler) -> None:
     """Создание групп (чатов) в автоматическом режиме"""
     accounts = get_account_list(db_handler)
-    # Extracting phone (rows[2]) numbers from the accounts list
-    phones = [rows[0] for rows in accounts]
-    # Passing the entire accounts list to create_gui
-    create_gui(phones, db_handler)
+    phones = [rows[0] for rows in accounts]  # Извлечение номеров телефонов (rows[2]) из списка учетных записей
+    create_gui(phones, db_handler)  # Передача всего списка учетных записей в create_gui

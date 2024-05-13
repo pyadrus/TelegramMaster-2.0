@@ -1,7 +1,7 @@
 from loguru import logger
-
 from system.auxiliary_functions.global_variables import logger_info
 from system.menu.main_menu_interface import main_menu
+
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.account_verification import deleting_files_by_dictionary
 

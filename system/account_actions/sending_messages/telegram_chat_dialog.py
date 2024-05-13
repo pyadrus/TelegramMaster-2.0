@@ -95,22 +95,34 @@ def sending_messages_files_via_chats() -> None:
                 client.send_file(groups_wr, f"user_settings/files_to_send/{link_to_the_file}")
                 # Работу записываем в лог файл, для удобства слежения, за изменениями
                 time.sleep(int(message_text_time))
-                record_account_actions(phone, f"Sending messages to a group: {groups_wr}", f"Рассылаем сообщение + файлы по чатам Telegram",  f"[medium_purple3]Сообщение в группу {groups_wr} написано!", db_handler)
+                record_account_actions(phone, f"Sending messages to a group: {groups_wr}",
+                                       f"Рассылаем сообщение + файлы по чатам Telegram",
+                                       f"[medium_purple3]Сообщение в группу {groups_wr} написано!", db_handler)
             except ChannelPrivateError:
-                record_account_actions(phone, f"Sending messages to a group: {groups_wr}", f"Рассылаем сообщение + файлы по чатам Telegram", "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
+                record_account_actions(phone, f"Sending messages to a group: {groups_wr}",
+                                       f"Рассылаем сообщение + файлы по чатам Telegram",
+                                       "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
                 db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
             except PeerFloodError:
-                record_and_interrupt("Предупреждение о Flood от Telegram.", phone, f"Sending messages to a group: {groups_wr}", f"Рассылаем сообщение + файлы по чатам Telegram", db_handler)
+                record_and_interrupt("Предупреждение о Flood от Telegram.", phone,
+                                     f"Sending messages to a group: {groups_wr}",
+                                     f"Рассылаем сообщение + файлы по чатам Telegram", db_handler)
                 break  # Прерываем работу и меняем аккаунт
             except FloodWaitError as e:
-                record_account_actions(phone, f"Sending messages to a group: {groups_wr}", f"Рассылаем сообщение + файлы по чатам Telegram", f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', db_handler)
+                record_account_actions(phone, f"Sending messages to a group: {groups_wr}",
+                                       f"Рассылаем сообщение + файлы по чатам Telegram",
+                                       f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', db_handler)
                 logger.error(f'Спим {e.seconds} секунд')
                 time.sleep(e.seconds)
             except UserBannedInChannelError:
-                record_and_interrupt("Вам запрещено отправлять сообщения в супергруппу.", phone, f"Sending messages to a group: {groups_wr}", f"Рассылаем сообщение + файлы по чатам Telegram", db_handler)
+                record_and_interrupt("Вам запрещено отправлять сообщения в супергруппу.", phone,
+                                     f"Sending messages to a group: {groups_wr}",
+                                     f"Рассылаем сообщение + файлы по чатам Telegram", db_handler)
                 break  # Прерываем работу и меняем аккаунт
             except ChatWriteForbiddenError:
-                record_and_interrupt("Вам запрещено писать в супергруппу / канал.", phone, f"Sending messages to a group: {groups_wr}", f"Рассылаем сообщение + файлы по чатам Telegram", db_handler)
+                record_and_interrupt("Вам запрещено писать в супергруппу / канал.", phone,
+                                     f"Sending messages to a group: {groups_wr}",
+                                     f"Рассылаем сообщение + файлы по чатам Telegram", db_handler)
                 break  # Прерываем работу и меняем аккаунт
             except (TypeError, UnboundLocalError):
                 continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -171,7 +183,6 @@ def sending_messages_via_chats_times(entities, db_handler) -> None:
             record_and_interrupt("Вам запрещено писать в супергруппу / канал.", phone,
                                  f"Sending messages to a group: {groups_wr}", event, db_handler)
             break  # Прерываем работу и меняем аккаунт
-    # client.disconnect()  # Разрываем соединение Telegram
 
 
 if __name__ == "__main__":

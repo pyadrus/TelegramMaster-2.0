@@ -73,7 +73,7 @@ def inviting_groups(db_handler) -> None:  # 1 - Инвайтинг в групп
     """"Inviting в группы"""
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     table = Table(title=f"[medium_purple3]Инвайтинг {link_group}!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names_2(table)  # Формируем колонки таблицы
+    column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
     table.add_row("1", "Инвайтинг без лимитов")
     table.add_row("2", "Инвайтинг с лимитами")
@@ -105,7 +105,7 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
     """Parsing групп и активных участников группы"""
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     table = Table(title="[medium_purple3]Parsing участников групп!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names_3(table)  # Формируем колонки таблицы
+    column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
     table.add_row("1", "Парсинг одной группы / групп")
     table.add_row("2", "Парсинг выбранной группы из подписанных пользователем")

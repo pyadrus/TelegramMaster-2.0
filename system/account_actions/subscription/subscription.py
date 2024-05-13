@@ -8,11 +8,14 @@ from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
 from loguru import logger
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.auxiliary_functions.global_variables import time_subscription_1
-from system.auxiliary_functions.global_variables import time_subscription_2
+from system.auxiliary_functions.global_variables import config_read
+# from system.auxiliary_functions.global_variables import time_subscription_1
+# from system.auxiliary_functions.global_variables import time_subscription_2
 from system.error.telegram_errors import record_account_actions
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
+
+time_subscription_1, time_subscription_2 = config_read()
 
 
 def subscription_all(db_handler) -> None:
@@ -68,18 +71,22 @@ def subscribe_to_group_or_channel(client, groups_wr, phone, db_handler) -> None:
                                    "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
         except (UsernameInvalidError, ValueError, TypeError):
             record_account_actions(phone, description_action, event,
-                                   f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}", db_handler)
-            db_handler.write_data_to_db("""SELECT * from writing_group_links""", """DELETE from writing_group_links where writing_group_links = ?""", groups_wrs)
+                                   f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}",
+                                   db_handler)
+            db_handler.write_data_to_db("""SELECT * from writing_group_links""",
+                                        """DELETE from writing_group_links where writing_group_links = ?""", groups_wrs)
         except PeerFloodError:
             record_account_actions(phone, description_action, event, "Предупреждение о Flood от Telegram.", db_handler)
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
             logger.error(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
-            record_and_interrupt(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}", phone, description_action, event, db_handler)
+            record_and_interrupt(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}", phone,
+                                 description_action, event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except InviteRequestSentError:
             record_account_actions(phone, description_action, event,
-                                   "Действия будут доступны после одобрения администратором на вступление в группу", db_handler)
+                                   "Действия будут доступны после одобрения администратором на вступление в группу",
+                                   db_handler)
 
 
 def subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler):

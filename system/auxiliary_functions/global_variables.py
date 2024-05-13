@@ -11,38 +11,66 @@ logger_info.add('user_settings/log/info.log', filter=lambda record: '[deadly]' i
                 format="{time:YYYY-MM-DD HH:mm:ss} | {message}")
 
 console = Console()
-config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 
-config.read('user_settings/config.ini')
-link_group = config['link_to_the_group']['target_group_entity']
 
-time_subscription_1 = int(config['time_subscription']['time_subscription_1'])
-time_subscription_2 = int(config['time_subscription']['time_subscription_2'])
+class ConfigReader:
+    def __init__(self):
+        self.config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
+        self.config.read('user_settings/config.ini')
 
-time_inviting_1 = int(config['time_inviting']['time_inviting_1'])
-time_inviting_2 = int(config['time_inviting']['time_inviting_2'])
+    def get_link_group(self):
+        link_group = self.config['link_to_the_group']['target_group_entity']
+        return link_group
 
-time_changing_accounts_1 = int(config['time_changing_accounts']['time_changing_accounts_1'])
-time_changing_accounts_2 = int(config['time_changing_accounts']['time_changing_accounts_2'])
+    def get_time_subscription(self):
+        time_subscription_1 = int(self.config['time_subscription']['time_subscription_1'])
+        time_subscription_2 = int(self.config['time_subscription']['time_subscription_2'])
+        return time_subscription_1, time_subscription_2
 
-limits = int(config['account_limits']['limits'])
+    def get_time_inviting(self):
+        time_inviting_1 = int(self.config['time_inviting']['time_inviting_1'])
+        time_inviting_2 = int(self.config['time_inviting']['time_inviting_2'])
+        return time_inviting_1, time_inviting_2
 
-limits_message = int(config['message_limits']['message_limits'])
+    def get_time_changing_accounts(self):
+        time_changing_accounts_1 = int(self.config['time_changing_accounts']['time_changing_accounts_1'])
+        time_changing_accounts_2 = int(self.config['time_changing_accounts']['time_changing_accounts_2'])
+        return time_changing_accounts_1, time_changing_accounts_2
 
-time_activity_user_1 = int(config['time_activity_user']['time_activity_user_1'])
-time_activity_user_2 = int(config['time_activity_user']['time_activity_user_2'])
+    def get_limits(self):
+        limits = int(self.config['account_limits']['limits'])
+        return limits
 
-time_sending_messages_1 = int(config['time_sending_messages']['time_sending_messages_1'])
-time_sending_messages_2 = int(config['time_sending_messages']['time_sending_messages_2'])
+    def get_message_limits(self):
+        limits_message = int(self.config['message_limits']['message_limits'])
+        return limits_message
 
-api_id_data = config["telegram_settings"]["id"]  # api_id с файла user_settings/config.ini
-api_hash_data = config["telegram_settings"]["hash"]  # api_hash с файла user_settings/config.ini
+    def get_time_activity_user(self):
+        time_activity_user_1 = int(self.config['time_activity_user']['time_activity_user_1'])
+        time_activity_user_2 = int(self.config['time_activity_user']['time_activity_user_2'])
+        return time_activity_user_1, time_activity_user_2
 
-device_model = config["device_model"]["device_model"]  # api_id с файла user_settings/config.ini
-system_version = config["system_version"]["system_version"]  # api_hash с файла user_settings/config.ini
-app_version = config["app_version"]["app_version"]  # api_hash с файла user_settings/config.ini
+    def get_time_sending_messages(self):
+        time_sending_messages_1 = int(self.config['time_sending_messages']['time_sending_messages_1'])
+        time_sending_messages_2 = int(self.config['time_sending_messages']['time_sending_messages_2'])
+        return time_sending_messages_1, time_sending_messages_2
 
-hour = config["hour_minutes_every_day"]["hour"]  # api_id с файла user_settings/config.ini
-minutes = config["hour_minutes_every_day"]["minutes"]  # api_hash с файла user_settings/config.ini
+    def get_api_id_data_api_hash_data(self):
+        api_id_data = self.config["telegram_settings"]["id"]  # api_id с файла user_settings/config.ini
+        api_hash_data = self.config["telegram_settings"]["hash"]  # api_hash с файла user_settings/config.ini
+        return api_id_data, api_hash_data
 
-account_name_newsletter = config["account_name_newsletter"]["account_name_newsletter"]
+    def get_device_model(self):
+        device_model = self.config["device_model"]["device_model"]  # api_id с файла user_settings/config.ini
+        system_version = self.config["system_version"]["system_version"]  # api_hash с файла user_settings/config.ini
+        app_version = self.config["app_version"]["app_version"]  # api_hash с файла user_settings/config.ini
+        return device_model, system_version, app_version
+
+    def get_hour_minutes_every_day(self):
+        hour = self.config["hour_minutes_every_day"]["hour"]  # api_id с файла user_settings/config.ini
+        minutes = self.config["hour_minutes_every_day"]["minutes"]  # api_hash с файла user_settings/config.ini
+        return hour, minutes
+
+    def get_account_name_newsletter(self):
+        account_name_newsletter = self.config["account_name_newsletter"]["account_name_newsletter"]
+        return account_name_newsletter
