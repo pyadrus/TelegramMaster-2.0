@@ -8,8 +8,11 @@ from telethon.errors import *
 from telethon.tl.functions.users import GetFullUserRequest
 
 from system.auxiliary_functions.auxiliary_functions import find_files
-from system.auxiliary_functions.global_variables import api_id_data, api_hash_data
+from system.auxiliary_functions.global_variables import ConfigReader
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
+
+configs_reader = ConfigReader()
+api_id_data, api_hash_data = configs_reader.get_api_id_data_api_hash_data()
 
 
 def working_with_accounts(account_folder, new_account_folder) -> None:

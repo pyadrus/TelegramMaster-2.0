@@ -20,6 +20,9 @@ from system.menu.app_gui import *
 from system.setting.setting import *
 from system.sqlite_working_tools.sqlite_working_tools import *
 
+configs_reader = ConfigReader()
+limits_message = configs_reader.get_message_limits()
+
 
 def main_menu() -> None:  # 1 - Основное меню программы
     """Основное меню программы"""

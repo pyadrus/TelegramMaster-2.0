@@ -19,10 +19,12 @@ from telethon.tl.types import UserStatusRecently
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link, \
     subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import display_progress_bar
-from system.auxiliary_functions.global_variables import console, time_activity_user_1, time_activity_user_2
+from system.auxiliary_functions.global_variables import console, ConfigReader
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
+configs_reader = ConfigReader()
+time_activity_user_1, time_activity_user_2 = configs_reader.get_time_activity_user()
 
 def getting_active_user_data(user):
     """Получаем данные пользователя"""

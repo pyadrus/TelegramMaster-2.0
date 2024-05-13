@@ -9,12 +9,16 @@ from system.account_actions.unsubscribe.unsubscribe import unsubscribe_from_the_
 from system.auxiliary_functions.auxiliary_functions import clear_console_and_display_banner
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.auxiliary_functions import record_inviting_results
-from system.auxiliary_functions.global_variables import limits, config_read
-# from system.auxiliary_functions.global_variables import link_group
+from system.auxiliary_functions.global_variables import ConfigReader
+
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
-link_group = config_read()
+configs_reader = ConfigReader()
+link_group = configs_reader.get_link_group()
+limits = configs_reader.get_limits()
+
+
 event: str = f"Inviting в группу {link_group}"  # Событие, которое записываем в базу данных
 
 

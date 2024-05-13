@@ -9,8 +9,12 @@ from telethon.tl.functions.channels import JoinChannelRequest
 
 from system.account_actions.sending_messages.telegram_chat_dialog import select_and_read_random_file
 from system.auxiliary_functions.auxiliary_functions import find_files, read_json_file
-from system.auxiliary_functions.global_variables import api_id_data, api_hash_data, time_sending_messages_1, \
-    time_sending_messages_2, account_name_newsletter
+from system.auxiliary_functions.global_variables import ConfigReader
+
+configs_reader = ConfigReader()
+api_id_data, api_hash_data = configs_reader.get_api_id_data_api_hash_data()
+account_name_newsletter = configs_reader.get_account_name_newsletter()
+time_sending_messages_1, time_sending_messages_2 = configs_reader.get_time_sending_messages()
 
 
 def mains(db_handler):

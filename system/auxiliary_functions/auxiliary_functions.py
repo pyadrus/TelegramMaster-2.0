@@ -9,12 +9,14 @@ from sys import platform
 from loguru import logger
 from rich.progress import track
 
-from system.auxiliary_functions.global_variables import time_changing_accounts_1
-from system.auxiliary_functions.global_variables import time_changing_accounts_2
-from system.auxiliary_functions.global_variables import time_inviting_1
-from system.auxiliary_functions.global_variables import time_inviting_2
+
+from system.auxiliary_functions.global_variables import ConfigReader
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_banner import banner
+
+configs_reader = ConfigReader()
+time_changing_accounts_1, time_changing_accounts_2 = configs_reader.get_time_changing_accounts()
+time_inviting_1, time_inviting_2 = configs_reader.get_time_inviting()
 
 
 def read_json_file(filename):

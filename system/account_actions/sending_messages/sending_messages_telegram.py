@@ -9,9 +9,12 @@ from telethon.errors import *
 from system.account_actions.sending_messages.telegram_chat_dialog import select_and_read_random_file
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, record_inviting_results, \
     find_files
-from system.auxiliary_functions.global_variables import console, time_inviting_1
+from system.auxiliary_functions.global_variables import console, ConfigReader
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
+
+configs_reader = ConfigReader()
+time_inviting_1, time_inviting_2 = configs_reader.get_time_inviting()
 
 
 def send_files_to_personal_chats(limits, db_handler) -> None:
@@ -49,7 +52,7 @@ def send_files_to_personal_chats(limits, db_handler) -> None:
                     break  # Прерываем работу и меняем аккаунт
                 except UserNotMutualContactError:
                     record_inviting_results(username, phone, f"username : {username}",
-                                            "Отправляем сообщение",  "User не является взаимным контактом.", db_handler)
+                                            "Отправляем сообщение", "User не является взаимным контактом.", db_handler)
                 except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                     record_inviting_results(username, phone, f"username : {username}",
                                             "Отправляем сообщение", "Не корректное имя user", db_handler)

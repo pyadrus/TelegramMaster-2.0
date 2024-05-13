@@ -8,14 +8,14 @@ from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
 from loguru import logger
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.auxiliary_functions.global_variables import config_read
-# from system.auxiliary_functions.global_variables import time_subscription_1
-# from system.auxiliary_functions.global_variables import time_subscription_2
+from system.auxiliary_functions.global_variables import ConfigReader
 from system.error.telegram_errors import record_account_actions
 from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
-time_subscription_1, time_subscription_2 = config_read()
+
+configs_reader = ConfigReader()
+time_subscription_1, time_subscription_2 = configs_reader.get_time_subscription()
 
 
 def subscription_all(db_handler) -> None:

@@ -9,7 +9,7 @@ from telethon.errors import *
 
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, read_json_file
-from system.auxiliary_functions.global_variables import console, time_sending_messages_1, time_sending_messages_2
+from system.auxiliary_functions.global_variables import console, ConfigReader
 from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
 from system.notification.notification import app_notifications
@@ -18,6 +18,9 @@ from system.telegram_actions.telegram_actions import telegram_connect_and_output
 creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
 event: str = "Рассылаем сообщение по чатам Telegram"
+
+configs_reader = ConfigReader()
+time_sending_messages_1, time_sending_messages_2 = configs_reader.get_time_sending_messages()
 
 
 def connecting_tg_account_creating_list_groups(db_handler):
@@ -50,22 +53,27 @@ def sending_files_via_chats(db_handler) -> None:
             client.send_file(groups_wr, f"user_settings/files_to_send/{link_to_the_file}")  # Рассылаем файлов по чатам
             # Работу записываем в лог файл, для удобства слежения, за изменениями
             time.sleep(int(message_text_time))
-            record_account_actions(phone, description_action, event, f"[medium_purple3]Сообщение в группу {groups_wr} написано!", db_handler)
+            record_account_actions(phone, description_action, event,
+                                   f"[medium_purple3]Сообщение в группу {groups_wr} написано!", db_handler)
         except ChannelPrivateError:
-            record_account_actions(phone, description_action, event, "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
+            record_account_actions(phone, description_action, event,
+                                   "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
             db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
         except PeerFloodError:
             record_and_interrupt("Предупреждение о Flood от Telegram.", phone, description_action, event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
-            record_account_actions(phone, description_action, event, f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', db_handler)
+            record_account_actions(phone, description_action, event,
+                                   f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', db_handler)
             logger.error(f'Спим {e.seconds} секунд')
             time.sleep(e.seconds)
         except UserBannedInChannelError:
-            record_and_interrupt("Вам запрещено отправлять сообщения в супергруппу.", phone, description_action, event, db_handler)
+            record_and_interrupt("Вам запрещено отправлять сообщения в супергруппу.", phone, description_action, event,
+                                 db_handler)
             break  # Прерываем работу и меняем аккаунт
         except ChatWriteForbiddenError:
-            record_and_interrupt("Вам запрещено писать в супергруппу / канал.", phone, description_action, event, db_handler)
+            record_and_interrupt("Вам запрещено писать в супергруппу / канал.", phone, description_action, event,
+                                 db_handler)
             break  # Прерываем работу и меняем аккаунт
         except (TypeError, UnboundLocalError):
             continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -101,7 +109,8 @@ def sending_messages_files_via_chats() -> None:
             except ChannelPrivateError:
                 record_account_actions(phone, f"Sending messages to a group: {groups_wr}",
                                        f"Рассылаем сообщение + файлы по чатам Telegram",
-                                       "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
+                                       "Указанный канал является приватным, или вам запретили подписываться.",
+                                       db_handler)
                 db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
             except PeerFloodError:
                 record_and_interrupt("Предупреждение о Flood от Telegram.", phone,

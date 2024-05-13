@@ -3,9 +3,12 @@ import time
 import schedule
 
 from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body
-from system.auxiliary_functions.global_variables import console, hour, minutes
+from system.auxiliary_functions.global_variables import console, ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.account_verification import deleting_files_by_dictionary
+
+configs_reader = ConfigReader()
+hour, minutes = configs_reader.get_hour_minutes_every_day()
 
 
 def schedule_member_invitation() -> None:

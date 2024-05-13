@@ -195,8 +195,8 @@ def mainss(page: ft.Page):
         elif page.route == "/link_entry":
             print("Запись ссылки")
         elif page.route == "/time_between_subscriptions":
-            print("Время между подписками")
-            recording_the_time_to_launch_an_invite_every_day()
+            # print("Время между подписками")
+            recording_the_time_to_launch_an_invite_every_day(page)
         page.update()
 
     def view_pop(view):
