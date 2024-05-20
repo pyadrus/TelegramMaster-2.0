@@ -285,7 +285,7 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     table.add_row("15", "Запись времени между сообщениями")
     table.add_row("16", "Формирование списка чатов / каналов")
     table.add_row("17", "Запись имени аккаунта")
-    table.add_row("0", "В начальное меню")
+    # table.add_row("0", "В начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
@@ -333,8 +333,8 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         output_the_input_field(db_handler)  # Вызов функции формирования списка чатов
     elif user_input == "17":
         record_account_name_newsletter()
-    elif user_input == "0":  # Вернуться назад
-        main_menu()  # После отработки функции переходим в начальное меню
+    # elif user_input == "0":  # Вернуться назад
+    #     main_menu()  # После отработки функции переходим в начальное меню
     else:
         program_settings(db_handler)
     os.system("python main.py")  # После отработки функции возвращаемся в начальное меню

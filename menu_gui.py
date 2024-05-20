@@ -1,7 +1,8 @@
 import flet as ft
 
 from system.menu.app_banner import program_version, date_of_program_change
-from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, recording_text_for_sending_messages
+from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, \
+    recording_text_for_sending_messages, record_account_name_newsletter
 
 
 def mainss(page: ft.Page):
@@ -168,12 +169,14 @@ def mainss(page: ft.Page):
                                                         on_click=lambda _: page.go("/")),
                                       ft.ElevatedButton(width=500, height=30, text=f"Смена аккаунтов",
                                                         on_click=lambda _: page.go("/")),
-                                      ft.ElevatedButton(width=500, height=30, text=f"✔️ Запись времени",
+
+                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись времени",
                                                         on_click=lambda _: page.go("/time_between_subscriptions")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️  Запись сообщений",
                                                         on_click=lambda _: page.go("/message_recording")),
-                                      ft.ElevatedButton(width=500, height=30, text=f"Лимиты на аккаунт",
-                                                        on_click=lambda _: page.go("/")),
+                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись имени аккаунта",
+                                                        on_click=lambda _: page.go("/record_your_account_name")),
+
                                       ft.ElevatedButton(width=500, height=30, text="Смена типа устройства",
                                                         on_click=lambda _: page.go("/")),
                                       ft.ElevatedButton(width=500, height=30, text="Запись времени",
@@ -188,6 +191,9 @@ def mainss(page: ft.Page):
         elif page.route == "/message_recording":
             # ✔️ Запись сообщений
             recording_text_for_sending_messages(page)
+        elif page.route == "/record_your_account_name":
+            # ✔️ Запись имени аккаунта
+            record_account_name_newsletter(page)
         page.update()
 
     def view_pop(view):
