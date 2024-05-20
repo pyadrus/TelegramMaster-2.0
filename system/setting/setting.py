@@ -191,38 +191,43 @@ def recording_the_time_between_chat_messages(variable):
     ft.app(target=main_inviting)
 
 
-def create_main_window(variable) -> None:
+def create_main_window(page: ft.Page, variable) -> None:
     """
+    :param page:
     :param variable: название переменной в файле config.ini
     :return: None
     """
+    smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
+    larger_timex = ft.TextField(label="Время в секундах (большее)")
 
-    def main_inviting(page) -> None:
-        create_window(page=page, width=300, height=300, resizable=False)  # Создаем окно с размером 300 на 300 пикселей
-        smaller_time = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
-        larger_time = ft.TextField(label="Время в секундах (большее)")
-        greetings = ft.Column()
+    def btn_click(e) -> None:
+        try:
+            smaller_times = int(smaller_timex.value)
+            larger_times = int(larger_timex.value)
 
-        def btn_click(e) -> None:
-            try:
-                smaller_times = int(smaller_time.value)
-                larger_times = int(larger_time.value)
+            if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
+                # Если условие прошло проверку, то возвращаем первое и второе время
+                config = recording_limits_file(str(smaller_times), str(larger_times), variable=variable)
+                writing_settings_to_a_file(config)
+                page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        except ValueError:
+            pass
 
-                if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
-                    # Если условие прошло проверку, то возвращаем первое и второе время
-                    print(f"Вы ввели:\n{smaller_times} секунд (меньшее время)\n{larger_times} секунд (большее время)")
-                    config = recording_limits_file(str(smaller_times), str(larger_times), variable=variable)
-                    writing_settings_to_a_file(config)
-                    page.window_close()
-            except ValueError:
-                pass
+        page.update()
 
-            page.update()
-            smaller_time.focus()
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
 
-        page.add(smaller_time, larger_time, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
-
-    ft.app(target=main_inviting)
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                smaller_timex,
+                larger_timex,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 
 def save_message(reactions, path_to_the_file):
@@ -247,7 +252,6 @@ def record_account_name_newsletter(page: ft.Page):
                                 multiline=True, max_lines=19)
 
     def btn_click(e) -> None:
-        # print(f"Вы ввели: {text_to_send}")
         config.get("account_name_newsletter", "account_name_newsletter")
         config.set("account_name_newsletter", "account_name_newsletter", text_to_send.value)
         writing_settings_to_a_file(config)

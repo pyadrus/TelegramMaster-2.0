@@ -2,7 +2,7 @@ import flet as ft
 
 from system.menu.app_banner import program_version, date_of_program_change
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, \
-    recording_text_for_sending_messages, record_account_name_newsletter
+    recording_text_for_sending_messages, record_account_name_newsletter, create_main_window
 
 
 def mainss(page: ft.Page):
@@ -160,15 +160,15 @@ def mainss(page: ft.Page):
             page.views.append(
                 ft.View("/settings", [ft.AppBar(title=ft.Text("Главное меню"),
                                                 bgcolor=ft.colors.SURFACE_VARIANT),
-                                      ft.ElevatedButton(width=500, height=30, text=f"Запись ссылки",
-                                                        on_click=lambda _: page.go("/link_entry")),
-                                      ft.ElevatedButton(width=500, height=30, text=f"Запись api_id, api_hash",
-                                                        on_click=lambda _: page.go("/")),
-                                      ft.ElevatedButton(width=500, height=30,
-                                                        text=f"Время между Inviting, рассылка сообщений",
-                                                        on_click=lambda _: page.go("/")),
-                                      ft.ElevatedButton(width=500, height=30, text=f"Смена аккаунтов",
-                                                        on_click=lambda _: page.go("/")),
+                                      # ft.ElevatedButton(width=500, height=30, text=f"Запись ссылки",
+                                      #                   on_click=lambda _: page.go("/link_entry")),
+                                      # ft.ElevatedButton(width=500, height=30, text=f"Запись api_id, api_hash",
+                                      #                   on_click=lambda _: page.go("/")),
+                                      # ft.ElevatedButton(width=500, height=30,
+                                      #                   text=f"Время между Inviting, рассылка сообщений",
+                                      #                   on_click=lambda _: page.go("/")),
+                                      # ft.ElevatedButton(width=500, height=30, text=f"Смена аккаунтов",
+                                      #                   on_click=lambda _: page.go("/")),
 
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Запись времени",
                                                         on_click=lambda _: page.go("/time_between_subscriptions")),
@@ -176,13 +176,14 @@ def mainss(page: ft.Page):
                                                         on_click=lambda _: page.go("/message_recording")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Запись имени аккаунта",
                                                         on_click=lambda _: page.go("/record_your_account_name")),
+                                      ft.ElevatedButton(width=500, height=30, text="✔️ Время между подпиской",
+                                                        on_click=lambda _: page.go("/time_between_subscriptionss")),
 
-                                      ft.ElevatedButton(width=500, height=30, text="Смена типа устройства",
-                                                        on_click=lambda _: page.go("/")),
-                                      ft.ElevatedButton(width=500, height=30, text="Запись времени",
-                                                        on_click=lambda _: page.go("/")),
-                                      ft.ElevatedButton(width=500, height=30, text="Лимиты на сообщения",
-                                                        on_click=lambda _: page.go("/")), ], ))
+                                      # ft.ElevatedButton(width=500, height=30, text="Запись времени",
+                                      #                   on_click=lambda _: page.go("/")),
+                                      # ft.ElevatedButton(width=500, height=30, text="Лимиты на сообщения",
+                                      #                   on_click=lambda _: page.go("/")),
+            ], ))
         elif page.route == "/link_entry":
             print("Запись ссылки")
         elif page.route == "/time_between_subscriptions":
@@ -194,6 +195,10 @@ def mainss(page: ft.Page):
         elif page.route == "/record_your_account_name":
             # ✔️ Запись имени аккаунта
             record_account_name_newsletter(page)
+        elif page.route == "/time_between_subscriptionss":
+            # ✔️ Время между подпиской
+            print("Время между подпиской")
+            create_main_window(page, variable="time_subscription")
         page.update()
 
     def view_pop(view):

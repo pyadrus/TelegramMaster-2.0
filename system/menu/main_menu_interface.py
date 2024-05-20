@@ -272,7 +272,7 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     table.add_row("2", "Запись api_id, api_hash")
     table.add_row("3", "Время между Inviting, рассылка сообщений")
     table.add_row("4", "Смена аккаунтов")
-    table.add_row("5", "Время между подпиской")
+    # table.add_row("5", "Время между подпиской")
     table.add_row("6", "Запись proxy")
     table.add_row("7", "Лимиты на аккаунт")
     table.add_row("8", "Смена типа устройства")
@@ -284,7 +284,7 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     # table.add_row("14", "Запись сообщений")
     table.add_row("15", "Запись времени между сообщениями")
     table.add_row("16", "Формирование списка чатов / каналов")
-    table.add_row("17", "Запись имени аккаунта")
+    # table.add_row("17", "Запись имени аккаунта")
     # table.add_row("0", "В начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
@@ -304,10 +304,10 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         print("[medium_purple3][+] Введите время между сменой аккаунтов в секундах. C начала меньшее, потом большее. "
               "НАПРИМЕР: 10 20!")
         create_main_window(variable="time_changing_accounts")
-    elif user_input == "5":  # Время между подпиской групп
-        print("[medium_purple3][+] Введите время между подпиской на группы / каналы в секундах (между приглашениями) C "
-              "начала меньшее, потом большее. НАПРИМЕР: 10 20!")
-        create_main_window(variable="time_subscription")
+    # elif user_input == "5":  # Время между подпиской групп
+    #     print("[medium_purple3][+] Введите время между подпиской на группы / каналы в секундах (между приглашениями) C "
+    #           "начала меньшее, потом большее. НАПРИМЕР: 10 20!")
+    #     create_main_window(variable="time_subscription")
     elif user_input == "6":  # Запись данных для proxy
         creating_the_main_window_for_proxy_data_entry(db_handler)
         program_settings(db_handler)
@@ -331,8 +331,8 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         recording_the_time_between_chat_messages(variable="time_sending_messages")
     elif user_input == "16":  # Формирование списка чатов
         output_the_input_field(db_handler)  # Вызов функции формирования списка чатов
-    elif user_input == "17":
-        record_account_name_newsletter()
+    # elif user_input == "17":
+    #     record_account_name_newsletter()
     # elif user_input == "0":  # Вернуться назад
     #     main_menu()  # После отработки функции переходим в начальное меню
     else:
