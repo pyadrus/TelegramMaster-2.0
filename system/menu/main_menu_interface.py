@@ -270,14 +270,13 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     # Выводим текст в таблице
     table.add_row("1", "Запись ссылки")
     table.add_row("2", "Запись api_id, api_hash")
-    table.add_row("6", "Запись proxy")
+    # table.add_row("6", "Запись proxy")
     table.add_row("7", "Лимиты на аккаунт")
     table.add_row("8", "Смена типа устройства")
     table.add_row("10", "Лимиты на сообщения")
     table.add_row("11", "Выбор реакций")
     table.add_row("12", "Запись ссылки для реакций")
     table.add_row("13", "Запись количества аккаунтов для реакций")
-    # table.add_row("15", "Запись времени между сообщениями")
     table.add_row("16", "Формирование списка чатов / каналов")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
@@ -289,9 +288,9 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     elif user_input == "2":  # Запись id, hash в файл
         print("[medium_purple3][!] Получить api_id, api_hash можно на сайте https://my.telegram.org/auth")
         writing_settings_to_a_file(config=writing_api_id_api_hash())
-    elif user_input == "6":  # Запись данных для proxy
-        creating_the_main_window_for_proxy_data_entry(db_handler)
-        program_settings(db_handler)
+    # elif user_input == "6":  # Запись данных для proxy
+    #     creating_the_main_window_for_proxy_data_entry(db_handler)
+    #     program_settings(db_handler)
     elif user_input == "7":  # Запись лимитов на аккаунт
         writing_settings_to_a_file(config=record_account_limits())
     elif user_input == "8":  # Запись типа устройства
@@ -304,8 +303,6 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         recording_link_channel()
     elif user_input == "13":  # Запись ссылки для рассылки
         record_the_number_of_accounts()
-    # elif user_input == "15":  # Запись времени между сообщениями
-    #     recording_the_time_between_chat_messages(variable="time_sending_messages")
     elif user_input == "16":  # Формирование списка чатов
         output_the_input_field(db_handler)  # Вызов функции формирования списка чатов
     else:

@@ -127,33 +127,38 @@ def telegram_connect(phone, db_handler) -> TelegramClient:
     return client
 
 
-def creating_the_main_window_for_proxy_data_entry(db_handler) -> None:
+def creating_the_main_window_for_proxy_data_entry(page: ft.Page, db_handler) -> None:
     """Создание главного окна для ввода дынных proxy"""
-    print("Proxy IPV6 - НЕ РАБОТАЮТ")
+    proxy_type = ft.TextField(label="Введите тип прокси, например SOCKS5: ", multiline=True, max_lines=19)
+    addr_type = ft.TextField(label="Введите ip адрес, например 194.67.248.9: ", multiline=True, max_lines=19)
+    port_type = ft.TextField(label="Введите порт прокси, например 9795: ", multiline=True, max_lines=19)
+    username_type = ft.TextField(label="Введите username, например NnbjvX: ", multiline=True, max_lines=19)
+    password_type = ft.TextField(label="Введите пароль, например ySfCfk: ", multiline=True, max_lines=19)
 
-    def main_inviting(page) -> None:
-        create_window(page=page, width=600, height=600, resizable=False)  # Создаем окно с размером 600 на 600 пикселей
-        proxy_type = ft.TextField(label="Введите тип прокси, например SOCKS5: ", multiline=True, max_lines=19)
-        addr_type = ft.TextField(label="Введите ip адрес, например 194.67.248.9: ", multiline=True, max_lines=19)
-        port_type = ft.TextField(label="Введите порт прокси, например 9795: ", multiline=True, max_lines=19)
-        username_type = ft.TextField(label="Введите username, например NnbjvX: ", multiline=True, max_lines=19)
-        password_type = ft.TextField(label="Введите пароль, например ySfCfk: ", multiline=True, max_lines=19)
-        greetings = ft.Column()
+    def btn_click(e) -> None:
+        rdns_types = "True"
+        proxy = [proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
+                 rdns_types]
+        db_handler.save_proxy_data_to_db(proxy=proxy)
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
 
-        def btn_click(e) -> None:
-            print(
-                f"Вы ввели: {proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value}")
-            rdns_types = "True"
-            proxy = [proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
-                     rdns_types]
-            db_handler.save_proxy_data_to_db(proxy=proxy)
-            page.window_close()
-            page.update()
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
 
-        page.add(proxy_type, addr_type, port_type, username_type, password_type, greetings,
-                 ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
-
-    ft.app(target=main_inviting)  # Создаем окно
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                proxy_type,
+                addr_type,
+                port_type,
+                username_type,
+                password_type,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 
 def create_main_window(page: ft.Page, variable) -> None:
