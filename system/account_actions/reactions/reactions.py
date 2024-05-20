@@ -1,3 +1,4 @@
+import io
 import json
 import random
 import sys
@@ -19,6 +20,8 @@ from system.auxiliary_functions.global_variables import console
 from system.notification.notification import app_notifications
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 
 async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> None:
@@ -100,9 +103,8 @@ def setting_reactions(db_handler):
 
 
 def save_reactions(reactions, path_to_the_file):
-    """Открываем файл для записи данных в формате JSON"""
-    with open(f'{path_to_the_file}', 'w') as json_file:
-        json.dump(reactions, json_file)  # Используем функцию dump для записи данных в файл
+    with open(path_to_the_file, 'w', encoding='utf-8') as file:
+        json.dump(reactions, file, ensure_ascii=False, indent=4)
 
 
 def record_the_number_of_accounts():
@@ -152,96 +154,95 @@ def recording_link_channel():
     ft.app(target=main_inviting)
 
 
-def reaction_gui():
+def reaction_gui(page: ft.Page):
     """Выбираем реакцию с помощью чекбокса"""
+    t = ft.Text(value='Выберите реакцию')  # Создает текстовое поле (t).
+    c1 = ft.Checkbox(label="😀")  # Создает чекбокс c1 с меткой "😀".
+    c2 = ft.Checkbox(label="😎")
+    c3 = ft.Checkbox(label="😍")
+    c4 = ft.Checkbox(label="😂")
+    c5 = ft.Checkbox(label="😡")
+    c6 = ft.Checkbox(label="😱")
+    c7 = ft.Checkbox(label="👍")
+    c8 = ft.Checkbox(label="👎")
+    c9 = ft.Checkbox(label="❤")
+    c10 = ft.Checkbox(label="🔥")
+    c11 = ft.Checkbox(label="🎉")
+    c12 = ft.Checkbox(label="😁")
+    c13 = ft.Checkbox(label="😢")
+    c14 = ft.Checkbox(label="💩")
+    c15 = ft.Checkbox(label="👏")
+    c16 = ft.Checkbox(label="🤷‍♀️")
+    c17 = ft.Checkbox(label="🤷")
+    c18 = ft.Checkbox(label="🤷‍♂️")
+    c19 = ft.Checkbox(label="👾")
+    c20 = ft.Checkbox(label="🙊")
+    c21 = ft.Checkbox(label="💊")
+    c22 = ft.Checkbox(label="😘")
+    c23 = ft.Checkbox(label="🦄")
+    c24 = ft.Checkbox(label="💘")
+    c25 = ft.Checkbox(label="🆒")
+    c26 = ft.Checkbox(label="🗿")
+    c27 = ft.Checkbox(label="🤪")
+    c28 = ft.Checkbox(label="💅")
+    c29 = ft.Checkbox(label="☃️")
+    c30 = ft.Checkbox(label="🎄")
+    c31 = ft.Checkbox(label="🎅")
+    c32 = ft.Checkbox(label="🤗")
+    c33 = ft.Checkbox(label="🤬")
+    c34 = ft.Checkbox(label="🤮")
+    c35 = ft.Checkbox(label="🤡")
+    c36 = ft.Checkbox(label="🥴")
+    c37 = ft.Checkbox(label="💯")
+    c38 = ft.Checkbox(label="🌭")
+    c39 = ft.Checkbox(label="⚡️")
+    c40 = ft.Checkbox(label="🍌")
+    c41 = ft.Checkbox(label="🖕")
+    c42 = ft.Checkbox(label="💋")
+    c43 = ft.Checkbox(label="👀")
+    c44 = ft.Checkbox(label="🤝")
+    c45 = ft.Checkbox(label="🍾")
+    c46 = ft.Checkbox(label="🏆")
+    c47 = ft.Checkbox(label="🥱")
+    c48 = ft.Checkbox(label="🕊")
+    c49 = ft.Checkbox(label="😭")
 
-    def main(page):
-        """Основное тело программы"""
+    def button_clicked(e):
+        """Выбранная реакция"""
+        selected_reactions = []  # Создает пустой список selected_reactions для хранения выбранных реакций.
+        for checkbox in [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19, c20,
+                         c21, c22, c23, c24, c25, c26, c27, c28, c29, c30, c31, c32, c33, c34, c35, c36, c37, c38,
+                         c39, c40, c41, c42, c43, c44, c45, c46, c47, c48, c49]:  # Перебирает чекбоксы (c1 - c49).
+            if checkbox.value:  # Проверяет, отмечен ли чекбокс.
+                # Если чекбокс отмечен, добавляет его текст (метку) в список selected_reactions.
+                selected_reactions.append(checkbox.label)
 
-        page.window_width = 480  # ширина окна
-        page.window_height = 450  # высота окна
-        page.window_resizable = False  # Запрет на изменение размера окна
+        save_reactions(reactions=selected_reactions,
+                       path_to_the_file='user_settings/reactions/reactions.json')  # Сохраняем реакцию в json файл
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
 
-        def button_clicked(e):
-            """Выбранная реакция"""
-            selected_reactions = []  # Создает пустой список selected_reactions для хранения выбранных реакций.
-            for checkbox in [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, q13, c14, q15, q16, q18, c19, c20, c21, c23,
-                             c24, c25, c26, c27, c28, c29, c30, c31, c32, c33, c34, c35, c36, c37, c38, c39, c41, c42,
-                             c43, c44, c45, c46, q47, c48, c49, c50, c51, q52, c53]:  # Перебирает чекбоксы (c1 - c53).
-                if checkbox.value:  # Проверяет, отмечен ли чекбокс.
-                    # Если чекбокс отмечен, добавляет его текст (метку) в список selected_reactions.
-                    selected_reactions.append(checkbox.label)
+    # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
+    button = ft.ElevatedButton("Готово", on_click=button_clicked)
 
-            print(f"Выбранные реакции: {selected_reactions}")  # Печатает список выбранных реакций.
-            save_reactions(reactions=selected_reactions,
-                           path_to_the_file='user_settings/reactions/reactions.json')  # Сохраняем реакцию в jsone файл
-            page.window_close()
-
-        t = ft.Text(value='Выберите реакцию')  # Создает текстовое поле (t).
-        c1 = ft.Checkbox(label="😀")  # Создает чекбокс c1 с меткой "😀".
-        c2 = ft.Checkbox(label="😎")
-        c3 = ft.Checkbox(label="😍")
-        c4 = ft.Checkbox(label="😂")
-        c5 = ft.Checkbox(label="😡")
-        c6 = ft.Checkbox(label="😱")
-        c7 = ft.Checkbox(label="👍")
-        c8 = ft.Checkbox(label="👎")
-        c9 = ft.Checkbox(label="❤")
-        c10 = ft.Checkbox(label="🔥")
-        c11 = ft.Checkbox(label="🎉")
-        q13 = ft.Checkbox(label="😁")
-        c14 = ft.Checkbox(label="😢")
-        q15 = ft.Checkbox(label="💩")
-        q16 = ft.Checkbox(label="👏")
-        q18 = ft.Checkbox(label="🤷‍♀️")
-        c19 = ft.Checkbox(label="🤷")
-        c20 = ft.Checkbox(label="🤷‍♂️")
-        c21 = ft.Checkbox(label="👾️")
-        c23 = ft.Checkbox(label="🙊")
-        c24 = ft.Checkbox(label="💊")
-        c25 = ft.Checkbox(label="😘")
-        c26 = ft.Checkbox(label="🦄")
-        c27 = ft.Checkbox(label="💘")
-        c28 = ft.Checkbox(label="🆒")
-        c29 = ft.Checkbox(label="🗿")
-        c30 = ft.Checkbox(label="🤪")
-        c31 = ft.Checkbox(label="💅")
-        c32 = ft.Checkbox(label="☃️")
-        c33 = ft.Checkbox(label="🎄")
-        c34 = ft.Checkbox(label="🎅")
-        c35 = ft.Checkbox(label="🤗")
-        c36 = ft.Checkbox(label="🤬")
-        c37 = ft.Checkbox(label="🤮")
-        c38 = ft.Checkbox(label="🤡")
-        c39 = ft.Checkbox(label="🥴")
-        c41 = ft.Checkbox(label="💯")
-        c42 = ft.Checkbox(label="🌭")
-        c43 = ft.Checkbox(label="⚡️")
-        c44 = ft.Checkbox(label="🍌")
-        c45 = ft.Checkbox(label="🖕")
-        c46 = ft.Checkbox(label="💋")
-        q47 = ft.Checkbox(label="👀")
-        c48 = ft.Checkbox(label="🤝")
-        c49 = ft.Checkbox(label="🍾")
-        c50 = ft.Checkbox(label="🏆")
-        c51 = ft.Checkbox(label="🥱")
-        q52 = ft.Checkbox(label="🕊")
-        c53 = ft.Checkbox(label="😭")
-
-        # Кнопка "Готово" (b) и связывает ее с функцией button_clicked.
-        b = ft.ElevatedButton(text="Готово", on_click=button_clicked)
-
-        page.add(ft.Row([t]))  # Добавляет все элементы (c1 - c6, b, t) на страницу (page).
-        page.add(ft.Row([c1, c2, c3, c4, c5, c6, c49]))  # Добавляет все элементы (c1 - c6, b, t) на страницу (page).
-        page.add(ft.Row([c7, c8, c9, c10, c11, c53, c48]))  # Добавляет все элементы (c1 - c6, b, t) на страницу (page).
-        page.add(ft.Row([c19, c20, c21, c23, c24, c51, c46]))
-        page.add(ft.Row([c25, c26, c27, c28, c29, c30, c45]))
-        page.add(ft.Row([c31, c32, c33, c34, c35, c36, c44]))
-        page.add(ft.Row([c37, c38, c39, c41, c42, c50, c43]))
-        page.add(ft.Row([q13, c14, q15, q16, q18, q52, q47]))
-        page.add(ft.Row([b]))  # Добавляет все элементы (c1 - c6, b, t) на страницу (page).
-
-    ft.app(target=main)  # Запускает приложение, используя функцию main в качестве точки входа.
+    page.views.append(
+        ft.View(
+            "/settings",
+            controls=[
+                t,  # Добавляет текстовое поле t на страницу (page).
+                ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                    ft.Row([c1, c2, c3, c4, c5, c6, c49]),
+                    ft.Row([c7, c8, c9, c10, c11, c48, c47]),
+                    ft.Row([c19, c20, c21, c23, c24, c47, c46]),
+                    ft.Row([c25, c26, c27, c28, c29, c30, c45]),
+                    ft.Row([c31, c32, c33, c34, c35, c36, c44]),
+                    ft.Row([c37, c38, c39, c41, c42, c43]),
+                    ft.Row([c12, c13, c14, c15, c16, c17, c18]),
+                    ft.Row([c40, c22, c34, c35, c48, c49]),
+                ]),
+                button,  # Добавляет кнопку на страницу (page).
+            ]
+        )
+    )
 
 
 def users_choice_of_reaction(db_handler) -> None:

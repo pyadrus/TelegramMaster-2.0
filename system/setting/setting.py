@@ -10,7 +10,6 @@ from telethon.errors import *
 
 from system.account_actions.creating.account_registration import telegram_connects
 from system.auxiliary_functions.global_variables import console, ConfigReader
-from system.menu.app_gui import create_window
 from system.notification.notification import app_notifications
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
@@ -288,7 +287,7 @@ def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
                 print('Введите минуты в пределах от 0 до 59!')
                 return
 
-            # Assuming config is a dictionary-like object
+            # Предполагая, что config является объектом, похожим на словарь
             config.get("hour_minutes_every_day", "hour")
             config.set("hour_minutes_every_day", "hour", str(hour))
             config.get("hour_minutes_every_day", "minutes")

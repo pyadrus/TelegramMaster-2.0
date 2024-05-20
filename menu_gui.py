@@ -1,5 +1,6 @@
 import flet as ft
 
+from system.account_actions.reactions.reactions import reaction_gui
 from system.menu.app_banner import program_version, date_of_program_change
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, \
     recording_text_for_sending_messages, record_account_name_newsletter, create_main_window, \
@@ -162,14 +163,18 @@ def mainss(page: ft.Page):
             page.views.append(
                 ft.View("/settings", [ft.AppBar(title=ft.Text("Главное меню"),
                                                 bgcolor=ft.colors.SURFACE_VARIANT),
-
+                                      ft.ElevatedButton(width=500, height=30, text="✔️ Выбор реакций",
+                                                        on_click=lambda _: page.go("/choice_of_reactions")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Запись proxy",
                                                         on_click=lambda _: page.go("/proxy_entry")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись времени между сообщениями",
-                                                        on_click=lambda _: page.go("/recording_the_time_between_messages")),
+                                      ft.ElevatedButton(width=500, height=30,
+                                                        text="✔️ Запись времени между сообщениями",
+                                                        on_click=lambda _: page.go(
+                                                            "/recording_the_time_between_messages")),
                                       ft.ElevatedButton(width=500, height=30,
                                                         text="✔️ Время между инвайтингом, рассылка сообщений",
-                                                        on_click=lambda _: page.go("/time_between_invites_sending_messages")),
+                                                        on_click=lambda _: page.go(
+                                                            "/time_between_invites_sending_messages")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Смена аккаунтов",
                                                         on_click=lambda _: page.go("/changing_accounts")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Запись времени",
@@ -181,33 +186,26 @@ def mainss(page: ft.Page):
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Время между подпиской",
                                                         on_click=lambda _: page.go("/time_between_subscriptionss")),
 
-            ], ))
+                                      ], ))
         elif page.route == "/link_entry":
             print("Запись ссылки")
-
-        elif page.route == "/proxy_entry":
-            # ✔️ Запись времени между сообщениями
+        elif page.route == "/choice_of_reactions":  # ✔️ Выбор реакций
+            reaction_gui(page)
+        elif page.route == "/proxy_entry":  # ✔️ Запись времени между сообщениями
             creating_the_main_window_for_proxy_data_entry(page, DatabaseHandler())
-        elif page.route == "/recording_the_time_between_messages":
-            # ✔️ Запись времени между сообщениями
+        elif page.route == "/recording_the_time_between_messages":  # ✔️ Запись времени между сообщениями
             create_main_window(page, variable="time_sending_messages")
-        elif page.route == "/time_between_invites_sending_messages":
-            # ✔️ Время между инвайтингом, рассылка сообщений
+        elif page.route == "/time_between_invites_sending_messages":  # ✔️ Время между инвайтингом, рассылка сообщений
             create_main_window(page, variable="time_inviting")
-        elif page.route == "/changing_accounts":
-            # ✔️ Смена аккаунтов
+        elif page.route == "/changing_accounts":  # ✔️ Смена аккаунтов
             create_main_window(page, variable="time_changing_accounts")
-        elif page.route == "/time_between_subscriptions":
-            # ✔️ Запись времени
+        elif page.route == "/time_between_subscriptions":  # ✔️ Запись времени
             recording_the_time_to_launch_an_invite_every_day(page)
-        elif page.route == "/message_recording":
-            # ✔️ Запись сообщений
+        elif page.route == "/message_recording":  # ✔️ Запись сообщений
             recording_text_for_sending_messages(page)
-        elif page.route == "/record_your_account_name":
-            # ✔️ Запись имени аккаунта
+        elif page.route == "/record_your_account_name":  # ✔️ Запись имени аккаунта
             record_account_name_newsletter(page)
-        elif page.route == "/time_between_subscriptionss":
-            # ✔️ Время между подпиской
+        elif page.route == "/time_between_subscriptionss":  # ✔️ Время между подпиской
             create_main_window(page, variable="time_subscription")
         page.update()
 
@@ -219,5 +217,6 @@ def mainss(page: ft.Page):
     page.on_route_change = route_change
     page.on_view_pop = view_pop
     page.go(page.route)
+
 
 ft.app(target=mainss)
