@@ -276,12 +276,12 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     table.add_row("6", "Запись proxy")
     table.add_row("7", "Лимиты на аккаунт")
     table.add_row("8", "Смена типа устройства")
-    table.add_row("9", "Запись времени")
+    # table.add_row("9", "Запись времени")
     table.add_row("10", "Лимиты на сообщения")
     table.add_row("11", "Выбор реакций")
     table.add_row("12", "Запись ссылки для реакций")
     table.add_row("13", "Запись количества аккаунтов для реакций")
-    table.add_row("14", "Запись сообщений")
+    # table.add_row("14", "Запись сообщений")
     table.add_row("15", "Запись времени между сообщениями")
     table.add_row("16", "Формирование списка чатов / каналов")
     table.add_row("17", "Запись имени аккаунта")
@@ -315,8 +315,8 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         writing_settings_to_a_file(config=record_account_limits())
     elif user_input == "8":  # Запись типа устройства
         writing_settings_to_a_file(config=record_device_type())
-    elif user_input == "9":  # Запись времени для запуска inviting в определенное время
-        recording_the_time_to_launch_an_invite_every_day()
+    # elif user_input == "9":  # Запись времени для запуска inviting в определенное время
+    #     recording_the_time_to_launch_an_invite_every_day()
     elif user_input == "10":  # Запись лимитов на количество сообщений
         writing_settings_to_a_file(config=record_message_limits())
     elif user_input == "11":  # Выбор реакции
@@ -325,8 +325,8 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         recording_link_channel()
     elif user_input == "13":  # Запись ссылки для рассылки
         record_the_number_of_accounts()
-    elif user_input == "14":  # Запись текста для рассылки
-        recording_text_for_sending_messages()  # Вызов функции записи текста для рассылки
+    # elif user_input == "14":  # Запись текста для рассылки
+    #     recording_text_for_sending_messages()  # Вызов функции записи текста для рассылки
     elif user_input == "15":  # Запись времени между сообщениями
         recording_the_time_between_chat_messages(variable="time_sending_messages")
     elif user_input == "16":  # Формирование списка чатов
