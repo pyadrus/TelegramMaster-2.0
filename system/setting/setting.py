@@ -156,41 +156,6 @@ def creating_the_main_window_for_proxy_data_entry(db_handler) -> None:
     ft.app(target=main_inviting)  # Создаем окно
 
 
-def recording_the_time_between_chat_messages(variable):
-    """
-    Запись времени между сообщениями
-    :param variable: название переменной в файле config.ini
-    :return: None
-    """
-
-    def main_inviting(page) -> None:
-        create_window(page=page, width=300, height=300, resizable=False)  # Создаем окно с размером 300 на 300 пикселей
-        smaller_time = ft.TextField(label="Время в минутах (меньшее)", autofocus=True)
-        larger_time = ft.TextField(label="Время в минутах (большее)", autofocus=True)
-        greetings = ft.Column()
-
-        def btn_click(e) -> None:
-            try:
-                smaller_times = int(smaller_time.value)
-                larger_times = int(larger_time.value)
-
-                if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
-                    # Если условие прошло проверку, то возвращаем первое и второе время
-                    print(f"Вы ввели:\n{smaller_times} минут (меньшее время)\n{larger_times} минут (большее время)")
-                    config = recording_limits_file(str(smaller_times), str(larger_times), variable=variable)
-                    writing_settings_to_a_file(config)
-                    page.window_close()
-            except ValueError:
-                pass
-
-            page.update()
-            smaller_time.focus()
-
-        page.add(smaller_time, larger_time, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
-
-    ft.app(target=main_inviting)
-
-
 def create_main_window(page: ft.Page, variable) -> None:
     """
     :param page:

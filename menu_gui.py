@@ -162,9 +162,9 @@ def mainss(page: ft.Page):
                                                 bgcolor=ft.colors.SURFACE_VARIANT),
                                       # ft.ElevatedButton(width=500, height=30, text=f"Запись ссылки",
                                       #                   on_click=lambda _: page.go("/link_entry")),
-                                      # ft.ElevatedButton(width=500, height=30, text=f"Запись api_id, api_hash",
-                                      #                   on_click=lambda _: page.go("/")),
 
+                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись времени между сообщениями",
+                                                        on_click=lambda _: page.go("/recording_the_time_between_messages")),
                                       ft.ElevatedButton(width=500, height=30,
                                                         text="✔️ Время между инвайтингом, рассылка сообщений",
                                                         on_click=lambda _: page.go("/time_between_invites_sending_messages")),
@@ -186,6 +186,10 @@ def mainss(page: ft.Page):
             ], ))
         elif page.route == "/link_entry":
             print("Запись ссылки")
+
+        elif page.route == "/recording_the_time_between_messages":
+            # ✔️ Запись времени между сообщениями
+            create_main_window(page, variable="time_sending_messages")
         elif page.route == "/time_between_invites_sending_messages":
             # ✔️ Время между инвайтингом, рассылка сообщений
             create_main_window(page, variable="time_inviting")
