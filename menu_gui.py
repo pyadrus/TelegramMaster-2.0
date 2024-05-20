@@ -1,14 +1,11 @@
 import flet as ft
 
+from system.menu.app_banner import program_version, date_of_program_change
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day
-
-# from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body
-# from system.menu.app_banner import program_version, date_of_program_change
-# from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 link_group = 'https://t.me/novosti_v_odnom_meste'
 
-program_version, date_of_program_change = "0.10.7", "05.01.2024"  # Версия программы, дата изменения
+# program_version, date_of_program_change = "0.10.7", "05.01.2024"  # Версия программы, дата изменения
 
 
 def mainss(page: ft.Page):

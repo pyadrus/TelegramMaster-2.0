@@ -99,8 +99,8 @@ def connecting_new_account(db_handler) -> None:
     """Вводим данные в базу данных user_settings/software_database.db"""
     phone_data = console.input("[magenta][+] Введите номер телефона : ")  # Вводим номер телефона
     entities = (api_id_data, api_hash_data, phone_data)
-    db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS config(id, hash, phone)",
-                                writing_data_to_a_table="INSERT INTO config (id, hash, phone) VALUES (?, ?, ?)",
+    db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS config(phone)",
+                                writing_data_to_a_table="INSERT INTO config (phone) VALUES (?)",
                                 entities=entities)
     # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
     client = telegram_connect(phone_data, db_handler)
@@ -287,76 +287,76 @@ def recording_text_for_sending_messages() -> None:
     ft.app(target=main_inviting)
 
 
-# def recording_the_time_to_launch_an_invite_every_day() -> None:
-#     def main_inviting(page) -> None:
-#         create_window(page=page, width=300, height=300, resizable=False)  # Создаем окно с размером 300 на 300 пикселей
-#         hour = ft.TextField(label="Время в часах :", autofocus=True)
-#         minutes = ft.TextField(label="Время в минутах:")
-#         greetings = ft.Column()
+def recording_the_time_to_launch_an_invite_every_day() -> None:
+    def main_inviting(page) -> None:
+        create_window(page=page, width=300, height=300, resizable=False)  # Создаем окно с размером 300 на 300 пикселей
+        hour = ft.TextField(label="Время в часах :", autofocus=True)
+        minutes = ft.TextField(label="Время в минутах:")
+        greetings = ft.Column()
+
+        def btn_click(e) -> None:
+            try:
+                if not 0 <= int(hour.value) < 24:
+                    print('Введите часы в пределах от 0 до 23!')
+                    return
+                if not 0 <= int(minutes.value) < 60:
+                    print('Введите минуты в пределах от 0 до 59!')
+                    return
+                config.get("hour_minutes_every_day", "hour")
+                config.set("hour_minutes_every_day", "hour", str(hour.value))
+                config.get("hour_minutes_every_day", "minutes")
+                config.set("hour_minutes_every_day", "minutes", str(minutes.value))
+                writing_settings_to_a_file(config)
+                page.window_close()  # Закрываем окно
+            except ValueError:
+                pass
+            page.update()  # Обновляем страницу
+
+        page.add(hour, minutes, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
+
+    ft.app(target=main_inviting)
+
+# def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
+#     hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
+#     minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
 #
-#         def btn_click(e) -> None:
-#             try:
-#                 if not 0 <= int(hour.value) < 24:
-#                     print('Введите часы в пределах от 0 до 23!')
-#                     return
-#                 if not 0 <= int(minutes.value) < 60:
-#                     print('Введите минуты в пределах от 0 до 59!')
-#                     return
-#                 config.get("hour_minutes_every_day", "hour")
-#                 config.set("hour_minutes_every_day", "hour", str(hour.value))
-#                 config.get("hour_minutes_every_day", "minutes")
-#                 config.set("hour_minutes_every_day", "minutes", str(minutes.value))
-#                 writing_settings_to_a_file(config)
-#                 page.window_close()  # Закрываем окно
-#             except ValueError:
-#                 pass
-#             page.update()  # Обновляем страницу
+#     def btn_click(e) -> None:
+#         try:
+#             hour = int(hour_textfield.value)
+#             minutes = int(minutes_textfield.value)
 #
-#         page.add(hour, minutes, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
+#             if not 0 <= hour < 24:
+#                 print('Введите часы в пределах от 0 до 23!')
+#                 return
+#             if not 0 <= minutes < 60:
+#                 print('Введите минуты в пределах от 0 до 59!')
+#                 return
 #
-#     ft.app(target=main_inviting)
-
-def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
-    hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
-    minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
-
-    def btn_click(e) -> None:
-        try:
-            hour = int(hour_textfield.value)
-            minutes = int(minutes_textfield.value)
-
-            if not 0 <= hour < 24:
-                print('Введите часы в пределах от 0 до 23!')
-                return
-            if not 0 <= minutes < 60:
-                print('Введите минуты в пределах от 0 до 59!')
-                return
-
-            # Assuming config is a dictionary-like object
-            config.get("hour_minutes_every_day", "hour")
-            config.set("hour_minutes_every_day", "hour", str(hour))
-            config.get("hour_minutes_every_day", "minutes")
-            config.set("hour_minutes_every_day", "minutes", str(minutes))
-            writing_settings_to_a_file(config)
-            page.go("/settings")  # Change route to existing settings view
-            # page.window_close()  # Закрываем окно
-        except ValueError:
-            print('Введите числовые значения для часов и минут!')
-        page.update()  # Обновляем страницу
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                hour_textfield,
-                minutes_textfield,
-                ft.Column(),  # Placeholder for greetings or other content (optional)
-                button,
-            ],
-        )
-    )
+#             # Assuming config is a dictionary-like object
+#             config.get("hour_minutes_every_day", "hour")
+#             config.set("hour_minutes_every_day", "hour", str(hour))
+#             config.get("hour_minutes_every_day", "minutes")
+#             config.set("hour_minutes_every_day", "minutes", str(minutes))
+#             writing_settings_to_a_file(config)
+#             page.go("/settings")  # Change route to existing settings view
+#             # page.window_close()  # Закрываем окно
+#         except ValueError:
+#             print('Введите числовые значения для часов и минут!')
+#         page.update()  # Обновляем страницу
+#
+#     button = ft.ElevatedButton("Готово", on_click=btn_click)
+#
+#     page.views.append(
+#         ft.View(
+#             "/settings",
+#             [
+#                 hour_textfield,
+#                 minutes_textfield,
+#                 ft.Column(),  # Placeholder for greetings or other content (optional)
+#                 button,
+#             ],
+#         )
+#     )
 
 
 if __name__ == "__main__":
