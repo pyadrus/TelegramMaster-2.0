@@ -270,22 +270,16 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     # Выводим текст в таблице
     table.add_row("1", "Запись ссылки")
     table.add_row("2", "Запись api_id, api_hash")
-    table.add_row("3", "Время между Inviting, рассылка сообщений")
-    table.add_row("4", "Смена аккаунтов")
-    # table.add_row("5", "Время между подпиской")
+    table.add_row("3", "Время между инвайтинга, рассылка сообщений")
     table.add_row("6", "Запись proxy")
     table.add_row("7", "Лимиты на аккаунт")
     table.add_row("8", "Смена типа устройства")
-    # table.add_row("9", "Запись времени")
     table.add_row("10", "Лимиты на сообщения")
     table.add_row("11", "Выбор реакций")
     table.add_row("12", "Запись ссылки для реакций")
     table.add_row("13", "Запись количества аккаунтов для реакций")
-    # table.add_row("14", "Запись сообщений")
     table.add_row("15", "Запись времени между сообщениями")
     table.add_row("16", "Формирование списка чатов / каналов")
-    # table.add_row("17", "Запись имени аккаунта")
-    # table.add_row("0", "В начальное меню")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
@@ -300,14 +294,6 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         print("[medium_purple3][+] Введите время между Inviting / Рассылка сообщений! C начала меньшее, потом большее. "
               "НАПРИМЕР: 10 20!")
         create_main_window(variable="time_inviting")
-    elif user_input == "4":  # Время между сменой аккаунтов
-        print("[medium_purple3][+] Введите время между сменой аккаунтов в секундах. C начала меньшее, потом большее. "
-              "НАПРИМЕР: 10 20!")
-        create_main_window(variable="time_changing_accounts")
-    # elif user_input == "5":  # Время между подпиской групп
-    #     print("[medium_purple3][+] Введите время между подпиской на группы / каналы в секундах (между приглашениями) C "
-    #           "начала меньшее, потом большее. НАПРИМЕР: 10 20!")
-    #     create_main_window(variable="time_subscription")
     elif user_input == "6":  # Запись данных для proxy
         creating_the_main_window_for_proxy_data_entry(db_handler)
         program_settings(db_handler)
@@ -315,8 +301,6 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         writing_settings_to_a_file(config=record_account_limits())
     elif user_input == "8":  # Запись типа устройства
         writing_settings_to_a_file(config=record_device_type())
-    # elif user_input == "9":  # Запись времени для запуска inviting в определенное время
-    #     recording_the_time_to_launch_an_invite_every_day()
     elif user_input == "10":  # Запись лимитов на количество сообщений
         writing_settings_to_a_file(config=record_message_limits())
     elif user_input == "11":  # Выбор реакции
@@ -325,16 +309,10 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         recording_link_channel()
     elif user_input == "13":  # Запись ссылки для рассылки
         record_the_number_of_accounts()
-    # elif user_input == "14":  # Запись текста для рассылки
-    #     recording_text_for_sending_messages()  # Вызов функции записи текста для рассылки
     elif user_input == "15":  # Запись времени между сообщениями
         recording_the_time_between_chat_messages(variable="time_sending_messages")
     elif user_input == "16":  # Формирование списка чатов
         output_the_input_field(db_handler)  # Вызов функции формирования списка чатов
-    # elif user_input == "17":
-    #     record_account_name_newsletter()
-    # elif user_input == "0":  # Вернуться назад
-    #     main_menu()  # После отработки функции переходим в начальное меню
     else:
         program_settings(db_handler)
     os.system("python main.py")  # После отработки функции возвращаемся в начальное меню

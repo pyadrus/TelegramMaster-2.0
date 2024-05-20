@@ -164,12 +164,12 @@ def mainss(page: ft.Page):
                                       #                   on_click=lambda _: page.go("/link_entry")),
                                       # ft.ElevatedButton(width=500, height=30, text=f"Запись api_id, api_hash",
                                       #                   on_click=lambda _: page.go("/")),
-                                      # ft.ElevatedButton(width=500, height=30,
-                                      #                   text=f"Время между Inviting, рассылка сообщений",
-                                      #                   on_click=lambda _: page.go("/")),
-                                      # ft.ElevatedButton(width=500, height=30, text=f"Смена аккаунтов",
-                                      #                   on_click=lambda _: page.go("/")),
 
+                                      ft.ElevatedButton(width=500, height=30,
+                                                        text="✔️ Время между инвайтингом, рассылка сообщений",
+                                                        on_click=lambda _: page.go("/time_between_invites_sending_messages")),
+                                      ft.ElevatedButton(width=500, height=30, text="✔️ Смена аккаунтов",
+                                                        on_click=lambda _: page.go("/changing_accounts")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Запись времени",
                                                         on_click=lambda _: page.go("/time_between_subscriptions")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️  Запись сообщений",
@@ -186,6 +186,12 @@ def mainss(page: ft.Page):
             ], ))
         elif page.route == "/link_entry":
             print("Запись ссылки")
+        elif page.route == "/time_between_invites_sending_messages":
+            # ✔️ Время между инвайтингом, рассылка сообщений
+            create_main_window(page, variable="time_inviting")
+        elif page.route == "/changing_accounts":
+            # ✔️ Смена аккаунтов
+            create_main_window(page, variable="time_changing_accounts")
         elif page.route == "/time_between_subscriptions":
             # ✔️ Запись времени
             recording_the_time_to_launch_an_invite_every_day(page)
@@ -197,7 +203,6 @@ def mainss(page: ft.Page):
             record_account_name_newsletter(page)
         elif page.route == "/time_between_subscriptionss":
             # ✔️ Время между подпиской
-            print("Время между подпиской")
             create_main_window(page, variable="time_subscription")
         page.update()
 
