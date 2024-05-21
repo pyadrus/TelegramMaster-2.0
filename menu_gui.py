@@ -10,11 +10,13 @@ from system.setting.setting import recording_the_time_to_launch_an_invite_every_
     record_message_limits, record_device_type, writing_api_id_api_hash
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
+line_width = 580  # Ширина окна и ширина строки
+
 
 def mainss(page: ft.Page):
     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
-    page.window_width = 580  # window's ширина is 200 px
-    page.window_height = 790  # window's высота is 200 px
+    page.window_width = line_width  # window's ширина is 200 px
+    page.window_height = 700  # window's высота is 200 px
     page.window_resizable = False  # window is not resizable
 
     # width - ширина,  # height - высота
@@ -41,27 +43,27 @@ def mainss(page: ft.Page):
                                          ft.TextSpan("https://t.me/master_tg_d",
                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                      url="https://t.me/master_tg_d", ), ], ),
-                          ft.ElevatedButton(width=500, height=30, text="Инвайтинг",
+                          ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг",
                                             on_click=lambda _: page.go("/inviting")),
-                          ft.ElevatedButton(width=500, height=30, text="Парсинг",
+                          ft.ElevatedButton(width=line_width, height=30, text="Парсинг",
                                             on_click=lambda _: page.go("/parsing")),
-                          ft.ElevatedButton(width=500, height=30, text="Работа с контактами",
+                          ft.ElevatedButton(width=line_width, height=30, text="Работа с контактами",
                                             on_click=lambda _: page.go("/contacts")),
-                          ft.ElevatedButton(width=500, height=30, text="Подписка, отписка",
+                          ft.ElevatedButton(width=line_width, height=30, text="Подписка, отписка",
                                             on_click=lambda _: page.go("/subscribe_unsubscribe")),
-                          ft.ElevatedButton(width=500, height=30, text="Подключение аккаунтов",
+                          ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов",
                                             on_click=lambda _: page.go("/store")),
-                          ft.ElevatedButton(width=500, height=30, text="Рассылка сообщений",
+                          ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений",
                                             on_click=lambda _: page.go("/sending_messages")),
-                          ft.ElevatedButton(width=500, height=30, text="Работа с реакциями",
+                          ft.ElevatedButton(width=line_width, height=30, text="Работа с реакциями",
                                             on_click=lambda _: page.go("/reaction")),
-                          ft.ElevatedButton(width=500, height=30, text="Настройки",
+                          ft.ElevatedButton(width=line_width, height=30, text="Настройки",
                                             on_click=lambda _: page.go("/settings")),
-                          ft.ElevatedButton(width=500, height=30, text="Проверка аккаунтов",
+                          ft.ElevatedButton(width=line_width, height=30, text="Проверка аккаунтов",
                                             on_click=lambda _: page.go("/store")),
-                          ft.ElevatedButton(width=500, height=30, text="Создание групп (чатов)",
+                          ft.ElevatedButton(width=line_width, height=30, text="Создание групп (чатов)",
                                             on_click=lambda _: page.go("/store")),
-                          ft.ElevatedButton(width=500, height=30, text="Редактирование BIO",
+                          ft.ElevatedButton(width=line_width, height=30, text="Редактирование BIO",
                                             on_click=lambda _: page.go("/bio")),
                           ], ))
         if page.route == "/inviting":
@@ -69,7 +71,7 @@ def mainss(page: ft.Page):
             page.views.append(
                 ft.View("/inviting", [ft.AppBar(title=ft.Text("Главное меню"),
                                                 bgcolor=ft.colors.SURFACE_VARIANT),
-                                      ft.ElevatedButton(width=500, height=30, text=f"Инвайтинг без лимитов",
+                                      ft.ElevatedButton(width=line_width, height=30, text=f"Инвайтинг без лимитов",
                                                         on_click=lambda _: page.go("/inviting_without_limits")),
                                       # ft.ElevatedButton(width=500, height=30, text=f"Инвайтинг без лимитов",
                                       #                   on_click=lambda _: invitation_from_all_accounts_program_body(
@@ -92,122 +94,136 @@ def mainss(page: ft.Page):
             page.views.append(
                 ft.View("/parsing", [ft.AppBar(title=ft.Text("Главное меню"),
                                                bgcolor=ft.colors.SURFACE_VARIANT),
-                                     ft.ElevatedButton(width=500, height=30, text=f"Parsing одной групп",
+                                     ft.ElevatedButton(width=line_width, height=30, text=f"Parsing одной групп",
                                                        on_click=lambda _: page.go("/")),
-                                     ft.ElevatedButton(width=500, height=30, text=f"Выбор группы из подписанных",
+                                     ft.ElevatedButton(width=line_width, height=30, text=f"Выбор группы из подписанных",
                                                        on_click=lambda _: page.go("/")),
-                                     ft.ElevatedButton(width=500, height=30, text=f"Parsing активных участников",
+                                     ft.ElevatedButton(width=line_width, height=30, text=f"Parsing активных участников",
                                                        on_click=lambda _: page.go("/")),
-                                     ft.ElevatedButton(width=500, height=30,
+                                     ft.ElevatedButton(width=line_width, height=30,
                                                        text=f"Parsing списка: групп, каналов аккаунтов",
                                                        on_click=lambda _: page.go("/")),
-                                     ft.ElevatedButton(width=500, height=30, text=f"Очистка parsing списка",
+                                     ft.ElevatedButton(width=line_width, height=30, text=f"Очистка parsing списка",
                                                        on_click=lambda _: page.go("/")),
-                                     ft.ElevatedButton(width=500, height=30, text="Формирование списка",
+                                     ft.ElevatedButton(width=line_width, height=30, text="Формирование списка",
                                                        on_click=lambda _: page.go("/")), ], ))
         elif page.route == "/contacts":
             page.views.append(
                 ft.View("/contacts", [ft.AppBar(title=ft.Text("Главное меню"),
                                                 bgcolor=ft.colors.SURFACE_VARIANT),
-                                      ft.ElevatedButton(width=500, height=30, text=f"Формирование списка контактов",
+                                      ft.ElevatedButton(width=line_width, height=30,
+                                                        text=f"Формирование списка контактов",
                                                         on_click=lambda _: page.go("/")),
-                                      ft.ElevatedButton(width=500, height=30, text=f"Показать список контактов",
+                                      ft.ElevatedButton(width=line_width, height=30, text=f"Показать список контактов",
                                                         on_click=lambda _: page.go("/")),
-                                      ft.ElevatedButton(width=500, height=30, text=f"Удаление контактов",
+                                      ft.ElevatedButton(width=line_width, height=30, text=f"Удаление контактов",
                                                         on_click=lambda _: page.go("/")),
-                                      ft.ElevatedButton(width=500, height=30, text=f"Добавление контактов",
+                                      ft.ElevatedButton(width=line_width, height=30, text=f"Добавление контактов",
                                                         on_click=lambda _: page.go("/")), ], ))
         elif page.route == "/subscribe_unsubscribe":
             page.views.append(
                 ft.View("/subscribe_unsubscribe", [ft.AppBar(title=ft.Text("Главное меню"),
                                                              bgcolor=ft.colors.SURFACE_VARIANT),
-                                                   ft.ElevatedButton(width=500, height=30,
+                                                   ft.ElevatedButton(width=line_width, height=30,
                                                                      text=f"Формирование списка и подписка",
                                                                      on_click=lambda _: page.go("/")),
-                                                   ft.ElevatedButton(width=500, height=30, text=f"Отписываемся",
+                                                   ft.ElevatedButton(width=line_width, height=30, text=f"Отписываемся",
                                                                      on_click=lambda _: page.go("/")), ], ))
         elif page.route == "/sending_messages":
             page.views.append(
                 ft.View("/sending_messages", [ft.AppBar(title=ft.Text("Главное меню"),
                                                         bgcolor=ft.colors.SURFACE_VARIANT),
-                                              ft.ElevatedButton(width=500, height=30,
+                                              ft.ElevatedButton(width=line_width, height=30,
                                                                 text=f"Отправка сообщений в личку",
                                                                 on_click=lambda _: page.go("/")),
-                                              ft.ElevatedButton(width=500, height=30, text=f"Отправка файлов в личку",
+                                              ft.ElevatedButton(width=line_width, height=30,
+                                                                text=f"Отправка файлов в личку",
                                                                 on_click=lambda _: page.go("/")),
-                                              ft.ElevatedButton(width=500, height=30,
+                                              ft.ElevatedButton(width=line_width, height=30,
                                                                 text=f"Рассылка сообщений по чатам",
                                                                 on_click=lambda _: page.go("/")),
-                                              ft.ElevatedButton(width=500, height=30,
+                                              ft.ElevatedButton(width=line_width, height=30,
                                                                 text=f"Рассылка сообщений по чатам, по времени",
                                                                 on_click=lambda _: page.go("/")),
-                                              ft.ElevatedButton(width=500, height=30, text=f"Рассылка файлов по чатам",
+                                              ft.ElevatedButton(width=line_width, height=30,
+                                                                text=f"Рассылка файлов по чатам",
                                                                 on_click=lambda _: page.go("/")),
-                                              ft.ElevatedButton(width=500, height=30,
+                                              ft.ElevatedButton(width=line_width, height=30,
                                                                 text="Рассылка сообщений + файлов по чатам",
                                                                 on_click=lambda _: page.go("/")),
-                                              ft.ElevatedButton(width=500, height=30, text=f"Формирование списка чатов",
+                                              ft.ElevatedButton(width=line_width, height=30,
+                                                                text=f"Формирование списка чатов",
                                                                 on_click=lambda _: page.go("/")),
-                                              ft.ElevatedButton(width=500, height=30,
+                                              ft.ElevatedButton(width=line_width, height=30,
                                                                 text="Отправка сообщений в личку (с лимитами)",
                                                                 on_click=lambda _: page.go("/")),
-                                              ft.ElevatedButton(width=500, height=30,
+                                              ft.ElevatedButton(width=line_width, height=30,
                                                                 text="Отправка файлов в личку (с лимитами)",
                                                                 on_click=lambda _: page.go("/")), ], ))
         elif page.route == "/reaction":  # Работа с реакциями
             page.views.append(
                 ft.View("/reaction", [ft.AppBar(title=ft.Text("Главное меню"),
                                                 bgcolor=ft.colors.SURFACE_VARIANT),
-                                      ft.ElevatedButton(width=500, height=30, text=f"Ставим реакцию на 1 пост",
+                                      ft.ElevatedButton(width=line_width, height=30, text=f"Ставим реакцию на 1 пост",
                                                         on_click=lambda _: page.go("/")),
-                                      ft.ElevatedButton(width=500, height=30, text="Накручиваем просмотры постов",
+                                      ft.ElevatedButton(width=line_width, height=30,
+                                                        text="Накручиваем просмотры постов",
                                                         on_click=lambda _: page.go("/")), ], ))
         elif page.route == "/settings":  # Настройки
             page.views.append(
-                ft.View("/settings", [ft.AppBar(title=ft.Text("Главное меню"),
-                                                bgcolor=ft.colors.SURFACE_VARIANT),
-                                      ft.ElevatedButton(width=500, height=30,
-                                                        text="✔️ Запись количества аккаунтов для реакций",
-                                                        on_click=lambda _: page.go(
-                                                            "/recording_number_accounts_reactions")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Выбор реакций",
-                                                        on_click=lambda _: page.go("/choice_of_reactions")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись proxy",
-                                                        on_click=lambda _: page.go("/proxy_entry")),
-                                      ft.ElevatedButton(width=500, height=30,
-                                                        text="✔️ Запись времени между сообщениями",
-                                                        on_click=lambda _: page.go(
-                                                            "/recording_the_time_between_messages")),
-                                      ft.ElevatedButton(width=500, height=30,
-                                                        text="✔️ Время между инвайтингом, рассылка сообщений",
-                                                        on_click=lambda _: page.go(
-                                                            "/time_between_invites_sending_messages")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Смена аккаунтов",
-                                                        on_click=lambda _: page.go("/changing_accounts")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись времени",
-                                                        on_click=lambda _: page.go("/time_between_subscriptions")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️  Запись сообщений",
-                                                        on_click=lambda _: page.go("/message_recording")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись имени аккаунта",
-                                                        on_click=lambda _: page.go("/record_your_account_name")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Время между подпиской",
-                                                        on_click=lambda _: page.go("/time_between_subscriptionss")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись ссылки для реакций",
-                                                        on_click=lambda _: page.go("/recording_reaction_link")),
-                                      ft.ElevatedButton(width=500, height=30,
-                                                        text="✔️ Формирование списка чатов / каналов",
-                                                        on_click=lambda _: page.go("/forming_list_of_chats_channels")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись ссылки",
-                                                        on_click=lambda _: page.go("/link_entry")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Лимиты на аккаунт",
-                                                        on_click=lambda _: page.go("/account_limits")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Лимиты на сообщения",
-                                                        on_click=lambda _: page.go("/message_limits")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Смена типа устройства",
-                                                        on_click=lambda _: page.go("/changing_device_type")),
-                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись api_id, api_hash",
-                                                        on_click=lambda _: page.go("/recording_api_id_api_hash")),
-                                      ], ))
+                ft.View("/settings",
+                        [ft.AppBar(title=ft.Text("Главное меню"),
+                                   bgcolor=ft.colors.SURFACE_VARIANT),
+                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                            ft.ElevatedButton(width=line_width, height=30,
+                                              text="✔️ Запись количества аккаунтов для реакций",
+                                              on_click=lambda _: page.go("/recording_number_accounts_reactions")),
+
+                            ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Выбор реакций",
+                                                      on_click=lambda _: page.go("/choice_of_reactions")),
+                                    ft.ElevatedButton(width=270, height=30, text="✔️ Запись proxy",
+                                                      on_click=lambda _: page.go("/proxy_entry"))]),
+
+                            ft.ElevatedButton(width=line_width, height=30,
+                                              text="✔️ Запись времени между сообщениями",
+                                              on_click=lambda _: page.go("/recording_the_time_between_messages")),
+                            ft.ElevatedButton(width=line_width, height=30,
+                                              text="✔️ Время между инвайтингом, рассылка сообщений",
+                                              on_click=lambda _: page.go("/time_between_invites_sending_messages")),
+
+                            ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Смена аккаунтов",
+                                                      on_click=lambda _: page.go("/changing_accounts")),
+                                    ft.ElevatedButton(width=270, height=30, text="✔️ Запись api_id, api_hash",
+                                                      on_click=lambda _: page.go("/recording_api_id_api_hash"))]),
+
+                            ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Запись времени",
+                                                      on_click=lambda _: page.go("/time_between_subscriptions")),
+                                    ft.ElevatedButton(width=270, height=30, text="✔️  Запись сообщений",
+                                                      on_click=lambda _: page.go("/message_recording"))]),
+
+                            ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Запись имени аккаунта",
+                                                      on_click=lambda _: page.go("/record_your_account_name")),
+                                    ft.ElevatedButton(width=270, height=30, text="✔️ Время между подпиской",
+                                                      on_click=lambda _: page.go("/time_between_subscriptionss"))]),
+
+                            ft.ElevatedButton(width=line_width, height=30, text="✔️ Запись ссылки для реакций",
+                                              on_click=lambda _: page.go("/recording_reaction_link")),
+                            ft.ElevatedButton(width=line_width, height=30,
+                                              text="✔️ Формирование списка чатов / каналов",
+                                              on_click=lambda _: page.go("/forming_list_of_chats_channels")),
+
+                            ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Запись ссылки",
+                                                      on_click=lambda _: page.go("/link_entry")),
+                            ft.ElevatedButton(width=270, height=30, text="✔️ Лимиты на аккаунт",
+                                              on_click=lambda _: page.go("/account_limits"))]),
+
+                            ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Лимиты на сообщения",
+                                                      on_click=lambda _: page.go("/message_limits")),
+                            ft.ElevatedButton(width=270, height=30, text="✔️ Смена типа устройства",
+                                              on_click=lambda _: page.go("/changing_device_type"))]),
+
+
+                         ])]))
         elif page.route == "/recording_api_id_api_hash":  # ✔️ Запись api_id, api_hash
             writing_api_id_api_hash(page)
         elif page.route == "/changing_device_type":  # ✔️ Смена типа устройства

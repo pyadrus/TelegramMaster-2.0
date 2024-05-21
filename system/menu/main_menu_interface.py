@@ -259,24 +259,6 @@ def working_with_the_reaction(db_handler) -> None:  # 7 - Работа с реа
     main_menu()  # После отработки функции переходим в начальное меню
 
 
-# def program_settings(db_handler) -> None:  # 8 - Настройки программы
-#     """Настройки программы, запись времени задержки, api_id, api_hash, запись ссылки для inviting"""
-#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-#     table = Table(title="[medium_purple3]Настройки программы!", box=box.HORIZONTALS)  # Выводим таблицу
-#     column_names(table)  # Формируем колонки таблицы
-#     Выводим текст в таблице
-    # table.add_row("2", "Запись api_id, api_hash")
-    # console.print(table, justify="center")  # Отображаем таблицу
-    # user_input = console.input("[medium_purple3][+] Введите номер: ")
-    # clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    # if user_input == "2":  # Запись id, hash в файл
-    #     print("[medium_purple3][!] Получить api_id, api_hash можно на сайте https://my.telegram.org/auth")
-    #     writing_settings_to_a_file(config=writing_api_id_api_hash())
-    # else:
-    #     program_settings(db_handler)
-    # os.system("python main.py")  # После отработки функции возвращаемся в начальное меню
-
-
 def working_with_bio() -> None:  # 11 - Работа с био аккаунта Telegram
     """Работа с реакциями на посты группы или канала"""
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
