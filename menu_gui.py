@@ -1,6 +1,6 @@
 import flet as ft
 
-from system.account_actions.reactions.reactions import reaction_gui
+from system.account_actions.reactions.reactions import reaction_gui, record_the_number_of_accounts
 from system.menu.app_banner import program_version, date_of_program_change
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, \
     recording_text_for_sending_messages, record_account_name_newsletter, create_main_window, \
@@ -163,6 +163,8 @@ def mainss(page: ft.Page):
             page.views.append(
                 ft.View("/settings", [ft.AppBar(title=ft.Text("Главное меню"),
                                                 bgcolor=ft.colors.SURFACE_VARIANT),
+                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись количества аккаунтов для реакций",
+                                                        on_click=lambda _: page.go("/recording_number_accounts_reactions")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Выбор реакций",
                                                         on_click=lambda _: page.go("/choice_of_reactions")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Запись proxy",
@@ -189,6 +191,8 @@ def mainss(page: ft.Page):
                                       ], ))
         elif page.route == "/link_entry":
             print("Запись ссылки")
+        elif page.route == "/recording_number_accounts_reactions":  # ✔️ Запись количества аккаунтов для реакций
+            record_the_number_of_accounts(page)
         elif page.route == "/choice_of_reactions":  # ✔️ Выбор реакций
             reaction_gui(page)
         elif page.route == "/proxy_entry":  # ✔️ Запись времени между сообщениями

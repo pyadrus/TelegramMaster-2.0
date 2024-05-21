@@ -107,29 +107,34 @@ def save_reactions(reactions, path_to_the_file):
         json.dump(reactions, file, ensure_ascii=False, indent=4)
 
 
-def record_the_number_of_accounts():
+def record_the_number_of_accounts(page: ft.Page):
     """Запись количества аккаунтов проставляющих реакции"""
+    smaller_time = ft.TextField(label="Введите количество реакций", autofocus=True)
 
-    def main_inviting(page) -> None:
-        page.window_width = 300  # ширина окна
-        page.window_height = 300  # высота окна
-        page.window_resizable = False  # Запрет на изменение размера окна
-        smaller_time = ft.TextField(label="Введите количество реакций", autofocus=True)
-        greetings = ft.Column()
+    def btn_click(e) -> None:
+        try:
+            # page.update()
+            smaller_times = int(smaller_time.value)  # Extract the text value from the TextField
+            save_reactions(reactions=smaller_times,  # Количество аккаунтов для проставления реакций
+                           path_to_the_file='user_settings/reactions/number_accounts.json')
+            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            page.update()
 
-        def btn_click(e) -> None:
-            try:
-                page.update()
-                smaller_times = int(smaller_time.value)  # Extract the text value from the TextField
-                save_reactions(reactions=smaller_times,  # Количество аккаунтов для проставления реакций
-                               path_to_the_file='user_settings/reactions/number_accounts.json')
-                page.window_close()
-            except ValueError:
-                pass
+        except ValueError:
+            pass
 
-        page.add(smaller_time, ft.ElevatedButton("Сохранить", on_click=btn_click), greetings, )
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
 
-    ft.app(target=main_inviting)
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                smaller_time,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 
 def recording_link_channel():
