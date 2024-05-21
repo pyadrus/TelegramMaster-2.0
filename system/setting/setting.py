@@ -72,28 +72,41 @@ def record_message_limits(page: ft.Page):
     )
 
 
-def record_device_type() -> configparser.ConfigParser():
+def record_device_type(page: ft.Page):
     """Запись типа устройства например: Samsung SGH600, Android 9 (P30), 4.2.1,
     Vivo V9, Android 9 (P30), 4.2.1"""
-    try:
-        device_model = console.input("[magenta][+] Введите модель устройства: ")
+    device_model = ft.TextField(label="Введите модель устройства", multiline=True, max_lines=19)
+    system_version = ft.TextField(label="Введите версию операционной системы", multiline=True, max_lines=19)
+    app_version = ft.TextField(label="Введите версию приложения", multiline=True, max_lines=19)
+
+    def btn_click(e) -> None:
+
         config.get("device_model", "device_model")
-        config.set("device_model", "device_model", device_model)
-    except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
-        config["device_model"] = {"device_model": device_model}
-    try:
-        system_version = console.input("[magenta][+] Введите версию операционной системы: ")
+        config.set("device_model", "device_model", device_model.value)
         config.get("system_version", "system_version")
-        config.set("system_version", "system_version", system_version)
-    except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
-        config["system_version"] = {"system_version": system_version}
-    try:
-        app_version = console.input("[magenta][+] Введите версию приложения: ")
+        config.set("system_version", "system_version", system_version.value)
         config.get("app_version", "app_version")
-        config.set("app_version", "app_version", app_version)
-    except configparser.NoSectionError:  # Если в user_settings/config.ini нет записи, то создаем ее
-        config["app_version"] = {"app_version": app_version}
-    return config
+        config.set("app_version", "app_version", app_version.value)
+
+        writing_settings_to_a_file(config)
+
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
+
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                device_model,
+                system_version,
+                app_version,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 
 def writing_settings_to_a_file(config) -> None:
