@@ -76,13 +76,30 @@ def writing_api_id_api_hash() -> configparser.ConfigParser:
     return config
 
 
-def writing_link_to_the_group() -> configparser.ConfigParser:
+def writing_link_to_the_group(page: ft.Page):
     """Записываем ссылку для inviting групп"""
-    target_group_entity_user = console.input("[magenta][+] Введите ссылку на группу : ")  # Вводим ссылку на группу
-    # Находим ссылку в файле и меняем на свою
-    config.get("link_to_the_group", "target_group_entity")
-    config.set("link_to_the_group", "target_group_entity", target_group_entity_user)
-    return config
+    target_group_entity_user = ft.TextField(label="Введите ссылку на группу", multiline=True, max_lines=19)
+
+    def btn_click(e) -> None:
+        config.get("link_to_the_group", "target_group_entity")
+        config.set("link_to_the_group", "target_group_entity", target_group_entity_user.value)
+        writing_settings_to_a_file(config)
+
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
+
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                target_group_entity_user,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 
 def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigParser:

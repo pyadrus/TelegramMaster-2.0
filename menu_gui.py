@@ -6,7 +6,7 @@ from system.menu.app_banner import program_version, date_of_program_change
 from system.menu.app_gui import output_the_input_field
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, \
     recording_text_for_sending_messages, record_account_name_newsletter, create_main_window, \
-    creating_the_main_window_for_proxy_data_entry
+    creating_the_main_window_for_proxy_data_entry, writing_link_to_the_group
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -193,10 +193,15 @@ def mainss(page: ft.Page):
                                                         on_click=lambda _: page.go("/recording_reaction_link")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Формирование списка чатов / каналов",
                                                         on_click=lambda _: page.go("/forming_list_of_chats_channels")),
+                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись ссылки",
+                                                        on_click=lambda _: page.go("/link_entry")),
 
                                       ], ))
         elif page.route == "/link_entry":
             print("Запись ссылки")
+
+        elif page.route == "/link_entry":  # ✔️ Запись ссылки
+            writing_link_to_the_group(page)
         elif page.route == "/forming_list_of_chats_channels":  # ✔️ Формирование списка чатов / каналов
             output_the_input_field(page, DatabaseHandler())
         elif page.route == "/recording_reaction_link":  # ✔️ Запись ссылки для реакций
