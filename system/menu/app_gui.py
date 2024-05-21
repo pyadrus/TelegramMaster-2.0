@@ -16,27 +16,31 @@ def create_window(page, width, height, resizable):
     page.window_resizable = resizable  # Запрет на изменение размера окна
 
 
-def output_the_input_field(db_handler) -> None:
+def output_the_input_field(page: ft.Page, db_handler) -> None:
     """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
+    text_to_send = ft.TextField(label="Введите список ссылок на группы", multiline=True, max_lines=19)
 
-    def main_inviting(page) -> None:
-        create_window(page=page, width=600, height=600, resizable=False)  # Создаем окно с размером 600 на 600 пикселей
-        text_to_send = ft.TextField(label="Введите список ссылок на группы", multiline=True, max_lines=19)
-        greetings = ft.Column()
+    def btn_click(e) -> None:
+        db_handler.open_and_read_data("writing_group_links")  # Удаление списка с группами
+        db_handler.write_to_single_column_table(name_database="writing_group_links",
+                                                database_columns="writing_group_links",
+                                                into_columns="writing_group_links",
+                                                recorded_data=text_to_send.value.split())
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
 
-        def btn_click(e) -> None:
-            page.update()
-            print(f"Вы ввели: {text_to_send}")
-            db_handler.open_and_read_data("writing_group_links")  # Удаление списка с группами
-            db_handler.write_to_single_column_table(name_database="writing_group_links",
-                                                    database_columns="writing_group_links",
-                                                    into_columns="writing_group_links",
-                                                    recorded_data=text_to_send.value.split())
-            page.window_close()
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
 
-        page.add(text_to_send, ft.ElevatedButton("Готово", on_click=btn_click), greetings, )
-
-    ft.app(target=main_inviting)
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                text_to_send,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 
 def writing_members(db_handler) -> None:
