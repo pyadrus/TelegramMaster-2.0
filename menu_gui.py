@@ -7,14 +7,14 @@ from system.menu.app_gui import output_the_input_field
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, \
     recording_text_for_sending_messages, record_account_name_newsletter, create_main_window, \
     creating_the_main_window_for_proxy_data_entry, writing_link_to_the_group, record_account_limits, \
-    record_message_limits, record_device_type
+    record_message_limits, record_device_type, writing_api_id_api_hash
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
 def mainss(page: ft.Page):
     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
-    page.window_width = 520  # window's ширина is 200 px
-    page.window_height = 720  # window's высота is 200 px
+    page.window_width = 580  # window's ширина is 200 px
+    page.window_height = 790  # window's высота is 200 px
     page.window_resizable = False  # window is not resizable
 
     # width - ширина,  # height - высота
@@ -205,8 +205,11 @@ def mainss(page: ft.Page):
                                                         on_click=lambda _: page.go("/message_limits")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Смена типа устройства",
                                                         on_click=lambda _: page.go("/changing_device_type")),
+                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись api_id, api_hash",
+                                                        on_click=lambda _: page.go("/recording_api_id_api_hash")),
                                       ], ))
-
+        elif page.route == "/recording_api_id_api_hash":  # ✔️ Запись api_id, api_hash
+            writing_api_id_api_hash(page)
         elif page.route == "/changing_device_type":  # ✔️ Смена типа устройства
             record_device_type(page)
         elif page.route == "/message_limits":  # ✔️ Лимиты на сообщения

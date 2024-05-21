@@ -115,16 +115,33 @@ def writing_settings_to_a_file(config) -> None:
         config.write(setup)  # Записываем данные в файл
 
 
-def writing_api_id_api_hash() -> configparser.ConfigParser:
+def writing_api_id_api_hash(page: ft.Page):
     """Записываем api, hash полученный с помощью регистрации приложения на сайте https://my.telegram.org/auth"""
-    api_id_data = console.input("[magenta][+] Введите api_id : ")
-    config.get("telegram_settings", "id")
-    config.set("telegram_settings", "id", api_id_data)
-    api_hash_data = console.input("[magenta][+] Введите api_hash : ")
-    config.get("telegram_settings", "hash")
-    config.set("telegram_settings", "hash", api_hash_data)
-    return config
+    api_id_data = ft.TextField(label="Введите api_id", multiline=True, max_lines=19)
+    api_hash_data = ft.TextField(label="Введите api_hash", multiline=True, max_lines=19)
 
+    def btn_click(e) -> None:
+        config.get("telegram_settings", "id")
+        config.set("telegram_settings", "id", api_id_data.value)
+        config.get("telegram_settings", "hash")
+        config.set("telegram_settings", "hash", api_hash_data.value)
+        writing_settings_to_a_file(config)
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
+
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                api_id_data,
+                api_hash_data,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 def writing_link_to_the_group(page: ft.Page):
     """Записываем ссылку для inviting групп"""
