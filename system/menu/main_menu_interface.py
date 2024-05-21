@@ -273,8 +273,7 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     table.add_row("7", "Лимиты на аккаунт")
     table.add_row("8", "Смена типа устройства")
     table.add_row("10", "Лимиты на сообщения")
-    table.add_row("12", "Запись ссылки для реакций")
-    # table.add_row("13", "Запись количества аккаунтов для реакций")
+    # table.add_row("12", "Запись ссылки для реакций")
     table.add_row("16", "Формирование списка чатов / каналов")
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
@@ -292,10 +291,8 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
         writing_settings_to_a_file(config=record_device_type())
     elif user_input == "10":  # Запись лимитов на количество сообщений
         writing_settings_to_a_file(config=record_message_limits())
-    elif user_input == "12":  # Запись ссылки для реакций
-        recording_link_channel()
-    # elif user_input == "13":  # Запись ссылки для рассылки
-    #     record_the_number_of_accounts()
+    # elif user_input == "12":  # Запись ссылки для реакций
+    #     recording_link_channel()
     elif user_input == "16":  # Формирование списка чатов
         output_the_input_field(db_handler)  # Вызов функции формирования списка чатов
     else:

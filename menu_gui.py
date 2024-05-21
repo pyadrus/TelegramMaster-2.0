@@ -1,6 +1,7 @@
 import flet as ft
 
-from system.account_actions.reactions.reactions import reaction_gui, record_the_number_of_accounts
+from system.account_actions.reactions.reactions import reaction_gui, record_the_number_of_accounts, \
+    recording_link_channel
 from system.menu.app_banner import program_version, date_of_program_change
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, \
     recording_text_for_sending_messages, record_account_name_newsletter, create_main_window, \
@@ -187,10 +188,14 @@ def mainss(page: ft.Page):
                                                         on_click=lambda _: page.go("/record_your_account_name")),
                                       ft.ElevatedButton(width=500, height=30, text="✔️ Время между подпиской",
                                                         on_click=lambda _: page.go("/time_between_subscriptionss")),
+                                      ft.ElevatedButton(width=500, height=30, text="✔️ Запись ссылки для реакций",
+                                                        on_click=lambda _: page.go("/recording_reaction_link")),
 
                                       ], ))
         elif page.route == "/link_entry":
             print("Запись ссылки")
+        elif page.route == "/recording_reaction_link":  # ✔️ Запись ссылки для реакций
+            recording_link_channel(page)
         elif page.route == "/recording_number_accounts_reactions":  # ✔️ Запись количества аккаунтов для реакций
             record_the_number_of_accounts(page)
         elif page.route == "/choice_of_reactions":  # ✔️ Выбор реакций

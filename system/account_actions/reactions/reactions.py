@@ -137,26 +137,29 @@ def record_the_number_of_accounts(page: ft.Page):
     )
 
 
-def recording_link_channel():
+def recording_link_channel(page: ft.Page):
     """Запись ссылки на канал / группу"""
+    smaller_time = ft.TextField(label="Введите ссылку на группу", autofocus=True)
 
-    def main_inviting(page) -> None:
-        page.window_width = 300  # ширина окна
-        page.window_height = 300  # высота окна
-        page.window_resizable = False  # Запрет на изменение размера окна
-        smaller_time = ft.TextField(label="Введите ссылку на группу", autofocus=True)
-        greetings = ft.Column()
+    def btn_click(e) -> None:
+        link_text = smaller_time.value  # Extract the text value from the TextField
+        save_reactions(reactions=link_text,
+                       path_to_the_file='user_settings/reactions/link_channel.json')  # Запись ссылки в json файл
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
 
-        def btn_click(e) -> None:
-            page.update()
-            link_text = smaller_time.value  # Extract the text value from the TextField
-            save_reactions(reactions=link_text,
-                           path_to_the_file='user_settings/reactions/link_channel.json')  # Запись ссылки в json файл
-            page.window_close()
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
 
-        page.add(smaller_time, ft.ElevatedButton("Сохранить", on_click=btn_click), greetings, )
-
-    ft.app(target=main_inviting)
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                smaller_time,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 
 def reaction_gui(page: ft.Page):
