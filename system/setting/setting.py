@@ -46,12 +46,30 @@ def record_account_limits(page: ft.Page):
     )
 
 
-def record_message_limits() -> configparser.ConfigParser:
+def record_message_limits(page: ft.Page):
     """Запись лимитов на сообщения"""
-    limits = console.input("[magenta][+] Введите лимит на аккаунт : ")
-    config.get("message_limits", "message_limits")
-    config.set("message_limits", "message_limits", limits)
-    return config
+    limits = ft.TextField(label="Введите лимит на аккаунт", multiline=True, max_lines=19)
+
+    def btn_click(e) -> None:
+        config.get("message_limits", "message_limits")
+        config.set("message_limits", "message_limits", limits.value)
+        writing_settings_to_a_file(config)
+
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
+
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                limits,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 
 def record_device_type() -> configparser.ConfigParser():
