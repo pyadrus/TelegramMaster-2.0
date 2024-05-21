@@ -331,5 +331,4 @@ def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
 
 
 if __name__ == "__main__":
-    writing_link_to_the_group()
     record_account_limits()

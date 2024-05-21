@@ -268,7 +268,6 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     table = Table(title="[medium_purple3]Настройки программы!", box=box.HORIZONTALS)  # Выводим таблицу
     column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
-    # table.add_row("1", "Запись ссылки")
     table.add_row("2", "Запись api_id, api_hash")
     table.add_row("7", "Лимиты на аккаунт")
     table.add_row("8", "Смена типа устройства")
@@ -276,10 +275,6 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     console.print(table, justify="center")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    # if user_input == "1":  # Запись ссылки для inviting (Записываем ссылку на группу, которую будем inviting)
-    #     print("[magenta][!] Давайте запишем ссылку для inviting, ссылка должна быть [medium_purple3]одна! Обратите "
-    #           "внимание, что программа будет заново запущена")
-    #     writing_settings_to_a_file(config=writing_link_to_the_group())
     if user_input == "2":  # Запись id, hash в файл
         print("[medium_purple3][!] Получить api_id, api_hash можно на сайте https://my.telegram.org/auth")
         writing_settings_to_a_file(config=writing_api_id_api_hash())

@@ -197,8 +197,6 @@ def mainss(page: ft.Page):
                                                         on_click=lambda _: page.go("/link_entry")),
 
                                       ], ))
-        elif page.route == "/link_entry":
-            print("Запись ссылки")
 
         elif page.route == "/link_entry":  # ✔️ Запись ссылки
             writing_link_to_the_group(page)
