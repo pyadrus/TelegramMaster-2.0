@@ -269,7 +269,7 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     column_names(table)  # Формируем колонки таблицы
     # Выводим текст в таблице
     table.add_row("2", "Запись api_id, api_hash")
-    table.add_row("7", "Лимиты на аккаунт")
+    # table.add_row("7", "Лимиты на аккаунт")
     table.add_row("8", "Смена типа устройства")
     table.add_row("10", "Лимиты на сообщения")
     console.print(table, justify="center")  # Отображаем таблицу
@@ -278,8 +278,8 @@ def program_settings(db_handler) -> None:  # 8 - Настройки програ
     if user_input == "2":  # Запись id, hash в файл
         print("[medium_purple3][!] Получить api_id, api_hash можно на сайте https://my.telegram.org/auth")
         writing_settings_to_a_file(config=writing_api_id_api_hash())
-    elif user_input == "7":  # Запись лимитов на аккаунт
-        writing_settings_to_a_file(config=record_account_limits())
+    # elif user_input == "7":  # Запись лимитов на аккаунт
+    #     writing_settings_to_a_file(config=record_account_limits())
     elif user_input == "8":  # Запись типа устройства
         writing_settings_to_a_file(config=record_device_type())
     elif user_input == "10":  # Запись лимитов на количество сообщений
