@@ -20,7 +20,7 @@ class ConfigReader:
         self.config.read('user_settings/config.ini')
 
     def get_link_group(self):
-        return self.config.get('link_to_the_group', 'target_group_entity', fallback=None)
+        return self.config.get('link_to_the_group', 'link_to_the_group', fallback=None)
 
     def get_time_subscription(self):
         return (self.config.getint('time_subscription', 'time_subscription_1', fallback=None),

@@ -5,9 +5,9 @@ from system.account_actions.reactions.reactions import reaction_gui, record_the_
 from system.menu.app_banner import program_version, date_of_program_change
 from system.menu.app_gui import output_the_input_field
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, \
-    recording_text_for_sending_messages, record_account_name_newsletter, create_main_window, \
-    creating_the_main_window_for_proxy_data_entry, writing_link_to_the_group, record_device_type, \
-    writing_api_id_api_hash, record_limits
+    recording_text_for_sending_messages, create_main_window, \
+    creating_the_main_window_for_proxy_data_entry, record_device_type, \
+    writing_api_id_api_hash, record_setting
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 line_width = 580  # Ширина окна и ширина строки
@@ -217,11 +217,11 @@ def mainss(page: ft.Page):
         elif page.route == "/changing_device_type":  # ✔️ Смена типа устройства
             record_device_type(page)
         elif page.route == "/message_limits":  # ✔️ Лимиты на сообщения
-            record_limits(page, "message_limits", "Введите лимит на сообщения")
+            record_setting(page, "message_limits", "Введите лимит на сообщения")
         elif page.route == "/account_limits":  # ✔️ Лимиты на аккаунт
-            record_limits(page, "account_limits", "Введите лимит на аккаунт")
+            record_setting(page, "account_limits", "Введите лимит на аккаунт")
         elif page.route == "/link_entry":  # ✔️ Запись ссылки
-            writing_link_to_the_group(page)
+            record_setting(page, "link_to_the_group", "Введите ссылку на группу")
         elif page.route == "/forming_list_of_chats_channels":  # ✔️ Формирование списка чатов / каналов
             output_the_input_field(page, DatabaseHandler())
         elif page.route == "/recording_reaction_link":  # ✔️ Запись ссылки для реакций
@@ -243,7 +243,7 @@ def mainss(page: ft.Page):
         elif page.route == "/message_recording":  # ✔️ Запись сообщений
             recording_text_for_sending_messages(page)
         elif page.route == "/record_your_account_name":  # ✔️ Запись имени аккаунта
-            record_account_name_newsletter(page)
+            record_setting(page, "account_name_newsletter", "Введите название аккаунта для отправки сообщений по чатам")
         elif page.route == "/time_between_subscriptionss":  # ✔️ Время между подпиской
             create_main_window(page, variable="time_subscription")
         page.update()

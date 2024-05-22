@@ -19,7 +19,7 @@ configs_reader = ConfigReader()
 api_id_data, api_hash_data = configs_reader.get_api_id_data_api_hash_data()
 
 
-def record_limits(page: ft.Page, limit_type: str, label: str):
+def record_setting(page: ft.Page, limit_type: str, label: str):
     """Запись лимитов на аккаунт или сообщение"""
     limits = ft.TextField(label=label, multiline=True, max_lines=19)
 
@@ -81,12 +81,6 @@ def record_device_type(page: ft.Page):
     )
 
 
-def writing_settings_to_a_file(config) -> None:
-    """Запись данных в файл user_settings/config.ini"""
-    with open("user_settings/config.ini", "w") as setup:  # Открываем файл в режиме записи
-        config.write(setup)  # Записываем данные в файл
-
-
 def writing_api_id_api_hash(page: ft.Page):
     """Записываем api, hash полученный с помощью регистрации приложения на сайте https://my.telegram.org/auth"""
     api_id_data = ft.TextField(label="Введите api_id", multiline=True, max_lines=19)
@@ -116,30 +110,10 @@ def writing_api_id_api_hash(page: ft.Page):
     )
 
 
-def writing_link_to_the_group(page: ft.Page):
-    """Записываем ссылку для inviting групп"""
-    target_group_entity_user = ft.TextField(label="Введите ссылку на группу", multiline=True, max_lines=19)
-
-    def btn_click(e) -> None:
-        config.get("link_to_the_group", "target_group_entity")
-        config.set("link_to_the_group", "target_group_entity", target_group_entity_user.value)
-        writing_settings_to_a_file(config)
-
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                target_group_entity_user,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
+def writing_settings_to_a_file(config) -> None:
+    """Запись данных в файл user_settings/config.ini"""
+    with open("user_settings/config.ini", "w") as setup:  # Открываем файл в режиме записи
+        config.write(setup)  # Записываем данные в файл
 
 
 def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigParser:
@@ -270,33 +244,6 @@ def get_unique_filename(base_filename):
         if not os.path.isfile(new_filename):
             return new_filename
         index += 1
-
-
-def record_account_name_newsletter(page: ft.Page):
-    """Запись имени аккаунта"""
-    text_to_send = ft.TextField(label="Введите название аккаунта для отправки сообщений по чатам",
-                                multiline=True, max_lines=19)
-
-    def btn_click(e) -> None:
-        config.get("account_name_newsletter", "account_name_newsletter")
-        config.set("account_name_newsletter", "account_name_newsletter", text_to_send.value)
-        writing_settings_to_a_file(config)
-
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                text_to_send,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
 
 
 def recording_text_for_sending_messages(page: ft.Page) -> None:
