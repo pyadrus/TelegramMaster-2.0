@@ -480,7 +480,3 @@ def viewing_posts(db_handler) -> None:
             client.disconnect()
 
     app_notifications(notification_text=f"Работа с каналом {chat} окончена!")
-
-
-if __name__ == "__main__":
-    reaction_gui()

@@ -19,40 +19,13 @@ configs_reader = ConfigReader()
 api_id_data, api_hash_data = configs_reader.get_api_id_data_api_hash_data()
 
 
-def record_account_limits(page: ft.Page):
-    """Запись лимитов на аккаунт"""
-    limits = ft.TextField(label="Введите лимит на аккаунт", multiline=True, max_lines=19)
+def record_limits(page: ft.Page, limit_type: str, label: str):
+    """Запись лимитов на аккаунт или сообщение"""
+    limits = ft.TextField(label=label, multiline=True, max_lines=19)
 
     def btn_click(e) -> None:
-        config.get("account_limits", "limits")
-        config.set("account_limits", "limits", limits.value)
-        writing_settings_to_a_file(config)
-
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    # return config
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                limits,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
-
-
-def record_message_limits(page: ft.Page):
-    """Запись лимитов на сообщения"""
-    limits = ft.TextField(label="Введите лимит на аккаунт", multiline=True, max_lines=19)
-
-    def btn_click(e) -> None:
-        config.get("message_limits", "message_limits")
-        config.set("message_limits", "message_limits", limits.value)
+        config.get(limit_type, limit_type)
+        config.set(limit_type, limit_type, limits.value)
         writing_settings_to_a_file(config)
 
         page.go("/settings")  # Изменение маршрута в представлении существующих настроек
@@ -80,7 +53,6 @@ def record_device_type(page: ft.Page):
     app_version = ft.TextField(label="Введите версию приложения", multiline=True, max_lines=19)
 
     def btn_click(e) -> None:
-
         config.get("device_model", "device_model")
         config.set("device_model", "device_model", device_model.value)
         config.get("system_version", "system_version")
@@ -142,6 +114,7 @@ def writing_api_id_api_hash(page: ft.Page):
             ],
         )
     )
+
 
 def writing_link_to_the_group(page: ft.Page):
     """Записываем ссылку для inviting групп"""
@@ -395,7 +368,3 @@ def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
             ],
         )
     )
-
-
-if __name__ == "__main__":
-    record_account_limits()
