@@ -15,7 +15,16 @@ from system.auxiliary_functions.auxiliary_functions import find_files, read_json
 from system.auxiliary_functions.global_variables import console
 from system.notification.notification import app_notifications
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
+
+
+def choosing_random_reaction():
+    """Выбираем случайное значение из списка (реакция)"""
+    reaction_input = read_json_file(filename='user_settings/reactions/reactions.json')
+    random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
+    logger.info(random_value)
+    return random_value
 
 
 async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> None:
@@ -37,10 +46,7 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
         try:
             await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
             time.sleep(5)
-            reaction_input = read_json_file(filename='user_settings/reactions/reactions.json')
-
-            random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
-            logger.info(random_value)
+            random_value = choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
             await client(SendReactionRequest(peer=chat, msg_id=int(number),
                                              reaction=[types.ReactionEmoji(emoticon=f'{random_value}')]))
             time.sleep(1)
@@ -96,197 +102,53 @@ def setting_reactions(db_handler):
     client.run_until_disconnected()  # Запуск клиента
 
 
-def users_choice_of_reaction(db_handler) -> None:
-    """Выбираем реакцию для выставления в чате / канале"""
-    print("[medium_purple3][!] Давайте выберем какую реакцию будем ставить\n",
-          "[magenta][0] Поднятый большой палец 👍\n",
-          "[magenta][1] Опущенный большой палец 👎\n",
-          "[magenta][2] Красное сердце ❤\n",
-          "[magenta][3] Огонь 🔥\n",
-          "[magenta][4] Хлопушка 🎉\n",
-          "[magenta][5] Лицо, кричащее от страха 😱\n",
-          "[magenta][6] Широко улыбающееся лицо 😁\n",
-          "[magenta][7] Лицо с открытым ртом и в холодном поту 😢\n",
-          "[magenta][8] Фекалии 💩\n",
-          "[magenta][9] Аплодирующие руки 👏\n"
-          "[magenta][10] Злость 😡\n"
-          "[magenta][11] Женщина разводит руками 🤷‍♀️\n"
-          "[magenta][12] Человек разводит руками 🤷\n"
-          "[magenta][13] Мужчина разводит руками 🤷‍♂️\n"
-          "[magenta][14] Космический монстр 👾️\n"
-          "[magenta][15] Лицо в темных очках 😎\n"
-          "[magenta][16] Ничего не скажу 🙊\n"
-          "[magenta][17] Таблетка 💊\n"
-          "[magenta][18] Воздушный поцелуй 😘\n"
-          "[magenta][19] Единорог 🦄\n"
-          "[magenta][20] Сердце со стрелой 💘\n"
-          "[magenta][21] Значок круто 🆒\n"
-          "[magenta][22] Каменное лицо 🗿\n"
-          "[magenta][23] Глупое лицо 🤪\n"
-          "[magenta][24] Маникюр 💅\n"
-          "[magenta][25] Снеговик ☃️\n"
-          "[magenta][26] Елочка 🎄\n"
-          "[magenta][27] Дед мороз 🎅\n"
-          "[magenta][28] Объятия 🤗\n"
-          "[magenta][29] Непечатные выражения 🤬\n"
-          "[magenta][30] Тошнота 🤮\n"
-          "[magenta][31] Клоун 🤡\n"
-          "[magenta][32] Одурманенное лицо 🥴\n"
-          "[magenta][33] Влюбленный глаза 😍\n"
-          "[magenta][34] Сто балов 💯\n"
-          "[magenta][35] Хот-дог 🌭\n"
-          "[magenta][36] Высокое напряжение ⚡️\n"
-          "[magenta][37] Банан 🍌\n"
-          "[magenta][38] Средний палец 🖕\n"
-          "[magenta][39] Поцелуй 💋\n"
-          "[magenta][40] Глаза 👀\n"
-          "[magenta][41] Рукопожатие 🤝\n"
-          "[magenta][42] Шампанское 🍾\n"
-          "[magenta][43] Кубок 🏆\n"
-          "[magenta][44] Зевота 🥱\n"
-          "[magenta][45] Голубь мира 🕊\n"
-          "[magenta][46] Слезы рекой 😭")
+class WorkingWithReactions:  # Класс для работы с реакциями
 
-    user_input = console.input("[medium_purple3][+] Введите номер: ")
+    def __init__(self, db_handler: DatabaseHandler):
+        self.db_handler = db_handler
 
-    if user_input == "0":
-        reactions_for_groups_and_messages(reaction_input="👍", db_handler=db_handler)  # Поднятый большой палец
-    elif user_input == "1":
-        reactions_for_groups_and_messages(reaction_input="👎", db_handler=db_handler)  # Опущенный большой палец
-    elif user_input == "2":
-        reactions_for_groups_and_messages(reaction_input="❤", db_handler=db_handler)  # Красное сердце
-    elif user_input == "3":
-        reactions_for_groups_and_messages(reaction_input="🔥", db_handler=db_handler)  # Огонь
-    elif user_input == "4":
-        reactions_for_groups_and_messages(reaction_input="🎉", db_handler=db_handler)  # Хлопушка
-    elif user_input == "5":
-        reactions_for_groups_and_messages(reaction_input="😱", db_handler=db_handler)  # Лицо, кричащее от страха
-    elif user_input == "6":
-        reactions_for_groups_and_messages(reaction_input="😁", db_handler=db_handler)  # Широко улыбающееся лицо
-    elif user_input == "7":
-        reactions_for_groups_and_messages(reaction_input="😢",
-                                          db_handler=db_handler)  # Лицо с открытым ртом и в холодном поту
-    elif user_input == "8":
-        reactions_for_groups_and_messages(reaction_input="💩", db_handler=db_handler)  # Фекалии
-    elif user_input == "9":
-        reactions_for_groups_and_messages(reaction_input="👏", db_handler=db_handler)  # Аплодирующие руки
-    elif user_input == "11":
-        reactions_for_groups_and_messages(reaction_input="🤷‍♀️", db_handler=db_handler)  # Женщина разводит руками
-    elif user_input == "12":
-        reactions_for_groups_and_messages(reaction_input="🤷", db_handler=db_handler)  # Человек разводит руками
-    elif user_input == "13":
-        reactions_for_groups_and_messages(reaction_input="🤷‍♂️", db_handler=db_handler)  # Мужчина разводит руками
-    elif user_input == "14":
-        reactions_for_groups_and_messages(reaction_input="👾️", db_handler=db_handler)  # Космический монстр
-    elif user_input == "15":
-        reactions_for_groups_and_messages(reaction_input="😎", db_handler=db_handler)  # Лицо в темных очках
-    elif user_input == "16":
-        reactions_for_groups_and_messages(reaction_input="🙊", db_handler=db_handler)  # Ничего не скажу
-    elif user_input == "17":
-        reactions_for_groups_and_messages(reaction_input="💊", db_handler=db_handler)  # Таблетка
-    elif user_input == "18":
-        reactions_for_groups_and_messages(reaction_input="😘", db_handler=db_handler)  # Воздушный поцелуй
-    elif user_input == "19":
-        reactions_for_groups_and_messages(reaction_input="🦄", db_handler=db_handler)  # Единорог
-    elif user_input == "20":
-        reactions_for_groups_and_messages(reaction_input="💘", db_handler=db_handler)  # Сердце со стрелой
-    elif user_input == "21":
-        reactions_for_groups_and_messages(reaction_input="🆒", db_handler=db_handler)  # Значок круто
-    elif user_input == "22":
-        reactions_for_groups_and_messages(reaction_input="🗿", db_handler=db_handler)  # Каменное лицо
-    elif user_input == "23":
-        reactions_for_groups_and_messages(reaction_input="🤪", db_handler=db_handler)  # Глупое лицо
-    elif user_input == "24":
-        reactions_for_groups_and_messages(reaction_input="💅", db_handler=db_handler)  # Маникюр
-    elif user_input == "25":
-        reactions_for_groups_and_messages(reaction_input="☃", db_handler=db_handler)  # Снеговик
-    elif user_input == "26":
-        reactions_for_groups_and_messages(reaction_input="🎄", db_handler=db_handler)  # Елочка
-    elif user_input == "27":
-        reactions_for_groups_and_messages(reaction_input="🎅", db_handler=db_handler)  # Дед мороз
-    elif user_input == "28":
-        reactions_for_groups_and_messages(reaction_input="🤗", db_handler=db_handler)  # Объятия
-    elif user_input == "29":
-        reactions_for_groups_and_messages(reaction_input="🤬", db_handler=db_handler)  # Непечатные выражения
-    elif user_input == "30":
-        reactions_for_groups_and_messages(reaction_input="🤮", db_handler=db_handler)  # Тошнота
-    elif user_input == "31":
-        reactions_for_groups_and_messages(reaction_input="🤡", db_handler=db_handler)  # Клоун
-    elif user_input == "32":
-        reactions_for_groups_and_messages(reaction_input="🥴", db_handler=db_handler)  # Одурманенное лицо
-    elif user_input == "33":
-        reactions_for_groups_and_messages(reaction_input="😍", db_handler=db_handler)  # Влюбленный глаза
-    elif user_input == "34":
-        reactions_for_groups_and_messages(reaction_input="💯", db_handler=db_handler)  # Сто балов
-    elif user_input == "35":
-        reactions_for_groups_and_messages(reaction_input="🌭", db_handler=db_handler)  # Хот-дог
-    elif user_input == "36":
-        reactions_for_groups_and_messages(reaction_input="⚡️", db_handler=db_handler)  # Высокое напряжение
-    elif user_input == "37":
-        reactions_for_groups_and_messages(reaction_input="🍌", db_handler=db_handler)  # Банан
-    elif user_input == "38":
-        reactions_for_groups_and_messages(reaction_input="🖕", db_handler=db_handler)  # Средний палец
-    elif user_input == "39":
-        reactions_for_groups_and_messages(reaction_input="💋", db_handler=db_handler)  # Поцелуй
-    elif user_input == "40":
-        reactions_for_groups_and_messages(reaction_input="👀", db_handler=db_handler)  # Глаза
-    elif user_input == "41":
-        reactions_for_groups_and_messages(reaction_input="🤝", db_handler=db_handler)  # Рукопожатие
-    elif user_input == "42":
-        reactions_for_groups_and_messages(reaction_input="🍾", db_handler=db_handler)  # Шампанское
-    elif user_input == "43":
-        reactions_for_groups_and_messages(reaction_input="🏆", db_handler=db_handler)  # Кубок
-    elif user_input == "44":
-        reactions_for_groups_and_messages(reaction_input="🥱", db_handler=db_handler)  # Зевота
-    elif user_input == "45":
-        reactions_for_groups_and_messages(reaction_input="🕊", db_handler=db_handler)  # Голубь мира
-    elif user_input == "46":
-        reactions_for_groups_and_messages(reaction_input="😭", db_handler=db_handler)  # Слезы рекой
+    def users_choice_of_reaction(self) -> None:
+        """Выбираем реакцию для выставления в чате / канале"""
+        chat = console.input("[medium_purple3][+] Введите ссылку на группу / канал: ")  # Ссылка на группу или канал
+        message = console.input("[medium_purple3][+] Введите ссылку на сообщение или пост: ")  # Ссылка на сообщение
+        records: list = self.choosing_a_number_of_reactions()  # Выбираем лимиты для аккаунтов
+        random_value = choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
+        self.send_reaction_request(records, chat, message, random_value)  # Ставим реакцию на пост, сообщение
 
+    def choosing_a_number_of_reactions(self) -> list:
+        """Выбираем лимиты для аккаунтов"""
+        print("[medium_purple3]Введите количество с которых будут поставлены реакции")
+        # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
+        records: list = self.db_handler.open_and_read_data("config")
+        # Количество аккаунтов на данный момент в работе
+        print(f"[medium_purple3]Всего accounts: {len(records)}")
+        # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
+        number_of_accounts = console.input("[medium_purple3][+] Введите количество аккаунтов для выставления реакций: ")
+        records: list = self.db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
+                                                                          number_of_accounts=int(number_of_accounts))
+        return records
 
-def reactions_for_groups_and_messages(reaction_input, db_handler) -> None:
-    """Вводим ссылку на группу и ссылку на сообщение"""
-    chat = console.input("[medium_purple3][+] Введите ссылку на группу / канал: ")  # Ссылка на группу или канал
-    message = console.input("[medium_purple3][+] Введите ссылку на сообщение или пост: ")  # Ссылка на сообщение
-    records: list = choosing_a_number_of_reactions(db_handler)  # Выбираем лимиты для аккаунтов
-    send_reaction_request(records, chat, message, reaction_input, db_handler)  # Ставим реакцию на пост, сообщение
+    def send_reaction_request(self, records, chat, message_url, reaction_input) -> None:
+        """Ставим реакции на сообщения"""
+        for row in records:
+            # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
+            client, phone = telegram_connect_and_output_name(row, self.db_handler)
+            try:
+                subscribe_to_group_or_channel(client, chat, phone, self.db_handler)  # Подписываемся на группу
+                number = re.search(r'/(\d+)$', message_url).group(1)
+                time.sleep(5)
+                client(SendReactionRequest(peer=chat, msg_id=int(number),
+                                           reaction=[types.ReactionEmoji(emoticon=f'{reaction_input}')]))
+                time.sleep(1)
+            except KeyError:
+                sys.exit(1)
+            except Exception as e:
+                logger.exception(e)
+                print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+            finally:
+                client.disconnect()
 
-
-def choosing_a_number_of_reactions(db_handler) -> list:
-    """Выбираем лимиты для аккаунтов"""
-    print("[medium_purple3]Введите количество с которых будут поставлены реакции")
-    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = db_handler.open_and_read_data("config")
-    # Количество аккаунтов на данный момент в работе
-    print(f"[medium_purple3]Всего accounts: {len(records)}")
-    # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    number_of_accounts = console.input("[medium_purple3][+] Введите количество аккаунтов для выставления реакций: ")
-    records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
-                                                                 number_of_accounts=int(number_of_accounts))
-    return records
-
-
-def send_reaction_request(records, chat, message_url, reaction_input, db_handler) -> None:
-    """Ставим реакции на сообщения"""
-    for row in records:
-        # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row, db_handler)
-        try:
-            subscribe_to_group_or_channel(client, chat, phone, db_handler)  # Подписываемся на группу
-            number = re.search(r'/(\d+)$', message_url).group(1)
-            time.sleep(5)
-            client(SendReactionRequest(peer=chat, msg_id=int(number),
-                                       reaction=[types.ReactionEmoji(emoticon=f'{reaction_input}')]))
-            time.sleep(1)
-        except KeyError:
-            sys.exit(1)
-        except Exception as e:
-            logger.exception(e)
-            print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
-        finally:
-            client.disconnect()
-
-    app_notifications(notification_text=f"Работа с группой {chat} окончена!")
+        app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
 
 def viewing_posts(db_handler) -> None:

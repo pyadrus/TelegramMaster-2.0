@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 from loguru import logger
 from telethon import functions
 
-from system.sqlite_working_tools.sqlite_working_tools import select_from_config_by_phone
+from system.sqlite_working_tools.sqlite_working_tools import select_from_config_by_phone, DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
@@ -42,8 +42,9 @@ def create_gui(account_list, db_handler) -> None:
     window.close()
 
 
-def creating_groups_and_chats(db_handler) -> None:
+def creating_groups_and_chats() -> None:
     """Создание групп (чатов) в автоматическом режиме"""
+    db_handler = DatabaseHandler()
     accounts = get_account_list(db_handler)
     phones = [rows[0] for rows in accounts]  # Извлечение номеров телефонов (rows[2]) из списка учетных записей
     create_gui(phones, db_handler)  # Передача всего списка учетных записей в create_gui
