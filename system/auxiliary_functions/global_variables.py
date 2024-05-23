@@ -61,6 +61,9 @@ class ConfigReader:
         return (self.config.get('hour_minutes_every_day', 'hour', fallback=None),
                 self.config.get('hour_minutes_every_day', 'minutes', fallback=None))
 
+    def account_name_newsletter(self):
+        return self.config.get('account_name_newsletter', 'account_name_newsletter', fallback=None)
+
 
 # Пример использования
 config_reader = ConfigReader()

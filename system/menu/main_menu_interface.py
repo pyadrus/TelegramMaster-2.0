@@ -9,14 +9,13 @@ from system.account_actions.invitation.telegram_invite_scheduler import *
 from system.account_actions.parsing.parsing_account_groups_and_channels import *
 from system.account_actions.parsing.parsing_group_members import *
 from system.account_actions.reactions.reactions import *
-from system.account_actions.sending_messages.chat_dialog_mes import *
+from system.account_actions.sending_messages.chat_dialog_mes import mains
 from system.account_actions.sending_messages.sending_messages_telegram import *
 from system.account_actions.sending_messages.telegram_chat_dialog import *
 from system.account_actions.subscription.subscription import *
 from system.account_actions.unsubscribe.unsubscribe import *
 from system.auxiliary_functions.auxiliary_functions import *
 from system.auxiliary_functions.global_variables import *
-from system.menu.app_gui import *
 from system.setting.setting import *
 from system.sqlite_working_tools.sqlite_working_tools import *
 
@@ -41,7 +40,7 @@ def main_menu() -> None:  # 1 - Основное меню программы
     table.add_row("9", "Проверка аккаунтов")
     table.add_row("10", "Создание групп (чатов)")
     table.add_row("11", "Редактирование BIO")
-    console.print(table, justify="center")  # Отображаем таблицу
+    console.print(table, justify="left")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Инвайтинг
@@ -112,7 +111,6 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
     table.add_row("3", "Парсинг активных участников группы")
     table.add_row("4", "Парсинг групп / каналов на которые подписан аккаунт")
     table.add_row("5", "Очистка списка от ранее спарсенных данных")
-    table.add_row("6", "Формирование списка username")
     table.add_row("0", "В начальное меню")
     console.print(table, justify="left")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер функции: ")
@@ -131,8 +129,6 @@ def telegram_parsing_menu(db_handler) -> None:  # 2 - Parsing групп и ак
         parsing_groups_which_account_subscribed(db_handler)
     elif user_input == "5":  # Очистка списка от ранее спарсенных данных
         db_handler.cleaning_db(name_database_table="members")
-    elif user_input == "6":  # Формирование списка username
-        writing_members(db_handler)
     elif user_input == "0":  # Вернуться назад
         main_menu()  # После отработки функции переходим в начальное меню
     else:
@@ -150,7 +146,7 @@ def working_tools_contacts(db_handler) -> None:  # 3 - Работаем с ко�
     table.add_row("3", "Удаление контактов")
     table.add_row("4", "Добавление контактов")
     table.add_row("0", "Вернуться назад")
-    console.print(table, justify="center")  # Отображаем таблицу
+    console.print(table, justify="left")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Формирование списка контактов
@@ -177,7 +173,7 @@ def subscribe_unsubscribe_write_to_file(db_handler) -> None:  # 4 - Подпис
     table.add_row("1", "Подписка")
     table.add_row("2", "Отписываемся")
     table.add_row("0", "Вернуться назад")
-    console.print(table, justify="center")  # Отображаем таблицу
+    console.print(table, justify="left")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Запись: групп, каналов в файл, в файл user_settings/software_database.db
@@ -206,7 +202,7 @@ def personal_account_chat_messages_distribution(db_handler) -> None:  # 6 - Ра
     table.add_row("7", "Отправка сообщений в личку (с лимитами)")
     table.add_row("8", "Отправка файлов в личку (с лимитами)")
     table.add_row("0", "В начальное меню")
-    console.print(table, justify="center")  # Отображаем таблицу
+    console.print(table, justify="left")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Отправка сообщений в личку
@@ -243,7 +239,7 @@ def working_with_the_reaction(db_handler) -> None:  # 7 - Работа с реа
     table.add_row("2", "Накручиваем просмотры постов")
     table.add_row("3", "Автоматическое выставление реакций")
     table.add_row("0", "Вернуться назад")
-    console.print(table, justify="center")  # Отображаем таблицу
+    console.print(table, justify="left")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Ставим реакции на один пост в группе / канале
@@ -271,7 +267,7 @@ def working_with_bio() -> None:  # 11 - Работа с био аккаунта 
     table.add_row("4", "Изменение имени")
     table.add_row("5", "Изменение фамилии")
     table.add_row("0", "Вернуться назад")
-    console.print(table, justify="center")  # Отображаем таблицу
+    console.print(table, justify="left")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     if user_input == "1":

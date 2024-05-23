@@ -13,7 +13,7 @@ from system.auxiliary_functions.global_variables import ConfigReader
 
 configs_reader = ConfigReader()
 api_id_data, api_hash_data = configs_reader.get_api_id_data_api_hash_data()
-account_name_newsletter = configs_reader.get_account_name_newsletter()
+account_name_newsletter = configs_reader.account_name_newsletter()
 time_sending_messages_1, time_sending_messages_2 = configs_reader.get_time_sending_messages()
 
 

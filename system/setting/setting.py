@@ -2,8 +2,9 @@ import configparser
 import getpass
 import json
 import os
-
-import flet as ft
+import sys
+import io
+import flet as ft  # Импортируем библиотеку flet
 from rich import print
 from telethon import TelegramClient
 from telethon.errors import *
@@ -17,6 +18,40 @@ config.read("user_settings/config.ini")
 
 configs_reader = ConfigReader()
 api_id_data, api_hash_data = configs_reader.get_api_id_data_api_hash_data()
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+
+def output_the_input_field(page: ft.Page, db_handler) -> None:
+    """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
+    text_to_send = ft.TextField(label="Введите список ссылок на группы", multiline=True, max_lines=19)
+
+    def btn_click(e) -> None:
+        db_handler.open_and_read_data("writing_group_links")  # Удаление списка с группами
+        db_handler.write_to_single_column_table(name_database="writing_group_links",
+                                                database_columns="writing_group_links",
+                                                into_columns="writing_group_links",
+                                                recorded_data=text_to_send.value.split())
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
+
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                text_to_send,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
+
+
+def save_reactions(reactions, path_to_the_file):
+    with open(path_to_the_file, 'w', encoding='utf-8') as file:
+        json.dump(reactions, file, ensure_ascii=False, indent=4)
 
 
 def record_setting(page: ft.Page, limit_type: str, label: str):
@@ -310,6 +345,179 @@ def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
             [
                 hour_textfield,
                 minutes_textfield,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
+
+
+def record_the_number_of_accounts(page: ft.Page):
+    """Запись количества аккаунтов проставляющих реакции"""
+    smaller_time = ft.TextField(label="Введите количество реакций", autofocus=True)
+
+    def btn_click(e) -> None:
+        try:
+            smaller_times = int(smaller_time.value)  # Extract the text value from the TextField
+            save_reactions(reactions=smaller_times,  # Количество аккаунтов для проставления реакций
+                           path_to_the_file='user_settings/reactions/number_accounts.json')
+            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        except ValueError:
+            pass
+
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                smaller_time,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
+
+
+def recording_link_channel(page: ft.Page):
+    """Запись ссылки на канал / группу"""
+    smaller_time = ft.TextField(label="Введите ссылку на группу", autofocus=True)
+
+    def btn_click(e) -> None:
+        link_text = smaller_time.value  # Извлечение текстового значения из TextField
+        save_reactions(reactions=link_text,
+                       path_to_the_file='user_settings/reactions/link_channel.json')  # Запись ссылки в json файл
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
+
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                smaller_time,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
+
+
+def reaction_gui(page: ft.Page):
+    """Выбираем реакцию с помощью чекбокса"""
+    t = ft.Text(value='Выберите реакцию')  # Создает текстовое поле (t).
+    c1 = ft.Checkbox(label="😀")  # Создает чекбокс c1 с меткой "😀".
+    c2 = ft.Checkbox(label="😎")
+    c3 = ft.Checkbox(label="😍")
+    c4 = ft.Checkbox(label="😂")
+    c5 = ft.Checkbox(label="😡")
+    c6 = ft.Checkbox(label="😱")
+    c7 = ft.Checkbox(label="👍")
+    c8 = ft.Checkbox(label="👎")
+    c9 = ft.Checkbox(label="❤")
+    c10 = ft.Checkbox(label="🔥")
+    c11 = ft.Checkbox(label="🎉")
+    c12 = ft.Checkbox(label="😁")
+    c13 = ft.Checkbox(label="😢")
+    c14 = ft.Checkbox(label="💩")
+    c15 = ft.Checkbox(label="👏")
+    c16 = ft.Checkbox(label="🤷‍♀️")
+    c17 = ft.Checkbox(label="🤷")
+    c18 = ft.Checkbox(label="🤷‍♂️")
+    c19 = ft.Checkbox(label="👾")
+    c20 = ft.Checkbox(label="🙊")
+    c21 = ft.Checkbox(label="💊")
+    c22 = ft.Checkbox(label="😘")
+    c23 = ft.Checkbox(label="🦄")
+    c24 = ft.Checkbox(label="💘")
+    c25 = ft.Checkbox(label="🆒")
+    c26 = ft.Checkbox(label="🗿")
+    c27 = ft.Checkbox(label="🤪")
+    c28 = ft.Checkbox(label="💅")
+    c29 = ft.Checkbox(label="☃️")
+    c30 = ft.Checkbox(label="🎄")
+    c31 = ft.Checkbox(label="🎅")
+    c32 = ft.Checkbox(label="🤗")
+    c33 = ft.Checkbox(label="🤬")
+    c34 = ft.Checkbox(label="🤮")
+    c35 = ft.Checkbox(label="🤡")
+    c36 = ft.Checkbox(label="🥴")
+    c37 = ft.Checkbox(label="💯")
+    c38 = ft.Checkbox(label="🌭")
+    c39 = ft.Checkbox(label="⚡️")
+    c40 = ft.Checkbox(label="🍌")
+    c41 = ft.Checkbox(label="🖕")
+    c42 = ft.Checkbox(label="💋")
+    c43 = ft.Checkbox(label="👀")
+    c44 = ft.Checkbox(label="🤝")
+    c45 = ft.Checkbox(label="🍾")
+    c46 = ft.Checkbox(label="🏆")
+    c47 = ft.Checkbox(label="🥱")
+    c48 = ft.Checkbox(label="🕊")
+    c49 = ft.Checkbox(label="😭")
+
+    def button_clicked(e):
+        """Выбранная реакция"""
+        selected_reactions = []  # Создает пустой список selected_reactions для хранения выбранных реакций.
+        for checkbox in [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19, c20,
+                         c21, c22, c23, c24, c25, c26, c27, c28, c29, c30, c31, c32, c33, c34, c35, c36, c37, c38,
+                         c39, c40, c41, c42, c43, c44, c45, c46, c47, c48, c49]:  # Перебирает чекбоксы (c1 - c49).
+            if checkbox.value:  # Проверяет, отмечен ли чекбокс.
+                # Если чекбокс отмечен, добавляет его текст (метку) в список selected_reactions.
+                selected_reactions.append(checkbox.label)
+
+        save_reactions(reactions=selected_reactions,
+                       path_to_the_file='user_settings/reactions/reactions.json')  # Сохраняем реакцию в json файл
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+
+    # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
+    button = ft.ElevatedButton("Готово", on_click=button_clicked)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            controls=[
+                t,  # Добавляет текстовое поле t на страницу (page).
+                ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                    ft.Row([c1, c2, c3, c4, c5, c6, c49]),
+                    ft.Row([c7, c8, c9, c10, c11, c48, c47]),
+                    ft.Row([c19, c20, c21, c23, c24, c47, c46]),
+                    ft.Row([c25, c26, c27, c28, c29, c30, c45]),
+                    ft.Row([c31, c32, c33, c34, c35, c36, c44]),
+                    ft.Row([c37, c38, c39, c41, c42, c43]),
+                    ft.Row([c12, c13, c14, c15, c16, c17, c18]),
+                    ft.Row([c40, c22, c34, c35, c48, c49]),
+                ]),
+                button,  # Добавляет кнопку на страницу (page).
+            ]
+        )
+    )
+
+
+def writing_members(page: ft.Page, db_handler) -> None:
+    """Запись username в software_database.db в графическое окно Flet"""
+    text_to_send = ft.TextField(label="Введите список username", multiline=True, max_lines=19)
+
+    def btn_click(e) -> None:
+        db_handler.write_to_single_column_table(name_database="members",
+                                                database_columns="username, id, access_hash, first_name, last_name, "
+                                                                 "user_phone, online_at, photos_id, user_premium",
+                                                into_columns="members (username)",
+                                                recorded_data=text_to_send.value.split())
+
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
+
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                text_to_send,
                 ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
                 button,
             ],
