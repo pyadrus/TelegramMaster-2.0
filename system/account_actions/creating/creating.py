@@ -48,3 +48,7 @@ def creating_groups_and_chats() -> None:
     accounts = get_account_list(db_handler)
     phones = [rows[0] for rows in accounts]  # Извлечение номеров телефонов (rows[2]) из списка учетных записей
     create_gui(phones, db_handler)  # Передача всего списка учетных записей в create_gui
+
+
+if __name__ == '__main__':
+    creating_groups_and_chats()

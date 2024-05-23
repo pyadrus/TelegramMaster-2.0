@@ -41,7 +41,8 @@ def check_account_for_spam() -> None:
                 if similarity_ratio_ru >= 97:
                     print('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                    record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}", db_handler)
+                    record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
+                                           db_handler)
                     # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                     working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
                                           new_account_folder=f"user_settings/accounts/banned/{row[2]}.session")
@@ -58,11 +59,17 @@ def check_account_for_spam() -> None:
                 if similarity_ratio_en >= 97:
                     print('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                    record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}", db_handler)
+                    record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
+                                           db_handler)
                     # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                     working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
                                           new_account_folder=f"user_settings/accounts/banned/{row[2]}.session")
-                record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}", db_handler)
+                record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
+                                       db_handler)
 
         except YouBlockedUserError:
             continue  # Записываем ошибку в software_database.db и продолжаем работу
+
+
+if __name__ == '__main__':
+    check_account_for_spam()
