@@ -169,10 +169,8 @@ def viewing_posts(db_handler) -> None:
             time.sleep(5)
             posts = client.get_messages(channel, limit=10)  # Получение последних 10 постов из канала
             for post in posts:  # Вывод информации о постах
-                post_link = f"{chat}/{post.id}"  # Ссылка на пост
-                print("Ссылка на пост:", post_link)
-                print(f"Date: {post.date}\nText: {post.text}\n")
-                number = re.search(r"/(\d+)$", post_link).group(1)
+                print(f"Ссылка на пост:", f"{chat}/{post.id}\nDate: {post.date}\nText: {post.text}\n")
+                number = re.search(r"/(\d+)$", f"{chat}/{post.id}").group(1)
                 time.sleep(5)
                 client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))
         except KeyError:
