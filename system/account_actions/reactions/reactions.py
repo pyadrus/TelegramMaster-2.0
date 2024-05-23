@@ -117,11 +117,10 @@ class WorkingWithReactions:  # Класс для работы с реакция�
 
     def choosing_a_number_of_reactions(self) -> list:
         """Выбираем лимиты для аккаунтов"""
-        print("[medium_purple3]Введите количество с которых будут поставлены реакции")
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
         records: list = self.db_handler.open_and_read_data("config")
         # Количество аккаунтов на данный момент в работе
-        print(f"[medium_purple3]Всего accounts: {len(records)}")
+        print(f"[medium_purple3]Введите количество с которых будут поставлены реакции\nВсего accounts: {len(records)}")
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
         number_of_accounts = console.input("[medium_purple3][+] Введите количество аккаунтов для выставления реакций: ")
         records: list = self.db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
@@ -179,8 +178,7 @@ def viewing_posts(db_handler) -> None:
         except KeyError:
             sys.exit(1)
         except Exception as e:
-            logger.exception(e)
-            print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+            logger.info(f"[!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log {e}")
         finally:
             client.disconnect()
 
