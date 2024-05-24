@@ -1,5 +1,6 @@
 import flet as ft
 
+from system.account_actions.creating.account_registration import AccountRIO
 from system.menu.app_banner import program_version, date_of_program_change
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, \
     recording_text_for_sending_messages, create_main_window, \
@@ -42,11 +43,40 @@ def mainss(page: ft.Page):
                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                      url="https://t.me/master_tg_d", ), ], ),
 
+                          ft.ElevatedButton(width=line_width, height=30, text="Редактирование BIO",
+                                            on_click=lambda _: page.go("/bio_editing")),
+
                           ft.ElevatedButton(width=line_width, height=30, text="Настройки",
                                             on_click=lambda _: page.go("/settings")),
                           ], ))
+        if page.route == "/bio_editing":  # Настройки
+            page.views.append(
+                ft.View("/bio_editing",
+                        [ft.AppBar(title=ft.Text("Главное меню"),
+                                   bgcolor=ft.colors.SURFACE_VARIANT),
+                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Изменение username",
+                                               on_click=lambda _: page.go("/changing_username")),
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Изменение фото",
+                                               on_click=lambda _: page.go("/edit_photo")),
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Изменение описания",
+                                               on_click=lambda _: page.go("/edit_description")),
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Изменение имени",
+                                               on_click=lambda _: page.go("/name_change")),
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Изменение фамилии",
+                                               on_click=lambda _: page.go("/change_surname")),
+                         ])]))
 
-        if page.route == "/settings":  # Настройки
+        elif page.route == "/edit_description":  # ✔️ Изменение описания
+            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+            aaa.change_bio_profile_gui(page, DatabaseHandler())
+
+        elif page.route == "/settings":  # Настройки
             page.views.append(
                 ft.View("/settings",
                         [ft.AppBar(title=ft.Text("Главное меню"),

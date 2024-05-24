@@ -244,10 +244,8 @@ def working_with_the_reaction() -> None:  # 7 - Работа с реакциям
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
     if user_input == "1":  # Ставим реакции на один пост в группе / канале
-        # Создаем экземпляр класса WorkingWithReactions
-        reaction_worker = WorkingWithReactions(DatabaseHandler())
-        # Вызываем метод для выбора реакции и установки её на сообщение
-        reaction_worker.users_choice_of_reaction()
+        reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
+        reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
     elif user_input == "2":  # Накручиваем просмотры постов
         viewing_posts(DatabaseHandler())
     elif user_input == "3":
@@ -267,7 +265,7 @@ def working_with_bio() -> None:  # 11 - Работа с био аккаунта 
     # Выводим текст в таблице
     table.add_row("1", "Изменение username")
     table.add_row("2", "Изменение фото")
-    table.add_row("3", "Изменение описания")
+    # table.add_row("3", "Изменение описания")
     table.add_row("4", "Изменение имени")
     table.add_row("5", "Изменение фамилии")
     table.add_row("0", "Вернуться назад")
@@ -280,9 +278,9 @@ def working_with_bio() -> None:  # 11 - Работа с био аккаунта 
     elif user_input == "2":
         aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
         aaa.change_photo_profile(DatabaseHandler())
-    elif user_input == "3":
-        aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-        aaa.change_bio_profile(DatabaseHandler())
+    # elif user_input == "3":
+    #     aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+    #     aaa.change_bio_profile(DatabaseHandler())
     elif user_input == "4":
         aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
         aaa.change_name_profile(DatabaseHandler())
