@@ -75,6 +75,18 @@ def mainss(page: ft.Page):
         elif page.route == "/edit_description":  # ✔️ Изменение описания
             aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
             aaa.change_bio_profile_gui(page, DatabaseHandler())
+        elif page.route == "/name_change":  # ✔️ Изменение имени
+            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+            aaa.change_name_profile_gui(page, DatabaseHandler())
+        elif page.route == "/change_surname":  # ✔️ Изменение фамилии
+            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+            aaa.change_last_name_profile_gui(page, DatabaseHandler())
+        elif page.route == "/edit_photo":  # ✔️ Изменение фото
+            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+            aaa.change_photo_profile(DatabaseHandler())
+        elif page.route == "/changing_username":  # ✔️ Изменение username
+            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+            aaa.change_username_profile_gui(page, DatabaseHandler())
 
         elif page.route == "/settings":  # Настройки
             page.views.append(
@@ -86,7 +98,7 @@ def mainss(page: ft.Page):
                                                text="✔️ Запись количества аккаунтов для реакций",
                                                on_click=lambda _: page.go("/recording_number_accounts_reactions")),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30,  text="✔️ Выбор реакций",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Выбор реакций",
                                                        on_click=lambda _: page.go("/choice_of_reactions")),
                                      ft.ElevatedButton(width=270, height=30, text="✔️ Запись proxy",
                                                        on_click=lambda _: page.go("/proxy_entry"))]),

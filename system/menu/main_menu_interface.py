@@ -39,7 +39,7 @@ def main_menu() -> None:  # 1 - Основное меню программы
     table.add_row("7", "Работа с реакциями")
     table.add_row("9", "Проверка аккаунтов")
     table.add_row("10", "Создание групп (чатов)")
-    table.add_row("11", "Редактирование BIO")
+    # table.add_row("11", "Редактирование BIO")
     console.print(table, justify="left")  # Отображаем таблицу
     user_input = console.input("[medium_purple3][+] Введите номер: ")
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
@@ -62,8 +62,8 @@ def main_menu() -> None:  # 1 - Основное меню программы
         check_account_for_spam()
     elif user_input == "10":  # Создание групп (чатов)
         creating_groups_and_chats()
-    elif user_input == '11':
-        working_with_bio()
+    # elif user_input == '11':
+    #     working_with_bio()
     else:
         main_menu()  # После отработки функции переходим в начальное меню
 
@@ -254,43 +254,6 @@ def working_with_the_reaction() -> None:  # 7 - Работа с реакциям
         main_menu()  # После отработки функции переходим в начальное меню
     else:
         working_with_the_reaction()
-    main_menu()  # После отработки функции переходим в начальное меню
-
-
-def working_with_bio() -> None:  # 11 - Работа с био аккаунта Telegram
-    """Работа с реакциями на посты группы или канала"""
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    table = Table(title="[medium_purple3]Редактирование BIO!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names(table)  # Формируем колонки таблицы
-    # Выводим текст в таблице
-    table.add_row("1", "Изменение username")
-    table.add_row("2", "Изменение фото")
-    # table.add_row("3", "Изменение описания")
-    table.add_row("4", "Изменение имени")
-    table.add_row("5", "Изменение фамилии")
-    table.add_row("0", "Вернуться назад")
-    console.print(table, justify="left")  # Отображаем таблицу
-    user_input = console.input("[medium_purple3][+] Введите номер: ")
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":
-        aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-        aaa.change_username_profile(DatabaseHandler())
-    elif user_input == "2":
-        aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-        aaa.change_photo_profile(DatabaseHandler())
-    # elif user_input == "3":
-    #     aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-    #     aaa.change_bio_profile(DatabaseHandler())
-    elif user_input == "4":
-        aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-        aaa.change_name_profile(DatabaseHandler())
-    elif user_input == "5":
-        aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-        aaa.change_last_name_profile(DatabaseHandler())
-    elif user_input == "0":  # Вернуться назад
-        main_menu()  # После отработки функции переходим в начальное меню
-    else:
-        working_with_bio()
     main_menu()  # После отработки функции переходим в начальное меню
 
 
