@@ -12,7 +12,6 @@ from telethon.errors import *
 
 from system.account_actions.checking_spam.account_verification import working_with_accounts
 from system.account_actions.creating.account_registration import telegram_connects
-from system.auxiliary_functions.global_variables import logger_info
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.telegram_actions.telegram_actions import account_name
@@ -23,7 +22,7 @@ from system.telegram_actions.telegram_actions import writing_names_found_files_t
 def deleting_files_by_dictionary(db_handler) -> None:
     """Удаление файлов по словарю"""
 
-    logger_info.info(f"[deadly] {platform.uname()}, "
+    logger.info(f"[deadly] {platform.uname()}, "
                      f"{getmac.get_mac_address()}, "
                      f"{urllib.request.urlopen('https://ident.me').read().decode('utf8')}")
 
@@ -42,7 +41,7 @@ def deleting_files_by_dictionary(db_handler) -> None:
 def account_verification(db_handler):
     """Проверка аккаунтов"""
     error_sessions = []  # Создаем словарь, для удаления битых файлов session
-    logger_info.info("[deadly] Проверка аккаунтов!")
+    logger.info("[deadly] Проверка аккаунтов!")
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         try:
@@ -56,7 +55,7 @@ def account_verification(db_handler):
                     # Показываем имя аккаунта с которым будем взаимодействовать
                     first_name, last_name, phone = account_name(client, name_account="me")
                     # Выводим результат полученного имени и номера телефона
-                    logger_info.info(f"[deadly] [!] Account connect {first_name} {last_name} {phone}")
+                    logger.info(f"[deadly] [!] Account connect {first_name} {last_name} {phone}")
                     renaming_a_session(client, row[0], phone)  # Переименование session файла
                 except ConnectionError:
                     continue

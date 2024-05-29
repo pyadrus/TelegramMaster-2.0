@@ -125,20 +125,25 @@ class AccountRIO:
             except AuthKeyUnregisteredError:
                 logger.error("Ошибка соединения с профилем")
 
-    def change_photo_profile(self, db_handler):
-        """Изменение фото профиля"""
-        entities = find_files(directory_path=f"user_settings/accounts/bio_accounts", extension='session')
+    async def change_photo_profile(self, db_handler):
+        """Изменение фото профиля."""
+        entities = find_files(directory_path="user_settings/accounts/bio_accounts", extension='session')
         for file in entities:
             self.client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
-            entitiess = find_files(directory_path=f"user_settings/bio", extension='jpg')
-            for files in entitiess:
+            photo_files = find_files(directory_path="user_settings/bio", extension='jpg')
+            for photo_file in photo_files:
                 try:
-                    result = self.client(functions.photos.UploadProfilePhotoRequest(
-                        file=self.client.upload_file(f"user_settings/bio/{files[0]}.jpg")))
+                    file_path = f"user_settings/bio/{photo_file[0]}.jpg"
+                    result = await self.client(functions.photos.UploadProfilePhotoRequest(
+                        file=self.client.upload_file(file_path)
+                    ))
                     logger.info(f'{result}\nФото успешно обновлено!')
-                    self.client.disconnect()
                 except AuthKeyUnregisteredError:
                     logger.error("Ошибка соединения с профилем")
+                except Exception as e:
+                    logger.error(f"Ошибка обновления фото профиля: {e}")
+                finally:
+                    await self.client.disconnect()
 
     def change_username_profile_gui(self, page: ft.Page, db_handler) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""

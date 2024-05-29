@@ -2,7 +2,6 @@ import datetime
 import random
 import time
 
-from rich import print
 from rich.progress import track
 from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
@@ -42,7 +41,7 @@ def subscription_all(db_handler) -> None:
     app_notifications(notification_text="На группы подписались!")  # Выводим уведомление
 
 
-def subscribe_to_group_or_channel(client, groups_wr, phone, db_handler) -> None:
+async def subscribe_to_group_or_channel(client, groups_wr, db_handler) -> None:
     """Подписываемся на группу или канал"""
     actions: str = "Подписался на группу или чат, если ранее не был подписан"
     event: str = f"Subscription: {groups_wr}"
@@ -52,10 +51,10 @@ def subscribe_to_group_or_channel(client, groups_wr, phone, db_handler) -> None:
     groups_wra = [groups_wr]
     for groups_wrs in groups_wra:
         try:
-            client(JoinChannelRequest(groups_wrs))
+            await client(JoinChannelRequest(groups_wrs))
             print(f"[magenta] Аккаунт подписался на группу: {groups_wrs}")
             # Записываем данные о действии аккаунта в базу данных
-            record_account_actions(phone, description_action, event, actions, db_handler)
+            record_account_actions(description_action, event, actions, db_handler)
         except ChannelsTooMuchError:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             for dialog in client.iter_dialogs():
@@ -67,32 +66,32 @@ def subscribe_to_group_or_channel(client, groups_wr, phone, db_handler) -> None:
                     break
             print("[magenta][+] Список почистили, и в файл записали.")
         except ChannelPrivateError:
-            record_account_actions(phone, description_action, event,
+            record_account_actions(description_action, event,
                                    "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
         except (UsernameInvalidError, ValueError, TypeError):
-            record_account_actions(phone, description_action, event,
+            record_account_actions(description_action, event,
                                    f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}",
                                    db_handler)
             db_handler.write_data_to_db("""SELECT * from writing_group_links""",
                                         """DELETE from writing_group_links where writing_group_links = ?""", groups_wrs)
         except PeerFloodError:
-            record_account_actions(phone, description_action, event, "Предупреждение о Flood от Telegram.", db_handler)
+            record_account_actions(description_action, event, "Предупреждение о Flood от Telegram.", db_handler)
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
             logger.error(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
-            record_and_interrupt(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}", phone,
+            record_and_interrupt(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}",
                                  description_action, event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except InviteRequestSentError:
-            record_account_actions(phone, description_action, event,
+            record_account_actions(description_action, event,
                                    "Действия будут доступны после одобрения администратором на вступление в группу",
                                    db_handler)
 
 
-def subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler):
+async def subscribe_to_the_group_and_send_the_link(client, groups, db_handler):
     """Подписываемся на группу и передаем ссылку"""
     group = {"writing_group_links": groups[0]}
     # Вытягиваем данные из кортежа, для подстановки
     groups_wr = group["writing_group_links"]
-    subscribe_to_group_or_channel(client, groups_wr, phone, db_handler)
+    await subscribe_to_group_or_channel(client, groups_wr, db_handler)
     return groups_wr

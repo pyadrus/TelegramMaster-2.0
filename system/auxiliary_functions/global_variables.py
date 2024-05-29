@@ -1,14 +1,12 @@
 import configparser
 from rich.console import Console
-from loguru import logger
 
-logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 # Создаем логгер для информационных сообщений с [deadly] в сообщении
-logger_info = logger.bind()
+# logger_info = logger.bind()
 # Обработчик для информационных сообщений с [deadly] в сообщении
-logger_info.add('user_settings/log/info.log', filter=lambda record: '[deadly]' in record['message'],
-                format="{time:YYYY-MM-DD HH:mm:ss} | {message}")
+# logger_info.add('user_settings/log/info.log', filter=lambda record: '[deadly]' in record['message'],
+#                 format="{time:YYYY-MM-DD HH:mm:ss} | {message}")
 
 console = Console()
 

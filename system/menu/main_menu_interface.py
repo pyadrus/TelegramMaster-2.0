@@ -1,265 +1,263 @@
-from rich import box
-from rich.table import Table
-
-from system.account_actions.checking_spam.account_verification import *
-from system.account_actions.creating.account_registration import *
-from system.account_actions.creating.creating import *
-from system.account_actions.invitation.inviting_participants_telegram import *
-from system.account_actions.invitation.telegram_invite_scheduler import *
-from system.account_actions.parsing.parsing_account_groups_and_channels import *
-from system.account_actions.parsing.parsing_group_members import *
-from system.account_actions.reactions.reactions import *
-from system.account_actions.sending_messages.chat_dialog_mes import mains
-from system.account_actions.sending_messages.sending_messages_telegram import *
-from system.account_actions.sending_messages.telegram_chat_dialog import *
-from system.account_actions.subscription.subscription import *
-from system.account_actions.unsubscribe.unsubscribe import *
-from system.auxiliary_functions.auxiliary_functions import *
-from system.auxiliary_functions.global_variables import *
-from system.setting.setting import *
-from system.sqlite_working_tools.sqlite_working_tools import *
-
-configs_reader = ConfigReader()
-limits_message = configs_reader.get_message_limits()
-
-
-def main_menu() -> None:  # 1 - Основное меню программы
-    """Основное меню программы"""
-    # db_handler = DatabaseHandler()  # Создаем объект для работы с БД
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    table = Table(title="[medium_purple3]Основные функции программы!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names(table)  # Формируем колонки таблицы
-    # Выводим текст в таблице
-    table.add_row("1", f"Инвайтинг {link_group}")
-    table.add_row("2", "Парсинг")
-    table.add_row("3", "Работа с контактами")
-    table.add_row("4", "Подписка, отписка")
-    table.add_row("5", "Подключение аккаунтов")
-    table.add_row("6", "Рассылка сообщений")
-    table.add_row("7", "Работа с реакциями")
-    table.add_row("9", "Проверка аккаунтов")
-    table.add_row("10", "Создание групп (чатов)")
-    # table.add_row("11", "Редактирование BIO")
-    console.print(table, justify="left")  # Отображаем таблицу
-    user_input = console.input("[medium_purple3][+] Введите номер: ")
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Инвайтинг
-        inviting_groups()
-    elif user_input == "2":  # Парсинг
-        telegram_parsing_menu()
-    elif user_input == "3":  # Работаем с контактами телефонной книги
-        working_tools_contacts()
-    elif user_input == "4":  # Работаем с подпиской, подписка, отписка, запись ссылок в файл
-        subscribe_unsubscribe_write_to_file()
-    elif user_input == "5":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-        connecting_new_account()
-        main_menu()
-    elif user_input == "6":  # Рассылка сообщений по списку members.db
-        personal_account_chat_messages_distribution()
-    elif user_input == "7":  # Работа с реакциями
-        working_with_the_reaction()
-    elif user_input == "9":  # Проверка аккаунта через спам бот
-        check_account_for_spam()
-    elif user_input == "10":  # Создание групп (чатов)
-        creating_groups_and_chats()
-    # elif user_input == '11':
-    #     working_with_bio()
-    else:
-        main_menu()  # После отработки функции переходим в начальное меню
-
-
-def inviting_groups() -> None:  # 1 - Инвайтинг в группы
-    """"Inviting в группы"""
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    table = Table(title=f"[medium_purple3]Инвайтинг {link_group}!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names(table)  # Формируем колонки таблицы
-    # Выводим текст в таблице
-    table.add_row("1", "Инвайтинг без лимитов")
-    table.add_row("2", "Инвайтинг с лимитами")
-    table.add_row("3", "Инвайтинг 1 раз в час")
-    table.add_row("4", "Инвайтинг в определенное время")
-    table.add_row("5", "Инвайтинг каждый день")
-    table.add_row("0", "В начальное меню")
-    console.print(table, justify="left")  # Отображаем таблицу
-    user_input = console.input("[medium_purple3][+] Введите номер функции: ")
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Инвайтинг без лимитов
-        invitation_from_all_accounts_program_body(name_database_table="members", db_handler=DatabaseHandler())
-    elif user_input == "2":  # Инвайтинг с лимитами
-        invite_from_multiple_accounts_with_limits(name_database_table="members", db_handler=DatabaseHandler())
-    elif user_input == "3":  # Инвайтинг 1 раз в час
-        launching_an_invite_once_an_hour()
-    elif user_input == "4":  # Инвайтинг в определенное время
-        schedule_invite()
-    elif user_input == "5":  # Инвайтинг каждый день
-        launching_invite_every_day_certain_time()
-    elif user_input == "0":  # Вернуться назад
-        main_menu()  # После отработки функции переходим в начальное меню
-    else:
-        inviting_groups()  # Если пользователь ввел не правильный номер, то возвращаемся в начало выбора
-    main_menu()  # После отработки функции переходим в начальное меню
-
-
-def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активных участников группы
-    """Parsing групп и активных участников группы"""
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    table = Table(title="[medium_purple3]Parsing участников групп!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names(table)  # Формируем колонки таблицы
-    # Выводим текст в таблице
-    table.add_row("1", "Парсинг одной группы / групп")
-    table.add_row("2", "Парсинг выбранной группы из подписанных пользователем")
-    table.add_row("3", "Парсинг активных участников группы")
-    table.add_row("4", "Парсинг групп / каналов на которые подписан аккаунт")
-    table.add_row("5", "Очистка списка от ранее спарсенных данных")
-    table.add_row("0", "В начальное меню")
-    console.print(table, justify="left")  # Отображаем таблицу
-    user_input = console.input("[medium_purple3][+] Введите номер функции: ")
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Парсинг одной группы / групп
-        parsing_mass_parsing_of_groups(DatabaseHandler())  # Парсинг участников чата
-    elif user_input == "2":  # Парсинг выбранной группы из подписанных пользователем
-        choosing_a_group_from_the_subscribed_ones_for_parsing(DatabaseHandler())
-    elif user_input == "3":  # Парсинг активных участников группы
-        chat_input: str = console.input(
-            "[medium_purple3][+] Введите ссылку на чат с которого будем собирать активных: ")
-        limit_active_user: int = console.input(
-            "[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
-        parsing_of_active_participants(chat_input, limit_active_user, DatabaseHandler())
-    elif user_input == "4":  # Парсинг групп / каналов на которые подписан аккаунт
-        parsing_groups_which_account_subscribed(DatabaseHandler())
-    elif user_input == "5":  # Очистка списка от ранее спарсенных данных
-        db_handler = DatabaseHandler()
-        db_handler.cleaning_db(name_database_table="members")
-    elif user_input == "0":  # Вернуться назад
-        main_menu()  # После отработки функции переходим в начальное меню
-    else:
-        telegram_parsing_menu()
-
-
-def working_tools_contacts() -> None:  # 3 - Работаем с контактами телефонной книги
-    """Работаем с контактами телефонной книги"""
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    table = Table(title="[medium_purple3]Работа с контактами!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names(table)  # Формируем колонки таблицы
-    # Выводим текст в таблице
-    table.add_row("1", "Формирование списка контактов")
-    table.add_row("2", "Показать список контактов")
-    table.add_row("3", "Удаление контактов")
-    table.add_row("4", "Добавление контактов")
-    table.add_row("0", "Вернуться назад")
-    console.print(table, justify="left")  # Отображаем таблицу
-    user_input = console.input("[medium_purple3][+] Введите номер: ")
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Формирование списка контактов
-        we_record_phone_numbers_in_the_db(DatabaseHandler())
-    elif user_input == "2":  # Отображение списка контактов
-        show_account_contact_list(DatabaseHandler())
-    elif user_input == "3":  # Удаляем все контакты с аккаунтов
-        delete_contact(DatabaseHandler())
-    elif user_input == "4":  # Вносим контакты в телефонную книгу
-        inviting_contact(DatabaseHandler())
-    elif user_input == "0":  # Вернуться назад
-        main_menu()  # После отработки функции переходим в начальное меню
-    else:
-        working_tools_contacts()
-    main_menu()  # После отработки функции переходим в начальное меню
-
-
-def subscribe_unsubscribe_write_to_file() -> None:  # 4 - Подписка, отписка, запись в файл групп
-    """Подписка, отписка, запись в файл групп"""
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    table = Table(title="[medium_purple3]Подписываемся / отписываемся!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names(table)  # Формируем колонки таблицы
-    # Выводим текст в таблице
-    table.add_row("1", "Подписка")
-    table.add_row("2", "Отписываемся")
-    table.add_row("0", "Вернуться назад")
-    console.print(table, justify="left")  # Отображаем таблицу
-    user_input = console.input("[medium_purple3][+] Введите номер: ")
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Запись: групп, каналов в файл, в файл user_settings/software_database.db
-        subscription_all(DatabaseHandler())
-    elif user_input == "2":  # Отписываемся от групп / каналов (работа с несколькими аккаунтами)
-        unsubscribe_all(DatabaseHandler())
-    elif user_input == "0":  # Вернуться назад
-        main_menu()  # После отработки функции переходим в начальное меню
-    else:
-        subscribe_unsubscribe_write_to_file()
-    main_menu()  # После отработки функции переходим в начальное меню
-
-
-def personal_account_chat_messages_distribution() -> None:  # 6 - Рассылка сообщений в личку
-    """Рассылка сообщений в личку"""
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    table = Table(title="[medium_purple3]Рассылка сообщений в личку!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names(table)  # Формируем колонки таблицы
-    # Выводим текст в таблице
-    table.add_row("1", "Отправка сообщений в личку")
-    table.add_row("2", "Отправка файлов в личку")
-    table.add_row("3", "Рассылка сообщений по чатам")
-    table.add_row("4", "Рассылка сообщений по чатам с автоответчиком")
-    table.add_row("5", "Рассылка файлов по чатам")
-    table.add_row("6", "Рассылка сообщений + файлов по чатам")
-    table.add_row("7", "Отправка сообщений в личку (с лимитами)")
-    table.add_row("8", "Отправка файлов в личку (с лимитами)")
-    table.add_row("0", "В начальное меню")
-    console.print(table, justify="left")  # Отображаем таблицу
-    user_input = console.input("[medium_purple3][+] Введите номер: ")
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Отправка сообщений в личку
-        send_message_from_all_accounts(limits=None, db_handler=DatabaseHandler())
-    elif user_input == "2":  # Отправка файлов в личку
-        send_files_to_personal_chats(limits=None, db_handler=DatabaseHandler())
-    elif user_input == "3":  # Рассылка сообщений по чатам
-        entities = find_files(directory_path="user_settings/message", extension="json")
-        logger.info(entities)
-        sending_messages_via_chats_times(entities, DatabaseHandler())
-    elif user_input == "4":  # ✅ Рассылка сообщений по чатам по времени
-        mains(DatabaseHandler())
-    elif user_input == "5":  # Рассылка файлов по чатам
-        sending_files_via_chats(DatabaseHandler())
-    elif user_input == "6":  # Рассылка сообщений + файлов по чатам
-        sending_messages_files_via_chats()
-    elif user_input == "7":  # Отправка сообщений в личку (с лимитами)
-        send_message_from_all_accounts(limits=limits_message, db_handler=DatabaseHandler())
-    elif user_input == "8":  # Отправка файлов в личку (с лимитами)
-        send_files_to_personal_chats(limits=limits_message, db_handler=DatabaseHandler())
-    elif user_input == "0":  # Вернуться назад
-        main_menu()  # После отработки функции переходим в начальное меню
-    else:
-        personal_account_chat_messages_distribution()
-
-
-def working_with_the_reaction() -> None:  # 7 - Работа с реакциями на посты группы или канала
-    """Работа с реакциями на посты группы или канала"""
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    table = Table(title="[medium_purple3]Работа с реакциями / постами!", box=box.HORIZONTALS)  # Выводим таблицу
-    column_names(table)  # Формируем колонки таблицы
-    # Выводим текст в таблице
-    table.add_row("1", "Ставим реакции")
-    table.add_row("2", "Накручиваем просмотры постов")
-    table.add_row("3", "Автоматическое выставление реакций")
-    table.add_row("0", "Вернуться назад")
-    console.print(table, justify="left")  # Отображаем таблицу
-    user_input = console.input("[medium_purple3][+] Введите номер: ")
-    clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    if user_input == "1":  # Ставим реакции на один пост в группе / канале
-        reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
-        reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
-    elif user_input == "2":  # Накручиваем просмотры постов
-        viewing_posts(DatabaseHandler())
-    elif user_input == "3":
-        setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
-    elif user_input == "0":  # Вернуться назад
-        main_menu()  # После отработки функции переходим в начальное меню
-    else:
-        working_with_the_reaction()
-    main_menu()  # После отработки функции переходим в начальное меню
-
-
-if __name__ == "__main__":
-    try:
-        main_menu()
-    except Exception as e:
-        logger.exception(e)
-        print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+# from rich import box
+# from rich.table import Table
+#
+# from system.account_actions.checking_spam.account_verification import check_account_for_spam
+# from system.account_actions.invitation.inviting_participants_telegram import link_group, \
+#     invitation_from_all_accounts_program_body, invite_from_multiple_accounts_with_limits
+# from system.account_actions.invitation.telegram_invite_scheduler import launching_an_invite_once_an_hour, \
+#     schedule_invite, launching_invite_every_day_certain_time
+# from system.account_actions.parsing.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
+# from system.account_actions.parsing.parsing_group_members import parsing_mass_parsing_of_groups, \
+#     parsing_of_active_participants, choosing_a_group_from_the_subscribed_ones_for_parsing, inviting_contact, \
+#     delete_contact, show_account_contact_list, we_record_phone_numbers_in_the_db
+# from system.account_actions.reactions.reactions import setting_reactions, WorkingWithReactions, viewing_posts
+# from system.account_actions.sending_messages.chat_dialog_mes import mains
+# from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_chats, \
+#     send_message_from_all_accounts
+# from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats, \
+#     sending_messages_via_chats_times, sending_files_via_chats
+# from system.account_actions.subscription.subscription import subscription_all
+# from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
+# from system.auxiliary_functions.auxiliary_functions import clear_console_and_display_banner, column_names, find_files
+# from system.auxiliary_functions.global_variables import ConfigReader, console
+# from system.setting.setting import connecting_new_account
+# from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+# from loguru import logger
+#
+# configs_reader = ConfigReader()
+# limits_message = configs_reader.get_message_limits()
+#
+#
+# def main_menu() -> None:  # 1 - Основное меню программы
+#     """Основное меню программы"""
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     table = Table(title="[medium_purple3]Основные функции программы!", box=box.HORIZONTALS)  # Выводим таблицу
+#     column_names(table)  # Формируем колонки таблицы
+#     # Выводим текст в таблице
+#     table.add_row("1", f"Инвайтинг {link_group}")
+#     table.add_row("2", "Парсинг")
+#     table.add_row("3", "Работа с контактами")
+#     table.add_row("4", "Подписка, отписка")
+#     table.add_row("5", "Подключение аккаунтов")
+#     table.add_row("6", "Рассылка сообщений")
+#     table.add_row("7", "Работа с реакциями")
+#     table.add_row("9", "Проверка аккаунтов")
+#     console.print(table, justify="left")  # Отображаем таблицу
+#     user_input = console.input("[medium_purple3][+] Введите номер: ")
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     if user_input == "1":  # Инвайтинг
+#         inviting_groups()
+#     elif user_input == "2":  # Парсинг
+#         telegram_parsing_menu()
+#     elif user_input == "3":  # Работаем с контактами телефонной книги
+#         working_tools_contacts()
+#     elif user_input == "4":  # Работаем с подпиской, подписка, отписка, запись ссылок в файл
+#         subscribe_unsubscribe_write_to_file()
+#     elif user_input == "5":  # Подключение новых аккаунтов, методом ввода нового номера телефона
+#         connecting_new_account()
+#         main_menu()
+#     elif user_input == "6":  # Рассылка сообщений по списку members.db
+#         personal_account_chat_messages_distribution()
+#     elif user_input == "7":  # Работа с реакциями
+#         working_with_the_reaction()
+#     elif user_input == "9":  # Проверка аккаунта через спам бот
+#         check_account_for_spam()
+#     else:
+#         main_menu()  # После отработки функции переходим в начальное меню
+#
+#
+# def inviting_groups() -> None:  # 1 - Инвайтинг в группы
+#     """"Inviting в группы"""
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     table = Table(title=f"[medium_purple3]Инвайтинг {link_group}!", box=box.HORIZONTALS)  # Выводим таблицу
+#     column_names(table)  # Формируем колонки таблицы
+#     # Выводим текст в таблице
+#     table.add_row("1", "Инвайтинг без лимитов")
+#     table.add_row("2", "Инвайтинг с лимитами")
+#     table.add_row("3", "Инвайтинг 1 раз в час")
+#     table.add_row("4", "Инвайтинг в определенное время")
+#     table.add_row("5", "Инвайтинг каждый день")
+#     table.add_row("0", "В начальное меню")
+#     console.print(table, justify="left")  # Отображаем таблицу
+#     user_input = console.input("[medium_purple3][+] Введите номер функции: ")
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     if user_input == "1":  # Инвайтинг без лимитов
+#         invitation_from_all_accounts_program_body(name_database_table="members", db_handler=DatabaseHandler())
+#     elif user_input == "2":  # Инвайтинг с лимитами
+#         invite_from_multiple_accounts_with_limits(name_database_table="members", db_handler=DatabaseHandler())
+#     elif user_input == "3":  # Инвайтинг 1 раз в час
+#         launching_an_invite_once_an_hour()
+#     elif user_input == "4":  # Инвайтинг в определенное время
+#         schedule_invite()
+#     elif user_input == "5":  # Инвайтинг каждый день
+#         launching_invite_every_day_certain_time()
+#     elif user_input == "0":  # Вернуться назад
+#         main_menu()  # После отработки функции переходим в начальное меню
+#     else:
+#         inviting_groups()  # Если пользователь ввел не правильный номер, то возвращаемся в начало выбора
+#     main_menu()  # После отработки функции переходим в начальное меню
+#
+#
+# def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активных участников группы
+#     """Parsing групп и активных участников группы"""
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     table = Table(title="[medium_purple3]Parsing участников групп!", box=box.HORIZONTALS)  # Выводим таблицу
+#     column_names(table)  # Формируем колонки таблицы
+#     # Выводим текст в таблице
+#     table.add_row("1", "Парсинг одной группы / групп")
+#     table.add_row("2", "Парсинг выбранной группы из подписанных пользователем")
+#     table.add_row("3", "Парсинг активных участников группы")
+#     table.add_row("4", "Парсинг групп / каналов на которые подписан аккаунт")
+#     table.add_row("5", "Очистка списка от ранее спарсенных данных")
+#     table.add_row("0", "В начальное меню")
+#     console.print(table, justify="left")  # Отображаем таблицу
+#     user_input = console.input("[medium_purple3][+] Введите номер функции: ")
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     if user_input == "1":  # Парсинг одной группы / групп
+#         parsing_mass_parsing_of_groups(DatabaseHandler())  # Парсинг участников чата
+#     elif user_input == "2":  # Парсинг выбранной группы из подписанных пользователем
+#         choosing_a_group_from_the_subscribed_ones_for_parsing(DatabaseHandler())
+#     elif user_input == "3":  # Парсинг активных участников группы
+#         chat_input: str = console.input(
+#             "[medium_purple3][+] Введите ссылку на чат с которого будем собирать активных: ")
+#         limit_active_user: int = console.input(
+#             "[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
+#         parsing_of_active_participants(chat_input, limit_active_user, DatabaseHandler())
+#     elif user_input == "4":  # Парсинг групп / каналов на которые подписан аккаунт
+#         parsing_groups_which_account_subscribed(DatabaseHandler())
+#     elif user_input == "5":  # Очистка списка от ранее спарсенных данных
+#         db_handler = DatabaseHandler()
+#         db_handler.cleaning_db(name_database_table="members")
+#     elif user_input == "0":  # Вернуться назад
+#         main_menu()  # После отработки функции переходим в начальное меню
+#     else:
+#         telegram_parsing_menu()
+#
+#
+# def working_tools_contacts() -> None:  # 3 - Работаем с контактами телефонной книги
+#     """Работаем с контактами телефонной книги"""
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     table = Table(title="[medium_purple3]Работа с контактами!", box=box.HORIZONTALS)  # Выводим таблицу
+#     column_names(table)  # Формируем колонки таблицы
+#     # Выводим текст в таблице
+#     table.add_row("1", "Формирование списка контактов")
+#     table.add_row("2", "Показать список контактов")
+#     table.add_row("3", "Удаление контактов")
+#     table.add_row("4", "Добавление контактов")
+#     table.add_row("0", "Вернуться назад")
+#     console.print(table, justify="left")  # Отображаем таблицу
+#     user_input = console.input("[medium_purple3][+] Введите номер: ")
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     if user_input == "1":  # Формирование списка контактов
+#         we_record_phone_numbers_in_the_db(DatabaseHandler())
+#     elif user_input == "2":  # Отображение списка контактов
+#         show_account_contact_list(DatabaseHandler())
+#     elif user_input == "3":  # Удаляем все контакты с аккаунтов
+#         delete_contact(DatabaseHandler())
+#     elif user_input == "4":  # Вносим контакты в телефонную книгу
+#         inviting_contact(DatabaseHandler())
+#     elif user_input == "0":  # Вернуться назад
+#         main_menu()  # После отработки функции переходим в начальное меню
+#     else:
+#         working_tools_contacts()
+#     main_menu()  # После отработки функции переходим в начальное меню
+#
+#
+# def subscribe_unsubscribe_write_to_file() -> None:  # 4 - Подписка, отписка, запись в файл групп
+#     """Подписка, отписка, запись в файл групп"""
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     table = Table(title="[medium_purple3]Подписываемся / отписываемся!", box=box.HORIZONTALS)  # Выводим таблицу
+#     column_names(table)  # Формируем колонки таблицы
+#     # Выводим текст в таблице
+#     table.add_row("1", "Подписка")
+#     table.add_row("2", "Отписываемся")
+#     table.add_row("0", "Вернуться назад")
+#     console.print(table, justify="left")  # Отображаем таблицу
+#     user_input = console.input("[medium_purple3][+] Введите номер: ")
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     if user_input == "1":  # Запись: групп, каналов в файл, в файл user_settings/software_database.db
+#         subscription_all(DatabaseHandler())
+#     elif user_input == "2":  # Отписываемся от групп / каналов (работа с несколькими аккаунтами)
+#         unsubscribe_all(DatabaseHandler())
+#     elif user_input == "0":  # Вернуться назад
+#         main_menu()  # После отработки функции переходим в начальное меню
+#     else:
+#         subscribe_unsubscribe_write_to_file()
+#     main_menu()  # После отработки функции переходим в начальное меню
+#
+#
+# def personal_account_chat_messages_distribution() -> None:  # 6 - Рассылка сообщений в личку
+#     """Рассылка сообщений в личку"""
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     table = Table(title="[medium_purple3]Рассылка сообщений в личку!", box=box.HORIZONTALS)  # Выводим таблицу
+#     column_names(table)  # Формируем колонки таблицы
+#     # Выводим текст в таблице
+#     table.add_row("1", "Отправка сообщений в личку")
+#     table.add_row("2", "Отправка файлов в личку")
+#     table.add_row("3", "Рассылка сообщений по чатам")
+#     table.add_row("4", "Рассылка сообщений по чатам с автоответчиком")
+#     table.add_row("5", "Рассылка файлов по чатам")
+#     table.add_row("6", "Рассылка сообщений + файлов по чатам")
+#     table.add_row("7", "Отправка сообщений в личку (с лимитами)")
+#     table.add_row("8", "Отправка файлов в личку (с лимитами)")
+#     table.add_row("0", "В начальное меню")
+#     console.print(table, justify="left")  # Отображаем таблицу
+#     user_input = console.input("[medium_purple3][+] Введите номер: ")
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     if user_input == "1":  # Отправка сообщений в личку
+#         send_message_from_all_accounts(limits=None, db_handler=DatabaseHandler())
+#     elif user_input == "2":  # Отправка файлов в личку
+#         send_files_to_personal_chats(limits=None, db_handler=DatabaseHandler())
+#     elif user_input == "3":  # Рассылка сообщений по чатам
+#         entities = find_files(directory_path="user_settings/message", extension="json")
+#         logger.info(entities)
+#         sending_messages_via_chats_times(entities, DatabaseHandler())
+#     elif user_input == "4":  # ✅ Рассылка сообщений по чатам по времени
+#         mains(DatabaseHandler())
+#     elif user_input == "5":  # Рассылка файлов по чатам
+#         sending_files_via_chats(DatabaseHandler())
+#     elif user_input == "6":  # Рассылка сообщений + файлов по чатам
+#         sending_messages_files_via_chats()
+#     elif user_input == "7":  # Отправка сообщений в личку (с лимитами)
+#         send_message_from_all_accounts(limits=limits_message, db_handler=DatabaseHandler())
+#     elif user_input == "8":  # Отправка файлов в личку (с лимитами)
+#         send_files_to_personal_chats(limits=limits_message, db_handler=DatabaseHandler())
+#     elif user_input == "0":  # Вернуться назад
+#         main_menu()  # После отработки функции переходим в начальное меню
+#     else:
+#         personal_account_chat_messages_distribution()
+#
+#
+# def working_with_the_reaction() -> None:  # 7 - Работа с реакциями на посты группы или канала
+#     """Работа с реакциями на посты группы или канала"""
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     table = Table(title="[medium_purple3]Работа с реакциями / постами!", box=box.HORIZONTALS)  # Выводим таблицу
+#     column_names(table)  # Формируем колонки таблицы
+#     # Выводим текст в таблице
+#     table.add_row("1", "Ставим реакции")
+#     table.add_row("2", "Накручиваем просмотры постов")
+#     table.add_row("3", "Автоматическое выставление реакций")
+#     table.add_row("0", "Вернуться назад")
+#     console.print(table, justify="left")  # Отображаем таблицу
+#     user_input = console.input("[medium_purple3][+] Введите номер: ")
+#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
+#     if user_input == "1":  # Ставим реакции на один пост в группе / канале
+#         reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
+#         reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
+#     elif user_input == "2":  # Накручиваем просмотры постов
+#         viewing_posts(DatabaseHandler())
+#     elif user_input == "3":
+#         setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
+#     elif user_input == "0":  # Вернуться назад
+#         main_menu()  # После отработки функции переходим в начальное меню
+#     else:
+#         working_with_the_reaction()
+#     main_menu()  # После отработки функции переходим в начальное меню
+#
+#
+# if __name__ == "__main__":
+#     try:
+#         main_menu()
+#     except Exception as e:
+#         logger.exception(e)
+#         print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")

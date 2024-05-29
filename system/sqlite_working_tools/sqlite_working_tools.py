@@ -9,7 +9,7 @@ def select_from_config_by_phone(phone_value):
     conn = sqlite3.connect("user_settings/software_database.db")
     cursor = conn.cursor()
     # Выбор данных из таблицы config по заданному номеру телефона
-    cursor.execute('''SELECT phone FROM config WHERE phone = ?''', (phone_value,))
+    cursor.execute('''SELECT FROM config WHERE phone = ?''', (phone_value,))
     result = cursor.fetchall()  # Получение результатов запроса
     conn.close()  # Закрытие соединения
     return result
@@ -90,7 +90,7 @@ class DatabaseHandler:
         self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    def delete_row_db(self, table, column, value) -> None:
+    async def delete_row_db(self, table, column, value) -> None:
         """Удаляет строку из таблицы"""
         self.connect()
         self.cursor.execute(f"SELECT * from {table}")  # Считываем таблицу

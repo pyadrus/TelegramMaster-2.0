@@ -4,16 +4,15 @@ from loguru import logger
 from rich import print
 
 
-def record_account_actions(phone_number, action_description, event, action_result, db_handler) -> None:
+def record_account_actions(action_description, event, action_result, db_handler) -> None:
     """Записывает действия аккаунта в базу данных
-    :arg phone_number: номер телефона аккаунта
     :arg action_description: описание действия
     :arg event: действие, которое производится
     :arg action_result: результат выполнения действия.
     :arg db_handler: База данных для записи действий аккаунта в базу данных"""
     logger.error(f"[!] {action_result}")
     date = datetime.datetime.now()  # Получаем текущую дату
-    entities = [phone_number, str(date), action_description, event, action_result]  # Формируем словарь
+    entities = [str(date), action_description, event, action_result]  # Формируем словарь
     db_handler.write_data_to_db(
         """CREATE TABLE IF NOT EXISTS account_actions (phone, date, description_action, event, actions)""",
         """INSERT INTO  account_actions (phone, date, description_action, event, actions) VALUES (?, ?, ?, ?, ?)""",
