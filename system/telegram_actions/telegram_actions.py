@@ -29,7 +29,7 @@ async def telegram_connects(db_handler, session) -> TelegramClient:
     :param db_handler: База данных
     :param session: Сессия Telegram
     """
-    proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
+    proxy = await reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
     client = TelegramClient(session, api_id=api_id_data, api_hash=api_hash_data,
                             system_version="4.16.30-vxCUSTOM", proxy=proxy)
     print(f"Подключение аккаунта: {session.split('/')[-1]}, {api_id_data}, {api_hash_data}")

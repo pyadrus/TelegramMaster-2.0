@@ -10,14 +10,19 @@ from system.setting.setting import recording_the_time_to_launch_an_invite_every_
     writing_api_id_api_hash, record_setting, recording_link_channel, record_the_number_of_accounts, reaction_gui, \
     output_the_input_field, writing_members
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from system.telegram_actions.account_verification import deleting_files_by_dictionary
+
 # from system.telegram_actions.account_verification import deleting_files_by_dictionary
 # from loguru import logger
 
 # logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-# db_handler = DatabaseHandler()
-# deleting_files_by_dictionary(db_handler)
+
+
+async def account_verification():
+    db_handler = DatabaseHandler()
+    await deleting_files_by_dictionary(db_handler)
 
 
 def mainss(page: ft.Page):
@@ -70,9 +75,11 @@ def mainss(page: ft.Page):
         if page.route == "/parsing":  # Парсинг
             parsing_gui(page)
         elif page.route == "/creating_groups":  # Создание групп (чатов)
-            db_handler = DatabaseHandler()
-            records: list = db_handler.open_and_read_data("config")
-            creating_groups_and_chats(page, records, db_handler)
+            async def creating_groups():
+                db_handler = DatabaseHandler()
+                records: list = await db_handler.open_and_read_data("config")
+                creating_groups_and_chats(page, records, db_handler)
+            creating_groups()
 
         elif page.route == "/bio_editing":  # Настройки
             page.views.append(

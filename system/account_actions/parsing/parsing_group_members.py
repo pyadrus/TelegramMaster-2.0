@@ -1,6 +1,6 @@
 import random
 import time
-import asyncio
+# import asyncio
 import flet as ft
 from loguru import logger
 # from rich import print
@@ -135,19 +135,19 @@ def all_participants_user(all_participants) -> list:
 async def parsing_mass_parsing_of_groups(db_handler) -> None:
     """Parsing групп, ввод в графическое окно списка групп"""
     # Открываем базу с аккаунтами и с выставленными лимитами
-    records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
+    records: list = await db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client = await telegram_connect_and_output_name(row, db_handler)
         # Открываем базу с группами для дальнейшего parsing
-        records: list = db_handler.open_and_read_data("writing_group_links")
+        records: list = await db_handler.open_and_read_data("writing_group_links")
         for groups in records:  # Поочередно выводим записанные группы
-            groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, db_handler)
+            groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups, db_handler)
             await group_parsing(client, groups_wr, db_handler)  # Parsing групп
             # Удаляем отработанную группу или канал
-            db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
-        db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
-        db_handler.delete_duplicates(table_name="members",
+            await db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
+        await db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
+        await db_handler.delete_duplicates(table_name="members",
                                      column_name="id")  # Чистка дублирующих username по столбцу id
         await client.disconnect()  # Разрываем соединение telegram
     app_notifications(notification_text="Список успешно сформирован!")  # Выводим уведомление
@@ -162,7 +162,7 @@ async def group_parsing(client, groups_wr, db_handler) -> None:
     all_participants: list = await parsing_of_users_from_the_selected_group(client, groups_wr)
     # Записываем parsing данные в файл user_settings/software_database.db
     entities = all_participants_user(all_participants)
-    db_handler.write_parsed_chat_participants_to_db(entities)
+    await db_handler.write_parsed_chat_participants_to_db(entities)
 
 
 async def choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler) -> None:

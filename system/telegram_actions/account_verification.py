@@ -14,21 +14,21 @@ from system.account_actions.checking_spam.account_verification import working_wi
 from system.account_actions.creating.account_registration import telegram_connects
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import checking_the_proxy_for_work
-from system.telegram_actions.telegram_actions import account_name
-from system.telegram_actions.telegram_actions import renaming_a_session
+# from system.telegram_actions.telegram_actions import account_name
+# from system.telegram_actions.telegram_actions import renaming_a_session
 from system.telegram_actions.telegram_actions import writing_names_found_files_to_the_db
 
 
-def deleting_files_by_dictionary(db_handler) -> None:
+async def deleting_files_by_dictionary(db_handler) -> None:
     """Удаление файлов по словарю"""
 
     logger.info(f"[deadly] {platform.uname()}, "
-                     f"{getmac.get_mac_address()}, "
-                     f"{urllib.request.urlopen('https://ident.me').read().decode('utf8')}")
+                f"{getmac.get_mac_address()}, "
+                f"{urllib.request.urlopen('https://ident.me').read().decode('utf8')}")
 
-    checking_the_proxy_for_work(db_handler)  # Проверка proxy
+    await checking_the_proxy_for_work(db_handler)  # Проверка proxy
     writing_names_found_files_to_the_db(db_handler)  # Сканируем папку с аккаунтами на наличие сессий
-    error_sessions = account_verification(db_handler)
+    error_sessions = await account_verification(db_handler)
     for row in error_sessions:
         try:
             print(f"Удаляем не валидный аккаунт {''.join(row)}.session")
@@ -38,33 +38,33 @@ def deleting_files_by_dictionary(db_handler) -> None:
     writing_names_found_files_to_the_db(db_handler)  # Сканируем папку с аккаунтами на наличие сессий
 
 
-def account_verification(db_handler):
+async def account_verification(db_handler):
     """Проверка аккаунтов"""
     error_sessions = []  # Создаем словарь, для удаления битых файлов session
     logger.info("[deadly] Проверка аккаунтов!")
     records: list = db_handler.open_and_read_data("config")
     for row in records:
         try:
-            client = telegram_connects(db_handler, session=f"user_settings/accounts/{row[0]}")
+            client = await telegram_connects(db_handler, session=f"user_settings/accounts/{row[0]}")
             try:
                 if not client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
                     telegram_phone_number_banned_error(client=client, phone=row[0],
                                                        db_handler=db_handler)  # Удаляем номер телефона с базы данных
                 time.sleep(1)
-                try:
+                # try:
                     # Показываем имя аккаунта с которым будем взаимодействовать
-                    first_name, last_name, phone = account_name(client, name_account="me")
+                    # first_name, last_name, phone = account_name(client, name_account="me")
                     # Выводим результат полученного имени и номера телефона
-                    logger.info(f"[deadly] [!] Account connect {first_name} {last_name} {phone}")
-                    renaming_a_session(client, row[0], phone)  # Переименование session файла
-                except ConnectionError:
-                    continue
+                    # logger.info(f"[deadly] [!] Account connect {first_name} {last_name} {phone}")
+                    # renaming_a_session(client, row[0], phone)  # Переименование session файла
+                # except ConnectionError:
+                #     continue
             except AttributeError:
                 continue
             except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
                 print(f"На данный момент аккаунт {row[2]} запущен под другим ip")
                 # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                client.disconnect()
+                await client.disconnect()
                 working_with_accounts(account_folder=f"user_settings/accounts/{row[0]}.session",
                                       new_account_folder=f"user_settings/accounts/invalid_account/{row[0]}.session")
             except (PhoneNumberBannedError, UserDeactivatedBanError):

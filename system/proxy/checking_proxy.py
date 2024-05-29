@@ -4,12 +4,12 @@ import requests
 from rich import print
 
 
-def reading_proxy_data_from_the_database(db_handler):
+async def reading_proxy_data_from_the_database(db_handler):
     """Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
     username - логин (например: username), password - пароль (например: password)"""
     try:
-        records: list = db_handler.open_and_read_data("proxy")
+        records: list = await db_handler.open_and_read_data("proxy")
         proxy_random_list = random.choice(records)
         print(f"[magenta]{proxy_random_list}")
         proxy = {'proxy_type': (proxy_random_list[0]), 'addr': proxy_random_list[1], 'port': int(proxy_random_list[2]),
@@ -33,11 +33,11 @@ def unpacking_a_dictionary_with_proxy_by_variables(proxy):
     return proxy_type, addr, port, username, password, rdns
 
 
-def checking_the_proxy_for_work(db_handler) -> None:
+async def checking_the_proxy_for_work(db_handler) -> None:
     """Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
     уровня, который используется для демонстрации работы сетевых протоколов. На этом сайте нет никакого контента, но он
     используется для различных тестов."""
-    records: list = db_handler.open_and_read_data("proxy")
+    records: list = await db_handler.open_and_read_data("proxy")
     for proxy_dic in records:
         print(proxy_dic)
         # Распаковка словаря с proxy по переменным

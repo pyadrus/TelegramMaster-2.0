@@ -54,7 +54,7 @@ async def subscribe_to_group_or_channel(client, groups_wr, db_handler) -> None:
             await client(JoinChannelRequest(groups_wrs))
             print(f"[magenta] Аккаунт подписался на группу: {groups_wrs}")
             # Записываем данные о действии аккаунта в базу данных
-            record_account_actions(description_action, event, actions, db_handler)
+            await record_account_actions(description_action, event, actions, db_handler)
         except ChannelsTooMuchError:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             for dialog in client.iter_dialogs():

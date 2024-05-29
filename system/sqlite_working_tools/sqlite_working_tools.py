@@ -19,7 +19,7 @@ class DatabaseHandler:
     def __init__(self, db_file="user_settings/software_database.db"):
         self.db_file = db_file
 
-    def connect(self) -> None:
+    async def connect(self) -> None:
         """Подключение к базе данных"""
         self.sqlite_connection = sqlite3.connect(self.db_file)
         self.cursor = self.sqlite_connection.cursor()
@@ -28,15 +28,15 @@ class DatabaseHandler:
         """Закрытие соединения с базой данных"""
         self.sqlite_connection.close()
 
-    def open_and_read_data(self, table_name) -> list:
+    async def open_and_read_data(self, table_name) -> list:
         """Открываем базу и считываем данные из указанной таблицы"""
-        self.connect()
+        await self.connect()
         self.cursor.execute(f"SELECT * FROM {table_name}")
         records = self.cursor.fetchall()
         self.close()
         return records
 
-    def delete_duplicates(self, table_name, column_name) -> None:
+    async def delete_duplicates(self, table_name, column_name) -> None:
         """
         Этот запрос удаляет все дублирующиеся записи в поле id. Данный запрос использует функцию MIN(), которая возвращает
         минимальное значение из списка значений. Функция MIN() будет применена к полю rowid, которое является уникальным
@@ -44,18 +44,18 @@ class DatabaseHandler:
         каждой записи в поле id. Затем он удаляет все записи, у которых rowid не равен минимальному значению.
         Это позволяет оставить только уникальные значения в поле id.
         """
-        self.connect()
+        await self.connect()
         self.cursor.execute(f"DELETE FROM {table_name} WHERE row{column_name} NOT IN (SELECT MIN(row{column_name}) "
                             f"FROM {table_name} GROUP BY {column_name})")
         self.sqlite_connection.commit()
         self.close()
 
-    def open_the_db_and_read_the_data_lim(self, name_database_table, number_of_accounts: int) -> list:
+    async def open_the_db_and_read_the_data_lim(self, name_database_table, number_of_accounts: int) -> list:
         """
         Открытие базы данных для inviting (рассылка сообщений) c лимитами
         Если number_of_accounts равно None, возвращаем весь список
         """
-        self.connect()
+        await self.connect()
         self.cursor.execute(f"SELECT * from {name_database_table}")  # Считываем таблицу
         if number_of_accounts is not None:
             records: list = self.cursor.fetchmany(number_of_accounts)  # fetchmany(size) – возвращает число записей
@@ -67,9 +67,9 @@ class DatabaseHandler:
         self.close()  # Закрываем базу данных
         return records
 
-    def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities) -> None:
+    async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities) -> None:
         """Запись действий аккаунта в базу данных"""
-        self.connect()
+        await self.connect()
         self.cursor.execute(creating_a_table)  # Считываем таблицу
         try:
             self.cursor.executemany(writing_data_to_a_table, (entities,))
@@ -79,9 +79,9 @@ class DatabaseHandler:
             print(e)
             time.sleep(5)
 
-    def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns) -> None:
+    async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns) -> None:
         """Удаляем не рабочий proxy с software_database.db, таблица proxy"""
-        self.connect()
+        await self.connect()
         self.cursor.execute(
             f"DELETE FROM proxy WHERE proxy_type='{proxy_type}' AND addr='{addr}' AND port='{port}' AND "
             f"username='{username}' AND password='{password}' AND rdns='{rdns}'"
@@ -92,15 +92,15 @@ class DatabaseHandler:
 
     async def delete_row_db(self, table, column, value) -> None:
         """Удаляет строку из таблицы"""
-        self.connect()
+        await self.connect()
         self.cursor.execute(f"SELECT * from {table}")  # Считываем таблицу
         self.cursor.execute(f"DELETE from {table} where {column} = ?", (value,))  # Удаляем строку
         self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    def write_parsed_chat_participants_to_db(self, entities) -> None:
+    async def write_parsed_chat_participants_to_db(self, entities) -> None:
         """Запись результатов parsing участников чата"""
-        self.connect()
+        await self.connect()
         for line in entities:
             # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
             self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
@@ -110,9 +110,9 @@ class DatabaseHandler:
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    def write_parsed_chat_participants_to_db_active(self, entities) -> None:
+    async def write_parsed_chat_participants_to_db_active(self, entities) -> None:
         """Запись результатов parsing участников чата"""
-        self.connect()
+        await self.connect()
         # for line in entities:
         # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
         self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
@@ -123,23 +123,23 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    def save_proxy_data_to_db(self, proxy) -> None:
+    async def save_proxy_data_to_db(self, proxy) -> None:
         """Запись данных proxy в базу данных"""
-        self.connect()
+        await self.connect()
         self.cursor.execute("CREATE TABLE IF NOT EXISTS proxy(proxy_type, addr, port, username, password, rdns)")
         self.cursor.executemany("INSERT INTO proxy(proxy_type, addr, port, username, password, rdns) "
                                 "VALUES (?, ?, ?, ?, ?, ?)", (proxy,), )
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    def write_to_single_column_table(self, name_database, database_columns, into_columns, recorded_data) -> None:
+    async def write_to_single_column_table(self, name_database, database_columns, into_columns, recorded_data) -> None:
         """Запись данных в таблицу с одной колонкой в базу данных
         :param name_database: название таблицы
         :param database_columns: название колон
         :param into_columns: название колонки в таблице
         :param recorded_data: данные для записи
         """
-        self.connect()
+        await self.connect()
         # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
         self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {name_database}({database_columns})")
         for line in recorded_data:
@@ -149,24 +149,24 @@ class DatabaseHandler:
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    def cleaning_db(self, name_database_table) -> None:
+    async def cleaning_db(self, name_database_table) -> None:
         """
         Очистка указанной таблицы (name_database_table) в базе данных.
 
         Этот метод устанавливает соединение с базой данных, удаляет все записи из указанной таблицы (name_database_table),
         затем фиксирует изменения. После этого закрывает соединение с базой данных.
         """
-        self.connect()
+        await self.connect()
         # Удаляем таблицу members, функция execute отвечает за SQL-запрос DELETE FROM - команда удаления базы данных
         # name_database_table - название таблицы в базе данных
         self.cursor.execute(f"DELETE FROM {name_database_table};")
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    def cleaning_list_of_participants_who_do_not_have_username(self) -> None:
+    async def cleaning_list_of_participants_who_do_not_have_username(self) -> None:
         """Чистка списка от участников у которых нет username"""
-        print("[medium_purple3]Чищу список software_database.db от участников у которых нет username")
-        self.connect()
+        print("Чищу список software_database.db от участников у которых нет username")
+        await self.connect()
         self.cursor.execute("""SELECT * from members""")
         records: list = self.cursor.fetchall()
         print(f"[medium_purple3]Всего username: {len(records)}")
