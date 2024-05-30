@@ -111,6 +111,11 @@ async def group_parsing(page, lv, client, groups_wr, db_handler) -> None:
     @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
     """
     all_participants: list = await parsing_of_users_from_the_selected_group(page, lv, client, groups_wr)
+    logger.info(f"[+] Спарсили данные с группы {groups_wr}")
+
+    lv.controls.append(ft.Text(f"[+] Спарсили данные с группы {groups_wr}"))
+    page.update()  # Обновите страницу, чтобы сразу показать сообщение
+
     # Записываем parsing данные в файл user_settings/software_database.db
     entities = all_participants_user(page, lv, all_participants)
     await db_handler.write_parsed_chat_participants_to_db(entities)
@@ -147,8 +152,10 @@ def all_participants_user(page, lv, all_participants) -> list:
     """Формируем список user_settings/software_database.db"""
     entities = []  # Создаем словарь
     for user in all_participants:
+
         lv.controls.append(ft.Text(f"{user}"))
         page.update()  # Обновите страницу, чтобы сразу показать сообщение
+
         getting_user_data(user, entities)
     return entities  # Возвращаем словарь пользователей
 
