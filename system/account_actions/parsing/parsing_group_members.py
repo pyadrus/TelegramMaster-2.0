@@ -38,10 +38,12 @@ def parsing_gui(page: ft.Page):
         db_handler = DatabaseHandler()  # Открываем базу с аккаунтами и с выставленными лимитами
         records: list = await db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
                                                                            number_of_accounts=1)
+
         lv.controls.append(ft.Text(f"Аккаунтов для парсинга: {len(records)}"))
         page.update()  # Обновите страницу, чтобы сразу показать сообщение
+
         for row in records:
-            await process_telegram_groups(page, lv,  row, db_handler)
+            await process_telegram_groups(page, lv, row, db_handler)
 
         # Добавление сообщения о завершении парсинга
         lv.controls.append(ft.Text("Парсинг завершен"))
@@ -65,8 +67,10 @@ def parsing_gui(page: ft.Page):
     page.update()
 
 
-async def process_telegram_groups(page, lv,  row, db_handler) -> None:
+async def process_telegram_groups(page, lv, row, db_handler) -> None:
     """
+    :param lv: ListView
+    :param page: страница
     :param row: строка из таблицы
     :param db_handler: база данных
     """
@@ -78,15 +82,17 @@ async def process_telegram_groups(page, lv,  row, db_handler) -> None:
         logger.info(f'[+] Парсинг группы: {groups}')
         lv.controls.append(ft.Text(f"Группа для парсинга: {groups}"))
         page.update()  # Обновите страницу, чтобы сразу показать сообщение
-        await subscribe_and_parse_group(page, lv,  client, groups, db_handler)
+        await subscribe_and_parse_group(page, lv, client, groups, db_handler)
     await db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
     await db_handler.delete_duplicates(table_name="members",
                                        column_name="id")  # Чистка дублирующих username по столбцу id
     await client.disconnect()  # Разрываем соединение telegram
 
 
-async def subscribe_and_parse_group(page, lv,  client, groups, db_handler) -> None:
+async def subscribe_and_parse_group(page, lv, client, groups, db_handler) -> None:
     """
+    :param lv:  ListView
+    :param page:  страница
     :param client: Телеграм клиент
     :param groups: список групп
     :param db_handler: база данных
@@ -94,33 +100,38 @@ async def subscribe_and_parse_group(page, lv,  client, groups, db_handler) -> No
     groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups)
     lv.controls.append(ft.Text(f"Группа для парсинга: {len(groups_wr)}"))
     page.update()  # Обновите страницу, чтобы сразу показать сообщение
-    await group_parsing(client, groups_wr, db_handler)  # Parsing групп
+    await group_parsing(page, lv, client, groups_wr, db_handler)  # Parsing групп
     # Удаляем отработанную группу или канал
     await db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
 
 
-async def group_parsing(client, groups_wr, db_handler) -> None:
+async def group_parsing(page, lv, client, groups_wr, db_handler) -> None:
     """
     Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
     @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
     """
-    all_participants: list = await parsing_of_users_from_the_selected_group(client, groups_wr)
+    all_participants: list = await parsing_of_users_from_the_selected_group(page, lv, client, groups_wr)
     # Записываем parsing данные в файл user_settings/software_database.db
-    entities = all_participants_user(all_participants)
+    entities = all_participants_user(page, lv, all_participants)
     await db_handler.write_parsed_chat_participants_to_db(entities)
 
 
-async def parsing_of_users_from_the_selected_group(client, target_group) -> list:
+async def parsing_of_users_from_the_selected_group(page, lv, client, target_group) -> list:
     """Собираем данные user и записываем в файл members.db (создание нового файла members.db)"""
     logger.info("[+] Ищем участников... Сохраняем в файл software_database.db...")
+    lv.controls.append(ft.Text("[+] Ищем участников... Сохраняем в файл software_database.db..."))
+    page.update()  # Обновите страницу, чтобы сразу показать сообщение
     all_participants: list = []
     while_condition = True
     my_filter = ChannelParticipantsSearch("")
     offset = 0
     while while_condition:
         try:
-            participants = await client(
-                GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200, hash=0))
+            participants = await client(GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200, hash=0))
+
+            lv.controls.append(ft.Text(participants))
+            page.update()  # Обновите страницу, чтобы сразу показать сообщение
+
             all_participants.extend(participants.users)
             offset += len(participants.users)
             if len(participants.users) < 1:
@@ -132,10 +143,12 @@ async def parsing_of_users_from_the_selected_group(client, target_group) -> list
     return all_participants
 
 
-def all_participants_user(all_participants) -> list:
+def all_participants_user(page, lv, all_participants) -> list:
     """Формируем список user_settings/software_database.db"""
     entities = []  # Создаем словарь
     for user in all_participants:
+        lv.controls.append(ft.Text(f"{user}"))
+        page.update()  # Обновите страницу, чтобы сразу показать сообщение
         getting_user_data(user, entities)
     return entities  # Возвращаем словарь пользователей
 
@@ -203,16 +216,16 @@ def getting_active_user_data(user):
     return entity
 
 
-async def choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler) -> None:
+async def choosing_a_group_from_the_subscribed_ones_for_parsing(page, lv, db_handler) -> None:
     """Выбираем группу из подписанных для parsing"""
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
         tg_tar = output_a_list_of_groups_new(client)
-        all_participants_list = await parsing_of_users_from_the_selected_group(client, tg_tar)
+        all_participants_list = await parsing_of_users_from_the_selected_group(page, lv, client, tg_tar)
         # Записываем parsing данные в файл user_settings/software_database.db
-        entities = all_participants_user(all_participants_list)
+        entities = all_participants_user(page, lv, all_participants_list)
         db_handler.write_parsed_chat_participants_to_db(entities)
         db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
         db_handler.delete_duplicates(table_name="members",
@@ -403,7 +416,8 @@ def adding_a_contact_to_the_phone_book(client, db_handler) -> None:
             # После работы с номером телефона, программа удаляет номер со списка
             db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
         except ValueError:
-            logger.info(f"[+] Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
+            logger.info(
+                f"[+] Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
             # После работы с номером телефона, программа удаляет номер со списка
             db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
     client.disconnect()  # Разрываем соединение telegram

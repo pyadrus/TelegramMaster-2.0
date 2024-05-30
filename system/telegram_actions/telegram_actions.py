@@ -44,10 +44,10 @@ async def telegram_connects(db_handler, session) -> TelegramClient:
                               new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
 
 
-def telegram_connect_and_output_name(row, db_handler):
+async def telegram_connect_and_output_name(row, db_handler):
     """Подключаемся телеграмм аккаунту и выводим имя"""
     print(row[0])
-    client = telegram_connects(db_handler, f"user_settings/accounts/{row[0]}")
+    client = await telegram_connects(db_handler, f"user_settings/accounts/{row[0]}")
     # Выводим командой print: имя, фамилию, номер телефона аккаунта
     # first_name, last_name, phone = account_name(client, name_account="me")
     # Выводим результат полученного имени и номера телефона
