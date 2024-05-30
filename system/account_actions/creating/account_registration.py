@@ -38,7 +38,7 @@ class AccountRIO:
         entities = find_files(directory_path="user_settings/accounts/bio_accounts", extension='session')
         for file in entities:
             logger.info(f'Имя файла: {file[0]}')
-            self.client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
+            self.client = await telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
 
             while True:
 
@@ -81,7 +81,7 @@ class AccountRIO:
         """Изменение имени профиля"""
         entities = find_files(directory_path=f"user_settings/accounts/bio_accounts", extension='session')
         for file in entities:
-            self.client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
+            self.client = await telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
             # user_input: str = input('Введите имя профиля, не более 64 символов: ')
             try:
                 result = self.client(functions.account.UpdateProfileRequest(first_name=user_input))
@@ -116,7 +116,7 @@ class AccountRIO:
         """Изменение фамилии профиля"""
         entities = find_files(directory_path=f"user_settings/accounts/bio_accounts", extension='session')
         for file in entities:
-            self.client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
+            self.client = await telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
             # user_input: str = input('Введите фамилию профиля, не более 64 символов: ')
             try:
                 result = self.client(functions.account.UpdateProfileRequest(last_name=user_input))
@@ -129,13 +129,13 @@ class AccountRIO:
         """Изменение фото профиля."""
         entities = find_files(directory_path="user_settings/accounts/bio_accounts", extension='session')
         for file in entities:
-            self.client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
+            self.client = await telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
             photo_files = find_files(directory_path="user_settings/bio", extension='jpg')
             for photo_file in photo_files:
                 try:
                     file_path = f"user_settings/bio/{photo_file[0]}.jpg"
                     result = await self.client(functions.photos.UploadProfilePhotoRequest(
-                        file=self.client.upload_file(file_path)
+                        file=await self.client.upload_file(file_path)
                     ))
                     logger.info(f'{result}\nФото успешно обновлено!')
                 except AuthKeyUnregisteredError:
@@ -171,7 +171,7 @@ class AccountRIO:
         """Изменение никнейма профиля"""
         entities = find_files(directory_path=f"user_settings/accounts/bio_accounts", extension='session')
         for file in entities:
-            self.client = telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
+            self.client = await telegram_connects(db_handler, session=f"user_settings/accounts/bio_accounts/{file[0]}")
             try:
                 result = self.client(functions.account.UpdateUsernameRequest(username=user_input))
                 logger.info(f'{result}\nНикнейм успешно обновлен!')

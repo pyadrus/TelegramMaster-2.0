@@ -11,13 +11,13 @@ from rich import print
 from telethon.errors import *
 
 
-def check_account_for_spam() -> None:
+async def check_account_for_spam() -> None:
     """Проверка аккаунта на спам через @SpamBot"""
     event: str = "Проверка аккаунтов через SpamBot"  # Событие, которое записываем в базу данных
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     db_handler = DatabaseHandler()
-    records: list = db_handler.open_and_read_data("config")
+    records: list = await db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
@@ -41,7 +41,7 @@ def check_account_for_spam() -> None:
                 if similarity_ratio_ru >= 97:
                     print('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                    record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
+                    await record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
                                            db_handler)
                     # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                     working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
@@ -59,12 +59,12 @@ def check_account_for_spam() -> None:
                 if similarity_ratio_en >= 97:
                     print('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                    record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
+                    await record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
                                            db_handler)
                     # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                     working_with_accounts(account_folder=f"user_settings/accounts/{row[2]}.session",
                                           new_account_folder=f"user_settings/accounts/banned/{row[2]}.session")
-                record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
+                await record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
                                        db_handler)
 
         except YouBlockedUserError:

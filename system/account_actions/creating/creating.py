@@ -2,7 +2,7 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
 
-from system.sqlite_working_tools.sqlite_working_tools import select_from_config_by_phone, DatabaseHandler
+from system.sqlite_working_tools.sqlite_working_tools import select_from_config_by_phone
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 

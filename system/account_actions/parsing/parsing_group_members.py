@@ -39,10 +39,6 @@ def parsing_gui(page: ft.Page):
 
         await parsing_mass_parsing_of_groups(DatabaseHandler())  # Парсинг участников чата
 
-        # for i in range(999999):
-        #     lv.controls.append(ft.Text(value=f"Hello, world! {i}", color="green"))
-        #     await asyncio.sleep(0.1)  # Non-blocking sleep
-        #     page.update()
         page.go("/settings")  # Изменение маршрута в представлении существующих настроек
 
     button = ft.ElevatedButton("Начать парсинг", on_click=add_items)
@@ -148,7 +144,7 @@ async def parsing_mass_parsing_of_groups(db_handler) -> None:
             await db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
         await db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
         await db_handler.delete_duplicates(table_name="members",
-                                     column_name="id")  # Чистка дублирующих username по столбцу id
+                                           column_name="id")  # Чистка дублирующих username по столбцу id
         await client.disconnect()  # Разрываем соединение telegram
     app_notifications(notification_text="Список успешно сформирован!")  # Выводим уведомление
 
@@ -250,7 +246,7 @@ def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, limit_
         db_handler.write_parsed_chat_participants_to_db_active(entities)
 
 
-def parsing_of_active_participants(chat_input, limit_active_user, db_handler) -> None:
+async def parsing_of_active_participants(chat_input, limit_active_user, db_handler) -> None:
     """
     Parsing участников, которые пишут в чат (активных участников)
 
@@ -264,7 +260,7 @@ def parsing_of_active_participants(chat_input, limit_active_user, db_handler) ->
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
         # Подписываемся на чат, с которого будем parsing активных участников
-        subscribe_to_group_or_channel(client, chat_input, phone, db_handler)
+        await subscribe_to_group_or_channel(client, chat_input, phone, db_handler)
         time.sleep(time_activity_user_2)
         we_get_the_data_of_the_group_members_who_wrote_messages(client, chat_input, limit_active_user, db_handler)
         client.disconnect()  # Разрываем соединение telegram

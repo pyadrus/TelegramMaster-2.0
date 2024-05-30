@@ -54,7 +54,7 @@ def invitation_from_all_accounts_program_body(name_database_table, db_handler) -
     app_notifications(notification_text=f"Работа с группой {link_group} окончена!")  # Выводим уведомление
 
 
-def invite_from_multiple_accounts_with_limits(name_database_table, db_handler) -> None:
+async def invite_from_multiple_accounts_with_limits(name_database_table, db_handler) -> None:
     """Inviting по заранее parsing списку и работа с несколькими аккаунтами и выставленными лимитами"""
     app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
@@ -64,7 +64,7 @@ def invite_from_multiple_accounts_with_limits(name_database_table, db_handler) -
         client, phone = telegram_connect_and_output_name(row, db_handler)
         # Подписываемся на группу которую будем inviting, если аккаунт новый, то он автоматически подпишется и
         # записываем действия в software_database.db
-        subscribe_to_group_or_channel(client, link_group, phone, db_handler)
+        await subscribe_to_group_or_channel(client, link_group, phone, db_handler)
         number_usernames: list = db_handler.open_and_read_data(name_database_table)
         records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table, number_of_accounts=limits)
         # Количество аккаунтов на данный момент в работе
