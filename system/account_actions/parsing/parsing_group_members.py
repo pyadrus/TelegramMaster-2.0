@@ -1,9 +1,9 @@
 import random
 import time
-# import asyncio
+
 import flet as ft
 from loguru import logger
-# from rich import print
+
 from telethon import functions
 from telethon import types
 from telethon.tl.functions.channels import GetParticipantsRequest
@@ -21,12 +21,8 @@ from system.account_actions.subscription.subscription import subscribe_to_the_gr
     subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import display_progress_bar
 from system.auxiliary_functions.global_variables import console, ConfigReader
-from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
-
-configs_reader = ConfigReader()
-time_activity_user_1, time_activity_user_2 = configs_reader.get_time_activity_user()
 
 
 def parsing_gui(page: ft.Page):
@@ -35,11 +31,23 @@ def parsing_gui(page: ft.Page):
     page.update()  # Убедитесь, что ListView добавлен на страницу перед запуском цикла
 
     async def add_items(e):
-        print('Получаем данные пользователя')
+        # Индикация начала парсинга
+        lv.controls.append(ft.Text("Парсинг начался..."))
+        page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
-        await parsing_mass_parsing_of_groups(DatabaseHandler())  # Парсинг участников чата
+        db_handler = DatabaseHandler()  # Открываем базу с аккаунтами и с выставленными лимитами
+        records: list = await db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
+                                                                           number_of_accounts=1)
+        lv.controls.append(ft.Text(f"Аккаунтов для парсинга: {len(records)}"))
+        page.update()  # Обновите страницу, чтобы сразу показать сообщение
+        for row in records:
+            await process_telegram_groups(page, lv,  row, db_handler)
 
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        # Добавление сообщения о завершении парсинга
+        lv.controls.append(ft.Text("Парсинг завершен"))
+        page.update()  # Обновление страницы для показа сообщения о завершении
+
+        # await app_notifications(notification_text="Список успешно сформирован!")  # Выводим уведомление
 
     button = ft.ElevatedButton("Начать парсинг", on_click=add_items)
 
@@ -55,6 +63,111 @@ def parsing_gui(page: ft.Page):
     )
 
     page.update()
+
+
+async def process_telegram_groups(page, lv,  row, db_handler) -> None:
+    """
+    :param row: строка из таблицы
+    :param db_handler: база данных
+    """
+    # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
+    client = await telegram_connect_and_output_name(row, db_handler)
+    # Открываем базу с группами для дальнейшего parsing
+    records: list = await db_handler.open_and_read_data("writing_group_links")
+    for groups in records:  # Поочередно выводим записанные группы
+        logger.info(f'[+] Парсинг группы: {groups}')
+        lv.controls.append(ft.Text(f"Группа для парсинга: {groups}"))
+        page.update()  # Обновите страницу, чтобы сразу показать сообщение
+        await subscribe_and_parse_group(page, lv,  client, groups, db_handler)
+    await db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
+    await db_handler.delete_duplicates(table_name="members",
+                                       column_name="id")  # Чистка дублирующих username по столбцу id
+    await client.disconnect()  # Разрываем соединение telegram
+
+
+async def subscribe_and_parse_group(page, lv,  client, groups, db_handler) -> None:
+    """
+    :param client: Телеграм клиент
+    :param groups: список групп
+    :param db_handler: база данных
+    """
+    groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups)
+    lv.controls.append(ft.Text(f"Группа для парсинга: {len(groups_wr)}"))
+    page.update()  # Обновите страницу, чтобы сразу показать сообщение
+    await group_parsing(client, groups_wr, db_handler)  # Parsing групп
+    # Удаляем отработанную группу или канал
+    await db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
+
+
+async def group_parsing(client, groups_wr, db_handler) -> None:
+    """
+    Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
+    @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
+    """
+    all_participants: list = await parsing_of_users_from_the_selected_group(client, groups_wr)
+    # Записываем parsing данные в файл user_settings/software_database.db
+    entities = all_participants_user(all_participants)
+    await db_handler.write_parsed_chat_participants_to_db(entities)
+
+
+async def parsing_of_users_from_the_selected_group(client, target_group) -> list:
+    """Собираем данные user и записываем в файл members.db (создание нового файла members.db)"""
+    logger.info("[+] Ищем участников... Сохраняем в файл software_database.db...")
+    all_participants: list = []
+    while_condition = True
+    my_filter = ChannelParticipantsSearch("")
+    offset = 0
+    while while_condition:
+        try:
+            participants = await client(
+                GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200, hash=0))
+            all_participants.extend(participants.users)
+            offset += len(participants.users)
+            if len(participants.users) < 1:
+                while_condition = False
+        except TypeError:
+            logger.info(f'Ошибка parsing: не верное имя или cсылка {target_group} не является группой / каналом: {target_group}')
+            time.sleep(2)
+            break
+    return all_participants
+
+
+def all_participants_user(all_participants) -> list:
+    """Формируем список user_settings/software_database.db"""
+    entities = []  # Создаем словарь
+    for user in all_participants:
+        getting_user_data(user, entities)
+    return entities  # Возвращаем словарь пользователей
+
+
+def getting_user_data(user, entities) -> None:
+    """Получаем данные пользователя"""
+    username = user.username if user.username else "NONE"
+    user_phone = user.phone if user.phone else "Номер телефона скрыт"
+    first_name = user.first_name if user.first_name else ""
+    last_name = user.last_name if user.last_name else ""
+    photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
+    online_at = "Был(а) недавно"
+    # Статусы пользователя https://core.telegram.org/type/UserStatus
+    if isinstance(user.status, (
+            UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, UserStatusOnline,
+            UserStatusEmpty)):
+        if isinstance(user.status, UserStatusOffline):
+            online_at = user.status.was_online
+        if isinstance(user.status, UserStatusRecently):
+            online_at = "Был(а) недавно"
+        if isinstance(user.status, UserStatusLastWeek):
+            online_at = "Был(а) на этой неделе"
+        if isinstance(user.status, UserStatusLastMonth):
+            online_at = "Был(а) в этом месяце"
+        if isinstance(user.status, UserStatusOnline):
+            online_at = user.status.expires
+        if isinstance(user.status, UserStatusEmpty):
+            online_at = "статус пользователя еще не определен"
+    user_premium = "Пользователь с premium" if user.premium else ""
+
+    entities.append(
+        [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium])
 
 
 def getting_active_user_data(user):
@@ -90,77 +203,6 @@ def getting_active_user_data(user):
     return entity
 
 
-def getting_user_data(user, entities) -> None:
-    """Получаем данные пользователя"""
-    username = user.username if user.username else "NONE"
-    user_phone = user.phone if user.phone else "Номер телефона скрыт"
-    first_name = user.first_name if user.first_name else ""
-    last_name = user.last_name if user.last_name else ""
-    photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
-    online_at = "Был(а) недавно"
-    # Статусы пользователя https://core.telegram.org/type/UserStatus
-    if isinstance(user.status, (
-            UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, UserStatusOnline,
-            UserStatusEmpty)):
-        if isinstance(user.status, UserStatusOffline):
-            online_at = user.status.was_online
-        if isinstance(user.status, UserStatusRecently):
-            online_at = "Был(а) недавно"
-        if isinstance(user.status, UserStatusLastWeek):
-            online_at = "Был(а) на этой неделе"
-        if isinstance(user.status, UserStatusLastMonth):
-            online_at = "Был(а) в этом месяце"
-        if isinstance(user.status, UserStatusOnline):
-            online_at = user.status.expires
-        if isinstance(user.status, UserStatusEmpty):
-            online_at = "статус пользователя еще не определен"
-    user_premium = "Пользователь с premium" if user.premium else ""
-
-    entities.append(
-        [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium])
-
-
-def all_participants_user(all_participants) -> list:
-    """Формируем список user_settings/software_database.db"""
-    entities = []  # Создаем словарь
-    for user in all_participants:
-        getting_user_data(user, entities)
-    return entities  # Возвращаем словарь пользователей
-
-
-async def parsing_mass_parsing_of_groups(db_handler) -> None:
-    """Parsing групп, ввод в графическое окно списка групп"""
-    # Открываем базу с аккаунтами и с выставленными лимитами
-    records: list = await db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
-    for row in records:
-        # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client = await telegram_connect_and_output_name(row, db_handler)
-        # Открываем базу с группами для дальнейшего parsing
-        records: list = await db_handler.open_and_read_data("writing_group_links")
-        for groups in records:  # Поочередно выводим записанные группы
-            groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups, db_handler)
-            await group_parsing(client, groups_wr, db_handler)  # Parsing групп
-            # Удаляем отработанную группу или канал
-            await db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
-        await db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
-        await db_handler.delete_duplicates(table_name="members",
-                                           column_name="id")  # Чистка дублирующих username по столбцу id
-        await client.disconnect()  # Разрываем соединение telegram
-    app_notifications(notification_text="Список успешно сформирован!")  # Выводим уведомление
-
-
-async def group_parsing(client, groups_wr, db_handler) -> None:
-    """
-    Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
-    @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
-    """
-    # with console.status("[magenta]Работа над задачами...", spinner_style="time") as _:
-    all_participants: list = await parsing_of_users_from_the_selected_group(client, groups_wr)
-    # Записываем parsing данные в файл user_settings/software_database.db
-    entities = all_participants_user(all_participants)
-    await db_handler.write_parsed_chat_participants_to_db(entities)
-
-
 async def choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler) -> None:
     """Выбираем группу из подписанных для parsing"""
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
@@ -172,33 +214,10 @@ async def choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler) -> N
         # Записываем parsing данные в файл user_settings/software_database.db
         entities = all_participants_user(all_participants_list)
         db_handler.write_parsed_chat_participants_to_db(entities)
-        db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
+        db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
         db_handler.delete_duplicates(table_name="members",
                                      column_name="id")  # Чистка дублирующих username по столбцу id
         client.disconnect()  # Разрываем соединение telegram
-
-
-async def parsing_of_users_from_the_selected_group(client, target_group) -> list:
-    """Собираем данные user и записываем в файл members.db (создание нового файла members.db)"""
-    print("[magenta][+] Ищем участников... Сохраняем в файл software_database.db...")
-    all_participants: list = []
-    while_condition = True
-    my_filter = ChannelParticipantsSearch("")
-    offset = 0
-    while while_condition:
-        try:
-            participants = await client(
-                GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200, hash=0))
-            all_participants.extend(participants.users)
-            offset += len(participants.users)
-            if len(participants.users) < 1:
-                while_condition = False
-        except TypeError:
-            logger.info(
-                f'Ошибка parsing: не верное имя или cсылка {target_group} не является группой / каналом: {target_group}')
-            time.sleep(2)
-            break
-    return all_participants
 
 
 def output_a_list_of_groups_new(client):
@@ -218,9 +237,9 @@ def output_a_list_of_groups_new(client):
             continue  # Записываем ошибку в software_database.db и продолжаем работу
     i = 0
     for g in groups:
-        print(f"[magenta][{str(i)}] - {g.title}")
+        logger.info(f"[{str(i)}] - {g.title}")
         i += 1
-    print("")
+    logger.info("")
     g_index = console.input("[medium_purple3][+] Введите номер : ")
     target_group = groups[int(g_index)]
     return target_group
@@ -229,43 +248,48 @@ def output_a_list_of_groups_new(client):
 """Parsing активных участников группы"""
 
 
-def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, limit_active_user, db_handler) -> None:
+async def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, limit_active_user) -> None:
     """
     Получаем данные участников группы которые писали сообщения
-
-    Параметры:
-    client: клиент
-    chat: ссылка на чат
-    limit_active_user: лимит активных участников
+    :param client: клиент Telegram
+    :param chat: ссылка на чат
+    :param limit_active_user: лимит активных участников
     """
     for message in client.iter_messages(chat, limit=int(limit_active_user)):
         from_user = client.get_entity(message.from_id.user_id)  # Получаем отправителя по ИД
+        configs_reader = ConfigReader()
+        time_activity_user_1, time_activity_user_2 = configs_reader.get_time_activity_user()
         display_progress_bar(time_activity_user_1, time_activity_user_2, "Выполнение задачи...")
         entities = getting_active_user_data(from_user)
         logger.info(entities)
-        db_handler.write_parsed_chat_participants_to_db_active(entities)
+        db_handler = DatabaseHandler()
+        await db_handler.write_parsed_chat_participants_to_db_active(entities)
 
 
-async def parsing_of_active_participants(chat_input, limit_active_user, db_handler) -> None:
+async def parsing_of_active_participants(chat_input, limit_active_user) -> None:
     """
     Parsing участников, которые пишут в чат (активных участников)
 
-    Параметры:
-    chat_input: ссылка на чат
-    limit_active_user: лимит активных участников
+    :param chat_input: ссылка на чат
+    :param limit_active_user: лимит активных участников
     """
     # Открываем базу с аккаунтами и с выставленными лимитами
-    records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
+    db_handler = DatabaseHandler()
+    records: list = await db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
+                                                                       number_of_accounts=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
         # Подписываемся на чат, с которого будем parsing активных участников
-        await subscribe_to_group_or_channel(client, chat_input, phone, db_handler)
+        await subscribe_to_group_or_channel(client, chat_input)
+        configs_reader = ConfigReader()
+        time_activity_user_1, time_activity_user_2 = configs_reader.get_time_activity_user()
         time.sleep(time_activity_user_2)
-        we_get_the_data_of_the_group_members_who_wrote_messages(client, chat_input, limit_active_user, db_handler)
+        await we_get_the_data_of_the_group_members_who_wrote_messages(client, chat_input, limit_active_user)
         client.disconnect()  # Разрываем соединение telegram
-    db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
-    db_handler.delete_duplicates(table_name="members", column_name="id")  # Чистка дублирующих username по столбцу id
+    await db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
+    await db_handler.delete_duplicates(table_name="members",
+                                       column_name="id")  # Чистка дублирующих username по столбцу id
 
 
 """Работа с номерами телефонов"""
@@ -273,15 +297,15 @@ async def parsing_of_active_participants(chat_input, limit_active_user, db_handl
 
 def we_record_phone_numbers_in_the_db(db_handler) -> None:
     """Записываем номера телефонов в базу данных"""
-    print("[magenta]Контакты которые были добавлены в телефонную книгу, будем записывать с файл "
-          "software_database.db, в папке user_settings")
+    logger.info("Контакты которые были добавлены в телефонную книгу, будем записывать с файл "
+                "software_database.db, в папке user_settings")
     # Вводим имя файла с которым будем работать
     file_name_input = console.input(
         "[magenta][+] Введите имя файла с контактами, в папке contacts, имя вводим без txt: ")
     # Открываем файл с которым будем работать
     with open(f"user_settings/{file_name_input}.txt", "r") as file_contact:
         for line in file_contact.readlines():
-            print(line.strip())
+            logger.info(line.strip())
             # strip() - удаляет с конца и начала строки лишние пробелы, в том числе символ окончания строки
             lines = line.strip()
             entities = [lines]
@@ -322,7 +346,7 @@ def we_get_the_account_id(client, db_handler) -> None:
 def get_and_parse_contacts(client) -> list:
     all_participants: list = []
     result = client(functions.contacts.GetContactsRequest(hash=0))
-    print(result)  # Печатаем результат
+    logger.info(result)  # Печатаем результат
     all_participants.extend(result.users)
     return all_participants
 
@@ -330,7 +354,7 @@ def get_and_parse_contacts(client) -> list:
 def we_show_and_delete_the_contact_of_the_phone_book(client, user) -> None:
     """Показываем и удаляем контакт телефонной книги"""
     client(functions.contacts.DeleteContactsRequest(id=[user.id]))
-    print("[magenta] Подождите 2 - 4 секунды")
+    logger.info("Подождите 2 - 4 секунды")
     time.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
 
 
@@ -348,7 +372,7 @@ def inviting_contact(db_handler) -> None:
     """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
-    print(f"[medium_purple3]Всего accounts: {len(records)}")
+    logger.info(f"[medium_purple3]Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
@@ -359,7 +383,7 @@ def adding_a_contact_to_the_phone_book(client, db_handler) -> None:
     """Добавляем контакт в телефонную книгу"""
 
     records: list = db_handler.open_and_read_data("contact")
-    print(f"[medium_purple3]Всего номеров: {len(records)}")
+    logger.info(f"Всего номеров: {len(records)}")
     entities = []  # Создаем список сущностей
     for rows in records:
         user = {"phone": rows[0]}
@@ -373,16 +397,15 @@ def adding_a_contact_to_the_phone_book(client, db_handler) -> None:
             # Получаем данные номера телефона https://docs.telethon.dev/en/stable/concepts/entities.html
             contact = client.get_entity(phone)
             getting_user_data(contact, entities)
-            print(f"[magenta][+] Контакт с добавлен в телефонную книгу!")
+            print(f"[+] Контакт с добавлен в телефонную книгу!")
             time.sleep(4)
             # Запись результатов parsing в файл members_contacts.db, для дальнейшего inviting
             # После работы с номером телефона, программа удаляет номер со списка
             db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
         except ValueError:
-            print(f"[magenta][+] Контакт с номером {phone} не зарегистрирован или отсутствует "
-                  f"возможность добавить в телефонную книгу!")
+            logger.info(f"[+] Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
             # После работы с номером телефона, программа удаляет номер со списка
             db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
     client.disconnect()  # Разрываем соединение telegram
     db_handler.write_parsed_chat_participants_to_db(entities)
-    db_handler.cleaning_list_of_participants_who_do_not_have_username()  # Чистка списка parsing списка, если нет username
+    db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username

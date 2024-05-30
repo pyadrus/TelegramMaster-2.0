@@ -3,14 +3,14 @@ import time
 from telethon import functions
 
 from system.error.telegram_errors import record_account_actions
-from system.notification.notification import app_notifications
+# from system.notification.notification import app_notifications
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
 def parsing_groups_which_account_subscribed(db_handler) -> None:
     """Parsing групп / каналов на которые подписан аккаунт и сохраняем в файл software_database.db"""
-    app_notifications(notification_text="Parsing групп / каналов на которые подписан аккаунт")  # Выводим уведомление
+    # app_notifications(notification_text="Parsing групп / каналов на которые подписан аккаунт")  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
     for row in records:

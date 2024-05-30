@@ -1,20 +1,20 @@
 from telethon.sync import TelegramClient  # Не удалять, так как используется кодом
 from system.error.telegram_errors import record_account_actions
-from system.notification.notification import app_notifications
+# from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name, working_with_accounts
 from thefuzz import fuzz
 
 from loguru import logger
-from rich import print
+# from rich import print
 from telethon.errors import *
 
 
 async def check_account_for_spam() -> None:
     """Проверка аккаунта на спам через @SpamBot"""
     event: str = "Проверка аккаунтов через SpamBot"  # Событие, которое записываем в базу данных
-    app_notifications(notification_text=event)  # Выводим уведомление
+    # app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     db_handler = DatabaseHandler()
     records: list = await db_handler.open_and_read_data("config")

@@ -53,17 +53,17 @@ def display_progress_bar(time_range_1, time_range_2, message) -> None:
         time.sleep(1)
 
 
-def record_inviting_results(username, phone, description_action, event, actions, db_handler) -> None:
+def record_inviting_results(username, description_action, event, actions, db_handler) -> None:
     """Запись результатов inviting, отправка сообщений в базу данных"""
-    record_account_actions(phone, description_action, event, actions, db_handler)
+    record_account_actions(description_action, event, actions, db_handler)
     db_handler.delete_row_db(table="members", column="username", value=username)
     # Смена username через случайное количество секунд
     display_progress_bar(time_inviting_1, time_inviting_2, "Переход к новому username")
 
 
-def record_and_interrupt(actions, phone, description_action, event, db_handler) -> None:
+def record_and_interrupt(actions, description_action, event, db_handler) -> None:
     """Запись данных в базу данных и прерывание выполнения кода"""
-    record_account_actions(phone, description_action, event, actions, db_handler)
+    record_account_actions(description_action, event, actions, db_handler)
     # Смена аккаунта через случайное количество секунд
     display_progress_bar(time_changing_accounts_1, time_changing_accounts_2, "Ожидайте смены аккаунта")
 

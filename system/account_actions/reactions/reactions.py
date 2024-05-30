@@ -2,7 +2,7 @@ import random
 import time
 import sys
 from loguru import logger  # Импортируем библиотеку loguru для логирования
-from rich import print  # Импортируем библиотеку rich для красивого отображения текста в терминале / консолей (цветного)
+# from rich import print  # Импортируем библиотеку rich для красивого отображения текста в терминале / консолей (цветного)
 from telethon import TelegramClient
 from telethon import events, types
 from telethon.errors import *
@@ -13,7 +13,7 @@ from system.account_actions.creating.account_registration import telegram_connec
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import find_files, read_json_file
 from system.auxiliary_functions.global_variables import console
-from system.notification.notification import app_notifications
+# from system.notification.notification import app_notifications
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
@@ -58,7 +58,7 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
         finally:
             client.disconnect()
 
-    app_notifications(notification_text=f"Работа с группой {chat} окончена!")
+    # app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
 
 def writing_names_found_files_to_the_db_config_reactions(db_handler) -> None:
@@ -71,7 +71,7 @@ def writing_names_found_files_to_the_db_config_reactions(db_handler) -> None:
                                     "INSERT INTO config_reactions (id, hash, phone) VALUES (?, ?, ?)", entities)
 
 
-def setting_reactions(db_handler):
+async def setting_reactions(db_handler):
     """Выставление реакций на новые посты"""
     writing_names_found_files_to_the_db_config_reactions(db_handler)
 
@@ -85,10 +85,10 @@ def setting_reactions(db_handler):
                                                                  number_of_accounts=int(records_ac_json))
     logger.info(records)
     for row in records:
-        client = telegram_connects(db_handler, session=f"user_settings/reactions/accounts/{row[2]}")
+        client = await telegram_connects(db_handler, session=f"user_settings/reactions/accounts/{row[2]}")
         chat = read_json_file(filename='user_settings/reactions/link_channel.json')
         logger.info(chat)
-        client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
+        await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
 
         @client.on(events.NewMessage(chats=chat))
         async def handler(event):
@@ -107,23 +107,23 @@ class WorkingWithReactions:  # Класс для работы с реакция�
     def __init__(self, db_handler: DatabaseHandler):
         self.db_handler = db_handler
 
-    def users_choice_of_reaction(self) -> None:
+    async def users_choice_of_reaction(self) -> None:
         """Выбираем реакцию для выставления в чате / канале"""
         chat = console.input("[medium_purple3][+] Введите ссылку на группу / канал: ")  # Ссылка на группу или канал
         message = console.input("[medium_purple3][+] Введите ссылку на сообщение или пост: ")  # Ссылка на сообщение
-        records: list = self.choosing_a_number_of_reactions()  # Выбираем лимиты для аккаунтов
+        records: list = await self.choosing_a_number_of_reactions()  # Выбираем лимиты для аккаунтов
         random_value = choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
         self.send_reaction_request(records, chat, message, random_value)  # Ставим реакцию на пост, сообщение
 
-    def choosing_a_number_of_reactions(self) -> list:
+    async def choosing_a_number_of_reactions(self) -> list:
         """Выбираем лимиты для аккаунтов"""
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        records: list = self.db_handler.open_and_read_data("config")
+        records: list = await self.db_handler.open_and_read_data("config")
         # Количество аккаунтов на данный момент в работе
         print(f"[medium_purple3]Введите количество с которых будут поставлены реакции\nВсего accounts: {len(records)}")
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
         number_of_accounts = console.input("[medium_purple3][+] Введите количество аккаунтов для выставления реакций: ")
-        records: list = self.db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
+        records: list = await self.db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
                                                                           number_of_accounts=int(number_of_accounts))
         return records
 
@@ -133,7 +133,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
             # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
             client, phone = telegram_connect_and_output_name(row, self.db_handler)
             try:
-                subscribe_to_group_or_channel(client, chat, phone, self.db_handler)  # Подписываемся на группу
+                subscribe_to_group_or_channel(client, chat)  # Подписываемся на группу
                 number = re.search(r'/(\d+)$', message_url).group(1)
                 time.sleep(5)
                 client(SendReactionRequest(peer=chat, msg_id=int(number),
@@ -147,7 +147,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
             finally:
                 client.disconnect()
 
-        app_notifications(notification_text=f"Работа с группой {chat} окончена!")
+        # app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
 
 def viewing_posts(db_handler) -> None:
@@ -164,7 +164,7 @@ def viewing_posts(db_handler) -> None:
         # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
         try:
-            subscribe_to_group_or_channel(client, chat, phone, db_handler)  # Подписываемся на группу
+            subscribe_to_group_or_channel(client, chat)  # Подписываемся на группу
             channel = client.get_entity(chat)  # Получение информации о канале
             time.sleep(5)
             posts = client.get_messages(channel, limit=10)  # Получение последних 10 постов из канала
@@ -180,7 +180,7 @@ def viewing_posts(db_handler) -> None:
         finally:
             client.disconnect()
 
-    app_notifications(notification_text=f"Работа с каналом {chat} окончена!")
+    # app_notifications(notification_text=f"Работа с каналом {chat} окончена!")
 
 
 if __name__ == '__main__':

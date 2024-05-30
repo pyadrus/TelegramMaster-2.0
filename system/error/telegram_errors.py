@@ -1,7 +1,7 @@
 import datetime
 import os
 from loguru import logger
-from rich import print
+# from rich import print
 
 
 async def record_account_actions(action_description, event, action_result, db_handler) -> None:

@@ -1,7 +1,7 @@
 import random
 
 import requests
-from rich import print
+# from rich import print
 
 
 async def reading_proxy_data_from_the_database(db_handler):

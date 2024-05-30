@@ -7,7 +7,7 @@ import urllib.request
 
 import getmac
 from loguru import logger
-from rich import print
+# from rich import print
 from telethon.errors import *
 
 from system.account_actions.checking_spam.account_verification import working_with_accounts
