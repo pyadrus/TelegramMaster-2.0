@@ -1,14 +1,22 @@
 import flet as ft
 
+from system.account_actions.checking_spam.account_verification import check_account_for_spam
 from system.account_actions.creating.account_registration import AccountRIO
 from system.account_actions.creating.creating import creating_groups_and_chats
-from system.account_actions.parsing.parsing_group_members import parsing_gui
+from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body, \
+    invite_from_multiple_accounts_with_limits
+from system.account_actions.invitation.telegram_invite_scheduler import launching_an_invite_once_an_hour, \
+    schedule_invite, launching_invite_every_day_certain_time
+from system.account_actions.parsing.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
+from system.account_actions.parsing.parsing_group_members import parsing_gui, parsing_of_active_participants, \
+    choosing_a_group_from_the_subscribed_ones_for_parsing, we_record_phone_numbers_in_the_db, show_account_contact_list, \
+    delete_contact, inviting_contact
 from system.menu.app_banner import program_version, date_of_program_change
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day, \
     recording_text_for_sending_messages, create_main_window, \
     creating_the_main_window_for_proxy_data_entry, record_device_type, \
     writing_api_id_api_hash, record_setting, recording_link_channel, record_the_number_of_accounts, reaction_gui, \
-    output_the_input_field, writing_members
+    output_the_input_field, writing_members, connecting_new_account
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.account_verification import deleting_files_by_dictionary
 
@@ -55,25 +63,62 @@ def mainss(page: ft.Page):
                                          ft.TextSpan("https://t.me/master_tg_d",
                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                      url="https://t.me/master_tg_d", ), ], ),
-
+                          ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг",
+                                            on_click=lambda _: page.go("/inviting")),
                           ft.ElevatedButton(width=line_width, height=30, text="Парсинг",
                                             on_click=lambda _: page.go("/parsing")),
-
+                          ft.ElevatedButton(width=line_width, height=30, text="Работа с контактами",
+                                            on_click=lambda _: page.go("/working_with_contacts")),
+                          ft.ElevatedButton(width=line_width, height=30, text="Подписка, отписка",
+                                            on_click=lambda _: page.go("/subscribe_unsubscribe")),
+                          ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов",
+                                            on_click=lambda _: page.go("/connecting_accounts")),
+                          ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений",
+                                            on_click=lambda _: page.go("/sending_messages")),
+                          ft.ElevatedButton(width=line_width, height=30, text="Работа с реакциями",
+                                            on_click=lambda _: page.go("/working_with_reactions")),
+                          ft.ElevatedButton(width=line_width, height=30, text="Проверка аккаунтов",
+                                            on_click=lambda _: page.go("/checking_accounts")),
                           ft.ElevatedButton(width=line_width, height=30, text="Создание групп (чатов)",
                                             on_click=lambda _: page.go("/creating_groups")),
-
-                          ft.ElevatedButton(width=line_width, height=30, text="Создание групп (чатов)",
-                                            on_click=lambda _: page.go("/creating_groups")),
-
                           ft.ElevatedButton(width=line_width, height=30, text="Редактирование BIO",
                                             on_click=lambda _: page.go("/bio_editing")),
-
                           ft.ElevatedButton(width=line_width, height=30, text="Настройки",
                                             on_click=lambda _: page.go("/settings")),
                           ], ))
 
-        if page.route == "/parsing":  # Парсинг
+        if page.route == "/inviting":  # Инвайтинг
+            page.views.append(
+                ft.View("/inviting",
+                        [ft.AppBar(title=ft.Text("Главное меню"),
+                                   bgcolor=ft.colors.SURFACE_VARIANT),
+                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                             ft.ElevatedButton(width=line_width, height=30,text="Инвайтинг без лимитов",
+                                               on_click=lambda _: page.go("/inviting_without_limits")),
+                             ft.ElevatedButton(width=line_width, height=30,text="Инвайтинг с лимитами",
+                                               on_click=lambda _: page.go("/inviting_with_limits")),
+                             ft.ElevatedButton(width=line_width, height=30,text="Инвайтинг 1 раз в час",
+                                               on_click=lambda _: page.go("/inviting_1_time_per_hour")),
+                             ft.ElevatedButton(width=line_width, height=30,text="Инвайтинг в определенное время",
+                                               on_click=lambda _: page.go("/inviting_certain_time")),
+                             ft.ElevatedButton(width=line_width, height=30,text="Инвайтинг каждый день",
+                                               on_click=lambda _: page.go("/inviting_every_day")),
+                         ])]))
+        elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
+            invitation_from_all_accounts_program_body(name_database_table="members", db_handler=DatabaseHandler())
+        elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
+            invite_from_multiple_accounts_with_limits(name_database_table="members", db_handler=DatabaseHandler())
+        elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
+            launching_an_invite_once_an_hour()
+        elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
+            schedule_invite()
+        elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
+            launching_invite_every_day_certain_time()
 
+        elif page.route == "/checking_accounts":  # Проверка аккаунтов
+            check_account_for_spam()
+
+        elif page.route == "/parsing":  # Парсинг
             page.views.append(
                 ft.View("/parsing",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -90,24 +135,53 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/parsing_active_group_members")),
                              ft.ElevatedButton(width=line_width, height=30,
                                                text="Парсинг групп / каналов на которые подписан аккаунт",
-                                               on_click=lambda _: page.go("/parsing_groups_channels_account_subscribed")),
+                                               on_click=lambda _: page.go(
+                                                   "/parsing_groups_channels_account_subscribed")),
                              ft.ElevatedButton(width=line_width, height=30,
                                                text="Очистка списка от ранее спарсенных данных",
                                                on_click=lambda _: page.go("/clearing_list_previously_saved_data")),
                          ])]))
+
         elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
             parsing_gui(page)
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
-            pass
+            choosing_a_group_from_the_subscribed_ones_for_parsing(DatabaseHandler())
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
-            pass
+            chat_input = input("[+] Введите ссылку на чат с которого будем собирать активных: ")
+            limit_active_user = input("[+] Введите количество сообщений которые будем parsing: ")
+            parsing_of_active_participants(chat_input, int(limit_active_user))
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
-            pass
+            parsing_groups_which_account_subscribed(DatabaseHandler())
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
-            pass
+            db_handler = DatabaseHandler()
+            db_handler.cleaning_db(name_database_table="members")
 
+        elif page.route == "/working_with_contacts":  # Работа с контактами
+            page.views.append(
+                ft.View("/working_with_contacts",
+                        [ft.AppBar(title=ft.Text("Главное меню"),
+                                   bgcolor=ft.colors.SURFACE_VARIANT),
+                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                             ft.ElevatedButton(width=line_width, height=30,text="Формирование списка контактов",
+                                               on_click=lambda _: page.go("/creating_contact_list")),
+                             ft.ElevatedButton(width=line_width, height=30,text="Показать список контактов",
+                                               on_click=lambda _: page.go("/show_list_contacts")),
+                             ft.ElevatedButton(width=line_width, height=30,text="Удаление контактов",
+                                               on_click=lambda _: page.go("/deleting_contacts")),
+                             ft.ElevatedButton(width=line_width, height=30,text="Добавление контактов",
+                                               on_click=lambda _: page.go("/adding_contacts")),
+                         ])]))
+        elif page.route == "/creating_contact_list":  # Формирование списка контактов
+            we_record_phone_numbers_in_the_db(DatabaseHandler())
+        elif page.route == "/show_list_contacts":  # Показать список контактов
+            show_account_contact_list(DatabaseHandler())
+        elif page.route == "/deleting_contacts":  # Удаление контактов
+            delete_contact(DatabaseHandler())
+        elif page.route == "/adding_contacts":  # Добавление контактов
+            inviting_contact(DatabaseHandler())
 
-
+        elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
+            connecting_new_account()
 
 
         elif page.route == "/creating_groups":  # Создание групп (чатов)
@@ -124,20 +198,15 @@ def mainss(page: ft.Page):
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Изменение username",
+                             ft.ElevatedButton(width=line_width, height=30, text="Изменение username",
                                                on_click=lambda _: page.go("/changing_username")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Изменение фото",
+                             ft.ElevatedButton(width=line_width, height=30,text="Изменение фото",
                                                on_click=lambda _: page.go("/edit_photo")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Изменение описания",
+                             ft.ElevatedButton(width=line_width, height=30,text="Изменение описания",
                                                on_click=lambda _: page.go("/edit_description")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Изменение имени",
+                             ft.ElevatedButton(width=line_width, height=30,text="Изменение имени",
                                                on_click=lambda _: page.go("/name_change")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Изменение фамилии",
+                             ft.ElevatedButton(width=line_width, height=30,text="Изменение фамилии",
                                                on_click=lambda _: page.go("/change_surname")),
                          ])]))
 

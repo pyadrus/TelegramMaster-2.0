@@ -3,7 +3,7 @@ import time
 import schedule
 
 from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body
-from system.auxiliary_functions.global_variables import console, ConfigReader
+from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.account_verification import deleting_files_by_dictionary
 
@@ -38,10 +38,10 @@ def launching_an_invite_once_an_hour() -> None:
 def schedule_invite() -> None:
     """Запуск автоматической отправки приглашений участникам"""
     # Вводим час запуска программы в формате 03, 06, 23
-    hour_user: str = console.input("[magenta]Введите часы (Пример: 02, 03, 06): ")
+    hour_user: str = input("Введите часы (Пример: 02, 03, 06): ")
     # Вводим минуты запуска программы в формате 15, 25, 35
-    minute_user: str = console.input("[magenta]Введите минуты (Пример: 02, 25, 59): ")
-    console.print(f"[magenta]Скрипт будет запускаться каждый день в {hour_user}:{minute_user}")
+    minute_user: str = input("Введите минуты (Пример: 02, 25, 59): ")
+    print(f"Скрипт будет запускаться каждый день в {hour_user}:{minute_user}")
     # Запускаем автоматизацию
     schedule.every().day.at(f"{hour_user}:{minute_user}").do(schedule_member_invitation)
     while True:
