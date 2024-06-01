@@ -3,7 +3,6 @@ import random
 import time
 
 from loguru import logger
-from rich.progress import track
 from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
 
@@ -22,7 +21,7 @@ async def subscription_all(db_handler) -> None:
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
     logger.info(f"Всего accounts: {len(records)}")
-    for row in track(records, description="[medium_purple3]Прогресс выполнения работы\n"):
+    for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
         # Открываем базу данных

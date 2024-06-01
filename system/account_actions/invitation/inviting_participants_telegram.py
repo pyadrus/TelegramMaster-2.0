@@ -1,7 +1,6 @@
 import datetime
 
 from loguru import logger
-# from rich import print
 from telethon.errors import *
 
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
@@ -11,7 +10,6 @@ from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.auxiliary_functions import record_inviting_results
 from system.auxiliary_functions.global_variables import ConfigReader
 
-# from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 configs_reader = ConfigReader()

@@ -1,4 +1,3 @@
-rich
 certifi
 charset-normalizer
 colorama

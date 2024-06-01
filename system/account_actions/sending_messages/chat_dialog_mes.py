@@ -2,7 +2,7 @@ import asyncio
 import random
 
 from loguru import logger
-from rich.progress import track
+# from rich.progress import track
 from telethon import TelegramClient, events
 from telethon.errors import UserBannedInChannelError
 from telethon.tl.functions.channels import JoinChannelRequest
@@ -43,8 +43,10 @@ def mains(db_handler):
 
             selected_shift_time = random.randrange(time_sending_messages_1, time_sending_messages_2)
             time_in_seconds = selected_shift_time * 60
-            for _ in track(range(time_in_seconds), description=f"[red]Спим {time_in_seconds / 60} минуты / минут..."):
-                await asyncio.sleep(1)  # Спим 1 секунду
+            # for _ in track(range(time_in_seconds), description=f"[red]Спим {time_in_seconds / 60} минуты / минут..."):
+            #     await asyncio.sleep(1)  # Спим 1 секунду
+            logger.info(f'Спим {time_in_seconds / 60} минуты / минут...')
+            await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
 
     def select_and_read_random_filess(entities):
         if entities:  # Проверяем, что список не пустой, если он не пустой

@@ -1,5 +1,5 @@
 from loguru import logger
-from rich import print
+# from rich import print
 from telethon.errors import *
 from telethon.tl.functions.channels import LeaveChannelRequest
 

@@ -1,33 +1,17 @@
-# from rich import box
-# from rich.table import Table
-#
-# from system.account_actions.checking_spam.account_verification import check_account_for_spam
-# from system.account_actions.invitation.inviting_participants_telegram import link_group, \
-#     invitation_from_all_accounts_program_body, invite_from_multiple_accounts_with_limits
-# from system.account_actions.invitation.telegram_invite_scheduler import launching_an_invite_once_an_hour, \
-#     schedule_invite, launching_invite_every_day_certain_time
-# from system.account_actions.parsing.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
-# from system.account_actions.parsing.parsing_group_members import parsing_mass_parsing_of_groups, \
-#     parsing_of_active_participants, choosing_a_group_from_the_subscribed_ones_for_parsing, inviting_contact, \
-#     delete_contact, show_account_contact_list, we_record_phone_numbers_in_the_db
-# from system.account_actions.reactions.reactions import setting_reactions, WorkingWithReactions, viewing_posts
-# from system.account_actions.sending_messages.chat_dialog_mes import mains
-# from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_chats, \
-#     send_message_from_all_accounts
-# from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats, \
-#     sending_messages_via_chats_times, sending_files_via_chats
-# from system.account_actions.subscription.subscription import subscription_all
-# from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
-# from system.auxiliary_functions.auxiliary_functions import clear_console_and_display_banner, column_names, find_files
-# from system.auxiliary_functions.global_variables import ConfigReader, console
-# from system.setting.setting import connecting_new_account
-# from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-# from loguru import logger
-#
-# configs_reader = ConfigReader()
-# limits_message = configs_reader.get_message_limits()
-#
-#
+#     if user_input == "1":  # Парсинг одной группы / групп
+#         parsing_mass_parsing_of_groups(DatabaseHandler())  # Парсинг участников чата
+#     elif user_input == "2":  # Парсинг выбранной группы из подписанных пользователем
+#         choosing_a_group_from_the_subscribed_ones_for_parsing(DatabaseHandler())
+#     elif user_input == "3":  # Парсинг активных участников группы
+#         chat_input: str = console.input("[medium_purple3][+] Введите ссылку на чат с которого будем собирать активных: ")
+#         limit_active_user: int = console.input("[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
+#         parsing_of_active_participants(chat_input, limit_active_user, DatabaseHandler())
+#     elif user_input == "4":  # Парсинг групп / каналов на которые подписан аккаунт
+#         parsing_groups_which_account_subscribed(DatabaseHandler())
+#     elif user_input == "5":  # Очистка списка от ранее спарсенных данных
+#         db_handler = DatabaseHandler()
+#         db_handler.cleaning_db(name_database_table="members")
+
 # def main_menu() -> None:  # 1 - Основное меню программы
 #     """Основное меню программы"""
 #     clear_console_and_display_banner()  # Чистим консоль, выводим банер
@@ -98,40 +82,7 @@
 #     main_menu()  # После отработки функции переходим в начальное меню
 #
 #
-# def telegram_parsing_menu() -> None:  # 2 - Parsing групп и активных участников группы
-#     """Parsing групп и активных участников группы"""
-#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-#     table = Table(title="[medium_purple3]Parsing участников групп!", box=box.HORIZONTALS)  # Выводим таблицу
-#     column_names(table)  # Формируем колонки таблицы
-#     # Выводим текст в таблице
-#     table.add_row("1", "Парсинг одной группы / групп")
-#     table.add_row("2", "Парсинг выбранной группы из подписанных пользователем")
-#     table.add_row("3", "Парсинг активных участников группы")
-#     table.add_row("4", "Парсинг групп / каналов на которые подписан аккаунт")
-#     table.add_row("5", "Очистка списка от ранее спарсенных данных")
-#     table.add_row("0", "В начальное меню")
-#     console.print(table, justify="left")  # Отображаем таблицу
-#     user_input = console.input("[medium_purple3][+] Введите номер функции: ")
-#     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-#     if user_input == "1":  # Парсинг одной группы / групп
-#         parsing_mass_parsing_of_groups(DatabaseHandler())  # Парсинг участников чата
-#     elif user_input == "2":  # Парсинг выбранной группы из подписанных пользователем
-#         choosing_a_group_from_the_subscribed_ones_for_parsing(DatabaseHandler())
-#     elif user_input == "3":  # Парсинг активных участников группы
-#         chat_input: str = console.input(
-#             "[medium_purple3][+] Введите ссылку на чат с которого будем собирать активных: ")
-#         limit_active_user: int = console.input(
-#             "[medium_purple3][+] Введите количество сообщений которые будем parsing: ")
-#         parsing_of_active_participants(chat_input, limit_active_user, DatabaseHandler())
-#     elif user_input == "4":  # Парсинг групп / каналов на которые подписан аккаунт
-#         parsing_groups_which_account_subscribed(DatabaseHandler())
-#     elif user_input == "5":  # Очистка списка от ранее спарсенных данных
-#         db_handler = DatabaseHandler()
-#         db_handler.cleaning_db(name_database_table="members")
-#     elif user_input == "0":  # Вернуться назад
-#         main_menu()  # После отработки функции переходим в начальное меню
-#     else:
-#         telegram_parsing_menu()
+
 #
 #
 # def working_tools_contacts() -> None:  # 3 - Работаем с контактами телефонной книги

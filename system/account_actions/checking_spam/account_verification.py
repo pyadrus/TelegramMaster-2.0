@@ -1,13 +1,11 @@
 from telethon.sync import TelegramClient  # Не удалять, так как используется кодом
 from system.error.telegram_errors import record_account_actions
-# from system.notification.notification import app_notifications
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name, working_with_accounts
 from thefuzz import fuzz
 
 from loguru import logger
-# from rich import print
 from telethon.errors import *
 
 

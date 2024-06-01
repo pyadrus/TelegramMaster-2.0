@@ -5,13 +5,11 @@ import os
 import sys
 import io
 import flet as ft  # Импортируем библиотеку flet
-# from rich import print
 from telethon import TelegramClient
 from telethon.errors import *
 
 from system.account_actions.creating.account_registration import telegram_connects
-from system.auxiliary_functions.global_variables import console, ConfigReader
-# from system.notification.notification import app_notifications
+from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
@@ -163,7 +161,7 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
 
 async def connecting_new_account() -> None:
     """Вводим данные в базу данных user_settings/software_database.db"""
-    phone_data = console.input("[magenta][+] Введите номер телефона : ")  # Вводим номер телефона
+    phone_data = input("[magenta][+] Введите номер телефона : ")  # Вводим номер телефона
     entities = (api_id_data, api_hash_data, phone_data)
     db_handler = DatabaseHandler()
     await db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS config(phone)",
@@ -182,7 +180,7 @@ async def telegram_connect(phone, db_handler) -> TelegramClient:
         await client.send_code_request(phone)
         try:
             # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
-            await client.sign_in(phone, code=console.input("[medium_purple3][+] Введите код: "))
+            await client.sign_in(phone, code=input("[medium_purple3][+] Введите код: "))
         except SessionPasswordNeededError:
             """
             https://telethonn.readthedocs.io/en/latest/extra/basic/creating-a-client.html#two-factor-authorization-2fa

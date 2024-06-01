@@ -1,5 +1,5 @@
 import configparser
-from rich.console import Console
+# from rich.console import Console
 
 
 # Создаем логгер для информационных сообщений с [deadly] в сообщении
@@ -8,7 +8,7 @@ from rich.console import Console
 # logger_info.add('user_settings/log/info.log', filter=lambda record: '[deadly]' in record['message'],
 #                 format="{time:YYYY-MM-DD HH:mm:ss} | {message}")
 
-console = Console()
+# console = Console()
 
 
 class ConfigReader:

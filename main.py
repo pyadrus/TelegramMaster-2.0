@@ -73,12 +73,49 @@ def mainss(page: ft.Page):
                           ], ))
 
         if page.route == "/parsing":  # Парсинг
+
+            page.views.append(
+                ft.View("/parsing",
+                        [ft.AppBar(title=ft.Text("Главное меню"),
+                                   bgcolor=ft.colors.SURFACE_VARIANT),
+                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Парсинг одной группы / групп",
+                                               on_click=lambda _: page.go("/parsing_single_groups")),
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Парсинг выбранной группы из подписанных пользователем",
+                                               on_click=lambda _: page.go("/parsing_selected_group_user_subscribed")),
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Парсинг активных участников группы",
+                                               on_click=lambda _: page.go("/parsing_active_group_members")),
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Парсинг групп / каналов на которые подписан аккаунт",
+                                               on_click=lambda _: page.go("/parsing_groups_channels_account_subscribed")),
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Очистка списка от ранее спарсенных данных",
+                                               on_click=lambda _: page.go("/clearing_list_previously_saved_data")),
+                         ])]))
+        elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
             parsing_gui(page)
+        elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
+            pass
+        elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
+            pass
+        elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
+            pass
+        elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
+            pass
+
+
+
+
+
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             async def creating_groups():
                 db_handler = DatabaseHandler()
                 records: list = await db_handler.open_and_read_data("config")
                 creating_groups_and_chats(page, records, db_handler)
+
             creating_groups()
 
         elif page.route == "/bio_editing":  # Настройки

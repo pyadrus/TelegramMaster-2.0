@@ -19,8 +19,7 @@ from telethon.tl.types import UserStatusRecently
 
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link, \
     subscribe_to_group_or_channel
-from system.auxiliary_functions.auxiliary_functions import display_progress_bar
-from system.auxiliary_functions.global_variables import console, ConfigReader
+from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
@@ -260,7 +259,7 @@ def output_a_list_of_groups_new(client):
         logger.info(f"[{str(i)}] - {g.title}")
         i += 1
     logger.info("")
-    g_index = console.input("[medium_purple3][+] Введите номер : ")
+    g_index = input("[medium_purple3][+] Введите номер : ")
     target_group = groups[int(g_index)]
     return target_group
 
@@ -279,7 +278,7 @@ async def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, 
         from_user = client.get_entity(message.from_id.user_id)  # Получаем отправителя по ИД
         configs_reader = ConfigReader()
         time_activity_user_1, time_activity_user_2 = configs_reader.get_time_activity_user()
-        display_progress_bar(time_activity_user_1, time_activity_user_2, "Выполнение задачи...")
+        # display_progress_bar(time_activity_user_1, time_activity_user_2, "Выполнение задачи...")
         entities = getting_active_user_data(from_user)
         logger.info(entities)
         db_handler = DatabaseHandler()
@@ -320,8 +319,7 @@ def we_record_phone_numbers_in_the_db(db_handler) -> None:
     logger.info("Контакты которые были добавлены в телефонную книгу, будем записывать с файл "
                 "software_database.db, в папке user_settings")
     # Вводим имя файла с которым будем работать
-    file_name_input = console.input(
-        "[magenta][+] Введите имя файла с контактами, в папке contacts, имя вводим без txt: ")
+    file_name_input = input("[+] Введите имя файла с контактами, в папке contacts, имя вводим без txt: ")
     # Открываем файл с которым будем работать
     with open(f"user_settings/{file_name_input}.txt", "r") as file_contact:
         for line in file_contact.readlines():

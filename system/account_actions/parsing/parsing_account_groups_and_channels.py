@@ -3,7 +3,6 @@ import time
 from telethon import functions
 
 from system.error.telegram_errors import record_account_actions
-# from system.notification.notification import app_notifications
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
