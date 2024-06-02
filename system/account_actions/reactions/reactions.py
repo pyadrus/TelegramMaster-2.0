@@ -1,8 +1,8 @@
 import random
-import time
 import sys
+import time
+
 from loguru import logger  # Импортируем библиотеку loguru для логирования
-# from rich import print  # Импортируем библиотеку rich для красивого отображения текста в терминале / консолей (цветного)
 from telethon import TelegramClient
 from telethon import events, types
 from telethon.errors import *
@@ -11,9 +11,8 @@ from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViews
 
 from system.account_actions.creating.account_registration import telegram_connects
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
-from system.auxiliary_functions.auxiliary_functions import find_files, read_json_file
-from system.auxiliary_functions.global_variables import console
-# from system.notification.notification import app_notifications
+from system.auxiliary_functions.auxiliary_functions import find_files
+from system.auxiliary_functions.auxiliary_functions import read_json_file
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
@@ -109,8 +108,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
 
     async def users_choice_of_reaction(self) -> None:
         """Выбираем реакцию для выставления в чате / канале"""
-        chat = console.input("[medium_purple3][+] Введите ссылку на группу / канал: ")  # Ссылка на группу или канал
-        message = console.input("[medium_purple3][+] Введите ссылку на сообщение или пост: ")  # Ссылка на сообщение
+        chat = input("[+] Введите ссылку на группу / канал: ")  # Ссылка на группу или канал
+        message = input("[+] Введите ссылку на сообщение или пост: ")  # Ссылка на сообщение
         records: list = await self.choosing_a_number_of_reactions()  # Выбираем лимиты для аккаунтов
         random_value = choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
         self.send_reaction_request(records, chat, message, random_value)  # Ставим реакцию на пост, сообщение
@@ -122,7 +121,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         # Количество аккаунтов на данный момент в работе
         print(f"[medium_purple3]Введите количество с которых будут поставлены реакции\nВсего accounts: {len(records)}")
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        number_of_accounts = console.input("[medium_purple3][+] Введите количество аккаунтов для выставления реакций: ")
+        number_of_accounts = input("[+] Введите количество аккаунтов для выставления реакций: ")
         records: list = await self.db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
                                                                           number_of_accounts=int(number_of_accounts))
         return records
@@ -143,7 +142,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 sys.exit(1)
             except Exception as e:
                 logger.exception(e)
-                print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+                print("[!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
             finally:
                 client.disconnect()
 
@@ -152,12 +151,12 @@ class WorkingWithReactions:  # Класс для работы с реакция�
 
 def viewing_posts(db_handler) -> None:
     """Накрутка просмотров постов"""
-    chat = console.input("[medium_purple3][+] Введите ссылку на канал: ")  # Ссылка на группу или канал
+    chat = input("[+] Введите ссылку на канал: ")  # Ссылка на группу или канал
     records: list = db_handler.open_and_read_data("config")
     # Количество аккаунтов на данный момент в работе
     print(f"[medium_purple3]Всего accounts: {len(records)}")
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    number_of_accounts = console.input("[medium_purple3][+] Введите количество аккаунтов для просмотра постов: ")
+    number_of_accounts = input("[+] Введите количество аккаунтов для просмотра постов: ")
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
                                                                  number_of_accounts=int(number_of_accounts))
     for row in records:

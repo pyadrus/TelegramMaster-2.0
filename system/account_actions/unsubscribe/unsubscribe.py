@@ -1,9 +1,8 @@
 from loguru import logger
-# from rich import print
+
 from telethon.errors import *
 from telethon.tl.functions.channels import LeaveChannelRequest
 
-# from system.notification.notification import app_notifications
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 

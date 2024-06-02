@@ -10,7 +10,6 @@ from loguru import logger
 
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.error.telegram_errors import record_account_actions
-# from system.menu.app_banner import banner
 
 configs_reader = ConfigReader()
 time_changing_accounts_1, time_changing_accounts_2 = configs_reader.get_time_changing_accounts()

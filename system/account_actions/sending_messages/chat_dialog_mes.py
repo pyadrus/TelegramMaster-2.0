@@ -2,7 +2,7 @@ import asyncio
 import random
 
 from loguru import logger
-# from rich.progress import track
+
 from telethon import TelegramClient, events
 from telethon.errors import UserBannedInChannelError
 from telethon.tl.functions.channels import JoinChannelRequest
