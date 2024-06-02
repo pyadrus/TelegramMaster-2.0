@@ -3,7 +3,6 @@ import time
 
 import flet as ft
 from loguru import logger
-
 from telethon import functions
 from telethon import types
 from telethon.tl.functions.channels import GetParticipantsRequest
@@ -17,8 +16,8 @@ from telethon.tl.types import UserStatusOffline
 from telethon.tl.types import UserStatusOnline
 from telethon.tl.types import UserStatusRecently
 
-from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link, \
-    subscribe_to_group_or_channel
+from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
+from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name

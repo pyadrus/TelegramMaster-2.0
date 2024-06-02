@@ -29,32 +29,29 @@ def inviting_to_a_group(client, username) -> None:
         logger.error(e)
 
 
-def invitation_from_all_accounts_program_body(name_database_table, db_handler) -> None:
+async def invitation_from_all_accounts_program_body(name_database_table, db_handler) -> None:
     """Inviting по заранее parsing списку и работа с несколькими аккаунтами"""
     clear_console_and_display_banner()  # Чистим консоль, выводим банер
-    # app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = db_handler.open_and_read_data("config")
+    records: list = await db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row, db_handler)
+        client, phone = await telegram_connect_and_output_name(row, db_handler)
         # Подписываемся на группу которую будем inviting, если аккаунт новый, то он автоматически подпишется и
         # записываем действия в software_database.db
         print(link_group)
-        subscribe_to_group_or_channel(client, link_group, phone, db_handler)
+        await subscribe_to_group_or_channel(client, link_group)
         records: list = db_handler.open_and_read_data(name_database_table)
-        print(f"[medium_purple3]Всего username: {len(records)}")  # Количество аккаунтов на данный момент в работе
+        print(f"Всего username: {len(records)}")  # Количество аккаунтов на данный момент в работе
         try:
             inviting(client, phone, records, db_handler)
         except FloodWaitError as e:
             logger.error(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}')
             continue  # Прерываем работу и меняем аккаунт
-    # app_notifications(notification_text=f"Работа с группой {link_group} окончена!")  # Выводим уведомление
 
 
 async def invite_from_multiple_accounts_with_limits(name_database_table, db_handler) -> None:
     """Inviting по заранее parsing списку и работа с несколькими аккаунтами и выставленными лимитами"""
-    # app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
     for row in records:
@@ -62,13 +59,12 @@ async def invite_from_multiple_accounts_with_limits(name_database_table, db_hand
         client, phone = telegram_connect_and_output_name(row, db_handler)
         # Подписываемся на группу которую будем inviting, если аккаунт новый, то он автоматически подпишется и
         # записываем действия в software_database.db
-        await subscribe_to_group_or_channel(client, link_group, phone, db_handler)
+        await subscribe_to_group_or_channel(client, link_group)
         number_usernames: list = db_handler.open_and_read_data(name_database_table)
         records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table, number_of_accounts=limits)
         # Количество аккаунтов на данный момент в работе
-        print(f"[medium_purple3]Всего username: {len(number_usernames)}. Лимит на аккаунт: {len(records)}")
+        print(f"Всего username: {len(number_usernames)}. Лимит на аккаунт: {len(records)}")
         inviting(client, phone, records, db_handler)
-    # app_notifications(notification_text=f"Работа с группой {link_group} окончена!")  # Выводим уведомление
 
 
 def inviting(client, phone, records, db_handler) -> None:
@@ -132,7 +128,7 @@ def inviting(client, phone, records, db_handler) -> None:
             print("[!] Скрипт остановлен!")
         else:
             # Записываем данные в базу данных, чистим список кого добавляли или писали сообщение
-            print(f"[magenta][+] Участник {username} добавлен, если не состоит в чате")
+            print(f"[+] Участник {username} добавлен, если не состоит в чате")
             record_inviting_results(username, f"username : {username}", event,
                                     f"Участник {username} добавлен, если не состоит в чате", db_handler)
     unsubscribe_from_the_group(client, link_group)  # Отписываемся от группы, на которую подписались в самом начале

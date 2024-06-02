@@ -14,8 +14,7 @@ def creating_groups_and_chats(page: ft.Page, records, db_handler) -> None:
     result = select_from_config_by_phone(phones)
     logger.info(result)
 
-    t = ft.Text(
-        value='Выберите Telegram аккаунт, в котором будут создаваться группы (чаты): ')  # Создает текстовое поле.
+    t = ft.Text(value='Выберите Telegram аккаунт, в котором будут создаваться группы (чаты): ')  # Создает текстовое поле.
 
     # Создаем список чекбоксов для каждого аккаунта
     checkboxes = []
@@ -23,7 +22,7 @@ def creating_groups_and_chats(page: ft.Page, records, db_handler) -> None:
         phone = row[0]  # Предполагая, что первый элемент в строке - это номер телефона
         checkboxes.append(ft.Checkbox(label=phone))
 
-    def button_clicked(e):
+    async def button_clicked(e):
         """Выбранная реакция"""
 
         selected_account = None
@@ -35,13 +34,11 @@ def creating_groups_and_chats(page: ft.Page, records, db_handler) -> None:
         if selected_account:
             row = next(row for row in result if row[0] == selected_account)
             # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-            client, phone = telegram_connect_and_output_name(row, db_handler)
+            client = await telegram_connect_and_output_name(row, db_handler)
             # Создаем группу (чат) в выбранном аккаунте
-            response = client(functions.channels.CreateChannelRequest(
-                title='My awesome title',
-                about='Description for your group',
-                megagroup=True
-            ))
+            response = client(functions.channels.CreateChannelRequest(title='My awesome title',
+                                                                      about='Description for your group',
+                                                                      megagroup=True))
             print(response.stringify())
 
         page.go("/settings")  # Изменение маршрута в представлении существующих настроек
