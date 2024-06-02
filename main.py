@@ -176,6 +176,43 @@ def mainss(page: ft.Page):
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             await setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
 
+        elif page.route == "/subscribe_unsubscribe":  # подписка, отписка
+            page.views.append(
+                ft.View("/subscribe_unsubscribe",
+                        [ft.AppBar(title=ft.Text("Главное меню"),
+                                   bgcolor=ft.colors.SURFACE_VARIANT),
+                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                             ft.ElevatedButton(width=line_width, height=30, text="Подписка",
+                                               on_click=lambda _: page.go("/subscription_all")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Отписываемся",
+                                               on_click=lambda _: page.go("/unsubscribe_all")),
+                         ])]))
+        elif page.route == "/subscription_all":  # Подписка
+            subscription_all(DatabaseHandler())
+        elif page.route == "/unsubscribe_all":  # Отписываемся
+            unsubscribe_all(DatabaseHandler())
+
+        elif page.route == "/working_with_reactions":  # Работа с реакциями
+            page.views.append(
+                ft.View("/working_with_reactions",
+                        [ft.AppBar(title=ft.Text("Главное меню"),
+                                   bgcolor=ft.colors.SURFACE_VARIANT),
+                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                             ft.ElevatedButton(width=line_width, height=30, text="Ставим реакции",
+                                               on_click=lambda _: page.go("/setting_reactions")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Накручиваем просмотры постов",
+                                               on_click=lambda _: page.go("/we_are_winding_up_post_views")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Автоматическое выставление реакций",
+                                               on_click=lambda _: page.go("/automatic_setting_of_reactions")),
+                         ])]))
+        elif page.route == "/setting_reactions":  # Ставим реакции
+            reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
+            reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
+        elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
+            viewing_posts(DatabaseHandler())
+        elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
+            setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
+
         elif page.route == "/parsing":  # Парсинг
             page.views.append(
                 ft.View("/parsing",
@@ -249,6 +286,56 @@ def mainss(page: ft.Page):
                 creating_groups_and_chats(page, records, db_handler)
 
             await creating_groups()
+
+        elif page.route == "/sending_messages":  # Настройки
+            page.views.append(
+                ft.View("/sending_messages",
+                        [ft.AppBar(title=ft.Text("Главное меню"),
+                                   bgcolor=ft.colors.SURFACE_VARIANT),
+                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                             ft.ElevatedButton(width=line_width, height=30, text="Отправка сообщений в личку",
+                                               on_click=lambda _: page.go("/sending_messages_personal_account")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку",
+                                               on_click=lambda _: page.go("/sending_files_personal_account")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений по чатам",
+                                               on_click=lambda _: page.go("/sending_messages_via_chats")),
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Рассылка сообщений по чатам с автоответчиком",
+                                               on_click=lambda _: page.go(
+                                                   "/sending_messages_via_chats_with_answering_machine")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка файлов по чатам",
+                                               on_click=lambda _: page.go("/sending_files_via_chats")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений + файлов по чатам",
+                                               on_click=lambda _: page.go("/sending_messages_files_via_chats")),
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Отправка сообщений в личку (с лимитами)",
+                                               on_click=lambda _: page.go("/sending_personal_messages_with_limits")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку (с лимитами)",
+                                               on_click=lambda _: page.go(
+                                                   "/sending_files_to_personal_account_with_limits")),
+                         ])]))
+        elif page.route == "/sending_messages_personal_account":  # ✔️ Отправка сообщений в личку
+            send_message_from_all_accounts(limits=None, db_handler=DatabaseHandler())
+        elif page.route == "/sending_files_personal_account":  # ✔️ Отправка файлов в личку
+            send_files_to_personal_chats(limits=None, db_handler=DatabaseHandler())
+        elif page.route == "/sending_messages_via_chats":  # ✔️ Рассылка сообщений по чатам
+            entities = find_files(directory_path="user_settings/message", extension="json")
+            logger.info(entities)
+            sending_messages_via_chats_times(entities, DatabaseHandler())
+        elif page.route == "/sending_messages_via_chats_with_answering_machine":  # ✔️ Рассылка сообщений по чатам с автоответчиком
+            mains(DatabaseHandler())
+        elif page.route == "/sending_files_via_chats":  # ✔️ Рассылка файлов по чатам
+            sending_files_via_chats(DatabaseHandler())
+        elif page.route == "/sending_messages_files_via_chats":  # ✔️ Рассылка сообщений + файлов по чатам
+            sending_messages_files_via_chats()
+        elif page.route == "/sending_personal_messages_with_limits":  # ✔️ Отправка сообщений в личку (с лимитами)
+            config_reader = ConfigReader()
+            limits_message = config_reader.get_message_limits()
+            send_message_from_all_accounts(limits=limits_message, db_handler=DatabaseHandler())
+        elif page.route == "/sending_files_to_personal_account_with_limits":  # ✔️ Отправка файлов в личку (с лимитами)
+            config_reader = ConfigReader()
+            limits_message = config_reader.get_message_limits()
+            send_files_to_personal_chats(limits=limits_message, db_handler=DatabaseHandler())
 
         elif page.route == "/sending_messages":  # Настройки
             page.views.append(
