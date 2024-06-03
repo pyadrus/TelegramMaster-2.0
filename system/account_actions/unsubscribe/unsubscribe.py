@@ -20,7 +20,7 @@ def unsubscribe_all(db_handler) -> None:
             client.disconnect()
 
 
-def unsubscribe_from_the_group(client, group_link) -> None:
+async def unsubscribe_from_the_group(client, group_link) -> None:
     """
     Отписываемся от группы
     """

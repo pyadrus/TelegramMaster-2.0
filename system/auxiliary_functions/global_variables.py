@@ -1,13 +1,6 @@
 import configparser
 
 
-# Создаем логгер для информационных сообщений с [deadly] в сообщении
-# logger_info = logger.bind()
-# Обработчик для информационных сообщений с [deadly] в сообщении
-# logger_info.add('user_settings/log/info.log', filter=lambda record: '[deadly]' in record['message'],
-#                 format="{time:YYYY-MM-DD HH:mm:ss} | {message}")
-
-
 class ConfigReader:
 
     def __init__(self):

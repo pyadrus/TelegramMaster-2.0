@@ -44,19 +44,16 @@ async def subscribe_to_group_or_channel(client, groups_wr) -> None:
     :param groups_wr: str - группа или канал
     :param client: TelegramClient  - объект клиента
     """
-    actions: str = "Подписался на группу или чат, если ранее не был подписан"
-    event: str = f"Subscription: {groups_wr}"
-    description_action = f"channel / group: {groups_wr}"
-    # цикл for нужен для того, что бы сработала команда brake
-    # команда break в Python используется только для выхода из цикла, а не выхода из программы в целом.
+    # цикл for нужен для того, что бы сработала команда brake команда break в Python используется только для выхода из цикла, а не выхода из программы в целом.
+    db_handler = DatabaseHandler()
     groups_wra = [groups_wr]
     for groups_wrs in groups_wra:
         try:
             await client(JoinChannelRequest(groups_wrs))
             logger.info(f"Аккаунт подписался на группу: {groups_wrs}")
             # Записываем данные о действии аккаунта в базу данных
-            db_handler = DatabaseHandler()
-            await record_account_actions(description_action, event, actions, db_handler)
+            await record_account_actions(f"channel / group: {groups_wr}", f"Subscription: {groups_wr}",
+                                         f"Subscription: {groups_wr}", db_handler)
         except ChannelsTooMuchError:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             for dialog in client.iter_dialogs():
@@ -68,26 +65,30 @@ async def subscribe_to_group_or_channel(client, groups_wr) -> None:
                     break
             logger.info("[+] Список почистили, и в файл записали.")
         except ChannelPrivateError:
-            await record_account_actions(description_action, event,
+            await record_account_actions(f"channel / group: {groups_wr}",
+                                         f"Subscription: {groups_wr}",
                                          "Указанный канал является приватным, или вам запретили подписываться.",
                                          db_handler)
         except (UsernameInvalidError, ValueError, TypeError):
-            await record_account_actions(description_action, event,
+            await record_account_actions(f"channel / group: {groups_wr}",
+                                         f"Subscription: {groups_wr}",
                                          f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}",
                                          db_handler)
             await db_handler.write_data_to_db("""SELECT * from writing_group_links""",
                                               """DELETE from writing_group_links where writing_group_links = ?""",
                                               groups_wrs)
         except PeerFloodError:
-            await record_account_actions(description_action, event, "Предупреждение о Flood от Telegram.", db_handler)
+            await record_account_actions(f"channel / group: {groups_wr}",
+                                         f"Subscription: {groups_wr}", "Предупреждение о Flood от Telegram.",
+                                         db_handler)
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
             logger.error(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
-            record_and_interrupt(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}",
-                                 event, db_handler)
+            record_and_interrupt()
             break  # Прерываем работу и меняем аккаунт
         except InviteRequestSentError:
-            await record_account_actions(description_action, event,
+            await record_account_actions(f"channel / group: {groups_wr}",
+                                         f"Subscription: {groups_wr}",
                                          "Действия будут доступны после одобрения администратором на вступление в группу",
                                          db_handler)
 

@@ -40,11 +40,10 @@ def send_files_to_personal_chats(limits, db_handler) -> None:
                     record_inviting_results(username, f"username : {username}",
                                             "Отправляем сообщение", "Сообщение отправлено", db_handler)
                 except FloodWaitError as e:
-                    record_and_interrupt(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}',
-                                         f"username : {username}", "Отправляем сообщение", db_handler)
+                    record_and_interrupt()
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:
-                    record_and_interrupt("Предупреждение о Flood от telegram.", f"username : {username}", "Отправляем сообщение", db_handler)
+                    record_and_interrupt()
                     break  # Прерываем работу и меняем аккаунт
                 except UserNotMutualContactError:
                     record_inviting_results(username, f"username : {username}",
@@ -53,7 +52,7 @@ def send_files_to_personal_chats(limits, db_handler) -> None:
                     record_inviting_results(username, f"username : {username}",
                                             "Отправляем сообщение", "Не корректное имя user", db_handler)
                 except ChatWriteForbiddenError:
-                    record_and_interrupt("Вам запрещено писать в супергруппу / канал.", f"username : {username}", "Отправляем сообщение", db_handler)
+                    record_and_interrupt()
                     break  # Прерываем работу и меняем аккаунт
                 except (TypeError, UnboundLocalError):
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -92,14 +91,10 @@ def send_message_from_all_accounts(limits, db_handler) -> None:
                                             "Отправляем сообщение в личку пользователям Telegram",
                                             "Сообщение отправлено", db_handler)
                 except FloodWaitError as e:
-                    record_and_interrupt(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}',
-                                         f"username : {username}",
-                                         "Отправляем сообщение в личку пользователям Telegram", db_handler)
+                    record_and_interrupt()
                     break  # Прерываем работу и меняем аккаунт
                 except PeerFloodError:
-                    record_and_interrupt("Предупреждение о Flood от telegram.",
-                                         f"username : {username}",
-                                         "Отправляем сообщение в личку пользователям Telegram", db_handler)
+                    record_and_interrupt()
                     break  # Прерываем работу и меняем аккаунт
                 except UserNotMutualContactError:
                     record_inviting_results(username, f"username : {username}",
@@ -110,9 +105,7 @@ def send_message_from_all_accounts(limits, db_handler) -> None:
                                             "Отправляем сообщение в личку пользователям Telegram",
                                             "Не корректное имя user", db_handler)
                 except ChatWriteForbiddenError:
-                    record_and_interrupt("Вам запрещено писать в супергруппу / канал.",
-                                         f"username : {username}",
-                                         "Отправляем сообщение в личку пользователям Telegram", db_handler)
+                    record_and_interrupt()
                     break  # Прерываем работу и меняем аккаунт
                 except (TypeError, UnboundLocalError):
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
