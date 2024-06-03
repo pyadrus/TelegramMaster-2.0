@@ -1,7 +1,7 @@
 import time
 
 from telethon import functions
-
+from loguru import logger
 from system.error.telegram_errors import record_account_actions
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
@@ -9,7 +9,6 @@ from system.telegram_actions.telegram_actions import telegram_connect_and_output
 
 def parsing_groups_which_account_subscribed(db_handler) -> None:
     """Parsing групп / каналов на которые подписан аккаунт и сохраняем в файл software_database.db"""
-    # app_notifications(notification_text="Parsing групп / каналов на которые подписан аккаунт")  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
     for row in records:
@@ -41,7 +40,7 @@ def forming_a_list_of_groups(client, db_handler) -> None:
                 members_count = 0
             # Запишите время синтаксического анализа
             parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            print(dialog_id, chs_title, chat_about, f"https://t.me/{username}", members_count, parsing_time)
+            logger.info(dialog_id, chs_title, chat_about, f"https://t.me/{username}", members_count, parsing_time)
             entities = [dialog_id, chs_title, chat_about, f"https://t.me/{username}", members_count, parsing_time]
             db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link, members_count, parsing_time)",
                                         writing_data_to_a_table="INSERT INTO groups_and_channels (id, title, about, link, members_count, parsing_time) VALUES (?, ?, ?, ?, ?, ?)",

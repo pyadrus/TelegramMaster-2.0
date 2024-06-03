@@ -7,15 +7,12 @@ import urllib.request
 
 import getmac
 from loguru import logger
-# from rich import print
 from telethon.errors import *
 
 from system.account_actions.checking_spam.account_verification import working_with_accounts
 from system.account_actions.creating.account_registration import telegram_connects
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import checking_the_proxy_for_work
-# from system.telegram_actions.telegram_actions import account_name
-# from system.telegram_actions.telegram_actions import renaming_a_session
 from system.telegram_actions.telegram_actions import writing_names_found_files_to_the_db
 
 
@@ -31,7 +28,7 @@ async def deleting_files_by_dictionary(db_handler) -> None:
     error_sessions = await account_verification(db_handler)
     for row in error_sessions:
         try:
-            print(f"Удаляем не валидный аккаунт {''.join(row)}.session")
+            logger.info(f"Удаляем не валидный аккаунт {''.join(row)}.session")
             os.remove(f"user_settings/accounts/{''.join(row)}.session")
         except PermissionError:
             continue
@@ -62,7 +59,7 @@ async def account_verification(db_handler):
             except AttributeError:
                 continue
             except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
-                print(f"На данный момент аккаунт {row[2]} запущен под другим ip")
+                logger.info(f"На данный момент аккаунт {row[2]} запущен под другим ip")
                 # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                 await client.disconnect()
                 working_with_accounts(account_folder=f"user_settings/accounts/{row[0]}.session",
@@ -73,9 +70,9 @@ async def account_verification(db_handler):
                 logger.exception(e)
                 time.sleep(2)
             except AuthKeyNotFound:  # session файл не является базой данных
-                print(f"Битый файл {row[0]}.session")
+                logger.info(f"Битый файл {row[0]}.session")
                 error_sessions.append([row[0]])  # Удаляем не валидную сессию
         except sqlite3.DatabaseError:  # session файл не является базой данных
-            print(f"Битый файл {row[0]}.session")
+            logger.info(f"Битый файл {row[0]}.session")
             error_sessions.append([row[0]])  # Удаляем не валидную сессию
     return error_sessions

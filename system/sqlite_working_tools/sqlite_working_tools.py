@@ -1,8 +1,6 @@
 import sqlite3
 import time
-
-# from rich import print
-
+from loguru import logger
 
 def select_from_config_by_phone(phone_value):
     # Подключение к базе данных
@@ -76,7 +74,7 @@ class DatabaseHandler:
             self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
             self.close()  # cursor_members.close() – закрытие соединения с БД.
         except sqlite3.ProgrammingError as e:
-            print(e)
+            logger.info(e)
             time.sleep(5)
 
     async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns) -> None:
@@ -86,7 +84,7 @@ class DatabaseHandler:
             f"DELETE FROM proxy WHERE proxy_type='{proxy_type}' AND addr='{addr}' AND port='{port}' AND "
             f"username='{username}' AND password='{password}' AND rdns='{rdns}'"
         )
-        print(f"{self.cursor.rowcount} rows deleted")
+        logger.info(f"{self.cursor.rowcount} rows deleted")
         self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
@@ -165,11 +163,11 @@ class DatabaseHandler:
 
     async def clean_no_username(self) -> None:
         """Чистка списка от участников у которых нет username"""
-        print("Чищу список software_database.db от участников у которых нет username")
+        logger.info("Чищу список software_database.db от участников у которых нет username")
         await self.connect()
         self.cursor.execute("""SELECT * from members""")
         records: list = self.cursor.fetchall()
-        print(f"Всего username: {len(records)}")
+        logger.info(f"Всего username: {len(records)}")
         for rows in records:
             ints_list1 = {"username": rows[0]}
             username = ints_list1["username"]

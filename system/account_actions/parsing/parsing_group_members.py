@@ -47,8 +47,6 @@ def parsing_gui(page: ft.Page):
         lv.controls.append(ft.Text("Парсинг завершен"))
         page.update()  # Обновление страницы для показа сообщения о завершении
 
-        # await app_notifications(notification_text="Список успешно сформирован!")  # Выводим уведомление
-
     button = ft.ElevatedButton("Начать парсинг", on_click=add_items)
 
     page.views.append(
@@ -258,7 +256,7 @@ def output_a_list_of_groups_new(client):
         logger.info(f"[{str(i)}] - {g.title}")
         i += 1
     logger.info("")
-    g_index = input("[medium_purple3][+] Введите номер : ")
+    g_index = input("[+] Введите номер : ")
     target_group = groups[int(g_index)]
     return target_group
 
@@ -389,7 +387,7 @@ def inviting_contact(db_handler) -> None:
     """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
-    logger.info(f"[medium_purple3]Всего accounts: {len(records)}")
+    logger.info(f"Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
@@ -414,7 +412,7 @@ def adding_a_contact_to_the_phone_book(client, db_handler) -> None:
             # Получаем данные номера телефона https://docs.telethon.dev/en/stable/concepts/entities.html
             contact = client.get_entity(phone)
             getting_user_data(contact, entities)
-            print(f"[+] Контакт с добавлен в телефонную книгу!")
+            logger.info(f"[+] Контакт с добавлен в телефонную книгу!")
             time.sleep(4)
             # Запись результатов parsing в файл members_contacts.db, для дальнейшего inviting
             # После работы с номером телефона, программа удаляет номер со списка

@@ -31,7 +31,7 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
     # Количество аккаунтов на данный момент в работе
-    print(f"[medium_purple3]Всего accounts: {len(records)}")
+    logger.info(f"Всего accounts: {len(records)}")
     number_of_accounts = read_json_file(filename='user_settings/reactions/number_accounts.json')
     logger.info(f'Всего реакций на пост: {number_of_accounts}')
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
@@ -53,7 +53,7 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
             sys.exit(1)
         except Exception as e:
             logger.exception(e)
-            print("[medium_purple3][!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+            logger.info("[!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
         finally:
             client.disconnect()
 
@@ -65,7 +65,7 @@ def writing_names_found_files_to_the_db_config_reactions(db_handler) -> None:
     db_handler.cleaning_db(name_database_table="config_reactions")  # Call the method on the instance
     records = find_files(directory_path="user_settings/reactions/accounts", extension='session')
     for entities in records:
-        print(f"Записываем данные аккаунта {entities} в базу данных")
+        logger.info(f"Записываем данные аккаунта {entities} в базу данных")
         db_handler.write_data_to_db("CREATE TABLE IF NOT EXISTS config_reactions (id, hash, phone)",
                                     "INSERT INTO config_reactions (id, hash, phone) VALUES (?, ?, ?)", entities)
 
@@ -77,7 +77,7 @@ async def setting_reactions(db_handler):
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records_ac: list = db_handler.open_and_read_data("config_reactions")
     # Количество аккаунтов на данный момент в работе
-    print(f"[medium_purple3]Всего accounts: {len(records_ac)}")
+    logger.info(f"Всего accounts: {len(records_ac)}")
     records_ac_json = read_json_file(filename='user_settings/reactions/number_accounts.json')
     logger.info(records_ac_json)
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config_reactions",
@@ -119,7 +119,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
         records: list = await self.db_handler.open_and_read_data("config")
         # Количество аккаунтов на данный момент в работе
-        print(f"[medium_purple3]Введите количество с которых будут поставлены реакции\nВсего accounts: {len(records)}")
+        logger.info(f"Введите количество с которых будут поставлены реакции\nВсего accounts: {len(records)}")
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
         number_of_accounts = input("[+] Введите количество аккаунтов для выставления реакций: ")
         records: list = await self.db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
@@ -142,7 +142,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 sys.exit(1)
             except Exception as e:
                 logger.exception(e)
-                print("[!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
+                logger.info("[!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
             finally:
                 client.disconnect()
 
@@ -154,7 +154,7 @@ def viewing_posts(db_handler) -> None:
     chat = input("[+] Введите ссылку на канал: ")  # Ссылка на группу или канал
     records: list = db_handler.open_and_read_data("config")
     # Количество аккаунтов на данный момент в работе
-    print(f"[medium_purple3]Всего accounts: {len(records)}")
+    logger.info(f"Всего accounts: {len(records)}")
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     number_of_accounts = input("[+] Введите количество аккаунтов для просмотра постов: ")
     records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
@@ -168,7 +168,7 @@ def viewing_posts(db_handler) -> None:
             time.sleep(5)
             posts = client.get_messages(channel, limit=10)  # Получение последних 10 постов из канала
             for post in posts:  # Вывод информации о постах
-                print(f"Ссылка на пост:", f"{chat}/{post.id}\nDate: {post.date}\nText: {post.text}\n")
+                logger.info(f"Ссылка на пост:", f"{chat}/{post.id}\nDate: {post.date}\nText: {post.text}\n")
                 number = re.search(r"/(\d+)$", f"{chat}/{post.id}").group(1)
                 time.sleep(5)
                 client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))

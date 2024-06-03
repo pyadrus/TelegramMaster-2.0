@@ -22,15 +22,14 @@ time_sending_messages_1, time_sending_messages_2 = configs_reader.get_time_sendi
 
 def connecting_tg_account_creating_list_groups(db_handler):
     """Подключение к аккаунту телеграмм и формирование списка групп"""
-    # app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")  # Открываем базу данных
-    print(f"[medium_purple3]Всего accounts: {len(records)}")
+    logger.info(f"Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
         records: list = db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
-        print(f"[medium_purple3]Всего групп: {len(records)}")
+        logger.info(f"Всего групп: {len(records)}")
 
     return client, phone, records
 
@@ -49,7 +48,7 @@ def sending_files_via_chats(db_handler) -> None:
             # Работу записываем в лог файл, для удобства слежения, за изменениями
             time.sleep(int(message_text_time))
             record_account_actions(description_action, event,
-                                   f"[medium_purple3]Сообщение в группу {groups_wr} написано!", db_handler)
+                                   f"Сообщение в группу {groups_wr} написано!", db_handler)
         except ChannelPrivateError:
             record_account_actions(description_action, event,
                                    "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
@@ -83,7 +82,7 @@ def sending_messages_files_via_chats() -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
         message_text = text.get("1.0", 'end-1c')
         closing_the_input_field()
-        print("[+] Введите текс сообщения которое будем отправлять в чаты: ")
+        logger.info("[+] Введите текс сообщения которое будем отправлять в чаты: ")
         link_to_the_file: str = input("[+] Введите название файла с папки user_settings/files_to_send: ")
         # Спрашиваем у пользователя, через какое время будем отправлять сообщения
         message_text_time: str = input("[+] Введите время, через какое время будем отправлять сообщения: ")
@@ -98,7 +97,7 @@ def sending_messages_files_via_chats() -> None:
                 time.sleep(int(message_text_time))
                 record_account_actions(f"Sending messages to a group: {groups_wr}",
                                        f"Рассылаем сообщение + файлы по чатам Telegram",
-                                       f"[medium_purple3]Сообщение в группу {groups_wr} написано!", db_handler)
+                                       f"Сообщение в группу {groups_wr} написано!", db_handler)
             except ChannelPrivateError:
                 record_account_actions(f"Sending messages to a group: {groups_wr}",
                                        f"Рассылаем сообщение + файлы по чатам Telegram",
@@ -162,7 +161,7 @@ def sending_messages_via_chats_times(entities, db_handler) -> None:
             #     time.sleep(1)  # Спим 1 секунду
 
             record_account_actions(f"Sending messages to a group: {groups_wr}", event,
-                                   f"[medium_purple3]Сообщение в группу {groups_wr} написано!", db_handler)
+                                   f"Сообщение в группу {groups_wr} написано!", db_handler)
         except ChannelPrivateError:
             record_account_actions(f"Sending messages to a group: {groups_wr}", event,
                                    "Указанный канал является приватным, или вам запретили подписываться.", db_handler)

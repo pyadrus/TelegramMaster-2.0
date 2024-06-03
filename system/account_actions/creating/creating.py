@@ -39,7 +39,7 @@ def creating_groups_and_chats(page: ft.Page, records, db_handler) -> None:
             response = client(functions.channels.CreateChannelRequest(title='My awesome title',
                                                                       about='Description for your group',
                                                                       megagroup=True))
-            print(response.stringify())
+            logger.info(response.stringify())
 
         page.go("/settings")  # Изменение маршрута в представлении существующих настроек
 

@@ -10,15 +10,14 @@ def unsubscribe_all(db_handler) -> None:
     """Отписываемся от групп, каналов, личных сообщений"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     records: list = db_handler.open_and_read_data("config")
-    print(f"[medium_purple3]Всего accounts: {len(records)}")
+    logger.info(f"Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
         for dialog in client.iter_dialogs():
-            print(f"[magenta]{dialog.name}, {dialog.id}")
+            logger.info(f"{dialog.name}, {dialog.id}")
             client.delete_dialog(dialog)
             client.disconnect()
-    # app_notifications(notification_text="Список почистили!")  # Выводим уведомление
 
 
 def unsubscribe_from_the_group(client, group_link) -> None:

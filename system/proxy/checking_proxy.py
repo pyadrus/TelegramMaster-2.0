@@ -1,7 +1,6 @@
 import random
-
+from loguru import logger
 import requests
-# from rich import print
 
 
 async def reading_proxy_data_from_the_database(db_handler):
@@ -11,7 +10,7 @@ async def reading_proxy_data_from_the_database(db_handler):
     try:
         records: list = await db_handler.open_and_read_data("proxy")
         proxy_random_list = random.choice(records)
-        print(f"[magenta]{proxy_random_list}")
+        logger.info(f"{proxy_random_list}")
         proxy = {'proxy_type': (proxy_random_list[0]), 'addr': proxy_random_list[1], 'port': int(proxy_random_list[2]),
                  'username': proxy_random_list[3], 'password': proxy_random_list[4], 'rdns': proxy_random_list[5]}
         return proxy
@@ -39,7 +38,7 @@ async def checking_the_proxy_for_work(db_handler) -> None:
     используется для различных тестов."""
     records: list = await db_handler.open_and_read_data("proxy")
     for proxy_dic in records:
-        print(proxy_dic)
+        logger.info(proxy_dic)
         # Распаковка словаря с proxy по переменным
         proxy_type, addr, port, username, password, rdns = unpacking_a_dictionary_with_proxy_by_variables(proxy_dic)
         # Подключение к proxy с проверкой на работоспособность
@@ -55,9 +54,9 @@ def connecting_to_proxy_with_verification(proxy_type, addr, port, username, pass
         # Указываем параметры прокси
         proxy = {'http': f'{proxy_type}://{username}:{password}@{addr}:{port}'}
         requests.get('http://example.org', proxies=proxy)
-        print('[magenta][!] Proxy рабочий!')
+        logger.info('[!] Proxy рабочий!')
     # RequestException исключение возникает при ошибках, которые могут быть вызваны при запросе к веб-серверу.
     # Это может быть из-за недоступности сервера, ошибочного URL или других проблем с соединением.
     except requests.exceptions.RequestException:
-        print('[magenta][-] Proxy не рабочий!')
+        logger.info('[-] Proxy не рабочий!')
         db_handler.deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns)

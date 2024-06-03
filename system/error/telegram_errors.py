@@ -1,7 +1,6 @@
 import datetime
 import os
 from loguru import logger
-# from rich import print
 
 
 async def record_account_actions(action_description, event, action_result, db_handler) -> None:
@@ -24,7 +23,7 @@ def delete_files(file) -> None:
     try:
         os.remove(f"{file}")
     except FileNotFoundError:
-        print(f"[red][!] Файл {file} не найден!")
+        logger.info(f"[red][!] Файл {file} не найден!")
 
 
 def telegram_phone_number_banned_error(client, phone, db_handler) -> None:

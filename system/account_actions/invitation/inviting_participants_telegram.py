@@ -36,15 +36,15 @@ async def invitation_from_all_accounts_program_body(name_database_table, db_hand
     records: list = await db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = await telegram_connect_and_output_name(row, db_handler)
+        client = await telegram_connect_and_output_name(row, db_handler)
         # Подписываемся на группу которую будем inviting, если аккаунт новый, то он автоматически подпишется и
         # записываем действия в software_database.db
-        print(link_group)
+        logger.info(link_group)
         await subscribe_to_group_or_channel(client, link_group)
         records: list = db_handler.open_and_read_data(name_database_table)
-        print(f"Всего username: {len(records)}")  # Количество аккаунтов на данный момент в работе
+        logger.info(f"Всего username: {len(records)}")  # Количество аккаунтов на данный момент в работе
         try:
-            inviting(client, phone, records, db_handler)
+            inviting(client, records, db_handler)
         except FloodWaitError as e:
             logger.error(f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}')
             continue  # Прерываем работу и меняем аккаунт
@@ -63,11 +63,11 @@ async def invite_from_multiple_accounts_with_limits(name_database_table, db_hand
         number_usernames: list = db_handler.open_and_read_data(name_database_table)
         records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table, number_of_accounts=limits)
         # Количество аккаунтов на данный момент в работе
-        print(f"Всего username: {len(number_usernames)}. Лимит на аккаунт: {len(records)}")
+        logger.info(f"Всего username: {len(number_usernames)}. Лимит на аккаунт: {len(records)}")
         inviting(client, phone, records, db_handler)
 
 
-def inviting(client, phone, records, db_handler) -> None:
+def inviting(client, records, db_handler) -> None:
     """Inviting"""
     for rows in records:
         username = rows[0]  # Имя аккаунта пользователя в базе данных user_settings/software_database.db
@@ -121,14 +121,14 @@ def inviting(client, phone, records, db_handler) -> None:
                                     "Действия будут доступны после одобрения администратором на вступление в группу", db_handler)
             break  # Прерываем работу и меняем аккаунт
         except TypeNotFoundError:
-            record_and_interrupt(f"Аккаунт {phone} не может добавить в группу {link_group}", f"username : {username}", event, db_handler)
+            record_and_interrupt(f"Аккаунт не может добавить в группу {link_group}", f"username : {username}", event, db_handler)
             break  # Прерываем работу и меняем аккаунт
         except KeyboardInterrupt:  # Закрытие окна программы
             client.disconnect()  # Разрываем соединение telegram
-            print("[!] Скрипт остановлен!")
+            logger.info("[!] Скрипт остановлен!")
         else:
             # Записываем данные в базу данных, чистим список кого добавляли или писали сообщение
-            print(f"[+] Участник {username} добавлен, если не состоит в чате")
+            logger.info(f"[+] Участник {username} добавлен, если не состоит в чате")
             record_inviting_results(username, f"username : {username}", event,
                                     f"Участник {username} добавлен, если не состоит в чате", db_handler)
     unsubscribe_from_the_group(client, link_group)  # Отписываемся от группы, на которую подписались в самом начале

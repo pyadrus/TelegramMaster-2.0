@@ -60,7 +60,7 @@ def record_inviting_results(time_range_1, time_range_2, username, description_ac
     db_handler.delete_row_db(table="members", column="username", value=username)
     # Смена username через случайное количество секунд
     selected_shift_time = random.randrange(time_range_1, time_range_2)
-    print(f"Переход к новому username через {selected_shift_time} секунд")
+    logger.info(f"Переход к новому username через {selected_shift_time} секунд")
     time.sleep(selected_shift_time)
 
 
@@ -77,7 +77,7 @@ def record_and_interrupt(actions, description_action, event, db_handler, time_ra
     record_account_actions(description_action, event, actions, db_handler)
     # Смена аккаунта через случайное количество секунд
     selected_shift_time = random.randrange(time_range_1, time_range_2)
-    print(f"Переход к новому username через {selected_shift_time} секунд")
+    logger.info(f"Переход к новому username через {selected_shift_time} секунд")
     time.sleep(selected_shift_time)
 
 

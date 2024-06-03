@@ -29,7 +29,7 @@ def send_files_to_personal_chats(limits, db_handler) -> None:
             # Открываем parsing список user_settings/software_database.db для inviting в группу
             records: list = db_handler.open_the_db_and_read_the_data_lim("members", number_of_accounts=limits)
             # Количество аккаунтов на данный момент в работе
-            print(f"Всего username: {len(records)}")
+            logger.info(f"Всего username: {len(records)}")
             for rows in records:
                 username = rows[0]  # Получаем имя аккаунта из базы данных user_settings/software_database.db
                 logger.info(f"[!] Отправляем сообщение: {username}")
@@ -76,10 +76,10 @@ def send_message_from_all_accounts(limits, db_handler) -> None:
         try:
             records: list = db_handler.open_the_db_and_read_the_data_lim("members", number_of_accounts=limits)
             # Количество аккаунтов на данный момент в работе
-            print(f"Всего username: {len(records)}")
+            logger.info(f"Всего username: {len(records)}")
             for rows in records:
                 username = rows[0]  # Имя аккаунта пользователя в базе данных user_settings/software_database.db
-                print(f"[!] Отправляем сообщение: {username}")
+                logger.info(f"[!] Отправляем сообщение: {username}")
                 try:
                     user_to_add = client.get_input_entity(username)
                     entities = find_files(directory_path="user_settings/message", extension="json")

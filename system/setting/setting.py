@@ -7,7 +7,7 @@ import io
 import flet as ft  # Импортируем библиотеку flet
 from telethon import TelegramClient
 from telethon.errors import *
-
+from loguru import logger
 from system.account_actions.creating.account_registration import telegram_connects
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -161,7 +161,7 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
 
 async def connecting_new_account() -> None:
     """Вводим данные в базу данных user_settings/software_database.db"""
-    phone_data = input("[magenta][+] Введите номер телефона : ")  # Вводим номер телефона
+    phone_data = input("[+] Введите номер телефона : ")  # Вводим номер телефона
     entities = (api_id_data, api_hash_data, phone_data)
     db_handler = DatabaseHandler()
     await db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS config(phone)",
@@ -180,7 +180,7 @@ async def telegram_connect(phone, db_handler) -> TelegramClient:
         await client.send_code_request(phone)
         try:
             # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
-            await client.sign_in(phone, code=input("[medium_purple3][+] Введите код: "))
+            await client.sign_in(phone, code=input("[+] Введите код: "))
         except SessionPasswordNeededError:
             """
             https://telethonn.readthedocs.io/en/latest/extra/basic/creating-a-client.html#two-factor-authorization-2fa
@@ -188,7 +188,7 @@ async def telegram_connect(phone, db_handler) -> TelegramClient:
             # Если аккаунт имеет password, то просим пользователя ввести пароль
             await client.sign_in(password=getpass.getpass())
         except ApiIdInvalidError:
-            print("[medium_purple3][!] Не валидные api_id/api_hash")
+            logger.info("[!] Не валидные api_id/api_hash")
     return client
 
 
@@ -320,10 +320,10 @@ def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
             minutes = int(minutes_textfield.value)
 
             if not 0 <= hour < 24:
-                print('Введите часы в пределах от 0 до 23!')
+                logger.info('Введите часы в пределах от 0 до 23!')
                 return
             if not 0 <= minutes < 60:
-                print('Введите минуты в пределах от 0 до 59!')
+                logger.info('Введите минуты в пределах от 0 до 59!')
                 return
 
             # Предполагая, что config является объектом, похожим на словарь
@@ -334,7 +334,7 @@ def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
             writing_settings_to_a_file(config)
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
         except ValueError:
-            print('Введите числовые значения для часов и минут!')
+            logger.info('Введите числовые значения для часов и минут!')
         page.update()  # Обновляем страницу
 
     button = ft.ElevatedButton("Готово", on_click=btn_click)

@@ -12,7 +12,6 @@ from telethon.errors import *
 async def check_account_for_spam() -> None:
     """Проверка аккаунта на спам через @SpamBot"""
     event: str = "Проверка аккаунтов через SpamBot"  # Событие, которое записываем в базу данных
-    # app_notifications(notification_text=event)  # Выводим уведомление
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
     db_handler = DatabaseHandler()
     records: list = await db_handler.open_and_read_data("config")
@@ -23,7 +22,7 @@ async def check_account_for_spam() -> None:
             client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
             message_bot = client.get_messages('SpamBot')
             for message in message_bot:
-                print(f"[magenta]{phone} {message.message}")
+                logger.info(f"{phone} {message.message}")
 
                 similarity_ratio_ru: int = fuzz.ratio(f"{message.message}",
                                                       "Очень жаль, что Вы с этим столкнулись. К сожалению, "
@@ -37,7 +36,7 @@ async def check_account_for_spam() -> None:
                                                       "несмотря на ограничения.")
                 logger.exception(similarity_ratio_ru)
                 if similarity_ratio_ru >= 97:
-                    print('Аккаунт в бане')
+                    logger.info('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                     await record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
                                            db_handler)
@@ -55,7 +54,7 @@ async def check_account_for_spam() -> None:
                                                       "contact you first, you can always reply to them.")
                 logger.exception(similarity_ratio_en)
                 if similarity_ratio_en >= 97:
-                    print('Аккаунт в бане')
+                    logger.info('Аккаунт в бане')
                     client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                     await record_account_actions(phone, "Checking: checking account for SpamBot", event, f"{message.message}",
                                            db_handler)
