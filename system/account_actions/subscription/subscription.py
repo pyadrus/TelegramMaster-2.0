@@ -18,13 +18,13 @@ time_subscription_1, time_subscription_2 = configs_reader.get_time_subscription(
 async def subscription_all(db_handler) -> None:
     """Подписываемся на каналы и группы, работаем по базе данных"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = db_handler.open_and_read_data("config")
+    records: list = await db_handler.open_and_read_data("config")
     logger.info(f"Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row, db_handler)
+        client = await telegram_connect_and_output_name(row, db_handler)
         # Открываем базу данных
-        records: list = db_handler.open_and_read_data("writing_group_links")
+        records: list = await db_handler.open_and_read_data("writing_group_links")
         logger.info(f"Всего групп: {len(records)}")
         for groups in records:  # Поочередно выводим записанные группы
             try:

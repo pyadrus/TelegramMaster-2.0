@@ -1,4 +1,4 @@
-certifi
+certifi==2024.6.2
 charset-normalizer
 colorama
 emoji
@@ -11,13 +11,12 @@ pyaes
 pyasn1==0.6.0
 Pygments==2.18.0
 PySocks
-requests==2.32.2
+requests==2.32.3
 rsa
-schedule
+schedule==1.2.2
 Telethon==1.35.0
 urllib3
 win32-setctime
-PySimpleGUI==4.60.5
 thefuzz
 flet==0.22.1
 getmac

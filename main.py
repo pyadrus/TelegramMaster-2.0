@@ -153,7 +153,7 @@ def mainss(page: ft.Page):
         elif page.route == "/subscription_all":  # Подписка
             await subscription_all(DatabaseHandler())
         elif page.route == "/unsubscribe_all":  # Отписываемся
-            unsubscribe_all(DatabaseHandler())
+            await unsubscribe_all()
 
         elif page.route == "/working_with_reactions":  # Работа с реакциями
             page.views.append(
