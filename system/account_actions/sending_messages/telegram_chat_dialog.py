@@ -8,30 +8,29 @@ from telethon.errors import *
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, read_json_file
 from system.auxiliary_functions.global_variables import ConfigReader
-# from system.error.telegram_errors import record_account_actions
-from system.menu.app_gui import program_window, done_button
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
-# event: str = "Рассылаем сообщение по чатам Telegram"
 
 configs_reader = ConfigReader()
 time_sending_messages_1, time_sending_messages_2 = configs_reader.get_time_sending_messages()
+time_subscription_1, time_subscription_2 = configs_reader.get_time_subscription()
 
 
-def connecting_tg_account_creating_list_groups(db_handler):
+async def connecting_tg_account_creating_list_groups(db_handler):
     """Подключение к аккаунту телеграмм и формирование списка групп"""
     # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-    records: list = db_handler.open_and_read_data("config")  # Открываем базу данных
+    records: list = await db_handler.open_and_read_data("config")  # Открываем базу данных
     logger.info(f"Всего accounts: {len(records)}")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row, db_handler)
-        records: list = db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
+        client = await telegram_connect_and_output_name(row, db_handler)
+        records: list = await db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
         logger.info(f"Всего групп: {len(records)}")
 
-    return client, phone, records
+    return client, records
 
 
 def sending_files_via_chats(db_handler) -> None:
@@ -74,7 +73,6 @@ def sending_files_via_chats(db_handler) -> None:
 
 def sending_messages_files_via_chats() -> None:
     """Рассылка сообщений + файлов по чатам"""
-    root, text = program_window()
 
     def output_values_from_the_input_field(db_handler) -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
@@ -138,42 +136,37 @@ def select_and_read_random_file(entities):
     return data  # Возвращаем данные из файла
 
 
-def sending_messages_via_chats_times(entities, db_handler) -> None:
+async def sending_messages_via_chats_times(entities) -> None:
     """Массовая рассылка в чаты"""
-    client, phone, records = connecting_tg_account_creating_list_groups(db_handler)
+    db_handler = DatabaseHandler()  # Открываем базу с аккаунтами и с выставленными лимитами
+    client, records = await connecting_tg_account_creating_list_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
         logger.info(f"Группа: {groups}")
-        groups_wr = subscribe_to_the_group_and_send_the_link(client, groups)
+        groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups)
         data = select_and_read_random_file(entities)  # Выбираем случайное сообщение из файла
         try:
-            client.send_message(entity=groups_wr, message=data)  # Рассылаем сообщение по чатам
+            await client.send_message(entity=groups_wr, message=data)  # Рассылаем сообщение по чатам
             selected_shift_time = random.randrange(time_sending_messages_1, time_sending_messages_2)
             time_in_seconds = selected_shift_time * 60
-
-            # for _ in track(range(time_in_seconds), description=f"[red]Спим {time_in_seconds} минуты / минут..."):
-            #     time.sleep(1)  # Спим 1 секунду
-
-            record_account_actions(f"Sending messages to a group: {groups_wr}", "Рассылаем сообщение по чатам Telegram",
-                                   f"Сообщение в группу {groups_wr} написано!", db_handler)
+            time.sleep(time_in_seconds)  # Спим секунд секунду
+            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Сообщение в группу {groups_wr} написано!""")
         except ChannelPrivateError:
-            record_account_actions(f"Sending messages to a group: {groups_wr}", "Рассылаем сообщение по чатам Telegram",
-                                   "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
-            db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
+            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Указанный канал / группа  {groups_wr} является 
+                             приватным, или вам запретили подписываться.""")
         except PeerFloodError:
-            record_and_interrupt()
+            record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
-            record_account_actions(f"Sending messages to a group: {groups_wr}", "Рассылаем сообщение по чатам Telegram",
-                                   f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', db_handler)
-            logger.error(f'Спим {e.seconds} секунд')
+            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Flood! wait for 
+                             {str(datetime.timedelta(seconds=e.seconds))}""")
             time.sleep(e.seconds)
         except UserBannedInChannelError:
-            record_and_interrupt()
+            record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except (TypeError, UnboundLocalError):
             continue  # Записываем ошибку в software_database.db и продолжаем работу
         except ChatWriteForbiddenError:
-            record_and_interrupt()
+            record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
 
 

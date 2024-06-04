@@ -27,7 +27,6 @@ from system.account_actions.subscription.subscription import subscription_all
 from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
-from system.menu.app_banner import program_version, date_of_program_change
 from system.setting.setting import connecting_new_account
 from system.setting.setting import create_main_window
 from system.setting.setting import creating_the_main_window_for_proxy_data_entry
@@ -47,6 +46,7 @@ from system.telegram_actions.account_verification import deleting_files_by_dicti
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
+program_version, date_of_program_change = "0.14.8", "04.06.2024"  # Версия программы, дата изменения
 
 
 async def account_verification():
@@ -321,7 +321,7 @@ def mainss(page: ft.Page):
         elif page.route == "/sending_messages_via_chats":  # ✔️ Рассылка сообщений по чатам
             entities = find_files(directory_path="user_settings/message", extension="json")
             logger.info(entities)
-            sending_messages_via_chats_times(entities, DatabaseHandler())
+            await sending_messages_via_chats_times(entities)
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # ✔️ Рассылка сообщений по чатам с автоответчиком
             mains(DatabaseHandler())
         elif page.route == "/sending_files_via_chats":  # ✔️ Рассылка файлов по чатам
@@ -371,13 +371,13 @@ def mainss(page: ft.Page):
         elif page.route == "/sending_messages_via_chats":  # ✔️ Рассылка сообщений по чатам
             entities = find_files(directory_path="user_settings/message", extension="json")
             logger.info(entities)
-            sending_messages_via_chats_times(entities, DatabaseHandler())
+            await sending_messages_via_chats_times(entities)
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # ✔️ Рассылка сообщений по чатам с автоответчиком
             mains(DatabaseHandler())
         elif page.route == "/sending_files_via_chats":  # ✔️ Рассылка файлов по чатам
             sending_files_via_chats(DatabaseHandler())
         elif page.route == "/sending_messages_files_via_chats":  # ✔️ Рассылка сообщений + файлов по чатам
-            sending_messages_files_via_chats()
+            await sending_messages_files_via_chats()
         elif page.route == "/sending_personal_messages_with_limits":  # ✔️ Отправка сообщений в личку (с лимитами)
             config_reader = ConfigReader()
             limits_message = config_reader.get_message_limits()
