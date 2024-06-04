@@ -44,7 +44,7 @@ from system.setting.setting import writing_members
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.account_verification import deleting_files_by_dictionary
 
-# logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
+logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
 

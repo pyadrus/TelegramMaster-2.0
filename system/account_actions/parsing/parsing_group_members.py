@@ -274,7 +274,7 @@ async def we_get_the_data_of_the_group_members_who_wrote_messages(client, chat, 
     for message in client.iter_messages(chat, limit=int(limit_active_user)):
         from_user = client.get_entity(message.from_id.user_id)  # Получаем отправителя по ИД
         configs_reader = ConfigReader()
-        time_activity_user_1, time_activity_user_2 = configs_reader.get_time_activity_user()
+        # time_activity_user_1, time_activity_user_2 = configs_reader.get_time_activity_user()
         # display_progress_bar(time_activity_user_1, time_activity_user_2, "Выполнение задачи...")
         entities = getting_active_user_data(from_user)
         logger.info(entities)

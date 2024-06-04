@@ -8,7 +8,6 @@ from telethon.tl.functions.channels import JoinChannelRequest
 
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import ConfigReader
-from system.error.telegram_errors import record_account_actions
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
@@ -40,20 +39,19 @@ async def subscription_all(db_handler) -> None:
 
 
 async def subscribe_to_group_or_channel(client, groups_wr) -> None:
-    """Подписываемся на группу или канал
-    :param groups_wr: str - группа или канал
-    :param client: TelegramClient  - объект клиента
     """
-    # цикл for нужен для того, что бы сработала команда brake команда break в Python используется только для выхода из цикла, а не выхода из программы в целом.
+    Подписываемся на группу или канал
+    :param groups_wr: str - группа или канал
+    :param client: TelegramClient - объект клиента
+    """
+    # цикл for нужен для того, что бы сработала команда brake команда break в Python используется только для выхода из
+    # цикла, а не выхода из программы в целом.
     db_handler = DatabaseHandler()
     groups_wra = [groups_wr]
     for groups_wrs in groups_wra:
         try:
             await client(JoinChannelRequest(groups_wrs))
             logger.info(f"Аккаунт подписался на группу: {groups_wrs}")
-            # Записываем данные о действии аккаунта в базу данных
-            await record_account_actions(f"channel / group: {groups_wr}", f"Subscription: {groups_wr}",
-                                         f"Subscription: {groups_wr}", db_handler)
         except ChannelsTooMuchError:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             for dialog in client.iter_dialogs():
@@ -65,32 +63,25 @@ async def subscribe_to_group_or_channel(client, groups_wr) -> None:
                     break
             logger.info("[+] Список почистили, и в файл записали.")
         except ChannelPrivateError:
-            await record_account_actions(f"channel / group: {groups_wr}",
-                                         f"Subscription: {groups_wr}",
-                                         "Указанный канал является приватным, или вам запретили подписываться.",
-                                         db_handler)
+            logger.error(f"""Попытка подписки на группу / канал {groups_wr}. Указанный канал / группа {groups_wr} 
+                             является приватным, или вам запретили подписываться.""")
         except (UsernameInvalidError, ValueError, TypeError):
-            await record_account_actions(f"channel / group: {groups_wr}",
-                                         f"Subscription: {groups_wr}",
-                                         f"Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}",
-                                         db_handler)
+            logger.error(f"""Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wrs} не 
+                             является группой / каналом: {groups_wrs}""")
             await db_handler.write_data_to_db("""SELECT * from writing_group_links""",
                                               """DELETE from writing_group_links where writing_group_links = ?""",
                                               groups_wrs)
         except PeerFloodError:
-            await record_account_actions(f"channel / group: {groups_wr}",
-                                         f"Subscription: {groups_wr}", "Предупреждение о Flood от Telegram.",
-                                         db_handler)
+            logger.error(f"""Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.""")
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
-            logger.error(f"Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
-            record_and_interrupt()
+            logger.error(f"""Попытка подписки на группу / канал {groups_wr}. Flood! wait for 
+                             {str(datetime.timedelta(seconds=e.seconds))}""")
+            record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except InviteRequestSentError:
-            await record_account_actions(f"channel / group: {groups_wr}",
-                                         f"Subscription: {groups_wr}",
-                                         "Действия будут доступны после одобрения администратором на вступление в группу",
-                                         db_handler)
+            logger.error(f"""Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения 
+                             администратором на вступление в группу""")
 
 
 async def subscribe_to_the_group_and_send_the_link(client, groups):

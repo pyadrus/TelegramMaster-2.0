@@ -2,7 +2,6 @@ import time
 
 from telethon import functions
 from loguru import logger
-from system.error.telegram_errors import record_account_actions
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
@@ -14,9 +13,7 @@ def parsing_groups_which_account_subscribed(db_handler) -> None:
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
-        record_account_actions("Parsing: groups and channels",
-                               "Parsing групп / каналов на которые подписан аккаунт",
-                               "Parsing групп / каналов", db_handler)
+        logger.info(f"""Parsing групп / каналов на которые подписан аккаунт""")
         forming_a_list_of_groups(client, db_handler)
         client.disconnect()  # Разрываем соединение telegram
     db_handler.delete_duplicates(table_name="groups_and_channels", column_name="id")  # Чистка дубликатов в базе данных

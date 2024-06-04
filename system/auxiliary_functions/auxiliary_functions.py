@@ -38,6 +38,21 @@ def find_files(directory_path, extension) -> list:
     return entities  # Возвращаем список json файлов
 
 
+async def record_account_actions(action_description, event, action_result, db_handler) -> None:
+    """Записывает действия аккаунта в базу данных
+    :arg action_description: описание действия
+    :arg event: действие, которое производится
+    :arg action_result: результат выполнения действия.
+    :arg db_handler: База данных для записи действий аккаунта в базу данных"""
+    logger.error(f"[!] {action_result}")
+    # date = datetime.datetime.now()  # Получаем текущую дату
+    # entities = [str(date), action_description, event, action_result]  # Формируем словарь
+    # await db_handler.write_data_to_db(
+    #     """CREATE TABLE IF NOT EXISTS account_actions (phone, date, description_action, event, actions)""",
+    #     """INSERT INTO  account_actions (phone, date, description_action, event, actions) VALUES (?, ?, ?, ?, ?)""",
+    #     entities)  # Запись данных в базу данных
+
+
 async def record_inviting_results(time_range_1: int, time_range_2: int, username: str) -> None:
     """
     Запись результатов inviting, отправка сообщений в базу данных.

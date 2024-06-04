@@ -8,13 +8,13 @@ from telethon.errors import *
 from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, read_json_file
 from system.auxiliary_functions.global_variables import ConfigReader
-from system.error.telegram_errors import record_account_actions
+# from system.error.telegram_errors import record_account_actions
 from system.menu.app_gui import program_window, done_button
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 creating_a_table = """SELECT * from writing_group_links"""
 writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
-event: str = "Рассылаем сообщение по чатам Telegram"
+# event: str = "Рассылаем сообщение по чатам Telegram"
 
 configs_reader = ConfigReader()
 time_sending_messages_1, time_sending_messages_2 = configs_reader.get_time_sending_messages()
@@ -47,17 +47,17 @@ def sending_files_via_chats(db_handler) -> None:
             client.send_file(groups_wr, f"user_settings/files_to_send/{link_to_the_file}")  # Рассылаем файлов по чатам
             # Работу записываем в лог файл, для удобства слежения, за изменениями
             time.sleep(int(message_text_time))
-            record_account_actions(description_action, event,
+            record_account_actions(description_action, "Рассылаем сообщение по чатам Telegram",
                                    f"Сообщение в группу {groups_wr} написано!", db_handler)
         except ChannelPrivateError:
-            record_account_actions(description_action, event,
+            record_account_actions(description_action, "Рассылаем сообщение по чатам Telegram",
                                    "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
             db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
         except PeerFloodError:
             record_and_interrupt()
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
-            record_account_actions(description_action, event,
+            record_account_actions(description_action, "Рассылаем сообщение по чатам Telegram",
                                    f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', db_handler)
             logger.error(f'Спим {e.seconds} секунд')
             time.sleep(e.seconds)
@@ -153,17 +153,17 @@ def sending_messages_via_chats_times(entities, db_handler) -> None:
             # for _ in track(range(time_in_seconds), description=f"[red]Спим {time_in_seconds} минуты / минут..."):
             #     time.sleep(1)  # Спим 1 секунду
 
-            record_account_actions(f"Sending messages to a group: {groups_wr}", event,
+            record_account_actions(f"Sending messages to a group: {groups_wr}", "Рассылаем сообщение по чатам Telegram",
                                    f"Сообщение в группу {groups_wr} написано!", db_handler)
         except ChannelPrivateError:
-            record_account_actions(f"Sending messages to a group: {groups_wr}", event,
+            record_account_actions(f"Sending messages to a group: {groups_wr}", "Рассылаем сообщение по чатам Telegram",
                                    "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
             db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
         except PeerFloodError:
             record_and_interrupt()
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
-            record_account_actions(f"Sending messages to a group: {groups_wr}", event,
+            record_account_actions(f"Sending messages to a group: {groups_wr}", "Рассылаем сообщение по чатам Telegram",
                                    f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', db_handler)
             logger.error(f'Спим {e.seconds} секунд')
             time.sleep(e.seconds)
