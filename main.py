@@ -10,7 +10,6 @@ from system.account_actions.invitation.telegram_invite_scheduler import launchin
 from system.account_actions.invitation.telegram_invite_scheduler import launching_invite_every_day_certain_time
 from system.account_actions.invitation.telegram_invite_scheduler import schedule_invite
 from system.account_actions.parsing.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
-from system.account_actions.parsing.parsing_group_members import choosing_a_group_from_the_subscribed_ones_for_parsing
 from system.account_actions.parsing.parsing_group_members import delete_contact
 from system.account_actions.parsing.parsing_group_members import inviting_contact
 from system.account_actions.parsing.parsing_group_members import parsing_gui, parsing_of_active_participants
@@ -188,9 +187,9 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/unsubscribe_all")),
                          ])]))
         elif page.route == "/subscription_all":  # Подписка
-            subscription_all(DatabaseHandler())
+            await subscription_all(DatabaseHandler())
         elif page.route == "/unsubscribe_all":  # Отписываемся
-            unsubscribe_all(DatabaseHandler())
+            await unsubscribe_all()
 
         elif page.route == "/working_with_reactions":  # Работа с реакциями
             page.views.append(
@@ -207,11 +206,11 @@ def mainss(page: ft.Page):
                          ])]))
         elif page.route == "/setting_reactions":  # Ставим реакции
             reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
-            reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
+            await reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
             viewing_posts(DatabaseHandler())
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-            setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
+            await setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
 
         elif page.route == "/parsing":  # Парсинг
             page.views.append(
@@ -240,7 +239,8 @@ def mainss(page: ft.Page):
         elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
             parsing_gui(page)
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
-            await choosing_a_group_from_the_subscribed_ones_for_parsing(DatabaseHandler())
+            # await choosing_a_group_from_the_subscribed_ones_for_parsing(page, lv, db_handler)
+            pass
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             chat_input = input("[+] Введите ссылку на чат с которого будем собирать активных: ")
             limit_active_user = input("[+] Введите количество сообщений которые будем parsing: ")
@@ -278,7 +278,6 @@ def mainss(page: ft.Page):
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
             await connecting_new_account()
 
-
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             async def creating_groups():
                 db_handler = DatabaseHandler()
@@ -315,9 +314,9 @@ def mainss(page: ft.Page):
                                                    "/sending_files_to_personal_account_with_limits")),
                          ])]))
         elif page.route == "/sending_messages_personal_account":  # ✔️ Отправка сообщений в личку
-            send_message_from_all_accounts(limits=None, db_handler=DatabaseHandler())
+            await send_message_from_all_accounts(limits=None)
         elif page.route == "/sending_files_personal_account":  # ✔️ Отправка файлов в личку
-            send_files_to_personal_chats(limits=None, db_handler=DatabaseHandler())
+            await send_files_to_personal_chats(limits=None)
         elif page.route == "/sending_messages_via_chats":  # ✔️ Рассылка сообщений по чатам
             entities = find_files(directory_path="user_settings/message", extension="json")
             logger.info(entities)
@@ -325,17 +324,17 @@ def mainss(page: ft.Page):
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # ✔️ Рассылка сообщений по чатам с автоответчиком
             mains(DatabaseHandler())
         elif page.route == "/sending_files_via_chats":  # ✔️ Рассылка файлов по чатам
-            sending_files_via_chats(DatabaseHandler())
+            await sending_files_via_chats(DatabaseHandler())
         elif page.route == "/sending_messages_files_via_chats":  # ✔️ Рассылка сообщений + файлов по чатам
             sending_messages_files_via_chats()
         elif page.route == "/sending_personal_messages_with_limits":  # ✔️ Отправка сообщений в личку (с лимитами)
             config_reader = ConfigReader()
             limits_message = config_reader.get_message_limits()
-            send_message_from_all_accounts(limits=limits_message, db_handler=DatabaseHandler())
+            await send_message_from_all_accounts(limits=limits_message)
         elif page.route == "/sending_files_to_personal_account_with_limits":  # ✔️ Отправка файлов в личку (с лимитами)
             config_reader = ConfigReader()
             limits_message = config_reader.get_message_limits()
-            send_files_to_personal_chats(limits=limits_message, db_handler=DatabaseHandler())
+            await send_files_to_personal_chats(limits=limits_message)
 
         elif page.route == "/sending_messages":  # Настройки
             page.views.append(
@@ -365,9 +364,9 @@ def mainss(page: ft.Page):
                                                    "/sending_files_to_personal_account_with_limits")),
                          ])]))
         elif page.route == "/sending_messages_personal_account":  # ✔️ Отправка сообщений в личку
-            send_message_from_all_accounts(limits=None, db_handler=DatabaseHandler())
+            await send_message_from_all_accounts(limits=None)
         elif page.route == "/sending_files_personal_account":  # ✔️ Отправка файлов в личку
-            send_files_to_personal_chats(limits=None, db_handler=DatabaseHandler())
+            await send_files_to_personal_chats(limits=None)
         elif page.route == "/sending_messages_via_chats":  # ✔️ Рассылка сообщений по чатам
             entities = find_files(directory_path="user_settings/message", extension="json")
             logger.info(entities)
@@ -375,17 +374,17 @@ def mainss(page: ft.Page):
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # ✔️ Рассылка сообщений по чатам с автоответчиком
             mains(DatabaseHandler())
         elif page.route == "/sending_files_via_chats":  # ✔️ Рассылка файлов по чатам
-            sending_files_via_chats(DatabaseHandler())
+            await sending_files_via_chats(DatabaseHandler())
         elif page.route == "/sending_messages_files_via_chats":  # ✔️ Рассылка сообщений + файлов по чатам
-            await sending_messages_files_via_chats()
+            sending_messages_files_via_chats()
         elif page.route == "/sending_personal_messages_with_limits":  # ✔️ Отправка сообщений в личку (с лимитами)
             config_reader = ConfigReader()
             limits_message = config_reader.get_message_limits()
-            send_message_from_all_accounts(limits=limits_message, db_handler=DatabaseHandler())
+            await send_message_from_all_accounts(limits=limits_message)
         elif page.route == "/sending_files_to_personal_account_with_limits":  # ✔️ Отправка файлов в личку (с лимитами)
             config_reader = ConfigReader()
             limits_message = config_reader.get_message_limits()
-            send_files_to_personal_chats(limits=limits_message, db_handler=DatabaseHandler())
+            await send_files_to_personal_chats(limits=limits_message)
 
         elif page.route == "/bio_editing":  # Настройки
             page.views.append(

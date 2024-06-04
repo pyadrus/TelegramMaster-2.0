@@ -20,6 +20,21 @@ def read_json_file(filename):
     return data
 
 
+def all_find_files(directory_path) -> list:
+    """
+    Поиск файлов в директории.
+    :arg directory_path: - путь к директории
+    :return list: - список имен найденных файлов
+    """
+
+    entities = []  # Создаем список с именами найденных файлов
+    for x in os.listdir(directory_path):
+        if os.path.isfile(os.path.join(directory_path, x)):  # Проверяем, является ли x файлом
+            entities.append(x)  # Добавляем имя файла в список
+
+    return entities  # Возвращаем список файлов
+
+
 def find_files(directory_path, extension) -> list:
     """
     Поиск файлов с определенным расширением в директории.
@@ -36,21 +51,6 @@ def find_files(directory_path, extension) -> list:
             entities.append([file])  # Добавляем информацию о файле в список
 
     return entities  # Возвращаем список json файлов
-
-
-async def record_account_actions(action_description, event, action_result, db_handler) -> None:
-    """Записывает действия аккаунта в базу данных
-    :arg action_description: описание действия
-    :arg event: действие, которое производится
-    :arg action_result: результат выполнения действия.
-    :arg db_handler: База данных для записи действий аккаунта в базу данных"""
-    logger.error(f"[!] {action_result}")
-    # date = datetime.datetime.now()  # Получаем текущую дату
-    # entities = [str(date), action_description, event, action_result]  # Формируем словарь
-    # await db_handler.write_data_to_db(
-    #     """CREATE TABLE IF NOT EXISTS account_actions (phone, date, description_action, event, actions)""",
-    #     """INSERT INTO  account_actions (phone, date, description_action, event, actions) VALUES (?, ?, ?, ?, ?)""",
-    #     entities)  # Запись данных в базу данных
 
 
 async def record_inviting_results(time_range_1: int, time_range_2: int, username: str) -> None:

@@ -2,6 +2,7 @@ import sqlite3
 import time
 from loguru import logger
 
+
 def select_from_config_by_phone(phone_value):
     # Подключение к базе данных
     conn = sqlite3.connect("user_settings/software_database.db")

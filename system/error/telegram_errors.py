@@ -3,9 +3,6 @@ import os
 from loguru import logger
 
 
-
-
-
 def delete_files(file) -> None:
     """Удаление файлов"""
     try:

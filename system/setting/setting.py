@@ -501,8 +501,8 @@ def writing_members(page: ft.Page, db_handler) -> None:
     """Запись username в software_database.db в графическое окно Flet"""
     text_to_send = ft.TextField(label="Введите список username", multiline=True, max_lines=19)
 
-    def btn_click(e) -> None:
-        db_handler.write_to_single_column_table(name_database="members",
+    async def btn_click(e) -> None:
+        await db_handler.write_to_single_column_table(name_database="members",
                                                 database_columns="username, id, access_hash, first_name, last_name, "
                                                                  "user_phone, online_at, photos_id, user_premium",
                                                 into_columns="members (username)",

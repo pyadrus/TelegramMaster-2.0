@@ -33,7 +33,7 @@ async def connecting_tg_account_creating_list_groups(db_handler):
     return client, records
 
 
-def sending_files_via_chats(db_handler) -> None:
+async def sending_files_via_chats(db_handler) -> None:
     """Рассылка файлов по чатам"""
     # Спрашиваем у пользователя, через какое время будем отправлять сообщения
     link_to_the_file: str = input("[+] Введите название файла с папки user_settings/files_to_send: ")
@@ -41,30 +41,25 @@ def sending_files_via_chats(db_handler) -> None:
     client, phone, records = connecting_tg_account_creating_list_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
         groups_wr = subscribe_to_the_group_and_send_the_link(client, groups)
-        description_action = f"Sending messages to a group: {groups_wr}"
         try:
             client.send_file(groups_wr, f"user_settings/files_to_send/{link_to_the_file}")  # Рассылаем файлов по чатам
             # Работу записываем в лог файл, для удобства слежения, за изменениями
             time.sleep(int(message_text_time))
-            record_account_actions(description_action, "Рассылаем сообщение по чатам Telegram",
-                                   f"Сообщение в группу {groups_wr} написано!", db_handler)
+            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Сообщение в группу {groups_wr} написано!""")
         except ChannelPrivateError:
-            record_account_actions(description_action, "Рассылаем сообщение по чатам Telegram",
-                                   "Указанный канал является приватным, или вам запретили подписываться.", db_handler)
-            db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
+            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Указанный канал / группа  {groups_wr} является 
+                             приватным, или вам запретили подписываться.""")
         except PeerFloodError:
-            record_and_interrupt()
+            record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
-            record_account_actions(description_action, "Рассылаем сообщение по чатам Telegram",
-                                   f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', db_handler)
-            logger.error(f'Спим {e.seconds} секунд')
+            logger.error(f"""Рассылка файлов в группу: {groups_wr}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}""")
             time.sleep(e.seconds)
         except UserBannedInChannelError:
-            record_and_interrupt()
+            record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except ChatWriteForbiddenError:
-            record_and_interrupt()
+            record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except (TypeError, UnboundLocalError):
             continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -74,7 +69,7 @@ def sending_files_via_chats(db_handler) -> None:
 def sending_messages_files_via_chats() -> None:
     """Рассылка сообщений + файлов по чатам"""
 
-    def output_values_from_the_input_field(db_handler) -> None:
+    async def output_values_from_the_input_field(db_handler) -> None:
         """Выводим значения с поля ввода (то что ввел пользователь)"""
         message_text = text.get("1.0", 'end-1c')
         closing_the_input_field()
@@ -84,36 +79,28 @@ def sending_messages_files_via_chats() -> None:
         message_text_time: str = input("[+] Введите время, через какое время будем отправлять сообщения: ")
         client, phone, records = connecting_tg_account_creating_list_groups(db_handler)
         for groups in records:  # Поочередно выводим записанные группы
-            groups_wr = subscribe_to_the_group_and_send_the_link(client, groups, phone, db_handler)
+            groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups)
             try:
                 client.send_message(entity=groups_wr, message=message_text)  # Рассылаем сообщение по чатам
                 # Рассылаем файлов по чатам
                 client.send_file(groups_wr, f"user_settings/files_to_send/{link_to_the_file}")
                 # Работу записываем в лог файл, для удобства слежения, за изменениями
                 time.sleep(int(message_text_time))
-                record_account_actions(f"Sending messages to a group: {groups_wr}",
-                                       f"Рассылаем сообщение + файлы по чатам Telegram",
-                                       f"Сообщение в группу {groups_wr} написано!", db_handler)
+                logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Сообщение в группу {groups_wr} написано!""")
             except ChannelPrivateError:
-                record_account_actions(f"Sending messages to a group: {groups_wr}",
-                                       f"Рассылаем сообщение + файлы по чатам Telegram",
-                                       "Указанный канал является приватным, или вам запретили подписываться.",
-                                       db_handler)
-                db_handler.write_data_to_db(creating_a_table, writing_data_to_a_table, groups_wr)
+                logger.error(f"""Рассылка сообщений + файлов в группу: {groups_wr}. Указанный канал / группа  {groups_wr} 
+                                 является приватным, или вам запретили подписываться.""")
             except PeerFloodError:
-                record_and_interrupt()
+                record_and_interrupt(time_subscription_1, time_subscription_2)
                 break  # Прерываем работу и меняем аккаунт
             except FloodWaitError as e:
-                record_account_actions(f"Sending messages to a group: {groups_wr}",
-                                       f"Рассылаем сообщение + файлы по чатам Telegram",
-                                       f'Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}', db_handler)
-                logger.error(f'Спим {e.seconds} секунд')
+                logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}""")
                 time.sleep(e.seconds)
             except UserBannedInChannelError:
-                record_and_interrupt()
+                record_and_interrupt(time_subscription_1, time_subscription_2)
                 break  # Прерываем работу и меняем аккаунт
             except ChatWriteForbiddenError:
-                record_and_interrupt()
+                record_and_interrupt(time_subscription_1, time_subscription_2)
                 break  # Прерываем работу и меняем аккаунт
             except (TypeError, UnboundLocalError):
                 continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -157,8 +144,7 @@ async def sending_messages_via_chats_times(entities) -> None:
             record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
-            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Flood! wait for 
-                             {str(datetime.timedelta(seconds=e.seconds))}""")
+            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}""")
             time.sleep(e.seconds)
         except UserBannedInChannelError:
             record_and_interrupt(time_subscription_1, time_subscription_2)
