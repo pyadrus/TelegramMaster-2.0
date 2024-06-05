@@ -6,7 +6,6 @@ idna==3.7
 loguru
 markdown-it-py
 mdurl
-notify-py
 pyaes
 pyasn1==0.6.0
 Pygments==2.18.0

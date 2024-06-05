@@ -503,10 +503,10 @@ def writing_members(page: ft.Page, db_handler) -> None:
 
     async def btn_click(e) -> None:
         await db_handler.write_to_single_column_table(name_database="members",
-                                                database_columns="username, id, access_hash, first_name, last_name, "
-                                                                 "user_phone, online_at, photos_id, user_premium",
-                                                into_columns="members (username)",
-                                                recorded_data=text_to_send.value.split())
+                                                      database_columns="username, id, access_hash, first_name, last_name, "
+                                                                       "user_phone, online_at, photos_id, user_premium",
+                                                      into_columns="members (username)",
+                                                      recorded_data=text_to_send.value.split())
 
         page.go("/settings")  # Изменение маршрута в представлении существующих настроек
         page.update()

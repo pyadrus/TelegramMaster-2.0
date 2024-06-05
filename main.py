@@ -4,8 +4,7 @@ from loguru import logger
 from system.account_actions.checking_spam.account_verification import check_account_for_spam
 from system.account_actions.creating.account_registration import AccountRIO
 from system.account_actions.creating.creating import creating_groups_and_chats
-from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body
-from system.account_actions.invitation.inviting_participants_telegram import invite_from_multiple_accounts_with_limits
+from system.account_actions.invitation.inviting_participants_telegram import InvitingToAGroup
 from system.account_actions.invitation.telegram_invite_scheduler import launching_an_invite_once_an_hour
 from system.account_actions.invitation.telegram_invite_scheduler import launching_invite_every_day_certain_time
 from system.account_actions.invitation.telegram_invite_scheduler import schedule_invite
@@ -19,8 +18,8 @@ from system.account_actions.reactions.reactions import WorkingWithReactions, vie
 from system.account_actions.sending_messages.chat_dialog_mes import mains
 from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_chats
 from system.account_actions.sending_messages.sending_messages_telegram import send_message_from_all_accounts
-from system.account_actions.sending_messages.telegram_chat_dialog import sending_files_via_chats
-from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_files_via_chats
+from system.account_actions.sending_messages.telegram_chat_dialog import sending_files_via_chats, \
+    sending_messages_files_via_chats
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_via_chats_times
 from system.account_actions.subscription.subscription import subscription_all
 from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
@@ -125,9 +124,17 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/inviting_every_day")),
                          ])]))
         elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
-            await invitation_from_all_accounts_program_body(name_database_table="members", db_handler=DatabaseHandler())
+            logger.info(f"Запуск инвайтинга без лимитов")
+            invitingToAGroup = InvitingToAGroup()
+            await invitingToAGroup.invite_from_multiple_accounts_with_limits()
+            # await invitation_from_all_accounts_program_body(name_database_table="members", db_handler=DatabaseHandler())
         elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
-            await invite_from_multiple_accounts_with_limits(name_database_table="members", db_handler=DatabaseHandler())
+            invitingToAGroup = InvitingToAGroup()
+            await invitingToAGroup.invite_from_multiple_accounts_with_limits()
+            # await invite_from_multiple_accounts_with_limits(name_database_table="members", db_handler=DatabaseHandler())
+
+
+
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             launching_an_invite_once_an_hour()
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
@@ -326,57 +333,7 @@ def mainss(page: ft.Page):
         elif page.route == "/sending_files_via_chats":  # ✔️ Рассылка файлов по чатам
             await sending_files_via_chats(DatabaseHandler())
         elif page.route == "/sending_messages_files_via_chats":  # ✔️ Рассылка сообщений + файлов по чатам
-            sending_messages_files_via_chats()
-        elif page.route == "/sending_personal_messages_with_limits":  # ✔️ Отправка сообщений в личку (с лимитами)
-            config_reader = ConfigReader()
-            limits_message = config_reader.get_message_limits()
-            await send_message_from_all_accounts(limits=limits_message)
-        elif page.route == "/sending_files_to_personal_account_with_limits":  # ✔️ Отправка файлов в личку (с лимитами)
-            config_reader = ConfigReader()
-            limits_message = config_reader.get_message_limits()
-            await send_files_to_personal_chats(limits=limits_message)
-
-        elif page.route == "/sending_messages":  # Настройки
-            page.views.append(
-                ft.View("/sending_messages",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Отправка сообщений в личку",
-                                               on_click=lambda _: page.go("/sending_messages_personal_account")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку",
-                                               on_click=lambda _: page.go("/sending_files_personal_account")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений по чатам",
-                                               on_click=lambda _: page.go("/sending_messages_via_chats")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Рассылка сообщений по чатам с автоответчиком",
-                                               on_click=lambda _: page.go(
-                                                   "/sending_messages_via_chats_with_answering_machine")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка файлов по чатам",
-                                               on_click=lambda _: page.go("/sending_files_via_chats")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений + файлов по чатам",
-                                               on_click=lambda _: page.go("/sending_messages_files_via_chats")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Отправка сообщений в личку (с лимитами)",
-                                               on_click=lambda _: page.go("/sending_personal_messages_with_limits")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку (с лимитами)",
-                                               on_click=lambda _: page.go(
-                                                   "/sending_files_to_personal_account_with_limits")),
-                         ])]))
-        elif page.route == "/sending_messages_personal_account":  # ✔️ Отправка сообщений в личку
-            await send_message_from_all_accounts(limits=None)
-        elif page.route == "/sending_files_personal_account":  # ✔️ Отправка файлов в личку
-            await send_files_to_personal_chats(limits=None)
-        elif page.route == "/sending_messages_via_chats":  # ✔️ Рассылка сообщений по чатам
-            entities = find_files(directory_path="user_settings/message", extension="json")
-            logger.info(entities)
-            await sending_messages_via_chats_times(entities)
-        elif page.route == "/sending_messages_via_chats_with_answering_machine":  # ✔️ Рассылка сообщений по чатам с автоответчиком
-            mains(DatabaseHandler())
-        elif page.route == "/sending_files_via_chats":  # ✔️ Рассылка файлов по чатам
-            await sending_files_via_chats(DatabaseHandler())
-        elif page.route == "/sending_messages_files_via_chats":  # ✔️ Рассылка сообщений + файлов по чатам
-            sending_messages_files_via_chats()
+            await sending_messages_files_via_chats()
         elif page.route == "/sending_personal_messages_with_limits":  # ✔️ Отправка сообщений в личку (с лимитами)
             config_reader = ConfigReader()
             limits_message = config_reader.get_message_limits()
@@ -488,7 +445,7 @@ def mainss(page: ft.Page):
         elif page.route == "/account_limits":  # ✔️ Лимиты на аккаунт
             record_setting(page, "account_limits", "Введите лимит на аккаунт")
         elif page.route == "/link_entry":  # ✔️ Запись ссылки
-            record_setting(page, "link_to_the_group", "Введите ссылку на группу")
+            output_the_input_field(page, DatabaseHandler())
         elif page.route == "/forming_list_of_chats_channels":  # ✔️ Формирование списка чатов / каналов
             output_the_input_field(page, DatabaseHandler())
         elif page.route == "/recording_reaction_link":  # ✔️ Запись ссылки для реакций
