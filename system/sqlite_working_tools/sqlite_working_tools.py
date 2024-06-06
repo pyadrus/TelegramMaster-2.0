@@ -29,11 +29,14 @@ class DatabaseHandler:
 
     async def open_and_read_data(self, table_name) -> list:
         """Открываем базу и считываем данные из указанной таблицы"""
-        await self.connect()
-        self.cursor.execute(f"SELECT * FROM {table_name}")
-        records = self.cursor.fetchall()
-        self.close()
-        return records
+        try:
+            await self.connect()
+            self.cursor.execute(f"SELECT * FROM {table_name}")
+            records = self.cursor.fetchall()
+            self.close()
+            return records
+        except Exception as e:
+            logger.error(f"{e}")
 
     async def delete_duplicates(self, table_name, column_name) -> None:
         """
@@ -75,8 +78,8 @@ class DatabaseHandler:
             self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
             self.close()  # cursor_members.close() – закрытие соединения с БД.
         except sqlite3.ProgrammingError as e:
-            logger.info(e)
-            time.sleep(5)
+            logger.error(e)
+            return  # Выходим из функции write_data_to_db
 
     async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns) -> None:
         """Удаляем не рабочий proxy с software_database.db, таблица proxy"""
@@ -154,6 +157,7 @@ class DatabaseHandler:
 
         Этот метод устанавливает соединение с базой данных, удаляет все записи из указанной таблицы (name_database_table),
         затем фиксирует изменения. После этого закрывает соединение с базой данных.
+        :param name_database_table: Название таблицы в базе данных
         """
         await self.connect()
         # Удаляем таблицу members, функция execute отвечает за SQL-запрос DELETE FROM - команда удаления базы данных

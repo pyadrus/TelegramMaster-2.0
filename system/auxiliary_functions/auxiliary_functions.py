@@ -37,12 +37,11 @@ def all_find_files(directory_path) -> list:
 
 def find_files(directory_path, extension) -> list:
     """
-    Поиск файлов с определенным расширением в директории.
-    :arg directory_path: - путь к директории
-    :arg extension: - расширение файла
-    :return list: - список имен найденных файлов
+    Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
+    :param directory_path: Путь к директории
+    :param extension: Расширение файла (указанное без точки)
+    :return list: Список имен найденных файлов
     """
-
     entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_settings/accounts
     for x in os.listdir(directory_path):
         if x.endswith(f".{extension}"):  # Проверяем, заканчивается ли имя файла на заданное расширение
@@ -60,12 +59,17 @@ async def record_inviting_results(time_range_1: int, time_range_2: int, username
     :param time_range_2:  - диапазон времени смены аккаунта
     :param username: - username аккаунта
     """
-    db_handler = DatabaseHandler()  # Открываем базу с аккаунтами и с выставленными лимитами
-    await db_handler.delete_row_db(table="members", column="username", value=username)
-    # Смена username через случайное количество секунд
-    selected_shift_time = random.randrange(int(time_range_1), int(time_range_2))
-    logger.info(f"Переход к новому username через {selected_shift_time} секунд")
-    time.sleep(selected_shift_time)
+    try:
+        logger.info(f'Удаляем с базы данных username {username[0]}')
+        db_handler = DatabaseHandler()  # Открываем базу с аккаунтами и с выставленными лимитами
+        await db_handler.delete_row_db(table="members", column="username", value=username[0])
+        # Смена username через случайное количество секунд
+
+        selected_shift_time = random.randrange(int(time_range_1), int(time_range_2))
+        logger.info(f"Переход к новому username через {selected_shift_time} секунд")
+        time.sleep(selected_shift_time)
+    except Exception as e:
+        logger.error(f"Ошибка: {e}")
 
 
 def record_and_interrupt(time_range_1, time_range_2) -> None:
@@ -75,6 +79,6 @@ def record_and_interrupt(time_range_1, time_range_2) -> None:
     :param time_range_2:  - диапазон времени смены аккаунта
     """
     # Смена аккаунта через случайное количество секунд
-    selected_shift_time = random.randrange(time_range_1, time_range_2)
+    selected_shift_time = random.randrange(int(time_range_1), int(time_range_2))
     logger.info(f"Переход к новому username через {selected_shift_time} секунд")
     time.sleep(selected_shift_time)

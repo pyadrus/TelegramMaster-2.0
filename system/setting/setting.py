@@ -1,16 +1,16 @@
 import configparser
-import getpass
+# import getpass
 import json
 import os
 import sys
 import io
 import flet as ft  # Импортируем библиотеку flet
-from telethon import TelegramClient
-from telethon.errors import *
+# from telethon import TelegramClient
+# from telethon.errors import *
 from loguru import logger
-from system.account_actions.creating.account_registration import telegram_connects
+# from system.account_actions.creating.account_registration import telegram_connects
 from system.auxiliary_functions.global_variables import ConfigReader
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+# from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 config.read("user_settings/config.ini")
@@ -19,6 +19,33 @@ configs_reader = ConfigReader()
 api_id_data, api_hash_data = configs_reader.get_api_id_data_api_hash_data()
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+
+def output_the_input_field_inviting(page: ft.Page, db_handler) -> None:
+    """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
+    text_to_send = ft.TextField(label="Введите ссылку на группу для инвайтинга", multiline=True, max_lines=19)
+
+    async def btn_click(e) -> None:
+        await db_handler.open_and_read_data("links_inviting")  # Удаление списка с группами
+        await db_handler.write_to_single_column_table(name_database="links_inviting",
+                                                      database_columns="links_inviting",
+                                                      into_columns="links_inviting",
+                                                      recorded_data=text_to_send.value.split())
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
+
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                text_to_send,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 
 def output_the_input_field(page: ft.Page, db_handler) -> None:
@@ -159,37 +186,36 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
     return config
 
 
-async def connecting_new_account() -> None:
-    """Вводим данные в базу данных user_settings/software_database.db"""
-    phone_data = input("[+] Введите номер телефона : ")  # Вводим номер телефона
-    entities = (api_id_data, api_hash_data, phone_data)
-    db_handler = DatabaseHandler()
-    await db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS config(phone)",
-                                      writing_data_to_a_table="INSERT INTO config (phone) VALUES (?)",
-                                      entities=entities)
-    # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
-    client = await telegram_connect(phone_data, db_handler)
-    client.disconnect()  # Разрываем соединение telegram
-    # app_notifications(notification_text="Аккаунт подсоединился!")  # Выводим уведомление
+# async def connecting_new_account() -> None:
+#     """Вводим данные в базу данных user_settings/software_database.db"""
+#     phone_data = input("[+] Введите номер телефона : ")  # Вводим номер телефона
+#     entities = (api_id_data, api_hash_data, phone_data)
+#     db_handler = DatabaseHandler()
+#     await db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS config(phone)",
+#                                       writing_data_to_a_table="INSERT INTO config (phone) VALUES (?)",
+#                                       entities=entities)
+#     # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
+#     client = await telegram_connect(phone_data, db_handler)
+#     client.disconnect()  # Разрываем соединение telegram
 
 
-async def telegram_connect(phone, db_handler) -> TelegramClient:
-    """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
-    client = await telegram_connects(db_handler, session=f"user_settings/accounts/{phone}")
-    if not client.is_user_authorized():
-        await client.send_code_request(phone)
-        try:
-            # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
-            await client.sign_in(phone, code=input("[+] Введите код: "))
-        except SessionPasswordNeededError:
-            """
-            https://telethonn.readthedocs.io/en/latest/extra/basic/creating-a-client.html#two-factor-authorization-2fa
-            """
-            # Если аккаунт имеет password, то просим пользователя ввести пароль
-            await client.sign_in(password=getpass.getpass())
-        except ApiIdInvalidError:
-            logger.info("[!] Не валидные api_id/api_hash")
-    return client
+# async def telegram_connect(phone, db_handler) -> TelegramClient:
+#     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
+#     client = await telegram_connects(db_handler, session=f"user_settings/accounts/{phone}")
+#     if not client.is_user_authorized():
+#         await client.send_code_request(phone)
+#         try:
+#             # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
+#             await client.sign_in(phone, code=input("[+] Введите код: "))
+#         except SessionPasswordNeededError:
+#             """
+#             https://telethonn.readthedocs.io/en/latest/extra/basic/creating-a-client.html#two-factor-authorization-2fa
+#             """
+#             # Если аккаунт имеет password, то просим пользователя ввести пароль
+#             await client.sign_in(password=getpass.getpass())
+#         except ApiIdInvalidError:
+#             logger.info("[!] Не валидные api_id/api_hash")
+#     return client
 
 
 def creating_the_main_window_for_proxy_data_entry(page: ft.Page, db_handler) -> None:

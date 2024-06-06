@@ -10,7 +10,7 @@ from loguru import logger
 from telethon.errors import *
 
 from system.account_actions.checking_spam.account_verification import working_with_accounts
-from system.account_actions.creating.account_registration import telegram_connects
+# from system.account_actions.creating.account_registration import telegram_connects
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.telegram_actions.telegram_actions import writing_names_found_files_to_the_db
@@ -24,7 +24,7 @@ async def deleting_files_by_dictionary(db_handler) -> None:
                 f"{urllib.request.urlopen('https://ident.me').read().decode('utf8')}")
 
     await checking_the_proxy_for_work(db_handler)  # Проверка proxy
-    writing_names_found_files_to_the_db(db_handler)  # Сканируем папку с аккаунтами на наличие сессий
+    await writing_names_found_files_to_the_db(db_handler)  # Сканируем папку с аккаунтами на наличие сессий
     error_sessions = await account_verification(db_handler)
     for row in error_sessions:
         try:
@@ -32,19 +32,19 @@ async def deleting_files_by_dictionary(db_handler) -> None:
             os.remove(f"user_settings/accounts/{''.join(row)}.session")
         except PermissionError:
             continue
-    writing_names_found_files_to_the_db(db_handler)  # Сканируем папку с аккаунтами на наличие сессий
+    await writing_names_found_files_to_the_db(db_handler)  # Сканируем папку с аккаунтами на наличие сессий
 
 
 async def account_verification(db_handler):
     """Проверка аккаунтов"""
     error_sessions = []  # Создаем словарь, для удаления битых файлов session
     logger.info("[deadly] Проверка аккаунтов!")
-    records: list = db_handler.open_and_read_data("config")
+    records: list = await db_handler.open_and_read_data("config")
     for row in records:
         try:
             client = await telegram_connects(db_handler, session=f"user_settings/accounts/{row[0]}")
             try:
-                if not client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
+                if not await client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
                     telegram_phone_number_banned_error(client=client, phone=row[0],
                                                        db_handler=db_handler)  # Удаляем номер телефона с базы данных
                 time.sleep(1)

@@ -63,25 +63,21 @@ async def subscribe_to_group_or_channel(client, groups_wr) -> None:
                     break
             logger.info("[+] Список почистили, и в файл записали.")
         except ChannelPrivateError:
-            logger.error(f"""Попытка подписки на группу / канал {groups_wr}. Указанный канал / группа {groups_wr} 
-                             является приватным, или вам запретили подписываться.""")
+            logger.error(f"Попытка подписки на группу / канал {groups_wrs}. Указанный канал / группа {groups_wrs} является приватным, или вам запретили подписываться.")
         except (UsernameInvalidError, ValueError, TypeError):
-            logger.error(f"""Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wrs} не 
-                             является группой / каналом: {groups_wrs}""")
+            logger.error(f"Попытка подписки на группу / канал {groups_wrs}. Не верное имя или cсылка {groups_wrs} не является группой / каналом: {groups_wrs}")
             await db_handler.write_data_to_db("""SELECT * from writing_group_links""",
                                               """DELETE from writing_group_links where writing_group_links = ?""",
                                               groups_wrs)
         except PeerFloodError:
-            logger.error(f"""Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.""")
+            logger.error(f"Попытка подписки на группу / канал {groups_wrs}. Предупреждение о Flood от Telegram.")
             time.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
-            logger.error(f"""Попытка подписки на группу / канал {groups_wr}. Flood! wait for 
-                             {str(datetime.timedelta(seconds=e.seconds))}""")
+            logger.error(f"Попытка подписки на группу / канал {groups_wrs}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
             record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except InviteRequestSentError:
-            logger.error(f"""Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения 
-                             администратором на вступление в группу""")
+            logger.error(f"Попытка подписки на группу / канал {groups_wrs}. Действия будут доступны после одобрения администратором на вступление в группу")
 
 
 async def subscribe_to_the_group_and_send_the_link(client, groups):
