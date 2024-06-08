@@ -1,15 +1,10 @@
 import flet as ft
 from loguru import logger
-from telethon.errors import PeerFloodError, AuthKeyDuplicatedError, FloodWaitError, UserPrivacyRestrictedError, \
-    UserChannelsTooMuchError, UserBannedInChannelError, ChatWriteForbiddenError, BotGroupsBlockedError, \
-    UserNotMutualContactError, ChatAdminRequiredError, UserKickedError, ChannelPrivateError, UserIdInvalidError, \
-    UsernameNotOccupiedError, UsernameInvalidError, InviteRequestSentError, TypeNotFoundError
 
 from system.account_actions.checking_spam.account_verification import check_account_for_spam
-# from system.account_actions.creating.account_registration import AccountRIO
 from system.account_actions.creating.creating import creating_groups_and_chats
-from system.account_actions.invitation.inviting_participants_telegram import INVITING_TO_A_GROUP
-# from system.account_actions.invitation.inviting_participants_telegram import InvitingToAGroup
+from system.account_actions.invitation.inviting_participants_telegram import inviting_without_limits, \
+    account_verification_for_inviting, inviting_with_limits
 from system.account_actions.invitation.telegram_invite_scheduler import launching_an_invite_once_an_hour
 from system.account_actions.invitation.telegram_invite_scheduler import launching_invite_every_day_certain_time
 from system.account_actions.invitation.telegram_invite_scheduler import schedule_invite
@@ -19,7 +14,6 @@ from system.account_actions.parsing.parsing_group_members import inviting_contac
 from system.account_actions.parsing.parsing_group_members import parsing_gui, parsing_of_active_participants
 from system.account_actions.parsing.parsing_group_members import show_account_contact_list
 from system.account_actions.parsing.parsing_group_members import we_record_phone_numbers_in_the_db
-# from system.account_actions.reactions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
 from system.account_actions.sending_messages.chat_dialog_mes import mains
 from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_chats
 from system.account_actions.sending_messages.sending_messages_telegram import send_message_from_all_accounts
@@ -28,13 +22,12 @@ from system.account_actions.sending_messages.telegram_chat_dialog import sending
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_via_chats_times
 from system.account_actions.subscription.subscription import subscription_all
 from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
-from system.auxiliary_functions.auxiliary_functions import find_files, record_and_interrupt, record_inviting_results
+from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
-# from system.setting.setting import connecting_new_account, output_the_input_field_inviting
-from system.setting.setting import output_the_input_field_inviting
 from system.setting.setting import create_main_window
 from system.setting.setting import creating_the_main_window_for_proxy_data_entry
 from system.setting.setting import output_the_input_field
+from system.setting.setting import output_the_input_field_inviting
 from system.setting.setting import reaction_gui
 from system.setting.setting import record_device_type
 from system.setting.setting import record_setting
@@ -46,10 +39,7 @@ from system.setting.setting import writing_api_id_api_hash
 from system.setting.setting import writing_members
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
-# from system.telegram_actions.account_verification import deleting_files_by_dictionary
-
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
-# logger.add(sys.stderr, level="ERROR")
 
 line_width = 580  # Ширина окна и ширина строки
 program_version, date_of_program_change = "0.14.8", "04.06.2024"  # Версия программы, дата изменения
@@ -115,9 +105,9 @@ def mainss(page: ft.Page):
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг без лимитов",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг без лимитов",
                                                on_click=lambda _: page.go("/inviting_without_limits")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг с лимитами",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг с лимитами",
                                                on_click=lambda _: page.go("/inviting_with_limits")),
                              ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг 1 раз в час",
                                                on_click=lambda _: page.go("/inviting_1_time_per_hour")),
@@ -128,146 +118,32 @@ def mainss(page: ft.Page):
                          ])]))
         elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
 
-            logger.info(f"Запуск инвайтинга без лимитов")
-            inviting_to_a_group = INVITING_TO_A_GROUP()
-
-            """Очистка базы данных"""
-            await inviting_to_a_group.cleaning_the_database_from_accounts()
-
-            """Сканирование каталога с аккаунтами"""
-            records = await inviting_to_a_group.scanning_the_folder_with_accounts_for_telegram_accounts()
-            logger.info(f"{records}")
-            for entities in records:
-                logger.info(f"{entities[0]}")
-                await inviting_to_a_group.write_account_data_to_the_database(entities)
-
-            """Проверка аккаунтов"""
-            accounts = await inviting_to_a_group.getting_accounts_from_the_database_for_inviting()
-            for account in accounts:
-                logger.info(f"{account[0]}")
-                proxy = await inviting_to_a_group.reading_proxies_from_the_database()
-                await inviting_to_a_group.account_verification_for_inviting(account[0], proxy)
-
-            """Инвайтинг"""
-            accounts = await inviting_to_a_group.reading_the_list_of_accounts_from_the_database()
-            for account in accounts:
-                logger.info(f"{account[0]}")
-
-                """Получение ссылки для инвайтинга"""
-                links_inviting = await inviting_to_a_group.getting_an_invitation_link_from_the_database()
-                for link in links_inviting:
-                    logger.info(f"{link[0]}")
-                    proxy = await inviting_to_a_group.reading_proxies_from_the_database()
-                    client = await inviting_to_a_group.connecting_to_telegram_for_inviting(account[0], proxy)
-                    await client.connect()
-
-                    """Подписка на группу для инвайтинга"""
-                    await inviting_to_a_group.subscription_to_group_for_inviting(client, link)
-
-                    """Получение списка usernames"""
-                    number_usernames = await inviting_to_a_group.getting_a_list_of_usernames_from_the_database()
-                    for username in number_usernames:
-                        logger.info(f"Пользователь username:{username[0]}")
-
-                        """Инвайтинг в группу по полученному списку"""
-                        config_reader = ConfigReader()
-                        time_inviting = config_reader.get_time_inviting()
-                        time_inviting_1 = time_inviting[0]
-                        time_inviting_2 = time_inviting[1]
-                        try:
-                            await inviting_to_a_group.inviting_to_a_group_according_to_the_received_list(client, link,
-                                                                                                         username)
-
-                        except PeerFloodError:
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки "
-                                         f"конфиденциальности {username} не позволяют вам inviting")
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
-                            break  # Прерываем работу и меняем аккаунт
-                        except AuthKeyDuplicatedError:
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
-                            break  # Прерываем работу и меняем аккаунт
-                        except FloodWaitError as error:
-                            logger.error(f'{error}')
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
-                            break  # Прерываем работу и меняем аккаунт
-                        except UserPrivacyRestrictedError:
-                            logger.error(
-                                f"Попытка приглашения {username} в группу {link[0]}. Настройки конфиденциальности "
-                                f"{username} не позволяют вам inviting")
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
-                        except UserChannelsTooMuchError:
-                            logger.error(
-                                f"Попытка приглашения {username} в группу {link[0]}. Превышен лимит у user каналов / "
-                                f"супергрупп.")
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
-                            continue
-                        except UserBannedInChannelError:
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
-                            break  # Прерываем работу и меняем аккаунт
-                        except ChatWriteForbiddenError:
-                            logger.error(
-                                f"Попытка приглашения {username} в группу {link[0]}. Настройки в чате не дают добавлять "
-                                f"людей в чат, возможно стоит бот админ и нужно подписаться на другие проекты")
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
-                            break  # Прерываем работу и меняем аккаунт
-                        except BotGroupsBlockedError:
-                            logger.error(
-                                f"Попытка приглашения {username} в группу {link[0]}. Вы не можете добавить бота в группу.")
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
-                        except UserNotMutualContactError:
-                            logger.error(
-                                f"Попытка приглашения {username} в группу {link[0]}. User не является взаимным контактом.")
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
-                        except ChatAdminRequiredError:
-                            logger.error(
-                                f"Попытка приглашения {username} в группу {link[0]}. Требуются права администратора.")
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
-                        except UserKickedError:
-                            logger.error(
-                                f"Попытка приглашения {username} в группу {link[0]}. Пользователь был удален ранее из "
-                                f"супергруппы.")
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
-                        except ChannelPrivateError:
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
-                            break  # Прерываем работу и меняем аккаунт
-                        except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
-                            logger.error(
-                                f"Попытка приглашения {username} в группу {link[0]}. Не корректное имя {username}")
-                            break  # Прерываем работу и меняем аккаунт
-                        except (TypeError, UnboundLocalError):
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}")
-                            continue  # Записываем ошибку в software_database.db и продолжаем работу
-                        except InviteRequestSentError:
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Доступ к функциям группы "
-                                         f"станет возможен после утверждения заявки администратором на {link[0]}")
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
-                            break  # Прерываем работу и меняем аккаунт
-                        except TypeNotFoundError:
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
-                            break  # Прерываем работу и меняем аккаунт
-                        except KeyboardInterrupt:  # Закрытие окна программы
-                            client.disconnect()  # Разрываем соединение telegram
-                            logger.info("[!] Скрипт остановлен!")
-                        except Exception as error:
-                            logger.error(f'{error}')  # Прерываем работу и меняем аккаунт
-                            logger.info(f'Спим 5 секунд')
-                            # time.sleep(5)
-                        else:
-                            logger.info(f"[+] Участник {username} добавлен, если не состоит в чате {link[0]}")
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
-
-                    await inviting_to_a_group.unsubscribing_from_group_for_inviting(client, link)
-            logger.info("[!] Инвайтинг окончен!")
+            await account_verification_for_inviting()  # Вызываем метод для проверки аккаунтов
+            await inviting_without_limits()  # Вызываем метод для инвайтинга
 
         elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
-            pass
+
+            await account_verification_for_inviting()  # Вызываем метод для проверки аккаунтов
+            await inviting_with_limits()  # Вызываем метод для инвайтинга с лимитами
+
+
+
+
+
+
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             launching_an_invite_once_an_hour()
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
             schedule_invite()
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             launching_invite_every_day_certain_time()
+
+
+
+
+
+
+
 
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
             await check_account_for_spam()
@@ -287,6 +163,11 @@ def mainss(page: ft.Page):
             await subscription_all(DatabaseHandler())
         elif page.route == "/unsubscribe_all":  # Отписываемся
             await unsubscribe_all()
+
+
+
+
+
 
         elif page.route == "/working_with_reactions":  # Работа с реакциями
             page.views.append(

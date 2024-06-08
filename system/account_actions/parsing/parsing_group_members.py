@@ -34,8 +34,8 @@ def parsing_gui(page: ft.Page):
         page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
         db_handler = DatabaseHandler()  # Открываем базу с аккаунтами и с выставленными лимитами
-        records: list = await db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
-                                                                           number_of_accounts=1)
+        records: list = await db_handler.open_db_func_lim(table_name="config",
+                                                          account_limit=1)
 
         lv.controls.append(ft.Text(f"Аккаунтов для парсинга: {len(records)}"))
         page.update()  # Обновите страницу, чтобы сразу показать сообщение
@@ -221,7 +221,7 @@ def getting_active_user_data(user):
 
 async def choosing_a_group_from_the_subscribed_ones_for_parsing(page, lv, db_handler) -> None:
     """Выбираем группу из подписанных для parsing"""
-    records: list = db_handler.open_the_db_and_read_the_data_lim(name_database_table="config", number_of_accounts=1)
+    records: list = db_handler.open_db_func_lim(table_name="config", account_limit=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)
@@ -291,8 +291,8 @@ async def parsing_of_active_participants(chat_input, limit_active_user) -> None:
     """
     # Открываем базу с аккаунтами и с выставленными лимитами
     db_handler = DatabaseHandler()
-    records: list = await db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
-                                                                       number_of_accounts=1)
+    records: list = await db_handler.open_db_func_lim(table_name="config",
+                                                      account_limit=1)
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client, phone = telegram_connect_and_output_name(row, db_handler)

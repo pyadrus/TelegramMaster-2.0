@@ -27,8 +27,8 @@ async def send_files_to_personal_chats(limits) -> None:
         client = await telegram_connect_and_output_name(row, db_handler)
         try:
             # Открываем parsing список user_settings/software_database.db для inviting в группу
-            records: list = await db_handler.open_the_db_and_read_the_data_lim("members",
-                                                                               number_of_accounts=limits)
+            records: list = await db_handler.open_db_func_lim("members",
+                                                              account_limit=limits)
             # Количество аккаунтов на данный момент в работе
             logger.info(f"Всего username: {len(records)}")
             for rows in records:
@@ -71,8 +71,8 @@ async def send_message_from_all_accounts(limits) -> None:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
         client = await telegram_connect_and_output_name(row, db_handler)
         try:
-            records: list = await db_handler.open_the_db_and_read_the_data_lim("members",
-                                                                               number_of_accounts=limits)
+            records: list = await db_handler.open_db_func_lim("members",
+                                                              account_limit=limits)
             # Количество аккаунтов на данный момент в работе
             logger.info(f"Всего username: {len(records)}")
             for rows in records:

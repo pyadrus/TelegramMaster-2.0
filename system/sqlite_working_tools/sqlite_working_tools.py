@@ -1,5 +1,5 @@
 import sqlite3
-import time
+
 from loguru import logger
 
 
@@ -52,16 +52,18 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()
 
-    async def open_the_db_and_read_the_data_lim(self, name_database_table, number_of_accounts: int) -> list:
+    async def open_db_func_lim(self, table_name, account_limit: int) -> list:
         """
-        Открытие базы данных для inviting (рассылка сообщений) c лимитами
-        Если number_of_accounts равно None, возвращаем весь список
+        Открытие базы данных для inviting (рассылка сообщений) c лимитами. Если number_of_accounts равно None,
+        возвращаем весь список
+        :param table_name: имя таблицы
+        :param account_limit: количество аккаунтов
+        :return list: полученный список
         """
         await self.connect()
-        self.cursor.execute(f"SELECT * from {name_database_table}")  # Считываем таблицу
-        if number_of_accounts is not None:
-            records: list = self.cursor.fetchmany(number_of_accounts)  # fetchmany(size) – возвращает число записей
-
+        self.cursor.execute(f"SELECT * from {table_name}")  # Считываем таблицу
+        if account_limit is not None:
+            records: list = self.cursor.fetchmany(account_limit)  # fetchmany(size) – возвращает число записей
         else:
             records: list = self.cursor.fetchall()  # Если number_of_accounts равно None, возвращаем весь список
 
