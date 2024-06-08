@@ -140,7 +140,7 @@ async def inviting_with_limits() -> None:
             await client.connect()
 
             """Подписка на группу для инвайтинга"""
-            await inviting_to_a_group.subscription_to_group_for_inviting(client, link)
+            await subscribe_to_group_or_channel(client, link[0])
 
             """Получение списка usernames"""
             number_usernames = await inviting_with_limits_class.get_usernames_with_limits(table_name="members")
@@ -259,7 +259,7 @@ async def inviting_without_limits() -> None:
             await client.connect()
 
             """Подписка на группу для инвайтинга"""
-            await inviting_to_a_group.subscription_to_group_for_inviting(client, link)
+            await subscribe_to_group_or_channel(client, link[0])
 
             """Получение списка usernames"""
             number_usernames = await inviting_with_limits_class.get_usernames_without_limits(table_name="members")
@@ -393,10 +393,6 @@ class InvitingToAGroup:
             return client  # Подсоединяемся к Telegram аккаунта
         except Exception as error:
             logger.error(f"Ошибка аккаунта {error}")
-
-    async def subscription_to_group_for_inviting(self, client, link_row) -> None:
-        """Подписка на группу"""
-        await subscribe_to_group_or_channel(client, link_row[0])
 
     async def inviting_to_a_group_according_to_the_received_list(self, client, link_row, username) -> None:
 

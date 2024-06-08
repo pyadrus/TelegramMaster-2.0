@@ -1,6 +1,7 @@
 import flet as ft
 from loguru import logger
 
+from system.account_actions.account_actions import subscribe_telegram
 from system.account_actions.checking_spam.account_verification import check_account_for_spam
 from system.account_actions.creating.creating import creating_groups_and_chats
 from system.account_actions.invitation.inviting_participants_telegram import inviting_without_limits, \
@@ -20,7 +21,6 @@ from system.account_actions.sending_messages.sending_messages_telegram import se
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_files_via_chats, \
     sending_messages_files_via_chats
 from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_via_chats_times
-from system.account_actions.subscription.subscription import subscription_all
 from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
@@ -160,7 +160,7 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/unsubscribe_all")),
                          ])]))
         elif page.route == "/subscription_all":  # Подписка
-            await subscription_all(DatabaseHandler())
+            await subscribe_telegram()
         elif page.route == "/unsubscribe_all":  # Отписываемся
             await unsubscribe_all()
 
@@ -189,22 +189,6 @@ def mainss(page: ft.Page):
         #     viewing_posts(DatabaseHandler())
         # elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
         #     await setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
-
-        elif page.route == "/subscribe_unsubscribe":  # подписка, отписка
-            page.views.append(
-                ft.View("/subscribe_unsubscribe",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Подписка",
-                                               on_click=lambda _: page.go("/subscription_all")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Отписываемся",
-                                               on_click=lambda _: page.go("/unsubscribe_all")),
-                         ])]))
-        elif page.route == "/subscription_all":  # Подписка
-            await subscription_all(DatabaseHandler())
-        elif page.route == "/unsubscribe_all":  # Отписываемся
-            await unsubscribe_all()
 
         elif page.route == "/working_with_reactions":  # Работа с реакциями
             page.views.append(

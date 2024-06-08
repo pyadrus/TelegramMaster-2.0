@@ -17,7 +17,6 @@ from telethon.tl.types import UserStatusOnline
 from telethon.tl.types import UserStatusRecently
 
 from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
-from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
@@ -93,12 +92,13 @@ async def subscribe_and_parse_group(page, lv, client, groups, db_handler) -> Non
     :param groups: список групп
     :param db_handler: база данных
     """
-    groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups)
-    lv.controls.append(ft.Text(f"Группа для парсинга: {len(groups_wr)}"))
+    # groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups)
+    await subscribe_to_group_or_channel(client, groups[0])
+    lv.controls.append(ft.Text(f"Группа для парсинга: {groups[0]}"))
     page.update()  # Обновите страницу, чтобы сразу показать сообщение
-    await group_parsing(page, lv, client, groups_wr, db_handler)  # Parsing групп
+    await group_parsing(page, lv, client, groups[0], db_handler)  # Parsing групп
     # Удаляем отработанную группу или канал
-    await db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups_wr)
+    await db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups)
 
 
 async def group_parsing(page, lv, client, groups_wr, db_handler) -> None:

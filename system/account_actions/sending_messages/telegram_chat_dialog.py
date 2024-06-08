@@ -5,15 +5,12 @@ import time
 from loguru import logger
 from telethon.errors import *
 
-from system.account_actions.subscription.subscription import subscribe_to_the_group_and_send_the_link
+from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, read_json_file, all_find_files, \
     find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
-
-creating_a_table = """SELECT * from writing_group_links"""
-writing_data_to_a_table = """DELETE from writing_group_links where writing_group_links = ?"""
 
 configs_reader = ConfigReader()
 time_sending_messages_1, time_sending_messages_2 = configs_reader.get_time_sending_messages()
@@ -41,22 +38,22 @@ async def sending_files_via_chats(db_handler) -> None:
     entities = all_find_files(directory_path="user_settings/files_to_send")
     client, records = await connecting_tg_account_creating_list_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
-        groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups)
+        await subscribe_to_group_or_channel(client, groups[0])
         try:
             for file in entities:
-                await client.send_file(groups_wr, f"user_settings/files_to_send/{file}")
+                await client.send_file(groups[0], f"user_settings/files_to_send/{file}")
                 # Работу записываем в лог файл, для удобства слежения, за изменениями
-                logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Сообщение в группу {groups_wr} написано!""")
+                logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
                 time.sleep(time_sending_messages_1)
         except ChannelPrivateError:
-            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Указанный канал / группа  {groups_wr} является 
+            logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является 
                              приватным, или вам запретили подписываться.""")
         except PeerFloodError:
             record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
             logger.error(
-                f"""Рассылка файлов в группу: {groups_wr}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}""")
+                f"""Рассылка файлов в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}""")
             time.sleep(e.seconds)
         except UserBannedInChannelError:
             record_and_interrupt(time_subscription_1, time_subscription_2)
@@ -75,25 +72,25 @@ async def sending_messages_files_via_chats() -> None:
     client, records = await connecting_tg_account_creating_list_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
         logger.info(f"Всего групп: {len(records)}")
-        groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups)
+        await subscribe_to_group_or_channel(client, groups[0])
         try:
             entities = find_files(directory_path="user_settings/message", extension="json")
             data = select_and_read_random_file(entities)  # Выбираем случайное сообщение из файла
             entitiess = all_find_files(directory_path="user_settings/files_to_send")
             for file in entitiess:
                 file_path = f"user_settings/files_to_send/{file}"
-                await client.send_file(groups_wr, file_path, caption=data)
+                await client.send_file(groups[0], file_path, caption=data)
                 # Работу записываем в лог файл, для удобства слежения, за изменениями
-                logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Файл {file} отправлен в группу {groups_wr}.""")
+                logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Файл {file} отправлен в группу {groups[0]}.""")
                 time.sleep(time_sending_messages_1)
         except ChannelPrivateError:
-            logger.error(f"""Рассылка сообщений + файлов в группу: {groups_wr}. Указанный канал / группа  {groups_wr} 
+            logger.error(f"""Рассылка сообщений + файлов в группу: {groups[0]}. Указанный канал / группа  {groups[0]} 
                              является приватным, или вам запретили подписываться.""")
         except PeerFloodError:
             record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
-            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}""")
+            logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}""")
             time.sleep(e.seconds)
         except UserBannedInChannelError:
             record_and_interrupt(time_subscription_1, time_subscription_2)
@@ -121,23 +118,23 @@ async def sending_messages_via_chats_times(entities) -> None:
     client, records = await connecting_tg_account_creating_list_groups(db_handler)
     for groups in records:  # Поочередно выводим записанные группы
         logger.info(f"Группа: {groups}")
-        groups_wr = await subscribe_to_the_group_and_send_the_link(client, groups)
+        await subscribe_to_group_or_channel(client, groups[0])
         data = select_and_read_random_file(entities)  # Выбираем случайное сообщение из файла
         try:
-            await client.send_message(entity=groups_wr, message=data)  # Рассылаем сообщение по чатам
+            await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
             selected_shift_time = random.randrange(time_sending_messages_1, time_sending_messages_2)
             time_in_seconds = selected_shift_time * 60
             time.sleep(time_in_seconds)  # Спим секунд секунду
-            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Сообщение в группу {groups_wr} написано!""")
+            logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
         except ChannelPrivateError:
-            logger.error(f"""Рассылка сообщений в группу: {groups_wr}. Указанный канал / группа  {groups_wr} является 
+            logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является 
                              приватным, или вам запретили подписываться.""")
         except PeerFloodError:
             record_and_interrupt(time_subscription_1, time_subscription_2)
             break  # Прерываем работу и меняем аккаунт
         except FloodWaitError as e:
             logger.error(
-                f"""Рассылка сообщений в группу: {groups_wr}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}""")
+                f"""Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}""")
             time.sleep(e.seconds)
         except UserBannedInChannelError:
             record_and_interrupt(time_subscription_1, time_subscription_2)
