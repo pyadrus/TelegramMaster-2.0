@@ -4,7 +4,7 @@ import time
 from loguru import logger
 from telethon.errors import *
 
-from system.account_actions.sending_messages.telegram_chat_dialog import select_and_read_random_file
+from system.account_actions.telegram_chat_dialog import select_and_read_random_file
 from system.auxiliary_functions.auxiliary_functions import find_files, all_find_files
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import ConfigReader

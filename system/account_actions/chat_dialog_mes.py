@@ -7,7 +7,7 @@ from telethon import TelegramClient, events
 from telethon.errors import UserBannedInChannelError
 from telethon.tl.functions.channels import JoinChannelRequest
 
-from system.account_actions.sending_messages.telegram_chat_dialog import select_and_read_random_file
+from system.account_actions.telegram_chat_dialog import select_and_read_random_file
 from system.auxiliary_functions.auxiliary_functions import find_files, read_json_file
 from system.auxiliary_functions.global_variables import ConfigReader
 

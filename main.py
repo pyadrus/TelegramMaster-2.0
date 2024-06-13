@@ -1,27 +1,23 @@
 import flet as ft
 from loguru import logger
 
+from system.account_actions.TGChecking import account_verification_for_inviting
 from system.account_actions.account_actions import subscribe_telegram
-from system.account_actions.checking_spam.account_verification import check_account_for_spam
-from system.account_actions.creating.creating import creating_groups_and_chats
-from system.account_actions.invitation.inviting_participants_telegram import inviting_without_limits, \
-    account_verification_for_inviting, inviting_with_limits
-from system.account_actions.invitation.telegram_invite_scheduler import launching_an_invite_once_an_hour
-from system.account_actions.invitation.telegram_invite_scheduler import launching_invite_every_day_certain_time
-from system.account_actions.invitation.telegram_invite_scheduler import schedule_invite
-from system.account_actions.parsing.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
-from system.account_actions.parsing.parsing_group_members import delete_contact
-from system.account_actions.parsing.parsing_group_members import inviting_contact
-from system.account_actions.parsing.parsing_group_members import parsing_gui, parsing_of_active_participants
-from system.account_actions.parsing.parsing_group_members import show_account_contact_list
-from system.account_actions.parsing.parsing_group_members import we_record_phone_numbers_in_the_db
-from system.account_actions.sending_messages.chat_dialog_mes import mains
-from system.account_actions.sending_messages.sending_messages_telegram import send_files_to_personal_chats
-from system.account_actions.sending_messages.sending_messages_telegram import send_message_from_all_accounts
-from system.account_actions.sending_messages.telegram_chat_dialog import sending_files_via_chats, \
-    sending_messages_files_via_chats
-from system.account_actions.sending_messages.telegram_chat_dialog import sending_messages_via_chats_times
-from system.account_actions.unsubscribe.unsubscribe import unsubscribe_all
+from system.account_actions.account_registration import AccountRIO
+from system.account_actions.account_verification import check_account_for_spam
+from system.account_actions.chat_dialog_mes import mains
+from system.account_actions.creating import creating_groups_and_chats
+from system.account_actions.inviting_participants_telegram import inviting_without_limits, inviting_with_limits
+from system.account_actions.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
+from system.account_actions.parsing_group_members import parsing_gui, parsing_of_active_participants, \
+    we_record_phone_numbers_in_the_db, show_account_contact_list, delete_contact, inviting_contact
+from system.account_actions.sending_messages_telegram import send_files_to_personal_chats
+from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
+from system.account_actions.telegram_chat_dialog import sending_files_via_chats, sending_messages_files_via_chats
+from system.account_actions.telegram_chat_dialog import sending_messages_via_chats_times
+from system.account_actions.telegram_invite_scheduler import launching_an_invite_once_an_hour, schedule_invite, \
+    launching_invite_every_day_certain_time
+from system.account_actions.unsubscribe import unsubscribe_all
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.setting.setting import create_main_window
@@ -118,17 +114,15 @@ def mainss(page: ft.Page):
                          ])]))
         elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
 
-            await account_verification_for_inviting()  # Вызываем метод для проверки аккаунтов
+            await account_verification_for_inviting(directory_path="user_settings/accounts/inviting",
+                                                    extension="session")  # Вызываем метод для проверки аккаунтов
             await inviting_without_limits()  # Вызываем метод для инвайтинга
 
         elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
 
-            await account_verification_for_inviting()  # Вызываем метод для проверки аккаунтов
+            await account_verification_for_inviting(directory_path="user_settings/accounts/inviting",
+                                                    extension="session")  # Вызываем метод для проверки аккаунтов
             await inviting_with_limits()  # Вызываем метод для инвайтинга с лимитами
-
-
-
-
 
 
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
@@ -154,7 +148,7 @@ def mainss(page: ft.Page):
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Подписка",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Подписка",
                                                on_click=lambda _: page.go("/subscription_all")),
                              ft.ElevatedButton(width=line_width, height=30, text="Отписываемся",
                                                on_click=lambda _: page.go("/unsubscribe_all")),
@@ -353,21 +347,21 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/change_surname")),
                          ])]))
 
-        # elif page.route == "/edit_description":  # ✔️ Изменение описания
-        #     aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-        #     aaa.change_bio_profile_gui(page, DatabaseHandler())
-        # elif page.route == "/name_change":  # ✔️ Изменение имени
-        #     aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-        #     aaa.change_name_profile_gui(page, DatabaseHandler())
-        # elif page.route == "/change_surname":  # ✔️ Изменение фамилии
-        #     aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-        #     aaa.change_last_name_profile_gui(page, DatabaseHandler())
-        # elif page.route == "/edit_photo":  # ✔️ Изменение фото
-        #     aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-        #     await aaa.change_photo_profile(DatabaseHandler())
-        # elif page.route == "/changing_username":  # ✔️ Изменение username
-        #     aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-        #     aaa.change_username_profile_gui(page, DatabaseHandler())
+        elif page.route == "/edit_description":  # ✔️ Изменение описания
+            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+            aaa.change_bio_profile_gui(page, DatabaseHandler())
+        elif page.route == "/name_change":  # ✔️ Изменение имени
+            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+            aaa.change_name_profile_gui(page, DatabaseHandler())
+        elif page.route == "/change_surname":  # ✔️ Изменение фамилии
+            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+            aaa.change_last_name_profile_gui(page, DatabaseHandler())
+        elif page.route == "/edit_photo":  # ✔️ Изменение фото
+            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+            await aaa.change_photo_profile(DatabaseHandler())
+        elif page.route == "/changing_username":  # ✔️ Изменение username
+            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
+            aaa.change_username_profile_gui(page, DatabaseHandler())
 
         elif page.route == "/settings":  # Настройки
             page.views.append(

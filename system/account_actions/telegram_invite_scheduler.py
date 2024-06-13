@@ -2,7 +2,6 @@ import time
 
 import schedule
 from loguru import logger
-# from system.account_actions.invitation.inviting_participants_telegram import invitation_from_all_accounts_program_body
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.account_verification import deleting_files_by_dictionary
