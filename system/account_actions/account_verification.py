@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from telethon.sync import TelegramClient  # Не удалять, так как используется кодом
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 

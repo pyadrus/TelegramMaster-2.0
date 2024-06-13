@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import random
 from loguru import logger
 import requests

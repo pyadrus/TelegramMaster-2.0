@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
@@ -5,6 +6,7 @@ from telethon.errors import AuthKeyUnregisteredError
 
 from system.account_actions.TGChecking import account_verification_for_inviting
 from system.account_actions.TGConnect import TGConnect
+from system.account_actions.inviting_participants_telegram import InvitingToAGroup
 from system.auxiliary_functions.auxiliary_functions import find_files
 
 

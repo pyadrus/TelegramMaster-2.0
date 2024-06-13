@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from loguru import logger
 from telethon.sync import TelegramClient
 

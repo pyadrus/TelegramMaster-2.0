@@ -10,16 +10,16 @@ from system.telegram_actions.telegram_actions import working_with_accounts
 
 
 async def account_verification_for_inviting(directory_path, extension) -> None:
-    """Проверка аккаунтов для инвайтинга"""
+    """РџСЂРѕРІРµСЂРєР° Р°РєРєР°СѓРЅС‚РѕРІ РґР»СЏ РёРЅРІР°Р№С‚РёРЅРіР°"""
 
-    logger.info(f"Запуск проверки аккаунтов для инвайтинга")
+    logger.info(f"Р—Р°РїСѓСЃРє РїСЂРѕРІРµСЂРєРё Р°РєРєР°СѓРЅС‚РѕРІ РґР»СЏ РёРЅРІР°Р№С‚РёРЅРіР°")
     account_verification = AccountVerification()
     tg_connect = TGConnect()
 
-    """Очистка базы данных"""
+    """РћС‡РёСЃС‚РєР° Р±Р°Р·С‹ РґР°РЅРЅС‹С…"""
     await account_verification.cleaning_the_database_from_accounts()
 
-    """Сканирование каталога с аккаунтами"""
+    """РЎРєР°РЅРёСЂРѕРІР°РЅРёРµ РєР°С‚Р°Р»РѕРіР° СЃ Р°РєРєР°СѓРЅС‚Р°РјРё"""
     records = await account_verification.scanning_the_folder_with_accounts_for_telegram_accounts(directory_path,
                                                                                                  extension)
     logger.info(f"{records}")
@@ -27,18 +27,18 @@ async def account_verification_for_inviting(directory_path, extension) -> None:
         logger.info(f"{entities[0]}")
         await account_verification.write_account_data_to_the_database(entities)
 
-    """Проверка аккаунтов"""
+    """РџСЂРѕРІРµСЂРєР° Р°РєРєР°СѓРЅС‚РѕРІ"""
     accounts = await account_verification.getting_accounts_from_the_database_for_inviting()
     for account in accounts:
         logger.info(f"{account[0]}")
         proxy = await tg_connect.reading_proxies_from_the_database()
         await account_verification.account_verification_for_inviting(directory_path, account[0], proxy)
 
-    logger.info(f"Окончание проверки аккаунтов для инвайтинга")
+    logger.info(f"РћРєРѕРЅС‡Р°РЅРёРµ РїСЂРѕРІРµСЂРєРё Р°РєРєР°СѓРЅС‚РѕРІ РґР»СЏ РёРЅРІР°Р№С‚РёРЅРіР°")
 
 
 class AccountVerification:
-    """Проверка аккаунтов Telegram"""
+    """РџСЂРѕРІРµСЂРєР° Р°РєРєР°СѓРЅС‚РѕРІ Telegram"""
 
     def __init__(self):
         self.db_handler = DatabaseHandler()
@@ -46,41 +46,41 @@ class AccountVerification:
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
 
     async def cleaning_the_database_from_accounts(self) -> None:
-        """Подключение к телеграм аккаунту для инвайтинга"""
-        logger.info("Очистка базы данных")
+        """РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє С‚РµР»РµРіСЂР°Рј Р°РєРєР°СѓРЅС‚Сѓ РґР»СЏ РёРЅРІР°Р№С‚РёРЅРіР°"""
+        logger.info("РћС‡РёСЃС‚РєР° Р±Р°Р·С‹ РґР°РЅРЅС‹С…")
         await self.db_handler.cleaning_db(name_database_table="config")
 
     async def scanning_the_folder_with_accounts_for_telegram_accounts(self, directory_path, extension) -> list:
-        """Сканирование в папку с аккаунтами телеграм аккаунтов"""
-        logger.info("Сканирование папки с аккаунтами на наличие аккаунтов Telegram")
+        """РЎРєР°РЅРёСЂРѕРІР°РЅРёРµ РІ РїР°РїРєСѓ СЃ Р°РєРєР°СѓРЅС‚Р°РјРё С‚РµР»РµРіСЂР°Рј Р°РєРєР°СѓРЅС‚РѕРІ"""
+        logger.info("РЎРєР°РЅРёСЂРѕРІР°РЅРёРµ РїР°РїРєРё СЃ Р°РєРєР°СѓРЅС‚Р°РјРё РЅР° РЅР°Р»РёС‡РёРµ Р°РєРєР°СѓРЅС‚РѕРІ Telegram")
         entities = find_files(directory_path, extension)
-        logger.info(f"Найденные аккаунты:  {entities}")
+        logger.info(f"РќР°Р№РґРµРЅРЅС‹Рµ Р°РєРєР°СѓРЅС‚С‹:  {entities}")
         return entities
 
     async def write_account_data_to_the_database(self, entities) -> None:
-        """Получение списка аккаунтов и записываем в базу данных"""
-        logger.info(f"Записываем данные аккаунта {entities} в базу данных")
+        """РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° Р°РєРєР°СѓРЅС‚РѕРІ Рё Р·Р°РїРёСЃС‹РІР°РµРј РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…"""
+        logger.info(f"Р—Р°РїРёСЃС‹РІР°РµРј РґР°РЅРЅС‹Рµ Р°РєРєР°СѓРЅС‚Р° {entities} РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…")
         await self.db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS config(phone)",
                                                writing_data_to_a_table="INSERT INTO config (phone) VALUES (?)",
                                                entities=entities)
 
     async def getting_accounts_from_the_database_for_inviting(self) -> list:
         accounts: list = await self.db_handler.open_and_read_data("config")
-        logger.info(f"Всего accounts: {len(accounts)}")
+        logger.info(f"Р’СЃРµРіРѕ accounts: {len(accounts)}")
         return accounts
 
     async def account_verification_for_inviting(self, directory_path, session, proxy) -> None:
-        """Проверка и сортировка аккаунтов"""
+        """РџСЂРѕРІРµСЂРєР° Рё СЃРѕСЂС‚РёСЂРѕРІРєР° Р°РєРєР°СѓРЅС‚РѕРІ"""
         api_id = self.api_id_api_hash[0]
         api_hash = self.api_id_api_hash[1]
-        logger.info(f"Всего api_id_data: api_id {api_id}, api_hash {api_hash}")
+        logger.info(f"Р’СЃРµРіРѕ api_id_data: api_id {api_id}, api_hash {api_hash}")
         client = TelegramClient(f"{directory_path}/{session}", api_id=api_id, api_hash=api_hash,
                                 system_version="4.16.30-vxCUSTOM", proxy=proxy)
         try:
-            await client.connect()  # Подсоединяемся к Telegram аккаунта
-            await client.disconnect()  # Отсоединяемся от Telegram аккаунта
-        except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
-            logger.info(f"На данный момент аккаунт {session.split('/')[-1]} запущен под другим ip")
-            await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+            await client.connect()  # РџРѕРґСЃРѕРµРґРёРЅСЏРµРјСЃСЏ Рє Telegram Р°РєРєР°СѓРЅС‚Р°
+            await client.disconnect()  # РћС‚СЃРѕРµРґРёРЅСЏРµРјСЃСЏ РѕС‚ Telegram Р°РєРєР°СѓРЅС‚Р°
+        except AuthKeyDuplicatedError:  # РќР° РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ Р°РєРєР°СѓРЅС‚ Р·Р°РїСѓС‰РµРЅ РїРѕРґ РґСЂСѓРіРёРј ip
+            logger.info(f"РќР° РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ Р°РєРєР°СѓРЅС‚ {session.split('/')[-1]} Р·Р°РїСѓС‰РµРЅ РїРѕРґ РґСЂСѓРіРёРј ip")
+            await client.disconnect()  # РћС‚РєР»СЋС‡Р°РµРјСЃСЏ РѕС‚ Р°РєРєР°СѓРЅС‚Р°, С‡С‚Рѕ Р±С‹ session С„Р°Р№Р» РЅРµ Р±С‹Р» Р·Р°РЅСЏС‚ РґСЂСѓРіРёРј РїСЂРѕС†РµСЃСЃРѕРј
             working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
