@@ -3,7 +3,7 @@ import flet as ft
 from loguru import logger
 
 from system.account_actions.TGChecking import account_verification_for_inviting
-from system.account_actions.account_registration import AccountRIO
+from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.account_verification import check_account_for_spam
 from system.account_actions.chat_dialog_mes import mains
 from system.account_actions.creating import creating_groups_and_chats
@@ -53,6 +53,9 @@ def mainss(page: ft.Page):
     # width - ширина,  # height - высота
     async def route_change(route):
         page.views.clear()
+
+        # Меню "Главное меню"
+
         page.views.append(
             ft.View("/", [ft.AppBar(title=ft.Text("Главное меню"),
                                     bgcolor=ft.colors.SURFACE_VARIANT),
@@ -98,6 +101,8 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/settings")),
                           ], ))
 
+        # Меню "Инвайтинг"
+
         if page.route == "/inviting":  # Инвайтинг
             page.views.append(
                 ft.View("/inviting",
@@ -138,7 +143,9 @@ def mainss(page: ft.Page):
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
             await check_account_for_spam()
 
-        elif page.route == "/subscribe_unsubscribe":  # подписка, отписка
+        # Меню "Подписка и отписка"
+
+        elif page.route == "/subscribe_unsubscribe":
             page.views.append(
                 ft.View("/subscribe_unsubscribe",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -153,7 +160,10 @@ def mainss(page: ft.Page):
             await subscribe_telegram()
         elif page.route == "/unsubscribe_all":  # Отписываемся
             await unsubscribe_all()
-        elif page.route == "/working_with_reactions":  # Работа с реакциями
+
+        # Меню "Работа с реакциями"
+
+        elif page.route == "/working_with_reactions":
             page.views.append(
                 ft.View("/working_with_reactions",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -193,7 +203,10 @@ def mainss(page: ft.Page):
             viewing_posts(DatabaseHandler())
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             await setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
-        elif page.route == "/parsing":  # Парсинг
+
+        # Меню "Парсинг"
+
+        elif page.route == "/parsing":
             page.views.append(
                 ft.View("/parsing",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -231,7 +244,9 @@ def mainss(page: ft.Page):
             db_handler = DatabaseHandler()
             await db_handler.cleaning_db(name_database_table="members")
 
-        elif page.route == "/working_with_contacts":  # Работа с контактами
+        # Меню "Работа с контактами"
+
+        elif page.route == "/working_with_contacts":
             page.views.append(
                 ft.View("/working_with_contacts",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -264,7 +279,9 @@ def mainss(page: ft.Page):
 
             await creating_groups()
 
-        elif page.route == "/sending_messages":  # Настройки
+        # Меню "Рассылка сообщений"
+
+        elif page.route == "/sending_messages":
             page.views.append(
                 ft.View("/sending_messages",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -313,7 +330,10 @@ def mainss(page: ft.Page):
             config_reader = ConfigReader()
             limits_message = config_reader.get_message_limits()
             await send_files_to_personal_chats(limits=limits_message)
-        elif page.route == "/bio_editing":  # Настройки
+
+        # Меню "Редактирование BIO"
+
+        elif page.route == "/bio_editing":
             page.views.append(
                 ft.View("/bio_editing",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -330,23 +350,26 @@ def mainss(page: ft.Page):
                              ft.ElevatedButton(width=line_width, height=30, text="Изменение фамилии",
                                                on_click=lambda _: page.go("/change_surname")),
                          ])]))
-        elif page.route == "/edit_description":  # ✔️ Изменение описания
-            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-            aaa.change_bio_profile_gui(page, DatabaseHandler())
-        elif page.route == "/name_change":  # ✔️ Изменение имени
-            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-            aaa.change_name_profile_gui(page, DatabaseHandler())
-        elif page.route == "/change_surname":  # ✔️ Изменение фамилии
-            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-            aaa.change_last_name_profile_gui(page, DatabaseHandler())
-        elif page.route == "/edit_photo":  # ✔️ Изменение фото
-            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-            await aaa.change_photo_profile(DatabaseHandler())
-        elif page.route == "/changing_username":  # ✔️ Изменение username
-            aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
-            aaa.change_username_profile_gui(page, DatabaseHandler())
 
-        elif page.route == "/settings":  # Настройки
+        elif page.route == "/edit_description":  # ✔️ Изменение описания
+            aaa = AccountBIO()  # Передаем db_handler как аргумент
+            aaa.change_bio_profile_gui(page)
+        elif page.route == "/name_change":  # ✔️ Изменение имени
+            aaa = AccountBIO()  # Передаем db_handler как аргумент
+            aaa.change_name_profile_gui(page)
+        elif page.route == "/change_surname":  # ✔️ Изменение фамилии
+            aaa = AccountBIO()  # Передаем db_handler как аргумент
+            aaa.change_last_name_profile_gui(page)
+        elif page.route == "/edit_photo":  # ✔️ Изменение фото
+            aaa = AccountBIO()  # Передаем db_handler как аргумент
+            await aaa.change_photo_profile()
+        elif page.route == "/changing_username":  # ✔️ Изменение username
+            aaa = AccountBIO()  # Передаем db_handler как аргумент
+            aaa.change_username_profile_gui(page)
+
+        # Меню "Настройки TelegramMaster"
+
+        elif page.route == "/settings":
             page.views.append(
                 ft.View("/settings",
                         [ft.AppBar(title=ft.Text("Главное меню"),

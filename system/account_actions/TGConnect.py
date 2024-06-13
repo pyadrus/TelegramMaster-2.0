@@ -14,7 +14,7 @@ class TGConnect:
         self.config_reader = ConfigReader()
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
 
-    async def reading_proxies_from_the_database(self) -> None:
+    async def reading_proxies_from_the_database(self):
         """Чтение списка прокси с базы данных"""
         logger.info("Получение прокси из базы данных")
         proxy = await reading_proxy_data_from_the_database(self.db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
