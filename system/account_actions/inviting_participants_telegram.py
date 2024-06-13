@@ -9,8 +9,8 @@ from telethon.tl.functions.channels import InviteToChannelRequest
 
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGLimits import SettingLimits
-from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
-from system.account_actions.unsubscribe.unsubscribe import unsubscribe_from_the_group
+from system.account_actions.subscription import subscribe_to_group_or_channel
+from system.account_actions.unsubscribe import unsubscribe_from_the_group
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, record_inviting_results
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler

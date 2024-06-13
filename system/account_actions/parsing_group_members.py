@@ -16,7 +16,7 @@ from telethon.tl.types import UserStatusOffline
 from telethon.tl.types import UserStatusOnline
 from telethon.tl.types import UserStatusRecently
 
-from system.account_actions.subscription.subscription import subscribe_to_group_or_channel
+from system.account_actions.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 from system.telegram_actions.telegram_actions import telegram_connect_and_output_name

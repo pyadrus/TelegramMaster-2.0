@@ -9,11 +9,10 @@ import getmac
 from loguru import logger
 from telethon.errors import *
 
-from system.account_actions.checking_spam.account_verification import working_with_accounts
-# from system.account_actions.creating.account_registration import telegram_connects
+
 from system.error.telegram_errors import telegram_phone_number_banned_error
 from system.proxy.checking_proxy import checking_the_proxy_for_work
-from system.telegram_actions.telegram_actions import writing_names_found_files_to_the_db
+from system.telegram_actions.telegram_actions import writing_names_found_files_to_the_db, working_with_accounts
 
 
 async def deleting_files_by_dictionary(db_handler) -> None:

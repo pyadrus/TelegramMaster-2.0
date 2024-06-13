@@ -2,7 +2,6 @@ import flet as ft
 from loguru import logger
 
 from system.account_actions.TGChecking import account_verification_for_inviting
-from system.account_actions.account_actions import subscribe_telegram
 from system.account_actions.account_registration import AccountRIO
 from system.account_actions.account_verification import check_account_for_spam
 from system.account_actions.chat_dialog_mes import mains
@@ -10,7 +9,9 @@ from system.account_actions.creating import creating_groups_and_chats
 from system.account_actions.inviting_participants_telegram import inviting_without_limits, inviting_with_limits
 from system.account_actions.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
 from system.account_actions.parsing_group_members import parsing_gui, parsing_of_active_participants, \
-    we_record_phone_numbers_in_the_db, show_account_contact_list, delete_contact, inviting_contact
+    we_record_phone_numbers_in_the_db, show_account_contact_list, delete_contact, inviting_contact, \
+    choosing_a_group_from_the_subscribed_ones_for_parsing
+from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
 from system.account_actions.sending_messages_telegram import send_files_to_personal_chats
 from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
 from system.account_actions.telegram_chat_dialog import sending_files_via_chats, sending_messages_files_via_chats
@@ -34,6 +35,7 @@ from system.setting.setting import recording_the_time_to_launch_an_invite_every_
 from system.setting.setting import writing_api_id_api_hash
 from system.setting.setting import writing_members
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from system.telegram_actions.account_actions import subscribe_telegram
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
@@ -132,13 +134,6 @@ def mainss(page: ft.Page):
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             launching_invite_every_day_certain_time()
 
-
-
-
-
-
-
-
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
             await check_account_for_spam()
 
@@ -157,12 +152,6 @@ def mainss(page: ft.Page):
             await subscribe_telegram()
         elif page.route == "/unsubscribe_all":  # Отписываемся
             await unsubscribe_all()
-
-
-
-
-
-
         elif page.route == "/working_with_reactions":  # Работа с реакциями
             page.views.append(
                 ft.View("/working_with_reactions",
@@ -176,14 +165,13 @@ def mainss(page: ft.Page):
                              ft.ElevatedButton(width=line_width, height=30, text="Автоматическое выставление реакций",
                                                on_click=lambda _: page.go("/automatic_setting_of_reactions")),
                          ])]))
-        # elif page.route == "/setting_reactions":  # Ставим реакции
-        #     reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
-        #     await reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
-        # elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
-        #     viewing_posts(DatabaseHandler())
-        # elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-        #     await setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
-
+        elif page.route == "/setting_reactions":  # Ставим реакции
+            reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
+            await reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
+        elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
+            viewing_posts(DatabaseHandler())
+        elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
+            await setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
         elif page.route == "/working_with_reactions":  # Работа с реакциями
             page.views.append(
                 ft.View("/working_with_reactions",
@@ -197,14 +185,13 @@ def mainss(page: ft.Page):
                              ft.ElevatedButton(width=line_width, height=30, text="Автоматическое выставление реакций",
                                                on_click=lambda _: page.go("/automatic_setting_of_reactions")),
                          ])]))
-        # elif page.route == "/setting_reactions":  # Ставим реакции
-        #     reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
-        #     await reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
-        # elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
-        #     viewing_posts(DatabaseHandler())
-        # elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-        #     await setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
-
+        elif page.route == "/setting_reactions":  # Ставим реакции
+            reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
+            await reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
+        elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
+            viewing_posts(DatabaseHandler())
+        elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
+            await setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
         elif page.route == "/parsing":  # Парсинг
             page.views.append(
                 ft.View("/parsing",
@@ -232,8 +219,7 @@ def mainss(page: ft.Page):
         elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
             parsing_gui(page)
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
-            # await choosing_a_group_from_the_subscribed_ones_for_parsing(page, lv, db_handler)
-            pass
+            await choosing_a_group_from_the_subscribed_ones_for_parsing(page, lv, db_handler)
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             chat_input = input("[+] Введите ссылку на чат с которого будем собирать активных: ")
             limit_active_user = input("[+] Введите количество сообщений которые будем parsing: ")
@@ -267,10 +253,8 @@ def mainss(page: ft.Page):
             delete_contact(DatabaseHandler())
         elif page.route == "/adding_contacts":  # Добавление контактов
             inviting_contact(DatabaseHandler())
-
-        # elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-        #     await connecting_new_account()
-
+        elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
+            await connecting_new_account()
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             async def creating_groups():
                 db_handler = DatabaseHandler()
@@ -328,7 +312,6 @@ def mainss(page: ft.Page):
             config_reader = ConfigReader()
             limits_message = config_reader.get_message_limits()
             await send_files_to_personal_chats(limits=limits_message)
-
         elif page.route == "/bio_editing":  # Настройки
             page.views.append(
                 ft.View("/bio_editing",
@@ -346,7 +329,6 @@ def mainss(page: ft.Page):
                              ft.ElevatedButton(width=line_width, height=30, text="Изменение фамилии",
                                                on_click=lambda _: page.go("/change_surname")),
                          ])]))
-
         elif page.route == "/edit_description":  # ✔️ Изменение описания
             aaa = AccountRIO(DatabaseHandler())  # Передаем db_handler как аргумент
             aaa.change_bio_profile_gui(page, DatabaseHandler())
