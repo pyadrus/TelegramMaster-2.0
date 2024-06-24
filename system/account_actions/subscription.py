@@ -6,6 +6,7 @@ import time
 from loguru import logger
 from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
+from telethon.tl.functions.contacts import ResolveUsernameRequest
 
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import ConfigReader
@@ -26,6 +27,7 @@ async def subscribe_to_group_or_channel(client, groups_wr) -> None:
     db_handler = DatabaseHandler()
     groups_wra = [groups_wr]
     for groups_wrs in groups_wra:
+        logger.info(groups_wrs)
         try:
             await client(JoinChannelRequest(groups_wrs))
             logger.info(f"Аккаунт подписался на группу / канал: {groups_wrs}")
@@ -59,3 +61,8 @@ async def subscribe_to_group_or_channel(client, groups_wr) -> None:
         except InviteRequestSentError:
             logger.error(f"Попытка подписки на группу / канал {groups_wrs}. Действия будут доступны после одобрения "
                          f"администратором на вступление в группу")
+        except ResolveUsernameRequest:
+            logger.error(f'Попытка подписки на группу / канал  {groups_wrs}. Действия будут доступны после одобрения')
+            # break
+        except Exception as e:
+            logger.error(f"Попытка подписки на группу / канал {groups_wrs}. Ошибка: {e}")

@@ -4,8 +4,8 @@ import time
 import schedule
 from loguru import logger
 from system.auxiliary_functions.global_variables import ConfigReader
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.account_verification import deleting_files_by_dictionary
+# from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+# from system.telegram_actions.account_verification import deleting_files_by_dictionary
 
 configs_reader = ConfigReader()
 hour, minutes = configs_reader.get_hour_minutes_every_day()
@@ -13,7 +13,8 @@ hour, minutes = configs_reader.get_hour_minutes_every_day()
 
 def schedule_member_invitation() -> None:
     """Запуск inviting"""
-    deleting_files_by_dictionary(DatabaseHandler())
+    pass
+    # deleting_files_by_dictionary(DatabaseHandler())
     # invitation_from_all_accounts_program_body(name_database_table="members", db_handler=DatabaseHandler())
 
 

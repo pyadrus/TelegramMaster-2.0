@@ -2,16 +2,16 @@
 import flet as ft
 from loguru import logger
 
-from system.account_actions.TGChecking import account_verification_for_inviting
+from system.account_actions.TGChecking import account_verification_for_telegram
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.account_verification import check_account_for_spam
 from system.account_actions.chat_dialog_mes import mains
 from system.account_actions.creating import creating_groups_and_chats
 from system.account_actions.inviting_participants_telegram import inviting_without_limits, inviting_with_limits
 from system.account_actions.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
-from system.account_actions.parsing_group_members import parsing_gui, parsing_of_active_participants, \
+from system.account_actions.parsing_group_members import parsing_of_active_participants, \
     we_record_phone_numbers_in_the_db, show_account_contact_list, delete_contact, inviting_contact, \
-    choosing_a_group_from_the_subscribed_ones_for_parsing
+    choosing_a_group_from_the_subscribed_ones_for_parsing, process_telegram_groups
 from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
 from system.account_actions.sending_messages_telegram import send_files_to_personal_chats
 from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
@@ -122,13 +122,13 @@ def mainss(page: ft.Page):
                          ])]))
         elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
 
-            await account_verification_for_inviting(directory_path="user_settings/accounts/inviting",
+            await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
             await inviting_without_limits()  # Вызываем метод для инвайтинга
 
         elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
 
-            await account_verification_for_inviting(directory_path="user_settings/accounts/inviting",
+            await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
             await inviting_with_limits()  # Вызываем метод для инвайтинга с лимитами
 
@@ -231,15 +231,19 @@ def mainss(page: ft.Page):
                          ])]))
 
         elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
-            parsing_gui(page)
+
+            await account_verification_for_telegram(directory_path="user_settings/accounts/parsing",
+                                                    extension="session")  # Вызываем метод для проверки аккаунтов
+            await process_telegram_groups()
+
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
-            await choosing_a_group_from_the_subscribed_ones_for_parsing(page, lv, db_handler)
+            await choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler)
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             chat_input = input("[+] Введите ссылку на чат с которого будем собирать активных: ")
             limit_active_user = input("[+] Введите количество сообщений которые будем parsing: ")
             await parsing_of_active_participants(chat_input, int(limit_active_user))
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
-            parsing_groups_which_account_subscribed(DatabaseHandler())
+            await parsing_groups_which_account_subscribed(DatabaseHandler())
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             db_handler = DatabaseHandler()
             await db_handler.cleaning_db(name_database_table="members")
@@ -266,9 +270,9 @@ def mainss(page: ft.Page):
         elif page.route == "/show_list_contacts":  # Показать список контактов
             show_account_contact_list(DatabaseHandler())
         elif page.route == "/deleting_contacts":  # Удаление контактов
-            delete_contact(DatabaseHandler())
+            await delete_contact(DatabaseHandler())
         elif page.route == "/adding_contacts":  # Добавление контактов
-            inviting_contact(DatabaseHandler())
+            await inviting_contact(DatabaseHandler())
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
             await connecting_new_account()
         elif page.route == "/creating_groups":  # Создание групп (чатов)

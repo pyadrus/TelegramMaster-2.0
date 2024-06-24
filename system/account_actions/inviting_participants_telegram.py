@@ -262,7 +262,7 @@ class InvitingToAGroup:
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.time_inviting = self.config_reader.get_time_inviting()
 
-    async def reading_the_list_of_accounts_from_the_database(self) -> None:
+    async def reading_the_list_of_accounts_from_the_database(self) -> list:
         """Inviting по заранее parsing списку и работа с несколькими аккаунтами"""
         accounts: list = await self.db_handler.open_and_read_data("config")
         logger.info(f"Всего accounts: {len(accounts)}")

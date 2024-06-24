@@ -3,6 +3,8 @@ import random
 from loguru import logger
 import requests
 
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+
 
 async def reading_proxy_data_from_the_database(db_handler):
     """Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
@@ -33,10 +35,11 @@ def unpacking_a_dictionary_with_proxy_by_variables(proxy):
     return proxy_type, addr, port, username, password, rdns
 
 
-async def checking_the_proxy_for_work(db_handler) -> None:
+async def checking_the_proxy_for_work() -> None:
     """Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
     уровня, который используется для демонстрации работы сетевых протоколов. На этом сайте нет никакого контента, но он
     используется для различных тестов."""
+    db_handler = DatabaseHandler()
     records: list = await db_handler.open_and_read_data("proxy")
     for proxy_dic in records:
         logger.info(proxy_dic)
