@@ -79,7 +79,7 @@ class AccountVerification:
             logger.exception(e)
             time.sleep(2)
         except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
-            logger.info(f"На данный момент аккаунт {session.split('/')[-1]} запущен под другим ip")
             await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+            logger.info(f"На данный момент аккаунт {session.split('/')[-1]} запущен под другим ip")
             working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")

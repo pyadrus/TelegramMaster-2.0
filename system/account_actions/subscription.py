@@ -4,7 +4,8 @@ import random
 import time
 
 from loguru import logger
-from telethon.errors import *
+from telethon.errors import ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError, \
+    FloodWaitError, InviteRequestSentError
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.contacts import ResolveUsernameRequest
 
@@ -63,6 +64,3 @@ async def subscribe_to_group_or_channel(client, groups_wr) -> None:
                          f"администратором на вступление в группу")
         except ResolveUsernameRequest:
             logger.error(f'Попытка подписки на группу / канал  {groups_wrs}. Действия будут доступны после одобрения')
-            # break
-        except Exception as e:
-            logger.error(f"Попытка подписки на группу / канал {groups_wrs}. Ошибка: {e}")

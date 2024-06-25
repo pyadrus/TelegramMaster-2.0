@@ -3,14 +3,14 @@ import sys
 import time
 
 from loguru import logger
-from telethon.errors import *
+from telethon.errors import FloodWaitError, PeerFloodError, UserNotMutualContactError, UserIdInvalidError, \
+    UsernameNotOccupiedError, UsernameInvalidError, ChatWriteForbiddenError
 
 from system.account_actions.telegram_chat_dialog import select_and_read_random_file
 from system.auxiliary_functions.auxiliary_functions import find_files, all_find_files
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 configs_reader = ConfigReader()
 time_inviting_1, time_inviting_2 = configs_reader.get_time_inviting()

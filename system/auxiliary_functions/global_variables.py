@@ -8,9 +8,6 @@ class ConfigReader:
         self.config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
         self.config.read('user_settings/config.ini')
 
-    # def get_link_group(self):
-    #     return self.config.get('link_to_the_group', 'link_to_the_group', fallback=None)
-
     def get_time_subscription(self):
         return (self.config.getint('time_subscription', 'time_subscription_1', fallback=None),
                 self.config.getint('time_subscription', 'time_subscription_2', fallback=None))
@@ -40,11 +37,6 @@ class ConfigReader:
     def get_api_id_data_api_hash_data(self):
         return (self.config.get('telegram_settings', 'id', fallback=None),
                 self.config.get('telegram_settings', 'hash', fallback=None))
-
-    # def get_device_model(self):
-    #     return (self.config.get('device_model', 'device_model', fallback=None),
-    #             self.config.get('system_version', 'system_version', fallback=None),
-    #             self.config.get('app_version', 'app_version', fallback=None))
 
     def get_hour_minutes_every_day(self):
         return (self.config.get('hour_minutes_every_day', 'hour', fallback=None),

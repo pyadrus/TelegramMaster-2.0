@@ -3,13 +3,11 @@ import os
 import os.path
 
 from loguru import logger
-from telethon import TelegramClient
-from telethon.errors import *
+# from telethon.errors import *
 from telethon.tl.functions.users import GetFullUserRequest
 
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
-from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 
 configs_reader = ConfigReader()
 api_id_data, api_hash_data = configs_reader.get_api_id_data_api_hash_data()
@@ -22,48 +20,6 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
     except FileNotFoundError:  # Если в папке нет нужной папки, то создаем ее
         os.makedirs(new_account_folder)
         os.replace(account_folder, new_account_folder)
-
-
-# async def telegram_connects(db_handler, session):
-#     """Подключение к Telegram с помощью proxy
-#     :param db_handler: База данных
-#     :param session: Сессия Telegram
-#     """
-#     proxy = await reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
-#     client = TelegramClient(session, api_id=api_id_data, api_hash=api_hash_data,
-#                             system_version="4.16.30-vxCUSTOM", proxy=proxy)
-#     logger.info(f"Подключение аккаунта: {session.split('/')[-1]}, {api_id_data}, {api_hash_data}")
-#     try:
-#         await client.connect()  # Подсоединяемся к Telegram
-#         return client  # Возвращаем клиент
-#
-#     except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
-#         logger.info(f"На данный момент аккаунт {session.split('/')[-1]} запущен под другим ip")
-#         Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-        # await client.disconnect()
-        # working_with_accounts(account_folder=f"user_settings/accounts/{session.split('/')[-1]}.session",
-        #                       new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
-
-
-async def telegram_connect_and_output_name(row, db_handler):
-    """Подключаемся телеграмм аккаунту и выводим имя"""
-    logger.info(row[0])
-    session = f"user_settings/accounts/{row[0]}"
-    proxy = await reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
-    client = TelegramClient(session, api_id=api_id_data, api_hash=api_hash_data,
-                            system_version="4.16.30-vxCUSTOM", proxy=proxy)
-    logger.info(f"Подключение аккаунта: {session.split('/')[-1]}, {api_id_data}, {api_hash_data}")
-    try:
-        await client.connect()  # Подсоединяемся к Telegram
-        # return client  # Возвращаем клиент
-
-    except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
-        logger.info(f"На данный момент аккаунт {session.split('/')[-1]} запущен под другим ip")
-        # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-        await client.disconnect()
-        working_with_accounts(account_folder=f"user_settings/accounts/{session.split('/')[-1]}.session",
-                              new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
-    # return client
 
 
 """Получаем имя аккаунта (переписать на асинхронку)"""

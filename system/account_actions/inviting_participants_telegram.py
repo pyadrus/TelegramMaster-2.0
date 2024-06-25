@@ -127,8 +127,6 @@ async def inviting_with_limits() -> None:
                 except KeyboardInterrupt:  # Закрытие окна программы
                     client.disconnect()  # Разрываем соединение telegram
                     logger.info("[!] Скрипт остановлен!")
-                except Exception as error:
-                    logger.error(f'{error}')  # Прерываем работу и меняем аккаунт
                 else:
                     logger.info(f"[+] Участник {username} добавлен, если не состоит в чате {link[0]}")
                     await record_inviting_results(time_inviting_1, time_inviting_2, username)
@@ -245,8 +243,6 @@ async def inviting_without_limits() -> None:
                 except KeyboardInterrupt:  # Закрытие окна программы
                     client.disconnect()  # Разрываем соединение telegram
                     logger.info("[!] Скрипт остановлен!")
-                except Exception as error:
-                    logger.error(f'{error}')  # Прерываем работу и меняем аккаунт
                 else:
                     logger.info(f"[+] Участник {username} добавлен, если не состоит в чате {link[0]}")
                     await record_inviting_results(time_inviting_1, time_inviting_2, username)

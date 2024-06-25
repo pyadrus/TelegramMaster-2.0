@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from loguru import logger
+from telethon.errors import ChannelPrivateError
 
-from telethon.errors import *
 from telethon.tl.functions.channels import LeaveChannelRequest
 
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
 async def unsubscribe_all() -> None:

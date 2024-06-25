@@ -6,7 +6,6 @@ import time
 from loguru import logger  # Импортируем библиотеку loguru для логирования
 from telethon import TelegramClient
 from telethon import events, types
-from telethon.errors import *
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
 
@@ -15,7 +14,6 @@ from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.auxiliary_functions import read_json_file
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
 def choosing_random_reaction():
@@ -51,13 +49,8 @@ async def reactions_for_groups_and_messages_test(number, chat, db_handler) -> No
             time.sleep(1)
         except KeyError:
             sys.exit(1)
-        except Exception as e:
-            logger.exception(e)
-            logger.info("[!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
         finally:
             client.disconnect()
-
-    # app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
 
 def writing_names_found_files_to_the_db_config_reactions(db_handler) -> None:
@@ -140,13 +133,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 time.sleep(1)
             except KeyError:
                 sys.exit(1)
-            except Exception as e:
-                logger.exception(e)
-                logger.info("[!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log")
             finally:
                 client.disconnect()
-
-        # app_notifications(notification_text=f"Работа с группой {chat} окончена!")
 
 
 def viewing_posts(db_handler) -> None:
@@ -174,12 +162,8 @@ def viewing_posts(db_handler) -> None:
                 client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))
         except KeyError:
             sys.exit(1)
-        except Exception as e:
-            logger.info(f"[!] Произошла ошибка, для подробного изучения проблемы просмотрите файл log.log {e}")
         finally:
             client.disconnect()
-
-    # app_notifications(notification_text=f"Работа с каналом {chat} окончена!")
 
 
 if __name__ == '__main__':

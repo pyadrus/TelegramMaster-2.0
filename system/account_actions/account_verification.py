@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from telethon.errors import YouBlockedUserError
 from telethon.sync import TelegramClient  # Не удалять, так как используется кодом
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
-from system.telegram_actions.telegram_actions import telegram_connect_and_output_name, working_with_accounts
+from system.telegram_actions.telegram_actions import working_with_accounts
 from thefuzz import fuzz
 
 from loguru import logger
-from telethon.errors import *
 
 
 async def check_account_for_spam() -> None:
@@ -16,7 +16,7 @@ async def check_account_for_spam() -> None:
     records: list = await db_handler.open_and_read_data("config")
     for row in records:
         # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        client, phone = telegram_connect_and_output_name(row, db_handler)
+        # client, phone = telegram_connect_and_output_name(row, db_handler)
         try:
             client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
             message_bot = client.get_messages('SpamBot')

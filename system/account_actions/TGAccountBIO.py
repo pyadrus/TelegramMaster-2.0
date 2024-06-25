@@ -179,7 +179,5 @@ class AccountBIO:
                     logger.info(f'{result}\nФото успешно обновлено!')
                 except AuthKeyUnregisteredError:
                     logger.error("Ошибка соединения с профилем")
-                except Exception as e:
-                    logger.error(f"Ошибка обновления фото профиля: {e}")
                 finally:
                     await client.disconnect()

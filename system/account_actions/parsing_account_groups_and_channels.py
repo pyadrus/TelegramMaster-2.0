@@ -4,7 +4,6 @@ import time
 from telethon import functions
 from loguru import logger
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
-from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 
 async def parsing_groups_which_account_subscribed(db_handler) -> None:

@@ -30,14 +30,11 @@ class DatabaseHandler:
 
     async def open_and_read_data(self, table_name) -> list:
         """Открываем базу и считываем данные из указанной таблицы"""
-        try:
-            await self.connect()
-            self.cursor.execute(f"SELECT * FROM {table_name}")
-            records = self.cursor.fetchall()
-            self.close()
-            return records
-        except Exception as e:
-            logger.error(f"{e}")
+        await self.connect()
+        self.cursor.execute(f"SELECT * FROM {table_name}")
+        records = self.cursor.fetchall()
+        self.close()
+        return records
 
     async def delete_duplicates(self, table_name, column_name) -> None:
         """
@@ -99,7 +96,8 @@ class DatabaseHandler:
         """Удаляет строку из таблицы"""
         await self.connect()
         self.cursor.execute(f"SELECT * from {table}")  # Считываем таблицу
-        self.cursor.execute(f"DELETE from {table} where {column} = ?", (value,))  # Удаляем строку
+        # self.cursor.execute(f"DELETE from {table} where {column} = ?", (value,))  # Удаляем строку
+        self.cursor.execute(f"DELETE from {table} where {column} = ?", value)
         self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 

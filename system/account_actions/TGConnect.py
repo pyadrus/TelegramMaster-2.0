@@ -31,12 +31,11 @@ class TGConnect:
         api_id = self.api_id_api_hash[0]
         api_hash = self.api_id_api_hash[1]
         logger.info(f"Всего api_id_data: api_id {api_id}, api_hash {api_hash}")
-        try:
-            client = TelegramClient(f"{directory_path}/{session}", api_id=api_id, api_hash=api_hash,
-                                    system_version="4.16.30-vxCUSTOM", proxy=proxy)
-            return client  # Подсоединяемся к Telegram аккаунта
-        except Exception as error:
-            logger.error(f"Ошибка аккаунта {error}")
+
+        client = TelegramClient(f"{directory_path}/{session}", api_id=api_id, api_hash=api_hash,
+                                system_version="4.16.30-vxCUSTOM", proxy=proxy)
+        return client  # Подсоединяемся к Telegram аккаунта
+
 
 
 

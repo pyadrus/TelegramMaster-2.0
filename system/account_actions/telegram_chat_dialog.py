@@ -4,14 +4,14 @@ import random
 import time
 
 from loguru import logger
-from telethon.errors import *
+from telethon.errors import ChannelPrivateError, PeerFloodError, FloodWaitError, UserBannedInChannelError, \
+    ChatWriteForbiddenError
 
 from system.account_actions.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, read_json_file, all_find_files, \
     find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.telegram_actions import telegram_connect_and_output_name
 
 configs_reader = ConfigReader()
 time_sending_messages_1, time_sending_messages_2 = configs_reader.get_time_sending_messages()
