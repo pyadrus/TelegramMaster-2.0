@@ -9,8 +9,7 @@ from system.account_actions.chat_dialog_mes import mains
 from system.account_actions.creating import creating_groups_and_chats
 from system.account_actions.inviting_participants_telegram import inviting_without_limits, inviting_with_limits
 from system.account_actions.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
-from system.account_actions.parsing_group_members import parsing_of_active_participants, \
-    we_record_phone_numbers_in_the_db, show_account_contact_list, delete_contact, inviting_contact, ParsingGroupMembers
+from system.account_actions.parsing_group_members import ParsingGroupMembers
 from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
 from system.account_actions.sending_messages_telegram import send_files_to_personal_chats
 from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
@@ -244,9 +243,13 @@ def mainss(page: ft.Page):
             await parsing_group_members.choosing_a_group_from_the_subscribed_ones_for_parsing()
 
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
-            chat_input = input("[+] Введите ссылку на чат с которого будем собирать активных: ")
-            limit_active_user = input("[+] Введите количество сообщений которые будем parsing: ")
-            await parsing_of_active_participants(chat_input, int(limit_active_user))
+
+            chat_input = input(f"{logger.info('[+] Введите ссылку на чат с которого будем собирать активных: ')}")
+            limit_active_user = input(f"{logger.info('[+] Введите количество сообщений которые будем parsing: ')}")
+
+            parsing_group_members = ParsingGroupMembers()
+            await parsing_group_members.parsing_of_active_participants(chat_input, int(limit_active_user))
+
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
             await parsing_groups_which_account_subscribed(DatabaseHandler())
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
@@ -271,15 +274,20 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/adding_contacts")),
                          ])]))
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
-            we_record_phone_numbers_in_the_db(DatabaseHandler())
+            parsing_group_members = ParsingGroupMembers()
+            await parsing_group_members.we_record_phone_numbers_in_the_db()
         elif page.route == "/show_list_contacts":  # Показать список контактов
-            show_account_contact_list(DatabaseHandler())
+            parsing_group_members = ParsingGroupMembers()
+            await parsing_group_members.show_account_contact_list()
         elif page.route == "/deleting_contacts":  # Удаление контактов
-            await delete_contact(DatabaseHandler())
+            parsing_group_members = ParsingGroupMembers()
+            await parsing_group_members.delete_contact()
         elif page.route == "/adding_contacts":  # Добавление контактов
-            await inviting_contact(DatabaseHandler())
+            parsing_group_members = ParsingGroupMembers()
+            await parsing_group_members.inviting_contact()
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-            await connecting_new_account()
+            parsing_group_members = ParsingGroupMembers()
+            await parsing_group_members.connecting_new_account()
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             async def creating_groups():
                 db_handler = DatabaseHandler()
