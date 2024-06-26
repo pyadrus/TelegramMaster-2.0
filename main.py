@@ -10,8 +10,7 @@ from system.account_actions.creating import creating_groups_and_chats
 from system.account_actions.inviting_participants_telegram import inviting_without_limits, inviting_with_limits
 from system.account_actions.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
 from system.account_actions.parsing_group_members import parsing_of_active_participants, \
-    we_record_phone_numbers_in_the_db, show_account_contact_list, delete_contact, inviting_contact, \
-    choosing_a_group_from_the_subscribed_ones_for_parsing, process_telegram_groups
+    we_record_phone_numbers_in_the_db, show_account_contact_list, delete_contact, inviting_contact, ParsingGroupMembers
 from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
 from system.account_actions.sending_messages_telegram import send_files_to_personal_chats
 from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
@@ -234,10 +233,16 @@ def mainss(page: ft.Page):
 
             await account_verification_for_telegram(directory_path="user_settings/accounts/parsing",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
-            await process_telegram_groups()
+            parsing_group_members = ParsingGroupMembers()
+            await parsing_group_members.process_telegram_groups()
 
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
-            await choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler)
+
+            await account_verification_for_telegram(directory_path="user_settings/accounts/parsing",
+                                                    extension="session")  # Вызываем метод для проверки аккаунтов
+            parsing_group_members = ParsingGroupMembers()
+            await parsing_group_members.choosing_a_group_from_the_subscribed_ones_for_parsing()
+
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             chat_input = input("[+] Введите ссылку на чат с которого будем собирать активных: ")
             limit_active_user = input("[+] Введите количество сообщений которые будем parsing: ")

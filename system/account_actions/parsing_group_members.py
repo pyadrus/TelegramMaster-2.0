@@ -23,42 +23,66 @@ from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
-async def process_telegram_groups() -> None:
+class ParsingGroupMembers:
     """Парсинг групп"""
-    db_handler = DatabaseHandler()
 
-    entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-    for file in entities:
-        logger.info(f"{file[0]}")
-        tg_connect = TGConnect()
-        proxy = await tg_connect.reading_proxies_from_the_database()
-        client = await tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts/parsing")
-        await client.connect()
-        # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        # Открываем базу с группами для дальнейшего parsing
-        records: list = await db_handler.open_and_read_data("writing_group_links")
-        for groups in records:  # Поочередно выводим записанные группы
-            logger.info(f'[+] Парсинг группы: {groups[0]}')
-            await subscribe_to_group_or_channel(client, groups[0])
-            await group_parsing(client, groups[0], db_handler)  # Parsing групп
-            await db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups)
-        await db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
-        await db_handler.delete_duplicates(table_name="members",
-                                           column_name="id")  # Чистка дублирующих username по столбцу id
-        await client.disconnect()
+    def __init__(self):
+        self.db_handler = DatabaseHandler()
+        self.tg_connect = TGConnect()
 
+    async def process_telegram_groups(self) -> None:
+        """Парсинг групп"""
+        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
+        for file in entities:
+            logger.info(f"{file[0]}")
 
-async def group_parsing(client, groups_wr, db_handler) -> None:
-    """
-    Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
-    @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
-    """
-    all_participants: list = await parsing_of_users_from_the_selected_group(client, groups_wr)
-    logger.info(f"[+] Спарсили данные с группы {groups_wr}")
+            proxy = await self.tg_connect.reading_proxies_from_the_database()
+            client = await self.tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts/parsing")
+            await client.connect()
+            # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
+            # Открываем базу с группами для дальнейшего parsing
+            records: list = await self.db_handler.open_and_read_data("writing_group_links")
+            for groups in records:  # Поочередно выводим записанные группы
+                logger.info(f'[+] Парсинг группы: {groups[0]}')
+                await subscribe_to_group_or_channel(client, groups[0])
+                await self.group_parsing(client, groups[0])  # Parsing групп
+                await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
+                                                    value=groups)
+            await self.db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
+            await self.db_handler.delete_duplicates(table_name="members",
+                                                    column_name="id")  # Чистка дублирующих username по столбцу id
+            await client.disconnect()
 
-    # Записываем parsing данные в файл user_settings/software_database.db
-    entities: list = all_participants_user(all_participants)
-    await db_handler.write_parsed_chat_participants_to_db(entities)
+    async def choosing_a_group_from_the_subscribed_ones_for_parsing(self) -> None:
+        """Выбираем группу из подписанных для parsing"""
+        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
+        for file in entities:
+            logger.info(f"{file[0]}")
+
+            proxy = await self.tg_connect.reading_proxies_from_the_database()
+            client = await self.tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts/parsing")
+            await client.connect()
+
+            tg_tar = await output_a_list_of_groups_new(client)
+            all_participants_list = await parsing_of_users_from_the_selected_group(client, tg_tar)
+            # Записываем parsing данные в файл user_settings/software_database.db
+            entities: list = all_participants_user(all_participants_list)
+            await self.db_handler.write_parsed_chat_participants_to_db(entities)
+            await self.db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
+            await self.db_handler.delete_duplicates(table_name="members",
+                                                    column_name="id")  # Чистка дублирующих username по столбцу id
+            await client.disconnect()  # Разрываем соединение telegram
+
+    async def group_parsing(self, client, groups_wr) -> None:
+        """
+        Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
+        @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
+        """
+        all_participants: list = await parsing_of_users_from_the_selected_group(client, groups_wr)
+        logger.info(f"[+] Спарсили данные с группы {groups_wr}")
+        # Записываем parsing данные в файл user_settings/software_database.db
+        entities: list = all_participants_user(all_participants)
+        await self.db_handler.write_parsed_chat_participants_to_db(entities)
 
 
 async def parsing_of_users_from_the_selected_group(client, target_group) -> list:
@@ -158,41 +182,34 @@ def getting_active_user_data(user):
     return entity
 
 
-async def choosing_a_group_from_the_subscribed_ones_for_parsing(db_handler) -> None:
-    """Выбираем группу из подписанных для parsing"""
-    records: list = await db_handler.open_db_func_lim(table_name="config", account_limit=1)
-    for row in records:
-        # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-        # client, phone = telegram_connect_and_output_name(row, db_handler)
-        tg_tar = output_a_list_of_groups_new(client)
-
-        all_participants_list = await parsing_of_users_from_the_selected_group(client, tg_tar)
-        # Записываем parsing данные в файл user_settings/software_database.db
-        entities: list = all_participants_user(all_participants_list)
-        await db_handler.write_parsed_chat_participants_to_db(entities)
-        await db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
-        await db_handler.delete_duplicates(table_name="members",
-                                           column_name="id")  # Чистка дублирующих username по столбцу id
-        await client.disconnect()  # Разрываем соединение telegram
-
-
-def output_a_list_of_groups_new(client):
-    """Выводим список групп, выбираем группу, которую будем parsing user с группы telegram"""
-    chats = []
+async def output_a_list_of_groups_new(client):
+    """Выводим список групп, выбираем группу, которую будем parsing user с группы telegram
+    :param client: объект клиента
+    """
+    chats: list = []
     last_date = None
-    groups = []
-    result = client(GetDialogsRequest(offset_date=last_date, offset_id=0,
-                                      offset_peer=InputPeerEmpty(), limit=200, hash=0))
+    groups: list = []
+    result = await client(GetDialogsRequest(offset_date=last_date, offset_id=0,
+                                            offset_peer=InputPeerEmpty(), limit=200, hash=0))
     chats.extend(result.chats)
     for chat in chats:
-        if chat.megagroup:
-            groups.append(chat)
+
+        try:
+            if chat.megagroup:
+                groups.append(chat)
+        except AttributeError:
+            continue  # Игнорируем объекты, у которых нет атрибута 'megagroup'
+
     i = 0
     for g in groups:
         logger.info(f"[{str(i)}] - {g.title}")
         i += 1
     logger.info("")
-    g_index = input("[+] Введите номер : ")
+
+    logger.info("[+] Введите номер группы: ")
+
+    g_index = input("")
+
     target_group = groups[int(g_index)]
     return target_group
 

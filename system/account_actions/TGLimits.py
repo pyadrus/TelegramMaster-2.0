@@ -14,7 +14,7 @@ class SettingLimits:
         self.account_limits = self.config_reader.get_limits()
         self.account_limits_none = None
 
-    async def get_usernames_with_limits(self, table_name):
+    async def get_usernames_with_limits(self, table_name) -> list:
         """Получение списка пользователей из базы данных с учетом лимитов"""
         logger.info(f"Лимит на аккаунт: {self.account_limits}")
         number_usernames: list = await self.db_handler.open_db_func_lim(table_name=table_name,
@@ -22,7 +22,7 @@ class SettingLimits:
         logger.info(f"Всего username: {len(number_usernames)}")
         return number_usernames
 
-    async def get_usernames_without_limits(self, table_name):
+    async def get_usernames_without_limits(self, table_name) -> list:
         """Получение списка пользователей из базы данных без учета лимитов"""
         logger.info(f"Лимит на аккаунт (без ограничений)")
         number_usernames: list = await self.db_handler.open_db_func_lim(table_name=table_name,
