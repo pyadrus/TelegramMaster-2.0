@@ -8,8 +8,7 @@ from system.account_actions.account_verification import check_account_for_spam
 from system.account_actions.chat_dialog_mes import mains
 from system.account_actions.creating import creating_groups_and_chats
 from system.account_actions.inviting_participants_telegram import inviting_without_limits, inviting_with_limits
-from system.account_actions.parsing_account_groups_and_channels import parsing_groups_which_account_subscribed
-from system.account_actions.parsing_group_members import ParsingGroupMembers
+from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
 from system.account_actions.sending_messages_telegram import send_files_to_personal_chats
 from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
@@ -39,7 +38,7 @@ from system.telegram_actions.account_actions import subscribe_telegram
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "0.14.8", "04.06.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "0.15.0", "27.06.2024"  # Версия программы, дата изменения
 
 
 def mainss(page: ft.Page):
@@ -233,14 +232,14 @@ def mainss(page: ft.Page):
             await account_verification_for_telegram(directory_path="user_settings/accounts/parsing",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
             parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.process_telegram_groups()
+            await parsing_group_members.parse_groups()
 
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
 
             await account_verification_for_telegram(directory_path="user_settings/accounts/parsing",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
             parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.choosing_a_group_from_the_subscribed_ones_for_parsing()
+            await parsing_group_members.choose_group_for_parsing()
 
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
 
@@ -248,10 +247,11 @@ def mainss(page: ft.Page):
             limit_active_user = input(f"{logger.info('[+] Введите количество сообщений которые будем parsing: ')}")
 
             parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.parsing_of_active_participants(chat_input, int(limit_active_user))
+            await parsing_group_members.parse_active_users(chat_input, int(limit_active_user))
 
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
-            await parsing_groups_which_account_subscribed(DatabaseHandler())
+            parsing_group_members = ParsingGroupMembers()
+            await parsing_group_members.parse_subscribed_groups()
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             db_handler = DatabaseHandler()
             await db_handler.cleaning_db(name_database_table="members")
