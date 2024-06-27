@@ -9,7 +9,6 @@ from telethon import events, types
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
 
-from system.account_actions.subscription import subscribe_to_group_or_channel
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.auxiliary_functions import read_json_file
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database

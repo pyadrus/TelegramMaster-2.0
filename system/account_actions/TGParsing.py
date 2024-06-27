@@ -17,7 +17,7 @@ from telethon.tl.types import UserStatusOnline
 from telethon.tl.types import UserStatusRecently
 
 from system.account_actions.TGConnect import TGConnect
-from system.account_actions.subscription import subscribe_to_group_or_channel
+from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -30,6 +30,7 @@ class ParsingGroupMembers:
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
         self.config_reader = ConfigReader()
+        self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
     async def connect_to_telegram(self, file):
         """Подключение к Telegram, используя файл session."""
@@ -49,7 +50,7 @@ class ParsingGroupMembers:
             records: list = await self.db_handler.open_and_read_data("writing_group_links")
             for groups in records:  # Поочередно выводим записанные группы
                 logger.info(f'[+] Парсинг группы: {groups[0]}')
-                await subscribe_to_group_or_channel(client, groups[0])
+                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
                 await self.parse_group(client, groups[0])  # Parsing групп
                 await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
                                                     value=groups)
@@ -91,7 +92,7 @@ class ParsingGroupMembers:
         for file in entities:
             client = await self.connect_to_telegram(file)
 
-            await subscribe_to_group_or_channel(client, chat_input)
+            await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat_input)
             time_activity_user_1, time_activity_user_2 = self.config_reader.get_time_activity_user()
             time.sleep(time_activity_user_2)
             await self.get_active_users(client, chat_input, limit_active_user)

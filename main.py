@@ -2,14 +2,15 @@
 import flet as ft
 from loguru import logger
 
-from system.account_actions.TGChecking import account_verification_for_telegram
 from system.account_actions.TGAccountBIO import AccountBIO
+from system.account_actions.TGChecking import account_verification_for_telegram
 from system.account_actions.TGContact import TGContact
+from system.account_actions.TGParsing import ParsingGroupMembers
+from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.account_actions.account_verification import check_account_for_spam
 from system.account_actions.chat_dialog_mes import mains
 from system.account_actions.creating import creating_groups_and_chats
 from system.account_actions.inviting_participants_telegram import inviting_without_limits, inviting_with_limits
-from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
 from system.account_actions.sending_messages_telegram import send_files_to_personal_chats
 from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
@@ -17,7 +18,6 @@ from system.account_actions.telegram_chat_dialog import sending_files_via_chats,
 from system.account_actions.telegram_chat_dialog import sending_messages_via_chats_times
 from system.account_actions.telegram_invite_scheduler import launching_an_invite_once_an_hour, schedule_invite, \
     launching_invite_every_day_certain_time
-from system.account_actions.unsubscribe import unsubscribe_all
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.setting.setting import create_main_window
@@ -34,7 +34,6 @@ from system.setting.setting import recording_the_time_to_launch_an_invite_every_
 from system.setting.setting import writing_api_id_api_hash
 from system.setting.setting import writing_members
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.telegram_actions.account_actions import subscribe_telegram
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
@@ -157,7 +156,8 @@ def mainss(page: ft.Page):
         elif page.route == "/subscription_all":  # Подписка
             await subscribe_telegram()
         elif page.route == "/unsubscribe_all":  # Отписываемся
-            await unsubscribe_all()
+            sub_unsub_tg = SubscribeUnsubscribeTelegram()
+            await sub_unsub_tg.unsubscribe_all()
 
         # Меню "Работа с реакциями"
 

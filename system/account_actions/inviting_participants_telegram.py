@@ -10,8 +10,7 @@ from telethon.tl.functions.channels import InviteToChannelRequest
 
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGLimits import SettingLimits
-from system.account_actions.subscription import subscribe_to_group_or_channel
-from system.account_actions.unsubscribe import unsubscribe_from_the_group
+from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, record_inviting_results
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -39,7 +38,8 @@ async def inviting_with_limits() -> None:
             await client.connect()
 
             """Подписка на группу для инвайтинга"""
-            await subscribe_to_group_or_channel(client, link[0])
+            sub_unsub_tg = SubscribeUnsubscribeTelegram()
+            await sub_unsub_tg.subscribe_to_group_or_channel(client, link[0])
 
             """Получение списка usernames"""
             number_usernames = await inviting_with_limits_class.get_usernames_with_limits(table_name="members")
@@ -158,7 +158,8 @@ async def inviting_without_limits() -> None:
             await client.connect()
 
             """Подписка на группу для инвайтинга"""
-            await subscribe_to_group_or_channel(client, link[0])
+            sub_unsub_tg = SubscribeUnsubscribeTelegram()
+            await sub_unsub_tg.subscribe_to_group_or_channel(client, link[0])
 
             """Получение списка usernames"""
             number_usernames = await inviting_with_limits_class.get_usernames_without_limits(table_name="members")
@@ -257,6 +258,7 @@ class InvitingToAGroup:
         self.config_reader = ConfigReader()
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.time_inviting = self.config_reader.get_time_inviting()
+        self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
     async def reading_the_list_of_accounts_from_the_database(self) -> list:
         """Inviting по заранее parsing списку и работа с несколькими аккаунтами"""
@@ -278,7 +280,7 @@ class InvitingToAGroup:
 
     async def unsubscribing_from_group_for_inviting(self, client, link_row):
         """Отписка от группы"""
-        await unsubscribe_from_the_group(client, link_row[0])  # Отписка из группы
+        await self.sub_unsub_tg.unsubscribe_from_the_group(client, link_row[0])  # Отписка из группы
         await client.disconnect()  # Разрываем соединение telegram telegram telegram
 
 
