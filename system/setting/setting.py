@@ -7,6 +7,7 @@ import io
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from system.auxiliary_functions.global_variables import ConfigReader
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 config.read("user_settings/config.ini")
@@ -44,24 +45,27 @@ def output_the_input_field_inviting(page: ft.Page, db_handler) -> None:
     )
 
 
-def output_the_input_field(page: ft.Page, db_handler) -> None:
-    """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
-    text_to_send = ft.TextField(label="Введите список ссылок на группы", multiline=True, max_lines=19)
+def output_the_input_field(page: ft.Page, label: str, table_name: str, column_name: str, route: str) -> None:
+    """Окно ввода для записи списка контактов telegram"""
+    db_handler = DatabaseHandler()
+    text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
 
     async def btn_click(e) -> None:
-        await db_handler.open_and_read_data("writing_group_links")  # Удаление списка с группами
-        await db_handler.write_to_single_column_table(name_database="writing_group_links",
-                                                      database_columns="writing_group_links",
-                                                      into_columns="writing_group_links",
-                                                      recorded_data=text_to_send.value.split())
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        await db_handler.open_and_read_data(table_name)  # Удаление списка с контактами
+        await db_handler.write_to_single_column_table(
+            name_database=table_name,
+            database_columns=column_name,
+            into_columns=column_name,
+            recorded_data=text_to_send.value.split()
+        )
+        page.go(route)  # Изменение маршрута в представлении существующих настроек
         page.update()
 
     button = ft.ElevatedButton("Готово", on_click=btn_click)
 
     page.views.append(
         ft.View(
-            "/settings",
+            route,
             [
                 text_to_send,
                 ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
@@ -180,38 +184,6 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
     config.get(f"{variable}", f"{variable}_2")
     config.set(f"{variable}", f"{variable}_2", time_2)
     return config
-
-
-# async def connecting_new_account() -> None:
-#     """Вводим данные в базу данных user_settings/software_database.db"""
-#     phone_data = input("[+] Введите номер телефона : ")  # Вводим номер телефона
-#     entities = (api_id_data, api_hash_data, phone_data)
-#     db_handler = DatabaseHandler()
-#     await db_handler.write_data_to_db(creating_a_table="CREATE TABLE IF NOT EXISTS config(phone)",
-#                                       writing_data_to_a_table="INSERT INTO config (phone) VALUES (?)",
-#                                       entities=entities)
-#     # Подключение к Telegram, возвращаем client для дальнейшего отключения сессии
-#     client = await telegram_connect(phone_data, db_handler)
-#     client.disconnect()  # Разрываем соединение telegram
-
-
-# async def telegram_connect(phone, db_handler) -> TelegramClient:
-#     """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
-#     client = await telegram_connects(db_handler, session=f"user_settings/accounts/{phone}")
-#     if not client.is_user_authorized():
-#         await client.send_code_request(phone)
-#         try:
-#             # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
-#             await client.sign_in(phone, code=input("[+] Введите код: "))
-#         except SessionPasswordNeededError:
-#             """
-#             https://telethonn.readthedocs.io/en/latest/extra/basic/creating-a-client.html#two-factor-authorization-2fa
-#             """
-#             # Если аккаунт имеет password, то просим пользователя ввести пароль
-#             await client.sign_in(password=getpass.getpass())
-#         except ApiIdInvalidError:
-#             logger.info("[!] Не валидные api_id/api_hash")
-#     return client
 
 
 def creating_the_main_window_for_proxy_data_entry(page: ft.Page, db_handler) -> None:

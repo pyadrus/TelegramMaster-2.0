@@ -4,6 +4,7 @@ from loguru import logger
 
 from system.account_actions.TGChecking import account_verification_for_telegram
 from system.account_actions.TGAccountBIO import AccountBIO
+from system.account_actions.TGContact import TGContact
 from system.account_actions.account_verification import check_account_for_spam
 from system.account_actions.chat_dialog_mes import mains
 from system.account_actions.creating import creating_groups_and_chats
@@ -210,16 +211,16 @@ def mainss(page: ft.Page):
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг одной группы / групп",
+                                               text="✔️ Парсинг одной группы / групп",
                                                on_click=lambda _: page.go("/parsing_single_groups")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг выбранной группы из подписанных пользователем",
+                                               text="✔️ Парсинг выбранной группы из подписанных пользователем",
                                                on_click=lambda _: page.go("/parsing_selected_group_user_subscribed")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг активных участников группы",
+                                               text="✔️ Парсинг активных участников группы",
                                                on_click=lambda _: page.go("/parsing_active_group_members")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг групп / каналов на которые подписан аккаунт",
+                                               text="✔️ Парсинг групп / каналов на которые подписан аккаунт",
                                                on_click=lambda _: page.go(
                                                    "/parsing_groups_channels_account_subscribed")),
                              ft.ElevatedButton(width=line_width, height=30,
@@ -264,7 +265,7 @@ def mainss(page: ft.Page):
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Формирование списка контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Формирование списка контактов",
                                                on_click=lambda _: page.go("/creating_contact_list")),
                              ft.ElevatedButton(width=line_width, height=30, text="Показать список контактов",
                                                on_click=lambda _: page.go("/show_list_contacts")),
@@ -274,20 +275,23 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/adding_contacts")),
                          ])]))
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
-            parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.we_record_phone_numbers_in_the_db()
+            # output_the_input_field(page, "Введите список номеров телефонов", "contact", "phone", "/working_with_contacts")
+            output_the_input_field(page, "Введите список номеров телефонов", "contact", "contact",
+                                   "/working_with_contacts")
         elif page.route == "/show_list_contacts":  # Показать список контактов
-            parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.show_account_contact_list()
+            tg_contact = TGContact()
+            await tg_contact.show_account_contact_list()
         elif page.route == "/deleting_contacts":  # Удаление контактов
-            parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.delete_contact()
+            tg_contact = TGContact()
+            await tg_contact.delete_contact()
         elif page.route == "/adding_contacts":  # Добавление контактов
-            parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.inviting_contact()
+            tg_contact = TGContact()
+            await tg_contact.inviting_contact()
+
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-            parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.connecting_new_account()
+            tg_contact = TGContact()
+            await tg_contact.connecting_new_account()
+
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             async def creating_groups():
                 db_handler = DatabaseHandler()
@@ -456,7 +460,7 @@ def mainss(page: ft.Page):
         elif page.route == "/link_entry":  # ✔️ Запись ссылки
             output_the_input_field_inviting(page, DatabaseHandler())
         elif page.route == "/forming_list_of_chats_channels":  # ✔️ Формирование списка чатов / каналов
-            output_the_input_field(page, DatabaseHandler())
+            output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links", "writing_group_links", "/settings")
         elif page.route == "/recording_reaction_link":  # ✔️ Запись ссылки для реакций
             recording_link_channel(page)
         elif page.route == "/recording_number_accounts_reactions":  # ✔️ Запись количества аккаунтов для реакций
