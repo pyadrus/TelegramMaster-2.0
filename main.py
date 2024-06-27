@@ -77,9 +77,9 @@ def mainss(page: ft.Page):
                                                      url="https://t.me/master_tg_d", ), ], ),
                           ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг",
                                             on_click=lambda _: page.go("/inviting")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Парсинг",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Парсинг",
                                             on_click=lambda _: page.go("/parsing")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Работа с контактами",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Работа с контактами",
                                             on_click=lambda _: page.go("/working_with_contacts")),
                           ft.ElevatedButton(width=line_width, height=30, text="Подписка, отписка",
                                             on_click=lambda _: page.go("/subscribe_unsubscribe")),
@@ -95,7 +95,7 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/creating_groups")),
                           ft.ElevatedButton(width=line_width, height=30, text="Редактирование BIO",
                                             on_click=lambda _: page.go("/bio_editing")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Настройки",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Настройки",
                                             on_click=lambda _: page.go("/settings")),
                           ], ))
 
@@ -224,7 +224,7 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go(
                                                    "/parsing_groups_channels_account_subscribed")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Очистка списка от ранее спарсенных данных",
+                                               text="✔️ Очистка списка от ранее спарсенных данных",
                                                on_click=lambda _: page.go("/clearing_list_previously_saved_data")),
                          ])]))
 
@@ -253,7 +253,9 @@ def mainss(page: ft.Page):
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
             parsing_group_members = ParsingGroupMembers()
             await parsing_group_members.parse_subscribed_groups()
+
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
+
             db_handler = DatabaseHandler()
             await db_handler.cleaning_db(name_database_table="members")
 
@@ -267,17 +269,16 @@ def mainss(page: ft.Page):
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                              ft.ElevatedButton(width=line_width, height=30, text="✔️ Формирование списка контактов",
                                                on_click=lambda _: page.go("/creating_contact_list")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Показать список контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Показать список контактов",
                                                on_click=lambda _: page.go("/show_list_contacts")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Удаление контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Удаление контактов",
                                                on_click=lambda _: page.go("/deleting_contacts")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Добавление контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Добавление контактов",
                                                on_click=lambda _: page.go("/adding_contacts")),
                          ])]))
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
-            # output_the_input_field(page, "Введите список номеров телефонов", "contact", "phone", "/working_with_contacts")
-            output_the_input_field(page, "Введите список номеров телефонов", "contact", "contact",
-                                   "/working_with_contacts")
+            output_the_input_field(page, "Введите список номеров телефонов", "contact",
+                                   "contact", "/working_with_contacts")
         elif page.route == "/show_list_contacts":  # Показать список контактов
             tg_contact = TGContact()
             await tg_contact.show_account_contact_list()
@@ -460,7 +461,8 @@ def mainss(page: ft.Page):
         elif page.route == "/link_entry":  # ✔️ Запись ссылки
             output_the_input_field_inviting(page, DatabaseHandler())
         elif page.route == "/forming_list_of_chats_channels":  # ✔️ Формирование списка чатов / каналов
-            output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links", "writing_group_links", "/settings")
+            output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
+                                   "writing_group_links", "/settings")
         elif page.route == "/recording_reaction_link":  # ✔️ Запись ссылки для реакций
             recording_link_channel(page)
         elif page.route == "/recording_number_accounts_reactions":  # ✔️ Запись количества аккаунтов для реакций

@@ -9,6 +9,7 @@ from telethon.tl.types import UserStatusRecently, UserStatusOffline, UserStatusL
     UserStatusOnline, UserStatusEmpty
 
 from system.account_actions.TGConnect import TGConnect
+from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
@@ -28,17 +29,16 @@ class TGContact:
         """
         logger.info(f"{file[0]}")
         proxy = await self.tg_connect.reading_proxies_from_the_database()
-        client = await self.tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts/parsing")
+        client = await self.tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts/contact")
         await client.connect()
         return client
 
     async def show_account_contact_list(self) -> None:
         """Показать список контактов аккаунтов и запись результатов в файл"""
-        # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        records: list = await self.db_handler.open_and_read_data("config")
-        for row in records:
+        entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
+        for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            # client, phone = telegram_connect_and_output_name(row, db_handler)
+            client = await self.connect_to_telegram(file)  # Подключение к Telegram
             await self.parsing_and_recording_contacts_in_the_database(client)
             client.disconnect()  # Разрываем соединение telegram
 
@@ -61,37 +61,36 @@ class TGContact:
 
     async def get_and_parse_contacts(self, client) -> list:
         all_participants: list = []
-        result = client(functions.contacts.GetContactsRequest(hash=0))
+        result = await client(functions.contacts.GetContactsRequest(hash=0))
         logger.info(result)  # Печатаем результат
         all_participants.extend(result.users)
         return all_participants
 
     async def we_show_and_delete_the_contact_of_the_phone_book(self, client, user) -> None:
         """Показываем и удаляем контакт телефонной книги"""
-        client(functions.contacts.DeleteContactsRequest(id=[user.id]))
+        await client(functions.contacts.DeleteContactsRequest(id=[user.id]))
         logger.info("Подождите 2 - 4 секунды")
         time.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
 
     async def delete_contact(self) -> None:
         """Удаляем контакты с аккаунтов"""
-        records: list = await self.db_handler.open_and_read_data("config")
-        for row in records:
+        entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
+        for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            # client, phone = await telegram_connect_and_output_name(row, db_handler)
+            client = await self.connect_to_telegram(file)  # Подключение к Telegram
             await self.we_get_the_account_id(client)
             client.disconnect()  # Разрываем соединение telegram
 
     async def inviting_contact(self) -> None:
         """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        records: list = await self.db_handler.open_and_read_data("config")
-        logger.info(f"Всего accounts: {len(records)}")
-        for row in records:
+        entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
+        for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            # client, phone = await telegram_connect_and_output_name(row, db_handler)
-            await self.adding_a_contact_to_the_phone_book(client)
+            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            await self.add_contact_to_phone_book(client)
 
-    async def adding_a_contact_to_the_phone_book(self, client) -> None:
+    async def add_contact_to_phone_book(self, client) -> None:
         """Добавляем контакт в телефонную книгу"""
         records: list = await self.db_handler.open_and_read_data("contact")
         logger.info(f"Всего номеров: {len(records)}")
@@ -100,13 +99,13 @@ class TGContact:
             user = {"phone": rows[0]}
             phone = user["phone"]
             # Добавляем контакт в телефонную книгу
-            client(functions.contacts.ImportContactsRequest(contacts=[types.InputPhoneContact(client_id=0,
+            await client(functions.contacts.ImportContactsRequest(contacts=[types.InputPhoneContact(client_id=0,
                                                                                               phone=phone,
                                                                                               first_name="Номер",
                                                                                               last_name=phone)]))
             try:
                 # Получаем данные номера телефона https://docs.telethon.dev/en/stable/concepts/entities.html
-                contact = client.get_entity(phone)
+                contact = await client.get_entity(phone)
                 await self.get_user_data(contact, entities)
                 logger.info(f"[+] Контакт с добавлен в телефонную книгу!")
                 time.sleep(4)
@@ -114,8 +113,7 @@ class TGContact:
                 # После работы с номером телефона, программа удаляет номер со списка
                 await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
             except ValueError:
-                logger.info(
-                    f"[+] Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
+                logger.info(f"[+] Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
                 # После работы с номером телефона, программа удаляет номер со списка
                 await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
         client.disconnect()  # Разрываем соединение telegram
@@ -153,32 +151,4 @@ class TGContact:
             [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
              user_premium])
 
-    async def add_contact_to_phone_book(self, client) -> None:
-        """Добавляем контакт в телефонную книгу"""
-        records: list = await self.db_handler.open_and_read_data("contact")
-        logger.info(f"Всего номеров: {len(records)}")
-        entities: list = []  # Создаем список сущностей
-        for rows in records:
-            user = {"phone": rows[0]}
-            phone = user["phone"]
-            # Добавляем контакт в телефонную книгу
-            client(functions.contacts.ImportContactsRequest(contacts=[types.InputPhoneContact(client_id=0,
-                                                                                              phone=phone,
-                                                                                              first_name="Номер",
-                                                                                              last_name=phone)]))
-            try:
-                # Получаем данные номера телефона https://docs.telethon.dev/en/stable/concepts/entities.html
-                contact = client.get_entity(phone)
-                await self.get_user_data(contact, entities)
-                logger.info(f"[+] Контакт с добавлен в телефонную книгу!")
-                time.sleep(4)
-                # Запись результатов parsing в файл members_contacts.db, для дальнейшего inviting
-                # После работы с номером телефона, программа удаляет номер со списка
-                await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
-            except ValueError:
-                logger.info(f"[+] Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
-                # После работы с номером телефона, программа удаляет номер со списка
-                await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
-        client.disconnect()  # Разрываем соединение telegram
-        await self.db_handler.write_parsed_chat_participants_to_db(entities)
-        await self.db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
+

@@ -96,8 +96,8 @@ class DatabaseHandler:
         """Удаляет строку из таблицы"""
         await self.connect()
         self.cursor.execute(f"SELECT * from {table}")  # Считываем таблицу
-        # self.cursor.execute(f"DELETE from {table} where {column} = ?", (value,))  # Удаляем строку
-        self.cursor.execute(f"DELETE from {table} where {column} = ?", value)
+        self.cursor.execute(f"DELETE from {table} where {column} = ?", (value,))  # Удаляем строку
+        # self.cursor.execute(f"DELETE from {table} where {column} = ?", value)
         self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
