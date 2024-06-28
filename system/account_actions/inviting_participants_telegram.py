@@ -255,9 +255,6 @@ async def inviting_without_limits() -> None:
 class InvitingToAGroup:
     def __init__(self):
         self.db_handler = DatabaseHandler()
-        self.config_reader = ConfigReader()
-        self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
-        self.time_inviting = self.config_reader.get_time_inviting()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
     async def reading_the_list_of_accounts_from_the_database(self) -> list:

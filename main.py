@@ -154,7 +154,8 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/unsubscribe_all")),
                          ])]))
         elif page.route == "/subscription_all":  # Подписка
-            await subscribe_telegram()
+            sub_unsub_tg = SubscribeUnsubscribeTelegram()
+            await sub_unsub_tg.subscribe_telegram()
         elif page.route == "/unsubscribe_all":  # Отписываемся
             sub_unsub_tg = SubscribeUnsubscribeTelegram()
             await sub_unsub_tg.unsubscribe_all()

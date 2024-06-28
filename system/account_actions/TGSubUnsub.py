@@ -11,7 +11,6 @@ from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.contacts import ResolveUsernameRequest
 
 from system.account_actions.TGConnect import TGConnect
-from system.account_actions.inviting_participants_telegram import InvitingToAGroup
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -23,8 +22,9 @@ class SubscribeUnsubscribeTelegram:
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
         self.config_reader = ConfigReader()
-        configs_reader = ConfigReader()
-        time_subscription_1, time_subscription_2 = configs_reader.get_time_subscription()
+        self.configs_reader = ConfigReader()
+        self.time_subscription_1, self.time_subscription_2 = self.configs_reader.get_time_subscription()
+        # self.inviting_to_a_group = InvitingToAGroup()
 
     async def connect_to_telegram(self, file):
         """Подключение к Telegram, используя файл session."""
@@ -37,28 +37,19 @@ class SubscribeUnsubscribeTelegram:
     async def subscribe_telegram(self) -> None:
         """Подписка на группы / каналы Telegram"""
         logger.info(f"Запуск подписки на группы / каналы Telegram")
-        inviting_to_a_group = InvitingToAGroup()
-        accounts = await inviting_to_a_group.reading_the_list_of_accounts_from_the_database()
-        for account in accounts:
-            logger.info(f"{account[0]}")
+        entities = find_files(directory_path="user_settings/accounts/unsubscribe", extension='session')
+        for file in entities:
+            client = await self.connect_to_telegram(file)  # Подключение к Telegram
 
             """Получение ссылки для инвайтинга"""
-            links_inviting = await inviting_to_a_group.getting_an_invitation_link_from_the_database()
+            links_inviting: list = await self.db_handler.open_and_read_data("links_inviting")  # Открываем базу данных
+            logger.info(f"Ссылка для инвайтинга:  {links_inviting}")
+            # return links_inviting
             for link in links_inviting:
                 logger.info(f"{link[0]}")
-                # proxy = await inviting_to_a_group.reading_proxies_from_the_database()
-                # client = await inviting_to_a_group.connecting_to_telegram_for_inviting(account[0], proxy)
-                tg_connect = TGConnect()
-                proxy = await tg_connect.reading_proxies_from_the_database()
-                client = await tg_connect.connecting_to_telegram(account[0], proxy, "user_settings/accounts/unsubscribe")
-                await client.connect()
 
                 """Подписка на группу для инвайтинга"""
                 await self.subscribe_to_group_or_channel(client, link[0])
-
-                # entity = await client.get_entity(link[0])
-                # if entity:
-                #     await client(LeaveChannelRequest(entity))
 
         logger.info(f"Окончание подписки на группы / каналы Telegram")
 
@@ -120,16 +111,16 @@ class SubscribeUnsubscribeTelegram:
                 logger.error(
                     f"Попытка подписки на группу / канал {groups_wrs}. Не верное имя или cсылка {groups_wrs} не "
                     f"является группой / каналом: {groups_wrs}")
-                await db_handler.write_data_to_db("""SELECT * from writing_group_links""",
+                await self.db_handler.write_data_to_db("""SELECT * from writing_group_links""",
                                                   """DELETE from writing_group_links where writing_group_links = ?""",
-                                                  groups_wrs)
+                                                       groups_wrs)
             except PeerFloodError:
                 logger.error(f"Попытка подписки на группу / канал {groups_wrs}. Предупреждение о Flood от Telegram.")
                 time.sleep(random.randrange(50, 60))
             except FloodWaitError as e:
                 logger.error(f"Попытка подписки на группу / канал {groups_wrs}. Flood! wait for "
                              f"{str(datetime.timedelta(seconds=e.seconds))}")
-                record_and_interrupt(time_subscription_1, time_subscription_2)
+                record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                 break  # Прерываем работу и меняем аккаунт
             except InviteRequestSentError:
                 logger.error(
