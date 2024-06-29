@@ -112,9 +112,9 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/inviting_with_limits")),
                              ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг 1 раз в час",
                                                on_click=lambda _: page.go("/inviting_1_time_per_hour")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг в определенное время",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг в определенное время",
                                                on_click=lambda _: page.go("/inviting_certain_time")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг каждый день",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг каждый день",
                                                on_click=lambda _: page.go("/inviting_every_day")),
                          ])]))
         elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
