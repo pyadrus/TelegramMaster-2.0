@@ -94,7 +94,7 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/creating_groups")),
                           ft.ElevatedButton(width=line_width, height=30, text="Редактирование BIO",
                                             on_click=lambda _: page.go("/bio_editing")),
-                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Настройки",
+                          ft.ElevatedButton(width=line_width, height=30, text="Настройки",
                                             on_click=lambda _: page.go("/settings")),
                           ], ))
 
@@ -108,9 +108,9 @@ def mainss(page: ft.Page):
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                              ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг без лимитов",
                                                on_click=lambda _: page.go("/inviting_without_limits")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг с лимитами",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг с лимитами",
                                                on_click=lambda _: page.go("/inviting_with_limits")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг 1 раз в час",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг 1 раз в час",
                                                on_click=lambda _: page.go("/inviting_1_time_per_hour")),
                              ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг в определенное время",
                                                on_click=lambda _: page.go("/inviting_certain_time")),
@@ -118,20 +118,15 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/inviting_every_day")),
                          ])]))
         elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
-
             await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
             inviting_to_a_group = InvitingToAGroup()
             await inviting_to_a_group.inviting_without_limits()  # Вызываем метод для инвайтинга
-
         elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
-
             await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
             inviting_to_a_group = InvitingToAGroup()
             await inviting_to_a_group.inviting_with_limits()  # Вызываем метод для инвайтинга с лимитами
-
-
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             launching_an_invite_once_an_hour()
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время

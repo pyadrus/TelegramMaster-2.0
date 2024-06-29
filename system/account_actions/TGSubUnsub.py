@@ -5,10 +5,9 @@ import time
 
 from loguru import logger
 from telethon.errors import ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError, \
-    FloodWaitError, InviteRequestSentError, AuthKeyUnregisteredError
+    FloodWaitError, InviteRequestSentError
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
-# from telethon.tl.functions.contacts import ResolveUsernameRequest
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, find_files
