@@ -5,7 +5,7 @@ import time
 from loguru import logger
 from telethon import TelegramClient
 from telethon.errors import AuthKeyDuplicatedError, PhoneNumberBannedError, UserDeactivatedBanError, TimedOutError, \
-    AuthKeyNotFound
+    AuthKeyNotFound, AuthKeyUnregisteredError
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_files
@@ -81,5 +81,10 @@ class AccountVerification:
         except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
             await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
             logger.info(f"На данный момент аккаунт {session.split('/')[-1]} запущен под другим ip")
+            working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
+                                  new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
+        except AuthKeyUnregisteredError:
+            client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
+            logger.info(f"Битый файл или аккаунт забанен {session.split('/')[-1]}.session")
             working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")

@@ -5,12 +5,12 @@ from loguru import logger
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGChecking import account_verification_for_telegram
 from system.account_actions.TGContact import TGContact
+from system.account_actions.TGInviting import InvitingToAGroup
 from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.account_actions.account_verification import check_account_for_spam
 from system.account_actions.chat_dialog_mes import mains
 from system.account_actions.creating import creating_groups_and_chats
-from system.account_actions.inviting_participants_telegram import inviting_without_limits, inviting_with_limits
 from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
 from system.account_actions.sending_messages_telegram import send_files_to_personal_chats
 from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
@@ -38,7 +38,7 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "0.15.0", "27.06.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "0.15.1", "29.06.2024"  # Версия программы, дата изменения
 
 
 def mainss(page: ft.Page):
@@ -76,9 +76,9 @@ def mainss(page: ft.Page):
                                                      url="https://t.me/master_tg_d", ), ], ),
                           ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг",
                                             on_click=lambda _: page.go("/inviting")),
-                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Парсинг",
+                          ft.ElevatedButton(width=line_width, height=30, text="Парсинг",
                                             on_click=lambda _: page.go("/parsing")),
-                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Работа с контактами",
+                          ft.ElevatedButton(width=line_width, height=30, text="Работа с контактами",
                                             on_click=lambda _: page.go("/working_with_contacts")),
                           ft.ElevatedButton(width=line_width, height=30, text="Подписка, отписка",
                                             on_click=lambda _: page.go("/subscribe_unsubscribe")),
@@ -108,7 +108,7 @@ def mainss(page: ft.Page):
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                              ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг без лимитов",
                                                on_click=lambda _: page.go("/inviting_without_limits")),
-                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг с лимитами",
+                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг с лимитами",
                                                on_click=lambda _: page.go("/inviting_with_limits")),
                              ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг 1 раз в час",
                                                on_click=lambda _: page.go("/inviting_1_time_per_hour")),
@@ -121,13 +121,15 @@ def mainss(page: ft.Page):
 
             await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
-            await inviting_without_limits()  # Вызываем метод для инвайтинга
+            inviting_to_a_group = InvitingToAGroup()
+            await inviting_to_a_group.inviting_without_limits()  # Вызываем метод для инвайтинга
 
         elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
 
             await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
-            await inviting_with_limits()  # Вызываем метод для инвайтинга с лимитами
+            inviting_to_a_group = InvitingToAGroup()
+            await inviting_to_a_group.inviting_with_limits()  # Вызываем метод для инвайтинга с лимитами
 
 
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
@@ -212,20 +214,20 @@ def mainss(page: ft.Page):
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="✔️ Парсинг одной группы / групп",
+                                               text="Парсинг одной группы / групп",
                                                on_click=lambda _: page.go("/parsing_single_groups")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="✔️ Парсинг выбранной группы из подписанных пользователем",
+                                               text="Парсинг выбранной группы из подписанных пользователем",
                                                on_click=lambda _: page.go("/parsing_selected_group_user_subscribed")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="✔️ Парсинг активных участников группы",
+                                               text="Парсинг активных участников группы",
                                                on_click=lambda _: page.go("/parsing_active_group_members")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="✔️ Парсинг групп / каналов на которые подписан аккаунт",
+                                               text="Парсинг групп / каналов на которые подписан аккаунт",
                                                on_click=lambda _: page.go(
                                                    "/parsing_groups_channels_account_subscribed")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="✔️ Очистка списка от ранее спарсенных данных",
+                                               text="Очистка списка от ранее спарсенных данных",
                                                on_click=lambda _: page.go("/clearing_list_previously_saved_data")),
                          ])]))
 
@@ -268,13 +270,13 @@ def mainss(page: ft.Page):
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Формирование списка контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="Формирование списка контактов",
                                                on_click=lambda _: page.go("/creating_contact_list")),
-                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Показать список контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="Показать список контактов",
                                                on_click=lambda _: page.go("/show_list_contacts")),
-                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Удаление контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="Удаление контактов",
                                                on_click=lambda _: page.go("/deleting_contacts")),
-                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Добавление контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="Добавление контактов",
                                                on_click=lambda _: page.go("/adding_contacts")),
                          ])]))
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
@@ -402,34 +404,34 @@ def mainss(page: ft.Page):
                                                text="✔️ Запись количества аккаунтов для реакций",
                                                on_click=lambda _: page.go("/recording_number_accounts_reactions")),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Выбор реакций",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Выбор реакций",
                                                        on_click=lambda _: page.go("/choice_of_reactions")),
-                                     ft.ElevatedButton(width=270, height=30, text="✔️ Запись proxy",
+                                     ft.ElevatedButton(width=270, height=30, text="Запись proxy",
                                                        on_click=lambda _: page.go("/proxy_entry"))]),
 
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="✔️ Запись времени между сообщениями",
+                                               text="Запись времени между сообщениями",
                                                on_click=lambda _: page.go("/recording_the_time_between_messages")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="✔️ Время между инвайтингом, рассылка сообщений",
+                                               text="Время между инвайтингом, рассылка сообщений",
                                                on_click=lambda _: page.go("/time_between_invites_sending_messages")),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Смена аккаунтов",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Смена аккаунтов",
                                                        on_click=lambda _: page.go("/changing_accounts")),
-                                     ft.ElevatedButton(width=270, height=30, text="✔️ Запись api_id, api_hash",
+                                     ft.ElevatedButton(width=270, height=30, text="Запись api_id, api_hash",
                                                        on_click=lambda _: page.go("/recording_api_id_api_hash"))]),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Запись времени",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись времени",
                                                        on_click=lambda _: page.go("/time_between_subscriptions")),
-                                     ft.ElevatedButton(width=270, height=30, text="✔️  Запись сообщений",
+                                     ft.ElevatedButton(width=270, height=30, text="Запись сообщений",
                                                        on_click=lambda _: page.go("/message_recording"))]),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Запись имени аккаунта",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись имени аккаунта",
                                                        on_click=lambda _: page.go("/record_your_account_name")),
-                                     ft.ElevatedButton(width=270, height=30, text="✔️ Время между подпиской",
+                                     ft.ElevatedButton(width=270, height=30, text="Время между подпиской",
                                                        on_click=lambda _: page.go("/time_between_subscriptionss"))]),
 
-                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Запись ссылки для реакций",
+                             ft.ElevatedButton(width=line_width, height=30, text="Запись ссылки для реакций",
                                                on_click=lambda _: page.go("/recording_reaction_link")),
                              ft.ElevatedButton(width=line_width, height=30,
                                                text="✔️ Формирование списка чатов / каналов",
@@ -438,14 +440,14 @@ def mainss(page: ft.Page):
                                                text="✔️ Формирование списка username",
                                                on_click=lambda _: page.go("/creating_username_list")),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Запись ссылки",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись ссылки",
                                                        on_click=lambda _: page.go("/link_entry")),
-                                     ft.ElevatedButton(width=270, height=30, text="✔️ Лимиты на аккаунт",
+                                     ft.ElevatedButton(width=270, height=30, text="Лимиты на аккаунт",
                                                        on_click=lambda _: page.go("/account_limits"))]),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Лимиты на сообщения",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Лимиты на сообщения",
                                                        on_click=lambda _: page.go("/message_limits")),
-                                     ft.ElevatedButton(width=270, height=30, text="✔️ Смена типа устройства",
+                                     ft.ElevatedButton(width=270, height=30, text="Смена типа устройства",
                                                        on_click=lambda _: page.go("/changing_device_type"))]),
 
                          ])]))
