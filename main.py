@@ -16,7 +16,7 @@ from system.account_actions.sending_messages_telegram import send_files_to_perso
 from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
 from system.account_actions.telegram_chat_dialog import sending_files_via_chats, sending_messages_files_via_chats
 from system.account_actions.telegram_chat_dialog import sending_messages_via_chats_times
-from system.account_actions.telegram_invite_scheduler import launching_an_invite_once_an_hour, schedule_invite, \
+from system.account_actions.TGInvitingScheduler import launching_an_invite_once_an_hour, schedule_invite, \
     launching_invite_every_day_certain_time
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
