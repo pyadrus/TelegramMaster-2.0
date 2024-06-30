@@ -38,7 +38,7 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "0.15.2", "30.06.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "0.15.3", "30.06.2024"  # Версия программы, дата изменения
 
 
 def mainss(page: ft.Page):
@@ -265,7 +265,7 @@ def mainss(page: ft.Page):
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Формирование списка контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Формирование списка контактов",
                                                on_click=lambda _: page.go("/creating_contact_list")),
                              ft.ElevatedButton(width=line_width, height=30, text="Показать список контактов",
                                                on_click=lambda _: page.go("/show_list_contacts")),
@@ -280,6 +280,7 @@ def mainss(page: ft.Page):
         elif page.route == "/show_list_contacts":  # Показать список контактов
             tg_contact = TGContact()
             await tg_contact.show_account_contact_list()
+
         elif page.route == "/deleting_contacts":  # Удаление контактов
             tg_contact = TGContact()
             await tg_contact.delete_contact()
