@@ -93,12 +93,18 @@ class DatabaseHandler:
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     async def delete_row_db(self, table, column, value) -> None:
-        """Удаляет строку из таблицы"""
+        """Удаляет строку из таблицы
+        :param table: имя таблицы
+        :param column: имя колонки
+        :param value: значение"""
         await self.connect()
         self.cursor.execute(f"SELECT * from {table}")  # Считываем таблицу
-        self.cursor.execute(f"DELETE from {table} where {column} = ?", (value,))  # Удаляем строку
-        # self.cursor.execute(f"DELETE from {table} where {column} = ?", value)
-        self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
+        try:
+            self.cursor.execute(f"DELETE from {table} where {column} = ?", (value,))  # Удаляем строку
+            self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
+        except sqlite3.ProgrammingError:
+            self.cursor.execute(f"DELETE from {table} where {column} = ?", value)
+            self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     async def write_parsed_chat_participants_to_db(self, entities) -> None:
