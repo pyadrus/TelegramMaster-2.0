@@ -209,20 +209,20 @@ def mainss(page: ft.Page):
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг одной группы / групп",
+                                               text="✔️ Парсинг одной группы / групп",
                                                on_click=lambda _: page.go("/parsing_single_groups")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг выбранной группы из подписанных пользователем",
+                                               text="✔️ Парсинг выбранной группы из подписанных пользователем",
                                                on_click=lambda _: page.go("/parsing_selected_group_user_subscribed")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг активных участников группы",
+                                               text="✔️ Парсинг активных участников группы",
                                                on_click=lambda _: page.go("/parsing_active_group_members")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг групп / каналов на которые подписан аккаунт",
+                                               text="✔️ Парсинг групп / каналов на которые подписан аккаунт",
                                                on_click=lambda _: page.go(
                                                    "/parsing_groups_channels_account_subscribed")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Очистка списка от ранее спарсенных данных",
+                                               text="✔️ Очистка списка от ранее спарсенных данных",
                                                on_click=lambda _: page.go("/clearing_list_previously_saved_data")),
                          ])]))
 
