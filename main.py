@@ -6,6 +6,8 @@ from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGChecking import account_verification_for_telegram
 from system.account_actions.TGContact import TGContact
 from system.account_actions.TGInviting import InvitingToAGroup
+from system.account_actions.TGInvitingScheduler import launching_an_invite_once_an_hour, \
+    launching_invite_every_day_certain_time, schedule_invite
 from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.account_actions.account_verification import check_account_for_spam
@@ -16,8 +18,6 @@ from system.account_actions.sending_messages_telegram import send_files_to_perso
 from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
 from system.account_actions.telegram_chat_dialog import sending_files_via_chats, sending_messages_files_via_chats
 from system.account_actions.telegram_chat_dialog import sending_messages_via_chats_times
-from system.account_actions.TGInvitingScheduler import launching_an_invite_once_an_hour, schedule_invite, \
-    launching_invite_every_day_certain_time
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.setting.setting import create_main_window
