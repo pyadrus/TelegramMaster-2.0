@@ -10,7 +10,7 @@ from system.account_actions.TGInvitingScheduler import launching_an_invite_once_
     launching_invite_every_day_certain_time, schedule_invite
 from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.account_actions.account_verification import check_account_for_spam
+from system.account_actions.TGCheckingSPAM import AccountVerificationSPAM
 from system.account_actions.chat_dialog_mes import mains
 from system.account_actions.creating import creating_groups_and_chats
 from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
@@ -74,11 +74,11 @@ def mainss(page: ft.Page):
                                          ft.TextSpan("https://t.me/master_tg_d",
                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                      url="https://t.me/master_tg_d", ), ], ),
-                          ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Инвайтинг",
                                             on_click=lambda _: page.go("/inviting")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Парсинг",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Парсинг",
                                             on_click=lambda _: page.go("/parsing")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Работа с контактами",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Работа с контактами",
                                             on_click=lambda _: page.go("/working_with_contacts")),
                           ft.ElevatedButton(width=line_width, height=30, text="Подписка, отписка",
                                             on_click=lambda _: page.go("/subscribe_unsubscribe")),
@@ -94,7 +94,7 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/creating_groups")),
                           ft.ElevatedButton(width=line_width, height=30, text="Редактирование BIO",
                                             on_click=lambda _: page.go("/bio_editing")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Настройки",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Настройки",
                                             on_click=lambda _: page.go("/settings")),
                           ], ))
 
@@ -135,7 +135,8 @@ def mainss(page: ft.Page):
             launching_invite_every_day_certain_time()
 
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
-            await check_account_for_spam()
+            Account_Verification_SPAM = AccountVerificationSPAM()
+            await Account_Verification_SPAM.check_account_for_spam()
 
         # Меню "Подписка и отписка"
 
@@ -400,34 +401,34 @@ def mainss(page: ft.Page):
                                                text="✔️ Запись количества аккаунтов для реакций",
                                                on_click=lambda _: page.go("/recording_number_accounts_reactions")),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Выбор реакций",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Выбор реакций",
                                                        on_click=lambda _: page.go("/choice_of_reactions")),
-                                     ft.ElevatedButton(width=270, height=30, text="Запись proxy",
+                                     ft.ElevatedButton(width=270, height=30, text="✔️ Запись proxy",
                                                        on_click=lambda _: page.go("/proxy_entry"))]),
 
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Запись времени между сообщениями",
+                                               text="✔️ Запись времени между сообщениями",
                                                on_click=lambda _: page.go("/recording_the_time_between_messages")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Время между инвайтингом, рассылка сообщений",
+                                               text="✔️ Время между инвайтингом, рассылка сообщений",
                                                on_click=lambda _: page.go("/time_between_invites_sending_messages")),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Смена аккаунтов",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Смена аккаунтов",
                                                        on_click=lambda _: page.go("/changing_accounts")),
-                                     ft.ElevatedButton(width=270, height=30, text="Запись api_id, api_hash",
+                                     ft.ElevatedButton(width=270, height=30, text="✔️ Запись api_id, api_hash",
                                                        on_click=lambda _: page.go("/recording_api_id_api_hash"))]),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись времени",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Запись времени",
                                                        on_click=lambda _: page.go("/time_between_subscriptions")),
-                                     ft.ElevatedButton(width=270, height=30, text="Запись сообщений",
+                                     ft.ElevatedButton(width=270, height=30, text="✔️ Запись сообщений",
                                                        on_click=lambda _: page.go("/message_recording"))]),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись имени аккаунта",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Запись имени аккаунта",
                                                        on_click=lambda _: page.go("/record_your_account_name")),
-                                     ft.ElevatedButton(width=270, height=30, text="Время между подпиской",
+                                     ft.ElevatedButton(width=270, height=30, text="✔️ Время между подпиской",
                                                        on_click=lambda _: page.go("/time_between_subscriptionss"))]),
 
-                             ft.ElevatedButton(width=line_width, height=30, text="Запись ссылки для реакций",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Запись ссылки для реакций",
                                                on_click=lambda _: page.go("/recording_reaction_link")),
                              ft.ElevatedButton(width=line_width, height=30,
                                                text="✔️ Формирование списка чатов / каналов",
@@ -436,14 +437,14 @@ def mainss(page: ft.Page):
                                                text="✔️ Формирование списка username",
                                                on_click=lambda _: page.go("/creating_username_list")),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись ссылки",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Запись ссылки",
                                                        on_click=lambda _: page.go("/link_entry")),
-                                     ft.ElevatedButton(width=270, height=30, text="Лимиты на аккаунт",
+                                     ft.ElevatedButton(width=270, height=30, text="✔️ Лимиты на аккаунт",
                                                        on_click=lambda _: page.go("/account_limits"))]),
 
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Лимиты на сообщения",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Лимиты на сообщения",
                                                        on_click=lambda _: page.go("/message_limits")),
-                                     ft.ElevatedButton(width=270, height=30, text="Смена типа устройства",
+                                     ft.ElevatedButton(width=270, height=30, text="✔️ Смена типа устройства",
                                                        on_click=lambda _: page.go("/changing_device_type"))]),
 
                          ])]))
