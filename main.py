@@ -88,7 +88,7 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/sending_messages")),
                           ft.ElevatedButton(width=line_width, height=30, text="Работа с реакциями",
                                             on_click=lambda _: page.go("/working_with_reactions")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Проверка аккаунтов",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Проверка аккаунтов",
                                             on_click=lambda _: page.go("/checking_accounts")),
                           ft.ElevatedButton(width=line_width, height=30, text="Создание групп (чатов)",
                                             on_click=lambda _: page.go("/creating_groups")),
@@ -268,11 +268,11 @@ def mainss(page: ft.Page):
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                              ft.ElevatedButton(width=line_width, height=30, text="✔️ Формирование списка контактов",
                                                on_click=lambda _: page.go("/creating_contact_list")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Показать список контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Показать список контактов",
                                                on_click=lambda _: page.go("/show_list_contacts")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Удаление контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Удаление контактов",
                                                on_click=lambda _: page.go("/deleting_contacts")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Добавление контактов",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Добавление контактов",
                                                on_click=lambda _: page.go("/adding_contacts")),
                          ])]))
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
