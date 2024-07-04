@@ -12,11 +12,8 @@ from system.account_actions.TGInvitingScheduler import launching_an_invite_once_
     launching_invite_every_day_certain_time, schedule_invite
 from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.account_actions.chat_dialog_mes import mains
 from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
-from system.account_actions.sending_messages_telegram import SendTelegramMessages
-from system.account_actions.telegram_chat_dialog import sending_files_via_chats, sending_messages_files_via_chats
-from system.account_actions.telegram_chat_dialog import sending_messages_via_chats_times
+from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.setting.setting import create_main_window
@@ -338,13 +335,17 @@ def mainss(page: ft.Page):
         elif page.route == "/sending_messages_via_chats":  # ✔️ Рассылка сообщений по чатам
             entities = find_files(directory_path="user_settings/message", extension="json")
             logger.info(entities)
-            await sending_messages_via_chats_times(entities)
+            Send_TelegramMessages = SendTelegramMessages()
+            await Send_TelegramMessages.sending_messages_via_chats_times()
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # ✔️ Рассылка сообщений по чатам с автоответчиком
-            mains(DatabaseHandler())
+            Send_TelegramMessages = SendTelegramMessages()
+            Send_TelegramMessages.mains()
         elif page.route == "/sending_files_via_chats":  # ✔️ Рассылка файлов по чатам
-            await sending_files_via_chats(DatabaseHandler())
+            Send_TelegramMessages = SendTelegramMessages()
+            await Send_TelegramMessages.sending_files_via_chats()
         elif page.route == "/sending_messages_files_via_chats":  # ✔️ Рассылка сообщений + файлов по чатам
-            await sending_messages_files_via_chats()
+            Send_TelegramMessages = SendTelegramMessages()
+            await Send_TelegramMessages.sending_messages_files_via_chats()
         elif page.route == "/sending_personal_messages_with_limits":  # ✔️ Отправка сообщений в личку (с лимитами)
             Send_TelegramMessages = SendTelegramMessages()
             config_reader = ConfigReader()

@@ -16,7 +16,9 @@ async def schedule_member_invitation() -> None:
     await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
                                             extension="session")  # Вызываем метод для проверки аккаунтов
     inviting_to_a_group = InvitingToAGroup()
-    await inviting_to_a_group.inviting_with_limits()  # Вызываем метод для инвайтинга с лимитами
+    config_reader = ConfigReader()
+    account_limits = config_reader.get_limits()
+    await inviting_to_a_group.inviting_without_limits(account_limits=account_limits)
 
 
 async def run_scheduler():
