@@ -12,7 +12,7 @@ from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.account_actions.TGCheckingSPAM import AccountVerificationSPAM
 from system.account_actions.chat_dialog_mes import mains
-from system.account_actions.creating import creating_groups_and_chats
+from system.account_actions.TGCreating import CreatingGroupsAndChats
 from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
 from system.account_actions.sending_messages_telegram import send_files_to_personal_chats
 from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
@@ -90,9 +90,9 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/working_with_reactions")),
                           ft.ElevatedButton(width=line_width, height=30, text="✔️ Проверка аккаунтов",
                                             on_click=lambda _: page.go("/checking_accounts")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Создание групп (чатов)",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Создание групп (чатов)",
                                             on_click=lambda _: page.go("/creating_groups")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Редактирование BIO",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Редактирование BIO",
                                             on_click=lambda _: page.go("/bio_editing")),
                           ft.ElevatedButton(width=line_width, height=30, text="✔️ Настройки",
                                             on_click=lambda _: page.go("/settings")),
@@ -294,12 +294,8 @@ def mainss(page: ft.Page):
             await tg_contact.connecting_new_account()
 
         elif page.route == "/creating_groups":  # Создание групп (чатов)
-            async def creating_groups():
-                db_handler = DatabaseHandler()
-                records: list = await db_handler.open_and_read_data("config")
-                creating_groups_and_chats(page, records, db_handler)
-
-            await creating_groups()
+            Creating_GroupsAndChats = CreatingGroupsAndChats()
+            await Creating_GroupsAndChats.creating_groups_and_chats()
 
         # Меню "Рассылка сообщений"
 
@@ -361,15 +357,15 @@ def mainss(page: ft.Page):
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Изменение username",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Изменение username",
                                                on_click=lambda _: page.go("/changing_username")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Изменение фото",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Изменение фото",
                                                on_click=lambda _: page.go("/edit_photo")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Изменение описания",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Изменение описания",
                                                on_click=lambda _: page.go("/edit_description")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Изменение имени",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Изменение имени",
                                                on_click=lambda _: page.go("/name_change")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Изменение фамилии",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Изменение фамилии",
                                                on_click=lambda _: page.go("/change_surname")),
                          ])]))
 
