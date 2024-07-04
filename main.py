@@ -34,7 +34,7 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "0.15.3", "30.06.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "0.15.5", "05.07.2024"  # Версия программы, дата изменения
 
 
 def mainss(page: ft.Page):
