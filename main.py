@@ -4,18 +4,17 @@ from loguru import logger
 
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGChecking import account_verification_for_telegram
+from system.account_actions.TGCheckingSPAM import AccountVerificationSPAM
 from system.account_actions.TGContact import TGContact
+from system.account_actions.TGCreating import CreatingGroupsAndChats
 from system.account_actions.TGInviting import InvitingToAGroup
 from system.account_actions.TGInvitingScheduler import launching_an_invite_once_an_hour, \
     launching_invite_every_day_certain_time, schedule_invite
 from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.account_actions.TGCheckingSPAM import AccountVerificationSPAM
 from system.account_actions.chat_dialog_mes import mains
-from system.account_actions.TGCreating import CreatingGroupsAndChats
 from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
-from system.account_actions.sending_messages_telegram import send_files_to_personal_chats
-from system.account_actions.sending_messages_telegram import send_message_from_all_accounts
+from system.account_actions.sending_messages_telegram import SendTelegramMessages
 from system.account_actions.telegram_chat_dialog import sending_files_via_chats, sending_messages_files_via_chats
 from system.account_actions.telegram_chat_dialog import sending_messages_via_chats_times
 from system.auxiliary_functions.auxiliary_functions import find_files
@@ -121,12 +120,14 @@ def mainss(page: ft.Page):
             await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
             inviting_to_a_group = InvitingToAGroup()
-            await inviting_to_a_group.inviting_without_limits()  # Вызываем метод для инвайтинга
+            await inviting_to_a_group.inviting_without_limits(account_limits=None)  # Вызываем метод для инвайтинга
         elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
             await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
             inviting_to_a_group = InvitingToAGroup()
-            await inviting_to_a_group.inviting_with_limits()  # Вызываем метод для инвайтинга с лимитами
+            config_reader = ConfigReader()
+            account_limits = config_reader.get_limits()
+            await inviting_to_a_group.inviting_without_limits(account_limits=account_limits)  # Вызываем метод для инвайтинга
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             launching_an_invite_once_an_hour()
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
@@ -327,9 +328,13 @@ def mainss(page: ft.Page):
                                                    "/sending_files_to_personal_account_with_limits")),
                          ])]))
         elif page.route == "/sending_messages_personal_account":  # ✔️ Отправка сообщений в личку
-            await send_message_from_all_accounts(limits=None)
+            Send_TelegramMessages = SendTelegramMessages()
+            logger.info(f"Лимит на аккаунт (без ограничений)")
+            await Send_TelegramMessages.send_message_from_all_accounts(account_limits=None)
         elif page.route == "/sending_files_personal_account":  # ✔️ Отправка файлов в личку
-            await send_files_to_personal_chats(limits=None)
+            Send_TelegramMessages = SendTelegramMessages()
+            logger.info(f"Лимит на аккаунт (без ограничений)")
+            await Send_TelegramMessages.send_files_to_personal_chats(account_limits=None)
         elif page.route == "/sending_messages_via_chats":  # ✔️ Рассылка сообщений по чатам
             entities = find_files(directory_path="user_settings/message", extension="json")
             logger.info(entities)
@@ -341,13 +346,15 @@ def mainss(page: ft.Page):
         elif page.route == "/sending_messages_files_via_chats":  # ✔️ Рассылка сообщений + файлов по чатам
             await sending_messages_files_via_chats()
         elif page.route == "/sending_personal_messages_with_limits":  # ✔️ Отправка сообщений в личку (с лимитами)
+            Send_TelegramMessages = SendTelegramMessages()
             config_reader = ConfigReader()
-            limits_message = config_reader.get_message_limits()
-            await send_message_from_all_accounts(limits=limits_message)
+            account_limits = config_reader.get_limits()
+            await Send_TelegramMessages.send_message_from_all_accounts(account_limits=account_limits)
         elif page.route == "/sending_files_to_personal_account_with_limits":  # ✔️ Отправка файлов в личку (с лимитами)
+            Send_TelegramMessages = SendTelegramMessages()
             config_reader = ConfigReader()
-            limits_message = config_reader.get_message_limits()
-            await send_files_to_personal_chats(limits=limits_message)
+            account_limits = config_reader.get_limits()
+            await Send_TelegramMessages.send_files_to_personal_chats(account_limits=account_limits)
 
         # Меню "Редактирование BIO"
 
