@@ -36,6 +36,10 @@ class TGConnect:
                                 system_version="4.16.30-vxCUSTOM", proxy=proxy)
         return client  # Подсоединяемся к Telegram аккаунта
 
-
-
-
+    async def connect_to_telegram(self, file, directory_path):
+        """Подключение к Telegram, используя файл session."""
+        logger.info(f"{file[0]}")
+        proxy = await self.reading_proxies_from_the_database()
+        client = await self.connecting_to_telegram(file[0], proxy, directory_path)
+        await client.connect()
+        return client

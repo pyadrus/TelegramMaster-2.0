@@ -16,21 +16,12 @@ class AccountVerificationSPAM:
     def __init__(self):
         self.tg_connect = TGConnect()
 
-    async def connect_to_telegram(self, file):
-        """Подключение к Telegram, используя файл session."""
-        logger.info(f"{file[0]}")
-        proxy = await self.tg_connect.reading_proxies_from_the_database()
-        client = await self.tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts")
-        await client.connect()
-        return client
-
     async def check_account_for_spam(self) -> None:
         """Проверка аккаунта на спам через @SpamBot"""
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
         entities = find_files(directory_path="user_settings/accounts", extension='session')
         for file in entities:
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
-
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts")
             try:
                 await client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
                 message_bot = await client.get_messages('SpamBot')

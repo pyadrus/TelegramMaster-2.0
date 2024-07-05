@@ -23,20 +23,12 @@ class SubscribeUnsubscribeTelegram:
         self.configs_reader = ConfigReader()
         self.time_subscription_1, self.time_subscription_2 = self.configs_reader.get_time_subscription()
 
-    async def connect_to_telegram(self, file):
-        """Подключение к Telegram, используя файл session."""
-        logger.info(f"{file[0]}")
-        proxy = await self.tg_connect.reading_proxies_from_the_database()
-        client = await self.tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts/unsubscribe")
-        await client.connect()
-        return client
-
     async def subscribe_telegram(self) -> None:
         """Подписка на группы / каналы Telegram"""
         logger.info(f"Запуск подписки на группы / каналы Telegram")
         entities = find_files(directory_path="user_settings/accounts/unsubscribe", extension='session')
         for file in entities:
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/unsubscribe")
 
             """Получение ссылки для инвайтинга"""
             links_inviting: list = await self.db_handler.open_and_read_data("links_inviting")  # Открываем базу данных
@@ -54,7 +46,7 @@ class SubscribeUnsubscribeTelegram:
         """Отписываемся от групп, каналов, личных сообщений"""
         entities = find_files(directory_path="user_settings/accounts/unsubscribe", extension='session')
         for file in entities:
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/unsubscribe")
             dialogs = client.iter_dialogs()
             async for dialog in dialogs:
                 logger.info(f"{dialog.name}, {dialog.id}")

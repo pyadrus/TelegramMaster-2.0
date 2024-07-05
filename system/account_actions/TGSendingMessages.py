@@ -40,14 +40,6 @@ class SendTelegramMessages:
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def connect_to_telegram(self, file):
-        """Подключение к Telegram, используя файл session."""
-        logger.info(f"{file[0]}")
-        proxy = await self.tg_connect.reading_proxies_from_the_database()
-        client = await self.tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts/send_message")
-        await client.connect()
-        return client
-
     async def send_message_from_all_accounts(self, account_limits) -> None:
         """Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных."""
         time_inviting = self.config_reader.get_time_inviting()
@@ -55,7 +47,7 @@ class SendTelegramMessages:
         time_inviting_2 = time_inviting[1]
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for file in entities:
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/send_message")
             try:
                 number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
                                                                                      account_limits=account_limits)
@@ -102,7 +94,7 @@ class SendTelegramMessages:
         entitiess = all_find_files(directory_path="user_settings/files_to_send")
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for file in entities:
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/send_message")
             try:
                 # Открываем parsing список user_settings/software_database.db для inviting в группу
                 number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
@@ -142,7 +134,7 @@ class SendTelegramMessages:
         # Спрашиваем у пользователя, через какое время будем отправлять сообщения
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for files in entities:
-            client = await self.connect_to_telegram(files)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(files, directory_path="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Всего групп: {len(records)}")
             for groups in records:  # Поочередно выводим записанные группы
@@ -179,7 +171,7 @@ class SendTelegramMessages:
         """Рассылка сообщений + файлов по чатам"""
         entitiess = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for files in entitiess:
-            client = await self.connect_to_telegram(files)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(files, directory_path="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Всего групп: {len(records)}")
             for groups in records:  # Поочередно выводим записанные группы
@@ -229,7 +221,7 @@ class SendTelegramMessages:
         """Массовая рассылка в чаты"""
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for file in entities:
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Всего групп: {len(records)}")
             for groups in records:  # Поочередно выводим записанные группы

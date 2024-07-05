@@ -24,14 +24,6 @@ class InvitingToAGroup:
         self.tg_connect = TGConnect()
         self.config_reader = ConfigReader()
 
-    async def connect_to_telegram(self, file):
-        """Подключение к Telegram, используя файл session."""
-        logger.info(f"{file[0]}")
-        proxy = await self.tg_connect.reading_proxies_from_the_database()
-        client = await self.tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts/inviting")
-        await client.connect()
-        return client
-
     async def getting_an_invitation_link_from_the_database(self):
         """"Получение ссылки для инвайтинга"""
         links_inviting: list = await self.db_handler.open_and_read_data("links_inviting")  # Открываем базу данных
@@ -49,7 +41,7 @@ class InvitingToAGroup:
         logger.info(f"Запуск инвайтинга без лимитов")
         entities = find_files(directory_path="user_settings/accounts/inviting", extension='session')
         for file in entities:
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/inviting")
             """Получение ссылки для инвайтинга"""
             links_inviting = await self.getting_an_invitation_link_from_the_database()
             for link in links_inviting:

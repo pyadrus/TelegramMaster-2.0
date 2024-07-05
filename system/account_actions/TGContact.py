@@ -22,23 +22,12 @@ class TGContact:
         self.tg_connect = TGConnect()
         self.config_reader = ConfigReader()
 
-    async def connect_to_telegram(self, file):
-        """
-        Подключение к Telegram, используя файл session.
-        :param file: Имя файла с которым будем работать
-        """
-        logger.info(f"{file[0]}")
-        proxy = await self.tg_connect.reading_proxies_from_the_database()
-        client = await self.tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts/contact")
-        await client.connect()
-        return client
-
     async def show_account_contact_list(self) -> None:
         """Показать список контактов аккаунтов и запись результатов в файл"""
         entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
         for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/contact")
             await self.parsing_and_recording_contacts_in_the_database(client)
             client.disconnect()  # Разрываем соединение telegram
 
@@ -77,7 +66,7 @@ class TGContact:
         entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
         for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/contact")
             await self.we_get_the_account_id(client)
             client.disconnect()  # Разрываем соединение telegram
 
@@ -87,7 +76,7 @@ class TGContact:
         entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
         for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/contact")
             await self.add_contact_to_phone_book(client)
 
     async def add_contact_to_phone_book(self, client) -> None:

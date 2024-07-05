@@ -32,19 +32,11 @@ class ParsingGroupMembers:
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def connect_to_telegram(self, file):
-        """Подключение к Telegram, используя файл session."""
-        logger.info(f"{file[0]}")
-        proxy = await self.tg_connect.reading_proxies_from_the_database()
-        client = await self.tg_connect.connecting_to_telegram(file[0], proxy, "user_settings/accounts/parsing")
-        await client.connect()
-        return client
-
     async def parse_groups(self) -> None:
         """Парсинг групп"""
         entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
         for file in entities:
-            client = await self.connect_to_telegram(file)  # Подключение к Telegram
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/parsing")
 
             # Открываем базу с группами для дальнейшего parsing
             records: list = await self.db_handler.open_and_read_data("writing_group_links")
@@ -63,7 +55,7 @@ class ParsingGroupMembers:
         """Выбираем группу из подписанных для parsing"""
         entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
         for file in entities:
-            client = await self.connect_to_telegram(file)
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/parsing")
             groups_wr = await self.list_groups(client)
             await self.parse_group(client, groups_wr)
             await self.db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
@@ -90,7 +82,7 @@ class ParsingGroupMembers:
         """
         entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
         for file in entities:
-            client = await self.connect_to_telegram(file)
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/parsing")
 
             await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat_input)
             time_activity_user_1, time_activity_user_2 = self.config_reader.get_time_activity_user()
@@ -107,7 +99,7 @@ class ParsingGroupMembers:
         entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
         for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            client = await self.connect_to_telegram(file)
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/parsing")
 
             logger.info("""Parsing групп / каналов на которые подписан аккаунт""")
             await self.forming_a_list_of_groups(client)
