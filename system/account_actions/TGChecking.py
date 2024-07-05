@@ -9,7 +9,6 @@ from telethon import TelegramClient
 from telethon.errors import AuthKeyDuplicatedError, PhoneNumberBannedError, UserDeactivatedBanError, TimedOutError, \
     AuthKeyNotFound, AuthKeyUnregisteredError
 from telethon.errors import YouBlockedUserError
-# from system.telegram_actions.telegram_actions import working_with_accounts
 from thefuzz import fuzz
 
 from system.account_actions.TGConnect import TGConnect
