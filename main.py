@@ -3,8 +3,7 @@ import flet as ft
 from loguru import logger
 
 from system.account_actions.TGAccountBIO import AccountBIO
-from system.account_actions.TGChecking import account_verification_for_telegram
-from system.account_actions.TGCheckingSPAM import AccountVerificationSPAM
+from system.account_actions.TGChecking import account_verification_for_telegram, AccountVerification
 from system.account_actions.TGContact import TGContact
 from system.account_actions.TGCreating import CreatingGroupsAndChats
 from system.account_actions.TGInviting import InvitingToAGroup
@@ -12,7 +11,7 @@ from system.account_actions.TGInvitingScheduler import launching_an_invite_once_
     launching_invite_every_day_certain_time, schedule_invite
 from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.account_actions.reactions import WorkingWithReactions, viewing_posts, setting_reactions
+from system.account_actions.TGReactions import WorkingWithReactions, viewing_posts, setting_reactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
@@ -133,7 +132,7 @@ def mainss(page: ft.Page):
             launching_invite_every_day_certain_time()
 
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
-            Account_Verification_SPAM = AccountVerificationSPAM()
+            Account_Verification_SPAM = AccountVerification()
             await Account_Verification_SPAM.check_account_for_spam()
 
         # Меню "Подписка и отписка"
