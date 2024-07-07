@@ -2,13 +2,16 @@
 import random
 import sys
 import time
-
+import re
 from loguru import logger  # Импортируем библиотеку loguru для логирования
 from telethon import TelegramClient
 from telethon import events, types
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
 
+from system.account_actions.TGConnect import TGConnect
+from system.account_actions.TGLimits import SettingLimits
+from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.auxiliary_functions import read_json_file
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
@@ -19,6 +22,9 @@ class WorkingWithReactions:  # Класс для работы с реакция�
 
     def __init__(self):
         self.db_handler = DatabaseHandler()
+        self.tg_connect = TGConnect()
+        self.limits_class = SettingLimits()
+        self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
     async def users_choice_of_reaction(self) -> None:
         """Выбираем реакцию для выставления в чате / канале"""
@@ -57,33 +63,29 @@ class WorkingWithReactions:  # Класс для работы с реакция�
             finally:
                 client.disconnect()
 
-    def viewing_posts(self) -> None:
+    async def viewing_posts(self) -> None:
         """Накрутка просмотров постов"""
-        chat = input("[+] Введите ссылку на канал: ")  # Ссылка на группу или канал
-        records: list = await self.db_handler.open_and_read_data("config")
-        # Количество аккаунтов на данный момент в работе
-        logger.info(f"Всего accounts: {len(records)}")
-        # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        number_of_accounts = input("[+] Введите количество аккаунтов для просмотра постов: ")
-        records: list = await self.db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
-                                                                     number_of_accounts=int(number_of_accounts))
-        for row in records:
-            # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-            client, phone = telegram_connect_and_output_name(row)
-            try:
-                subscribe_to_group_or_channel(client, chat)  # Подписываемся на группу
-                channel = client.get_entity(chat)  # Получение информации о канале
-                time.sleep(5)
-                posts = client.get_messages(channel, limit=10)  # Получение последних 10 постов из канала
-                for post in posts:  # Вывод информации о постах
-                    logger.info(f"Ссылка на пост:", f"{chat}/{post.id}\nDate: {post.date}\nText: {post.text}\n")
-                    number = re.search(r"/(\d+)$", f"{chat}/{post.id}").group(1)
+        entities = find_files(directory_path="user_settings/accounts/inviting", extension='session')
+        for file in entities:
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/inviting")
+            records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
+            logger.info(f"Всего групп: {len(records)}")
+            for groups in records:  # Поочередно выводим записанные группы
+                logger.info(f"Группа: {groups}")
+                try:
+                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
+                    channel = await client.get_entity(groups[0])  # Получение информации о канале
                     time.sleep(5)
-                    client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))
-            except KeyError:
-                sys.exit(1)
-            finally:
-                client.disconnect()
+                    posts = await client.get_messages(channel, limit=10)  # Получение последних 10 постов из канала
+                    for post in posts:  # Вывод информации о постах
+                        logger.info(f"Ссылка на пост:", f"{groups[0]}/{post.id}\nDate: {post.date}\nText: {post.text}\n")
+                        number = re.search(r"/(\d+)$", f"{groups[0]}/{post.id}").group(1)
+                        time.sleep(5)
+                        await client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))
+                except KeyError:
+                    sys.exit(1)
+                finally:
+                    client.disconnect()
 
     def choosing_random_reaction(self):
         """Выбираем случайное значение из списка (реакция)"""
@@ -120,7 +122,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
             finally:
                 client.disconnect()
 
-    def writing_names_found_files_to_the_db_config_reactions(self) -> None:
+    async def writing_names_found_files_to_the_db_config_reactions(self) -> None:
         """Запись названий найденных файлов в базу данных"""
         await self.db_handler.cleaning_db(name_database_table="config_reactions")  # Call the method on the instance
         records = find_files(directory_path="user_settings/reactions/accounts", extension='session')

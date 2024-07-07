@@ -11,7 +11,7 @@ from system.account_actions.TGInvitingScheduler import launching_an_invite_once_
     launching_invite_every_day_certain_time, schedule_invite
 from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.account_actions.TGReactions import WorkingWithReactions, viewing_posts, setting_reactions
+from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
@@ -171,32 +171,13 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/automatic_setting_of_reactions")),
                          ])]))
         elif page.route == "/setting_reactions":  # Ставим реакции
-            reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
+            reaction_worker = WorkingWithReactions()  # Создаем экземпляр класса WorkingWithReactions
             await reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
-            viewing_posts(DatabaseHandler())
+            Working_With_Reactions = WorkingWithReactions()   # Создаем экземпляр класса WorkingWithReactions
+            await Working_With_Reactions.viewing_posts()
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-            await setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
-        elif page.route == "/working_with_reactions":  # Работа с реакциями
-            page.views.append(
-                ft.View("/working_with_reactions",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Ставим реакции",
-                                               on_click=lambda _: page.go("/setting_reactions")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Накручиваем просмотры постов",
-                                               on_click=lambda _: page.go("/we_are_winding_up_post_views")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Автоматическое выставление реакций",
-                                               on_click=lambda _: page.go("/automatic_setting_of_reactions")),
-                         ])]))
-        elif page.route == "/setting_reactions":  # Ставим реакции
-            reaction_worker = WorkingWithReactions(DatabaseHandler())  # Создаем экземпляр класса WorkingWithReactions
-            await reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
-        elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
-            viewing_posts(DatabaseHandler())
-        elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-            await setting_reactions(DatabaseHandler())  # Автоматическое выставление реакций
+            await setting_reactions()  # Автоматическое выставление реакций
 
         # Меню "Парсинг"
 
