@@ -172,11 +172,13 @@ def mainss(page: ft.Page):
                          ])]))
         elif page.route == "/setting_reactions":  # Ставим реакции
             reaction_worker = WorkingWithReactions()  # Создаем экземпляр класса WorkingWithReactions
-            await reaction_worker.users_choice_of_reaction()  # Вызываем метод для выбора реакции и установки её на сообщение
+            await reaction_worker.send_reaction_request()  # Вызываем метод для выбора реакции и установки её на сообщение
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
             Working_With_Reactions = WorkingWithReactions()   # Создаем экземпляр класса WorkingWithReactions
             await Working_With_Reactions.viewing_posts()
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
+            await account_verification_for_telegram(directory_path="user_settings/accounts/reactions_list",
+                                                    extension="session")  # Вызываем метод для проверки аккаунтов
             Working_With_Reactions = WorkingWithReactions()  # Создаем экземпляр класса WorkingWithReactions
             await Working_With_Reactions.setting_reactions()  # Автоматическое выставление реакций
 
