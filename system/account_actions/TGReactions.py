@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import random
+import re
 import sys
 import time
-import re
+
 from loguru import logger  # Импортируем библиотеку loguru для логирования
-from telethon import TelegramClient
 from telethon import events, types
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
@@ -14,7 +14,6 @@ from system.account_actions.TGLimits import SettingLimits
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.auxiliary_functions import read_json_file
-from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -26,42 +25,32 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         self.limits_class = SettingLimits()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def users_choice_of_reaction(self) -> None:
-        """Выбираем реакцию для выставления в чате / канале"""
-        chat = input("[+] Введите ссылку на группу / канал: ")  # Ссылка на группу или канал
-        message = input("[+] Введите ссылку на сообщение или пост: ")  # Ссылка на сообщение
-        records: list = await self.choosing_a_number_of_reactions()  # Выбираем лимиты для аккаунтов
-        random_value = choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
-        self.send_reaction_request(records, chat, message, random_value)  # Ставим реакцию на пост, сообщение
-
-    async def choosing_a_number_of_reactions(self) -> list:
-        """Выбираем лимиты для аккаунтов"""
-        # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        records: list = await self.db_handler.open_and_read_data("config")
-        # Количество аккаунтов на данный момент в работе
-        logger.info(f"Введите количество с которых будут поставлены реакции\nВсего accounts: {len(records)}")
-        # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        number_of_accounts = input("[+] Введите количество аккаунтов для выставления реакций: ")
-        records: list = await self.db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
-                                                                          number_of_accounts=int(number_of_accounts))
-        return records
-
-    def send_reaction_request(self, records, chat, message_url, reaction_input) -> None:
+    async def send_reaction_request(self, records, chat, message_url, reaction_input) -> None:
         """Ставим реакции на сообщения"""
-        for row in records:
-            # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-            client, phone = telegram_connect_and_output_name(row, self.db_handler)
+        message = input("[+] Введите ссылку на сообщение или пост: ")  # Ссылка на сообщение
+        random_value = self.choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
+        chat = input("[+] Введите ссылку на группу / канал: ")  # Ссылка на группу или канал
+
+        entities = find_files(directory_path="user_settings/accounts/inviting", extension='session')
+        for file in entities:
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/inviting")
+
             try:
-                subscribe_to_group_or_channel(client, chat)  # Подписываемся на группу
-                number = re.search(r'/(\d+)$', message_url).group(1)
-                time.sleep(5)
-                client(SendReactionRequest(peer=chat, msg_id=int(number),
-                                           reaction=[types.ReactionEmoji(emoticon=f'{reaction_input}')]))
-                time.sleep(1)
+                # Открываем базу с группами для дальнейшего parsing
+                records: list = await self.db_handler.open_and_read_data("writing_group_links")
+                for groups in records:  # Поочередно выводим записанные группы
+                    logger.info(f'[+] Парсинг группы: {groups[0]}')
+                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
+
+                    umber = re.search(r'/(\d+)$', message_url).group(1)
+                    time.sleep(5)
+                    await client(SendReactionRequest(peer=chat, msg_id=int(1),
+                                               reaction=[types.ReactionEmoji(emoticon=f'{reaction_input}')]))
+                    time.sleep(1)
             except KeyError:
                 sys.exit(1)
             finally:
-                client.disconnect()
+                await client.disconnect()
 
     async def viewing_posts(self) -> None:
         """Накрутка просмотров постов"""
@@ -87,7 +76,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 finally:
                     client.disconnect()
 
-    def choosing_random_reaction(self):
+    async def choosing_random_reaction(self):
         """Выбираем случайное значение из списка (реакция)"""
         reaction_input = read_json_file(filename='user_settings/reactions/reactions.json')
         random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
@@ -96,56 +85,28 @@ class WorkingWithReactions:  # Класс для работы с реакция�
 
     async def reactions_for_groups_and_messages_test(self, number, chat) -> None:
         """Вводим ссылку на группу и ссылку на сообщение"""
-        # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        records: list = await self.db_handler.open_and_read_data("config")
-        # Количество аккаунтов на данный момент в работе
-        logger.info(f"Всего accounts: {len(records)}")
-        number_of_accounts = read_json_file(filename='user_settings/reactions/number_accounts.json')
-        logger.info(f'Всего реакций на пост: {number_of_accounts}')
-        records: list = await self.db_handler.open_the_db_and_read_the_data_lim(name_database_table="config",
-                                                                     number_of_accounts=int(number_of_accounts))
-        for row in records:
-            # Подключение к Telegram и вывод имени аккаунта в консоль / терминал
-            proxy = reading_proxy_data_from_the_database(db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
-            client = TelegramClient(f"user_settings/accounts/{row[2]}", int(row[0]), row[1],
-                                    system_version="4.16.30-vxCUSTOM", proxy=proxy)
-            await client.connect()  # Подсоединяемся к Telegram
+        entities = find_files(directory_path="user_settings/accounts/reactions", extension='session')
+        for file in entities:
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/reactions")
             try:
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
                 time.sleep(5)
-                random_value = self.choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
+                random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
                 await client(SendReactionRequest(peer=chat, msg_id=int(number),
                                                  reaction=[types.ReactionEmoji(emoticon=f'{random_value}')]))
                 time.sleep(1)
             except KeyError:
                 sys.exit(1)
             finally:
-                client.disconnect()
-
-    async def writing_names_found_files_to_the_db_config_reactions(self) -> None:
-        """Запись названий найденных файлов в базу данных"""
-        await self.db_handler.cleaning_db(name_database_table="config_reactions")  # Call the method on the instance
-        records = find_files(directory_path="user_settings/reactions/accounts", extension='session')
-        for entities in records:
-            logger.info(f"Записываем данные аккаунта {entities} в базу данных")
-            await self.db_handler.write_data_to_db("CREATE TABLE IF NOT EXISTS config_reactions (id, hash, phone)",
-                                        "INSERT INTO config_reactions (id, hash, phone) VALUES (?, ?, ?)", entities)
+                await client.disconnect()
 
     async def setting_reactions(self):
         """Выставление реакций на новые посты"""
-        self.writing_names_found_files_to_the_db_config_reactions()
-
-        # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        records_ac: list = await self.db_handler.open_and_read_data("config_reactions")
-        # Количество аккаунтов на данный момент в работе
-        logger.info(f"Всего accounts: {len(records_ac)}")
-        records_ac_json = read_json_file(filename='user_settings/reactions/number_accounts.json')
-        logger.info(records_ac_json)
-        records: list = await self.db_handler.open_the_db_and_read_the_data_lim(name_database_table="config_reactions",
-                                                                     number_of_accounts=int(records_ac_json))
-        logger.info(records)
-        for row in records:
-            client = await telegram_connects(db_handler, session=f"user_settings/reactions/accounts/{row[2]}")
+        entities = find_files(directory_path="user_settings/accounts/reactions", extension='session')
+        for file in entities:
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/reactions")
+            records_ac_json = read_json_file(filename='user_settings/reactions/number_accounts.json')
+            logger.info(records_ac_json)
             chat = read_json_file(filename='user_settings/reactions/link_channel.json')
             logger.info(chat)
             await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
@@ -158,5 +119,3 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 # Проверяем, является ли сообщение постом и не является ли оно нашим
                 if message.post and not message.out:
                     await event.reactions_for_groups_and_messages_test(message_id, chat)
-
-        client.run_until_disconnected()  # Запуск клиента

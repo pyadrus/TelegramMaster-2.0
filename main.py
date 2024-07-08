@@ -177,7 +177,8 @@ def mainss(page: ft.Page):
             Working_With_Reactions = WorkingWithReactions()   # Создаем экземпляр класса WorkingWithReactions
             await Working_With_Reactions.viewing_posts()
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-            await setting_reactions()  # Автоматическое выставление реакций
+            Working_With_Reactions = WorkingWithReactions()  # Создаем экземпляр класса WorkingWithReactions
+            await Working_With_Reactions.setting_reactions()  # Автоматическое выставление реакций
 
         # Меню "Парсинг"
 
