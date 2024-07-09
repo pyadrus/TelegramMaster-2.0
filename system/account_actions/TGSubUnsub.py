@@ -26,17 +26,14 @@ class SubscribeUnsubscribeTelegram:
     async def subscribe_telegram(self) -> None:
         """Подписка на группы / каналы Telegram"""
         logger.info(f"Запуск подписки на группы / каналы Telegram")
-        entities = find_files(directory_path="user_settings/accounts/unsubscribe", extension='session')
+        entities = find_files(directory_path="user_settings/accounts/subscription", extension='session')
         for file in entities:
-            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/unsubscribe")
-
+            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/subscription")
             """Получение ссылки для инвайтинга"""
-            links_inviting: list = await self.db_handler.open_and_read_data("links_inviting")  # Открываем базу данных
+            links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Ссылка для инвайтинга:  {links_inviting}")
-            # return links_inviting
             for link in links_inviting:
                 logger.info(f"{link[0]}")
-
                 """Подписка на группу для инвайтинга"""
                 await self.subscribe_to_group_or_channel(client, link[0])
 
@@ -48,6 +45,7 @@ class SubscribeUnsubscribeTelegram:
         for file in entities:
             client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/unsubscribe")
             dialogs = client.iter_dialogs()
+            logger.info(f"Диалоги: {dialogs}")
             async for dialog in dialogs:
                 logger.info(f"{dialog.name}, {dialog.id}")
                 await client.delete_dialog(dialog)

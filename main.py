@@ -81,7 +81,7 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/connecting_accounts")),
                           ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений",
                                             on_click=lambda _: page.go("/sending_messages")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Работа с реакциями",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Работа с реакциями",
                                             on_click=lambda _: page.go("/working_with_reactions")),
                           ft.ElevatedButton(width=line_width, height=30, text="✔️ Проверка аккаунтов",
                                             on_click=lambda _: page.go("/checking_accounts")),
@@ -130,7 +130,6 @@ def mainss(page: ft.Page):
             schedule_invite()
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             launching_invite_every_day_certain_time()
-
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
             Account_Verification_SPAM = AccountVerification()
             await Account_Verification_SPAM.check_account_for_spam()
