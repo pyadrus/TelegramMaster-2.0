@@ -49,7 +49,6 @@ class TGConnect:
         """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
         logger.info("Подключение к Telegram. Введите номер телефона: ")
         phone = input(" ")
-        logger.info(f"Введенный номер телефона: {phone}")
         proxy = await self.reading_proxies_from_the_database()
         client = await self.connecting_to_telegram(session=f"{phone}", proxy=proxy,
                                                    directory_path="user_settings/accounts")
