@@ -75,7 +75,7 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/parsing")),
                           ft.ElevatedButton(width=line_width, height=30, text="✔️ Работа с контактами",
                                             on_click=lambda _: page.go("/working_with_contacts")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Подписка, отписка",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Подписка, отписка",
                                             on_click=lambda _: page.go("/subscribe_unsubscribe")),
                           ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов",
                                             on_click=lambda _: page.go("/connecting_accounts")),
