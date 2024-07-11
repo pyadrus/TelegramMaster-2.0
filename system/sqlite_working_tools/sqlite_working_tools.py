@@ -58,6 +58,19 @@ class DatabaseHandler:
         self.close()  # Закрываем базу данных
         return records
 
+    async def write_parsed_chat_participants_to_db_active(self, entities) -> None:
+        """Запись результатов parsing участников чата"""
+        await self.connect()
+        # for line in entities:
+        # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
+                            "user_phone, online_at, photos_id, user_premium)")
+        self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
+                                "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                [entities])
+        self.sqlite_connection.commit()
+        self.close()  # cursor_members.close() – закрытие соединения с БД.
+
     async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities) -> None:
         """Запись действий аккаунта в базу данных"""
         await self.connect()
@@ -69,6 +82,18 @@ class DatabaseHandler:
         except sqlite3.ProgrammingError as e:
             logger.error(e)
             return  # Выходим из функции write_data_to_db
+
+    async def write_parsed_chat_participants_to_db(self, entities) -> None:
+        """Запись результатов parsing участников чата"""
+        await self.connect()
+        for line in entities:
+            # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
+                                "user_phone, online_at, photos_id, user_premium)")
+            self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
+                                    "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (line,), )
+            self.sqlite_connection.commit()
+        self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns) -> None:
         """Удаляем не рабочий proxy с software_database.db, таблица proxy"""
@@ -94,31 +119,6 @@ class DatabaseHandler:
         except sqlite3.ProgrammingError:
             self.cursor.execute(f"DELETE from {table} where {column} = ?", value)
             self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
-
-    async def write_parsed_chat_participants_to_db(self, entities) -> None:
-        """Запись результатов parsing участников чата"""
-        await self.connect()
-        for line in entities:
-            # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
-                                "user_phone, online_at, photos_id, user_premium)")
-            self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
-                                    "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (line,), )
-            self.sqlite_connection.commit()
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
-
-    async def write_parsed_chat_participants_to_db_active(self, entities) -> None:
-        """Запись результатов parsing участников чата"""
-        await self.connect()
-        # for line in entities:
-        # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
-                            "user_phone, online_at, photos_id, user_premium)")
-        self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
-                                "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                [entities])
-        self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     async def save_proxy_data_to_db(self, proxy) -> None:

@@ -22,7 +22,6 @@ from system.setting.setting import output_the_input_field_inviting
 from system.setting.setting import reaction_gui
 from system.setting.setting import record_device_type
 from system.setting.setting import record_setting
-from system.setting.setting import record_the_number_of_accounts
 from system.setting.setting import recording_link_channel
 from system.setting.setting import recording_text_for_sending_messages
 from system.setting.setting import recording_the_time_to_launch_an_invite_every_day
@@ -383,9 +382,6 @@ def mainss(page: ft.Page):
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="✔️ Запись количества аккаунтов для реакций",
-                                               on_click=lambda _: page.go("/recording_number_accounts_reactions")),
 
                              ft.Row([ft.ElevatedButton(width=270, height=30, text="✔️ Выбор реакций",
                                                        on_click=lambda _: page.go("/choice_of_reactions")),
@@ -451,8 +447,6 @@ def mainss(page: ft.Page):
                                    "writing_group_links", "/settings")
         elif page.route == "/recording_reaction_link":  # ✔️ Запись ссылки для реакций
             recording_link_channel(page)
-        elif page.route == "/recording_number_accounts_reactions":  # ✔️ Запись количества аккаунтов для реакций
-            record_the_number_of_accounts(page)
         elif page.route == "/choice_of_reactions":  # ✔️ Выбор реакций
             reaction_gui(page)
         elif page.route == "/proxy_entry":  # ✔️ Запись времени между сообщениями

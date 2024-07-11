@@ -346,42 +346,12 @@ def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
     )
 
 
-def record_the_number_of_accounts(page: ft.Page):
-    """Запись количества аккаунтов проставляющих реакции"""
-    smaller_time = ft.TextField(label="Введите количество реакций", autofocus=True)
-
-    def btn_click(e) -> None:
-        try:
-            smaller_times = int(smaller_time.value)  # Extract the text value from the TextField
-            save_reactions(reactions=smaller_times,  # Количество аккаунтов для проставления реакций
-                           path_to_the_file='user_settings/reactions/number_accounts.json')
-            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-            page.update()
-
-        except ValueError:
-            pass
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                smaller_time,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
-
-
 def recording_link_channel(page: ft.Page):
     """Запись ссылки на канал / группу"""
     smaller_time = ft.TextField(label="Введите ссылку на группу", autofocus=True)
 
     def btn_click(e) -> None:
-        link_text = smaller_time.value  # Извлечение текстового значения из TextField
-        save_reactions(reactions=link_text,
+        save_reactions(reactions=smaller_time.value,
                        path_to_the_file='user_settings/reactions/link_channel.json')  # Запись ссылки в json файл
         page.go("/settings")  # Изменение маршрута в представлении существующих настроек
         page.update()
