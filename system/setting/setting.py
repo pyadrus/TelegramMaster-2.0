@@ -6,16 +6,40 @@ import sys
 import io
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
-from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 config.read("user_settings/config.ini")
 
-configs_reader = ConfigReader()
-api_id_data, api_hash_data = configs_reader.get_api_id_data_api_hash_data()
-
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+
+def recording_text_for_sending_messages(page: ft.Page) -> None:
+    """
+    Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
+    <имя файла>.json и сохраняются в формате JSON.
+    """
+    text_to_send = ft.TextField(label="Введите текст сообщения", multiline=True, max_lines=19)
+
+    def btn_click(e) -> None:
+        unique_filename = get_unique_filename(base_filename='user_settings/message/message')
+        save_message(reactions=text_to_send.value,
+                     path_to_the_file=unique_filename)  # Сохраняем данные в файл
+        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        page.update()
+
+    button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+    page.views.append(
+        ft.View(
+            "/settings",
+            [
+                text_to_send,
+                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                button,
+            ],
+        )
+    )
 
 
 def output_the_input_field_inviting(page: ft.Page, db_handler) -> None:
@@ -275,32 +299,6 @@ def get_unique_filename(base_filename):
         index += 1
 
 
-def recording_text_for_sending_messages(page: ft.Page) -> None:
-    """
-    Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
-    <имя файла>.json и сохраняются в формате JSON.
-    """
-    text_to_send = ft.TextField(label="Введите текст сообщения", multiline=True, max_lines=19)
-
-    def btn_click(e) -> None:
-        unique_filename = get_unique_filename(base_filename='user_settings/message/message')
-        save_message(reactions=text_to_send.value,
-                     path_to_the_file=unique_filename)  # Сохраняем данные в файл
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                text_to_send,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
 
 
 def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:

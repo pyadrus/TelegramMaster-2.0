@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from loguru import logger
+from telethon.errors import SessionPasswordNeededError, ApiIdInvalidError
 from telethon.sync import TelegramClient
 
 from system.auxiliary_functions.global_variables import ConfigReader
@@ -43,3 +44,31 @@ class TGConnect:
         client = await self.connecting_to_telegram(file[0], proxy, directory_path)
         await client.connect()
         return client
+
+    async def telegram_connect(self):
+        """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
+        logger.info("Подключение к Telegram. Введите номер телефона: ")
+        phone = input(" ")
+        logger.info(f"Введенный номер телефона: {phone}")
+        proxy = await self.reading_proxies_from_the_database()
+        client = await self.connecting_to_telegram(session=f"{phone}", proxy=proxy,
+                                                   directory_path="user_settings/accounts")
+        await client.connect()  # Подключаемся к Telegram
+        if not await client.is_user_authorized():
+            await client.send_code_request(phone)
+            try:
+                logger.info("[+] Введите код: ")
+                phone_code = input(" ")
+                # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
+                await client.sign_in(phone, code=phone_code)
+            except SessionPasswordNeededError:
+                """
+                https://telethonn.readthedocs.io/en/latest/extra/basic/creating-a-client.html#two-factor-authorization-2fa
+                """
+                # Если аккаунт имеет password, то просим пользователя ввести пароль
+                logger.info("Введите пароль для входа в аккаунт: ")
+                password = input(" ")
+                await client.sign_in(password=password)
+            except ApiIdInvalidError:
+                logger.info("[!] Не валидные api_id/api_hash")
+        client.disconnect() # Отключаемся от Telegram

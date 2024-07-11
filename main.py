@@ -4,6 +4,7 @@ from loguru import logger
 
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGChecking import account_verification_for_telegram, AccountVerification
+from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
 from system.account_actions.TGCreating import CreatingGroupsAndChats
 from system.account_actions.TGInviting import InvitingToAGroup
@@ -269,8 +270,8 @@ def mainss(page: ft.Page):
             await tg_contact.inviting_contact()
 
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-            tg_contact = TGContact()
-            await tg_contact.connecting_new_account()
+            TG_Connect = TGConnect()
+            await TG_Connect.telegram_connect()
 
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             Creating_GroupsAndChats = CreatingGroupsAndChats()
