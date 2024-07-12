@@ -10,3 +10,9 @@
 /.idea!!/.idea/
 !/.idea/
 /docs/.obsidian/
+!/docs/.obsidian/app.json
+!/docs/.obsidian/appearance.json
+!/docs/.obsidian/core-plugins.json
+!/docs/.obsidian/core-plugins-migration.json
+!/docs/.obsidian/graph.json
+!/docs/.obsidian/workspace.json

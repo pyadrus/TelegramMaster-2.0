@@ -214,12 +214,11 @@ class SendTelegramMessages:
             # Выбираем рандомный файл для чтения
             random_file = random.choice(entities)  # Выбираем случайный файл для чтения из списка файлов
             logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
-            # data = read_json_file(filename=f"user_settings/message/{random_file[0]}.json")
             data = read_json_file(filename=f"user_settings/{folder}/{random_file[0]}.json")
         return data  # Возвращаем данные из файла
 
     async def sending_messages_via_chats_times(self) -> None:
-        """Массовая рассылка в чаты"""
+        """Массовая рассылка в чаты (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам.md)"""
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for file in entities:
             client = await self.tg_connect.connect_to_telegram(file,

@@ -292,9 +292,8 @@ def mainss(page: ft.Page):
                              ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений по чатам",
                                                on_click=lambda _: page.go("/sending_messages_via_chats")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Рассылка сообщений по чатам с автоответчиком",
-                                               on_click=lambda _: page.go(
-                                                   "/sending_messages_via_chats_with_answering_machine")),
+                                               text="✔️ Рассылка сообщений по чатам с автоответчиком",
+                                               on_click=lambda _: page.go("/sending_messages_via_chats_with_answering_machine")),
                              ft.ElevatedButton(width=line_width, height=30, text="Рассылка файлов по чатам",
                                                on_click=lambda _: page.go("/sending_files_via_chats")),
                              ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений + файлов по чатам",
