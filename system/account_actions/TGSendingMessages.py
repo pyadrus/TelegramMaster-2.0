@@ -268,34 +268,31 @@ class SendTelegramMessages:
         for file in entities:
             client = await self.tg_connect.connect_to_telegram(file,
                                                                directory_path="user_settings/accounts/answering_machine")
-            # Получаем список чатов, которым нужно отправить сообщение
-            records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
-            logger.info(records)
-            for chat in records:
-                try:
-                    await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
-                    entities = find_files(directory_path="user_settings/message",
-                                          extension="json")  # Выбираем случайное сообщение из файла
-                    logger.info(entities)  # Выводим список чатов
-                    data = self.select_and_read_random_file(entities, folder="message")
-                    await client.send_message(chat[0], f'{data}')
-                    logger.info(f'Сообщение {data} отправлено в чат {chat[0]}')
-                except UserBannedInChannelError:
-                    logger.error('Вам запрещено отправлять сообщения в супергруппах/каналах '
-                                 '(вызвано запросом SendMessageRequest)')  # Выводим в лог ошибку
 
-                await self.random_dream()  # Прерываем работу и меняем аккаунт
-
-            @client.on(events.NewMessage())
+            @client.on(events.NewMessage(incoming=True)) # Обработчик личных сообщений
             async def handle_private_messages(event):
                 """Обрабатывает входящие личные сообщения"""
                 if event.is_private:  # Проверяем, является ли сообщение личным
                     logger.info(f'Входящее сообщение: {event.message.message}')
-                    entities = find_files(directory_path="user_settings/answering_machine",
-                                          extension="json")  # Получаем список аккаунтов
-                    logger.info(entities)  # Выводим список чатов
-                    data = self.select_and_read_random_file(entities, folder="answering_machine")
+                    entities = find_files(directory_path="user_settings/answering_machine", extension="json")
+                    logger.info(entities)
+                    data = await self.select_and_read_random_file(entities, folder="answering_machine")
                     logger.info(data)
                     await event.respond(f'{data}')  # Отвечаем на входящее сообщение
 
-            client.loop.run_until_complete()  # Запускаем программу
+            # Получаем список чатов, которым нужно отправить сообщение
+            records: list = await self.db_handler.open_and_read_data("writing_group_links")
+            logger.info(records)
+            for chat in records:
+                try:
+                    await client(JoinChannelRequest(chat[0]))  # Подписываемся на канал / группу
+                    entities = find_files(directory_path="user_settings/message", extension="json")
+                    logger.info(entities)
+                    data = await self.select_and_read_random_file(entities, folder="message")
+                    await client.send_message(chat[0], f'{data}')
+                    logger.info(f'Сообщение {data} отправлено в чат {chat[0]}')
+                except UserBannedInChannelError:
+                    logger.error('Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
+                await self.random_dream()  # Прерываем работу и меняем аккаунт
+
+            await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
