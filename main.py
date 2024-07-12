@@ -87,7 +87,7 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/checking_accounts")),
                           ft.ElevatedButton(width=line_width, height=30, text="✔️ Создание групп (чатов)",
                                             on_click=lambda _: page.go("/creating_groups")),
-                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Редактирование BIO",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Редактирование_BIO",
                                             on_click=lambda _: page.go("/bio_editing")),
                           ft.ElevatedButton(width=line_width, height=30, text="✔️ Настройки",
                                             on_click=lambda _: page.go("/settings")),
@@ -339,7 +339,7 @@ def mainss(page: ft.Page):
             account_limits = config_reader.get_limits()
             await Send_TelegramMessages.send_files_to_personal_chats(account_limits=account_limits)
 
-        # Меню "Редактирование BIO"
+        # Меню "Редактирование_BIO"
 
         elif page.route == "/bio_editing":
             page.views.append(

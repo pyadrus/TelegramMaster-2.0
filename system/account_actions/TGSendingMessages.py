@@ -263,7 +263,7 @@ class SendTelegramMessages:
         await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
 
     async def answering_machine(self):
-        """Рассылка сообщений в чатам"""
+        """Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)"""
         entities = find_files(directory_path="user_settings/accounts/answering_machine", extension='session')
         for file in entities:
             client = await self.tg_connect.connect_to_telegram(file,
