@@ -321,7 +321,7 @@ def mainss(page: ft.Page):
             await Send_TelegramMessages.sending_messages_via_chats_times()
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # ✔️ Рассылка сообщений по чатам с автоответчиком
             Send_TelegramMessages = SendTelegramMessages()
-            Send_TelegramMessages.mains()
+            await Send_TelegramMessages.answering_machine()
         elif page.route == "/sending_files_via_chats":  # ✔️ Рассылка файлов по чатам
             Send_TelegramMessages = SendTelegramMessages()
             await Send_TelegramMessages.sending_files_via_chats()

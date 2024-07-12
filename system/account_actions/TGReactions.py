@@ -93,8 +93,6 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         entities = find_files(directory_path="user_settings/accounts/reactions", extension='session')
         for file in entities:
             client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/reactions")
-            records_ac_json = read_json_file(filename='user_settings/reactions/number_accounts.json')
-            logger.info(records_ac_json)
             chat = read_json_file(filename='user_settings/reactions/link_channel.json')
             logger.info(chat)
             await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
