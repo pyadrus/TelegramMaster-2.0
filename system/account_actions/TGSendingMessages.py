@@ -268,7 +268,6 @@ class SendTelegramMessages:
         for file in entities:
             client = await self.tg_connect.connect_to_telegram(file,
                                                                directory_path="user_settings/accounts/answering_machine")
-
             # Получаем список чатов, которым нужно отправить сообщение
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(records)
