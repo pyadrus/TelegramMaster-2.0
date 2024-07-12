@@ -268,7 +268,7 @@ class SendTelegramMessages:
             client = await self.tg_connect.connect_to_telegram(file,
                                                                directory_path="user_settings/accounts/answering_machine")
 
-            @client.on(events.NewMessage(incoming=True)) # Обработчик личных сообщений
+            @client.on(events.NewMessage(incoming=True))  # Обработчик личных сообщений
             async def handle_private_messages(event):
                 """Обрабатывает входящие личные сообщения"""
                 if event.is_private:  # Проверяем, является ли сообщение личным
