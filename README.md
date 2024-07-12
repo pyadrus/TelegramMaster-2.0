@@ -85,13 +85,9 @@
 
 Telegram: https://t.me/PyAdminRU
 
-VK: https://vk.com/zh.vitaliy
-
 ## Дополнительная информация
 
 Telegram: https://t.me/master_tg_d
-
-VK: https://vk.com/tg_smm2
 
 📣 Не забудьте поделиться своим опытом и отзывами!
 
