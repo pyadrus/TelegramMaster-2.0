@@ -79,7 +79,7 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/subscribe_unsubscribe")),
                           ft.ElevatedButton(width=line_width, height=30, text="✔️ Подключение аккаунтов",
                                             on_click=lambda _: page.go("/connecting_accounts")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Рассылка сообщений",
                                             on_click=lambda _: page.go("/sending_messages")),
                           ft.ElevatedButton(width=line_width, height=30, text="✔️ Работа с реакциями",
                                             on_click=lambda _: page.go("/working_with_reactions")),
@@ -144,7 +144,7 @@ def mainss(page: ft.Page):
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                              ft.ElevatedButton(width=line_width, height=30, text="✔️ Подписка",
                                                on_click=lambda _: page.go("/subscription_all")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Отписываемся",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Отписываемся",
                                                on_click=lambda _: page.go("/unsubscribe_all")),
                          ])]))
         elif page.route == "/subscription_all":  # Подписка
@@ -285,9 +285,9 @@ def mainss(page: ft.Page):
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Отправка сообщений в личку",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Отправка сообщений в личку",
                                                on_click=lambda _: page.go("/sending_messages_personal_account")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Отправка файлов в личку",
                                                on_click=lambda _: page.go("/sending_files_personal_account")),
                              ft.ElevatedButton(width=line_width, height=30, text="✔️ Рассылка сообщений по чатам",
                                                on_click=lambda _: page.go("/sending_messages_via_chats")),
@@ -296,12 +296,12 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/sending_messages_via_chats_with_answering_machine")),
                              ft.ElevatedButton(width=line_width, height=30, text="✔️ Рассылка файлов по чатам",
                                                on_click=lambda _: page.go("/sending_files_via_chats")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений + файлов по чатам",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Рассылка сообщений + файлов по чатам",
                                                on_click=lambda _: page.go("/sending_messages_files_via_chats")),
                              ft.ElevatedButton(width=line_width, height=30,
-                                               text="Отправка сообщений в личку (с лимитами)",
+                                               text="✔️ Отправка сообщений в личку (с лимитами)",
                                                on_click=lambda _: page.go("/sending_personal_messages_with_limits")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку (с лимитами)",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Отправка файлов в личку (с лимитами)",
                                                on_click=lambda _: page.go(
                                                    "/sending_files_to_personal_account_with_limits")),
                          ])]))

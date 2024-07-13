@@ -58,7 +58,7 @@ class SendTelegramMessages:
                         user_to_add = await client.get_input_entity(username)
                         entities = find_files(directory_path="user_settings/message", extension="json")
                         logger.info(entities)
-                        data = self.select_and_read_random_file(entities, folder="message")
+                        data = await self.select_and_read_random_file(entities, folder="message")
                         await client.send_message(user_to_add, data.format(username))
                         # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
                         logger.error(f"""Отправляем сообщение в личку {username}. Сообщение отправлено 
