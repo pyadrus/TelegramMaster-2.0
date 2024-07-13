@@ -129,11 +129,12 @@ class SendTelegramMessages:
                 sys.exit(1)
 
     async def sending_files_via_chats(self) -> None:
-        """Рассылка файлов по чатам"""
+        """Рассылка файлов по чатам (docs/Рассылка_сообщений/Рассылка_файлов_по_чатам.md)"""
         # Спрашиваем у пользователя, через какое время будем отправлять сообщения
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for files in entities:
-            client = await self.tg_connect.connect_to_telegram(files, directory_path="user_settings/accounts/send_message")
+            client = await self.tg_connect.connect_to_telegram(files,
+                                                               directory_path="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Всего групп: {len(records)}")
             for groups in records:  # Поочередно выводим записанные группы
@@ -143,7 +144,8 @@ class SendTelegramMessages:
                     for file in entities:
                         await client.send_file(groups[0], f"user_settings/files_to_send/{file}")
                         # Работу записываем в лог файл, для удобства слежения, за изменениями
-                        logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
+                        logger.error(
+                            f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
                 except ChannelPrivateError:
                     logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} 
@@ -174,15 +176,13 @@ class SendTelegramMessages:
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Всего групп: {len(records)}")
             for groups in records:  # Поочередно выводим записанные группы
-                logger.info(f"Всего групп: {len(records)}")
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
+                entities = find_files(directory_path="user_settings/message", extension="json")
+                data = await self.select_and_read_random_file(entities, folder="message")
+                file_entities = all_find_files(directory_path="user_settings/files_to_send")
                 try:
-                    entities = find_files(directory_path="user_settings/message", extension="json")
-                    data = await self.select_and_read_random_file(entitiess, folder="message")
-                    entitiess = all_find_files(directory_path="user_settings/files_to_send")
-                    for file in entities:
-                        file_path = f"user_settings/files_to_send/{file}"
-                        await client.send_file(groups[0], file_path, caption=data)
+                    for file in file_entities:
+                        await client.send_file(groups[0], f"user_settings/files_to_send/{file}", caption=data)
                         # Работу записываем в лог файл, для удобства слежения, за изменениями
                         logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Файл {file} отправлен в группу 
                                          {groups[0]}.""")
@@ -224,7 +224,6 @@ class SendTelegramMessages:
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Всего групп: {len(records)}")
             for groups in records:  # Поочередно выводим записанные группы
-                logger.info(f"Группа: {groups}")
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
                 entitiess = find_files(directory_path="user_settings/message", extension="json")
                 data = await self.select_and_read_random_file(entitiess, folder="message")
@@ -289,7 +288,8 @@ class SendTelegramMessages:
                     await client.send_message(chat[0], f'{data}')
                     logger.info(f'Сообщение {data} отправлено в чат {chat[0]}')
                 except UserBannedInChannelError:
-                    logger.error('Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
+                    logger.error(
+                        'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
                 await self.random_dream()  # Прерываем работу и меняем аккаунт
 
             await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
