@@ -33,7 +33,7 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "0.15.5", "05.07.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "0.15.8", "14.07.2024"  # Версия программы, дата изменения
 
 
 def mainss(page: ft.Page):
@@ -77,7 +77,7 @@ def mainss(page: ft.Page):
                                             on_click=lambda _: page.go("/working_with_contacts")),
                           ft.ElevatedButton(width=line_width, height=30, text="✔️ Подписка, отписка",
                                             on_click=lambda _: page.go("/subscribe_unsubscribe")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов",
+                          ft.ElevatedButton(width=line_width, height=30, text="✔️ Подключение аккаунтов",
                                             on_click=lambda _: page.go("/connecting_accounts")),
                           ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений",
                                             on_click=lambda _: page.go("/sending_messages")),
@@ -289,12 +289,12 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/sending_messages_personal_account")),
                              ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку",
                                                on_click=lambda _: page.go("/sending_files_personal_account")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений по чатам",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Рассылка сообщений по чатам",
                                                on_click=lambda _: page.go("/sending_messages_via_chats")),
                              ft.ElevatedButton(width=line_width, height=30,
                                                text="✔️ Рассылка сообщений по чатам с автоответчиком",
                                                on_click=lambda _: page.go("/sending_messages_via_chats_with_answering_machine")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка файлов по чатам",
+                             ft.ElevatedButton(width=line_width, height=30, text="✔️ Рассылка файлов по чатам",
                                                on_click=lambda _: page.go("/sending_files_via_chats")),
                              ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений + файлов по чатам",
                                                on_click=lambda _: page.go("/sending_messages_files_via_chats")),

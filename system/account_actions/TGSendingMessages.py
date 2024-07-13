@@ -133,8 +133,7 @@ class SendTelegramMessages:
         # Спрашиваем у пользователя, через какое время будем отправлять сообщения
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for files in entities:
-            client = await self.tg_connect.connect_to_telegram(files,
-                                                               directory_path="user_settings/accounts/send_message")
+            client = await self.tg_connect.connect_to_telegram(files, directory_path="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Всего групп: {len(records)}")
             for groups in records:  # Поочередно выводим записанные группы
@@ -144,8 +143,7 @@ class SendTelegramMessages:
                     for file in entities:
                         await client.send_file(groups[0], f"user_settings/files_to_send/{file}")
                         # Работу записываем в лог файл, для удобства слежения, за изменениями
-                        logger.error(
-                            f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
+                        logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
                 except ChannelPrivateError:
                     logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} 
