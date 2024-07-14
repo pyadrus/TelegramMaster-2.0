@@ -19,6 +19,6 @@ class CreatingGroupsAndChats:
             client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/creating")
 
             response = await client(functions.channels.CreateChannelRequest(title='My awesome title',
-                                                                      about='Description for your group',
-                                                                      megagroup=True))
+                                                                            about='Description for your group',
+                                                                            megagroup=True))
             logger.info(response.stringify())

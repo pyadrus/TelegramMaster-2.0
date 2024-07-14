@@ -288,8 +288,7 @@ class SendTelegramMessages:
                     await client.send_message(chat[0], f'{data}')
                     logger.info(f'Сообщение {data} отправлено в чат {chat[0]}')
                 except UserBannedInChannelError:
-                    logger.error(
-                        'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
+                    logger.error('Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
                 await self.random_dream()  # Прерываем работу и меняем аккаунт
 
             await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента

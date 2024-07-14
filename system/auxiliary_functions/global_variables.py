@@ -16,15 +16,8 @@ class ConfigReader:
         return (self.config.getint('time_inviting', 'time_inviting_1', fallback=None),
                 self.config.getint('time_inviting', 'time_inviting_2', fallback=None))
 
-    def get_time_changing_accounts(self):
-        return (self.config.getint('time_changing_accounts', 'time_changing_accounts_1', fallback=None),
-                self.config.getint('time_changing_accounts', 'time_changing_accounts_2', fallback=None))
-
     def get_limits(self):
         return self.config.getint('account_limits', 'account_limits', fallback=None)
-
-    def get_message_limits(self):
-        return self.config.getint('message_limits', 'message_limits', fallback=None)
 
     def get_time_activity_user(self):
         return (self.config.getint('time_activity_user', 'time_activity_user_1', fallback=None),
@@ -41,9 +34,6 @@ class ConfigReader:
     def get_hour_minutes_every_day(self):
         return (self.config.get('hour_minutes_every_day', 'hour', fallback=None),
                 self.config.get('hour_minutes_every_day', 'minutes', fallback=None))
-
-    def account_name_newsletter(self):
-        return self.config.get('account_name_newsletter', 'account_name_newsletter', fallback=None)
 
 
 # Пример использования

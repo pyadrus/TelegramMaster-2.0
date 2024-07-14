@@ -33,7 +33,7 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "2.0.0", "14.07.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "2.0.1", "14.07.2024"  # Версия программы, дата изменения
 
 
 def mainss(page: ft.Page):
@@ -123,7 +123,8 @@ def mainss(page: ft.Page):
             inviting_to_a_group = InvitingToAGroup()
             config_reader = ConfigReader()
             account_limits = config_reader.get_limits()
-            await inviting_to_a_group.inviting_without_limits(account_limits=account_limits)  # Вызываем метод для инвайтинга
+            await inviting_to_a_group.inviting_without_limits(
+                account_limits=account_limits)  # Вызываем метод для инвайтинга
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             launching_an_invite_once_an_hour()
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
@@ -135,7 +136,6 @@ def mainss(page: ft.Page):
             await Account_Verification_SPAM.check_account_for_spam()
 
         # Меню "Подписка и отписка"
-
         elif page.route == "/subscribe_unsubscribe":
             page.views.append(
                 ft.View("/subscribe_unsubscribe",
@@ -155,7 +155,6 @@ def mainss(page: ft.Page):
             await sub_unsub_tg.unsubscribe_all()
 
         # Меню "Работа с реакциями"
-
         elif page.route == "/working_with_reactions":
             page.views.append(
                 ft.View("/working_with_reactions",
@@ -173,7 +172,7 @@ def mainss(page: ft.Page):
             reaction_worker = WorkingWithReactions()  # Создаем экземпляр класса WorkingWithReactions
             await reaction_worker.send_reaction_request()  # Вызываем метод для выбора реакции и установки её на сообщение
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
-            Working_With_Reactions = WorkingWithReactions()   # Создаем экземпляр класса WorkingWithReactions
+            Working_With_Reactions = WorkingWithReactions()  # Создаем экземпляр класса WorkingWithReactions
             await Working_With_Reactions.viewing_posts()
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             await account_verification_for_telegram(directory_path="user_settings/accounts/reactions_list",
@@ -182,7 +181,6 @@ def mainss(page: ft.Page):
             await Working_With_Reactions.setting_reactions()  # Автоматическое выставление реакций
 
         # Меню "Парсинг"
-
         elif page.route == "/parsing":
             page.views.append(
                 ft.View("/parsing",
@@ -208,38 +206,28 @@ def mainss(page: ft.Page):
                          ])]))
 
         elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
-
             await account_verification_for_telegram(directory_path="user_settings/accounts/parsing",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
             parsing_group_members = ParsingGroupMembers()
             await parsing_group_members.parse_groups()
-
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
-
             await account_verification_for_telegram(directory_path="user_settings/accounts/parsing",
                                                     extension="session")  # Вызываем метод для проверки аккаунтов
             parsing_group_members = ParsingGroupMembers()
             await parsing_group_members.choose_group_for_parsing()
-
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
-
             chat_input = input(f"{logger.info('[+] Введите ссылку на чат с которого будем собирать активных: ')}")
             limit_active_user = input(f"{logger.info('[+] Введите количество сообщений которые будем parsing: ')}")
-
             parsing_group_members = ParsingGroupMembers()
             await parsing_group_members.parse_active_users(chat_input, int(limit_active_user))
-
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
             parsing_group_members = ParsingGroupMembers()
             await parsing_group_members.parse_subscribed_groups()
-
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
-
             db_handler = DatabaseHandler()
             await db_handler.cleaning_db(name_database_table="members")
 
         # Меню "Работа с контактами"
-
         elif page.route == "/working_with_contacts":
             page.views.append(
                 ft.View("/working_with_contacts",
@@ -261,24 +249,20 @@ def mainss(page: ft.Page):
         elif page.route == "/show_list_contacts":  # Показать список контактов
             tg_contact = TGContact()
             await tg_contact.show_account_contact_list()
-
         elif page.route == "/deleting_contacts":  # Удаление контактов
             tg_contact = TGContact()
             await tg_contact.delete_contact()
         elif page.route == "/adding_contacts":  # Добавление контактов
             tg_contact = TGContact()
             await tg_contact.inviting_contact()
-
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
             TG_Connect = TGConnect()
             await TG_Connect.telegram_connect()
-
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             Creating_GroupsAndChats = CreatingGroupsAndChats()
             await Creating_GroupsAndChats.creating_groups_and_chats()
 
         # Меню "Рассылка сообщений"
-
         elif page.route == "/sending_messages":
             page.views.append(
                 ft.View("/sending_messages",
@@ -293,7 +277,8 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/sending_messages_via_chats")),
                              ft.ElevatedButton(width=line_width, height=30,
                                                text="Рассылка сообщений по чатам с автоответчиком",
-                                               on_click=lambda _: page.go("/sending_messages_via_chats_with_answering_machine")),
+                                               on_click=lambda _: page.go(
+                                                   "/sending_messages_via_chats_with_answering_machine")),
                              ft.ElevatedButton(width=line_width, height=30, text="Рассылка файлов по чатам",
                                                on_click=lambda _: page.go("/sending_files_via_chats")),
                              ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений + файлов по чатам",
@@ -339,7 +324,6 @@ def mainss(page: ft.Page):
             await Send_TelegramMessages.send_files_to_personal_chats(account_limits=account_limits)
 
         # Меню "Редактирование_BIO"
-
         elif page.route == "/bio_editing":
             page.views.append(
                 ft.View("/bio_editing",
@@ -375,60 +359,44 @@ def mainss(page: ft.Page):
             aaa.change_username_profile_gui(page)
 
         # Меню "Настройки TelegramMaster"
-
         elif page.route == "/settings":
             page.views.append(
                 ft.View("/settings",
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-
                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Выбор реакций",
                                                        on_click=lambda _: page.go("/choice_of_reactions")),
                                      ft.ElevatedButton(width=270, height=30, text="Запись proxy",
                                                        on_click=lambda _: page.go("/proxy_entry"))]),
-
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Запись времени между сообщениями",
-                                               on_click=lambda _: page.go("/recording_the_time_between_messages")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Время между инвайтингом, рассылка сообщений",
-                                               on_click=lambda _: page.go("/time_between_invites_sending_messages")),
-
                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Смена аккаунтов",
                                                        on_click=lambda _: page.go("/changing_accounts")),
                                      ft.ElevatedButton(width=270, height=30, text="Запись api_id, api_hash",
                                                        on_click=lambda _: page.go("/recording_api_id_api_hash"))]),
-
                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись времени",
                                                        on_click=lambda _: page.go("/time_between_subscriptions")),
                                      ft.ElevatedButton(width=270, height=30, text="Запись сообщений",
                                                        on_click=lambda _: page.go("/message_recording"))]),
-
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись имени аккаунта",
-                                                       on_click=lambda _: page.go("/record_your_account_name")),
-                                     ft.ElevatedButton(width=270, height=30, text="Время между подпиской",
-                                                       on_click=lambda _: page.go("/time_between_subscriptionss"))]),
-
-                             ft.ElevatedButton(width=line_width, height=30, text="Запись ссылки для реакций",
-                                               on_click=lambda _: page.go("/recording_reaction_link")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Формирование списка чатов / каналов",
-                                               on_click=lambda _: page.go("/forming_list_of_chats_channels")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Формирование списка username",
-                                               on_click=lambda _: page.go("/creating_username_list")),
-
                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись ссылки",
                                                        on_click=lambda _: page.go("/link_entry")),
                                      ft.ElevatedButton(width=270, height=30, text="Лимиты на аккаунт",
                                                        on_click=lambda _: page.go("/account_limits"))]),
-
                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Лимиты на сообщения",
                                                        on_click=lambda _: page.go("/message_limits")),
                                      ft.ElevatedButton(width=270, height=30, text="Смена типа устройства",
                                                        on_click=lambda _: page.go("/changing_device_type"))]),
-
+                             ft.ElevatedButton(width=line_width, height=30, text="Формирование списка username",
+                                               on_click=lambda _: page.go("/creating_username_list")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Время между подпиской",
+                                               on_click=lambda _: page.go("/time_between_subscriptionss")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Запись времени между сообщениями",
+                                               on_click=lambda _: page.go("/recording_the_time_between_messages")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Время между инвайтингом, рассылка сообщений",
+                                               on_click=lambda _: page.go("/time_between_invites_sending_messages")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Запись ссылки для реакций",
+                                               on_click=lambda _: page.go("/recording_reaction_link")),
+                             ft.ElevatedButton(width=line_width, height=30, text="Формирование списка чатов / каналов",
+                                               on_click=lambda _: page.go("/forming_list_of_chats_channels")),
                          ])]))
         elif page.route == "/creating_username_list":  # ✔️ Формирование списка username
             writing_members(page, DatabaseHandler())
@@ -461,8 +429,6 @@ def mainss(page: ft.Page):
             recording_the_time_to_launch_an_invite_every_day(page)
         elif page.route == "/message_recording":  # ✔️ Запись сообщений
             recording_text_for_sending_messages(page)
-        elif page.route == "/record_your_account_name":  # ✔️ Запись имени аккаунта
-            record_setting(page, "account_name_newsletter", "Введите название аккаунта для отправки сообщений по чатам")
         elif page.route == "/time_between_subscriptionss":  # ✔️ Время между подпиской
             create_main_window(page, variable="time_subscription")
         page.update()
