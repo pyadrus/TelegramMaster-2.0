@@ -1,0 +1,11 @@
+Во время выполнения функции «Изменить имя username» TelegramMaster заменяет username пользователя аккаунта Telegram.
+
+Перед тем как изменить username пользователя, выполните следующие действия:
+1. Запустите TelegramMaster.
+2. Подключите аккаунты к TelegramMaster. Если вы ещё не подключили их, см. [Подключение аккаунтов Telegram к TelegramMaster](https://github.com/pyadrus/telegram_bot_smm/blob/main/docs/%D0%9F%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5_%D0%B0%D0%BA%D0%BA%D0%B0%D1%83%D0%BD%D1%82%D0%BE%D0%B2/%D0%9F%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5_%D0%B0%D0%BA%D0%BA%D0%B0%D1%83%D0%BD%D1%82%D0%BE%D0%B2.md). Вы также можете скопировать файл сессии аккаунта в папку `TelegramMaster/user_settings/accounts/bio`.
+3. Перейдите в «Редактирование BIO».
+4. Выберите функцию «Изменение username».
+5. Введите новый username в поле ввода.
+6. Нажмите «Готово».
+
+После выполнения этих действий username пользователя вашего аккаунта Telegram изменится.
