@@ -16,7 +16,8 @@ class AccountBIO:
         self.extension = 'session'
         self.tg_connect = TGConnect()
 
-    def function_button_ready(self, page: ft.Page, button, user_input):
+    @classmethod
+    def function_button_ready(cls, page: ft.Page, button, user_input):
 
         page.views.append(
             ft.View(
