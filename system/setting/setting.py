@@ -42,31 +42,90 @@ def recording_text_for_sending_messages(page: ft.Page) -> None:
     )
 
 
-def output_the_input_field_inviting(page: ft.Page, db_handler) -> None:
-    """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
-    text_to_send = ft.TextField(label="Введите ссылку на группу для инвайтинга", multiline=True, max_lines=19)
+class SettingPage:
 
-    async def btn_click(e) -> None:
-        await db_handler.open_and_read_data("links_inviting")  # Удаление списка с группами
-        await db_handler.write_to_single_column_table(name_database="links_inviting",
-                                                      database_columns="links_inviting",
-                                                      into_columns="links_inviting",
-                                                      recorded_data=text_to_send.value.split())
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
+    def __init__(self):
+        self.db_handler = DatabaseHandler()
 
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
+    def output_the_input_field_inviting(self, page: ft.Page) -> None:
+        """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
+        text_to_send = ft.TextField(label="Введите ссылку на группу для инвайтинга", multiline=True, max_lines=19)
 
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                text_to_send,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
+        async def btn_click(e) -> None:
+            await self.db_handler.open_and_read_data("links_inviting")  # Удаление списка с группами
+            await self.db_handler.write_to_single_column_table(name_database="links_inviting",
+                                                               database_columns="links_inviting",
+                                                               into_columns="links_inviting",
+                                                               recorded_data=text_to_send.value.split())
+            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        self.add_view_with_textfield_and_button(page, text_to_send, button)
+
+    def creating_the_main_window_for_proxy_data_entry(self, page: ft.Page) -> None:
+        """Создание главного окна для ввода дынных proxy"""
+        proxy_type = ft.TextField(label="Введите тип прокси, например SOCKS5: ", multiline=True, max_lines=19)
+        addr_type = ft.TextField(label="Введите ip адрес, например 194.67.248.9: ", multiline=True, max_lines=19)
+        port_type = ft.TextField(label="Введите порт прокси, например 9795: ", multiline=True, max_lines=19)
+        username_type = ft.TextField(label="Введите username, например NnbjvX: ", multiline=True, max_lines=19)
+        password_type = ft.TextField(label="Введите пароль, например ySfCfk: ", multiline=True, max_lines=19)
+
+        def btn_click(e) -> None:
+            rdns_types = "True"
+            proxy = [proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
+                     rdns_types]
+            self.db_handler.save_proxy_data_to_db(proxy=proxy)
+            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        page.views.append(
+            ft.View(
+                "/settings",
+                [
+                    proxy_type,
+                    addr_type,
+                    port_type,
+                    username_type,
+                    password_type,
+                    ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                    button,
+                ],
+            )
         )
-    )
+
+    def writing_members(self, page: ft.Page) -> None:
+        """Запись username в software_database.db в графическое окно Flet"""
+        text_to_send = ft.TextField(label="Введите список username", multiline=True, max_lines=19)
+
+        async def btn_click(e) -> None:
+            await self.db_handler.write_to_single_column_table(name_database="members",
+                                                               database_columns="username, id, access_hash, first_name, last_name, "
+                                                                                "user_phone, online_at, photos_id, user_premium",
+                                                               into_columns="members (username)",
+                                                               recorded_data=text_to_send.value.split())
+
+            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        self.add_view_with_textfield_and_button(page, text_to_send, button)
+
+    def add_view_with_textfield_and_button(self, page: ft.Page, text_to_send, button):
+        page.views.append(
+            ft.View(
+                "/settings",
+                [
+                    text_to_send,
+                    ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                    button,
+                ],
+            )
+        )
 
 
 def output_the_input_field(page: ft.Page, label: str, table_name: str, column_name: str, route: str) -> None:
@@ -210,40 +269,6 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
     return config
 
 
-def creating_the_main_window_for_proxy_data_entry(page: ft.Page, db_handler) -> None:
-    """Создание главного окна для ввода дынных proxy"""
-    proxy_type = ft.TextField(label="Введите тип прокси, например SOCKS5: ", multiline=True, max_lines=19)
-    addr_type = ft.TextField(label="Введите ip адрес, например 194.67.248.9: ", multiline=True, max_lines=19)
-    port_type = ft.TextField(label="Введите порт прокси, например 9795: ", multiline=True, max_lines=19)
-    username_type = ft.TextField(label="Введите username, например NnbjvX: ", multiline=True, max_lines=19)
-    password_type = ft.TextField(label="Введите пароль, например ySfCfk: ", multiline=True, max_lines=19)
-
-    def btn_click(e) -> None:
-        rdns_types = "True"
-        proxy = [proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
-                 rdns_types]
-        db_handler.save_proxy_data_to_db(proxy=proxy)
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                proxy_type,
-                addr_type,
-                port_type,
-                username_type,
-                password_type,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
-
-
 def create_main_window(page: ft.Page, variable) -> None:
     """
     :param page:
@@ -297,8 +322,6 @@ def get_unique_filename(base_filename):
         if not os.path.isfile(new_filename):
             return new_filename
         index += 1
-
-
 
 
 def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
@@ -455,33 +478,5 @@ def reaction_gui(page: ft.Page):
                 ]),
                 button,  # Добавляет кнопку на страницу (page).
             ]
-        )
-    )
-
-
-def writing_members(page: ft.Page, db_handler) -> None:
-    """Запись username в software_database.db в графическое окно Flet"""
-    text_to_send = ft.TextField(label="Введите список username", multiline=True, max_lines=19)
-
-    async def btn_click(e) -> None:
-        await db_handler.write_to_single_column_table(name_database="members",
-                                                      database_columns="username, id, access_hash, first_name, last_name, "
-                                                                       "user_phone, online_at, photos_id, user_premium",
-                                                      into_columns="members (username)",
-                                                      recorded_data=text_to_send.value.split())
-
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                text_to_send,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
         )
     )
