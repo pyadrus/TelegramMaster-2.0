@@ -62,7 +62,7 @@ class SettingPage:
 
         button = ft.ElevatedButton("Готово", on_click=btn_click)
 
-        self.add_view_with_textfield_and_button(page, text_to_send, button)
+        self.add_view_with_fields_and_button(page, [text_to_send], button)
 
     def creating_the_main_window_for_proxy_data_entry(self, page: ft.Page) -> None:
         """Создание главного окна для ввода дынных proxy"""
@@ -72,30 +72,18 @@ class SettingPage:
         username_type = ft.TextField(label="Введите username, например NnbjvX: ", multiline=True, max_lines=19)
         password_type = ft.TextField(label="Введите пароль, например ySfCfk: ", multiline=True, max_lines=19)
 
-        def btn_click(e) -> None:
+        async def btn_click(e) -> None:
             rdns_types = "True"
             proxy = [proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
                      rdns_types]
-            self.db_handler.save_proxy_data_to_db(proxy=proxy)
+            await self.db_handler.save_proxy_data_to_db(proxy=proxy)
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
         button = ft.ElevatedButton("Готово", on_click=btn_click)
 
-        page.views.append(
-            ft.View(
-                "/settings",
-                [
-                    proxy_type,
-                    addr_type,
-                    port_type,
-                    username_type,
-                    password_type,
-                    ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                    button,
-                ],
-            )
-        )
+        self.add_view_with_fields_and_button(page, [proxy_type, addr_type, port_type, username_type, password_type],
+                                             button)
 
     def writing_members(self, page: ft.Page) -> None:
         """Запись username в software_database.db в графическое окно Flet"""
@@ -113,17 +101,19 @@ class SettingPage:
 
         button = ft.ElevatedButton("Готово", on_click=btn_click)
 
-        self.add_view_with_textfield_and_button(page, text_to_send, button)
+        self.add_view_with_fields_and_button(page, [text_to_send], button)
 
-    def add_view_with_textfield_and_button(self, page: ft.Page, text_to_send, button):
+    def add_view_with_fields_and_button(self, page: ft.Page, fields: list, button: ft.ElevatedButton) -> None:
+        """
+        Добавляет представление с заданными текстовыми полями и кнопкой.
+        :param page: Страница, на которую нужно добавить представление
+        :param fields: Список текстовых полей для добавления
+        :param button: Кнопка для добавления
+        """
         page.views.append(
             ft.View(
                 "/settings",
-                [
-                    text_to_send,
-                    ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                    button,
-                ],
+                fields + [ft.Column(), button]  # Заполнитель для приветствия или другого содержимого (необязательно)
             )
         )
 
