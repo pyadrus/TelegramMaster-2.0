@@ -30,7 +30,7 @@ class AccountBIO:
             )
         )
 
-    def change_username_profile_gui(self, page: ft.Page) -> None:
+    async def change_username_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
         user_input = ft.TextField(label="Введите username профиля (не более 32 символов): ", multiline=True,
                                   max_lines=19)
@@ -66,7 +66,7 @@ class AccountBIO:
                 logger.error("Неверный никнейм")
                 client.disconnect()
 
-    def change_bio_profile_gui(self, page: ft.Page) -> None:
+    async def change_bio_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
         user_input = ft.TextField(label="Введите описание профиля, не более 70 символов: ", multiline=True,
                                   max_lines=19)
@@ -100,7 +100,7 @@ class AccountBIO:
             except AuthKeyUnregisteredError:
                 logger.error("Ошибка соединения с профилем")
 
-    def change_name_profile_gui(self, page: ft.Page) -> None:
+    async def change_name_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
         user_input = ft.TextField(label="Введите имя профиля, не более 64 символов: ", multiline=True,
                                   max_lines=19)
@@ -127,7 +127,7 @@ class AccountBIO:
             except AuthKeyUnregisteredError:
                 logger.error("Ошибка соединения с профилем")
 
-    def change_last_name_profile_gui(self, page: ft.Page) -> None:
+    async def change_last_name_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
         user_input = ft.TextField(label="Введите фамилию профиля, не более 64 символов: ", multiline=True,
                                   max_lines=19)
