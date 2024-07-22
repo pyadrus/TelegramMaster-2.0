@@ -317,7 +317,7 @@ def mainss(page: ft.Page):
                                                        on_click=lambda _: page.go("/time_between_subscriptions")),
                                      ft.ElevatedButton(width=270, height=30, text="Запись сообщений",
                                                        on_click=lambda _: page.go("/message_recording"))]),
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись ссылки",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись ссылки для инвайтинга",
                                                        on_click=lambda _: page.go("/link_entry")),
                                      ft.ElevatedButton(width=270, height=30, text="Лимиты на аккаунт",
                                                        on_click=lambda _: page.go("/account_limits"))]),
@@ -357,7 +357,7 @@ def mainss(page: ft.Page):
             SettingPage().output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
                                                  "writing_group_links", "/settings", "writing_group_links")
         elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
-            await DatabaseHandler().open_and_read_data("links_inviting")  # Удаление списка с группами
+            await DatabaseHandler().cleaning_db("links_inviting")  # Удаление списка с группами
             SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга", "links_inviting",
                                                  "links_inviting", "/settings", "links_inviting")
         elif page.route == "/proxy_entry":  # Запись времени между сообщениями
