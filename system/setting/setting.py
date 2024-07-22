@@ -19,21 +19,6 @@ class SettingPage:
     def __init__(self):
         self.db_handler = DatabaseHandler()
 
-    def output_the_input_field_inviting(self, page: ft.Page) -> None:
-        """Выводим ссылки в поле ввода поле ввода для записи ссылок групп"""
-        text_to_send = ft.TextField(label="Введите ссылку на группу для инвайтинга", multiline=True, max_lines=19)
-
-        async def btn_click(e) -> None:
-            await self.db_handler.open_and_read_data("links_inviting")  # Удаление списка с группами
-            await self.db_handler.write_to_single_column_table(name_database="links_inviting",
-                                                               database_columns="links_inviting",
-                                                               into_columns="links_inviting",
-                                                               recorded_data=text_to_send.value.split())
-            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-            page.update()
-
-        self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
-
     def creating_the_main_window_for_proxy_data_entry(self, page: ft.Page) -> None:
         """Создание главного окна для ввода дынных proxy"""
         proxy_type = ft.TextField(label="Введите тип прокси, например SOCKS5: ", multiline=True, max_lines=19)
@@ -53,22 +38,6 @@ class SettingPage:
         self.add_view_with_fields_and_button(page, [proxy_type, addr_type, port_type, username_type, password_type],
                                              btn_click)
 
-    def writing_members(self, page: ft.Page) -> None:
-        """Запись username в software_database.db в графическое окно Flet"""
-        text_to_send = ft.TextField(label="Введите список username", multiline=True, max_lines=19)
-
-        async def btn_click(e) -> None:
-            await self.db_handler.write_to_single_column_table(name_database="members",
-                                                               database_columns="username, id, access_hash, first_name, last_name, "
-                                                                                "user_phone, online_at, photos_id, user_premium",
-                                                               into_columns="members (username)",
-                                                               recorded_data=text_to_send.value.split())
-
-            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-            page.update()
-
-        self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
-
     def recording_text_for_sending_messages(self, page: ft.Page) -> None:
         """
         Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
@@ -85,16 +54,15 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
 
-    def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str) -> None:
+    def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str, into_columns: str) -> None:
         """Окно ввода для записи списка контактов telegram"""
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
 
         async def btn_click(e) -> None:
-            await self.db_handler.open_and_read_data(table_name)  # Удаление списка с контактами
             await self.db_handler.write_to_single_column_table(
                 name_database=table_name,
                 database_columns=column_name,
-                into_columns=column_name,
+                into_columns=into_columns,
                 recorded_data=text_to_send.value.split()
             )
             page.go(route)  # Изменение маршрута в представлении существующих настроек

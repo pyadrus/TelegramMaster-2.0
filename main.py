@@ -205,8 +205,9 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/adding_contacts")),
                          ])]))
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
+            await DatabaseHandler().open_and_read_data("contact")  # Удаление списка с контактами
             SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
-                                                 "contact", "/working_with_contacts")
+                                                 "contact", "/working_with_contacts", "contact")
         elif page.route == "/show_list_contacts":  # Показать список контактов
             await TGContact().show_account_contact_list()
         elif page.route == "/deleting_contacts":  # Удаление контактов
@@ -348,16 +349,21 @@ def mainss(page: ft.Page):
         elif page.route == "/account_limits":  # Лимиты на аккаунт
             SettingPage().record_setting(page, "account_limits", "Введите лимит на аккаунт")
         elif page.route == "/creating_username_list":  # Формирование списка username
-            SettingPage().writing_members(page)
+            SettingPage().output_the_input_field(page, "Введите список username", "members",
+                                                 "username, id, access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium",
+                                                 "/settings", "members (username)")
+        elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
+            await DatabaseHandler().open_and_read_data("writing_group_links")  # Удаление списка с контактами
+            SettingPage().output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
+                                                 "writing_group_links", "/settings", "writing_group_links")
         elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
-            SettingPage().output_the_input_field_inviting(page)
+            await DatabaseHandler().open_and_read_data("links_inviting")  # Удаление списка с группами
+            SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга", "links_inviting",
+                                                 "links_inviting", "/settings", "links_inviting")
         elif page.route == "/proxy_entry":  # Запись времени между сообщениями
             SettingPage().creating_the_main_window_for_proxy_data_entry(page)
         elif page.route == "/message_recording":  # Запись сообщений
             SettingPage().recording_text_for_sending_messages(page)
-        elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
-            SettingPage().output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
-                                                 "writing_group_links", "/settings")
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
             SettingPage().recording_link_channel(page)
         elif page.route == "/choice_of_reactions":  # Выбор реакций
