@@ -16,15 +16,8 @@ from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
-from system.setting.setting import create_main_window, SettingPage
-from system.setting.setting import output_the_input_field
+from system.setting.setting import SettingPage
 from system.setting.setting import reaction_gui
-from system.setting.setting import record_device_type
-from system.setting.setting import record_setting
-from system.setting.setting import recording_link_channel
-from system.setting.setting import recording_text_for_sending_messages
-from system.setting.setting import recording_the_time_to_launch_an_invite_every_day
-from system.setting.setting import writing_api_id_api_hash
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
@@ -212,8 +205,8 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/adding_contacts")),
                          ])]))
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
-            output_the_input_field(page, "Введите список номеров телефонов", "contact",
-                                   "contact", "/working_with_contacts")
+            SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
+                                                 "contact", "/working_with_contacts")
         elif page.route == "/show_list_contacts":  # Показать список контактов
             await TGContact().show_account_contact_list()
         elif page.route == "/deleting_contacts":  # Удаление контактов
@@ -347,43 +340,38 @@ def mainss(page: ft.Page):
                          ])]))
 
         elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash
-            writing_api_id_api_hash(page)
+            SettingPage().writing_api_id_api_hash(page)
         elif page.route == "/changing_device_type":  # Смена типа устройства
-            record_device_type(page)
+            SettingPage().record_device_type(page)
         elif page.route == "/message_limits":  # Лимиты на сообщения
-            record_setting(page, "message_limits", "Введите лимит на сообщения")
+            SettingPage().record_setting(page, "message_limits", "Введите лимит на сообщения")
         elif page.route == "/account_limits":  # Лимиты на аккаунт
-            record_setting(page, "account_limits", "Введите лимит на аккаунт")
-
-
+            SettingPage().record_setting(page, "account_limits", "Введите лимит на аккаунт")
         elif page.route == "/creating_username_list":  # Формирование списка username
             SettingPage().writing_members(page)
         elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
             SettingPage().output_the_input_field_inviting(page)
         elif page.route == "/proxy_entry":  # Запись времени между сообщениями
             SettingPage().creating_the_main_window_for_proxy_data_entry(page)
-
-
+        elif page.route == "/message_recording":  # Запись сообщений
+            SettingPage().recording_text_for_sending_messages(page)
         elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
-            output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
-                                   "writing_group_links", "/settings")
+            SettingPage().output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
+                                                 "writing_group_links", "/settings")
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
-            recording_link_channel(page)
+            SettingPage().recording_link_channel(page)
         elif page.route == "/choice_of_reactions":  # Выбор реакций
             reaction_gui(page)
-
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
-            create_main_window(page, variable="time_sending_messages")
+            SettingPage().create_main_window(page, variable="time_sending_messages")
         elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
-            create_main_window(page, variable="time_inviting")
+            SettingPage().create_main_window(page, variable="time_inviting")
         elif page.route == "/changing_accounts":  # Смена аккаунтов
-            create_main_window(page, variable="time_changing_accounts")
+            SettingPage().create_main_window(page, variable="time_changing_accounts")
         elif page.route == "/time_between_subscriptions":  # Запись времени
-            recording_the_time_to_launch_an_invite_every_day(page)
-        elif page.route == "/message_recording":  # Запись сообщений
-            recording_text_for_sending_messages(page)
+            SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
-            create_main_window(page, variable="time_subscription")
+            SettingPage().create_main_window(page, variable="time_subscription")
         page.update()
 
     def view_pop(view):

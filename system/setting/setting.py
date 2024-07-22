@@ -14,34 +14,6 @@ config.read("user_settings/config.ini")
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 
-def recording_text_for_sending_messages(page: ft.Page) -> None:
-    """
-    Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
-    <имя файла>.json и сохраняются в формате JSON.
-    """
-    text_to_send = ft.TextField(label="Введите текст сообщения", multiline=True, max_lines=19)
-
-    def btn_click(e) -> None:
-        unique_filename = get_unique_filename(base_filename='user_settings/message/message')
-        save_message(reactions=text_to_send.value,
-                     path_to_the_file=unique_filename)  # Сохраняем данные в файл
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                text_to_send,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
-
-
 class SettingPage:
 
     def __init__(self):
@@ -103,6 +75,172 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [text_to_send], button)
 
+    def recording_text_for_sending_messages(self, page: ft.Page) -> None:
+        """
+        Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
+        <имя файла>.json и сохраняются в формате JSON.
+        """
+        text_to_send = ft.TextField(label="Введите текст сообщения", multiline=True, max_lines=19)
+
+        def btn_click(e) -> None:
+            unique_filename = get_unique_filename(base_filename='user_settings/message/message')
+            save_message(reactions=text_to_send.value,
+                         path_to_the_file=unique_filename)  # Сохраняем данные в файл
+            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        self.add_view_with_fields_and_button(page, [text_to_send], button)
+
+    def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str) -> None:
+        """Окно ввода для записи списка контактов telegram"""
+        text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
+
+        async def btn_click(e) -> None:
+            await self.db_handler.open_and_read_data(table_name)  # Удаление списка с контактами
+            await self.db_handler.write_to_single_column_table(
+                name_database=table_name,
+                database_columns=column_name,
+                into_columns=column_name,
+                recorded_data=text_to_send.value.split()
+            )
+            page.go(route)  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        self.add_view_with_fields_and_button(page, [text_to_send], button)
+
+    def recording_link_channel(self, page: ft.Page):
+        """Запись ссылки на канал / группу"""
+        smaller_time = ft.TextField(label="Введите ссылку на группу", autofocus=True)
+
+        def btn_click(e) -> None:
+            save_reactions(reactions=smaller_time.value,
+                           path_to_the_file='user_settings/reactions/link_channel.json')  # Запись ссылки в json файл
+            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        self.add_view_with_fields_and_button(page, [smaller_time], button)
+
+    def record_setting(self, page: ft.Page, limit_type: str, label: str):
+        """Запись лимитов на аккаунт или сообщение"""
+        limits = ft.TextField(label=label, multiline=True, max_lines=19)
+
+        def btn_click(e) -> None:
+            config.get(limit_type, limit_type)
+            config.set(limit_type, limit_type, limits.value)
+            writing_settings_to_a_file(config)
+
+            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        self.add_view_with_fields_and_button(page, [limits], button)
+
+    def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
+        """Запись времени для запуска inviting в определенное время"""
+        hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
+        minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
+
+        def btn_click(e) -> None:
+            try:
+                hour = int(hour_textfield.value)
+                minutes = int(minutes_textfield.value)
+
+                if not 0 <= hour < 24:
+                    logger.info('Введите часы в пределах от 0 до 23!')
+                    return
+                if not 0 <= minutes < 60:
+                    logger.info('Введите минуты в пределах от 0 до 59!')
+                    return
+
+                # Предполагая, что config является объектом, похожим на словарь
+                config.get("hour_minutes_every_day", "hour")
+                config.set("hour_minutes_every_day", "hour", str(hour))
+                config.get("hour_minutes_every_day", "minutes")
+                config.set("hour_minutes_every_day", "minutes", str(minutes))
+                writing_settings_to_a_file(config)
+                page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            except ValueError:
+                logger.info('Введите числовые значения для часов и минут!')
+            page.update()  # Обновляем страницу
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], button)
+
+    def create_main_window(self, page: ft.Page, variable) -> None:
+        """
+        :param page:
+        :param variable: название переменной в файле config.ini
+        :return: None
+        """
+        smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
+        larger_timex = ft.TextField(label="Время в секундах (большее)")
+
+        def btn_click(e) -> None:
+            try:
+                smaller_times = int(smaller_timex.value)
+                larger_times = int(larger_timex.value)
+
+                if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
+                    # Если условие прошло проверку, то возвращаем первое и второе время
+                    config = recording_limits_file(str(smaller_times), str(larger_times), variable=variable)
+                    writing_settings_to_a_file(config)
+                    page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            except ValueError:
+                pass
+
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+        self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], button)
+
+    def writing_api_id_api_hash(self, page: ft.Page):
+        """Записываем api, hash полученный с помощью регистрации приложения на сайте https://my.telegram.org/auth"""
+        api_id_data = ft.TextField(label="Введите api_id", multiline=True, max_lines=19)
+        api_hash_data = ft.TextField(label="Введите api_hash", multiline=True, max_lines=19)
+
+        def btn_click(e) -> None:
+            config.get("telegram_settings", "id")
+            config.set("telegram_settings", "id", api_id_data.value)
+            config.get("telegram_settings", "hash")
+            config.set("telegram_settings", "hash", api_hash_data.value)
+            writing_settings_to_a_file(config)
+            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+        self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], button)
+
+    def record_device_type(self, page: ft.Page):
+        """Запись типа устройства например: Samsung SGH600, Android 9 (P30), 4.2.1,
+        Vivo V9, Android 9 (P30), 4.2.1"""
+        device_model = ft.TextField(label="Введите модель устройства", multiline=True, max_lines=19)
+        system_version = ft.TextField(label="Введите версию операционной системы", multiline=True, max_lines=19)
+        app_version = ft.TextField(label="Введите версию приложения", multiline=True, max_lines=19)
+
+        def btn_click(e) -> None:
+            config.get("device_model", "device_model")
+            config.set("device_model", "device_model", device_model.value)
+            config.get("system_version", "system_version")
+            config.set("system_version", "system_version", system_version.value)
+            config.get("app_version", "app_version")
+            config.set("app_version", "app_version", app_version.value)
+
+            writing_settings_to_a_file(config)
+
+            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+        self.add_view_with_fields_and_button(page, [device_model, system_version], button)
+
     def add_view_with_fields_and_button(self, page: ft.Page, fields: list, button: ft.ElevatedButton) -> None:
         """
         Добавляет представление с заданными текстовыми полями и кнопкой.
@@ -118,130 +256,9 @@ class SettingPage:
         )
 
 
-def output_the_input_field(page: ft.Page, label: str, table_name: str, column_name: str, route: str) -> None:
-    """Окно ввода для записи списка контактов telegram"""
-    db_handler = DatabaseHandler()
-    text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
-
-    async def btn_click(e) -> None:
-        await db_handler.open_and_read_data(table_name)  # Удаление списка с контактами
-        await db_handler.write_to_single_column_table(
-            name_database=table_name,
-            database_columns=column_name,
-            into_columns=column_name,
-            recorded_data=text_to_send.value.split()
-        )
-        page.go(route)  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            route,
-            [
-                text_to_send,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
-
-
 def save_reactions(reactions, path_to_the_file):
     with open(path_to_the_file, 'w', encoding='utf-8') as file:
         json.dump(reactions, file, ensure_ascii=False, indent=4)
-
-
-def record_setting(page: ft.Page, limit_type: str, label: str):
-    """Запись лимитов на аккаунт или сообщение"""
-    limits = ft.TextField(label=label, multiline=True, max_lines=19)
-
-    def btn_click(e) -> None:
-        config.get(limit_type, limit_type)
-        config.set(limit_type, limit_type, limits.value)
-        writing_settings_to_a_file(config)
-
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                limits,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
-
-
-def record_device_type(page: ft.Page):
-    """Запись типа устройства например: Samsung SGH600, Android 9 (P30), 4.2.1,
-    Vivo V9, Android 9 (P30), 4.2.1"""
-    device_model = ft.TextField(label="Введите модель устройства", multiline=True, max_lines=19)
-    system_version = ft.TextField(label="Введите версию операционной системы", multiline=True, max_lines=19)
-    app_version = ft.TextField(label="Введите версию приложения", multiline=True, max_lines=19)
-
-    def btn_click(e) -> None:
-        config.get("device_model", "device_model")
-        config.set("device_model", "device_model", device_model.value)
-        config.get("system_version", "system_version")
-        config.set("system_version", "system_version", system_version.value)
-        config.get("app_version", "app_version")
-        config.set("app_version", "app_version", app_version.value)
-
-        writing_settings_to_a_file(config)
-
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                device_model,
-                system_version,
-                app_version,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
-
-
-def writing_api_id_api_hash(page: ft.Page):
-    """Записываем api, hash полученный с помощью регистрации приложения на сайте https://my.telegram.org/auth"""
-    api_id_data = ft.TextField(label="Введите api_id", multiline=True, max_lines=19)
-    api_hash_data = ft.TextField(label="Введите api_hash", multiline=True, max_lines=19)
-
-    def btn_click(e) -> None:
-        config.get("telegram_settings", "id")
-        config.set("telegram_settings", "id", api_id_data.value)
-        config.get("telegram_settings", "hash")
-        config.set("telegram_settings", "hash", api_hash_data.value)
-        writing_settings_to_a_file(config)
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                api_id_data,
-                api_hash_data,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
 
 
 def writing_settings_to_a_file(config) -> None:
@@ -259,45 +276,6 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
     return config
 
 
-def create_main_window(page: ft.Page, variable) -> None:
-    """
-    :param page:
-    :param variable: название переменной в файле config.ini
-    :return: None
-    """
-    smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
-    larger_timex = ft.TextField(label="Время в секундах (большее)")
-
-    def btn_click(e) -> None:
-        try:
-            smaller_times = int(smaller_timex.value)
-            larger_times = int(larger_timex.value)
-
-            if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
-                # Если условие прошло проверку, то возвращаем первое и второе время
-                config = recording_limits_file(str(smaller_times), str(larger_times), variable=variable)
-                writing_settings_to_a_file(config)
-                page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        except ValueError:
-            pass
-
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                smaller_timex,
-                larger_timex,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
-
-
 def save_message(reactions, path_to_the_file):
     """Открываем файл для записи данных в формате JSON"""
     with open(f'{path_to_the_file}', 'w', encoding='utf-8') as json_file:
@@ -312,73 +290,6 @@ def get_unique_filename(base_filename):
         if not os.path.isfile(new_filename):
             return new_filename
         index += 1
-
-
-def recording_the_time_to_launch_an_invite_every_day(page: ft.Page) -> None:
-    """Запись времени для запуска inviting в определенное время"""
-    hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
-    minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
-
-    def btn_click(e) -> None:
-        try:
-            hour = int(hour_textfield.value)
-            minutes = int(minutes_textfield.value)
-
-            if not 0 <= hour < 24:
-                logger.info('Введите часы в пределах от 0 до 23!')
-                return
-            if not 0 <= minutes < 60:
-                logger.info('Введите минуты в пределах от 0 до 59!')
-                return
-
-            # Предполагая, что config является объектом, похожим на словарь
-            config.get("hour_minutes_every_day", "hour")
-            config.set("hour_minutes_every_day", "hour", str(hour))
-            config.get("hour_minutes_every_day", "minutes")
-            config.set("hour_minutes_every_day", "minutes", str(minutes))
-            writing_settings_to_a_file(config)
-            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        except ValueError:
-            logger.info('Введите числовые значения для часов и минут!')
-        page.update()  # Обновляем страницу
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                hour_textfield,
-                minutes_textfield,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
-
-
-def recording_link_channel(page: ft.Page):
-    """Запись ссылки на канал / группу"""
-    smaller_time = ft.TextField(label="Введите ссылку на группу", autofocus=True)
-
-    def btn_click(e) -> None:
-        save_reactions(reactions=smaller_time.value,
-                       path_to_the_file='user_settings/reactions/link_channel.json')  # Запись ссылки в json файл
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-        page.update()
-
-    button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-    page.views.append(
-        ft.View(
-            "/settings",
-            [
-                smaller_time,
-                ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button,
-            ],
-        )
-    )
 
 
 def reaction_gui(page: ft.Page):
