@@ -32,9 +32,7 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-        self.add_view_with_fields_and_button(page, [text_to_send], button)
+        self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
 
     def creating_the_main_window_for_proxy_data_entry(self, page: ft.Page) -> None:
         """Создание главного окна для ввода дынных proxy"""
@@ -52,10 +50,8 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-
         self.add_view_with_fields_and_button(page, [proxy_type, addr_type, port_type, username_type, password_type],
-                                             button)
+                                             btn_click)
 
     def writing_members(self, page: ft.Page) -> None:
         """Запись username в software_database.db в графическое окно Flet"""
@@ -71,9 +67,7 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-        self.add_view_with_fields_and_button(page, [text_to_send], button)
+        self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
 
     def recording_text_for_sending_messages(self, page: ft.Page) -> None:
         """
@@ -89,9 +83,7 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-        self.add_view_with_fields_and_button(page, [text_to_send], button)
+        self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
 
     def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str) -> None:
         """Окно ввода для записи списка контактов telegram"""
@@ -108,9 +100,7 @@ class SettingPage:
             page.go(route)  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-        self.add_view_with_fields_and_button(page, [text_to_send], button)
+        self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
 
     def recording_link_channel(self, page: ft.Page):
         """Запись ссылки на канал / группу"""
@@ -122,9 +112,7 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-        self.add_view_with_fields_and_button(page, [smaller_time], button)
+        self.add_view_with_fields_and_button(page, [smaller_time], btn_click)
 
     def record_setting(self, page: ft.Page, limit_type: str, label: str):
         """Запись лимитов на аккаунт или сообщение"""
@@ -138,9 +126,7 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-        self.add_view_with_fields_and_button(page, [limits], button)
+        self.add_view_with_fields_and_button(page, [limits], btn_click)
 
     def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
         """Запись времени для запуска inviting в определенное время"""
@@ -170,9 +156,7 @@ class SettingPage:
                 logger.info('Введите числовые значения для часов и минут!')
             page.update()  # Обновляем страницу
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-
-        self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], button)
+        self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click)
 
     def create_main_window(self, page: ft.Page, variable) -> None:
         """
@@ -198,8 +182,7 @@ class SettingPage:
 
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], button)
+        self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click)
 
     def writing_api_id_api_hash(self, page: ft.Page):
         """Записываем api, hash полученный с помощью регистрации приложения на сайте https://my.telegram.org/auth"""
@@ -215,8 +198,7 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], button)
+        self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], btn_click)
 
     def record_device_type(self, page: ft.Page):
         """Запись типа устройства например: Samsung SGH600, Android 9 (P30), 4.2.1,
@@ -238,16 +220,17 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.add_view_with_fields_and_button(page, [device_model, system_version], button)
+        self.add_view_with_fields_and_button(page, [device_model, system_version], btn_click)
 
-    def add_view_with_fields_and_button(self, page: ft.Page, fields: list, button: ft.ElevatedButton) -> None:
+    def add_view_with_fields_and_button(self, page: ft.Page, fields: list, btn_click) -> None:
         """
         Добавляет представление с заданными текстовыми полями и кнопкой.
         :param page: Страница, на которую нужно добавить представление
         :param fields: Список текстовых полей для добавления
         :param button: Кнопка для добавления
         """
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
         page.views.append(
             ft.View(
                 "/settings",
