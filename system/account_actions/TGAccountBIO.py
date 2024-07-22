@@ -17,8 +17,8 @@ class AccountBIO:
         self.tg_connect = TGConnect()
 
     @classmethod
-    def function_button_ready(cls, page: ft.Page, button, user_input):
-
+    def function_button_ready(cls, page: ft.Page, btn_click, user_input):
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
         page.views.append(
             ft.View(
                 "/bio_editing",
@@ -40,8 +40,7 @@ class AccountBIO:
             page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.function_button_ready(page, button, user_input)
+        self.function_button_ready(page, btn_click, user_input)
 
     async def change_username_profile(self, user_input) -> None:
         """
@@ -76,8 +75,7 @@ class AccountBIO:
             page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.function_button_ready(page, button, user_input)
+        self.function_button_ready(page, btn_click, user_input)
 
     async def change_bio_profile(self, user_input):
         """Изменение описания профиля"""
@@ -110,8 +108,7 @@ class AccountBIO:
             page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.function_button_ready(page, button, user_input)
+        self.function_button_ready(page, btn_click, user_input)
 
     async def change_name_profile(self, user_input):
         """Изменение имени профиля"""
@@ -137,8 +134,7 @@ class AccountBIO:
             page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.function_button_ready(page, button, user_input)
+        self.function_button_ready(page, btn_click, user_input)
 
     async def change_last_name_profile(self, user_input):
         """Изменение фамилии профиля"""

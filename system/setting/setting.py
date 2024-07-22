@@ -78,8 +78,8 @@ class SettingPage:
 
         def btn_click(e) -> None:
             unique_filename = get_unique_filename(base_filename='user_settings/message/message')
-            save_message(reactions=text_to_send.value,
-                         path_to_the_file=unique_filename)  # Сохраняем данные в файл
+            write_data_to_json_file(reactions=text_to_send.value,
+                                    path_to_the_file=unique_filename)  # Сохраняем данные в файл
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
@@ -107,8 +107,8 @@ class SettingPage:
         smaller_time = ft.TextField(label="Введите ссылку на группу", autofocus=True)
 
         def btn_click(e) -> None:
-            save_reactions(reactions=smaller_time.value,
-                           path_to_the_file='user_settings/reactions/link_channel.json')  # Запись ссылки в json файл
+            write_data_to_json_file(reactions=smaller_time.value,
+                                    path_to_the_file='user_settings/reactions/link_channel.json')  # Запись ссылки в json файл
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
@@ -239,11 +239,6 @@ class SettingPage:
         )
 
 
-def save_reactions(reactions, path_to_the_file):
-    with open(path_to_the_file, 'w', encoding='utf-8') as file:
-        json.dump(reactions, file, ensure_ascii=False, indent=4)
-
-
 def writing_settings_to_a_file(config) -> None:
     """Запись данных в файл user_settings/config.ini"""
     with open("user_settings/config.ini", "w") as setup:  # Открываем файл в режиме записи
@@ -259,10 +254,10 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
     return config
 
 
-def save_message(reactions, path_to_the_file):
+def write_data_to_json_file(reactions, path_to_the_file):
     """Открываем файл для записи данных в формате JSON"""
-    with open(f'{path_to_the_file}', 'w', encoding='utf-8') as json_file:
-        json.dump(reactions, json_file, ensure_ascii=False)  # Используем функцию dump для записи данных в файл
+    with open(path_to_the_file, 'w', encoding='utf-8') as file:
+        json.dump(reactions, file, ensure_ascii=False, indent=4)
 
 
 def get_unique_filename(base_filename):
@@ -338,8 +333,8 @@ def reaction_gui(page: ft.Page):
                 # Если чекбокс отмечен, добавляет его текст (метку) в список selected_reactions.
                 selected_reactions.append(checkbox.label)
 
-        save_reactions(reactions=selected_reactions,
-                       path_to_the_file='user_settings/reactions/reactions.json')  # Сохраняем реакцию в json файл
+        write_data_to_json_file(reactions=selected_reactions,
+                                path_to_the_file='user_settings/reactions/reactions.json')  # Сохраняем реакцию в json файл
         page.go("/settings")  # Изменение маршрута в представлении существующих настроек
 
     # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
