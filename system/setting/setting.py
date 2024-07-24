@@ -38,15 +38,14 @@ class SettingPage:
         self.add_view_with_fields_and_button(page, [proxy_type, addr_type, port_type, username_type, password_type],
                                              btn_click)
 
-    def recording_text_for_sending_messages(self, page: ft.Page) -> None:
+    def recording_text_for_sending_messages(self, page: ft.Page, label, unique_filename) -> None:
         """
         Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
         <имя файла>.json и сохраняются в формате JSON.
         """
-        text_to_send = ft.TextField(label="Введите текст сообщения", multiline=True, max_lines=19)
+        text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
 
         def btn_click(e) -> None:
-            unique_filename = get_unique_filename(base_filename='user_settings/message/message')
             write_data_to_json_file(reactions=text_to_send.value,
                                     path_to_the_file=unique_filename)  # Сохраняем данные в файл
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
@@ -54,7 +53,8 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
 
-    def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str, into_columns: str) -> None:
+    def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str,
+                               into_columns: str) -> None:
         """Окно ввода для записи списка контактов telegram"""
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
 
@@ -69,18 +69,6 @@ class SettingPage:
             page.update()
 
         self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
-
-    def recording_link_channel(self, page: ft.Page):
-        """Запись ссылки на канал / группу"""
-        smaller_time = ft.TextField(label="Введите ссылку на группу", autofocus=True)
-
-        def btn_click(e) -> None:
-            write_data_to_json_file(reactions=smaller_time.value,
-                                    path_to_the_file='user_settings/reactions/link_channel.json')  # Запись ссылки в json файл
-            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-            page.update()
-
-        self.add_view_with_fields_and_button(page, [smaller_time], btn_click)
 
     def record_setting(self, page: ft.Page, limit_type: str, label: str):
         """Запись лимитов на аккаунт или сообщение"""
@@ -168,27 +156,6 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], btn_click)
 
-    def record_device_type(self, page: ft.Page):
-        """Запись типа устройства например: Samsung SGH600, Android 9 (P30), 4.2.1,
-        Vivo V9, Android 9 (P30), 4.2.1"""
-        device_model = ft.TextField(label="Введите модель устройства", multiline=True, max_lines=19)
-        system_version = ft.TextField(label="Введите версию операционной системы", multiline=True, max_lines=19)
-        app_version = ft.TextField(label="Введите версию приложения", multiline=True, max_lines=19)
-
-        def btn_click(e) -> None:
-            config.get("device_model", "device_model")
-            config.set("device_model", "device_model", device_model.value)
-            config.get("system_version", "system_version")
-            config.set("system_version", "system_version", system_version.value)
-            config.get("app_version", "app_version")
-            config.set("app_version", "app_version", app_version.value)
-
-            writing_settings_to_a_file(config)
-
-            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-            page.update()
-
-        self.add_view_with_fields_and_button(page, [device_model, system_version], btn_click)
 
     def add_view_with_fields_and_button(self, page: ft.Page, fields: list, btn_click) -> None:
         """
