@@ -100,7 +100,6 @@ class ParsingGroupMembers:
         for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
             client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/parsing")
-
             logger.info("""Parsing групп / каналов на которые подписан аккаунт""")
             await self.forming_a_list_of_groups(client)
             await client.disconnect()  # Разрываем соединение telegram

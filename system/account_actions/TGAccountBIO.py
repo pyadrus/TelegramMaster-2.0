@@ -17,8 +17,8 @@ class AccountBIO:
         self.tg_connect = TGConnect()
 
     @classmethod
-    def function_button_ready(cls, page: ft.Page, button, user_input):
-
+    def function_button_ready(cls, page: ft.Page, btn_click, user_input):
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
         page.views.append(
             ft.View(
                 "/bio_editing",
@@ -30,7 +30,7 @@ class AccountBIO:
             )
         )
 
-    def change_username_profile_gui(self, page: ft.Page) -> None:
+    async def change_username_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
         user_input = ft.TextField(label="Введите username профиля (не более 32 символов): ", multiline=True,
                                   max_lines=19)
@@ -40,8 +40,7 @@ class AccountBIO:
             page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.function_button_ready(page, button, user_input)
+        self.function_button_ready(page, btn_click, user_input)
 
     async def change_username_profile(self, user_input) -> None:
         """
@@ -66,7 +65,7 @@ class AccountBIO:
                 logger.error("Неверный никнейм")
                 client.disconnect()
 
-    def change_bio_profile_gui(self, page: ft.Page) -> None:
+    async def change_bio_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
         user_input = ft.TextField(label="Введите описание профиля, не более 70 символов: ", multiline=True,
                                   max_lines=19)
@@ -76,8 +75,7 @@ class AccountBIO:
             page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.function_button_ready(page, button, user_input)
+        self.function_button_ready(page, btn_click, user_input)
 
     async def change_bio_profile(self, user_input):
         """Изменение описания профиля"""
@@ -100,7 +98,7 @@ class AccountBIO:
             except AuthKeyUnregisteredError:
                 logger.error("Ошибка соединения с профилем")
 
-    def change_name_profile_gui(self, page: ft.Page) -> None:
+    async def change_name_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
         user_input = ft.TextField(label="Введите имя профиля, не более 64 символов: ", multiline=True,
                                   max_lines=19)
@@ -110,8 +108,7 @@ class AccountBIO:
             page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.function_button_ready(page, button, user_input)
+        self.function_button_ready(page, btn_click, user_input)
 
     async def change_name_profile(self, user_input):
         """Изменение имени профиля"""
@@ -127,7 +124,7 @@ class AccountBIO:
             except AuthKeyUnregisteredError:
                 logger.error("Ошибка соединения с профилем")
 
-    def change_last_name_profile_gui(self, page: ft.Page) -> None:
+    async def change_last_name_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
         user_input = ft.TextField(label="Введите фамилию профиля, не более 64 символов: ", multiline=True,
                                   max_lines=19)
@@ -137,8 +134,7 @@ class AccountBIO:
             page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
-        self.function_button_ready(page, button, user_input)
+        self.function_button_ready(page, btn_click, user_input)
 
     async def change_last_name_profile(self, user_input):
         """Изменение фамилии профиля"""

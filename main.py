@@ -3,7 +3,7 @@ import flet as ft
 from loguru import logger
 
 from system.account_actions.TGAccountBIO import AccountBIO
-from system.account_actions.TGChecking import account_verification_for_telegram, AccountVerification
+from system.account_actions.TGChecking import AccountVerification
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
 from system.account_actions.TGCreating import CreatingGroupsAndChats
@@ -11,35 +11,25 @@ from system.account_actions.TGInviting import InvitingToAGroup
 from system.account_actions.TGInvitingScheduler import launching_an_invite_once_an_hour, \
     launching_invite_every_day_certain_time, schedule_invite
 from system.account_actions.TGParsing import ParsingGroupMembers
-from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
+from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
-from system.setting.setting import create_main_window
-from system.setting.setting import creating_the_main_window_for_proxy_data_entry
-from system.setting.setting import output_the_input_field
-from system.setting.setting import output_the_input_field_inviting
+from system.setting.setting import SettingPage, get_unique_filename
 from system.setting.setting import reaction_gui
-from system.setting.setting import record_device_type
-from system.setting.setting import record_setting
-from system.setting.setting import recording_link_channel
-from system.setting.setting import recording_text_for_sending_messages
-from system.setting.setting import recording_the_time_to_launch_an_invite_every_day
-from system.setting.setting import writing_api_id_api_hash
-from system.setting.setting import writing_members
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "2.0.3", "20.07.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "2.0.6", "24.07.2024"  # Версия программы, дата изменения
 
 
 def mainss(page: ft.Page):
     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
     page.window_width = line_width  # window's ширина is 200 px
-    page.window_height = 700  # window's высота is 200 px
+    page.window_height = 550  # window's высота is 200 px
     page.window_resizable = False  # window is not resizable
 
     # width - ширина,  # height - высота
@@ -69,33 +59,32 @@ def mainss(page: ft.Page):
                                          ft.TextSpan("https://t.me/master_tg_d",
                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                      url="https://t.me/master_tg_d", ), ], ),
-                          ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг",
-                                            on_click=lambda _: page.go("/inviting")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Парсинг",
-                                            on_click=lambda _: page.go("/parsing")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Работа с контактами",
-                                            on_click=lambda _: page.go("/working_with_contacts")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Подписка, отписка",
-                                            on_click=lambda _: page.go("/subscribe_unsubscribe")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов",
-                                            on_click=lambda _: page.go("/connecting_accounts")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений",
-                                            on_click=lambda _: page.go("/sending_messages")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Работа с реакциями",
-                                            on_click=lambda _: page.go("/working_with_reactions")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Проверка аккаунтов",
-                                            on_click=lambda _: page.go("/checking_accounts")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Создание групп (чатов)",
-                                            on_click=lambda _: page.go("/creating_groups")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Редактирование_BIO",
-                                            on_click=lambda _: page.go("/bio_editing")),
-                          ft.ElevatedButton(width=line_width, height=30, text="Настройки",
-                                            on_click=lambda _: page.go("/settings")),
-                          ], ))
+                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Инвайтинг",
+                                                        on_click=lambda _: page.go("/inviting")),
+                                      ft.ElevatedButton(width=270, height=30, text="Парсинг",
+                                                        on_click=lambda _: page.go("/parsing")), ]),
+                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Работа с контактами",
+                                                        on_click=lambda _: page.go("/working_with_contacts")),
+                                      ft.ElevatedButton(width=270, height=30, text="Подписка, отписка",
+                                                        on_click=lambda _: page.go("/subscribe_unsubscribe")), ]),
+                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Подключение аккаунтов",
+                                                        on_click=lambda _: page.go("/connecting_accounts")),
+                                      ft.ElevatedButton(width=270, height=30, text="Рассылка сообщений",
+                                                        on_click=lambda _: page.go("/sending_messages")), ]),
+                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Работа с реакциями",
+                                                        on_click=lambda _: page.go("/working_with_reactions")),
+                                      ft.ElevatedButton(width=270, height=30, text="Проверка аккаунтов",
+                                                        on_click=lambda _: page.go("/checking_accounts")), ]),
+                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Создание групп (чатов)",
+                                                        on_click=lambda _: page.go("/creating_groups")),
+                                      ft.ElevatedButton(width=270, height=30, text="Редактирование_BIO",
+                                                        on_click=lambda _: page.go("/bio_editing")), ]),
+                              ft.ElevatedButton(width=line_width, height=30, text="Настройки",
+                                                on_click=lambda _: page.go("/settings")),
+                          ]), ]))
 
-        # Меню "Инвайтинг"
-
-        if page.route == "/inviting":  # Инвайтинг
+        if page.route == "/inviting":  # Меню "Инвайтинг"
             page.views.append(
                 ft.View("/inviting",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -113,17 +102,11 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/inviting_every_day")),
                          ])]))
         elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
-            await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
-                                                    extension="session")  # Вызываем метод для проверки аккаунтов
-            inviting_to_a_group = InvitingToAGroup()
-            await inviting_to_a_group.inviting_without_limits(account_limits=None)  # Вызываем метод для инвайтинга
+            await InvitingToAGroup().inviting_without_limits(account_limits=None)  # Вызываем метод для инвайтинга
         elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
-            await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
-                                                    extension="session")  # Вызываем метод для проверки аккаунтов
-            inviting_to_a_group = InvitingToAGroup()
             config_reader = ConfigReader()
             account_limits = config_reader.get_limits()
-            await inviting_to_a_group.inviting_without_limits(
+            await InvitingToAGroup().inviting_without_limits(
                 account_limits=account_limits)  # Вызываем метод для инвайтинга
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             launching_an_invite_once_an_hour()
@@ -132,11 +115,9 @@ def mainss(page: ft.Page):
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             launching_invite_every_day_certain_time()
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
-            Account_Verification_SPAM = AccountVerification()
-            await Account_Verification_SPAM.check_account_for_spam()
+            await AccountVerification().check_account_for_spam()
 
-        # Меню "Подписка и отписка"
-        elif page.route == "/subscribe_unsubscribe":
+        elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             page.views.append(
                 ft.View("/subscribe_unsubscribe",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -148,14 +129,11 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/unsubscribe_all")),
                          ])]))
         elif page.route == "/subscription_all":  # Подписка
-            sub_unsub_tg = SubscribeUnsubscribeTelegram()
-            await sub_unsub_tg.subscribe_telegram()
+            await SubscribeUnsubscribeTelegram().subscribe_telegram()
         elif page.route == "/unsubscribe_all":  # Отписываемся
-            sub_unsub_tg = SubscribeUnsubscribeTelegram()
-            await sub_unsub_tg.unsubscribe_all()
+            await SubscribeUnsubscribeTelegram().unsubscribe_all()
 
-        # Меню "Работа с реакциями"
-        elif page.route == "/working_with_reactions":
+        elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             page.views.append(
                 ft.View("/working_with_reactions",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -169,19 +147,13 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/automatic_setting_of_reactions")),
                          ])]))
         elif page.route == "/setting_reactions":  # Ставим реакции
-            reaction_worker = WorkingWithReactions()  # Создаем экземпляр класса WorkingWithReactions
-            await reaction_worker.send_reaction_request()  # Вызываем метод для выбора реакции и установки её на сообщение
+            await WorkingWithReactions().send_reaction_request()  # Вызываем метод для выбора реакции и установки её на сообщение
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
-            Working_With_Reactions = WorkingWithReactions()  # Создаем экземпляр класса WorkingWithReactions
-            await Working_With_Reactions.viewing_posts()
+            await WorkingWithReactions().viewing_posts()
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-            await account_verification_for_telegram(directory_path="user_settings/accounts/reactions_list",
-                                                    extension="session")  # Вызываем метод для проверки аккаунтов
-            Working_With_Reactions = WorkingWithReactions()  # Создаем экземпляр класса WorkingWithReactions
-            await Working_With_Reactions.setting_reactions()  # Автоматическое выставление реакций
+            await WorkingWithReactions().setting_reactions()  # Автоматическое выставление реакций
 
-        # Меню "Парсинг"
-        elif page.route == "/parsing":
+        elif page.route == "/parsing":  # Меню "Парсинг"
             page.views.append(
                 ft.View("/parsing",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -206,29 +178,19 @@ def mainss(page: ft.Page):
                          ])]))
 
         elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
-            await account_verification_for_telegram(directory_path="user_settings/accounts/parsing",
-                                                    extension="session")  # Вызываем метод для проверки аккаунтов
-            parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.parse_groups()
+            await ParsingGroupMembers().parse_groups()
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
-            await account_verification_for_telegram(directory_path="user_settings/accounts/parsing",
-                                                    extension="session")  # Вызываем метод для проверки аккаунтов
-            parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.choose_group_for_parsing()
+            await ParsingGroupMembers().choose_group_for_parsing()
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             chat_input = input(f"{logger.info('[+] Введите ссылку на чат с которого будем собирать активных: ')}")
             limit_active_user = input(f"{logger.info('[+] Введите количество сообщений которые будем parsing: ')}")
-            parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.parse_active_users(chat_input, int(limit_active_user))
+            await ParsingGroupMembers().parse_active_users(chat_input, int(limit_active_user))
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
-            parsing_group_members = ParsingGroupMembers()
-            await parsing_group_members.parse_subscribed_groups()
+            await ParsingGroupMembers().parse_subscribed_groups()
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
-            db_handler = DatabaseHandler()
-            await db_handler.cleaning_db(name_database_table="members")
+            await DatabaseHandler().cleaning_db(name_database_table="members")
 
-        # Меню "Работа с контактами"
-        elif page.route == "/working_with_contacts":
+        elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
             page.views.append(
                 ft.View("/working_with_contacts",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -244,26 +206,22 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/adding_contacts")),
                          ])]))
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
-            output_the_input_field(page, "Введите список номеров телефонов", "contact",
-                                   "contact", "/working_with_contacts")
+            await DatabaseHandler().open_and_read_data("contact")  # Удаление списка с контактами
+            SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
+                                                 "contact", "/working_with_contacts", "contact")
         elif page.route == "/show_list_contacts":  # Показать список контактов
-            tg_contact = TGContact()
-            await tg_contact.show_account_contact_list()
+            await TGContact().show_account_contact_list()
         elif page.route == "/deleting_contacts":  # Удаление контактов
-            tg_contact = TGContact()
-            await tg_contact.delete_contact()
+            await TGContact().delete_contact()
         elif page.route == "/adding_contacts":  # Добавление контактов
-            tg_contact = TGContact()
-            await tg_contact.inviting_contact()
+            await TGContact().inviting_contact()
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
             TG_Connect = TGConnect()
             await TG_Connect.telegram_connect()
         elif page.route == "/creating_groups":  # Создание групп (чатов)
-            Creating_GroupsAndChats = CreatingGroupsAndChats()
-            await Creating_GroupsAndChats.creating_groups_and_chats()
+            await CreatingGroupsAndChats().creating_groups_and_chats()
 
-        # Меню "Рассылка сообщений"
-        elif page.route == "/sending_messages":
+        elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             page.views.append(
                 ft.View("/sending_messages",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -290,41 +248,30 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go(
                                                    "/sending_files_to_personal_account_with_limits")),
                          ])]))
-        elif page.route == "/sending_messages_personal_account":  # ✔️ Отправка сообщений в личку
-            Send_TelegramMessages = SendTelegramMessages()
+        elif page.route == "/sending_messages_personal_account":  # Отправка сообщений в личку
             logger.info(f"Лимит на аккаунт (без ограничений)")
-            await Send_TelegramMessages.send_message_from_all_accounts(account_limits=None)
-        elif page.route == "/sending_files_personal_account":  # ✔️ Отправка файлов в личку
-            Send_TelegramMessages = SendTelegramMessages()
+            await SendTelegramMessages().send_message_from_all_accounts(account_limits=None)
+        elif page.route == "/sending_files_personal_account":  # Отправка файлов в личку
             logger.info(f"Лимит на аккаунт (без ограничений)")
-            await Send_TelegramMessages.send_files_to_personal_chats(account_limits=None)
-        elif page.route == "/sending_messages_via_chats":  # ✔️ Рассылка сообщений по чатам
+            await SendTelegramMessages().send_files_to_personal_chats(account_limits=None)
+        elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
             entities = find_files(directory_path="user_settings/message", extension="json")
             logger.info(entities)
-            Send_TelegramMessages = SendTelegramMessages()
-            await Send_TelegramMessages.sending_messages_via_chats_times()
-        elif page.route == "/sending_messages_via_chats_with_answering_machine":  # ✔️ Рассылка сообщений по чатам с автоответчиком
-            Send_TelegramMessages = SendTelegramMessages()
-            await Send_TelegramMessages.answering_machine()
-        elif page.route == "/sending_files_via_chats":  # ✔️ Рассылка файлов по чатам
-            Send_TelegramMessages = SendTelegramMessages()
-            await Send_TelegramMessages.sending_files_via_chats()
-        elif page.route == "/sending_messages_files_via_chats":  # ✔️ Рассылка сообщений + файлов по чатам
-            Send_TelegramMessages = SendTelegramMessages()
-            await Send_TelegramMessages.sending_messages_files_via_chats()
-        elif page.route == "/sending_personal_messages_with_limits":  # ✔️ Отправка сообщений в личку (с лимитами)
-            Send_TelegramMessages = SendTelegramMessages()
-            config_reader = ConfigReader()
-            account_limits = config_reader.get_limits()
-            await Send_TelegramMessages.send_message_from_all_accounts(account_limits=account_limits)
-        elif page.route == "/sending_files_to_personal_account_with_limits":  # ✔️ Отправка файлов в личку (с лимитами)
-            Send_TelegramMessages = SendTelegramMessages()
-            config_reader = ConfigReader()
-            account_limits = config_reader.get_limits()
-            await Send_TelegramMessages.send_files_to_personal_chats(account_limits=account_limits)
+            await SendTelegramMessages().sending_messages_via_chats_times()
+        elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
+            await SendTelegramMessages().answering_machine()
+        elif page.route == "/sending_files_via_chats":  # Рассылка файлов по чатам
+            await SendTelegramMessages().sending_files_via_chats()
+        elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
+            await SendTelegramMessages().sending_messages_files_via_chats()
+        elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
+            account_limits = ConfigReader().get_limits()
+            await SendTelegramMessages().send_message_from_all_accounts(account_limits=account_limits)
+        elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
+            account_limits = ConfigReader().get_limits()
+            await SendTelegramMessages().send_files_to_personal_chats(account_limits=account_limits)
 
-        # Меню "Редактирование_BIO"
-        elif page.route == "/bio_editing":
+        elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
             page.views.append(
                 ft.View("/bio_editing",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -342,24 +289,18 @@ def mainss(page: ft.Page):
                                                on_click=lambda _: page.go("/change_surname")),
                          ])]))
 
-        elif page.route == "/edit_description":  # ✔️ Изменение описания
-            aaa = AccountBIO()  # Передаем db_handler как аргумент
-            aaa.change_bio_profile_gui(page)
-        elif page.route == "/name_change":  # ✔️ Изменение имени
-            aaa = AccountBIO()  # Передаем db_handler как аргумент
-            aaa.change_name_profile_gui(page)
-        elif page.route == "/change_surname":  # ✔️ Изменение фамилии
-            aaa = AccountBIO()  # Передаем db_handler как аргумент
-            aaa.change_last_name_profile_gui(page)
-        elif page.route == "/edit_photo":  # ✔️ Изменение фото
-            aaa = AccountBIO()  # Передаем db_handler как аргумент
-            await aaa.change_photo_profile()
-        elif page.route == "/changing_username":  # ✔️ Изменение username
-            aaa = AccountBIO()  # Передаем db_handler как аргумент
-            aaa.change_username_profile_gui(page)
+        elif page.route == "/edit_description":  # Изменение описания
+            await AccountBIO().change_bio_profile_gui(page)
+        elif page.route == "/name_change":  # Изменение имени
+            await AccountBIO().change_name_profile_gui(page)
+        elif page.route == "/change_surname":  # Изменение фамилии
+            await AccountBIO().change_last_name_profile_gui(page)
+        elif page.route == "/edit_photo":  # Изменение фото
+            await AccountBIO().change_photo_profile()
+        elif page.route == "/changing_username":  # Изменение username
+            await AccountBIO().change_username_profile_gui(page)
 
-        # Меню "Настройки TelegramMaster"
-        elif page.route == "/settings":
+        elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
             page.views.append(
                 ft.View("/settings",
                         [ft.AppBar(title=ft.Text("Главное меню"),
@@ -377,60 +318,66 @@ def mainss(page: ft.Page):
                                                        on_click=lambda _: page.go("/time_between_subscriptions")),
                                      ft.ElevatedButton(width=270, height=30, text="Запись сообщений",
                                                        on_click=lambda _: page.go("/message_recording"))]),
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись ссылки",
+                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись ссылки для инвайтинга",
                                                        on_click=lambda _: page.go("/link_entry")),
                                      ft.ElevatedButton(width=270, height=30, text="Лимиты на аккаунт",
                                                        on_click=lambda _: page.go("/account_limits"))]),
                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Лимиты на сообщения",
                                                        on_click=lambda _: page.go("/message_limits")),
-                                     ft.ElevatedButton(width=270, height=30, text="Смена типа устройства",
-                                                       on_click=lambda _: page.go("/changing_device_type"))]),
+                                     ft.ElevatedButton(width=270, height=30, text="Время между подпиской",
+                                                       on_click=lambda _: page.go("/time_between_subscriptionss")), ]),
                              ft.ElevatedButton(width=line_width, height=30, text="Формирование списка username",
                                                on_click=lambda _: page.go("/creating_username_list")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Время между подпиской",
-                                               on_click=lambda _: page.go("/time_between_subscriptionss")),
                              ft.ElevatedButton(width=line_width, height=30, text="Запись времени между сообщениями",
                                                on_click=lambda _: page.go("/recording_the_time_between_messages")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Время между инвайтингом, рассылка сообщений",
+                             ft.ElevatedButton(width=line_width, height=30,
+                                               text="Время между инвайтингом, рассылка сообщений",
                                                on_click=lambda _: page.go("/time_between_invites_sending_messages")),
                              ft.ElevatedButton(width=line_width, height=30, text="Запись ссылки для реакций",
                                                on_click=lambda _: page.go("/recording_reaction_link")),
                              ft.ElevatedButton(width=line_width, height=30, text="Формирование списка чатов / каналов",
                                                on_click=lambda _: page.go("/forming_list_of_chats_channels")),
                          ])]))
-        elif page.route == "/creating_username_list":  # ✔️ Формирование списка username
-            writing_members(page, DatabaseHandler())
-        elif page.route == "/recording_api_id_api_hash":  # ✔️ Запись api_id, api_hash
-            writing_api_id_api_hash(page)
-        elif page.route == "/changing_device_type":  # ✔️ Смена типа устройства
-            record_device_type(page)
-        elif page.route == "/message_limits":  # ✔️ Лимиты на сообщения
-            record_setting(page, "message_limits", "Введите лимит на сообщения")
-        elif page.route == "/account_limits":  # ✔️ Лимиты на аккаунт
-            record_setting(page, "account_limits", "Введите лимит на аккаунт")
-        elif page.route == "/link_entry":  # ✔️ Запись ссылки
-            output_the_input_field_inviting(page, DatabaseHandler())
-        elif page.route == "/forming_list_of_chats_channels":  # ✔️ Формирование списка чатов / каналов
-            output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
-                                   "writing_group_links", "/settings")
-        elif page.route == "/recording_reaction_link":  # ✔️ Запись ссылки для реакций
-            recording_link_channel(page)
-        elif page.route == "/choice_of_reactions":  # ✔️ Выбор реакций
+
+        elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash
+            SettingPage().writing_api_id_api_hash(page)
+        elif page.route == "/message_limits":  # Лимиты на сообщения
+            SettingPage().record_setting(page, "message_limits", "Введите лимит на сообщения")
+        elif page.route == "/account_limits":  # Лимиты на аккаунт
+            SettingPage().record_setting(page, "account_limits", "Введите лимит на аккаунт")
+        elif page.route == "/creating_username_list":  # Формирование списка username
+            SettingPage().output_the_input_field(page, "Введите список username", "members",
+                                                 "username, id, access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium",
+                                                 "/settings", "members (username)")
+        elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
+            await DatabaseHandler().open_and_read_data("writing_group_links")  # Удаление списка с контактами
+            SettingPage().output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
+                                                 "writing_group_links", "/settings", "writing_group_links")
+        elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
+            await DatabaseHandler().cleaning_db("links_inviting")  # Удаление списка с группами
+            SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга", "links_inviting",
+                                                 "links_inviting", "/settings", "links_inviting")
+        elif page.route == "/proxy_entry":  # Запись времени между сообщениями
+            SettingPage().creating_the_main_window_for_proxy_data_entry(page)
+        elif page.route == "/message_recording":  # Запись сообщений
+            SettingPage().recording_text_for_sending_messages(page, "Введите ссылку на группу",
+                                                              get_unique_filename(
+                                                                  base_filename='user_settings/message/message'))
+        elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
+            SettingPage().recording_text_for_sending_messages(page, "Введите текст сообщения",
+                                                              'user_settings/reactions/link_channel.json')
+        elif page.route == "/choice_of_reactions":  # Выбор реакций
             reaction_gui(page)
-        elif page.route == "/proxy_entry":  # ✔️ Запись времени между сообщениями
-            creating_the_main_window_for_proxy_data_entry(page, DatabaseHandler())
-        elif page.route == "/recording_the_time_between_messages":  # ✔️ Запись времени между сообщениями
-            create_main_window(page, variable="time_sending_messages")
-        elif page.route == "/time_between_invites_sending_messages":  # ✔️ Время между инвайтингом, рассылка сообщений
-            create_main_window(page, variable="time_inviting")
-        elif page.route == "/changing_accounts":  # ✔️ Смена аккаунтов
-            create_main_window(page, variable="time_changing_accounts")
-        elif page.route == "/time_between_subscriptions":  # ✔️ Запись времени
-            recording_the_time_to_launch_an_invite_every_day(page)
-        elif page.route == "/message_recording":  # ✔️ Запись сообщений
-            recording_text_for_sending_messages(page)
-        elif page.route == "/time_between_subscriptionss":  # ✔️ Время между подпиской
-            create_main_window(page, variable="time_subscription")
+        elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
+            SettingPage().create_main_window(page, variable="time_sending_messages")
+        elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
+            SettingPage().create_main_window(page, variable="time_inviting")
+        elif page.route == "/changing_accounts":  # Смена аккаунтов
+            SettingPage().create_main_window(page, variable="time_changing_accounts")
+        elif page.route == "/time_between_subscriptions":  # Запись времени
+            SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
+        elif page.route == "/time_between_subscriptionss":  # Время между подпиской
+            SettingPage().create_main_window(page, variable="time_subscription")
         page.update()
 
     def view_pop(view):
