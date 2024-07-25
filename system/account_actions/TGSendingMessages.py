@@ -14,7 +14,7 @@ from telethon.tl.functions.channels import JoinChannelRequest
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGLimits import SettingLimits
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_files, all_find_files
+from system.auxiliary_functions.auxiliary_functions import find_files, all_find_files, record_inviting_results
 from system.auxiliary_functions.auxiliary_functions import read_json_file
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import ConfigReader
@@ -61,7 +61,7 @@ class SendTelegramMessages:
                         # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
                         logger.error(f"""Отправляем сообщение в личку {username}. Сообщение отправлено 
                                          пользователю {username}.""")
-                        await self.random_dream()  # Прерываем работу и меняем аккаунт
+                        await record_inviting_results(time_inviting_1, time_inviting_2, username)
                     except FloodWaitError as e:
                         record_and_interrupt(time_inviting_1, time_inviting_2)
                         break  # Прерываем работу и меняем аккаунт
@@ -107,6 +107,7 @@ class SendTelegramMessages:
                             await client.send_file(user_to_add, f"user_settings/files_to_send/{files}")
                             logger.info(f"""Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю 
                                              {username}.""")
+                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
                     except FloodWaitError as e:
                         record_and_interrupt(time_inviting_1, time_inviting_2)
                         break  # Прерываем работу и меняем аккаунт
