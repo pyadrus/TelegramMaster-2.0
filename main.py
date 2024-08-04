@@ -181,10 +181,12 @@ def mainss(page: ft.Page):
             await ParsingGroupMembers().parse_groups()
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
             await ParsingGroupMembers().choose_group_for_parsing()
+
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             chat_input = input(f"{logger.info('[+] Введите ссылку на чат с которого будем собирать активных: ')}")
             limit_active_user = input(f"{logger.info('[+] Введите количество сообщений которые будем parsing: ')}")
             await ParsingGroupMembers().parse_active_users(chat_input, int(limit_active_user))
+
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
             await ParsingGroupMembers().parse_subscribed_groups()
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
@@ -216,8 +218,7 @@ def mainss(page: ft.Page):
         elif page.route == "/adding_contacts":  # Добавление контактов
             await TGContact().inviting_contact()
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-            TG_Connect = TGConnect()
-            await TG_Connect.telegram_connect()
+            await TGConnect().telegram_connect()
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             await CreatingGroupsAndChats().creating_groups_and_chats()
 

@@ -156,7 +156,6 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], btn_click)
 
-
     def add_view_with_fields_and_button(self, page: ft.Page, fields: list, btn_click) -> None:
         """
         Добавляет представление с заданными текстовыми полями и кнопкой.
