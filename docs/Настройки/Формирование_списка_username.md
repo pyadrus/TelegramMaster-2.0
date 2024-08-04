@@ -7,4 +7,4 @@
 5. Нажать «Готово»
 
 Список username записывается в базу данных (в файл `TelegramMaster/user_settings/software_database.db` в таблицу **members**)
-Если вы уже выполняли [[Парсинг]] ранее, программа добавит username в ранее созданный список (в файл `TelegramMaster/user_settings/software_database.db` в таблицу **members**).
+Если вы уже выполняли "Парсинг" ранее, программа добавит username в ранее созданный список (в файл `TelegramMaster/user_settings/software_database.db` в таблицу **members**).
