@@ -23,16 +23,15 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "2.0.8", "04.08.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "2.0.9", "06.08.2024"  # Версия программы, дата изменения
 
 
-def mainss(page: ft.Page):
+def telegram_master_main(page: ft.Page):
     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
     page.window_width = line_width  # window's ширина is 200 px
     page.window_height = 550  # window's высота is 200 px
     page.window_resizable = False  # window is not resizable
 
-    # width - ширина,  # height - высота
     async def route_change(route):
         page.views.clear()
 
@@ -391,4 +390,4 @@ def mainss(page: ft.Page):
     page.go(page.route)
 
 
-ft.app(target=mainss)
+ft.app(target=telegram_master_main)
