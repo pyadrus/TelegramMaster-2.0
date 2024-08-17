@@ -36,6 +36,22 @@ def all_find_files(directory_path) -> list:
     return entities  # Возвращаем список файлов
 
 
+def find_folders(directory_path) -> list:
+    """
+    Поиск всех папок в указанной директории.
+    :param directory_path: Путь к директории
+    :return list: Список имен найденных папок
+    """
+    folders = []  # Создаем список для хранения имен найденных папок
+    for x in os.listdir(directory_path):
+        full_path = os.path.join(directory_path, x)  # Получаем полный путь к объекту в директории
+        if os.path.isdir(full_path):  # Проверяем, является ли объект папкой
+            logger.info(f"Найдена папка: {x}")  # Выводим имя найденной папки
+            folders.append(x)  # Добавляем имя папки в список
+
+    return folders  # Возвращаем список папок
+
+
 def find_files(directory_path, extension) -> list:
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.

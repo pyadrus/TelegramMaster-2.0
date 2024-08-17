@@ -12,7 +12,7 @@ from telethon.errors import YouBlockedUserError
 from thefuzz import fuzz
 
 from system.account_actions.TGConnect import TGConnect
-from system.auxiliary_functions.auxiliary_functions import find_files
+from system.auxiliary_functions.auxiliary_functions import find_files, find_folders
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 
@@ -103,7 +103,9 @@ class AccountVerification:
 
     async def check_account_for_spam(self) -> None:
         """Проверка аккаунта на спам через @SpamBot"""
-        # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
+        folders = find_folders(directory_path="user_settings/accounts")
+        logger.info(f"Найденные папки: {folders}")
+
         entities = find_files(directory_path="user_settings/accounts", extension='session')
         for file in entities:
             client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts")
