@@ -46,9 +46,8 @@ def find_folders(directory_path) -> list:
     for x in os.listdir(directory_path):
         full_path = os.path.join(directory_path, x)  # Получаем полный путь к объекту в директории
         if os.path.isdir(full_path):  # Проверяем, является ли объект папкой
-            logger.info(f"Найдена папка: {x}")  # Выводим имя найденной папки
             folders.append(x)  # Добавляем имя папки в список
-
+    logger.info(f"🔍 Найденные папки: {folders}")  # Выводим имя найденной папки
     return folders  # Возвращаем список папок
 
 
@@ -63,10 +62,18 @@ def find_files(directory_path, extension) -> list:
     for x in os.listdir(directory_path):
         if x.endswith(f".{extension}"):  # Проверяем, заканчивается ли имя файла на заданное расширение
             file = os.path.splitext(x)[0]  # Разделяем имя файла на имя без расширения и расширение
-            logger.info(f"Найденные файлы: {file}.{extension}")  # Выводим имена найденных аккаунтов
             entities.append([file])  # Добавляем информацию о файле в список
-
+    logger.info(f"Найденные файлы: {entities}")  # Выводим имена найденных аккаунтов
     return entities  # Возвращаем список json файлов
+
+
+def working_with_accounts(account_folder, new_account_folder) -> None:
+    """Работа с аккаунтами"""
+    try:  # Переносим файлы в нужную папку
+        os.replace(account_folder, new_account_folder)
+    except FileNotFoundError:  # Если в папке нет нужной папки, то создаем ее
+        os.makedirs(new_account_folder)
+        os.replace(account_folder, new_account_folder)
 
 
 async def record_inviting_results(time_range_1: int, time_range_2: int, username: str) -> None:

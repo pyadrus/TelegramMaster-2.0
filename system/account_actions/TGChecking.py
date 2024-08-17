@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-import os.path
 import sqlite3
 import time
 
@@ -12,7 +10,7 @@ from telethon.errors import YouBlockedUserError
 from thefuzz import fuzz
 
 from system.account_actions.TGConnect import TGConnect
-from system.auxiliary_functions.auxiliary_functions import find_files, find_folders
+from system.auxiliary_functions.auxiliary_functions import find_files, working_with_accounts
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 
@@ -20,7 +18,7 @@ from system.proxy.checking_proxy import checking_the_proxy_for_work
 async def account_verification_for_telegram(directory_path, extension) -> None:
     """Проверка аккаунтов Telegram"""
 
-    logger.info(f"Запуск проверки аккаунтов Telegram")
+    logger.info(f"Запуск проверки аккаунтов Telegram из папки 📁 {directory_path}")
     account_verification = AccountVerification()
     tg_connect = TGConnect()
     await checking_the_proxy_for_work()  # Проверка proxy
@@ -30,13 +28,13 @@ async def account_verification_for_telegram(directory_path, extension) -> None:
                                                                                                  extension)
     logger.info(f"{records}")
     for entities in records:
-        logger.info(f"{entities[0]}")
+        logger.info(f"⚠️ Проверяемый аккаунт {directory_path}/{entities[0]}")
 
         """Проверка аккаунтов"""
         proxy = await tg_connect.reading_proxies_from_the_database()
         await account_verification.account_verification(directory_path, entities[0], proxy)
 
-    logger.info(f"Окончание проверки аккаунтов Telegram")
+    logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁 {directory_path}")
 
 
 class AccountVerification:
@@ -46,14 +44,6 @@ class AccountVerification:
         self.config_reader = ConfigReader()
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.tg_connect = TGConnect()
-
-    def working_with_accounts(self, account_folder, new_account_folder) -> None:
-        """Работа с аккаунтами"""
-        try:  # Переносим файлы в нужную папку
-            os.replace(account_folder, new_account_folder)
-        except FileNotFoundError:  # Если в папке нет нужной папки, то создаем ее
-            os.makedirs(new_account_folder)
-            os.replace(account_folder, new_account_folder)
 
     async def scanning_the_folder_with_accounts_for_telegram_accounts(self, directory_path, extension) -> list:
         """Сканирование в папку с аккаунтами телеграм аккаунтов"""
@@ -75,7 +65,7 @@ class AccountVerification:
             await client.connect()  # Подсоединяемся к Telegram аккаунта
             if not await client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
                 await client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                self.working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
+                working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
                                       new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
                 time.sleep(1)
                 return  # Возвращаемся из функции, так как аккаунт не авторизован
@@ -85,36 +75,32 @@ class AccountVerification:
         except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound, sqlite3.DatabaseError):
             client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
             logger.info(f"Битый файл или аккаунт забанен {session.split('/')[-1]}.session")
-            self.working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
-                                       new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
+            working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
+                                  new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
         except TimedOutError as e:
             logger.exception(e)
             time.sleep(2)
         except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
             await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
             logger.info(f"На данный момент аккаунт {session.split('/')[-1]} запущен под другим ip")
-            self.working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
-                                       new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
+            working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
+                                  new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
         except AuthKeyUnregisteredError:
             client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
             logger.info(f"Битый файл или аккаунт забанен {session.split('/')[-1]}.session")
-            self.working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
-                                       new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
+            working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
+                                  new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
 
-    async def check_account_for_spam(self) -> None:
+    async def check_account_for_spam(self, folders) -> None:
         """Проверка аккаунта на спам через @SpamBot"""
-        folders = find_folders(directory_path="user_settings/accounts")
-        logger.info(f"Найденные папки: {folders}")
-
-        entities = find_files(directory_path="user_settings/accounts", extension='session')
+        entities = find_files(directory_path=f"user_settings/accounts/{folders}", extension='session')
         for file in entities:
-            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts")
+            client = await self.tg_connect.connect_to_telegram(file, directory_path=f"user_settings/accounts/{folders}")
             try:
                 await client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
                 message_bot = await client.get_messages('SpamBot')
                 for message in message_bot:
                     logger.info(f"{file} {message.message}")
-
                     similarity_ratio_ru: int = fuzz.ratio(f"{message.message}",
                                                           "Очень жаль, что Вы с этим столкнулись. К сожалению, "
                                                           "иногда наша антиспам-система излишне сурово реагирует на "
@@ -125,14 +111,13 @@ class AccountVerification:
                                                           "а также приглашать таких пользователей в группы или каналы. "
                                                           "Если пользователь написал Вам первым, Вы сможете ответить, "
                                                           "несмотря на ограничения.")
-                    logger.exception(similarity_ratio_ru)
                     if similarity_ratio_ru >= 97:
                         logger.info('Аккаунт в бане')
                         await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                         logger.error(f"""Проверка аккаунтов через SpamBot. {file[0]}: {message.message}""")
                         # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
-                        self.working_with_accounts(account_folder=f"user_settings/accounts/{file[0]}.session",
-                                                   new_account_folder=f"user_settings/accounts/banned/{file[0]}.session")
+                        working_with_accounts(account_folder=f"user_settings/accounts/{folders}/{file[0]}.session",
+                                              new_account_folder=f"user_settings/accounts/banned/{file[0]}.session")
                     similarity_ratio_en: int = fuzz.ratio(f"{message.message}",
                                                           "I’m very sorry that you had to contact me. Unfortunately, "
                                                           "some account_actions can trigger a harsh response from our "
@@ -142,16 +127,18 @@ class AccountVerification:
                                                           "to people who do not have your number in their phone contacts "
                                                           "or add them to groups and channels. Of course, when people "
                                                           "contact you first, you can always reply to them.")
-                    logger.exception(similarity_ratio_en)
                     if similarity_ratio_en >= 97:
                         logger.info('Аккаунт в бане')
                         await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
                         logger.error(f"""Проверка аккаунтов через SpamBot. {file[0]}: {message.message}""")
                         # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                         logger.info(file[0])
-                        self.working_with_accounts(account_folder=f"user_settings/accounts/{file[0]}.session",
-                                                   new_account_folder=f"user_settings/accounts/banned/{file[0]}.session")
+                        working_with_accounts(account_folder=f"user_settings/accounts/{folders}/{file[0]}.session",
+                                              new_account_folder=f"user_settings/accounts/banned/{file[0]}.session")
                     logger.error(f"""Проверка аккаунтов через SpamBot. {file[0]}: {message.message}""")
-
             except YouBlockedUserError:
                 continue  # Записываем ошибку в software_database.db и продолжаем работу
+            except AttributeError as e:
+                logger.exception(e)  # Отправляем сообщение в лог
+                continue  # Записываем ошибку в software_database.db и продолжаем работу
+

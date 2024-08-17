@@ -3,7 +3,7 @@ import flet as ft
 from loguru import logger
 
 from system.account_actions.TGAccountBIO import AccountBIO
-from system.account_actions.TGChecking import AccountVerification
+from system.account_actions.TGChecking import AccountVerification, account_verification_for_telegram
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
 from system.account_actions.TGCreating import CreatingGroupsAndChats
@@ -14,7 +14,7 @@ from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_files
+from system.auxiliary_functions.auxiliary_functions import find_files, find_folders
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.setting.setting import SettingPage, get_unique_filename
 from system.setting.setting import reaction_gui
@@ -114,7 +114,19 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             launching_invite_every_day_certain_time()
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
-            await AccountVerification().check_account_for_spam()
+
+            logger.info("▶️ Проверка аккаунтов началась")
+            await account_verification_for_telegram(directory_path="user_settings/accounts", extension="session")  # Вызываем метод для проверки аккаунтов
+            folders = find_folders(directory_path="user_settings/accounts")
+            for folder in folders:
+                logger.info(f'Проверка аккаунтов из папки {folder} через спам бот')
+                if folder == "invalid_account":
+                    logger.info(f"⛔ Пропускаем папку: {folder}")
+                    continue  # Продолжаем цикл, пропуская эту итерацию
+                else:
+                    await account_verification_for_telegram(directory_path=f"user_settings/accounts/{folder}", extension="session")
+                    await AccountVerification().check_account_for_spam(folder)
+            logger.info("🔚 Проверка аккаунтов завершена")
 
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             page.views.append(
