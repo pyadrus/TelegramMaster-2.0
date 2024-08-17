@@ -17,24 +17,18 @@ from system.proxy.checking_proxy import checking_the_proxy_for_work
 
 async def account_verification_for_telegram(directory_path, extension) -> None:
     """Проверка аккаунтов Telegram"""
-
-    logger.info(f"Запуск проверки аккаунтов Telegram из папки 📁 {directory_path}")
+    logger.info(f"Запуск проверки аккаунтов Telegram из папки 📁: {directory_path}")
     account_verification = AccountVerification()
     tg_connect = TGConnect()
     await checking_the_proxy_for_work()  # Проверка proxy
-
     """Сканирование каталога с аккаунтами"""
-    records = await account_verification.scanning_the_folder_with_accounts_for_telegram_accounts(directory_path,
-                                                                                                 extension)
-    logger.info(f"{records}")
-    for entities in records:
+    entities = find_files(directory_path, extension)
+    for entities in entities:
         logger.info(f"⚠️ Проверяемый аккаунт {directory_path}/{entities[0]}")
-
         """Проверка аккаунтов"""
         proxy = await tg_connect.reading_proxies_from_the_database()
         await account_verification.account_verification(directory_path, entities[0], proxy)
-
-    logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁 {directory_path}")
+    logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁: {directory_path}")
 
 
 class AccountVerification:
@@ -45,20 +39,11 @@ class AccountVerification:
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.tg_connect = TGConnect()
 
-    async def scanning_the_folder_with_accounts_for_telegram_accounts(self, directory_path, extension) -> list:
-        """Сканирование в папку с аккаунтами телеграм аккаунтов"""
-        logger.info("Сканирование папки с аккаунтами на наличие аккаунтов Telegram")
-        entities = find_files(directory_path, extension)
-        logger.info(f"Найденные аккаунты:  {entities}")
-        return entities
-
     async def account_verification(self, directory_path, session, proxy) -> None:
         """Проверка и сортировка аккаунтов"""
-        logger.info("Проверка аккаунтов!")
-
         api_id = self.api_id_api_hash[0]
         api_hash = self.api_id_api_hash[1]
-        logger.info(f"Всего api_id_data: api_id {api_id}, api_hash {api_hash}")
+        logger.info(f"Проверка аккаунта {session}. Используемые: api_id {api_id}, api_hash {api_hash}")
         client = TelegramClient(f"{directory_path}/{session}", api_id=api_id, api_hash=api_hash,
                                 system_version="4.16.30-vxCUSTOM", proxy=proxy)
         try:

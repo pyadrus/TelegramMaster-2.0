@@ -119,9 +119,9 @@ def telegram_master_main(page: ft.Page):
             await account_verification_for_telegram(directory_path="user_settings/accounts", extension="session")  # Вызываем метод для проверки аккаунтов
             folders = find_folders(directory_path="user_settings/accounts")
             for folder in folders:
-                logger.info(f'Проверка аккаунтов из папки {folder} через спам бот')
+                logger.info(f'Проверка аккаунтов из папки 📁 {folder} через спам бот')
                 if folder == "invalid_account":
-                    logger.info(f"⛔ Пропускаем папку: {folder}")
+                    logger.info(f"⛔ Пропускаем папку 📁: {folder}")
                     continue  # Продолжаем цикл, пропуская эту итерацию
                 else:
                     await account_verification_for_telegram(directory_path=f"user_settings/accounts/{folder}", extension="session")
