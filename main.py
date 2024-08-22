@@ -20,6 +20,7 @@ from system.setting.setting import SettingPage, get_unique_filename
 from system.setting.setting import reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 import datetime
+
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
@@ -31,6 +32,7 @@ def telegram_master_main(page: ft.Page):
     page.window.width = line_width  # window's ширина is 200 px
     page.window.height = 550  # window's высота is 200 px
     page.window.resizable = False  # window is not resizable
+    logger.info(f"Program version: {program_version}. Date of change: {date_of_program_change}")
 
     async def route_change(route):
         page.views.clear()
@@ -115,10 +117,11 @@ def telegram_master_main(page: ft.Page):
             launching_invite_every_day_certain_time()
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
 
-            start = datetime.datetime.now() # фиксируем и выводим время старта работы кода
+            start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Проверка аккаунтов началась")
-            await account_verification_for_telegram(directory_path="user_settings/accounts", extension="session")  # Вызываем метод для проверки аккаунтов
+            await account_verification_for_telegram(directory_path="user_settings/accounts",
+                                                    extension="session")  # Вызываем метод для проверки аккаунтов
             folders = find_folders(directory_path="user_settings/accounts")
             for folder in folders:
                 logger.info(f'Проверка аккаунтов из папки 📁 {folder} через спам бот')
@@ -126,12 +129,13 @@ def telegram_master_main(page: ft.Page):
                     logger.info(f"⛔ Пропускаем папку 📁: {folder}")
                     continue  # Продолжаем цикл, пропуская эту итерацию
                 else:
-                    await account_verification_for_telegram(directory_path=f"user_settings/accounts/{folder}", extension="session")
+                    await account_verification_for_telegram(directory_path=f"user_settings/accounts/{folder}",
+                                                            extension="session")
                     await AccountVerification().check_account_for_spam(folder)
             logger.info("🔚 Проверка аккаунтов завершена")
-            finish = datetime.datetime.now() # фиксируем и выводим время окончания работы кода
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
-            logger.info('Время работы: ' + str(finish - start)) # вычитаем время старта из времени окончания
+            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             page.views.append(
