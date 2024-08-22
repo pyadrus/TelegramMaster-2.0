@@ -84,8 +84,8 @@ async def record_inviting_results(time_range_1: int, time_range_2: int, username
     :param username: - username аккаунта
     """
     logger.info(f'Удаляем с базы данных username {username[0]}')
-    db_handler = DatabaseHandler()  # Открываем базу с аккаунтами и с выставленными лимитами
-    await db_handler.delete_row_db(table="members", column="username", value=username[0])
+    # Открываем базу с аккаунтами и с выставленными лимитами
+    await DatabaseHandler().delete_row_db(table="members", column="username", value=username[0])
     # Смена username через случайное количество секунд
     record_and_interrupt(time_range_1, time_range_2)
 
