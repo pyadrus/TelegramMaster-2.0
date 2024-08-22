@@ -39,14 +39,14 @@ async def checking_the_proxy_for_work() -> None:
     """Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
     уровня, который используется для демонстрации работы сетевых протоколов. На этом сайте нет никакого контента, но он
     используется для различных тестов."""
-    db_handler = DatabaseHandler()
-    records: list = await db_handler.open_and_read_data("proxy")
+    records: list = await DatabaseHandler().open_and_read_data("proxy")
     for proxy_dic in records:
         logger.info(proxy_dic)
+        # TODO: пересмотреть целесообразность использования функции unpacking_a_dictionary_with_proxy_by_variables
         # Распаковка словаря с proxy по переменным
         proxy_type, addr, port, username, password, rdns = unpacking_a_dictionary_with_proxy_by_variables(proxy_dic)
         # Подключение к proxy с проверкой на работоспособность
-        connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler)
+        connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, DatabaseHandler())
 
 
 def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler) -> None:
@@ -58,7 +58,7 @@ def connecting_to_proxy_with_verification(proxy_type, addr, port, username, pass
         # Указываем параметры прокси
         proxy = {'http': f'{proxy_type}://{username}:{password}@{addr}:{port}'}
         requests.get('http://example.org', proxies=proxy)
-        logger.info('[!] Proxy рабочий!')
+        logger.info(f'⚠️ Proxy: {proxy_type}://{username}:{password}@{addr}:{port} рабочий!')
     # RequestException исключение возникает при ошибках, которые могут быть вызваны при запросе к веб-серверу.
     # Это может быть из-за недоступности сервера, ошибочного URL или других проблем с соединением.
     except requests.exceptions.RequestException:

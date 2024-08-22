@@ -36,6 +36,21 @@ def all_find_files(directory_path) -> list:
     return entities  # Возвращаем список файлов
 
 
+def find_folders(directory_path) -> list:
+    """
+    Поиск всех папок в указанной директории.
+    :param directory_path: Путь к директории
+    :return list: Список имен найденных папок
+    """
+    folders = []  # Создаем список для хранения имен найденных папок
+    for x in os.listdir(directory_path):
+        full_path = os.path.join(directory_path, x)  # Получаем полный путь к объекту в директории
+        if os.path.isdir(full_path):  # Проверяем, является ли объект папкой
+            folders.append(x)  # Добавляем имя папки в список
+    logger.info(f"🔍 Найденные папки: {folders}")  # Выводим имя найденной папки
+    return folders  # Возвращаем список папок
+
+
 def find_files(directory_path, extension) -> list:
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
@@ -47,10 +62,18 @@ def find_files(directory_path, extension) -> list:
     for x in os.listdir(directory_path):
         if x.endswith(f".{extension}"):  # Проверяем, заканчивается ли имя файла на заданное расширение
             file = os.path.splitext(x)[0]  # Разделяем имя файла на имя без расширения и расширение
-            logger.info(f"Найденные файлы: {file}.{extension}")  # Выводим имена найденных аккаунтов
             entities.append([file])  # Добавляем информацию о файле в список
-
+    logger.info(f"🔍 Найденные файлы: {entities}")  # Выводим имена найденных аккаунтов
     return entities  # Возвращаем список json файлов
+
+
+def working_with_accounts(account_folder, new_account_folder) -> None:
+    """Работа с аккаунтами"""
+    try:  # Переносим файлы в нужную папку
+        os.replace(account_folder, new_account_folder)
+    except FileNotFoundError:  # Если в папке нет нужной папки, то создаем ее
+        os.makedirs(new_account_folder)
+        os.replace(account_folder, new_account_folder)
 
 
 async def record_inviting_results(time_range_1: int, time_range_2: int, username: str) -> None:
@@ -61,8 +84,8 @@ async def record_inviting_results(time_range_1: int, time_range_2: int, username
     :param username: - username аккаунта
     """
     logger.info(f'Удаляем с базы данных username {username[0]}')
-    db_handler = DatabaseHandler()  # Открываем базу с аккаунтами и с выставленными лимитами
-    await db_handler.delete_row_db(table="members", column="username", value=username[0])
+    # Открываем базу с аккаунтами и с выставленными лимитами
+    await DatabaseHandler().delete_row_db(table="members", column="username", value=username[0])
     # Смена username через случайное количество секунд
     record_and_interrupt(time_range_1, time_range_2)
 

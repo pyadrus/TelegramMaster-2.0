@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from loguru import logger
-from telethon.errors import SessionPasswordNeededError, ApiIdInvalidError
+from telethon.errors import SessionPasswordNeededError, ApiIdInvalidError, AuthKeyDuplicatedError
 from telethon.sync import TelegramClient
 
+from system.auxiliary_functions.auxiliary_functions import working_with_accounts
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -17,7 +18,7 @@ class TGConnect:
 
     async def reading_proxies_from_the_database(self):
         """Чтение списка прокси с базы данных"""
-        logger.info("Получение прокси из базы данных")
+        # logger.info("Получение прокси из базы данных")
         proxy = await reading_proxy_data_from_the_database(self.db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
         return proxy
 
@@ -38,16 +39,30 @@ class TGConnect:
         return client  # Подсоединяемся к Telegram аккаунта
 
     async def connect_to_telegram(self, file, directory_path):
-        """Подключение к Telegram, используя файл session."""
-        logger.info(f"{file[0]}")
+        """
+        Подключение к Telegram, используя файл session.
+        Имя файла сессии file[0] - session файл
+        :param directory_path: Путь к директории
+        :param file: Файл сессии (file[0] - session файл)
+        :return TelegramClient: TelegramClient
+        """
+        logger.info(
+            f"Подключение к аккаунту: {directory_path}/{file[0]}")  # Получаем имя файла сессии file[0] - session файл
         proxy = await self.reading_proxies_from_the_database()
         client = await self.connecting_to_telegram(file[0], proxy, directory_path)
-        await client.connect()
-        return client
+        try:
+            await client.connect()
+            return client
+        except AuthKeyDuplicatedError:
+            await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+            logger.info(f"На данный момент аккаунт {file[0].split('/')[-1]} запущен под другим ip")
+            working_with_accounts(account_folder=f"{directory_path}/{file[0].split('/')[-1]}.session",
+                                  new_account_folder=f"user_settings/accounts/invalid_account/{file[0].split('/')[-1]}.session")
 
     async def telegram_connect(self):
         """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
         logger.info("Подключение к Telegram. Введите номер телефона: ")
+        # TODO: Убрать input() в коде
         phone = input(" ")
         proxy = await self.reading_proxies_from_the_database()
         client = await self.connecting_to_telegram(session=f"{phone}", proxy=proxy,
@@ -57,6 +72,7 @@ class TGConnect:
             await client.send_code_request(phone)
             try:
                 logger.info("[+] Введите код: ")
+                # TODO: Убрать input() в коде
                 phone_code = input(" ")
                 # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
                 await client.sign_in(phone, code=phone_code)
@@ -66,8 +82,9 @@ class TGConnect:
                 """
                 # Если аккаунт имеет password, то просим пользователя ввести пароль
                 logger.info("Введите пароль для входа в аккаунт: ")
+                # TODO: Убрать input() в коде
                 password = input(" ")
                 await client.sign_in(password=password)
             except ApiIdInvalidError:
                 logger.info("[!] Не валидные api_id/api_hash")
-        client.disconnect() # Отключаемся от Telegram
+        client.disconnect()  # Отключаемся от Telegram
