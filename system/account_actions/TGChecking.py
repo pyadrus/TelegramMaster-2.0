@@ -97,6 +97,7 @@ class AccountVerification:
         :param session: имя аккаунта для проверки аккаунта
         :param proxy: прокси
         """
+        # TODO: Рассмотреть использование функции connecting_to_telegram() или объединение с классом TGConnect
         api_id = self.api_id_api_hash[0]
         api_hash = self.api_id_api_hash[1]
         logger.info(f"Проверка аккаунта {session}. Используемые: api_id {api_id}, api_hash {api_hash}")
@@ -113,24 +114,14 @@ class AccountVerification:
             await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
         except AttributeError as e:
             logger.info(f"{e}")
-        except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound, sqlite3.DatabaseError):
+        except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound, sqlite3.DatabaseError, AuthKeyUnregisteredError, AuthKeyDuplicatedError):
             client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-            logger.info(f"Битый файл или аккаунт забанен {session.split('/')[-1]}.session")
+            logger.error(f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
             working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
         except TimedOutError as e:
             logger.exception(e)
             time.sleep(2)
-        except AuthKeyDuplicatedError:  # На данный момент аккаунт запущен под другим ip
-            await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-            logger.info(f"На данный момент аккаунт {session.split('/')[-1]} запущен под другим ip")
-            working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
-                                  new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
-        except AuthKeyUnregisteredError:
-            client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-            logger.info(f"Битый файл или аккаунт забанен {session.split('/')[-1]}.session")
-            working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
-                                  new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
 
     async def check_account_for_spam(self, folders) -> None:
         """
@@ -156,9 +147,9 @@ class AccountVerification:
                                                           "Если пользователь написал Вам первым, Вы сможете ответить, "
                                                           "несмотря на ограничения.")
                     if similarity_ratio_ru >= 97:
-                        logger.info('Аккаунт в бане')
+                        logger.info('⛔ Аккаунт в бане')
                         await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                        logger.error(f"""Проверка аккаунтов через SpamBot. {file[0]}: {message.message}""")
+                        logger.info(f"Проверка аккаунтов через SpamBot. {file[0]}: {message.message}")
                         # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                         working_with_accounts(account_folder=f"user_settings/accounts/{folders}/{file[0]}.session",
                                               new_account_folder=f"user_settings/accounts/banned/{file[0]}.session")
@@ -172,14 +163,14 @@ class AccountVerification:
                                                           "or add them to groups and channels. Of course, when people "
                                                           "contact you first, you can always reply to them.")
                     if similarity_ratio_en >= 97:
-                        logger.info('Аккаунт в бане')
+                        logger.info('⛔ Аккаунт в бане')
                         await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                        logger.error(f"""Проверка аккаунтов через SpamBot. {file[0]}: {message.message}""")
+                        logger.error(f"Проверка аккаунтов через SpamBot. {file[0]}: {message.message}")
                         # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                         logger.info(file[0])
                         working_with_accounts(account_folder=f"user_settings/accounts/{folders}/{file[0]}.session",
                                               new_account_folder=f"user_settings/accounts/banned/{file[0]}.session")
-                    logger.error(f"""Проверка аккаунтов через SpamBot. {file[0]}: {message.message}""")
+                    logger.error(f"Проверка аккаунтов через SpamBot. {file[0]}: {message.message}")
             except YouBlockedUserError:
                 continue  # Записываем ошибку в software_database.db и продолжаем работу
             except AttributeError as e:
