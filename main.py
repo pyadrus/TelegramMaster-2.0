@@ -24,7 +24,7 @@ import datetime
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "2.1.0", "17.08.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "2.1.1", "22.08.2024"  # Версия программы, дата изменения
 
 
 def telegram_master_main(page: ft.Page):

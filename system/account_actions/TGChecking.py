@@ -5,14 +5,27 @@ import time
 from loguru import logger
 from telethon import TelegramClient
 from telethon.errors import AuthKeyDuplicatedError, PhoneNumberBannedError, UserDeactivatedBanError, TimedOutError, \
-    AuthKeyNotFound, AuthKeyUnregisteredError
+    AuthKeyNotFound, AuthKeyUnregisteredError, TypeNotFoundError
 from telethon.errors import YouBlockedUserError
 from thefuzz import fuzz
-
+from telethon.tl.functions.users import GetFullUserRequest
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_files, working_with_accounts
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.proxy.checking_proxy import checking_the_proxy_for_work
+
+
+async def account_name(client, name_account):
+    """Показываем имя аккаунта с которого будем взаимодействовать"""
+    try:
+        full = await client(GetFullUserRequest(name_account))
+        for user in full.users:
+            first_name = user.first_name if user.first_name else ""
+            last_name = user.last_name if user.last_name else ""
+            phone = user.phone if user.phone else ""
+            return first_name, last_name, phone
+    except TypeNotFoundError as e:
+        logger.error(f"TypeNotFoundError: {e}")
 
 
 async def account_verification_for_telegram(directory_path, extension) -> None:
@@ -28,6 +41,12 @@ async def account_verification_for_telegram(directory_path, extension) -> None:
         """Проверка аккаунтов"""
         proxy = await tg_connect.reading_proxies_from_the_database()
         await account_verification.account_verification(directory_path, entities[0], proxy)
+
+        client = await tg_connect.connect_to_telegram(file=entities, directory_path=directory_path)
+        first_name, last_name, phone = await account_name(client, name_account="me")
+        # Выводим результат полученного имени и номера телефона
+        logger.info(f"[!] Account connect {first_name} {last_name} {phone}")
+
     logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁: {directory_path}")
 
 
@@ -126,4 +145,3 @@ class AccountVerification:
             except AttributeError as e:
                 logger.exception(e)  # Отправляем сообщение в лог
                 continue  # Записываем ошибку в software_database.db и продолжаем работу
-

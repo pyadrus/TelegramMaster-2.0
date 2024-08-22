@@ -39,7 +39,13 @@ class TGConnect:
         return client  # Подсоединяемся к Telegram аккаунта
 
     async def connect_to_telegram(self, file, directory_path):
-        """Подключение к Telegram, используя файл session."""
+        """
+        Подключение к Telegram, используя файл session.
+        Имя файла сессии file[0] - session файл
+        :param directory_path: Путь к директории
+        :param file: Файл сессии (file[0] - session файл)
+        :return TelegramClient: TelegramClient
+        """
         logger.info(f"Подключение к аккаунту: {directory_path}/{file[0]}") # Получаем имя файла сессии file[0] - session файл
         proxy = await self.reading_proxies_from_the_database()
         client = await self.connecting_to_telegram(file[0], proxy, directory_path)
