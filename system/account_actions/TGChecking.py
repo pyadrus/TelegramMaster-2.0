@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sqlite3
 import time
-
+import os
+import os.path
 from loguru import logger
 from telethon import TelegramClient
 from telethon.errors import AuthKeyDuplicatedError, PhoneNumberBannedError, UserDeactivatedBanError, TimedOutError, \
@@ -15,8 +16,29 @@ from system.auxiliary_functions.global_variables import ConfigReader
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 
 
+async def renaming_a_session(client, phone_old, phone, directory_path) -> None:
+    """
+    Переименование session файлов
+    :param client: клиент для работы с Telegram
+    :param phone_old: номер телефона для переименования
+    :param phone: номер телефона для переименования
+    :param directory_path: путь к каталогу с файлами
+    """
+    await client.disconnect()  # Отключаемся от аккаунта для освобождения session файла
+    try:
+        # Переименование session файла
+        os.rename(f"{directory_path}/{phone_old}.session", f"{directory_path}/{phone}.session", )
+    except FileExistsError:
+        # Если файл существует, то удаляем дубликат
+        os.remove(f"{directory_path}/{phone_old}.session")
+
+
 async def account_name(client, name_account):
-    """Показываем имя аккаунта с которого будем взаимодействовать"""
+    """
+    Показываем имя аккаунта с которого будем взаимодействовать
+    :param client: клиент для работы с Telegram
+    :param name_account: имя аккаунта для проверки аккаунта
+    """
     try:
         full = await client(GetFullUserRequest(name_account))
         for user in full.users:
@@ -29,23 +51,33 @@ async def account_name(client, name_account):
 
 
 async def account_verification_for_telegram(directory_path, extension) -> None:
-    """Проверка аккаунтов Telegram"""
+    """
+    Проверка аккаунтов Telegram
+    :param directory_path: путь к каталогу с аккаунтами
+    :param extension: расширение файла с аккаунтами
+    """
     logger.info(f"Запуск проверки аккаунтов Telegram из папки 📁: {directory_path}")
     account_verification = AccountVerification()
     tg_connect = TGConnect()
     await checking_the_proxy_for_work()  # Проверка proxy
-    """Сканирование каталога с аккаунтами"""
+
+    # Сканирование каталога с аккаунтами
     entities = find_files(directory_path, extension)
     for entities in entities:
         logger.info(f"⚠️ Проверяемый аккаунт {directory_path}/{entities[0]}")
-        """Проверка аккаунтов"""
+
+        # Проверка аккаунтов
         proxy = await tg_connect.reading_proxies_from_the_database()
         await account_verification.account_verification(directory_path, entities[0], proxy)
 
+        # Получение данных аккаунта
         client = await tg_connect.connect_to_telegram(file=entities, directory_path=directory_path)
         first_name, last_name, phone = await account_name(client, name_account="me")
         # Выводим результат полученного имени и номера телефона
-        logger.info(f"[!] Account connect {first_name} {last_name} {phone}")
+        logger.info(f"📔 Данные аккаунта {first_name} {last_name} {phone}")
+
+        # Переименовываем сессию
+        await renaming_a_session(client, entities[0], phone, directory_path)
 
     logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁: {directory_path}")
 
@@ -59,7 +91,12 @@ class AccountVerification:
         self.tg_connect = TGConnect()
 
     async def account_verification(self, directory_path, session, proxy) -> None:
-        """Проверка и сортировка аккаунтов"""
+        """
+        Проверка и сортировка аккаунтов
+        :param directory_path: путь к каталогу с аккаунтами
+        :param session: имя аккаунта для проверки аккаунта
+        :param proxy: прокси
+        """
         api_id = self.api_id_api_hash[0]
         api_hash = self.api_id_api_hash[1]
         logger.info(f"Проверка аккаунта {session}. Используемые: api_id {api_id}, api_hash {api_hash}")
@@ -96,7 +133,10 @@ class AccountVerification:
                                   new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
 
     async def check_account_for_spam(self, folders) -> None:
-        """Проверка аккаунта на спам через @SpamBot"""
+        """
+        Проверка аккаунта на спам через @SpamBot
+        :param folders: папка с аккаунтами
+        """
         entities = find_files(directory_path=f"user_settings/accounts/{folders}", extension='session')
         for file in entities:
             client = await self.tg_connect.connect_to_telegram(file, directory_path=f"user_settings/accounts/{folders}")
