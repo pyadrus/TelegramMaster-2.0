@@ -46,7 +46,8 @@ class TGConnect:
         :param file: Файл сессии (file[0] - session файл)
         :return TelegramClient: TelegramClient
         """
-        logger.info(f"Подключение к аккаунту: {directory_path}/{file[0]}") # Получаем имя файла сессии file[0] - session файл
+        logger.info(
+            f"Подключение к аккаунту: {directory_path}/{file[0]}")  # Получаем имя файла сессии file[0] - session файл
         proxy = await self.reading_proxies_from_the_database()
         client = await self.connecting_to_telegram(file[0], proxy, directory_path)
         try:
@@ -61,6 +62,7 @@ class TGConnect:
     async def telegram_connect(self):
         """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
         logger.info("Подключение к Telegram. Введите номер телефона: ")
+        # TODO: Убрать input() в коде
         phone = input(" ")
         proxy = await self.reading_proxies_from_the_database()
         client = await self.connecting_to_telegram(session=f"{phone}", proxy=proxy,
@@ -70,6 +72,7 @@ class TGConnect:
             await client.send_code_request(phone)
             try:
                 logger.info("[+] Введите код: ")
+                # TODO: Убрать input() в коде
                 phone_code = input(" ")
                 # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
                 await client.sign_in(phone, code=phone_code)
@@ -79,8 +82,9 @@ class TGConnect:
                 """
                 # Если аккаунт имеет password, то просим пользователя ввести пароль
                 logger.info("Введите пароль для входа в аккаунт: ")
+                # TODO: Убрать input() в коде
                 password = input(" ")
                 await client.sign_in(password=password)
             except ApiIdInvalidError:
                 logger.info("[!] Не валидные api_id/api_hash")
-        client.disconnect() # Отключаемся от Telegram
+        client.disconnect()  # Отключаемся от Telegram

@@ -203,6 +203,7 @@ def telegram_master_main(page: ft.Page):
             await ParsingGroupMembers().choose_group_for_parsing()
 
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
+            # TODO: Убрать input() в коде
             chat_input = input(f"{logger.info('[+] Введите ссылку на чат с которого будем собирать активных: ')}")
             limit_active_user = input(f"{logger.info('[+] Введите количество сообщений которые будем parsing: ')}")
             await ParsingGroupMembers().parse_active_users(chat_input, int(limit_active_user))

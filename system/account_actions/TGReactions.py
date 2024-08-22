@@ -28,6 +28,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
     async def send_reaction_request(self) -> None:
         """Ставим реакции на сообщения"""
         logger.info(f'[+] Введите ссылку на сообщение или пост: ')
+        # TODO: Убрать input() в коде
         message = input(" ")  # Ссылка на сообщение
         random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
         entities = find_files(directory_path="user_settings/accounts/reactions", extension='session')

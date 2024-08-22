@@ -147,7 +147,7 @@ class ParsingGroupMembers:
         logger.info("")
 
         logger.info("[+] Введите номер группы: ")
-
+        # TODO: Убрать input() в коде
         g_index = input("")
 
         target_group = groups[int(g_index)]
