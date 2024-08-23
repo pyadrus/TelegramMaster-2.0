@@ -105,10 +105,8 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
             await InvitingToAGroup().inviting_without_limits(account_limits=None)  # Вызываем метод для инвайтинга
         elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
-            config_reader = ConfigReader()
-            account_limits = config_reader.get_limits()
             await InvitingToAGroup().inviting_without_limits(
-                account_limits=account_limits)  # Вызываем метод для инвайтинга
+                account_limits=ConfigReader().get_limits())  # Вызываем метод для инвайтинга
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             launching_an_invite_once_an_hour()
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
