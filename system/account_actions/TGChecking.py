@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-import sqlite3
-import time
 import os
 import os.path
+import sqlite3
+import time
+
 from loguru import logger
 from telethon import TelegramClient
 from telethon.errors import AuthKeyDuplicatedError, PhoneNumberBannedError, UserDeactivatedBanError, TimedOutError, \
-    AuthKeyNotFound, AuthKeyUnregisteredError, TypeNotFoundError
+    AuthKeyNotFound, TypeNotFoundError, AuthKeyUnregisteredError
 from telethon.errors import YouBlockedUserError
-from thefuzz import fuzz
 from telethon.tl.functions.users import GetFullUserRequest
+from thefuzz import fuzz
+
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_files, working_with_accounts
 from system.auxiliary_functions.global_variables import ConfigReader
@@ -33,7 +35,7 @@ async def renaming_a_session(client, phone_old, phone, directory_path) -> None:
         os.remove(f"{directory_path}/{phone_old}.session")
 
 
-async def account_name(client, name_account):
+async def account_name(client, name_account, directory_path, session):
     """
     Показываем имя аккаунта с которого будем взаимодействовать
     :param client: клиент для работы с Telegram
@@ -46,8 +48,20 @@ async def account_name(client, name_account):
             last_name = user.last_name if user.last_name else ""
             phone = user.phone if user.phone else ""
             return first_name, last_name, phone
-    except TypeNotFoundError as e:
-        logger.error(f"TypeNotFoundError: {e}")
+    except TypeNotFoundError:
+        # logger.error(f"TypeNotFoundError: {e}")
+        await client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
+        logger.error(
+            f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
+        working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
+                              new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
+    except AuthKeyUnregisteredError:
+        # logger.error(f"TypeNotFoundError: {e}")
+        await client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
+        logger.error(
+            f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
+        working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
+                              new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
 
 
 async def account_verification_for_telegram(directory_path, extension) -> None:
@@ -72,12 +86,16 @@ async def account_verification_for_telegram(directory_path, extension) -> None:
 
         # Получение данных аккаунта
         client = await tg_connect.connect_to_telegram(file=entities, directory_path=directory_path)
-        first_name, last_name, phone = await account_name(client, name_account="me")
-        # Выводим результат полученного имени и номера телефона
-        logger.info(f"📔 Данные аккаунта {first_name} {last_name} {phone}")
+        try:
+            first_name, last_name, phone = await account_name(client, name_account="me", directory_path=directory_path,
+                                                              session=entities[0])
+            # Выводим результат полученного имени и номера телефона
+            logger.info(f"📔 Данные аккаунта {first_name} {last_name} {phone}")
 
-        # Переименовываем сессию
-        await renaming_a_session(client, entities[0], phone, directory_path)
+            # Переименовываем сессию
+            await renaming_a_session(client, entities[0], phone, directory_path)
+        except TypeError as e:
+            logger.error(f"TypeError: {e}")  # Ошибка
 
     logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁: {directory_path}")
 
@@ -114,9 +132,11 @@ class AccountVerification:
             await client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
         except AttributeError as e:
             logger.info(f"{e}")
-        except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound, sqlite3.DatabaseError, AuthKeyUnregisteredError, AuthKeyDuplicatedError):
+        except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound, sqlite3.DatabaseError,
+                AuthKeyUnregisteredError, AuthKeyDuplicatedError):
             client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-            logger.error(f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
+            logger.error(
+                f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
             working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
         except TimedOutError as e:
@@ -174,5 +194,8 @@ class AccountVerification:
             except YouBlockedUserError:
                 continue  # Записываем ошибку в software_database.db и продолжаем работу
             except AttributeError as e:
-                logger.exception(e)  # Отправляем сообщение в лог
+                logger.error(e)  # Отправляем сообщение в лог
                 continue  # Записываем ошибку в software_database.db и продолжаем работу
+            except AuthKeyUnregisteredError as e:
+                logger.error(e)  # Отправляем сообщение в лог
+

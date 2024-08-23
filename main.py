@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 import flet as ft
 from loguru import logger
 
 from system.account_actions.TGAccountBIO import AccountBIO
-from system.account_actions.TGChecking import AccountVerification, account_verification_for_telegram
+from system.account_actions.TGChecking import account_verification_for_telegram, AccountVerification
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
 from system.account_actions.TGCreating import CreatingGroupsAndChats
@@ -19,7 +21,6 @@ from system.auxiliary_functions.global_variables import ConfigReader
 from system.setting.setting import SettingPage, get_unique_filename
 from system.setting.setting import reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-import datetime
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
@@ -103,7 +104,16 @@ def telegram_master_main(page: ft.Page):
                                                on_click=lambda _: page.go("/inviting_every_day")),
                          ])]))
         elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
+
+            start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+            logger.info('Время старта: ' + str(start))
+            logger.info("▶️ Инвайтинг начался")
             await InvitingToAGroup().inviting_without_limits(account_limits=None)  # Вызываем метод для инвайтинга
+            logger.info("🔚 Инвайтинг завершен")
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            logger.info('Время окончания: ' + str(finish))
+            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
         elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
             await InvitingToAGroup().inviting_without_limits(
                 account_limits=ConfigReader().get_limits())  # Вызываем метод для инвайтинга
@@ -196,7 +206,17 @@ def telegram_master_main(page: ft.Page):
                          ])]))
 
         elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
+
+            start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+            logger.info('Время старта: ' + str(start))
+            logger.info("▶️ Парсинг начался")
             await ParsingGroupMembers().parse_groups()
+            logger.info("🔚 Парсинг завершен")
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            logger.info('Время окончания: ' + str(finish))
+            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
+
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
             await ParsingGroupMembers().choose_group_for_parsing()
 
