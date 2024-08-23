@@ -92,10 +92,8 @@ def telegram_master_main(page: ft.Page):
                         [ft.AppBar(title=ft.Text("Главное меню"),
                                    bgcolor=ft.colors.SURFACE_VARIANT),
                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг без лимитов",
+                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг",
                                                on_click=lambda _: page.go("/inviting_without_limits")),
-                             # ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг с лимитами",
-                             #                   on_click=lambda _: page.go("/inviting_with_limits")),
                              ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг 1 раз в час",
                                                on_click=lambda _: page.go("/inviting_1_time_per_hour")),
                              ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг в определенное время",
@@ -103,7 +101,7 @@ def telegram_master_main(page: ft.Page):
                              ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг каждый день",
                                                on_click=lambda _: page.go("/inviting_every_day")),
                          ])]))
-        elif page.route == "/inviting_without_limits":  # Инвайтинг без лимитов
+        elif page.route == "/inviting_without_limits":  # Инвайтинг
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Инвайтинг начался")
@@ -112,9 +110,6 @@ def telegram_master_main(page: ft.Page):
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
             logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-        # elif page.route == "/inviting_with_limits":  # Инвайтинг с лимитами
-        #     await InvitingToAGroup().inviting_without_limits(
-        #         account_limits=ConfigReader().get_limits())  # Вызываем метод для инвайтинга
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             launching_an_invite_once_an_hour()
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
