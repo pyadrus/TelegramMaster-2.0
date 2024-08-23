@@ -49,14 +49,12 @@ async def account_name(client, name_account, directory_path, session):
             phone = user.phone if user.phone else ""
             return first_name, last_name, phone
     except TypeNotFoundError:
-        # logger.error(f"TypeNotFoundError: {e}")
         await client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
         logger.error(
             f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
         working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
                               new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
     except AuthKeyUnregisteredError:
-        # logger.error(f"TypeNotFoundError: {e}")
         await client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
         logger.error(
             f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
