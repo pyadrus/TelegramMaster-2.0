@@ -180,12 +180,20 @@ def writing_settings_to_a_file(config) -> None:
 
 
 def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigParser:
-    """Запись данных в файл user_settings/time_inviting.ini"""
-    config.get(f"{variable}", f"{variable}_1")
-    config.set(f"{variable}", f"{variable}_1", time_1)
-    config.get(f"{variable}", f"{variable}_2")
-    config.set(f"{variable}", f"{variable}_2", time_2)
-    return config
+    """
+    Запись данных в файл TelegramMaster/user_settings/config.ini
+    :param time_1: Время в секундах
+    :param time_2: Время в секундах
+    :param variable: Название переменной в файле config.ini
+    """
+    try:
+        config.get(f"{variable}", f"{variable}_1")
+        config.set(f"{variable}", f"{variable}_1", time_1)
+        config.get(f"{variable}", f"{variable}_2")
+        config.set(f"{variable}", f"{variable}_2", time_2)
+        return config
+    except configparser.NoSectionError as error:
+        logger.error(f"Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_settings/config.ini")
 
 
 def write_data_to_json_file(reactions, path_to_the_file):

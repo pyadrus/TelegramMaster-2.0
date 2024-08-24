@@ -74,6 +74,8 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
     except FileNotFoundError:  # Если в папке нет нужной папки, то создаем ее
         os.makedirs(new_account_folder)
         os.replace(account_folder, new_account_folder)
+    except PermissionError:
+        logger.error("Не удалось перенести файлы в нужную папку")
 
 
 async def record_inviting_results(time_range_1: int, time_range_2: int, username: str) -> None:
