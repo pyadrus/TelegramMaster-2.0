@@ -40,6 +40,8 @@ async def account_name(client, name_account, directory_path, session):
     Показываем имя аккаунта с которого будем взаимодействовать
     :param client: клиент для работы с Telegram
     :param name_account: имя аккаунта для проверки аккаунта
+    :param directory_path: путь к файлу
+    :param session: имя session файла
     """
     try:
         full = await client(GetFullUserRequest(name_account))
@@ -50,14 +52,12 @@ async def account_name(client, name_account, directory_path, session):
             return first_name, last_name, phone
     except TypeNotFoundError:
         await client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-        logger.error(
-            f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
+        logger.error(f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
         working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
                               new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
     except AuthKeyUnregisteredError:
         await client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-        logger.error(
-            f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
+        logger.error(f"⛔ Битый файл или аккаунт забанен {session.split('/')[-1]}.session, возможно запущен под другим ip")
         working_with_accounts(account_folder=f"{directory_path}/{session.split('/')[-1]}.session",
                               new_account_folder=f"user_settings/accounts/invalid_account/{session.split('/')[-1]}.session")
 
