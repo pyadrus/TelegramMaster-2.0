@@ -5,7 +5,6 @@ import flet as ft
 from loguru import logger
 
 from system.account_actions.TGAccountBIO import AccountBIO
-from system.account_actions.TGChecking import account_verification_for_telegram, AccountVerification
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
 from system.account_actions.TGCreating import CreatingGroupsAndChats
@@ -121,8 +120,8 @@ def telegram_master_main(page: ft.Page):
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Проверка аккаунтов началась")
-            await account_verification_for_telegram(directory_path="user_settings/accounts",
-                                                    extension="session")  # Вызываем метод для проверки аккаунтов
+            await TGConnect().verify_all_accounts(account_directory="user_settings/accounts",
+                                                  extension="session")  # Вызываем метод для проверки аккаунтов
             folders = find_folders(directory_path="user_settings/accounts")
             for folder in folders:
                 logger.info(f'Проверка аккаунтов из папки 📁 {folder} через спам бот')
@@ -130,9 +129,9 @@ def telegram_master_main(page: ft.Page):
                     logger.info(f"⛔ Пропускаем папку 📁: {folder}")
                     continue  # Продолжаем цикл, пропуская эту итерацию
                 else:
-                    await account_verification_for_telegram(directory_path=f"user_settings/accounts/{folder}",
-                                                            extension="session")
-                    await AccountVerification().check_account_for_spam(folder)
+                    await TGConnect().verify_all_accounts(account_directory=f"user_settings/accounts/{folder}",
+                                                          extension="session")
+                    await TGConnect().check_for_spam(folder)
             logger.info("🔚 Проверка аккаунтов завершена")
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
@@ -250,7 +249,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/adding_contacts":  # Добавление контактов
             await TGContact().inviting_contact()
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-            await TGConnect().telegram_connect()
+            await TGConnect().start_telegram_session()
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             await CreatingGroupsAndChats().creating_groups_and_chats()
 

@@ -50,7 +50,7 @@ class AccountBIO:
         entities = find_files(directory_path=self.directory_path, extension=self.extension)
         for file in entities:
             logger.info(f"{file[0]}")
-            client = await self.tg_connect.connect_to_telegram(file, directory_path=self.directory_path)
+            client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
             try:
                 await client(functions.account.UpdateUsernameRequest(username=user_input))
@@ -83,7 +83,7 @@ class AccountBIO:
         entities = find_files(directory_path=self.directory_path, extension=self.extension)
         for file in entities:
             logger.info(f"{file[0]}")
-            client = await self.tg_connect.connect_to_telegram(file, directory_path=self.directory_path)
+            client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
             while True:
                 if len(user_input) <= 70:
@@ -114,7 +114,7 @@ class AccountBIO:
         entities = find_files(directory_path=self.directory_path, extension=self.extension)
         for file in entities:
             logger.info(f"{file[0]}")
-            client = await self.tg_connect.connect_to_telegram(file, directory_path=self.directory_path)
+            client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
             try:
                 result = await client(functions.account.UpdateProfileRequest(first_name=user_input))
@@ -139,7 +139,7 @@ class AccountBIO:
         entities = find_files(directory_path=self.directory_path, extension=self.extension)
         for file in entities:
             logger.info(f"{file[0]}")
-            client = await self.tg_connect.connect_to_telegram(file, directory_path=self.directory_path)
+            client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
             try:
                 result = await client(functions.account.UpdateProfileRequest(last_name=user_input))
@@ -153,7 +153,7 @@ class AccountBIO:
         entities = find_files(directory_path=self.directory_path, extension=self.extension)
         for file in entities:
             logger.info(f"{file[0]}")
-            client = await self.tg_connect.connect_to_telegram(file, directory_path=self.directory_path)
+            client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
             photo_files = find_files(directory_path="user_settings/bio", extension='jpg')
             for photo_file in photo_files:

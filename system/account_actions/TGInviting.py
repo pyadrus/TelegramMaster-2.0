@@ -41,7 +41,7 @@ class InvitingToAGroup:
         logger.info(f"Запуск инвайтинга без лимитов")
         entities = find_files(directory_path="user_settings/accounts/inviting", extension='session')
         for file in entities:
-            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/inviting")
+            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/inviting")
             """Получение ссылки для инвайтинга"""
             links_inviting = await self.getting_an_invitation_link_from_the_database()
             for link in links_inviting:
