@@ -3,7 +3,7 @@ import asyncio
 import schedule
 from loguru import logger
 
-from system.account_actions.TGChecking import account_verification_for_telegram
+from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGInviting import InvitingToAGroup
 from system.auxiliary_functions.global_variables import ConfigReader
 
@@ -13,8 +13,8 @@ hour, minutes = configs_reader.get_hour_minutes_every_day()
 
 async def schedule_member_invitation() -> None:
     """Запуск inviting"""
-    await account_verification_for_telegram(directory_path="user_settings/accounts/inviting",
-                                            extension="session")  # Вызываем метод для проверки аккаунтов
+    Tg_Connect = TGConnect()
+    await Tg_Connect.verify_account(account_directory="user_settings/accounts/inviting", session_name="session")  # Вызываем метод для проверки аккаунтов
     inviting_to_a_group = InvitingToAGroup()
     config_reader = ConfigReader()
     account_limits = config_reader.get_limits()

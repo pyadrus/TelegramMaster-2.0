@@ -11,7 +11,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, Use
                              ApiIdInvalidError, YouBlockedUserError)
 from telethon.tl.functions.users import GetFullUserRequest
 from thefuzz import fuzz
-
+import flet as ft  # Импортируем библиотеку flet
 from system.auxiliary_functions.auxiliary_functions import find_files, working_with_accounts
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.proxy.checking_proxy import checking_the_proxy_for_work
@@ -27,6 +27,7 @@ class TGConnect:
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
+        # self.data = {"phone": "phone"}
 
     async def connect_to_telegram(self, session, account_directory) -> TelegramClient:
         """
@@ -63,7 +64,8 @@ class TGConnect:
         except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound, sqlite3.DatabaseError,
                 AuthKeyUnregisteredError, AuthKeyDuplicatedError):
             telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-            logger.error(f"⛔ Битый файл или аккаунт забанен: {session_name.split('/')[-1]}.session. Возможно, запущен под другим IP")
+            logger.error(
+                f"⛔ Битый файл или аккаунт забанен: {session_name.split('/')[-1]}.session. Возможно, запущен под другим IP")
             working_with_accounts(account_folder=f"{account_directory}/{session_name.split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{session_name.split('/')[-1]}.session")
         except TimedOutError as e:
@@ -77,12 +79,13 @@ class TGConnect:
         """
         session_files = find_files(directory_path=f"user_settings/accounts/{folder_name}", extension='session')
         for session_file in session_files:
-            telegram_client = await self.get_telegram_client(session_file , account_directory=f"user_settings/accounts/{folder_name}")
+            telegram_client = await self.get_telegram_client(session_file,
+                                                             account_directory=f"user_settings/accounts/{folder_name}")
             try:
                 await telegram_client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
                 messages = await telegram_client.get_messages('SpamBot')
                 for message in messages:
-                    logger.info(f"{session_file } {message.message}")
+                    logger.info(f"{session_file} {message.message}")
                     similarity_ratio_ru: int = fuzz.ratio(f"{message.message}",
                                                           "Очень жаль, что Вы с этим столкнулись. К сожалению, "
                                                           "иногда наша антиспам-система излишне сурово реагирует на "
@@ -96,10 +99,11 @@ class TGConnect:
                     if similarity_ratio_ru >= 97:
                         logger.info('⛔ Аккаунт заблокирован')
                         await telegram_client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                        logger.info(f"Проверка аккаунтов через SpamBot. {session_file [0]}: {message.message}")
+                        logger.info(f"Проверка аккаунтов через SpamBot. {session_file[0]}: {message.message}")
                         # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
-                        working_with_accounts(account_folder=f"user_settings/accounts/{folder_name}/{session_file [0]}.session",
-                                              new_account_folder=f"user_settings/accounts/banned/{session_file [0]}.session")
+                        working_with_accounts(
+                            account_folder=f"user_settings/accounts/{folder_name}/{session_file[0]}.session",
+                            new_account_folder=f"user_settings/accounts/banned/{session_file[0]}.session")
                     similarity_ratio_en: int = fuzz.ratio(f"{message.message}",
                                                           "I’m very sorry that you had to contact me. Unfortunately, "
                                                           "some account_actions can trigger a harsh response from our "
@@ -112,12 +116,13 @@ class TGConnect:
                     if similarity_ratio_en >= 97:
                         logger.info('⛔ Аккаунт заблокирован')
                         await telegram_client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
-                        logger.error(f"Проверка аккаунтов через SpamBot. {session_file [0]}: {message.message}")
+                        logger.error(f"Проверка аккаунтов через SpamBot. {session_file[0]}: {message.message}")
                         # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
-                        logger.info(session_file [0])
-                        working_with_accounts(account_folder=f"user_settings/accounts/{folder_name}/{session_file [0]}.session",
-                                              new_account_folder=f"user_settings/accounts/banned/{session_file [0]}.session")
-                    logger.error(f"Проверка аккаунтов через SpamBot. {session_file [0]}: {message.message}")
+                        logger.info(session_file[0])
+                        working_with_accounts(
+                            account_folder=f"user_settings/accounts/{folder_name}/{session_file[0]}.session",
+                            new_account_folder=f"user_settings/accounts/banned/{session_file[0]}.session")
+                    logger.error(f"Проверка аккаунтов через SpamBot. {session_file[0]}: {message.message}")
             except YouBlockedUserError:
                 continue  # Записываем ошибку в software_database.db и продолжаем работу
             except (AttributeError, AuthKeyUnregisteredError) as e:
@@ -170,12 +175,14 @@ class TGConnect:
                 return first_name, last_name, phone_number
         except TypeNotFoundError:
             await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-            logger.error(f"⛔ Битый файл или аккаунт забанен: {session_name.split('/')[-1]}.session. Возможно, запущен под другим IP")
+            logger.error(
+                f"⛔ Битый файл или аккаунт забанен: {session_name.split('/')[-1]}.session. Возможно, запущен под другим IP")
             working_with_accounts(account_folder=f"{account_directory}/{session_name.split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{session_name.split('/')[-1]}.session")
         except AuthKeyUnregisteredError:
             await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-            logger.error(f"⛔ Битый файл или аккаунт забанен: {session_name.split('/')[-1]}.session. Возможно, запущен под другим IP")
+            logger.error(
+                f"⛔ Битый файл или аккаунт забанен: {session_name.split('/')[-1]}.session. Возможно, запущен под другим IP")
             working_with_accounts(account_folder=f"{account_directory}/{session_name.split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{session_name.split('/')[-1]}.session")
 
@@ -214,27 +221,71 @@ class TGConnect:
             working_with_accounts(account_folder=f"{account_directory}/{file[0].split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{file[0].split('/')[-1]}.session")
 
-    async def start_telegram_session(self):
+    async def start_telegram_session(self, page: ft.Page):
         """Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код"""
-        logger.info("Подключение к Telegram. Введите номер телефона: ")
-        # TODO: Убрать input() в коде
-        phone_number = input(" ")
-        telegram_client = await self.get_telegram_client(file=f"{phone_number}", account_directory="user_settings/accounts")
-        await telegram_client.connect()  # Подключаемся к Telegram
-        if not await telegram_client.is_user_authorized():
-            await telegram_client.send_code_request(phone_number)
-            try:
-                logger.info("[+] Введите код: ")
-                # TODO: Убрать input() в коде
-                phone_code = input(" ")
-                # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
-                await telegram_client.sign_in(phone_number, code=phone_code)
-            except SessionPasswordNeededError:
-                # Если аккаунт имеет password, то просим пользователя ввести пароль
-                logger.info("Введите пароль для входа в аккаунт: ")
-                # TODO: Убрать input() в коде
-                password = input(" ")
-                await telegram_client.sign_in(password=password)
-            except ApiIdInvalidError:
-                logger.info("[!] Неверные API ID или API Hash.")
-        telegram_client.disconnect()  # Отключаемся от Telegram
+        phone_number = ft.TextField(label="Введите номер телефона:", multiline=False, max_lines=1)
+
+        async def btn_click(e) -> None:
+            phone_number_value = phone_number.value
+            logger.info(f"Номер телефона: {phone_number_value}")
+
+            # Дальнейшая обработка после записи номера телефона
+            proxy_settings = await reading_proxy_data_from_the_database(self.db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
+            telegram_client = TelegramClient(f"user_settings/accounts/{phone_number_value}", api_id=self.api_id,
+                                             api_hash=self.api_hash,
+                                             system_version="4.16.30-vxCUSTOM", proxy=proxy_settings)
+            await telegram_client.connect()  # Подключаемся к Telegram
+
+            if not await telegram_client.is_user_authorized():
+                logger.info("Пользователь не авторизован")
+                await telegram_client.send_code_request(phone_number_value)  # Отправка кода на телефон
+                time.sleep(2)
+
+                passww = ft.TextField(label="Введите код telegram:", multiline=True, max_lines=1)
+
+                async def btn_click_code(e) -> None:
+                    try:
+                        logger.info(f"Код telegram: {passww.value}")
+                        await telegram_client.sign_in(phone_number_value, passww.value)  # Авторизация с кодом
+                        page.update()
+                    except SessionPasswordNeededError:
+                        # Если аккаунт защищен паролем, запрашиваем пароль
+                        logger.info("Требуется двухфакторная аутентификация. Введите пароль.")
+                        tfakt = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
+
+                        async def btn_click_password(e) -> None:
+                            logger.info(f"Пароль telegram: {tfakt.value}")
+                            try:
+                                await telegram_client.sign_in(password=tfakt.value)
+                                logger.info("Успешная авторизация.")
+                                page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+                                page.update()
+                            except Exception as ex:
+                                logger.error(f"Ошибка при вводе пароля: {ex}")
+
+                        button_password = ft.ElevatedButton("Готово", on_click=btn_click_password)
+                        page.views.append(ft.View(controls=[tfakt, button_password]))
+                        page.update()  # Обновляем страницу, чтобы интерфейс отобразился
+                        telegram_client.disconnect()
+                    except ApiIdInvalidError:
+                        logger.error("[!] Неверные API ID или API Hash.")
+                        await telegram_client.disconnect()  # Отключаемся от Telegram
+                    except Exception as ex:
+                        logger.error(f"Ошибка при авторизации: {ex}")
+                        await telegram_client.disconnect()  # Отключаемся от Telegram
+
+                button_code = ft.ElevatedButton("Готово", on_click=btn_click_code)
+                page.views.append(ft.View(controls=[passww, button_code]))
+                page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
+
+            page.update()
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        # Создаем вид, который будет содержать поле ввода и кнопку
+        input_view = ft.View(controls=[phone_number, button])
+
+        # Добавляем созданный вид на страницу
+        page.views.append(input_view)
+        page.update()
+
