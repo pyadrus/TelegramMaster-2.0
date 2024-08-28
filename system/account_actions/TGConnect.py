@@ -211,7 +211,7 @@ class TGConnect:
         :return TelegramClient: TelegramClient
         """
         logger.info(f"Подключение к аккаунту: {account_directory}/{file[0]}")  # Получаем имя файла сессии file[0] - session файл
-        telegram_client = await self.get_telegram_client(file[0], account_directory)
+        telegram_client = await self.connect_to_telegram(file[0], account_directory)
         try:
             await telegram_client.connect()
             return telegram_client
@@ -247,9 +247,10 @@ class TGConnect:
                     try:
                         logger.info(f"Код telegram: {passww.value}")
                         await telegram_client.sign_in(phone_number_value, passww.value)  # Авторизация с кодом
+                        telegram_client.disconnect()
+                        page.go("/settings")  # Перенаправление в настройки, если 2FA не требуется
                         page.update()
-                    except SessionPasswordNeededError:
-                        # Если аккаунт защищен паролем, запрашиваем пароль
+                    except SessionPasswordNeededError:# Если аккаунт защищен паролем, запрашиваем пароль
                         logger.info("Требуется двухфакторная аутентификация. Введите пароль.")
                         tfakt = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
 
@@ -258,6 +259,7 @@ class TGConnect:
                             try:
                                 await telegram_client.sign_in(password=tfakt.value)
                                 logger.info("Успешная авторизация.")
+                                telegram_client.disconnect()
                                 page.go("/settings")  # Изменение маршрута в представлении существующих настроек
                                 page.update()
                             except Exception as ex:
@@ -266,7 +268,7 @@ class TGConnect:
                         button_password = ft.ElevatedButton("Готово", on_click=btn_click_password)
                         page.views.append(ft.View(controls=[tfakt, button_password]))
                         page.update()  # Обновляем страницу, чтобы интерфейс отобразился
-                        telegram_client.disconnect()
+
                     except ApiIdInvalidError:
                         logger.error("[!] Неверные API ID или API Hash.")
                         await telegram_client.disconnect()  # Отключаемся от Telegram
@@ -282,10 +284,8 @@ class TGConnect:
 
         button = ft.ElevatedButton("Готово", on_click=btn_click)
 
-        # Создаем вид, который будет содержать поле ввода и кнопку
-        input_view = ft.View(controls=[phone_number, button])
+        input_view = ft.View(controls=[phone_number, button])# Создаем вид, который будет содержать поле ввода и кнопку
 
-        # Добавляем созданный вид на страницу
-        page.views.append(input_view)
+        page.views.append(input_view)# Добавляем созданный вид на страницу
         page.update()
 

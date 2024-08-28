@@ -249,37 +249,10 @@ def telegram_master_main(page: ft.Page):
             await TGContact().delete_contact()
         elif page.route == "/adding_contacts":  # Добавление контактов
             await TGContact().inviting_contact()
-
-
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-
             await TGConnect().start_telegram_session(page)
-
-            # elif page.route == "/telegram_password":  # Меню "Рассылка сообщений"
-            #     await TGConnect().telegram_password(page)
-                # if not await telegram_client.is_user_authorized():
-                #     await telegram_client.send_code_request(phone_number)
-                #     try:
-                #         logger.info("[+] Введите код: ")
-                #         phone_code = input(" ")
-                        # Если ранее аккаунт не подсоединялся, то просим ввести код подтверждения
-                        # await telegram_client.sign_in(phone_number, code=phone_code)
-                    # except SessionPasswordNeededError:
-                        # Если аккаунт имеет password, то просим пользователя ввести пароль
-                        # logger.info("Введите пароль для входа в аккаунт: ")
-                        # password = input(" ")
-                        # await telegram_client.sign_in(password=password)
-                    # except ApiIdInvalidError:
-                    #     logger.info("[!] Неверные API ID или API Hash.")
-                # telegram_client.disconnect()  # Отключаемся от Telegram
-
-
-
-
-
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             await CreatingGroupsAndChats().creating_groups_and_chats()
-
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             page.views.append(
                 ft.View("/sending_messages",
