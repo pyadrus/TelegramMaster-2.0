@@ -42,8 +42,8 @@ class SendTelegramMessages:
         time_inviting_2 = time_inviting[1]
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for file in entities:
-            client = await self.tg_connect.connect_to_telegram(file,
-                                                               directory_path="user_settings/accounts/send_message")
+            client = await self.tg_connect.get_telegram_client(file,
+                                                               account_directory="user_settings/accounts/send_message")
             try:
                 number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
                                                                                      account_limits=account_limits)
@@ -90,8 +90,8 @@ class SendTelegramMessages:
         entitiess = all_find_files(directory_path="user_settings/files_to_send")
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for file in entities:
-            client = await self.tg_connect.connect_to_telegram(file,
-                                                               directory_path="user_settings/accounts/send_message")
+            client = await self.tg_connect.get_telegram_client(file,
+                                                               account_directory="user_settings/accounts/send_message")
             try:
                 # Открываем parsing список user_settings/software_database.db для inviting в группу
                 number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
@@ -132,8 +132,8 @@ class SendTelegramMessages:
         # Спрашиваем у пользователя, через какое время будем отправлять сообщения
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for files in entities:
-            client = await self.tg_connect.connect_to_telegram(files,
-                                                               directory_path="user_settings/accounts/send_message")
+            client = await self.tg_connect.get_telegram_client(files,
+                                                               account_directory="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Всего групп: {len(records)}")
             for groups in records:  # Поочередно выводим записанные группы
@@ -169,8 +169,8 @@ class SendTelegramMessages:
         """Рассылка сообщений + файлов по чатам"""
         entitiess = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for files in entitiess:
-            client = await self.tg_connect.connect_to_telegram(files,
-                                                               directory_path="user_settings/accounts/send_message")
+            client = await self.tg_connect.get_telegram_client(files,
+                                                               account_directory="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Всего групп: {len(records)}")
             for groups in records:  # Поочередно выводим записанные группы
@@ -217,8 +217,8 @@ class SendTelegramMessages:
         """Массовая рассылка в чаты (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам.md)"""
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for file in entities:
-            client = await self.tg_connect.connect_to_telegram(file,
-                                                               directory_path="user_settings/accounts/send_message")
+            client = await self.tg_connect.get_telegram_client(file,
+                                                               account_directory="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
             logger.info(f"Всего групп: {len(records)}")
             for groups in records:  # Поочередно выводим записанные группы
@@ -260,8 +260,8 @@ class SendTelegramMessages:
         """Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)"""
         entities = find_files(directory_path="user_settings/accounts/answering_machine", extension='session')
         for file in entities:
-            client = await self.tg_connect.connect_to_telegram(file,
-                                                               directory_path="user_settings/accounts/answering_machine")
+            client = await self.tg_connect.get_telegram_client(file,
+                                                               account_directory="user_settings/accounts/answering_machine")
 
             @client.on(events.NewMessage(incoming=True))  # Обработчик личных сообщений
             async def handle_private_messages(event):

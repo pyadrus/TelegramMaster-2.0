@@ -27,7 +27,7 @@ class TGContact:
         entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
         for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/contact")
+            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/contact")
             await self.parsing_and_recording_contacts_in_the_database(client)
             client.disconnect()  # Разрываем соединение telegram
 
@@ -66,7 +66,7 @@ class TGContact:
         entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
         for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/contact")
+            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/contact")
             await self.we_get_the_account_id(client)
             client.disconnect()  # Разрываем соединение telegram
 
@@ -76,7 +76,7 @@ class TGContact:
         entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
         for file in entities:
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-            client = await self.tg_connect.connect_to_telegram(file, directory_path="user_settings/accounts/contact")
+            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/contact")
             await self.add_contact_to_phone_book(client)
 
     async def add_contact_to_phone_book(self, client) -> None:

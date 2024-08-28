@@ -50,7 +50,7 @@ class AccountBIO:
         entities = find_files(directory_path=self.directory_path, extension=self.extension)
         for file in entities:
             logger.info(f"{file[0]}")
-            client = await self.tg_connect.connect_to_telegram(file, directory_path=self.directory_path)
+            client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
             try:
                 await client(functions.account.UpdateUsernameRequest(username=user_input))
@@ -83,7 +83,7 @@ class AccountBIO:
         entities = find_files(directory_path=self.directory_path, extension=self.extension)
         for file in entities:
             logger.info(f"{file[0]}")
-            client = await self.tg_connect.connect_to_telegram(file, directory_path=self.directory_path)
+            client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
             while True:
                 if len(user_input) <= 70:
@@ -100,8 +100,7 @@ class AccountBIO:
 
     async def change_name_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
-        user_input = ft.TextField(label="Введите имя профиля, не более 64 символов: ", multiline=True,
-                                  max_lines=19)
+        user_input = ft.TextField(label="Введите имя профиля, не более 64 символов: ", multiline=True, max_lines=19)
 
         async def btn_click(e) -> None:
             await self.change_name_profile(user_input.value)
@@ -115,7 +114,7 @@ class AccountBIO:
         entities = find_files(directory_path=self.directory_path, extension=self.extension)
         for file in entities:
             logger.info(f"{file[0]}")
-            client = await self.tg_connect.connect_to_telegram(file, directory_path=self.directory_path)
+            client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
             try:
                 result = await client(functions.account.UpdateProfileRequest(first_name=user_input))
@@ -126,8 +125,7 @@ class AccountBIO:
 
     async def change_last_name_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
-        user_input = ft.TextField(label="Введите фамилию профиля, не более 64 символов: ", multiline=True,
-                                  max_lines=19)
+        user_input = ft.TextField(label="Введите фамилию профиля, не более 64 символов: ", multiline=True, max_lines=19)
 
         async def btn_click(e) -> None:
             await self.change_last_name_profile(user_input.value)
@@ -141,7 +139,7 @@ class AccountBIO:
         entities = find_files(directory_path=self.directory_path, extension=self.extension)
         for file in entities:
             logger.info(f"{file[0]}")
-            client = await self.tg_connect.connect_to_telegram(file, directory_path=self.directory_path)
+            client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
             try:
                 result = await client(functions.account.UpdateProfileRequest(last_name=user_input))
@@ -155,7 +153,7 @@ class AccountBIO:
         entities = find_files(directory_path=self.directory_path, extension=self.extension)
         for file in entities:
             logger.info(f"{file[0]}")
-            client = await self.tg_connect.connect_to_telegram(file, directory_path=self.directory_path)
+            client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
             photo_files = find_files(directory_path="user_settings/bio", extension='jpg')
             for photo_file in photo_files:
