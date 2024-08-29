@@ -1,0 +1,34 @@
+body {
+            /* Стили для контейнера и бокового меню */
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f4f4f4;
+            padding: 15px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: fixed; /* Фиксированное боковое меню */
+            height: 100%;
+            overflow: auto;
+            font-size: 13px; /* Уменьшите размер текста */
+        }
+
+        .content {
+            margin-left: 270px; /* Отступ для основного контента с учетом ширины бокового меню */
+            padding: 20px;
+        }
+
+        /* Стили для ссылок в меню */
+        .sidebar a {
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
