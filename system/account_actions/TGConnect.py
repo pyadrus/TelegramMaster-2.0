@@ -27,7 +27,6 @@ class TGConnect:
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
-        # self.data = {"phone": "phone"}
 
     async def connect_to_telegram(self, session, account_directory) -> TelegramClient:
         """
@@ -252,12 +251,12 @@ class TGConnect:
                         page.update()
                     except SessionPasswordNeededError:# Если аккаунт защищен паролем, запрашиваем пароль
                         logger.info("Требуется двухфакторная аутентификация. Введите пароль.")
-                        tfakt = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
+                        pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
 
                         async def btn_click_password(e) -> None:
-                            logger.info(f"Пароль telegram: {tfakt.value}")
+                            logger.info(f"Пароль telegram: {pass_2fa.value}")
                             try:
-                                await telegram_client.sign_in(password=tfakt.value)
+                                await telegram_client.sign_in(password=pass_2fa.value)
                                 logger.info("Успешная авторизация.")
                                 telegram_client.disconnect()
                                 page.go("/settings")  # Изменение маршрута в представлении существующих настроек
@@ -266,7 +265,7 @@ class TGConnect:
                                 logger.error(f"Ошибка при вводе пароля: {ex}")
 
                         button_password = ft.ElevatedButton("Готово", on_click=btn_click_password)
-                        page.views.append(ft.View(controls=[tfakt, button_password]))
+                        page.views.append(ft.View(controls=[pass_2fa, button_password]))
                         page.update()  # Обновляем страницу, чтобы интерфейс отобразился
 
                     except ApiIdInvalidError:
