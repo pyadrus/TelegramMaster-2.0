@@ -22,31 +22,24 @@ async def reading_proxy_data_from_the_database(db_handler):
         return proxy
 
 
-def unpacking_a_dictionary_with_proxy_by_variables(proxy):
-    """Распаковка словаря с proxy по переменным где: proxy_type - тип proxy (например: SOCKS5),
-    addr - адрес (например: 194.67.248.9), port - порт (например: 9795) username - логин (например: username),
-    password - пароль (например: password)"""
-    proxy_type = proxy[0]  # Тип proxy (например: SOCKS5)
-    addr = proxy[1]  # Адрес (например: 194.67.248.9)
-    port = proxy[2]  # Порт (например: 9795)
-    username = proxy[3]  # Логин (например: username)
-    password = proxy[4]  # Пароль (например: password)
-    rdns = proxy[5]
-    return proxy_type, addr, port, username, password, rdns
-
-
 async def checking_the_proxy_for_work() -> None:
-    """Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
+    """
+    Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
     уровня, который используется для демонстрации работы сетевых протоколов. На этом сайте нет никакого контента, но он
-    используется для различных тестов."""
+    используется для различных тестов.
+
+    """
     records: list = await DatabaseHandler().open_and_read_data("proxy")
     for proxy_dic in records:
         logger.info(proxy_dic)
-        # TODO: пересмотреть целесообразность использования функции unpacking_a_dictionary_with_proxy_by_variables
-        # Распаковка словаря с proxy по переменным
-        proxy_type, addr, port, username, password, rdns = unpacking_a_dictionary_with_proxy_by_variables(proxy_dic)
         # Подключение к proxy с проверкой на работоспособность
-        connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, DatabaseHandler())
+        connecting_to_proxy_with_verification(proxy_type=proxy_dic[0],# Тип proxy (например: SOCKS5)
+                                              addr= proxy_dic[1],# Адрес (например: 194.67.248.9)
+                                              port= proxy_dic[2], # Порт (например: 9795)
+                                              username= proxy_dic[3],# Логин (например: username)
+                                              password= proxy_dic[4],# Пароль (например: password)
+                                              rdns= proxy_dic[5],
+                                              db_handler=DatabaseHandler())
 
 
 def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler) -> None:
