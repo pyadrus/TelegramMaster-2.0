@@ -20,12 +20,20 @@ from system.auxiliary_functions.global_variables import ConfigReader
 from system.setting.setting import SettingPage, get_unique_filename
 from system.setting.setting import reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+import webbrowser
+import os
+
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "2.1.4", "30.08.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "2.1.5", "30.08.2024"  # Версия программы, дата изменения
 
+def open_html_file(file_path):
+    # Получаем абсолютный путь к файлу
+    abs_path = os.path.abspath(file_path)
+    # Открываем файл в браузере по умолчанию
+    webbrowser.open(f"file://{abs_path}")
 
 def telegram_master_main(page: ft.Page):
     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
@@ -83,6 +91,8 @@ def telegram_master_main(page: ft.Page):
                                                         on_click=lambda _: page.go("/bio_editing")), ]),
                               ft.ElevatedButton(width=line_width, height=30, text="Настройки",
                                                 on_click=lambda _: page.go("/settings")),
+                              ft.ElevatedButton(width=line_width, height=30, text="Документация",
+                                                on_click=lambda _: page.go("/documentation")),
                           ]), ]))
 
         if page.route == "/inviting":  # Меню "Инвайтинг"
@@ -410,6 +420,11 @@ def telegram_master_main(page: ft.Page):
             SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
             SettingPage().create_main_window(page, variable="time_subscription")
+
+        elif page.route == "/documentation":  # Открытие документации
+            # Пример использования
+            open_html_file('docs/index.html')
+
         page.update()
 
     def view_pop(view):
