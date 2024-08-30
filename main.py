@@ -23,17 +23,18 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 import webbrowser
 import os
 
-
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
 program_version, date_of_program_change = "2.1.5", "30.08.2024"  # Версия программы, дата изменения
+
 
 def open_html_file(file_path):
     # Получаем абсолютный путь к файлу
     abs_path = os.path.abspath(file_path)
     # Открываем файл в браузере по умолчанию
     webbrowser.open(f"file://{abs_path}")
+
 
 def telegram_master_main(page: ft.Page):
     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
@@ -438,4 +439,3 @@ def telegram_master_main(page: ft.Page):
 
 
 ft.app(target=telegram_master_main)
-

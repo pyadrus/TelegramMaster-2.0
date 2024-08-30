@@ -1,4 +1,5 @@
-body {
+
+body
             /* Стили для контейнера и бокового меню */
         .container {
             display: flex;
