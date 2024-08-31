@@ -97,20 +97,34 @@
 
     <!-- Основной контент -->
     <div class="content">
-        <h1 id="telegrammaster-">Показ списка контактов</h1>
+        <h1 id="telegrammaster-">Парсинг активных участников группы</h1>
         <hr align="center"/>
 
 
-        <p>
-Для того что бы посмотреть телефонную книгу аккаунта Telegram, выполните следующие действия:<br>
+<p>
+Для формирования списка пользователей (username), выполните следующие действия:<br>
 </p>
 
 <p>
-1. Запустить TelegramMaster (см. Запуск TelegramMaster).  <br>
-2. Подключить аккаунты к TelegramMaster (см. Подключение аккаунтов Telegram к TelegramMaster) или скопировать session файл аккаунта в папку <code>TelegramMaster/user_settings/accounts/contact</code>  <br>
-3. Перейти в раздел «Работа с контактами»  <br>
-4. Выбрать функцию «Показ списка контактов».<br>
-    </p>
+1. Запустить TelegramMaster (см. Запуск TelegramMaster).<br>
+2. Подключить аккаунты к TelegramMaster (см. Подключение аккаунтов Telegram к TelegramMaster) или скопировать session файл аккаунта в папку <code>TelegramMaster/user_settings/accounts/parsing</code><br>
+3. Перейти в раздел «Парсинг»<br>
+4. Выбрать функцию «Парсинг_активных_участников_группы».<br>
+5. Ввести ссылку на чат с которого будет происходить сбор "*активных участников*".<br>
+6. Ввести количество сообщений, которые будут парсится. <br>
+7. Дождаться окончания парсинга.<br>
+</p>
+
+<p>
+Во время парсинга результаты записываются в базу данных (в файл <code>TelegramMaster/user_settings/software_database.db</code> в таблицу members)<br>
+Если вы уже выполняли Парсинг ранее, программа добавит участников в ранее созданный список (в файл <code>TelegramMaster/user_settings/software_database.db</code> в таблицу members).<br>
+</p>
+
+<blockquote>
+ПРИМЕЧАНИЕ<br>
+⚠️ TelegramMaster автоматически сравнивает полученные данные по идентификаторам (ID) и удаляет дубликаты. <br>
+Важно отметить, что TelegramMaster не имеет возможности парсить каналы. <br>
+    </blockquote>
 
         <hr align="center"/>
 
