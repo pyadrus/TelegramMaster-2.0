@@ -45,9 +45,7 @@ def telegram_master_main(page: ft.Page):
 
     async def route_change(route):
         page.views.clear()
-
         # Меню "Главное меню"
-
         page.views.append(
             ft.View("/", [ft.AppBar(title=ft.Text("Главное меню"),
                                     bgcolor=ft.colors.SURFACE_VARIANT),
@@ -95,7 +93,6 @@ def telegram_master_main(page: ft.Page):
                               ft.ElevatedButton(width=line_width, height=30, text="Документация",
                                                 on_click=lambda _: page.go("/documentation")),
                           ]), ]))
-
         if page.route == "/inviting":  # Меню "Инвайтинг"
             page.views.append(
                 ft.View("/inviting",
@@ -115,8 +112,7 @@ def telegram_master_main(page: ft.Page):
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Инвайтинг начался")
-            await InvitingToAGroup().inviting_without_limits(
-                account_limits=ConfigReader().get_limits())  # Вызываем метод для инвайтинга
+            await InvitingToAGroup().inviting_without_limits(account_limits=ConfigReader().get_limits())  # Вызываем метод для инвайтинга
             logger.info("🔚 Инвайтинг завершен")
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
@@ -148,7 +144,6 @@ def telegram_master_main(page: ft.Page):
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
             logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             page.views.append(
                 ft.View("/subscribe_unsubscribe",
@@ -164,7 +159,6 @@ def telegram_master_main(page: ft.Page):
             await SubscribeUnsubscribeTelegram().subscribe_telegram()
         elif page.route == "/unsubscribe_all":  # Отписываемся
             await SubscribeUnsubscribeTelegram().unsubscribe_all()
-
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             page.views.append(
                 ft.View("/working_with_reactions",
@@ -184,7 +178,6 @@ def telegram_master_main(page: ft.Page):
             await WorkingWithReactions().viewing_posts()
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             await WorkingWithReactions().setting_reactions()  # Автоматическое выставление реакций
-
         elif page.route == "/parsing":  # Меню "Парсинг"
             page.views.append(
                 ft.View("/parsing",
@@ -208,9 +201,7 @@ def telegram_master_main(page: ft.Page):
                                                text="Очистка списка от ранее спарсенных данных",
                                                on_click=lambda _: page.go("/clearing_list_previously_saved_data")),
                          ])]))
-
         elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
-
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Парсинг начался")
@@ -219,22 +210,17 @@ def telegram_master_main(page: ft.Page):
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
             logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-
-
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
             await ParsingGroupMembers().choose_group_for_parsing()
-
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             # TODO: Убрать input() в коде
             chat_input = input(f"{logger.info('[+] Введите ссылку на чат с которого будем собирать активных: ')}")
             limit_active_user = input(f"{logger.info('[+] Введите количество сообщений которые будем parsing: ')}")
             await ParsingGroupMembers().parse_active_users(chat_input, int(limit_active_user))
-
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
             await ParsingGroupMembers().parse_subscribed_groups()
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db(name_database_table="members")
-
         elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
             page.views.append(
                 ft.View("/working_with_contacts",
