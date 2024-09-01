@@ -22,18 +22,32 @@ from system.setting.setting import reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 import webbrowser
 import os
-
+import os
+import http.server
+import socketserver
+import webbrowser
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
 program_version, date_of_program_change = "2.1.5", "30.08.2024"  # Версия программы, дата изменения
 
+def start_http_server(port=8000):
+    # Указываем директорию, которую хотим раздать
+    web_dir = os.path.join(os.path.dirname(__file__), 'docs')  # Путь к папке с документацией
+    os.chdir(web_dir)
 
-def open_html_file(file_path):
-    # Получаем абсолютный путь к файлу
-    abs_path = os.path.abspath(file_path)
+    # Настраиваем и запускаем сервер
+    handler = http.server.SimpleHTTPRequestHandler
+    with socketserver.TCPServer(("", port), handler) as httpd:
+        print(f"Сервер запущен на http://localhost:{port}")
+        webbrowser.open(f"http://localhost:{port}")
+        httpd.serve_forever()
+
+# def open_html_file(file_path):
+#     Получаем абсолютный путь к файлу
+    # abs_path = os.path.abspath(file_path)
     # Открываем файл в браузере по умолчанию
-    webbrowser.open(f"file://{abs_path}")
+    # webbrowser.open(f"file://{abs_path}")
 
 
 def telegram_master_main(page: ft.Page):
@@ -410,7 +424,7 @@ def telegram_master_main(page: ft.Page):
 
         elif page.route == "/documentation":  # Открытие документации
             # Пример использования
-            open_html_file('docs/index.html')
+            start_http_server(8000)  # Запуск сервера на порту 8000open_html_file('docs/index.html')
 
         page.update()
 
