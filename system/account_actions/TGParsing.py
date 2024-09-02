@@ -279,22 +279,45 @@ class ParsingGroupMembers:
                 continue  # Записываем ошибку в software_database.db и продолжаем работу
 
     async def entering_data_for_parsing_active(self, page: ft.Page) -> None:
-        chat_input = ft.TextField(label="Введите ссылку на чат с которого будем собирать активных: ", multiline=False, max_lines=1)
-        limit_active_user = ft.TextField(label="Введите количество сообщений которые будем parsing: ", multiline=False, max_lines=1)
+        """
+        Функция для ввода данных для парсинга активных пользователей.
+        Создает интерфейс с полем ввода для ссылки на чат и количеством сообщений.
+        """
 
+        # Поле для ввода ссылки на чат
+        chat_input = ft.TextField(label="Введите ссылку на чат, с которого будем собирать активных:", multiline=False, max_lines=1)
+
+        # Поле для ввода количества сообщений
+        limit_active_user = ft.TextField(label="Введите количество сообщений, которые будем парсить:", multiline=False, max_lines=1)
+
+        # Функция-обработчик для кнопки "Готово"
         async def btn_click(e) -> None:
+            # Считывание значений из полей ввода
             chat_input_value = chat_input.value
             limit_active_user_value = limit_active_user.value
 
+            # Логирование введенных данных
             logger.info(f"Ссылка на чат: {chat_input_value}. Количество сообщений: {limit_active_user_value}")
 
-            await self.parse_active_users(chat_input.value, int(limit_active_user.value))
+            # Вызов функции для парсинга активных пользователей (функция должна быть реализована)
+            await self.parse_active_users(chat_input_value, int(limit_active_user_value))
 
+            # Изменение маршрута на новый (если необходимо)
+            page.go("/parsing")
+            page.update()  # Обновление страницы для отображения изменений
+
+        # Кнопка для подтверждения и запуска парсинга
         button = ft.ElevatedButton("Готово", on_click=btn_click)
 
+        # Добавление представления на страницу
         page.views.append(
             ft.View(
-                "/parsing",
-                [chat_input, limit_active_user] + [ft.Column(), button]  # Заполнитель для приветствия или другого содержимого (необязательно)
+                "/parsing",  # Маршрут для этого представления
+                [
+                    chat_input,  # Поле ввода ссылки на чат
+                    limit_active_user,  # Поле ввода количества сообщений
+                    ft.Column(),  # Колонка для размещения других элементов (при необходимости)
+                    button  # Кнопка "Готово"
+                ]
             )
         )
