@@ -30,6 +30,7 @@ logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # �
 line_width = 580  # Ширина окна и ширина строки
 program_version, date_of_program_change = "2.1.6", "02.09.2024"  # Версия программы, дата изменения
 
+
 def start_http_server(port=8000):
     # Указываем директорию, которую хотим раздать
     web_dir = os.path.join(os.path.dirname(__file__), 'docs')  # Путь к папке с документацией
@@ -119,7 +120,8 @@ def telegram_master_main(page: ft.Page):
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Инвайтинг начался")
-            await InvitingToAGroup().inviting_without_limits(account_limits=ConfigReader().get_limits())  # Вызываем метод для инвайтинга
+            await InvitingToAGroup().inviting_without_limits(
+                account_limits=ConfigReader().get_limits())  # Вызываем метод для инвайтинга
             logger.info("🔚 Инвайтинг завершен")
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
@@ -131,7 +133,6 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             launching_invite_every_day_certain_time()
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
-
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Проверка аккаунтов началась")
