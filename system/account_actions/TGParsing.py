@@ -15,7 +15,7 @@ from telethon.tl.types import UserStatusLastWeek
 from telethon.tl.types import UserStatusOffline
 from telethon.tl.types import UserStatusOnline
 from telethon.tl.types import UserStatusRecently
-
+import flet as ft  # Импортируем библиотеку flet
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files
@@ -277,3 +277,24 @@ class ParsingGroupMembers:
                     entities=entities)
             except TypeError:
                 continue  # Записываем ошибку в software_database.db и продолжаем работу
+
+    async def entering_data_for_parsing_active(self, page: ft.Page) -> None:
+        chat_input = ft.TextField(label="Введите ссылку на чат с которого будем собирать активных: ", multiline=False, max_lines=1)
+        limit_active_user = ft.TextField(label="Введите количество сообщений которые будем parsing: ", multiline=False, max_lines=1)
+
+        async def btn_click(e) -> None:
+            chat_input_value = chat_input.value
+            limit_active_user_value = limit_active_user.value
+
+            logger.info(f"Ссылка на чат: {chat_input_value}. Количество сообщений: {limit_active_user_value}")
+
+            await self.parse_active_users(chat_input.value, int(limit_active_user.value))
+
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        page.views.append(
+            ft.View(
+                "/parsing",
+                [chat_input, limit_active_user] + [ft.Column(), button]  # Заполнитель для приветствия или другого содержимого (необязательно)
+            )
+        )

@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 import datetime
+import http.server
+import os
+import socketserver
+import webbrowser
 
 import flet as ft
 from loguru import logger
@@ -20,12 +24,7 @@ from system.auxiliary_functions.global_variables import ConfigReader
 from system.setting.setting import SettingPage, get_unique_filename
 from system.setting.setting import reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-import webbrowser
-import os
-import os
-import http.server
-import socketserver
-import webbrowser
+
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
@@ -42,12 +41,6 @@ def start_http_server(port=8000):
         print(f"Сервер запущен на http://localhost:{port}")
         webbrowser.open(f"http://localhost:{port}")
         httpd.serve_forever()
-
-# def open_html_file(file_path):
-#     Получаем абсолютный путь к файлу
-    # abs_path = os.path.abspath(file_path)
-    # Открываем файл в браузере по умолчанию
-    # webbrowser.open(f"file://{abs_path}")
 
 
 def telegram_master_main(page: ft.Page):
@@ -227,10 +220,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
             await ParsingGroupMembers().choose_group_for_parsing()
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
-            # TODO: Убрать input() в коде
-            chat_input = input(f"{logger.info('[+] Введите ссылку на чат с которого будем собирать активных: ')}")
-            limit_active_user = input(f"{logger.info('[+] Введите количество сообщений которые будем parsing: ')}")
-            await ParsingGroupMembers().parse_active_users(chat_input, int(limit_active_user))
+            await ParsingGroupMembers().entering_data_for_parsing_active(page)
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
             await ParsingGroupMembers().parse_subscribed_groups()
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
