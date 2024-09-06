@@ -1,0 +1,39 @@
+.telegram {
+    transition: none 0.5s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 222px;
+    height: 50px;
+    gap: 10px;
+    border: none;
+    background-color: rgb(42 171 238);
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.telegram-text {
+    transition: none 0.3s ease;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.telegram:hover .telegram-text {
+    display: none;
+    position: absolute;
+}
+
+.telegram-svg {
+    width: 23px;
+    height: 23px;
+    transition: 0.8s;
+}
+
+.telegram:hover .telegram-svg {
+    margin-left: 40px;
+    display: block;
+    transform: rotate(50deg);
+}
