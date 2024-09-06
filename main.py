@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 import datetime
+import http.server
+import os
+import socketserver
+import webbrowser
 
 import flet as ft
 from loguru import logger
@@ -20,20 +24,24 @@ from system.auxiliary_functions.global_variables import ConfigReader
 from system.setting.setting import SettingPage, get_unique_filename
 from system.setting.setting import reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-import webbrowser
-import os
 
 logger.add("user_settings/log/log.log", rotation="1 MB", compression="zip")  # Логирование программы
 
 line_width = 580  # Ширина окна и ширина строки
-program_version, date_of_program_change = "2.1.5", "30.08.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "2.1.6", "02.09.2024"  # Версия программы, дата изменения
 
 
-def open_html_file(file_path):
-    # Получаем абсолютный путь к файлу
-    abs_path = os.path.abspath(file_path)
-    # Открываем файл в браузере по умолчанию
-    webbrowser.open(f"file://{abs_path}")
+def start_http_server(port=8000):
+    # Указываем директорию, которую хотим раздать
+    web_dir = os.path.join(os.path.dirname(__file__), 'docs')  # Путь к папке с документацией
+    os.chdir(web_dir)
+
+    # Настраиваем и запускаем сервер
+    handler = http.server.SimpleHTTPRequestHandler
+    with socketserver.TCPServer(("", port), handler) as httpd:
+        print(f"Сервер запущен на http://localhost:{port}")
+        webbrowser.open(f"http://localhost:{port}")
+        httpd.serve_forever()
 
 
 def telegram_master_main(page: ft.Page):
@@ -112,7 +120,8 @@ def telegram_master_main(page: ft.Page):
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Инвайтинг начался")
-            await InvitingToAGroup().inviting_without_limits(account_limits=ConfigReader().get_limits())  # Вызываем метод для инвайтинга
+            await InvitingToAGroup().inviting_without_limits(
+                account_limits=ConfigReader().get_limits())  # Вызываем метод для инвайтинга
             logger.info("🔚 Инвайтинг завершен")
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
@@ -124,7 +133,6 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             launching_invite_every_day_certain_time()
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
-
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Проверка аккаунтов началась")
@@ -213,10 +221,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
             await ParsingGroupMembers().choose_group_for_parsing()
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
-            # TODO: Убрать input() в коде
-            chat_input = input(f"{logger.info('[+] Введите ссылку на чат с которого будем собирать активных: ')}")
-            limit_active_user = input(f"{logger.info('[+] Введите количество сообщений которые будем parsing: ')}")
-            await ParsingGroupMembers().parse_active_users(chat_input, int(limit_active_user))
+            await ParsingGroupMembers().entering_data_for_parsing_active(page)
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
             await ParsingGroupMembers().parse_subscribed_groups()
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
@@ -410,7 +415,7 @@ def telegram_master_main(page: ft.Page):
 
         elif page.route == "/documentation":  # Открытие документации
             # Пример использования
-            open_html_file('docs/index.html')
+            start_http_server(8000)  # Запуск сервера на порту 8000open_html_file('docs/index.html')
 
         page.update()
 
