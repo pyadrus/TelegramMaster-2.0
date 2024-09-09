@@ -8,6 +8,7 @@ import webbrowser
 import flet as ft
 from loguru import logger
 
+from docs.app import app, run_flask
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
@@ -31,18 +32,18 @@ line_width = 580  # Ширина окна и ширина строки
 program_version, date_of_program_change = "2.1.7", "09.09.2024"  # Версия программы, дата изменения
 
 
-def start_http_server(port=8000):
-    """Запуск сервера, для открытия документации TelegramMaster 2.0"""
-    # Указываем директорию, которую хотим раздать
-    web_dir = os.path.join(os.path.dirname(__file__), 'docs')  # Путь к папке с документацией
-    os.chdir(web_dir)
-
+# def start_http_server(port=8000):
+#     """Запуск сервера, для открытия документации TelegramMaster 2.0"""
+#     Указываем директорию, которую хотим раздать
+    # web_dir = os.path.join(os.path.dirname(__file__), 'docs')  # Путь к папке с документацией
+    # os.chdir(web_dir)
+    #
     # Настраиваем и запускаем сервер
-    handler = http.server.SimpleHTTPRequestHandler
-    with socketserver.TCPServer(("", port), handler) as httpd:
-        print(f"Сервер запущен на http://localhost:{port}")
-        webbrowser.open(f"http://localhost:{port}")
-        httpd.serve_forever()
+    # handler = http.server.SimpleHTTPRequestHandler
+    # with socketserver.TCPServer(("", port), handler) as httpd:
+    #     print(f"Сервер запущен на http://localhost:{port}")
+    #     webbrowser.open(f"http://localhost:{port}")
+    #     httpd.serve_forever()
 
 
 def telegram_master_main(page: ft.Page):
@@ -51,7 +52,7 @@ def telegram_master_main(page: ft.Page):
     page.window.height = 550  # window's высота is 200 px
     page.window.resizable = False  # window is not resizable
     logger.info(f"Program version: {program_version}. Date of change: {date_of_program_change}")
-
+    
     async def route_change(route):
         page.views.clear()
         # Меню "Главное меню"
@@ -416,8 +417,7 @@ def telegram_master_main(page: ft.Page):
             SettingPage().create_main_window(page, variable="time_subscription")
 
         elif page.route == "/documentation":  # Открытие документации
-            # Пример использования
-            start_http_server(8000)  # Запуск сервера на порту 8000open_html_file('docs/index.html')
+            run_flask()
 
         page.update()
 

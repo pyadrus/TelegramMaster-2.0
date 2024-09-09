@@ -6,22 +6,27 @@
     <title>Главная страница</title>
 
     <!-- Правильный способ подключения CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/style_menu.css">
+<!--    <link rel="stylesheet" href="css/style.css">-->
+<!--    <link rel="stylesheet" href="css/style_menu.css">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
+    <!-- Пример правильного пути к CSS файлу -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-    <script>
-        function loadMenu() {
-            fetch('menu.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('menu-placeholder').innerHTML = data;
-                })
-                .catch(error => console.error('Ошибка загрузки меню:', error));
-        }
 
-        // Вызов функции загрузки меню при загрузке страницы
-        window.onload = loadMenu;
-    </script>
+
+<script>
+    function loadMenu() {
+    fetch('/menu')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('menu-placeholder').innerHTML = data;
+        })
+        .catch(error => console.error('Ошибка загрузки меню:', error));
+}
+
+// Вызов функции загрузки меню при загрузке страницы
+window.onload = loadMenu;
+</script>
 
 </head>
 
@@ -69,7 +74,9 @@
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
-                <img src="images/TelegramMaster_2.png" alt="TelegramMaster" width="40%">
+<!--                <img src="images/TelegramMaster_2.png" alt="TelegramMaster" width="40%">-->
+                <!-- Пример правильного пути к изображению -->
+                <img src="{{ url_for('static', filename='images/TelegramMaster_2.png') }}" alt="Telegram Master" width="40%">
             </p>
 
             <hr />

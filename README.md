@@ -1,6 +1,6 @@
 # TelegramMaster 🚀
 
-![alt text](docs/images/TelegramMaster_2.png "TelegramMaster_2")
+![alt text](docs/static/images/TelegramMaster_2.png "TelegramMaster_2")
 
 Проект TelegramMaster создан на основе библиотеки Telethon и активно развивается с 29.01.2022 года.
 
@@ -27,7 +27,7 @@
 
 Регистрация aip_id и api_hash:
 
-- [Регистрация aip_id и api_hash](docs/Настройки_и_конфигурация/Регистрация_api_id_api_hash.html)
+- [Регистрация aip_id и api_hash](docs/templates/Регистрация_api_id_api_hash.html)
 
 <hr align="center"/>
 Основные функции TelegramMaster:

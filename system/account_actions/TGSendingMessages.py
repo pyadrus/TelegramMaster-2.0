@@ -128,7 +128,7 @@ class SendTelegramMessages:
                 sys.exit(1)
 
     async def sending_files_via_chats(self) -> None:
-        """Рассылка файлов по чатам (docs/Рассылка_сообщений/Рассылка_файлов_по_чатам.html)"""
+        """Рассылка файлов по чатам (docs/Рассылка_сообщений/⛔️ Рассылка_файлов_по_чатам.html)"""
         # Спрашиваем у пользователя, через какое время будем отправлять сообщения
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for files in entities:
@@ -214,7 +214,7 @@ class SendTelegramMessages:
         return data  # Возвращаем данные из файла
 
     async def sending_messages_via_chats_times(self) -> None:
-        """Массовая рассылка в чаты (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам.html)"""
+        """Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)"""
         entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
         for file in entities:
             client = await self.tg_connect.get_telegram_client(file,
