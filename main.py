@@ -64,7 +64,7 @@ def telegram_master_main(page: ft.Page):
                                   weight=ft.FontWeight.BOLD,
                                   foreground=ft.Paint(
                                       gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                           ft.colors.PURPLE])), ), ), ], ),
+                                                                                           ft.colors.PURPLE])),),),],),
                           ft.Text(disabled=False,
                                   spans=[ft.TextSpan("Аккаунт  Telegram: "),
                                          ft.TextSpan("https://t.me/PyAdminRU",
@@ -181,7 +181,7 @@ def telegram_master_main(page: ft.Page):
                                                on_click=lambda _: page.go("/automatic_setting_of_reactions")),
                          ])]))
         elif page.route == "/setting_reactions":  # Ставим реакции
-            await WorkingWithReactions().send_reaction_request()  # Вызываем метод для выбора реакции и установки её на сообщение
+            await WorkingWithReactions().send_reaction_request()  # Метод для выбора реакции и установки её на сообщение
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
             await WorkingWithReactions().viewing_posts()
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
@@ -381,7 +381,8 @@ def telegram_master_main(page: ft.Page):
             SettingPage().record_setting(page, "account_limits", "Введите лимит на аккаунт")
         elif page.route == "/creating_username_list":  # Формирование списка username
             SettingPage().output_the_input_field(page, "Введите список username", "members",
-                                                 "username, id, access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium",
+                                                 "username, id, access_hash, first_name, last_name, "
+                                                 "user_phone, online_at, photos_id, user_premium",
                                                  "/settings", "members (username)")
         elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
             await DatabaseHandler().open_and_read_data("writing_group_links")  # Удаление списка с контактами
