@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 import datetime
-import http.server
-import os
-import socketserver
-import webbrowser
 
 import flet as ft
 from loguru import logger
 
-from docs.app import app, run_flask
+from docs.app import run_flask
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
@@ -30,20 +26,6 @@ logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # �
 
 line_width = 580  # Ширина окна и ширина строки
 program_version, date_of_program_change = "2.1.7", "09.09.2024"  # Версия программы, дата изменения
-
-
-# def start_http_server(port=8000):
-#     """Запуск сервера, для открытия документации TelegramMaster 2.0"""
-#     Указываем директорию, которую хотим раздать
-    # web_dir = os.path.join(os.path.dirname(__file__), 'docs')  # Путь к папке с документацией
-    # os.chdir(web_dir)
-    #
-    # Настраиваем и запускаем сервер
-    # handler = http.server.SimpleHTTPRequestHandler
-    # with socketserver.TCPServer(("", port), handler) as httpd:
-    #     print(f"Сервер запущен на http://localhost:{port}")
-    #     webbrowser.open(f"http://localhost:{port}")
-    #     httpd.serve_forever()
 
 
 def telegram_master_main(page: ft.Page):

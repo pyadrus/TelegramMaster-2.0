@@ -6,22 +6,21 @@
     <title>Подключение аккаунтов к TelegramMaster</title>
 
     <!-- Правильный способ подключения CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/style_menu.css">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
-        function loadMenu() {
-            fetch('menu.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('menu-placeholder').innerHTML = data;
-                })
-                .catch(error => console.error('Ошибка загрузки меню:', error));
-        }
+    function loadMenu() {
+    fetch('/menu')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('menu-placeholder').innerHTML = data;
+        })
+        .catch(error => console.error('Ошибка загрузки меню:', error));
+}
 
-        // Вызов функции загрузки меню при загрузке страницы
-        window.onload = loadMenu;
-    </script>
+// Вызов функции загрузки меню при загрузке страницы
+window.onload = loadMenu;
+</script>
 
 </head>
 
@@ -86,7 +85,7 @@
             <h2>Чтобы подключить аккаунт в <b>TelegramMaster</b>:</h2>
 
             <ol>
-                <li> Запустить TelegramMaster (см. <a href="Запуск_TelegramMaster.html">Запуск TelegramMaster</a></a>).
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
                 <li> Запустить функцию «Подключение аккаунтов».
                 <li> Ввести номер телефона без пробелов, начиная с символа + (например, +79490000000).
                 <li> Ввести код подтверждения от Telegram. Если код не пришел в течение минуты, повторите процедуру.

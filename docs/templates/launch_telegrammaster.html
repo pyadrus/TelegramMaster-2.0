@@ -6,22 +6,21 @@
    <title>Проверка аккаунтов</title>
 
    <!-- Правильный способ подключения CSS -->
-   <link rel="stylesheet" href="css/style.css">
-   <link rel="stylesheet" href="css/style_menu.css">
-   <script>
-      function loadMenu() {
-         fetch('menu.html')
-            .then(response => response.text())
-            .then(data => {
-               document.getElementById('menu-placeholder').innerHTML = data;
-            })
-            .catch(error => console.error('Ошибка загрузки меню:', error));
-      }
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+    function loadMenu() {
+    fetch('/menu')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('menu-placeholder').innerHTML = data;
+        })
+        .catch(error => console.error('Ошибка загрузки меню:', error));
+}
 
-      // Вызов функции загрузки меню при загрузке страницы
-      window.onload = loadMenu;
-   </script>
-</head>
+// Вызов функции загрузки меню при загрузке страницы
+window.onload = loadMenu;
+</script>
 
 <body>
 
@@ -42,7 +41,7 @@
 
          <h2>Windows</h2>
 
-         1. Запуск через файл Запуск.bat:<br>
+         1️⃣ Запуск через файл Запуск.bat:<br>
          - Найдите файл Запуск.bat в папке проекта и дважды щелкните по нему.<br>
          2. Запуск через main.py:<br>
          - Найдите файл main.py в папке проекта и дважды щелкните по нему.<br>
@@ -56,7 +55,7 @@
          В разных дистрибутивах Linux используются разные командные интерпретаторы, такие как shell (Unix shell) и bash
          (Bourne again shell). Для запуска python-скриптов используйте следующие шаги:<br>
 
-         1. Установка Python:<br>
+         1️⃣. Установка Python:<br>
          - Убедитесь, что Python установлен (инструкция для Linux).<br>
          2. Открытие терминала:<br>
          - Нажмите Ctrl+Alt+T или откройте "Приложения" → "Терминал" (для версий Linux с графическим интерфейсом).<br>
@@ -86,7 +85,7 @@
          В MacOS по умолчанию используется командный интерпретатор bash. Процесс запуска python-скриптов аналогичен
          Linux.<br>
          <p>
-            1. Установка Python:<br>
+            1️⃣ Установка Python:<br>
             - Убедитесь, что Python установлен (инструкция для MacOS).<br>
          </p>
 

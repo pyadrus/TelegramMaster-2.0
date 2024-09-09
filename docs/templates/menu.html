@@ -27,20 +27,27 @@
 
         <h2>Меню</h2>
 
-        <a href="{{ url_for('index') }}">Главное меню</a>
+        <!-- Добавляем информацию о версии программы и дате обновления -->
+    <footer>
+        <p>Версия программы: {{ program_version }}</p>
+        <p>Дата обновления: {{ update_date }}</p>
+    </footer>
+
+        <a href="{{ url_for('index') }}">🏠 Главное меню</a>
         <a href="{{ url_for('inviting') }}">🚀 Инвайтинг</a>
-        <a href="{{ url_for('sending_messages') }}">💬 Рассылка сообщений</a>
-        <a href="{{ url_for('parsing') }}">🔎 Парсинг</a>
+        <a href="{{ url_for('sending_messages') }}">📧 Рассылка сообщений</a>
+        <a href="{{ url_for('parsing') }}">🔍 Парсинг</a>
         <a href="{{ url_for('working_with_reactions') }}">👍 Работа с реакциями</a>
-        <a href="{{ url_for('editing_bio') }}">👨‍🦰 Редактирование BIO</a>
+        <a href="{{ url_for('editing_bio') }}">📝 Редактирование BIO</a>
         <a href="{{ url_for('working_with_contacts') }}">📇 Работа с контактами</a>
         <a href="{{ url_for('settings') }}">⚙️ Настройки</a>
-        <a href="{{ url_for('subscribe_unsubscribe') }}">Подписка, отписка</a>
+        <a href="{{ url_for('subscribe_unsubscribe') }}">🔄 Подписка, отписка</a>
+        <a href="{{ url_for('connect_accounts') }}">🔗 Подключение аккаунтов</a>
+        <a href="{{ url_for('account_verification') }}">✅ Проверка аккаунтов</a>
+        <a href="{{ url_for('creating_groups') }}">👥 Создание групп (чатов)</a>
 
-        <a href="Подключение_аккаунтов.html">Подключение аккаунтов</a>
+        <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster 2.0</a>
 
-        <a href="Проверка_аккаунтов.html">Проверка аккаунтов</a>
-        <a href="Создание_групп_(чатов).html">Создание групп (чатов)</a>
 
 
 
