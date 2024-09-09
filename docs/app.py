@@ -82,6 +82,10 @@ def creating_groups():
     """Создание групп (чатов)"""
     return render_template('creating_groups.html')
 
+@app.route('/launch_telegrammaster')
+def launch_telegrammaster():
+    """Запуск TelegramMaster"""
+    return render_template('launch_telegrammaster.html')
 
 def run_flask():
     app.run(debug=True, port=8000)
