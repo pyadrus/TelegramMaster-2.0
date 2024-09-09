@@ -10,18 +10,22 @@ def index():
 
 @app.route('/menu')
 def menu():
+    """Меню программы"""
     return render_template('menu.html')
 
 @app.route('/inviting')
 def inviting():
+    """Инвайтинг"""
     return render_template('inviting.html')
 
 @app.route('/sending_messages')
 def sending_messages():
+    """Рассылка сообщений"""
     return render_template('sending_messages.html')
 
 @app.route('/editing_bio')
 def editing_bio():
+    """Редактирование БИЛ"""
     return render_template('editing_bio.html')
 
 @app.route('/working_with_contacts')
@@ -50,6 +54,11 @@ def subscribe_unsubscribe():
     """Подписка, отписка"""
     return render_template('subscribe_unsubscribe.html')
 
+
+@app.route('/connect_accounts')
+def connect_accounts():
+    """Подключение аккаунтов"""
+    return render_template('connect_accounts.html')
 
 def run_flask():
     app.run(debug=False, port=8000)
