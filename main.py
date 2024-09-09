@@ -32,6 +32,7 @@ program_version, date_of_program_change = "2.1.7", "09.09.2024"  # Версия 
 
 
 def start_http_server(port=8000):
+    """Запуск сервера, для открытия документации TelegramMaster 2.0"""
     # Указываем директорию, которую хотим раздать
     web_dir = os.path.join(os.path.dirname(__file__), 'docs')  # Путь к папке с документацией
     os.chdir(web_dir)
