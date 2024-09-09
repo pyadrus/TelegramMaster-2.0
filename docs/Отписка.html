@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <title>Проверка аккаунтов</title>
@@ -13,8 +14,8 @@
             fetch('menu.html')
                 .then(response => response.text())
                 .then(data => {
-                document.getElementById('menu-placeholder').innerHTML = data;
-            })
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
                 .catch(error => console.error('Ошибка загрузки меню:', error));
         }
 
@@ -23,35 +24,37 @@
     </script>
 
 </head>
+
 <body>
-<div class="container">
-    <!-- Подключение бокового меню -->
-    <div id="menu-placeholder"></div>
+    <div class="container">
+        <!-- Подключение бокового меню -->
+        <div id="menu-placeholder"></div>
 
-    <!-- Основной контент -->
-    <div class="content">
-        <h1 id="telegrammaster-">Отписка</h1>
-        <hr align="center"/>
+        <!-- Основной контент -->
+        <div class="content">
+            <h1 id="telegrammaster-">Отписка</h1>
+            <hr align="center" />
 
-<p>
-Для отписки группы / каналы на которые подписан аккаунт выполните следующие действия:<br>
-</p>
+            <p>
+                Для отписки группы / каналы на которые подписан аккаунт выполните следующие действия:<br>
+            </p>
 
-<p>
-1. Запустить TelegramMaster (см. <a href="Запуск_TelegramMaster.html">Запуск TelegramMaster</a>).<br>
-2. Подключить аккаунты к TelegramMaster (см. Подключение аккаунтов Telegram к TelegramMaster).<br>
-3. Перейти в раздел «Подписка, отписка».<br>
-4. Выбрать функцию «Отписка».<br>
-</p>
+            <p>
+                1. Запустить TelegramMaster (см. <a href="Запуск_TelegramMaster.html">Запуск TelegramMaster</a>).<br>
+                2. Подключить аккаунты к TelegramMaster (см. Подключение аккаунтов Telegram к TelegramMaster).<br>
+                3. Перейти в раздел «Подписка, отписка».<br>
+                4. Выбрать функцию «Отписка».<br>
+            </p>
 
-<p>
-TelegramMaster автоматически очистит группы / каналы, на которые подписан аккаунт Telegram.<br>
-</p>
+            <p>
+                TelegramMaster автоматически очистит группы / каналы, на которые подписан аккаунт Telegram.<br>
+            </p>
 
-        <hr align="center"/>
+            <hr align="center" />
 
+        </div>
     </div>
-</div>
 
 </body>
+
 </html>

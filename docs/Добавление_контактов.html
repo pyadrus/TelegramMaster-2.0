@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <title>Проверка аккаунтов</title>
@@ -13,8 +14,8 @@
             fetch('menu.html')
                 .then(response => response.text())
                 .then(data => {
-                document.getElementById('menu-placeholder').innerHTML = data;
-            })
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
                 .catch(error => console.error('Ошибка загрузки меню:', error));
         }
 
@@ -23,39 +24,45 @@
     </script>
 
 </head>
+
 <body>
-<div class="container">
-    <!-- Подключение бокового меню -->
-    <div id="menu-placeholder"></div>
+    <div class="container">
+        <!-- Подключение бокового меню -->
+        <div id="menu-placeholder"></div>
 
-    <!-- Основной контент -->
-    <div class="content">
-        <h1 id="telegrammaster-">Добавление контактов</h1>
-        <hr align="center"/>
+        <!-- Основной контент -->
+        <div class="content">
+            <h1 id="telegrammaster-">Добавление контактов</h1>
+            <hr align="center" />
 
-<p>
-Для добавления, перебора списка номеров (контактов), для дальнейшего взаимодействия с ними), выполните следующие действия:  <br>
-</p>
+            <p>
+                Для добавления, перебора списка номеров (контактов), для дальнейшего взаимодействия с ними), выполните
+                следующие действия: <br>
+            </p>
 
-<p>
-1. Запустить TelegramMaster (см. <a href="Запуск_TelegramMaster.html">Запуск TelegramMaster</a>).  <br>
-2. Подключить аккаунты к TelegramMaster (см. Подключение аккаунтов Telegram к TelegramMaster)) или скопировать session файл аккаунта в папку <code>TelegramMaster/user_settings/accounts/contact</code><br>
-3. Перейти в раздел «Работа с контактами»  <br>
-4. Выбрать функцию «Добавление контактов»<br>
-</p>
+            <p>
+                1. Запустить TelegramMaster (см. <a href="Запуск_TelegramMaster.html">Запуск TelegramMaster</a>). <br>
+                2. Подключить аккаунты к TelegramMaster (см. Подключение аккаунтов Telegram к TelegramMaster)) или
+                скопировать session файл аккаунта в папку <code>TelegramMaster/user_settings/accounts/contact</code><br>
+                3. Перейти в раздел «Работа с контактами» <br>
+                4. Выбрать функцию «Добавление контактов»<br>
+            </p>
 
-<p>
-Во время Добавления контактов (перебора контактов) номера берутся с базы данных (файл <code>TelegramMaster/user_settings/software_database.db</code> из таблицы contact).<br>
-</p>
+            <p>
+                Во время Добавления контактов (перебора контактов) номера берутся с базы данных (файл
+                <code>TelegramMaster/user_settings/software_database.db</code> из таблицы contact).<br>
+            </p>
 
-<p>
-Если вы не формировали список контактов ранее, воспользуйтесь функцией «Формирование списка контактов».<br>
-    </p>
+            <p>
+                Если вы не формировали список контактов ранее, воспользуйтесь функцией «Формирование списка
+                контактов».<br>
+            </p>
 
-        <hr align="center"/>
+            <hr align="center" />
 
+        </div>
     </div>
-</div>
 
 </body>
+
 </html>
