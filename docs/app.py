@@ -39,6 +39,17 @@ def working_with_reactions():
     """Работа с реакциями"""
     return render_template('working_with_reactions.html')
 
+@app.route('/parsing')
+def parsing():
+    """Парсинг"""
+    return render_template('parsing.html')
+
+
+@app.route('/subscribe_unsubscribe')
+def subscribe_unsubscribe():
+    """Подписка, отписка"""
+    return render_template('subscribe_unsubscribe.html')
+
 
 def run_flask():
     app.run(debug=False, port=8000)
