@@ -11,7 +11,12 @@ def index():
 @app.route('/menu')
 def menu():
     """Меню программы"""
-    return render_template('menu.html')
+    # Версия и дата обновления
+    program_version = "2.1.7"
+    update_date = "09.09.2024"
+    return render_template('menu.html', program_version=program_version, update_date=update_date)
+
+    # return render_template('menu.html')
 
 @app.route('/inviting')
 def inviting():
@@ -59,6 +64,17 @@ def subscribe_unsubscribe():
 def connect_accounts():
     """Подключение аккаунтов"""
     return render_template('connect_accounts.html')
+
+@app.route('/account_verification')
+def account_verification():
+    """Проверка аккаунтов"""
+    return render_template('account_verification.html')
+
+
+@app.route('/creating_groups')
+def creating_groups():
+    """Создание групп (чатов)"""
+    return render_template('creating_groups.html')
 
 def run_flask():
     app.run(debug=False, port=8000)
