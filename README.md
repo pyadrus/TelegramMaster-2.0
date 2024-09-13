@@ -3,9 +3,9 @@
 ![alt text](docs/static/images/TelegramMaster_2.png "TelegramMaster_2")
 
 <h2>📖 Описание</h2>
-- Название проекта: TelegramMaster 2.0
-- Текущая версия: 2.1.8
-- Дата последнего обновления: 13.09.2024
+- Название проекта: TelegramMaster 2.0<br>
+- Текущая версия: 2.1.8<br>
+- Дата последнего обновления: 13.09.2024<br>
 
 [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
 [![made-with-PyAdminRU](https://img.shields.io/badge/Made%20with-PyAdminRU-1f425f.svg)](https://t.me/PyAdminRU)
