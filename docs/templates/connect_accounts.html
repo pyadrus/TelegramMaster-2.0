@@ -6,21 +6,20 @@
     <title>Подключение аккаунтов к TelegramMaster</title>
 
     <!-- Правильный способ подключения CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
-    function loadMenu() {
-    fetch('/menu')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('menu-placeholder').innerHTML = data;
-        })
-        .catch(error => console.error('Ошибка загрузки меню:', error));
-}
+        function loadMenu() {
+            fetch('/menu')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
+                .catch(error => console.error('Ошибка загрузки меню:', error));
+        }
 
-// Вызов функции загрузки меню при загрузке страницы
-window.onload = loadMenu;
-</script>
+        // Вызов функции загрузки меню при загрузке страницы
+        window.onload = loadMenu;
+    </script>
 
 </head>
 
@@ -85,8 +84,9 @@ window.onload = loadMenu;
             <h2>Чтобы подключить аккаунт в <b>TelegramMaster</b>:</h2>
 
             <ol>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-                <li> Запустить функцию «Подключение аккаунтов».
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
+                2️⃣ Запустить функцию «Подключение аккаунтов».
                 <li> Ввести номер телефона без пробелов, начиная с символа + (например, +79490000000).
                 <li> Ввести код подтверждения от Telegram. Если код не пришел в течение минуты, повторите процедуру.
                 <li> Если на аккаунте есть пароль, то ввести пароль. Если к аккаунту привязана двухфакторная
@@ -97,7 +97,8 @@ window.onload = loadMenu;
                 <p>⚠️ Если не пришел код подтверждения, удалите session файл из
                     <code>TelegramMaster/user_settings/accounts</code>. Для этого откройте
                     <code>TelegramMaster/user_settings/accounts</code>, найдите session файл с номером телефона,
-                    введенным ранее.</p>
+                    введенным ранее.
+                </p>
             </blockquote>
 
             <p>После успешного подключения будет создан файл с названием номер_телефона.session и будет расположен в
@@ -114,7 +115,8 @@ window.onload = loadMenu;
 
             <p>Например, если вы планируете использовать функцию парсинга, расположите аккаунт в папке
                 <code>TelegramMaster/user_settings/accounts/parsing</code>. Если вам нужно будет рассылать сообщения по
-                чатам, то поместите аккаунт в папку <code>TelegramMaster/user_settings/accounts/send_message</code>.</p>
+                чатам, то поместите аккаунт в папку <code>TelegramMaster/user_settings/accounts/send_message</code>.
+            </p>
 
             <h2>Структура папок с аккаунтами:</h2>
 

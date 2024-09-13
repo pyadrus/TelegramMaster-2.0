@@ -5,22 +5,21 @@
     <meta charset="UTF-8">
     <title>Проверка аккаунтов</title>
 
-   <!-- Правильный способ подключения CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
+    <!-- Правильный способ подключения CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
-    function loadMenu() {
-    fetch('/menu')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('menu-placeholder').innerHTML = data;
-        })
-        .catch(error => console.error('Ошибка загрузки меню:', error));
-}
+        function loadMenu() {
+            fetch('/menu')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
+                .catch(error => console.error('Ошибка загрузки меню:', error));
+        }
 
-// Вызов функции загрузки меню при загрузке страницы
-window.onload = loadMenu;
-</script>
+        // Вызов функции загрузки меню при загрузке страницы
+        window.onload = loadMenu;
+    </script>
 
 </head>
 
@@ -40,8 +39,10 @@ window.onload = loadMenu;
             </p>
 
             <p>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-                2. Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение аккаунтов Telegram к TelegramMaster)</a> или
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
+                    2️⃣  Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+                    аккаунтов Telegram к TelegramMaster)</a> или
                 скопировать session файл аккаунта в папку <code>TelegramMaster/user_settings/accounts/contact</code>
                 <br>
                 3. Перейти в раздел «Работа с контактами»<br>
@@ -61,7 +62,7 @@ window.onload = loadMenu;
 
             <hr align="center" />
 
-          <h1 style="text-align: center">Показ списка контактов</h1>
+            <h1 style="text-align: center">Показ списка контактов</h1>
 
 
             <p>
@@ -69,8 +70,10 @@ window.onload = loadMenu;
             </p>
 
             <p>
-               1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-                2. Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение аккаунтов Telegram к TelegramMaster)</a> или
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
+                    2️⃣  Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+                    аккаунтов Telegram к TelegramMaster)</a> или
                 скопировать session файл аккаунта в папку <code>TelegramMaster/user_settings/accounts/contact</code>
                 <br>
                 3. Перейти в раздел «Работа с контактами» <br>
@@ -86,8 +89,10 @@ window.onload = loadMenu;
             </p>
 
             <p>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-                2. Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение аккаунтов Telegram к TelegramMaster)</a> или
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
+                    2️⃣  Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+                    аккаунтов Telegram к TelegramMaster)</a> или
                 скопировать session файл аккаунта в папку <code>TelegramMaster/user_settings/accounts/contact</code>
                 <br>
                 3. Перейти в раздел «Работа с контактами»<br>
@@ -104,8 +109,10 @@ window.onload = loadMenu;
             </p>
 
             <p>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-                2. Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение аккаунтов Telegram к TelegramMaster)</a> или
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
+                    2️⃣  Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+                    аккаунтов Telegram к TelegramMaster)</a> или
                 скопировать session файл аккаунта в папку <code>TelegramMaster/user_settings/accounts/contact</code><br>
                 3. Перейти в раздел «Работа с контактами» <br>
                 4. Выбрать функцию «Добавление контактов»<br>

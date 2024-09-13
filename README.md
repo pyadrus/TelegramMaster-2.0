@@ -1,4 +1,4 @@
-# TelegramMaster 🚀
+<h1 align="center">TelegramMaster 🚀<a href="https://t.me/PyAdminRU" target="_blank">PyAdminRU</a>
 
 ![alt text](docs/static/images/TelegramMaster_2.png "TelegramMaster_2")
 
