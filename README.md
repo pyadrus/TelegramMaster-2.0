@@ -2,25 +2,29 @@
 
 <hr align="center"/>
 
-# Внешний вид
+<h>Внешний вид</h2>
 
 ![alt text](docs/static/images/TelegramMaster_2.png "TelegramMaster_2")
 
-![alt text](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
-![alt text](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+<h2>Описание</h2>
+
+Название проекта: TelegramMaster 2.0<br> 
+Версия программы: 2.1.8,<br> 
+Дата обновления: 13.09.2024<br>
+
+TelegramMaster 2.0 поддерживается следующими операционными системами:<br>
 ![alt text](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
 ![alt text](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white)
 ![alt text](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 
-![alt text](https://img.shields.io/badge/HTML-239120?style=for-the-badge&logo=html5&logoColor=white)
+Проект TelegramMaster 2.0 написан на следующих языках:
+
+![alt text](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
 ![alt text](https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white)
 ![alt text](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![alt text](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
+![alt text](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white)
 
-
-![alt text](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
-
-Проект TelegramMaster создан на основе библиотеки Telethon и активно развивается с 29.01.2022 года. 
+Cоздан на основе библиотеки Telethon и активно развивается с <b>29.01.2022</b> года. 
 <code>TelegramMaster</code> 🤖 представляет собой многофункциональный инструмент для работы с <code>Telegram</code>. 
 Она предлагает широкий спектр возможностей, включая: 
 - Инвайтинг (приглашение пользователей)💌, 
@@ -42,7 +46,7 @@
 
 <hr align="center"/>
 
-# Документация по работе с TelegramMaster 🚀
+<h>Документация по работе с TelegramMaster 🚀</h2>
 
 Установка TelegramMaster 2.0:
 
@@ -52,7 +56,7 @@ Windows
 3. Скачайте установщик: Кликните на кнопку «Download» под выбранной версией. После этого начнётся скачивание файла установщика.
 4. Запустите установку: Дважды кликните на скачанный файл установщика, чтобы начать процесс установки.
 5. Следуйте инструкциям мастера установки.
-Добавьте путь к интерпретатору Python в переменные среды: Чтобы использовать Python из командной строки, добавьте путь к каталогу, где установлен Python, в переменную PATH. Для этого:
+6. Добавьте путь к интерпретатору Python в переменные среды: Чтобы использовать Python из командной строки, добавьте путь к каталогу, где установлен Python, в переменную PATH. Для этого:
 В меню «Пуск» найдите «Панель управления».
 Перейдите в раздел «Система и безопасность», затем «Система».
 Выберите «Дополнительные параметры системы».
@@ -102,7 +106,7 @@ sudo apt install python3
 python3
 ```
 
-Предварительная настройка TelegramMaster:
+<h2>Предварительная настройка TelegramMaster:</h2>
 
 - [Предварительная настройка TelegramMaster](docs/Настройки_и_конфигурация/Предварительная_настройка_программы_(установка_программы_по_умолчанию).md)
 
@@ -111,7 +115,7 @@ python3
 - [Регистрация aip_id и api_hash](docs/templates/Регистрация_api_id_api_hash.html)
 
 <hr align="center"/>
-Основные функции TelegramMaster:
+<h2>Основные функции TelegramMaster:</h2>
 
 - Инвайтинг
   - Инвайтинг без лимитов
@@ -173,11 +177,13 @@ python3
 
 <hr align="center"/>
 
-## Обратная связь
+<h2>Обратная связь</h2>
 
-Telegram: https://t.me/PyAdminRU
+<a href="https://t.me/PyAdminRU" target="_blank">![alt text](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
 
-## Дополнительная информация
+<a href="https://github.com/pyadrus" target="_blank">![alt text](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+
+<h2>Дополнительная информация</h2>
 
 Telegram: https://t.me/master_tg_d
 
