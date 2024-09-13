@@ -6,21 +6,20 @@
     <title>Проверка аккаунтов</title>
 
     <!-- Правильный способ подключения CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
-    function loadMenu() {
-    fetch('/menu')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('menu-placeholder').innerHTML = data;
-        })
-        .catch(error => console.error('Ошибка загрузки меню:', error));
-}
+        function loadMenu() {
+            fetch('/menu')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
+                .catch(error => console.error('Ошибка загрузки меню:', error));
+        }
 
-// Вызов функции загрузки меню при загрузке страницы
-window.onload = loadMenu;
-</script>
+        // Вызов функции загрузки меню при загрузке страницы
+        window.onload = loadMenu;
+    </script>
 
 </head>
 
@@ -106,8 +105,10 @@ window.onload = loadMenu;
             </p>
 
             <p>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-                2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение аккаунтов Telegram к TelegramMaster)</a> или
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
+                2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+                    аккаунтов Telegram к TelegramMaster)</a> или
                 скопировать session файл аккаунта в папку
                 <code>TelegramMaster/user_settings/accounts/reactions</code><br>
                 3️⃣ Перейти в Настройки.<br>
@@ -122,7 +123,8 @@ window.onload = loadMenu;
 
             <p>
                 Если ранее вы выполняли действия по настройке TelegramMaster, то выполните следующие действия:<br>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в "Работа с реакциями"<br>
                 3️⃣ Запустить функцию "Автоматическое выставление реакций"<br>
             </p>
@@ -158,10 +160,12 @@ window.onload = loadMenu;
             </p>
 
             <p>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в Настройки.<br>
                 3️⃣ Сформировать список каналов в разделе «Формирование_списка_чатов_каналов»<br>
-                4️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение аккаунтов Telegram к TelegramMaster)</a> или
+                4️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+                    аккаунтов Telegram к TelegramMaster)</a> или
                 скопировать session файл аккаунта в папку <code>TelegramMaster/user_settings/accounts/viewing</code><br>
                 5️⃣ Перейти в «Работа с реакциями».<br>
                 6️⃣ Запустить функцию «Накручиваем просмотры постов».<br>
@@ -169,7 +173,8 @@ window.onload = loadMenu;
 
             <p>
                 Если ранее вы выполняли действия по настройке TelegramMaster, то выполните следующие действия:<br>
-               1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в «Работа с реакциями».<br>
                 3️⃣ Запустить функцию «Накручиваем просмотры постов».<br>
             </p>

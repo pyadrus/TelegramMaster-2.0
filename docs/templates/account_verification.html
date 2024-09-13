@@ -6,21 +6,20 @@
     <title>Проверка аккаунтов</title>
 
     <!-- Правильный способ подключения CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
-    function loadMenu() {
-    fetch('/menu')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('menu-placeholder').innerHTML = data;
-        })
-        .catch(error => console.error('Ошибка загрузки меню:', error));
-}
+        function loadMenu() {
+            fetch('/menu')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
+                .catch(error => console.error('Ошибка загрузки меню:', error));
+        }
 
-// Вызов функции загрузки меню при загрузке страницы
-window.onload = loadMenu;
-</script>
+        // Вызов функции загрузки меню при загрузке страницы
+        window.onload = loadMenu;
+    </script>
 
 </head>
 
@@ -52,7 +51,8 @@ window.onload = loadMenu;
                 этим шагам:
             </p>
             <p>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Нажмите на кнопку <b>🔍 Проверка аккаунтов</b>.<br />
                 3️⃣ Дождитесь завершения проверки ⏳ .<br />
                 4️⃣ Результаты сохранятся в log-файле: <b>TelegramMaster/user_settings/log/log.log</b>.
@@ -80,7 +80,6 @@ window.onload = loadMenu;
                 пути написанной программой.
             </p>
 
-<!--            <p class="aligncenter"><img src="1.png" width="40%"></p>-->
             <img src="{{ url_for('static', filename='images/1.png') }}" width="40%" alt="Telegram Master">
 
             <style>

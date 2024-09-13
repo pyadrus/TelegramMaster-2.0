@@ -6,21 +6,20 @@
    <title>Проверка аккаунтов</title>
 
    <!-- Правильный способ подключения CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script>
-    function loadMenu() {
-    fetch('/menu')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('menu-placeholder').innerHTML = data;
-        })
-        .catch(error => console.error('Ошибка загрузки меню:', error));
-}
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+   <script>
+      function loadMenu() {
+         fetch('/menu')
+            .then(response => response.text())
+            .then(data => {
+               document.getElementById('menu-placeholder').innerHTML = data;
+            })
+            .catch(error => console.error('Ошибка загрузки меню:', error));
+      }
 
-// Вызов функции загрузки меню при загрузке страницы
-window.onload = loadMenu;
-</script>
+      // Вызов функции загрузки меню при загрузке страницы
+      window.onload = loadMenu;
+   </script>
 
 <body>
 
@@ -90,7 +89,7 @@ window.onload = loadMenu;
          </p>
 
          <p>
-            2. Открытие терминала:<br>
+            2️⃣  Открытие терминала:<br>
             - Откройте "Программы" ("Launchpad") → "Утилиты" → "Терминал" или "Finder" → каталог "Программы/Утилиты" →
             "Терминал".<br>
          </p>

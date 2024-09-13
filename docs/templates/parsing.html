@@ -6,21 +6,20 @@
     <title>Парсинг</title>
 
     <!-- Правильный способ подключения CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
-    function loadMenu() {
-    fetch('/menu')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('menu-placeholder').innerHTML = data;
-        })
-        .catch(error => console.error('Ошибка загрузки меню:', error));
-}
+        function loadMenu() {
+            fetch('/menu')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
+                .catch(error => console.error('Ошибка загрузки меню:', error));
+        }
 
-// Вызов функции загрузки меню при загрузке страницы
-window.onload = loadMenu;
-</script>
+        // Вызов функции загрузки меню при загрузке страницы
+        window.onload = loadMenu;
+    </script>
 
 </head>
 
@@ -62,8 +61,10 @@ window.onload = loadMenu;
             <p>Для формирования списка пользователей (username), выполните следующие действия:<br></p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-                2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
+                2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+                    аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
                 <code>TelegramMaster/user_settings/accounts/parsing</code><br>
                 3️⃣ Перейти в Настройки.<br>
                 4️⃣ Сформировать список групп в разделе «Формирование списка чатов каналов»<br>
@@ -91,8 +92,10 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-                2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
+                2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+                    аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
                 <code>TelegramMaster/user_settings/accounts/parsing</code><br>
                 3️⃣ Перейти в раздел «Парсинг»<br>
                 4️⃣ Выбрать функцию «Парсинг групп каналов на которые подписан аккаунт».<br>
@@ -117,8 +120,10 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-                2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
+                2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+                    аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
                 <code>TelegramMaster/user_settings/accounts/parsing</code><br>
                 3️⃣ Перейти в раздел «Парсинг»<br>
                 4️⃣ Выбрать функцию «<a href="Запуск_TelegramMaster.html">Парсинг активных участников группы</a>».<br>
@@ -149,8 +154,10 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-                2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
+                2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+                    аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
                 <code>TelegramMaster/user_settings/accounts/parsing</code><br>
                 3️⃣ Перейти в раздел «Парсинг».<br>
                 4️⃣ Выбрать функцию «Парсинг выбранной группы из подписанных пользователем».<br>
@@ -175,7 +182,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел «<a href="Парсинг.html">Запуск TelegramMaster</a>»<br>
                 3️⃣ Выбрать функцию «Очистка списка от ранее спарсенных данных».<br>
             </blockquote>

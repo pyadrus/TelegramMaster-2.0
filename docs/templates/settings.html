@@ -6,21 +6,20 @@
     <title>Инвайтинг с лимитами в TelegramMaster</title>
 
     <!-- Правильный способ подключения CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_menu.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
-    function loadMenu() {
-    fetch('/menu')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('menu-placeholder').innerHTML = data;
-        })
-        .catch(error => console.error('Ошибка загрузки меню:', error));
-}
+        function loadMenu() {
+            fetch('/menu')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
+                .catch(error => console.error('Ошибка загрузки меню:', error));
+        }
 
-// Вызов функции загрузки меню при загрузке страницы
-window.onload = loadMenu;
-</script>
+        // Вызов функции загрузки меню при загрузке страницы
+        window.onload = loadMenu;
+    </script>
 
 </head>
 
@@ -86,7 +85,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Выбор реакций".<br>
                 4️⃣ С помощью чек-бокса выбрать необходимые реакции. <br>
@@ -106,7 +106,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Подключить аккаунты к TelegramMaster (см. Подключение аккаунтов Telegram к TelegramMaster).<br>
                 3️⃣ Перейти в раздел «<a href="Настройки.html">Настройки</a>»<br>
                 4️⃣ Выбрать функцию «Запись_proxy».<br>
@@ -132,7 +133,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Смена_аккаунтов".<br>
                 4️⃣ Ввести время.<br>
@@ -154,7 +156,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Запись api_id, api_hash".<br>
                 4️⃣ Ввести api_id<br>
@@ -180,7 +183,8 @@ window.onload = loadMenu;
                 Для записи времени, выполните следующие действия:
             </p>
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Запись_времени".<br>
                 4️⃣ Ввести:<br>
@@ -201,7 +205,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Запись_сообщений".<br>
                 4️⃣ Ввести сообщение.<br>
@@ -224,7 +229,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "[Запись_ссылки](Запись_ссылки_для_инвайтинга.html)".<br>
                 4️⃣ Ввеcти ссылку на группу в которую будет происходить Инвайтинг (например: https://t.me/test),
@@ -251,7 +257,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Лимиты_на_аккаунт".<br>
                 4️⃣ Ввести лимит на сообщения.<br>
@@ -271,7 +278,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Лимиты_на_сообщения".<br>
                 4️⃣ Ввести лимит на сообщения.<br>
@@ -291,7 +299,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел «<a href="Настройки.html">Настройки</a>»<br>
                 3️⃣ Выбрать функцию «Формирование_списка_username».<br>
                 4️⃣ В графическое окно программы вставить список username<br>
@@ -315,7 +324,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Время_между_подпиской".<br>
                 4️⃣ Ввести время.<br>
@@ -335,7 +345,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-               1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Запись_времени_между_сообщениями".<br>
                 4️⃣ Ввести имя аккаунта.<br>
@@ -355,7 +366,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-               1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Время_между_инвайтингом_рассылка_сообщений".<br>
                 4️⃣ Ввести имя аккаунта.<br>
@@ -375,7 +387,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Запись_ссылки_для_реакций".<br>
                 4️⃣ Ввести время.<br>
@@ -395,7 +408,8 @@ window.onload = loadMenu;
             </p>
 
             <blockquote>
-                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                    TelegramMaster</a>).<br>
                 2️⃣ Перейти в раздел "<a href="Настройки.html">Настройки</a>".<br>
                 3️⃣ Запустить функцию "Формирование_списка_чатов_каналов".<br>
                 4️⃣ Ввести список чатов - каналов.<br>

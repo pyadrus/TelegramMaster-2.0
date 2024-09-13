@@ -1,41 +1,60 @@
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 20px;
-    background-color: #FFFFF0;
+    font-family: 'Source Code Pro', sans-serif;
+    margin: 0;
+    background-color: #323F4C; /* Подходящий фон под баннер */
+    color: #D6F0F0; /* Цвет текста по всем страницам */
 }
 
+.container {
+    display: flex;
+}
+
+.sidebar {
+    width: 250px;
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    font-size: 13px;
+    background-color: #f4f5f8; /* Цвет фона */
+}
+
+.sidebar a {
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    color: #777A7A;
+    border-bottom: 1px solid #9ea1a1;
+}
+
+.sidebar a:hover {
+    background-color: #b0b0b0;
+}
+
+.content {
+    margin-left: 270px;
+    padding: 20px;
+    position: relative;
+    z-index: 30;
+}
+
+.banner {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 20px;
+    border-radius: 8px;
+    position: fixed; /* Предполагаю, что баннер должен быть фиксирован */
+}
+
+
 h1 {
-    color: #333;
+    text-align: center;
+    color: #59C3C3; /* Измените на желаемый цвет */
 }
 
 h2 {
-    color: #555;
-}
-
-p {
-    margin-bottom: 10px;
-}
-
-a {
-    color: #1e90ff;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-.note {
-    background-color: #ffeb3b;
-    border-left: 6px solid #f1c40f;
-    padding: 10px;
-    margin-bottom: 20px;
-}
-
-code {
-    background-color: #eee;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-family: "Courier New", Courier, monospace;
+    text-align: center;
+    color: #59C3C3; /* Измените на желаемый цвет */
 }
