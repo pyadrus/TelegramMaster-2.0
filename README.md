@@ -2,8 +2,6 @@
 
 ![alt text](docs/static/images/TelegramMaster_2.png "TelegramMaster_2")
 
-<hr align="center"/>
-
 <h2>📖 Описание</h2>
 - Название проекта: TelegramMaster 2.0
 - Текущая версия: 2.1.8
@@ -24,7 +22,7 @@ TelegramMaster 2.0 совместим со следующими операцио
 </p>
 
 <h2>🛠️ Технологии</h2>
-Проект разработан с использованием следующих языков программирования:
+Проект разработан с использованием следующих языков программирования:<br>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white" alt="Python Badge">
@@ -32,7 +30,6 @@ TelegramMaster 2.0 совместим со следующими операцио
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5 Badge">
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white" alt="JavaScript Badge">
 </p>
-
 
 Cоздан на основе библиотек: [Telethon](https://github.com/LonamiWebs/Telethon), [Flask](https://flask.palletsprojects.com/en/3.0.x/), [Flet](https://github.com/flet-dev/flet).
 
@@ -82,7 +79,7 @@ C полным перечнем вы можете ознакомиться в п
 python --version
 ```
 
-1. Установка TelegramMaster:
+2. Установка TelegramMaster:
 
 * Клонируйте репозиторий:
 ```sh
@@ -135,7 +132,7 @@ python3 --version
 
 ```
 
-Установка TelegramMaster:
+2. Установка TelegramMaster:
 
 - Клонируйте репозиторий и установите зависимости как в предыдущих системах.
 
