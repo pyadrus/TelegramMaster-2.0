@@ -1,5 +1,7 @@
+from hypercorn.asyncio import serve
+from hypercorn.config import Config
+from loguru import logger
 from quart import Quart, render_template
-import asyncio
 
 app = Quart(__name__, template_folder='templates')
 
@@ -90,9 +92,11 @@ async def launch_telegrammaster():
     return await render_template('launch_telegrammaster.html')
 
 
-# def run_flask():
-#     app.run(debug=True, port=8000)
-
-
-# if __name__ == "__main__":
-#     run_flask()
+async def run_quart():
+    try:
+        config = Config()
+        config.bind = ["127.0.0.1:8000"]
+        logger.info("Запуск сервера Quart...")
+        await serve(app, config)
+    except Exception as e:
+        logger.error(f"Ошибка при запуске сервера: {e}")
