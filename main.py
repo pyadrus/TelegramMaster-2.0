@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import asyncio
 import datetime
+import time
 
 import flet as ft
 from loguru import logger
-
-from docs.app import app
+import webbrowser
+from docs.app import run_quart
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
@@ -29,9 +31,15 @@ logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # �
 program_version, date_of_program_change = "2.1.8", "13.09.2024"  # Версия программы, дата изменения
 
 
-async def run_quart():
-    # Запуск Flask в асинхронной функции
-    app.run(debug=True, port=8000, use_reloader=False)
+async def main():
+    # Запускаем сервер Quart в фоновом режиме
+    quart_task = asyncio.create_task(run_quart())
+
+    # Ваш код Flet
+    page = ft.Page()
+    telegram_master_main(page)
+
+    await quart_task  # Ждём завершения задачи сервера Quart
 
 
 def setup_page(page, program_version, date_of_program_change, line_width):
@@ -265,8 +273,8 @@ def telegram_master_main(page: ft.Page):
             SettingPage().create_main_window(page, variable="time_subscription")
 
         elif page.route == "/documentation":  # Открытие документации
-            # await run_quart()
-            pass
+            webbrowser.open_new("http://127.0.0.1:8000")
+            await run_quart()
 
         page.update()
 
@@ -281,3 +289,7 @@ def telegram_master_main(page: ft.Page):
 
 
 ft.app(target=telegram_master_main)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

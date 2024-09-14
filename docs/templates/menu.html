@@ -29,8 +29,8 @@
 
         <!-- Добавляем информацию о версии программы и дате обновления -->
     <footer>
-        <p>Версия программы: {{ program_version }}</p>
-        <p>Дата обновления: {{ update_date }}</p>
+        <p><font color="black">Версия программы: {{ program_version }}</font></p>
+        <p><font color="black">Дата обновления: {{ update_date }}</font></p>
     </footer>
 
         <a href="{{ url_for('index') }}">🏠 Главное меню</a>
@@ -45,10 +45,6 @@
         <a href="{{ url_for('connect_accounts') }}">🔗 Подключение аккаунтов</a>
         <a href="{{ url_for('account_verification') }}">✅ Проверка аккаунтов</a>
         <a href="{{ url_for('creating_groups') }}">👥 Создание групп (чатов)</a>
-
         <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster 2.0</a>
-
-
-
 
 </div>
