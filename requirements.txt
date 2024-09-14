@@ -7,3 +7,4 @@ thefuzz~=0.22.1
 schedule~=1.2.2
 PySocks
 Flask~=3.0.3
+Quart~=0.19.6

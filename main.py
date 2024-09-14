@@ -4,7 +4,7 @@ import datetime
 import flet as ft
 from loguru import logger
 
-from docs.app import run_flask
+from docs.app import app
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
@@ -18,23 +18,33 @@ from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files, find_folders
 from system.auxiliary_functions.global_variables import ConfigReader
+from system.menu_gui.menu_gui import line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu, \
+    bio_editing_menu, settings_menu, menu_parsing, reactions_menu, subscribe_and_unsubscribe_menu
 from system.setting.setting import SettingPage, get_unique_filename
 from system.setting.setting import reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
 
-line_width = 580  # Ширина окна и ширина строки
 program_version, date_of_program_change = "2.1.8", "13.09.2024"  # Версия программы, дата изменения
 
 
-def telegram_master_main(page: ft.Page):
+async def run_quart():
+    # Запуск Flask в асинхронной функции
+    app.run(debug=True, port=8000, use_reloader=False)
+
+
+def setup_page(page, program_version, date_of_program_change, line_width):
     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
-    page.window.width = line_width  # window's ширина is 200 px
-    page.window.height = 550  # window's высота is 200 px
-    page.window.resizable = False  # window is not resizable
+    page.window.width = line_width
+    page.window.height = 550
+    page.window.resizable = False
     logger.info(f"Program version: {program_version}. Date of change: {date_of_program_change}")
-    
+
+
+def telegram_master_main(page: ft.Page):
+    setup_page(page, program_version, date_of_program_change, line_width)
+
     async def route_change(route):
         page.views.clear()
         # Меню "Главное меню"
@@ -48,7 +58,7 @@ def telegram_master_main(page: ft.Page):
                                   weight=ft.FontWeight.BOLD,
                                   foreground=ft.Paint(
                                       gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                           ft.colors.PURPLE])),),),],),
+                                                                                           ft.colors.PURPLE])), ), ), ], ),
                           ft.Text(disabled=False,
                                   spans=[ft.TextSpan("Аккаунт  Telegram: "),
                                          ft.TextSpan("https://t.me/PyAdminRU",
@@ -86,20 +96,8 @@ def telegram_master_main(page: ft.Page):
                                                 on_click=lambda _: page.go("/documentation")),
                           ]), ]))
         if page.route == "/inviting":  # Меню "Инвайтинг"
-            page.views.append(
-                ft.View("/inviting",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг",
-                                               on_click=lambda _: page.go("/inviting_without_limits")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг 1 раз в час",
-                                               on_click=lambda _: page.go("/inviting_1_time_per_hour")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг в определенное время",
-                                               on_click=lambda _: page.go("/inviting_certain_time")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг каждый день",
-                                               on_click=lambda _: page.go("/inviting_every_day")),
-                         ])]))
+            await inviting_menu(page)
+
         elif page.route == "/inviting_without_limits":  # Инвайтинг
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
@@ -137,33 +135,13 @@ def telegram_master_main(page: ft.Page):
             logger.info('Время окончания: ' + str(finish))
             logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
-            page.views.append(
-                ft.View("/subscribe_unsubscribe",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Подписка",
-                                               on_click=lambda _: page.go("/subscription_all")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Отписываемся",
-                                               on_click=lambda _: page.go("/unsubscribe_all")),
-                         ])]))
+            await subscribe_and_unsubscribe_menu(page)
         elif page.route == "/subscription_all":  # Подписка
             await SubscribeUnsubscribeTelegram().subscribe_telegram()
         elif page.route == "/unsubscribe_all":  # Отписываемся
             await SubscribeUnsubscribeTelegram().unsubscribe_all()
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
-            page.views.append(
-                ft.View("/working_with_reactions",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Ставим реакции",
-                                               on_click=lambda _: page.go("/setting_reactions")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Накручиваем просмотры постов",
-                                               on_click=lambda _: page.go("/we_are_winding_up_post_views")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Автоматическое выставление реакций",
-                                               on_click=lambda _: page.go("/automatic_setting_of_reactions")),
-                         ])]))
+            await reactions_menu(page)
         elif page.route == "/setting_reactions":  # Ставим реакции
             await WorkingWithReactions().send_reaction_request()  # Метод для выбора реакции и установки её на сообщение
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
@@ -171,28 +149,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             await WorkingWithReactions().setting_reactions()  # Автоматическое выставление реакций
         elif page.route == "/parsing":  # Меню "Парсинг"
-            page.views.append(
-                ft.View("/parsing",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг одной группы / групп",
-                                               on_click=lambda _: page.go("/parsing_single_groups")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг выбранной группы из подписанных пользователем",
-                                               on_click=lambda _: page.go("/parsing_selected_group_user_subscribed")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг активных участников группы",
-                                               on_click=lambda _: page.go("/parsing_active_group_members")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Парсинг групп / каналов на которые подписан аккаунт",
-                                               on_click=lambda _: page.go(
-                                                   "/parsing_groups_channels_account_subscribed")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Очистка списка от ранее спарсенных данных",
-                                               on_click=lambda _: page.go("/clearing_list_previously_saved_data")),
-                         ])]))
+            await menu_parsing(page)
         elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
@@ -211,20 +168,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db(name_database_table="members")
         elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
-            page.views.append(
-                ft.View("/working_with_contacts",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Формирование списка контактов",
-                                               on_click=lambda _: page.go("/creating_contact_list")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Показать список контактов",
-                                               on_click=lambda _: page.go("/show_list_contacts")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Удаление контактов",
-                                               on_click=lambda _: page.go("/deleting_contacts")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Добавление контактов",
-                                               on_click=lambda _: page.go("/adding_contacts")),
-                         ])]))
+            await working_with_contacts_menu(page)
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
             await DatabaseHandler().open_and_read_data("contact")  # Удаление списка с контактами
             SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
@@ -240,32 +184,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             await CreatingGroupsAndChats().creating_groups_and_chats()
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
-            page.views.append(
-                ft.View("/sending_messages",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Отправка сообщений в личку",
-                                               on_click=lambda _: page.go("/sending_messages_personal_account")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку",
-                                               on_click=lambda _: page.go("/sending_files_personal_account")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений по чатам",
-                                               on_click=lambda _: page.go("/sending_messages_via_chats")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Рассылка сообщений по чатам с автоответчиком",
-                                               on_click=lambda _: page.go(
-                                                   "/sending_messages_via_chats_with_answering_machine")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка файлов по чатам",
-                                               on_click=lambda _: page.go("/sending_files_via_chats")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений + файлов по чатам",
-                                               on_click=lambda _: page.go("/sending_messages_files_via_chats")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Отправка сообщений в личку (с лимитами)",
-                                               on_click=lambda _: page.go("/sending_personal_messages_with_limits")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку (с лимитами)",
-                                               on_click=lambda _: page.go(
-                                                   "/sending_files_to_personal_account_with_limits")),
-                         ])]))
+            await message_distribution_menu(page)
         elif page.route == "/sending_messages_personal_account":  # Отправка сообщений в личку
             logger.info(f"Лимит на аккаунт (без ограничений)")
             await SendTelegramMessages().send_message_from_all_accounts(account_limits=None)
@@ -283,29 +202,12 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
             await SendTelegramMessages().sending_messages_files_via_chats()
         elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
-            account_limits = ConfigReader().get_limits()
-            await SendTelegramMessages().send_message_from_all_accounts(account_limits=account_limits)
+            await SendTelegramMessages().send_message_from_all_accounts(account_limits=ConfigReader().get_limits())
         elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
-            account_limits = ConfigReader().get_limits()
-            await SendTelegramMessages().send_files_to_personal_chats(account_limits=account_limits)
+            await SendTelegramMessages().send_files_to_personal_chats(account_limits=ConfigReader().get_limits())
 
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
-            page.views.append(
-                ft.View("/bio_editing",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.ElevatedButton(width=line_width, height=30, text="Изменение username",
-                                               on_click=lambda _: page.go("/changing_username")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Изменение фото",
-                                               on_click=lambda _: page.go("/edit_photo")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Изменение описания",
-                                               on_click=lambda _: page.go("/edit_description")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Изменение имени",
-                                               on_click=lambda _: page.go("/name_change")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Изменение фамилии",
-                                               on_click=lambda _: page.go("/change_surname")),
-                         ])]))
+            await bio_editing_menu(page)
 
         elif page.route == "/edit_description":  # Изменение описания
             await AccountBIO().change_bio_profile_gui(page)
@@ -319,43 +221,7 @@ def telegram_master_main(page: ft.Page):
             await AccountBIO().change_username_profile_gui(page)
 
         elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
-            page.views.append(
-                ft.View("/settings",
-                        [ft.AppBar(title=ft.Text("Главное меню"),
-                                   bgcolor=ft.colors.SURFACE_VARIANT),
-                         ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Выбор реакций",
-                                                       on_click=lambda _: page.go("/choice_of_reactions")),
-                                     ft.ElevatedButton(width=270, height=30, text="Запись proxy",
-                                                       on_click=lambda _: page.go("/proxy_entry"))]),
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Смена аккаунтов",
-                                                       on_click=lambda _: page.go("/changing_accounts")),
-                                     ft.ElevatedButton(width=270, height=30, text="Запись api_id, api_hash",
-                                                       on_click=lambda _: page.go("/recording_api_id_api_hash"))]),
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись времени",
-                                                       on_click=lambda _: page.go("/time_between_subscriptions")),
-                                     ft.ElevatedButton(width=270, height=30, text="Запись сообщений",
-                                                       on_click=lambda _: page.go("/message_recording"))]),
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Запись ссылки для инвайтинга",
-                                                       on_click=lambda _: page.go("/link_entry")),
-                                     ft.ElevatedButton(width=270, height=30, text="Лимиты на аккаунт",
-                                                       on_click=lambda _: page.go("/account_limits"))]),
-                             ft.Row([ft.ElevatedButton(width=270, height=30, text="Лимиты на сообщения",
-                                                       on_click=lambda _: page.go("/message_limits")),
-                                     ft.ElevatedButton(width=270, height=30, text="Время между подпиской",
-                                                       on_click=lambda _: page.go("/time_between_subscriptionss")), ]),
-                             ft.ElevatedButton(width=line_width, height=30, text="Формирование списка username",
-                                               on_click=lambda _: page.go("/creating_username_list")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Запись времени между сообщениями",
-                                               on_click=lambda _: page.go("/recording_the_time_between_messages")),
-                             ft.ElevatedButton(width=line_width, height=30,
-                                               text="Время между инвайтингом, рассылка сообщений",
-                                               on_click=lambda _: page.go("/time_between_invites_sending_messages")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Запись ссылки для реакций",
-                                               on_click=lambda _: page.go("/recording_reaction_link")),
-                             ft.ElevatedButton(width=line_width, height=30, text="Формирование списка чатов / каналов",
-                                               on_click=lambda _: page.go("/forming_list_of_chats_channels")),
-                         ])]))
+            await settings_menu(page)
 
         elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash
             SettingPage().writing_api_id_api_hash(page)
@@ -399,7 +265,8 @@ def telegram_master_main(page: ft.Page):
             SettingPage().create_main_window(page, variable="time_subscription")
 
         elif page.route == "/documentation":  # Открытие документации
-            run_flask()
+            # await run_quart()
+            pass
 
         page.update()
 
