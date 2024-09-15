@@ -8,7 +8,7 @@ from loguru import logger  # Импортируем библиотеку loguru 
 from telethon import events, types
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
-
+import flet as ft  # Импортируем библиотеку flet
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGLimits import SettingLimits
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -25,24 +25,47 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         self.limits_class = SettingLimits()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def send_reaction_request(self) -> None:
+    async def send_reaction_request(self, page: ft.Page) -> None:
         """Ставим реакции на сообщения"""
-        logger.info(f'[+] Введите ссылку на сообщение или пост: ')
-        # TODO: Убрать input() в коде
-        message = input(" ")  # Ссылка на сообщение
-        random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
-        entities = find_files(directory_path="user_settings/accounts/reactions", extension='session')
-        for file in entities:
-            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/reactions")
-            chat = read_json_file(filename='user_settings/reactions/link_channel.json')
-            logger.info(f'[+] Работаем с группой: {chat}')
-            await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat)
-            msg_id = int(re.search(r'/(\d+)$', message).group(1))  # Получаем id сообщения из ссылки
-            time.sleep(5)
-            await client(SendReactionRequest(peer=chat, msg_id=msg_id,
-                                             reaction=[types.ReactionEmoji(emoticon=f'{random_value}')]))
-            time.sleep(1)
-            await client.disconnect()
+
+        # Поле для ввода ссылки на чат
+        message = ft.TextField(label="Введите ссылку на сообщение или пост:", multiline=False, max_lines=1)
+
+        async def btn_click(e) -> None:
+            random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
+            entities = find_files(directory_path="user_settings/accounts/reactions", extension='session')
+            for file in entities:
+                client = await self.tg_connect.get_telegram_client(file,
+                                                                   account_directory="user_settings/accounts/reactions")
+                chat = read_json_file(filename='user_settings/reactions/link_channel.json')
+                logger.info(f'[+] Работаем с группой: {chat}')
+                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat)
+                msg_id = int(re.search(r'/(\d+)$', message.value).group(1))  # Получаем id сообщения из ссылки
+                time.sleep(5)
+                await client(SendReactionRequest(peer=chat, msg_id=msg_id,
+                                                 reaction=[types.ReactionEmoji(emoticon=f'{random_value}')]))
+                time.sleep(1)
+                await client.disconnect()
+
+                # Изменение маршрута на новый (если необходимо)
+                page.go("/working_with_reactions")
+                page.update()  # Обновление страницы для отображения изменений
+
+        # Кнопка для подтверждения и запуска парсинга
+        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        # Добавление представления на страницу
+        page.views.append(
+            ft.View(
+                "/working_with_reactions",  # Маршрут для этого представления
+                [
+                    message,  # Поле ввода ссылки на чат
+                    # limit_active_user,  # Поле ввода количества сообщений
+                    ft.Column(),  # Колонка для размещения других элементов (при необходимости)
+                    button  # Кнопка "Готово"
+                ]
+            )
+        )
 
     async def viewing_posts(self) -> None:
         """Накрутка просмотров постов"""
@@ -80,7 +103,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         """Вводим ссылку на группу и ссылку на сообщение"""
         entities = find_files(directory_path="user_settings/accounts/reactions_list", extension='session')
         for file in entities:
-            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/reactions_list")
+            client = await self.tg_connect.get_telegram_client(file,
+                                                               account_directory="user_settings/accounts/reactions_list")
             await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
             await asyncio.sleep(5)
             random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
@@ -93,7 +117,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         """Выставление реакций на новые посты"""
         entities = find_files(directory_path="user_settings/accounts/reactions", extension='session')
         for file in entities:
-            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/reactions")
+            client = await self.tg_connect.get_telegram_client(file,
+                                                               account_directory="user_settings/accounts/reactions")
             chat = read_json_file(filename='user_settings/reactions/link_channel.json')
             logger.info(chat)
             await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу

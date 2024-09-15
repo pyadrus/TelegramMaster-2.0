@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import datetime
-import time
+import webbrowser
 
 import flet as ft
 from loguru import logger
-import webbrowser
+
 from docs.app import run_quart
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGConnect import TGConnect
@@ -151,7 +151,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             await reactions_menu(page)
         elif page.route == "/setting_reactions":  # Ставим реакции
-            await WorkingWithReactions().send_reaction_request()  # Метод для выбора реакции и установки её на сообщение
+            await WorkingWithReactions().send_reaction_request(page)  # Метод для выбора реакции и установки её на сообщение
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
             await WorkingWithReactions().viewing_posts()
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
@@ -168,7 +168,7 @@ def telegram_master_main(page: ft.Page):
             logger.info('Время окончания: ' + str(finish))
             logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
-            await ParsingGroupMembers().choose_group_for_parsing()
+            await ParsingGroupMembers().choose_and_parse_group(page)
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             await ParsingGroupMembers().entering_data_for_parsing_active(page)
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
