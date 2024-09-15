@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import time
-
 from loguru import logger
 from telethon import functions
 from telethon import types
@@ -50,18 +49,6 @@ class ParsingGroupMembers:
             await self.db_handler.delete_duplicates(table_name="members",
                                                     column_name="id")  # Чистка дублирующих username по столбцу id
             await client.disconnect()
-
-    async def choose_group_for_parsing(self) -> None:
-        """Выбираем группу из подписанных для parsing"""
-        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-        for file in entities:
-            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
-            groups_wr = await self.list_groups(client)
-            await self.parse_group(client, groups_wr)
-            await self.db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
-            await self.db_handler.delete_duplicates(table_name="members",
-                                                    column_name="id")  # Чистка дублирующих username по столбцу id
-            await client.disconnect()  # Разрываем соединение telegram
 
     async def parse_group(self, client, groups_wr) -> None:
         """
@@ -122,36 +109,57 @@ class ParsingGroupMembers:
             else:
                 logger.warning(f"Message {message.id} does not have a valid from_id.")
 
-    async def list_groups(self, client):
-        """Выводим список групп, выбираем группу, которую будем parsing user с группы telegram
-        :param client: объект клиента
-        """
-        chats: list = []
-        last_date = None
-        groups: list = []
-        result = await client(GetDialogsRequest(offset_date=last_date, offset_id=0,
-                                                offset_peer=InputPeerEmpty(), limit=200, hash=0))
-        chats.extend(result.chats)
-        for chat in chats:
+    async def choose_and_parse_group(self, page: ft.Page) -> None:
+        """Выбираем группу из подписанных и запускаем парсинг"""
+        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
+        for file in entities:
+            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
+            chats: list = []
+            last_date = None
+            groups: list = []
+            result = await client(GetDialogsRequest(offset_date=last_date, offset_id=0,
+                                                    offset_peer=InputPeerEmpty(), limit=200, hash=0))
+            chats.extend(result.chats)
+            for chat in chats:  # Фильтруем группы
+                try:
+                    if chat.megagroup:
+                        groups.append(chat)
+                except AttributeError:
+                    continue  # Игнорируем объекты, у которых нет атрибута 'megagroup'
+            i = 0
+            for g in groups:
+                logger.info(f"[{str(i)}] - {g.title}")
+                i += 1
+            logger.info("")
+            # Поле для ввода ссылки на чат
+            group_input = ft.TextField(label="Введите номер группы:", multiline=False, max_lines=1)
 
-            try:
-                if chat.megagroup:
-                    groups.append(chat)
-            except AttributeError:
-                continue  # Игнорируем объекты, у которых нет атрибута 'megagroup'
+            async def btn_click(e) -> None:
+                target_group = groups[int(group_input.value)]
+                # Изменение маршрута на новый (если необходимо)
+                page.go("/parsing")
+                page.update()  # Обновление страницы для отображения изменений
+                # Запускаем парсинг выбранной группы
+                await self.parse_group(client, target_group)
+                # Чистка и обновление базы данных
+                await self.db_handler.clean_no_username()
+                await self.db_handler.delete_duplicates(table_name="members", column_name="id")
+                await client.disconnect()  # Разрываем соединение telegram
 
-        i = 0
-        for g in groups:
-            logger.info(f"[{str(i)}] - {g.title}")
-            i += 1
-        logger.info("")
-
-        logger.info("[+] Введите номер группы: ")
-        # TODO: Убрать input() в коде
-        g_index = input("")
-
-        target_group = groups[int(g_index)]
-        return target_group
+            # Кнопка для подтверждения и запуска парсинга
+            button = ft.ElevatedButton("Готово", on_click=btn_click)
+            # Добавление представления на страницу
+            page.views.append(
+                ft.View(
+                    "/parsing",  # Маршрут для этого представления
+                    [
+                        group_input,  # Поле ввода ссылки на чат
+                        ft.Column(),  # Колонка для размещения других элементов (при необходимости)
+                        button  # Кнопка "Готово"
+                    ]
+                )
+            )
+            page.update()  # Обновляем страницу, чтобы отобразить новый вид
 
     async def parse_users(self, client, target_group) -> list:
         """Собираем данные user и записываем в файл members.db (создание нового файла members.db)"""
@@ -285,10 +293,12 @@ class ParsingGroupMembers:
         """
 
         # Поле для ввода ссылки на чат
-        chat_input = ft.TextField(label="Введите ссылку на чат, с которого будем собирать активных:", multiline=False, max_lines=1)
+        chat_input = ft.TextField(label="Введите ссылку на чат, с которого будем собирать активных:", multiline=False,
+                                  max_lines=1)
 
         # Поле для ввода количества сообщений
-        limit_active_user = ft.TextField(label="Введите количество сообщений, которые будем парсить:", multiline=False, max_lines=1)
+        limit_active_user = ft.TextField(label="Введите количество сообщений, которые будем парсить:", multiline=False,
+                                         max_lines=1)
 
         # Функция-обработчик для кнопки "Готово"
         async def btn_click(e) -> None:
