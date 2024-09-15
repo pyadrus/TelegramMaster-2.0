@@ -22,7 +22,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
     def __init__(self):
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
-        self.limits_class = SettingLimits()
+        self.limits_class = SettingLimits()  # TODO проверить на использование в коде
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
     async def send_reaction_request(self, page: ft.Page) -> None:
