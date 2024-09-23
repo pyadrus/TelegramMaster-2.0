@@ -33,8 +33,7 @@ class ParsingGroupMembers:
 
     async def parse_groups(self) -> None:
         """Парсинг групп"""
-        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
 
             # Открываем базу с группами для дальнейшего parsing
@@ -55,10 +54,9 @@ class ParsingGroupMembers:
         Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
         @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
         """
-        all_participants: list = await self.parse_users(client, groups_wr)
         logger.info(f"[+] Спарсили данные с группы {groups_wr}")
         # Записываем parsing данные в файл user_settings/software_database.db
-        entities: list = await self.get_all_participants(all_participants)
+        entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr))
         await self.db_handler.write_parsed_chat_participants_to_db(entities)
 
     async def parse_active_users(self, chat_input, limit_active_user) -> None:
@@ -67,8 +65,7 @@ class ParsingGroupMembers:
         :param chat_input: ссылка на чат
         :param limit_active_user: лимит активных участников
         """
-        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
 
             await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat_input)
@@ -83,8 +80,7 @@ class ParsingGroupMembers:
     async def parse_subscribed_groups(self) -> None:
         """Parsing групп / каналов на которые подписан аккаунт и сохраняем в файл software_database.db"""
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
             logger.info("""Parsing групп / каналов на которые подписан аккаунт""")
@@ -111,8 +107,7 @@ class ParsingGroupMembers:
 
     async def choose_and_parse_group(self, page: ft.Page) -> None:
         """Выбираем группу из подписанных и запускаем парсинг"""
-        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
             chats: list = []
             last_date = None
