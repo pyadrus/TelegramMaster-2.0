@@ -24,8 +24,7 @@ class TGContact:
 
     async def show_account_contact_list(self) -> None:
         """Показать список контактов аккаунтов и запись результатов в файл"""
-        entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/contact", extension='session'):
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/contact")
             await self.parsing_and_recording_contacts_in_the_database(client)
@@ -34,16 +33,14 @@ class TGContact:
     async def parsing_and_recording_contacts_in_the_database(self, client) -> None:
         """Парсинг и запись контактов в базу данных"""
         entities: list = []  # Создаем список сущностей
-        all_participants = await self.get_and_parse_contacts(client)
-        for contact in all_participants:  # Выводим результат parsing
+        for contact in await self.get_and_parse_contacts(client):  # Выводим результат parsing
             await self.get_user_data(contact, entities)
         await self.db_handler.write_parsed_chat_participants_to_db(entities)
 
     async def we_get_the_account_id(self, client) -> None:
         """Получаем id аккаунта"""
         entities: list = []  # Создаем список сущностей
-        all_participants = await self.get_and_parse_contacts(client)
-        for user in all_participants:  # Выводим результат parsing
+        for user in await self.get_and_parse_contacts(client):  # Выводим результат parsing
             await self.get_user_data(user, entities)
             await self.we_show_and_delete_the_contact_of_the_phone_book(client, user)
         await self.db_handler.write_parsed_chat_participants_to_db(entities)
@@ -63,8 +60,7 @@ class TGContact:
 
     async def delete_contact(self) -> None:
         """Удаляем контакты с аккаунтов"""
-        entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/contact", extension='session'):
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/contact")
             await self.we_get_the_account_id(client)
@@ -73,8 +69,7 @@ class TGContact:
     async def inviting_contact(self) -> None:
         """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        entities = find_files(directory_path="user_settings/accounts/contact", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/contact", extension='session'):
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/contact")
             await self.add_contact_to_phone_book(client)

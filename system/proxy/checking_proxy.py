@@ -11,8 +11,7 @@ async def reading_proxy_data_from_the_database(db_handler):
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
     username - логин (например: username), password - пароль (например: password)"""
     try:
-        records: list = await db_handler.open_and_read_data("proxy")
-        proxy_random_list = random.choice(records)
+        proxy_random_list = random.choice(await db_handler.open_and_read_data("proxy"))
         logger.info(f"{proxy_random_list}")
         proxy = {'proxy_type': (proxy_random_list[0]), 'addr': proxy_random_list[1], 'port': int(proxy_random_list[2]),
                  'username': proxy_random_list[3], 'password': proxy_random_list[4], 'rdns': proxy_random_list[5]}
@@ -29,16 +28,15 @@ async def checking_the_proxy_for_work() -> None:
     используется для различных тестов.
 
     """
-    records: list = await DatabaseHandler().open_and_read_data("proxy")
-    for proxy_dic in records:
+    for proxy_dic in await DatabaseHandler().open_and_read_data("proxy"):
         logger.info(proxy_dic)
         # Подключение к proxy с проверкой на работоспособность
-        connecting_to_proxy_with_verification(proxy_type=proxy_dic[0],# Тип proxy (например: SOCKS5)
-                                              addr= proxy_dic[1],# Адрес (например: 194.67.248.9)
-                                              port= proxy_dic[2], # Порт (например: 9795)
-                                              username= proxy_dic[3],# Логин (например: username)
-                                              password= proxy_dic[4],# Пароль (например: password)
-                                              rdns= proxy_dic[5],
+        connecting_to_proxy_with_verification(proxy_type=proxy_dic[0],  # Тип proxy (например: SOCKS5)
+                                              addr=proxy_dic[1],  # Адрес (например: 194.67.248.9)
+                                              port=proxy_dic[2],  # Порт (например: 9795)
+                                              username=proxy_dic[3],  # Логин (например: username)
+                                              password=proxy_dic[4],  # Пароль (например: password)
+                                              rdns=proxy_dic[5],
                                               db_handler=DatabaseHandler())
 
 
