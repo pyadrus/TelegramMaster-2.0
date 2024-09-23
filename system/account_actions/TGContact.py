@@ -31,7 +31,10 @@ class TGContact:
             client.disconnect()  # Разрываем соединение telegram
 
     async def parsing_and_recording_contacts_in_the_database(self, client) -> None:
-        """Парсинг и запись контактов в базу данных"""
+        """
+        Парсинг и запись контактов в базу данных
+        :param client: Телеграм клиент
+        """
         entities: list = []  # Создаем список сущностей
         for contact in await self.get_and_parse_contacts(client):  # Выводим результат parsing
             await self.get_user_data(contact, entities)
@@ -46,6 +49,10 @@ class TGContact:
         await self.db_handler.write_parsed_chat_participants_to_db(entities)
 
     async def get_and_parse_contacts(self, client) -> list:
+        """
+        Получаем контакты
+        :param client: Телеграм клиент
+        """
         all_participants: list = []
         result = await client(functions.contacts.GetContactsRequest(hash=0))
         logger.info(result)  # Печатаем результат
@@ -53,7 +60,11 @@ class TGContact:
         return all_participants
 
     async def we_show_and_delete_the_contact_of_the_phone_book(self, client, user) -> None:
-        """Показываем и удаляем контакт телефонной книги"""
+        """
+        Показываем и удаляем контакт телефонной книги
+        :param client: Телеграм клиент
+        :param user: Телеграм пользователя пользователя
+        """
         await client(functions.contacts.DeleteContactsRequest(id=[user.id]))
         logger.info("Подождите 2 - 4 секунды")
         time.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
@@ -75,7 +86,10 @@ class TGContact:
             await self.add_contact_to_phone_book(client)
 
     async def add_contact_to_phone_book(self, client) -> None:
-        """Добавляем контакт в телефонную книгу"""
+        """
+        Добавляем контакт в телефонную книгу
+        :param client: Телеграм клиент
+        """
         records: list = await self.db_handler.open_and_read_data("contact")
         logger.info(f"Всего номеров: {len(records)}")
         entities: list = []  # Создаем список сущностей
@@ -105,7 +119,11 @@ class TGContact:
         await self.db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
 
     async def get_user_data(self, user, entities) -> None:
-        """Получаем данные пользователя"""
+        """
+        Получаем данные пользователя
+        :param user: Телеграм пользователя
+        :param entities: Список сущностей
+        """
         username = user.username if user.username else "NONE"
         user_phone = user.phone if user.phone else "Номер телефона скрыт"
         first_name = user.first_name if user.first_name else ""

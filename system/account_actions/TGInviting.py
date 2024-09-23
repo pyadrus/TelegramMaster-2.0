@@ -32,13 +32,20 @@ class InvitingToAGroup:
         return links_inviting
 
     async def inviting_to_a_group_according_to_the_received_list(self, client, link_row, username) -> None:
+        """ Инвайтинг в группу
+        :param client: Телеграм клиент
+        :param link_row: Ссылка для инвайтинга
+        :param username: username"""
         logger.error(f"Попытка приглашения {username[0]} в группу {link_row[0]}.")
         await client(InviteToChannelRequest(link_row[0], [username[0]]))
         logger.info(f'Удачно! Спим 5 секунд')
         time.sleep(5)
 
     async def inviting_without_limits(self, account_limits) -> None:
-        """Инвайтинг без лимитов"""
+        """
+        Инвайтинг без лимитов
+        :param account_limits: Таблица с лимитами
+        """
         logger.info(f"Запуск инвайтинга без лимитов")
         for file in find_files(directory_path="user_settings/accounts/inviting", extension='session'):
             client = await self.tg_connect.get_telegram_client(file,

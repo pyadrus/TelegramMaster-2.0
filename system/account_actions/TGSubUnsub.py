@@ -52,7 +52,7 @@ class SubscribeUnsubscribeTelegram:
     async def unsubscribe_from_the_group(self, client, group_link) -> None:
         """
         Отписываемся от группы.
-        :param group_link: группа или канал
+        :param group_link: Группа или канал
         :param client: Телеграм клиент
         """
         try:

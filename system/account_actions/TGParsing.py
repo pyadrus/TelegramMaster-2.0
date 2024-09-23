@@ -47,6 +47,8 @@ class ParsingGroupMembers:
         """
         Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
         @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
+        :param client: клиент Telegram
+        :param groups_wr: ссылка на группу
         """
         logger.info(f"[+] Спарсили данные с группы {groups_wr}")
         # Записываем parsing данные в файл user_settings/software_database.db
@@ -151,7 +153,10 @@ class ParsingGroupMembers:
             page.update()  # Обновляем страницу, чтобы отобразить новый вид
 
     async def parse_users(self, client, target_group) -> list:
-        """Собираем данные user и записываем в файл members.db (создание нового файла members.db)"""
+        """
+        Собираем данные user и записываем в файл members.db (создание нового файла members.db)
+        :param client: клиент Telegram
+        :param target_group: группа / канал"""
 
         logger.info("[+] Ищем участников... Сохраняем в файл software_database.db...")
 
@@ -177,14 +182,22 @@ class ParsingGroupMembers:
         return all_participants
 
     async def get_all_participants(self, all_participants) -> list:
-        """Формируем список user_settings/software_database.db"""
+        """
+        Формируем список user_settings/software_database.db
+        :param all_participants: список пользователей
+        :return: список пользователей
+        """
         entities: list = []  # Создаем словарь
         for user in all_participants:
             await self.get_user_data(user, entities)
         return entities  # Возвращаем словарь пользователей
 
     async def get_user_data(self, user, entities) -> None:
-        """Получаем данные пользователя"""
+        """
+        Получаем данные пользователя
+        :param user: пользователь
+        :param entities: список пользователей
+        """
         username = user.username if user.username else "NONE"
         user_phone = user.phone if user.phone else "Номер телефона скрыт"
         first_name = user.first_name if user.first_name else ""
@@ -215,7 +228,10 @@ class ParsingGroupMembers:
              user_premium])
 
     async def get_active_user_data(self, user):
-        """Получаем данные пользователя"""
+        """
+        Получаем данные пользователя
+        :param user: пользователь
+        """
         username = user.username if user.username else "NONE"
         user_phone = user.phone if user.phone else "Номер телефона скрыт"
         first_name = user.first_name if user.first_name else ""
@@ -248,7 +264,10 @@ class ParsingGroupMembers:
         return entity
 
     async def forming_a_list_of_groups(self, client) -> None:
-        """Формируем список групп"""
+        """
+        Формируем список групп
+        :param client: клиент
+        """
         async for dialog in client.iter_dialogs():
             try:
                 dialog_id = dialog.id

@@ -36,7 +36,10 @@ class SendTelegramMessages:
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
     async def send_message_from_all_accounts(self, account_limits) -> None:
-        """Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных."""
+        """
+        Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
+        :param account_limits: Лимит на аккаунты
+        """
         time_inviting = self.config_reader.get_time_inviting()
         time_inviting_1 = time_inviting[0]
         time_inviting_2 = time_inviting[1]
@@ -82,7 +85,10 @@ class SendTelegramMessages:
                 sys.exit(1)
 
     async def send_files_to_personal_chats(self, account_limits) -> None:
-        """Отправка файлов в личку"""
+        """
+        Отправка файлов в личку
+        :param account_limits: Лимит на аккаунты
+        """
         # Просим пользователя ввести расширение сообщения
         time_inviting = self.config_reader.get_time_inviting()
         time_inviting_1 = time_inviting[0]
@@ -202,6 +208,11 @@ class SendTelegramMessages:
             await client.disconnect()  # Разрываем соединение Telegram
 
     async def select_and_read_random_file(self, entities, folder):
+        """
+        Выбираем рандомный файл для чтения
+        :param entities: список файлов для чтения
+        :param folder: папка для сохранения файлов
+        """
         if entities:  # Проверяем, что список не пустой, если он не пустой
             # Выбираем рандомный файл для чтения
             random_file = random.choice(entities)  # Выбираем случайный файл для чтения из списка файлов

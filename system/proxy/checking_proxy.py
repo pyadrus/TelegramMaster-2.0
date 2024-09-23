@@ -9,7 +9,9 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 async def reading_proxy_data_from_the_database(db_handler):
     """Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
-    username - логин (например: username), password - пароль (например: password)"""
+    username - логин (например: username), password - пароль (например: password)
+    :param db_handler - объект класса DatabaseHandler
+    """
     try:
         proxy_random_list = random.choice(await db_handler.open_and_read_data("proxy"))
         logger.info(f"{proxy_random_list}")
@@ -43,7 +45,15 @@ async def checking_the_proxy_for_work() -> None:
 def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler) -> None:
     """Подключение к proxy с проверкой на работоспособность где: proxy_type - тип proxy (например: SOCKS5),
     addr - адрес (например: 194.67.248.9), port - порт (например: 9795), username - логин (например: username),
-    password - пароль (например: password)"""
+    password - пароль (например: password)
+    :param proxy_type: тип proxy (например: SOCKS5)
+    :param addr: адрес (например: 194.67.248.9)
+    :param port: порт (например: 9795)
+    :param username: логин (например: username)
+    :param password: пароль (например: password)
+    :param rdns: rdns (например: rdns)
+    :param db_handler: объект класса DatabaseHandler
+    """
     # Пробуем подключиться по прокси
     try:
         # Указываем параметры прокси

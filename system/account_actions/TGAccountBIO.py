@@ -77,7 +77,10 @@ class AccountBIO:
         self.function_button_ready(page, btn_click, user_input)
 
     async def change_bio_profile(self, user_input):
-        """Изменение описания профиля"""
+        """
+        Изменение описания профиля
+        :param user_input  - новое описание профиля Telegram
+        """
         logger.info(f"Запуск смены  описания профиля")
         for file in find_files(directory_path=self.directory_path, extension=self.extension):
             logger.info(f"{file[0]}")
@@ -108,7 +111,10 @@ class AccountBIO:
         self.function_button_ready(page, btn_click, user_input)
 
     async def change_name_profile(self, user_input):
-        """Изменение имени профиля"""
+        """
+        Изменение имени профиля
+        :param user_input  - новое имя пользователя
+        """
         for file in find_files(directory_path=self.directory_path, extension=self.extension):
             logger.info(f"{file[0]}")
             client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
@@ -132,7 +138,10 @@ class AccountBIO:
         self.function_button_ready(page, btn_click, user_input)
 
     async def change_last_name_profile(self, user_input):
-        """Изменение фамилии профиля"""
+        """
+        Изменение фамилии профиля
+        :param user_input  - новое имя пользователя Telegram
+        """
         for file in find_files(directory_path=self.directory_path, extension=self.extension):
             logger.info(f"{file[0]}")
             client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)

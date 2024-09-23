@@ -24,7 +24,7 @@ def read_json_file(filename):
 def all_find_files(directory_path) -> list:
     """
     Поиск файлов в директории.
-    :arg directory_path: - путь к директории
+    :param directory_path: - путь к директории
     :return list: - список имен найденных файлов
     """
 
@@ -68,7 +68,11 @@ def find_files(directory_path, extension) -> list:
 
 
 def working_with_accounts(account_folder, new_account_folder) -> None:
-    """Работа с аккаунтами"""
+    """
+    Работа с аккаунтами
+    :param account_folder: Путь к папке с аккаунтами
+    :param new_account_folder: Путь к папке с аккаунтами
+    """
     try:  # Переносим файлы в нужную папку
         os.replace(account_folder, new_account_folder)
     except FileNotFoundError:  # Если в папке нет нужной папки, то создаем ее
