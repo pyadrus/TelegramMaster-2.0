@@ -5,6 +5,8 @@ from quart import Quart, render_template
 
 app = Quart(__name__, template_folder='templates')
 
+program_version, date_of_program_change = "2.1.9", "23.09.2024"  # Версия программы, дата изменения
+
 
 @app.route('/')
 async def index():
@@ -14,10 +16,7 @@ async def index():
 @app.route('/menu')
 async def menu():
     """Меню программы"""
-    # Версия и дата обновления
-    program_version = "2.1.7"
-    update_date = "09.09.2024"
-    return await render_template('menu.html', program_version=program_version, update_date=update_date)
+    return await render_template('menu.html', program_version=program_version, update_date=date_of_program_change)
 
 
 @app.route('/inviting')

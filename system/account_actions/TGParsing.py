@@ -6,14 +6,8 @@ from telethon import types
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
-from telethon.tl.types import ChannelParticipantsSearch
-from telethon.tl.types import InputPeerEmpty
-from telethon.tl.types import UserStatusEmpty
-from telethon.tl.types import UserStatusLastMonth
-from telethon.tl.types import UserStatusLastWeek
-from telethon.tl.types import UserStatusOffline
-from telethon.tl.types import UserStatusOnline
-from telethon.tl.types import UserStatusRecently
+from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, UserStatusLastMonth,
+                               UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently)
 import flet as ft  # Импортируем библиотеку flet
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram

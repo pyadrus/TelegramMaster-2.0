@@ -7,8 +7,9 @@ import time
 
 from loguru import logger
 from telethon import events
-from telethon.errors import ChannelPrivateError, PeerFloodError, FloodWaitError, UserBannedInChannelError, \
-    ChatWriteForbiddenError, UserNotMutualContactError, UserIdInvalidError, UsernameNotOccupiedError, UsernameInvalidError
+from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError, UserBannedInChannelError,
+                             ChatWriteForbiddenError, UserNotMutualContactError, UserIdInvalidError,
+                             UsernameNotOccupiedError, UsernameInvalidError)
 from telethon.tl.functions.channels import JoinChannelRequest
 
 from system.account_actions.TGConnect import TGConnect
@@ -138,7 +139,8 @@ class SendTelegramMessages:
                     for file in all_find_files(directory_path="user_settings/files_to_send"):
                         await client.send_file(groups[0], f"user_settings/files_to_send/{file}")
                         # Работу записываем в лог файл, для удобства слежения, за изменениями
-                        logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
+                        logger.error(
+                            f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
                 except ChannelPrivateError:
                     logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} 
@@ -277,7 +279,8 @@ class SendTelegramMessages:
                     await client.send_message(chat[0], f'{data}')
                     logger.info(f'Сообщение {data} отправлено в чат {chat[0]}')
                 except UserBannedInChannelError:
-                    logger.error('Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
+                    logger.error(
+                        'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
                 await self.random_dream()  # Прерываем работу и меняем аккаунт
 
             await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента

@@ -4,8 +4,8 @@ import random
 import time
 
 from loguru import logger
-from telethon.errors import ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError, \
-    FloodWaitError, InviteRequestSentError
+from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
+                             FloodWaitError, InviteRequestSentError)
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 

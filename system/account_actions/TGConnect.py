@@ -57,7 +57,7 @@ class TGConnect:
                                       new_account_folder=f"user_settings/accounts/invalid_account/{session_name.split('/')[-1]}.session")
                 time.sleep(1)
                 return  # Возвращаемся из функции, так как аккаунт не авторизован
-            await telegram_client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+            await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
         except AttributeError as e:
             logger.info(f"{e}")
         except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound, sqlite3.DatabaseError,
@@ -95,7 +95,7 @@ class TGConnect:
                                                           "несмотря на ограничения.")
                     if similarity_ratio_ru >= 97:
                         logger.info('⛔ Аккаунт заблокирован')
-                        await telegram_client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+                        await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                         logger.info(f"Проверка аккаунтов через SpamBot. {session_file[0]}: {message.message}")
                         # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                         working_with_accounts(
@@ -112,7 +112,7 @@ class TGConnect:
                                                           "contact you first, you can always reply to them.")
                     if similarity_ratio_en >= 97:
                         logger.info('⛔ Аккаунт заблокирован')
-                        await telegram_client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+                        await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                         logger.error(f"Проверка аккаунтов через SpamBot. {session_file[0]}: {message.message}")
                         # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                         logger.info(session_file[0])
@@ -207,13 +207,13 @@ class TGConnect:
         :return TelegramClient: TelegramClient
         """
         logger.info(
-            f"Подключение к аккаунту: {account_directory}/{file[0]}")  # Получаем имя файла сессии file[0] - session файл
+            f"Подключение к аккаунту: {account_directory}/{file[0]}")  # Имя файла сессии file[0] - session файл
         telegram_client = await self.connect_to_telegram(file[0], account_directory)
         try:
             await telegram_client.connect()
             return telegram_client
         except AuthKeyDuplicatedError:
-            await telegram_client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+            await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
             logger.info(f"На данный момент аккаунт {file[0].split('/')[-1]} запущен под другим ip")
             working_with_accounts(account_folder=f"{account_directory}/{file[0].split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{file[0].split('/')[-1]}.session")

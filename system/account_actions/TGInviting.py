@@ -2,10 +2,11 @@
 import time
 
 from loguru import logger
-from telethon.errors import AuthKeyDuplicatedError, PeerFloodError, FloodWaitError, UserPrivacyRestrictedError, \
-    UserChannelsTooMuchError, BotGroupsBlockedError, ChatWriteForbiddenError, UserBannedInChannelError, \
-    UserNotMutualContactError, ChatAdminRequiredError, UserKickedError, ChannelPrivateError, UserIdInvalidError, \
-    UsernameNotOccupiedError, UsernameInvalidError, InviteRequestSentError, TypeNotFoundError
+from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitError, UserPrivacyRestrictedError,
+                             UserChannelsTooMuchError, BotGroupsBlockedError, ChatWriteForbiddenError,
+                             UserBannedInChannelError, UserNotMutualContactError, ChatAdminRequiredError,
+                             UserKickedError, ChannelPrivateError, UserIdInvalidError, UsernameNotOccupiedError,
+                             UsernameInvalidError, InviteRequestSentError, TypeNotFoundError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
 from system.account_actions.TGConnect import TGConnect
@@ -40,7 +41,8 @@ class InvitingToAGroup:
         """Инвайтинг без лимитов"""
         logger.info(f"Запуск инвайтинга без лимитов")
         for file in find_files(directory_path="user_settings/accounts/inviting", extension='session'):
-            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/inviting")
+            client = await self.tg_connect.get_telegram_client(file,
+                                                               account_directory="user_settings/accounts/inviting")
             """Получение ссылки для инвайтинга"""
             for link in await self.getting_an_invitation_link_from_the_database():
                 logger.info(f"{link[0]}")
@@ -53,7 +55,7 @@ class InvitingToAGroup:
                 if len(number_usernames) == 0:
                     logger.info(f"В таблице members нет пользователей для инвайтинга")
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, link[0])
-                    break   # Прерываем работу и меняем аккаунт
+                    break  # Прерываем работу и меняем аккаунт
 
                 for username in number_usernames:
                     logger.info(f"Пользователь username:{username[0]}")

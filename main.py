@@ -6,29 +6,28 @@ import webbrowser
 import flet as ft
 from loguru import logger
 
-from docs.app import run_quart
+from docs.app import run_quart, program_version, date_of_program_change
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
 from system.account_actions.TGCreating import CreatingGroupsAndChats
 from system.account_actions.TGInviting import InvitingToAGroup
-from system.account_actions.TGInvitingScheduler import launching_an_invite_once_an_hour, \
-    launching_invite_every_day_certain_time, schedule_invite
+from system.account_actions.TGInvitingScheduler import (launching_an_invite_once_an_hour,
+                                                        launching_invite_every_day_certain_time, schedule_invite)
 from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files, find_folders
 from system.auxiliary_functions.global_variables import ConfigReader
-from system.menu_gui.menu_gui import line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu, \
-    bio_editing_menu, settings_menu, menu_parsing, reactions_menu, subscribe_and_unsubscribe_menu
+from system.menu_gui.menu_gui import (line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu,
+                                      bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
+                                      subscribe_and_unsubscribe_menu)
 from system.setting.setting import SettingPage, get_unique_filename
 from system.setting.setting import reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
-
-program_version, date_of_program_change = "2.1.8", "13.09.2024"  # Версия программы, дата изменения
 
 
 async def main():
@@ -156,9 +155,12 @@ def telegram_master_main(page: ft.Page):
             await WorkingWithReactions().viewing_posts()
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             await WorkingWithReactions().setting_reactions()  # Автоматическое выставление реакций
+
         elif page.route == "/parsing":  # Меню "Парсинг"
             await menu_parsing(page)
+
         elif page.route == "/parsing_single_groups":  # Парсинг одной группы / групп
+
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Парсинг начался")
@@ -167,12 +169,40 @@ def telegram_master_main(page: ft.Page):
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
             logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы из подписанных пользователем
+
+            start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+            logger.info('Время старта: ' + str(start))
+            logger.info("▶️ Парсинг начался")
             await ParsingGroupMembers().choose_and_parse_group(page)
+            logger.info("🔚 Парсинг завершен")
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            logger.info('Время окончания: ' + str(finish))
+            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
+
+            start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+            logger.info('Время старта: ' + str(start))
+            logger.info("▶️ Парсинг начался")
             await ParsingGroupMembers().entering_data_for_parsing_active(page)
+            logger.info("🔚 Парсинг завершен")
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            logger.info('Время окончания: ' + str(finish))
+            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов на которые подписан аккаунт
+
+            start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+            logger.info('Время старта: ' + str(start))
+            logger.info("▶️ Парсинг начался")
             await ParsingGroupMembers().parse_subscribed_groups()
+            logger.info("🔚 Парсинг завершен")
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            logger.info('Время окончания: ' + str(finish))
+            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db(name_database_table="members")
         elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"

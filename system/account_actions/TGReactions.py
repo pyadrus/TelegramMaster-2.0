@@ -12,8 +12,7 @@ import flet as ft  # Импортируем библиотеку flet
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGLimits import SettingLimits
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_files
-from system.auxiliary_functions.auxiliary_functions import read_json_file
+from system.auxiliary_functions.auxiliary_functions import find_files, read_json_file
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 

@@ -5,8 +5,8 @@ import time
 from loguru import logger
 from telethon import functions
 from telethon import types
-from telethon.tl.types import UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, \
-    UserStatusOnline, UserStatusEmpty
+from telethon.tl.types import (UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth,
+                               UserStatusOnline, UserStatusEmpty)
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_files

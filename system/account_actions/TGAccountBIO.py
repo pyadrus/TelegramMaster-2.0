@@ -2,8 +2,8 @@
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
-from telethon.errors import AuthKeyUnregisteredError, UsernamePurchaseAvailableError, UsernameOccupiedError, \
-    UsernameInvalidError
+from telethon.errors import (AuthKeyUnregisteredError, UsernamePurchaseAvailableError, UsernameOccupiedError,
+                             UsernameInvalidError)
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_files
