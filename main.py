@@ -28,6 +28,7 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
 
+
 async def log_and_execute_with_args(task_name, execute_method, *args, **kwargs):
     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
     logger.info(f'Время старта: {start}')
@@ -190,7 +191,8 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/parsing_selected_group_user_subscribed":
             await log_and_parse("Парсинг выбранной группы", ParsingGroupMembers().choose_and_parse_group, page)
         elif page.route == "/parsing_active_group_members":
-            await log_and_parse("Парсинг активных участников группы", ParsingGroupMembers().entering_data_for_parsing_active, page)
+            await log_and_parse("Парсинг активных участников группы",
+                                ParsingGroupMembers().entering_data_for_parsing_active, page)
         elif page.route == "/parsing_groups_channels_account_subscribed":
             await log_and_parse("Парсинг групп / каналов аккаунта", ParsingGroupMembers().parse_subscribed_groups)
         elif page.route == "/clearing_list_previously_saved_data":
@@ -210,29 +212,27 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/adding_contacts":
             await log_and_parse("Добавление контактов", TGContact().inviting_contact)
         elif page.route == "/connecting_accounts":
-            await log_and_parse("Подключение новых аккаунтов, методом ввода нового номера телефона", TGConnect().start_telegram_session, page)
+            await log_and_parse("Подключение новых аккаунтов, методом ввода нового номера телефона",
+                                TGConnect().start_telegram_session, page)
         elif page.route == "/creating_groups":
             await log_and_parse("Создание групп (чатов)", CreatingGroupsAndChats().creating_groups_and_chats)
 
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             await message_distribution_menu(page)
-        elif page.route == "/sending_messages_personal_account":  # Отправка сообщений в личку
-            logger.info(f"Лимит на аккаунт (без ограничений)") # TODO удалить любое упоминание о лимитах
-            await SendTelegramMessages().send_message_from_all_accounts(account_limits=None)
-        elif page.route == "/sending_files_personal_account":  # Отправка файлов в личку
-            logger.info(f"Лимит на аккаунт (без ограничений)")
-            await SendTelegramMessages().send_files_to_personal_chats(account_limits=None)
+
         elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
             entities = find_files(directory_path="user_settings/message", extension="json")
             logger.info(entities)
             await SendTelegramMessages().sending_messages_via_chats_times()
 
         elif page.route == "/sending_messages_via_chats_with_answering_machine":
-            await log_and_parse("Рассылка сообщений по чатам с автоответчиком", SendTelegramMessages().answering_machine)
+            await log_and_parse("Рассылка сообщений по чатам с автоответчиком",
+                                SendTelegramMessages().answering_machine)
         elif page.route == "/sending_files_via_chats":
             await log_and_parse("Рассылка файлов по чатам", SendTelegramMessages().sending_files_via_chats)
         elif page.route == "/sending_messages_files_via_chats":
-            await log_and_parse("Рассылка сообщений + файлов по чатам", SendTelegramMessages().sending_messages_files_via_chats)
+            await log_and_parse("Рассылка сообщений + файлов по чатам",
+                                SendTelegramMessages().sending_messages_files_via_chats)
 
         elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
             await SendTelegramMessages().send_message_from_all_accounts(account_limits=ConfigReader().get_limits())
@@ -268,17 +268,18 @@ def telegram_master_main(page: ft.Page):
                                                  "username, id, access_hash, first_name, last_name, "
                                                  "user_phone, online_at, photos_id, user_premium",
                                                  "/settings", "members (username)")
+
         elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
-            await DatabaseHandler().open_and_read_data("writing_group_links")  # Удаление списка с контактами TODO посмотреть различие в функциях
             SettingPage().output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
                                                  "writing_group_links", "/settings", "writing_group_links")
         elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
-            await DatabaseHandler().cleaning_db("links_inviting")  # Удаление списка с группами TODO посмотреть различие в функциях
+            await DatabaseHandler().cleaning_db("links_inviting")  # Удаление списка с группами
             SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга", "links_inviting",
                                                  "links_inviting", "/settings", "links_inviting")
 
         elif page.route == "/proxy_entry":
-            await log_and_parse("Запись времени между сообщениями", SettingPage().creating_the_main_window_for_proxy_data_entry, page)
+            await log_and_parse("Запись времени между сообщениями",
+                                SettingPage().creating_the_main_window_for_proxy_data_entry, page)
         elif page.route == "/message_recording":  # Запись сообщений
             SettingPage().recording_text_for_sending_messages(page, "Введите ссылку на группу",
                                                               get_unique_filename(
@@ -297,7 +298,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/changing_accounts":  # Смена аккаунтов
             SettingPage().create_main_window(page, variable="time_changing_accounts")
 
-        elif page.route == "/time_between_subscriptions":
+        elif page.route == "/time_between_subscriptions":  # TODO проверить на повторное использование
             await log_and_parse("Запись времени", SettingPage().recording_the_time_to_launch_an_invite_every_day, page)
 
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской

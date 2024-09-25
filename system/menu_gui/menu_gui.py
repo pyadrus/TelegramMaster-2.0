@@ -89,10 +89,6 @@ async def message_distribution_menu(page):
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     ft.ElevatedButton(width=line_width, height=30, text="Отправка сообщений в личку",
-                                       on_click=lambda _: page.go("/sending_messages_personal_account")),
-                     ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку",
-                                       on_click=lambda _: page.go("/sending_files_personal_account")),
                      ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений по чатам",
                                        on_click=lambda _: page.go("/sending_messages_via_chats")),
                      ft.ElevatedButton(width=line_width, height=30,
@@ -103,10 +99,11 @@ async def message_distribution_menu(page):
                                        on_click=lambda _: page.go("/sending_files_via_chats")),
                      ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений + файлов по чатам",
                                        on_click=lambda _: page.go("/sending_messages_files_via_chats")),
+
                      ft.ElevatedButton(width=line_width, height=30,
-                                       text="Отправка сообщений в личку (с лимитами)",
+                                       text="Отправка сообщений в личку",
                                        on_click=lambda _: page.go("/sending_personal_messages_with_limits")),
-                     ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку (с лимитами)",
+                     ft.ElevatedButton(width=line_width, height=30, text="Отправка файлов в личку",
                                        on_click=lambda _: page.go(
                                            "/sending_files_to_personal_account_with_limits")),
                  ])]))
