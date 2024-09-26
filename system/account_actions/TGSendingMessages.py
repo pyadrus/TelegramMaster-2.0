@@ -7,8 +7,9 @@ import time
 
 from loguru import logger
 from telethon import events
-from telethon.errors import ChannelPrivateError, PeerFloodError, FloodWaitError, UserBannedInChannelError, \
-    ChatWriteForbiddenError, UserNotMutualContactError, UserIdInvalidError, UsernameNotOccupiedError, UsernameInvalidError
+from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError, UserBannedInChannelError,
+                             ChatWriteForbiddenError, UserNotMutualContactError, UserIdInvalidError,
+                             UsernameNotOccupiedError, UsernameInvalidError)
 from telethon.tl.functions.channels import JoinChannelRequest
 
 from system.account_actions.TGConnect import TGConnect
@@ -20,9 +21,8 @@ from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
-configs_reader = ConfigReader()
-time_sending_messages_1, time_sending_messages_2 = configs_reader.get_time_sending_messages()
-time_subscription_1, time_subscription_2 = configs_reader.get_time_subscription()
+time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_sending_messages()
+time_subscription_1, time_subscription_2 = ConfigReader().get_time_subscription()
 
 
 class SendTelegramMessages:
@@ -36,7 +36,10 @@ class SendTelegramMessages:
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
     async def send_message_from_all_accounts(self, account_limits) -> None:
-        """Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных."""
+        """
+        Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
+        :param account_limits: Лимит на аккаунты
+        """
         time_inviting = self.config_reader.get_time_inviting()
         time_inviting_1 = time_inviting[0]
         time_inviting_2 = time_inviting[1]
@@ -82,14 +85,15 @@ class SendTelegramMessages:
                 sys.exit(1)
 
     async def send_files_to_personal_chats(self, account_limits) -> None:
-        """Отправка файлов в личку"""
+        """
+        Отправка файлов в личку
+        :param account_limits: Лимит на аккаунты
+        """
         # Просим пользователя ввести расширение сообщения
         time_inviting = self.config_reader.get_time_inviting()
         time_inviting_1 = time_inviting[0]
         time_inviting_2 = time_inviting[1]
-        entitiess = all_find_files(directory_path="user_settings/files_to_send")
-        entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/send_message", extension='session'):
             client = await self.tg_connect.get_telegram_client(file,
                                                                account_directory="user_settings/accounts/send_message")
             try:
@@ -103,7 +107,7 @@ class SendTelegramMessages:
                     logger.info(f"[!] Отправляем сообщение: {username}")
                     try:
                         user_to_add = await client.get_input_entity(username)
-                        for files in entitiess:
+                        for files in all_find_files(directory_path="user_settings/files_to_send"):
                             await client.send_file(user_to_add, f"user_settings/files_to_send/{files}")
                             logger.info(f"""Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю 
                                              {username}.""")
@@ -130,8 +134,7 @@ class SendTelegramMessages:
     async def sending_files_via_chats(self) -> None:
         """Рассылка файлов по чатам (docs/Рассылка_сообщений/⛔️ Рассылка_файлов_по_чатам.html)"""
         # Спрашиваем у пользователя, через какое время будем отправлять сообщения
-        entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
-        for files in entities:
+        for files in find_files(directory_path="user_settings/accounts/send_message", extension='session'):
             client = await self.tg_connect.get_telegram_client(files,
                                                                account_directory="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
@@ -139,11 +142,11 @@ class SendTelegramMessages:
             for groups in records:  # Поочередно выводим записанные группы
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
                 try:
-                    entities = all_find_files(directory_path="user_settings/files_to_send")
-                    for file in entities:
+                    for file in all_find_files(directory_path="user_settings/files_to_send"):
                         await client.send_file(groups[0], f"user_settings/files_to_send/{file}")
                         # Работу записываем в лог файл, для удобства слежения, за изменениями
-                        logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
+                        logger.error(
+                            f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
                 except ChannelPrivateError:
                     logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} 
@@ -167,8 +170,7 @@ class SendTelegramMessages:
 
     async def sending_messages_files_via_chats(self) -> None:
         """Рассылка сообщений + файлов по чатам"""
-        entitiess = find_files(directory_path="user_settings/accounts/send_message", extension='session')
-        for files in entitiess:
+        for files in find_files(directory_path="user_settings/accounts/send_message", extension='session'):
             client = await self.tg_connect.get_telegram_client(files,
                                                                account_directory="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
@@ -206,6 +208,11 @@ class SendTelegramMessages:
             await client.disconnect()  # Разрываем соединение Telegram
 
     async def select_and_read_random_file(self, entities, folder):
+        """
+        Выбираем рандомный файл для чтения
+        :param entities: список файлов для чтения
+        :param folder: папка для сохранения файлов
+        """
         if entities:  # Проверяем, что список не пустой, если он не пустой
             # Выбираем рандомный файл для чтения
             random_file = random.choice(entities)  # Выбираем случайный файл для чтения из списка файлов
@@ -215,8 +222,7 @@ class SendTelegramMessages:
 
     async def sending_messages_via_chats_times(self) -> None:
         """Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)"""
-        entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/send_message", extension='session'):
             client = await self.tg_connect.get_telegram_client(file,
                                                                account_directory="user_settings/accounts/send_message")
             records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
@@ -251,15 +257,13 @@ class SendTelegramMessages:
 
     async def random_dream(self):
         """Рандомный сон"""
-        selected_shift_time = random.randrange(time_sending_messages_1, time_sending_messages_2)
-        time_in_seconds = selected_shift_time * 60
+        time_in_seconds = random.randrange(time_sending_messages_1, time_sending_messages_2) * 60
         logger.info(f'Спим {time_in_seconds / 60} минуты / минут...')
         await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
 
     async def answering_machine(self):
         """Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)"""
-        entities = find_files(directory_path="user_settings/accounts/answering_machine", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/answering_machine", extension='session'):
             client = await self.tg_connect.get_telegram_client(file,
                                                                account_directory="user_settings/accounts/answering_machine")
 
@@ -286,7 +290,8 @@ class SendTelegramMessages:
                     await client.send_message(chat[0], f'{data}')
                     logger.info(f'Сообщение {data} отправлено в чат {chat[0]}')
                 except UserBannedInChannelError:
-                    logger.error('Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
+                    logger.error(
+                        'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
                 await self.random_dream()  # Прерываем работу и меняем аккаунт
 
             await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента

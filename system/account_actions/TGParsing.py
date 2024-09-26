@@ -6,14 +6,8 @@ from telethon import types
 from telethon.tl.functions.channels import GetFullChannelRequest  # Не удалять
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
-from telethon.tl.types import ChannelParticipantsSearch
-from telethon.tl.types import InputPeerEmpty
-from telethon.tl.types import UserStatusEmpty
-from telethon.tl.types import UserStatusLastMonth
-from telethon.tl.types import UserStatusLastWeek
-from telethon.tl.types import UserStatusOffline
-from telethon.tl.types import UserStatusOnline
-from telethon.tl.types import UserStatusRecently
+from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, UserStatusLastMonth,
+                               UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently)
 import flet as ft  # Импортируем библиотеку flet
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -33,8 +27,7 @@ class ParsingGroupMembers:
 
     async def parse_groups(self) -> None:
         """Парсинг групп"""
-        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
 
             # Открываем базу с группами для дальнейшего parsing
@@ -54,11 +47,12 @@ class ParsingGroupMembers:
         """
         Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
         @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
+        :param client: клиент Telegram
+        :param groups_wr: ссылка на группу
         """
-        all_participants: list = await self.parse_users(client, groups_wr)
         logger.info(f"[+] Спарсили данные с группы {groups_wr}")
         # Записываем parsing данные в файл user_settings/software_database.db
-        entities: list = await self.get_all_participants(all_participants)
+        entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr))
         await self.db_handler.write_parsed_chat_participants_to_db(entities)
 
     async def parse_active_users(self, chat_input, limit_active_user) -> None:
@@ -67,8 +61,7 @@ class ParsingGroupMembers:
         :param chat_input: ссылка на чат
         :param limit_active_user: лимит активных участников
         """
-        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
 
             await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat_input)
@@ -83,8 +76,7 @@ class ParsingGroupMembers:
     async def parse_subscribed_groups(self) -> None:
         """Parsing групп / каналов на которые подписан аккаунт и сохраняем в файл software_database.db"""
         # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
             # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
             logger.info("""Parsing групп / каналов на которые подписан аккаунт""")
@@ -111,8 +103,7 @@ class ParsingGroupMembers:
 
     async def choose_and_parse_group(self, page: ft.Page) -> None:
         """Выбираем группу из подписанных и запускаем парсинг"""
-        entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
             chats: list = []
             last_date = None
@@ -162,7 +153,10 @@ class ParsingGroupMembers:
             page.update()  # Обновляем страницу, чтобы отобразить новый вид
 
     async def parse_users(self, client, target_group) -> list:
-        """Собираем данные user и записываем в файл members.db (создание нового файла members.db)"""
+        """
+        Собираем данные user и записываем в файл members.db (создание нового файла members.db)
+        :param client: клиент Telegram
+        :param target_group: группа / канал"""
 
         logger.info("[+] Ищем участников... Сохраняем в файл software_database.db...")
 
@@ -188,14 +182,22 @@ class ParsingGroupMembers:
         return all_participants
 
     async def get_all_participants(self, all_participants) -> list:
-        """Формируем список user_settings/software_database.db"""
+        """
+        Формируем список user_settings/software_database.db
+        :param all_participants: список пользователей
+        :return: список пользователей
+        """
         entities: list = []  # Создаем словарь
         for user in all_participants:
             await self.get_user_data(user, entities)
         return entities  # Возвращаем словарь пользователей
 
     async def get_user_data(self, user, entities) -> None:
-        """Получаем данные пользователя"""
+        """
+        Получаем данные пользователя
+        :param user: пользователь
+        :param entities: список пользователей
+        """
         username = user.username if user.username else "NONE"
         user_phone = user.phone if user.phone else "Номер телефона скрыт"
         first_name = user.first_name if user.first_name else ""
@@ -226,7 +228,10 @@ class ParsingGroupMembers:
              user_premium])
 
     async def get_active_user_data(self, user):
-        """Получаем данные пользователя"""
+        """
+        Получаем данные пользователя
+        :param user: пользователь
+        """
         username = user.username if user.username else "NONE"
         user_phone = user.phone if user.phone else "Номер телефона скрыт"
         first_name = user.first_name if user.first_name else ""
@@ -259,7 +264,10 @@ class ParsingGroupMembers:
         return entity
 
     async def forming_a_list_of_groups(self, client) -> None:
-        """Формируем список групп"""
+        """
+        Формируем список групп
+        :param client: клиент
+        """
         async for dialog in client.iter_dialogs():
             try:
                 dialog_id = dialog.id

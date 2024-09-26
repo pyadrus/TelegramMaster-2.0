@@ -12,8 +12,7 @@ import flet as ft  # Импортируем библиотеку flet
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGLimits import SettingLimits
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_files
-from system.auxiliary_functions.auxiliary_functions import read_json_file
+from system.auxiliary_functions.auxiliary_functions import find_files, read_json_file
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -22,7 +21,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
     def __init__(self):
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
-        self.limits_class = SettingLimits()
+        # self.limits_class = SettingLimits()  # TODO проверить на использование в коде
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
     async def send_reaction_request(self, page: ft.Page) -> None:
@@ -100,7 +99,11 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         return random_value
 
     async def reactions_for_groups_and_messages_test(self, number, chat) -> None:
-        """Вводим ссылку на группу и ссылку на сообщение"""
+        """
+        Вводим ссылку на группу и ссылку на сообщение
+        :param number: Ссылка на сообщение
+        :param chat: Ссылка на группу
+        """
         entities = find_files(directory_path="user_settings/accounts/reactions_list", extension='session')
         for file in entities:
             client = await self.tg_connect.get_telegram_client(file,

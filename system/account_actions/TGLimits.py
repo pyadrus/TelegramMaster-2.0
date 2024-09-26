@@ -11,7 +11,11 @@ class SettingLimits:
         self.db_handler = DatabaseHandler()
 
     async def get_usernames_with_limits(self, table_name, account_limits) -> list:
-        """Получение списка пользователей из базы данных с учетом лимитов"""
+        """
+        Получение списка пользователей из базы данных с учетом лимитов
+        :param table_name: название таблицы
+        :param account_limits: лимиты на аккаунт
+        """
         logger.info(f"Лимит на аккаунт: {account_limits}")
         number_usernames: list = await self.db_handler.open_db_func_lim(table_name=table_name,
                                                                         account_limit=account_limits)

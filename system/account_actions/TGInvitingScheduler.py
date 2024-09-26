@@ -7,18 +7,14 @@ from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGInviting import InvitingToAGroup
 from system.auxiliary_functions.global_variables import ConfigReader
 
-configs_reader = ConfigReader()
-hour, minutes = configs_reader.get_hour_minutes_every_day()
+hour, minutes = ConfigReader().get_hour_minutes_every_day()
 
 
 async def schedule_member_invitation() -> None:
     """Запуск inviting"""
-    Tg_Connect = TGConnect()
-    await Tg_Connect.verify_account(account_directory="user_settings/accounts/inviting", session_name="session")  # Вызываем метод для проверки аккаунтов
-    inviting_to_a_group = InvitingToAGroup()
-    config_reader = ConfigReader()
-    account_limits = config_reader.get_limits()
-    await inviting_to_a_group.inviting_without_limits(account_limits=account_limits)
+    await TGConnect().verify_account(account_directory="user_settings/accounts/inviting",
+                                     session_name="session")  # Вызываем метод для проверки аккаунтов
+    await InvitingToAGroup().inviting_without_limits(account_limits=ConfigReader().get_limits())
 
 
 async def run_scheduler():
@@ -43,17 +39,9 @@ def launching_an_invite_once_an_hour() -> None:
 
 def schedule_invite() -> None:
     """Запуск автоматической отправки приглашений участникам"""
-    # Вводим час запуска программы в формате 03, 06, 23
-    logger.info("Введите часы (Пример: 02, 03, 06): ")
-    # TODO: Убрать input() в коде
-    hour_user: str = input("")
-    # Вводим минуты запуска программы в формате 15, 25, 35
-    logger.info("Введите минуты (Пример: 02, 25, 59): ")
-    # TODO: Убрать input() в коде
-    minute_user: str = input("")
-    logger.info(f"Скрипт будет запускаться каждый день в {hour_user}:{minute_user}")
+    logger.info(f"Скрипт будет запускаться каждый день в {hour}:{minutes}")
     # Запускаем автоматизацию
-    schedule.every().day.at(f"{hour_user}:{minute_user}").do(
+    schedule.every().day.at(f"{hour}:{minutes}").do(
         lambda: asyncio.ensure_future(schedule_member_invitation()))
     asyncio.ensure_future(run_scheduler())
 

@@ -30,15 +30,15 @@ class TGConnect:
 
     async def connect_to_telegram(self, session, account_directory) -> TelegramClient:
         """
-        Создает клиент для подключения к Telegram.
+        Создает клиент для подключения к Telegram. Proxy IPV6 - НЕ РАБОТАЮТ.
         :param session: Имя сессии
         :param account_directory: Путь к директории
         :return TelegramClient: TelegramClient
         """
         logger.info(f"Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
-        proxy_settings = await reading_proxy_data_from_the_database(self.db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
         telegram_client = TelegramClient(f"{account_directory}/{session}", api_id=self.api_id, api_hash=self.api_hash,
-                                         system_version="4.16.30-vxCUSTOM", proxy=proxy_settings)
+                                         system_version="4.16.30-vxCUSTOM",
+                                         proxy=await reading_proxy_data_from_the_database(self.db_handler))
         return telegram_client
 
     async def verify_account(self, account_directory, session_name) -> None:
@@ -57,7 +57,7 @@ class TGConnect:
                                       new_account_folder=f"user_settings/accounts/invalid_account/{session_name.split('/')[-1]}.session")
                 time.sleep(1)
                 return  # Возвращаемся из функции, так как аккаунт не авторизован
-            await telegram_client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+            await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
         except AttributeError as e:
             logger.info(f"{e}")
         except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound, sqlite3.DatabaseError,
@@ -76,14 +76,12 @@ class TGConnect:
         Проверка аккаунта на спам через @SpamBot
         :param folder_name: папка с аккаунтами
         """
-        session_files = find_files(directory_path=f"user_settings/accounts/{folder_name}", extension='session')
-        for session_file in session_files:
+        for session_file in find_files(directory_path=f"user_settings/accounts/{folder_name}", extension='session'):
             telegram_client = await self.get_telegram_client(session_file,
                                                              account_directory=f"user_settings/accounts/{folder_name}")
             try:
                 await telegram_client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
-                messages = await telegram_client.get_messages('SpamBot')
-                for message in messages:
+                for message in await telegram_client.get_messages('SpamBot'):
                     logger.info(f"{session_file} {message.message}")
                     similarity_ratio_ru: int = fuzz.ratio(f"{message.message}",
                                                           "Очень жаль, что Вы с этим столкнулись. К сожалению, "
@@ -97,7 +95,7 @@ class TGConnect:
                                                           "несмотря на ограничения.")
                     if similarity_ratio_ru >= 97:
                         logger.info('⛔ Аккаунт заблокирован')
-                        await telegram_client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+                        await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                         logger.info(f"Проверка аккаунтов через SpamBot. {session_file[0]}: {message.message}")
                         # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                         working_with_accounts(
@@ -114,7 +112,7 @@ class TGConnect:
                                                           "contact you first, you can always reply to them.")
                     if similarity_ratio_en >= 97:
                         logger.info('⛔ Аккаунт заблокирован')
-                        await telegram_client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+                        await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                         logger.error(f"Проверка аккаунтов через SpamBot. {session_file[0]}: {message.message}")
                         # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                         logger.info(session_file[0])
@@ -137,8 +135,7 @@ class TGConnect:
         logger.info(f"Запуск проверки аккаунтов Telegram из папки 📁: {account_directory}")
         await checking_the_proxy_for_work()  # Проверка proxy
         # Сканирование каталога с аккаунтами
-        session_files = find_files(account_directory, extension)
-        for session_file in session_files:
+        for session_file in find_files(account_directory, extension):
             logger.info(f"⚠️ Проверяемый аккаунт: {account_directory}/{session_file[0]}")
             # Проверка аккаунтов
             await self.verify_account(account_directory, session_file[0])
@@ -209,13 +206,14 @@ class TGConnect:
         :param file: Файл сессии (file[0] - session файл)
         :return TelegramClient: TelegramClient
         """
-        logger.info(f"Подключение к аккаунту: {account_directory}/{file[0]}")  # Получаем имя файла сессии file[0] - session файл
+        logger.info(
+            f"Подключение к аккаунту: {account_directory}/{file[0]}")  # Имя файла сессии file[0] - session файл
         telegram_client = await self.connect_to_telegram(file[0], account_directory)
         try:
             await telegram_client.connect()
             return telegram_client
         except AuthKeyDuplicatedError:
-            await telegram_client.disconnect()  # Отключаемся от аккаунта, что бы session файл не был занят другим процессом
+            await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
             logger.info(f"На данный момент аккаунт {file[0].split('/')[-1]} запущен под другим ip")
             working_with_accounts(account_folder=f"{account_directory}/{file[0].split('/')[-1]}.session",
                                   new_account_folder=f"user_settings/accounts/invalid_account/{file[0].split('/')[-1]}.session")
@@ -249,7 +247,7 @@ class TGConnect:
                         telegram_client.disconnect()
                         page.go("/settings")  # Перенаправление в настройки, если 2FA не требуется
                         page.update()
-                    except SessionPasswordNeededError:# Если аккаунт защищен паролем, запрашиваем пароль
+                    except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
                         logger.info("Требуется двухфакторная аутентификация. Введите пароль.")
                         pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
 
@@ -283,8 +281,8 @@ class TGConnect:
 
         button = ft.ElevatedButton("Готово", on_click=btn_click)
 
-        input_view = ft.View(controls=[phone_number, button])# Создаем вид, который будет содержать поле ввода и кнопку
+        input_view = ft.View(
+            controls=[phone_number, button])  # Создаем вид, который будет содержать поле ввода и кнопку
 
-        page.views.append(input_view)# Добавляем созданный вид на страницу
+        page.views.append(input_view)  # Добавляем созданный вид на страницу
         page.update()
-

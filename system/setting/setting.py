@@ -84,7 +84,7 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [limits], btn_click)
 
-    def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
+    async def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
         """Запись времени для запуска inviting в определенное время"""
         hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
         minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
@@ -140,7 +140,7 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click)
 
-    def writing_api_id_api_hash(self, page: ft.Page):
+    async def writing_api_id_api_hash(self, page: ft.Page):
         """Записываем api, hash полученный с помощью регистрации приложения на сайте https://my.telegram.org/auth"""
         api_id_data = ft.TextField(label="Введите api_id", multiline=True, max_lines=19)
         api_hash_data = ft.TextField(label="Введите api_hash", multiline=True, max_lines=19)
@@ -212,7 +212,7 @@ def get_unique_filename(base_filename):
         index += 1
 
 
-def reaction_gui(page: ft.Page):
+async def reaction_gui(page: ft.Page):
     """Выбираем реакцию с помощью чекбокса"""
     t = ft.Text(value='Выберите реакцию')  # Создает текстовое поле (t).
     c1 = ft.Checkbox(label="😀")  # Создает чекбокс c1 с меткой "😀".
@@ -279,8 +279,14 @@ def reaction_gui(page: ft.Page):
                                 path_to_the_file='user_settings/reactions/reactions.json')  # Сохраняем реакцию в json файл
         page.go("/settings")  # Изменение маршрута в представлении существующих настроек
 
+    def back_button_clicked(e):
+        """Кнопка возврата в меню настроек"""
+        page.go("/settings")
+
+
     # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
     button = ft.ElevatedButton("Готово", on_click=button_clicked)
+    button_back = ft.ElevatedButton("Назад", on_click=back_button_clicked)
 
     page.views.append(
         ft.View(
@@ -297,7 +303,7 @@ def reaction_gui(page: ft.Page):
                     ft.Row([c12, c13, c14, c15, c16, c17, c18]),
                     ft.Row([c40, c22, c34, c35, c48, c49]),
                 ]),
-                button,  # Добавляет кнопку на страницу (page).
+                button, button_back  # Добавляет кнопку на страницу (page).
             ]
         )
     )

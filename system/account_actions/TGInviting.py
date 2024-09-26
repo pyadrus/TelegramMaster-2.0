@@ -2,10 +2,11 @@
 import time
 
 from loguru import logger
-from telethon.errors import AuthKeyDuplicatedError, PeerFloodError, FloodWaitError, UserPrivacyRestrictedError, \
-    UserChannelsTooMuchError, BotGroupsBlockedError, ChatWriteForbiddenError, UserBannedInChannelError, \
-    UserNotMutualContactError, ChatAdminRequiredError, UserKickedError, ChannelPrivateError, UserIdInvalidError, \
-    UsernameNotOccupiedError, UsernameInvalidError, InviteRequestSentError, TypeNotFoundError
+from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitError, UserPrivacyRestrictedError,
+                             UserChannelsTooMuchError, BotGroupsBlockedError, ChatWriteForbiddenError,
+                             UserBannedInChannelError, UserNotMutualContactError, ChatAdminRequiredError,
+                             UserKickedError, ChannelPrivateError, UserIdInvalidError, UsernameNotOccupiedError,
+                             UsernameInvalidError, InviteRequestSentError, TypeNotFoundError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
 from system.account_actions.TGConnect import TGConnect
@@ -31,20 +32,26 @@ class InvitingToAGroup:
         return links_inviting
 
     async def inviting_to_a_group_according_to_the_received_list(self, client, link_row, username) -> None:
+        """ Инвайтинг в группу
+        :param client: Телеграм клиент
+        :param link_row: Ссылка для инвайтинга
+        :param username: username"""
         logger.error(f"Попытка приглашения {username[0]} в группу {link_row[0]}.")
         await client(InviteToChannelRequest(link_row[0], [username[0]]))
         logger.info(f'Удачно! Спим 5 секунд')
         time.sleep(5)
 
     async def inviting_without_limits(self, account_limits) -> None:
-        """Инвайтинг без лимитов"""
+        """
+        Инвайтинг без лимитов
+        :param account_limits: Таблица с лимитами
+        """
         logger.info(f"Запуск инвайтинга без лимитов")
-        entities = find_files(directory_path="user_settings/accounts/inviting", extension='session')
-        for file in entities:
-            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/inviting")
+        for file in find_files(directory_path="user_settings/accounts/inviting", extension='session'):
+            client = await self.tg_connect.get_telegram_client(file,
+                                                               account_directory="user_settings/accounts/inviting")
             """Получение ссылки для инвайтинга"""
-            links_inviting = await self.getting_an_invitation_link_from_the_database()
-            for link in links_inviting:
+            for link in await self.getting_an_invitation_link_from_the_database():
                 logger.info(f"{link[0]}")
                 """Подписка на группу для инвайтинга"""
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link[0])
@@ -55,7 +62,7 @@ class InvitingToAGroup:
                 if len(number_usernames) == 0:
                     logger.info(f"В таблице members нет пользователей для инвайтинга")
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, link[0])
-                    break   # Прерываем работу и меняем аккаунт
+                    break  # Прерываем работу и меняем аккаунт
 
                 for username in number_usernames:
                     logger.info(f"Пользователь username:{username[0]}")

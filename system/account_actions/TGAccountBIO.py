@@ -2,8 +2,8 @@
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
-from telethon.errors import AuthKeyUnregisteredError, UsernamePurchaseAvailableError, UsernameOccupiedError, \
-    UsernameInvalidError
+from telethon.errors import (AuthKeyUnregisteredError, UsernamePurchaseAvailableError, UsernameOccupiedError,
+                             UsernameInvalidError)
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_files
@@ -47,8 +47,7 @@ class AccountBIO:
         Изменение username профиля Telegram
         :param user_input  - новое имя пользователя
         """
-        entities = find_files(directory_path=self.directory_path, extension=self.extension)
-        for file in entities:
+        for file in find_files(directory_path=self.directory_path, extension=self.extension):
             logger.info(f"{file[0]}")
             client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
@@ -78,10 +77,12 @@ class AccountBIO:
         self.function_button_ready(page, btn_click, user_input)
 
     async def change_bio_profile(self, user_input):
-        """Изменение описания профиля"""
+        """
+        Изменение описания профиля
+        :param user_input  - новое описание профиля Telegram
+        """
         logger.info(f"Запуск смены  описания профиля")
-        entities = find_files(directory_path=self.directory_path, extension=self.extension)
-        for file in entities:
+        for file in find_files(directory_path=self.directory_path, extension=self.extension):
             logger.info(f"{file[0]}")
             client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
@@ -110,9 +111,11 @@ class AccountBIO:
         self.function_button_ready(page, btn_click, user_input)
 
     async def change_name_profile(self, user_input):
-        """Изменение имени профиля"""
-        entities = find_files(directory_path=self.directory_path, extension=self.extension)
-        for file in entities:
+        """
+        Изменение имени профиля
+        :param user_input  - новое имя пользователя
+        """
+        for file in find_files(directory_path=self.directory_path, extension=self.extension):
             logger.info(f"{file[0]}")
             client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
@@ -135,9 +138,11 @@ class AccountBIO:
         self.function_button_ready(page, btn_click, user_input)
 
     async def change_last_name_profile(self, user_input):
-        """Изменение фамилии профиля"""
-        entities = find_files(directory_path=self.directory_path, extension=self.extension)
-        for file in entities:
+        """
+        Изменение фамилии профиля
+        :param user_input  - новое имя пользователя Telegram
+        """
+        for file in find_files(directory_path=self.directory_path, extension=self.extension):
             logger.info(f"{file[0]}")
             client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
@@ -150,17 +155,14 @@ class AccountBIO:
 
     async def change_photo_profile(self):
         """Изменение фото профиля."""
-        entities = find_files(directory_path=self.directory_path, extension=self.extension)
-        for file in entities:
+        for file in find_files(directory_path=self.directory_path, extension=self.extension):
             logger.info(f"{file[0]}")
             client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
             await client.connect()
-            photo_files = find_files(directory_path="user_settings/bio", extension='jpg')
-            for photo_file in photo_files:
+            for photo_file in find_files(directory_path="user_settings/bio", extension='jpg'):
                 try:
-                    file_path = f"user_settings/bio/{photo_file[0]}.jpg"
                     result = await client(functions.photos.UploadProfilePhotoRequest(
-                        file=await client.upload_file(file_path)
+                        file=await client.upload_file(f"user_settings/bio/{photo_file[0]}.jpg")
                     ))
                     logger.info(f'{result}\nФото успешно обновлено!')
                 except AuthKeyUnregisteredError:

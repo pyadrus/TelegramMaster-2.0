@@ -4,8 +4,8 @@ import random
 import time
 
 from loguru import logger
-from telethon.errors import ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError, \
-    FloodWaitError, InviteRequestSentError
+from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
+                             FloodWaitError, InviteRequestSentError)
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 
@@ -26,8 +26,7 @@ class SubscribeUnsubscribeTelegram:
     async def subscribe_telegram(self) -> None:
         """Подписка на группы / каналы Telegram"""
         logger.info(f"Запуск подписки на группы / каналы Telegram")
-        entities = find_files(directory_path="user_settings/accounts/subscription", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/subscription", extension='session'):
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/subscription")
             """Получение ссылки для инвайтинга"""
             links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
@@ -41,8 +40,7 @@ class SubscribeUnsubscribeTelegram:
 
     async def unsubscribe_all(self) -> None:
         """Отписываемся от групп, каналов, личных сообщений"""
-        entities = find_files(directory_path="user_settings/accounts/unsubscribe", extension='session')
-        for file in entities:
+        for file in find_files(directory_path="user_settings/accounts/unsubscribe", extension='session'):
             client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/unsubscribe")
             dialogs = client.iter_dialogs()
             logger.info(f"Диалоги: {dialogs}")
@@ -54,7 +52,7 @@ class SubscribeUnsubscribeTelegram:
     async def unsubscribe_from_the_group(self, client, group_link) -> None:
         """
         Отписываемся от группы.
-        :param group_link: группа или канал
+        :param group_link: Группа или канал
         :param client: Телеграм клиент
         """
         try:
