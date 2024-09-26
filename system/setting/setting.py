@@ -19,7 +19,7 @@ class SettingPage:
     def __init__(self):
         self.db_handler = DatabaseHandler()
 
-    def creating_the_main_window_for_proxy_data_entry(self, page: ft.Page) -> None:
+    async def creating_the_main_window_for_proxy_data_entry(self, page: ft.Page) -> None:
         """Создание главного окна для ввода дынных proxy"""
         proxy_type = ft.TextField(label="Введите тип прокси, например SOCKS5: ", multiline=True, max_lines=19)
         addr_type = ft.TextField(label="Введите ip адрес, например 194.67.248.9: ", multiline=True, max_lines=19)
@@ -163,12 +163,20 @@ class SettingPage:
         :param fields: Список текстовых полей для добавления
         :param button: Кнопка для добавления
         """
-        button = ft.ElevatedButton("Готово", on_click=btn_click)
+
+        def back_button_clicked(e):
+            """Кнопка возврата в меню настроек"""
+            page.go("/settings")
+
+        # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
+        button = ft.ElevatedButton(width=550, height=30, text="Готово", on_click=btn_click)
+        button_back = ft.ElevatedButton(width=550, height=30, text="Назад", on_click=back_button_clicked)
 
         page.views.append(
             ft.View(
                 "/settings",
-                fields + [ft.Column(), button]  # Заполнитель для приветствия или другого содержимого (необязательно)
+                fields + [ft.Column(), button, button_back]
+                # Заполнитель для приветствия или другого содержимого (необязательно)
             )
         )
 
@@ -193,7 +201,8 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
         config.set(f"{variable}", f"{variable}_2", time_2)
         return config
     except configparser.NoSectionError as error:
-        logger.error(f"Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_settings/config.ini")
+        logger.error(
+            f"Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_settings/config.ini")
 
 
 def write_data_to_json_file(reactions, path_to_the_file):
@@ -214,63 +223,36 @@ def get_unique_filename(base_filename):
 
 async def reaction_gui(page: ft.Page):
     """Выбираем реакцию с помощью чекбокса"""
+
     t = ft.Text(value='Выберите реакцию')  # Создает текстовое поле (t).
-    c1 = ft.Checkbox(label="😀")  # Создает чекбокс c1 с меткой "😀".
-    c2 = ft.Checkbox(label="😎")
-    c3 = ft.Checkbox(label="😍")
-    c4 = ft.Checkbox(label="😂")
-    c5 = ft.Checkbox(label="😡")
-    c6 = ft.Checkbox(label="😱")
-    c7 = ft.Checkbox(label="👍")
-    c8 = ft.Checkbox(label="👎")
-    c9 = ft.Checkbox(label="❤")
-    c10 = ft.Checkbox(label="🔥")
-    c11 = ft.Checkbox(label="🎉")
-    c12 = ft.Checkbox(label="😁")
-    c13 = ft.Checkbox(label="😢")
-    c14 = ft.Checkbox(label="💩")
-    c15 = ft.Checkbox(label="👏")
-    c16 = ft.Checkbox(label="🤷‍♀️")
-    c17 = ft.Checkbox(label="🤷")
-    c18 = ft.Checkbox(label="🤷‍♂️")
-    c19 = ft.Checkbox(label="👾")
-    c20 = ft.Checkbox(label="🙊")
-    c21 = ft.Checkbox(label="💊")
-    c22 = ft.Checkbox(label="😘")
-    c23 = ft.Checkbox(label="🦄")
-    c24 = ft.Checkbox(label="💘")
-    c25 = ft.Checkbox(label="🆒")
-    c26 = ft.Checkbox(label="🗿")
-    c27 = ft.Checkbox(label="🤪")
-    c28 = ft.Checkbox(label="💅")
-    c29 = ft.Checkbox(label="☃️")
-    c30 = ft.Checkbox(label="🎄")
-    c31 = ft.Checkbox(label="🎅")
-    c32 = ft.Checkbox(label="🤗")
-    c33 = ft.Checkbox(label="🤬")
-    c34 = ft.Checkbox(label="🤮")
-    c35 = ft.Checkbox(label="🤡")
-    c36 = ft.Checkbox(label="🥴")
-    c37 = ft.Checkbox(label="💯")
-    c38 = ft.Checkbox(label="🌭")
-    c39 = ft.Checkbox(label="⚡️")
-    c40 = ft.Checkbox(label="🍌")
-    c41 = ft.Checkbox(label="🖕")
-    c42 = ft.Checkbox(label="💋")
-    c43 = ft.Checkbox(label="👀")
-    c44 = ft.Checkbox(label="🤝")
-    c45 = ft.Checkbox(label="🍾")
-    c46 = ft.Checkbox(label="🏆")
-    c47 = ft.Checkbox(label="🥱")
-    c48 = ft.Checkbox(label="🕊")
-    c49 = ft.Checkbox(label="😭")
 
     def button_clicked(e):
         """Выбранная реакция"""
         selected_reactions = []  # Создает пустой список selected_reactions для хранения выбранных реакций.
-        for checkbox in [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19, c20,
-                         c21, c22, c23, c24, c25, c26, c27, c28, c29, c30, c31, c32, c33, c34, c35, c36, c37, c38,
-                         c39, c40, c41, c42, c43, c44, c45, c46, c47, c48, c49]:  # Перебирает чекбоксы (c1 - c49).
+        for checkbox in [
+            ft.Checkbox(label="😀"), ft.Checkbox(label="😎"), ft.Checkbox(label="😍"),
+            ft.Checkbox(label="😂"), ft.Checkbox(label="😡"), ft.Checkbox(label="😱"),
+            ft.Checkbox(label="😭"), ft.Checkbox(label="👍"), ft.Checkbox(label="👎"),
+
+            ft.Checkbox(label="❤"), ft.Checkbox(label="🔥"), ft.Checkbox(label="🎉"),
+            ft.Checkbox(label="😁"), ft.Checkbox(label="😢"), ft.Checkbox(label="💩"),
+            ft.Checkbox(label="👏"), ft.Checkbox(label="🤷‍♀️"), ft.Checkbox(label="🤷"),
+
+            ft.Checkbox(label="🤷‍♂️"), ft.Checkbox(label="👾"), ft.Checkbox(label="🙊"),
+            ft.Checkbox(label="💊"), ft.Checkbox(label="😘"), ft.Checkbox(label="🦄"),
+            ft.Checkbox(label="💘"), ft.Checkbox(label="🆒"), ft.Checkbox(label="🗿"),
+
+            ft.Checkbox(label="🤪"), ft.Checkbox(label="💅"), ft.Checkbox(label="☃️"),
+            ft.Checkbox(label="🎄"), ft.Checkbox(label="🎅"), ft.Checkbox(label="🤗"),
+            ft.Checkbox(label="🤬"), ft.Checkbox(label="🤮"), ft.Checkbox(label="🤡"),
+
+            ft.Checkbox(label="🥴"), ft.Checkbox(label="💯"), ft.Checkbox(label="🌭"),
+            ft.Checkbox(label="⚡️"), ft.Checkbox(label="🍌"), ft.Checkbox(label="🖕"),
+            ft.Checkbox(label="💋"), ft.Checkbox(label="👀"), ft.Checkbox(label="🤝"),
+
+            ft.Checkbox(label="🍾"), ft.Checkbox(label="🏆"), ft.Checkbox(label="🥱"),
+            ft.Checkbox(label="🕊"), ft.Checkbox(label="😭")
+        ]:
             if checkbox.value:  # Проверяет, отмечен ли чекбокс.
                 # Если чекбокс отмечен, добавляет его текст (метку) в список selected_reactions.
                 selected_reactions.append(checkbox.label)
@@ -283,10 +265,9 @@ async def reaction_gui(page: ft.Page):
         """Кнопка возврата в меню настроек"""
         page.go("/settings")
 
-
     # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
-    button = ft.ElevatedButton("Готово", on_click=button_clicked)
-    button_back = ft.ElevatedButton("Назад", on_click=back_button_clicked)
+    button = ft.ElevatedButton(width=550, height=30, text="Готово", on_click=button_clicked)
+    button_back = ft.ElevatedButton(width=550, height=30, text="Назад", on_click=back_button_clicked)
 
     page.views.append(
         ft.View(
@@ -294,14 +275,35 @@ async def reaction_gui(page: ft.Page):
             controls=[
                 t,  # Добавляет текстовое поле t на страницу (page).
                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                    ft.Row([c1, c2, c3, c4, c5, c6, c49]),
-                    ft.Row([c7, c8, c9, c10, c11, c48, c47]),
-                    ft.Row([c19, c20, c21, c23, c24, c47, c46]),
-                    ft.Row([c25, c26, c27, c28, c29, c30, c45]),
-                    ft.Row([c31, c32, c33, c34, c35, c36, c44]),
-                    ft.Row([c37, c38, c39, c41, c42, c43]),
-                    ft.Row([c12, c13, c14, c15, c16, c17, c18]),
-                    ft.Row([c40, c22, c34, c35, c48, c49]),
+                    ft.Row([
+                        ft.Checkbox(label="😀"), ft.Checkbox(label="😎"), ft.Checkbox(label="😍"),
+                        ft.Checkbox(label="😂"), ft.Checkbox(label="😡"), ft.Checkbox(label="😱"),
+                        ft.Checkbox(label="😭"), ft.Checkbox(label="👍"), ft.Checkbox(label="👎")
+                    ]),
+                    ft.Row([
+                        ft.Checkbox(label="❤"), ft.Checkbox(label="🔥"), ft.Checkbox(label="🎉"),
+                        ft.Checkbox(label="😁"), ft.Checkbox(label="😢"), ft.Checkbox(label="💩"),
+                        ft.Checkbox(label="👏"), ft.Checkbox(label="🤷‍♀️"), ft.Checkbox(label="🤷"),
+                    ]),
+                    ft.Row([
+                        ft.Checkbox(label="🤷‍♂️"), ft.Checkbox(label="👾"), ft.Checkbox(label="🙊"),
+                        ft.Checkbox(label="💊"), ft.Checkbox(label="😘"), ft.Checkbox(label="🦄"),
+                        ft.Checkbox(label="💘"), ft.Checkbox(label="🆒"), ft.Checkbox(label="🗿"),
+                    ]),
+                    ft.Row([
+                        ft.Checkbox(label="🤪"), ft.Checkbox(label="💅"), ft.Checkbox(label="☃️"),
+                        ft.Checkbox(label="🎄"), ft.Checkbox(label="🎅"), ft.Checkbox(label="🤗"),
+                        ft.Checkbox(label="🤬"), ft.Checkbox(label="🤮"), ft.Checkbox(label="🤡"),
+                    ]),
+                    ft.Row([
+                        ft.Checkbox(label="🥴"), ft.Checkbox(label="💯"), ft.Checkbox(label="🌭"),
+                        ft.Checkbox(label="⚡️"), ft.Checkbox(label="🍌"), ft.Checkbox(label="🖕"),
+                        ft.Checkbox(label="💋"), ft.Checkbox(label="👀"), ft.Checkbox(label="🤝"),
+                    ]),
+                    ft.Row([
+                        ft.Checkbox(label="🍾"), ft.Checkbox(label="🏆"), ft.Checkbox(label="🥱"),
+                        ft.Checkbox(label="🕊"), ft.Checkbox(label="😭")
+                    ]),
                 ]),
                 button, button_back  # Добавляет кнопку на страницу (page).
             ]
