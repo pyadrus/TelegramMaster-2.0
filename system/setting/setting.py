@@ -279,8 +279,14 @@ async def reaction_gui(page: ft.Page):
                                 path_to_the_file='user_settings/reactions/reactions.json')  # Сохраняем реакцию в json файл
         page.go("/settings")  # Изменение маршрута в представлении существующих настроек
 
+    def back_button_clicked(e):
+        """Кнопка возврата в меню настроек"""
+        page.go("/settings")
+
+
     # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
     button = ft.ElevatedButton("Готово", on_click=button_clicked)
+    button_back = ft.ElevatedButton("Назад", on_click=back_button_clicked)
 
     page.views.append(
         ft.View(
@@ -297,7 +303,7 @@ async def reaction_gui(page: ft.Page):
                     ft.Row([c12, c13, c14, c15, c16, c17, c18]),
                     ft.Row([c40, c22, c34, c35, c48, c49]),
                 ]),
-                button,  # Добавляет кнопку на страницу (page).
+                button, button_back  # Добавляет кнопку на страницу (page).
             ]
         )
     )
