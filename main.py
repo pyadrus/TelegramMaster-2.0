@@ -97,7 +97,7 @@ def telegram_master_main(page: ft.Page):
                                       gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
                                                                                            ft.colors.PURPLE])), ), ), ], ),
                           ft.Text(disabled=False,
-                                  spans=[ft.TextSpan("Аккаунт  Telegram: "),
+                                  spans=[ft.TextSpan('Аккаунт  Telegram: '),
                                          ft.TextSpan("https://t.me/PyAdminRU",
                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                      url="https://t.me/PyAdminRU", ), ], ),
@@ -261,9 +261,11 @@ def telegram_master_main(page: ft.Page):
             await log_and_parse("Запись proxy",
                                 SettingPage().creating_the_main_window_for_proxy_data_entry, page)
         elif page.route == "/message_recording":  # Запись сообщений
-            SettingPage().recording_text_for_sending_messages(page, "Введите ссылку на группу",
+
+            SettingPage().recording_text_for_sending_messages(page, "Введите текст для сообщения",
                                                               get_unique_filename(
                                                                   base_filename='user_settings/message/message'))
+
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
             SettingPage().recording_text_for_sending_messages(page, "Введите текст сообщения",
                                                               'user_settings/reactions/link_channel.json')

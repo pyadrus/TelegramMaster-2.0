@@ -12,9 +12,12 @@ hour, minutes = ConfigReader().get_hour_minutes_every_day()
 
 async def schedule_member_invitation() -> None:
     """Запуск inviting"""
-    await TGConnect().verify_account(account_directory="user_settings/accounts/inviting",
-                                     session_name="session")  # Вызываем метод для проверки аккаунтов
-    await InvitingToAGroup().inviting_without_limits(account_limits=ConfigReader().get_limits())
+    try:
+        await TGConnect().verify_account(account_directory="user_settings/accounts/inviting",
+                                         session_name="session")  # Вызываем метод для проверки аккаунтов
+        await InvitingToAGroup().inviting_without_limits(account_limits=ConfigReader().get_limits())
+    except Exception as e:
+        logger.exception(f"Ошибка: {e}")
 
 
 async def run_scheduler():
@@ -25,25 +28,34 @@ async def run_scheduler():
 
 def launching_invite_every_day_certain_time() -> None:
     """Запуск inviting каждый день в определенное время выбранное пользователем"""
-    schedule.every().day.at(f"{int(hour):02d}:{int(minutes):02d}").do(
-        lambda: asyncio.ensure_future(schedule_member_invitation()))
-    asyncio.ensure_future(run_scheduler())
+    try:
+        schedule.every().day.at(f"{int(hour):02d}:{int(minutes):02d}").do(
+            lambda: asyncio.ensure_future(schedule_member_invitation()))
+        asyncio.ensure_future(run_scheduler())
+    except Exception as e:
+        logger.exception(f"Ошибка: {e}")
 
 
 def launching_an_invite_once_an_hour() -> None:
     """Запуск inviting 1 раз в час"""
-    logger.info("Запуск программы в 00 минут")
-    schedule.every().hour.at(":00").do(lambda: asyncio.ensure_future(schedule_member_invitation()))
-    asyncio.ensure_future(run_scheduler())
+    try:
+        logger.info("Запуск программы в 00 минут")
+        schedule.every().hour.at(":00").do(lambda: asyncio.ensure_future(schedule_member_invitation()))
+        asyncio.ensure_future(run_scheduler())
+    except Exception as e:
+        logger.exception(f"Ошибка: {e}")
 
 
 def schedule_invite() -> None:
     """Запуск автоматической отправки приглашений участникам"""
-    logger.info(f"Скрипт будет запускаться каждый день в {hour}:{minutes}")
-    # Запускаем автоматизацию
-    schedule.every().day.at(f"{hour}:{minutes}").do(
-        lambda: asyncio.ensure_future(schedule_member_invitation()))
-    asyncio.ensure_future(run_scheduler())
+    try:
+        logger.info(f"Скрипт будет запускаться каждый день в {hour}:{minutes}")
+        # Запускаем автоматизацию
+        schedule.every().day.at(f"{hour}:{minutes}").do(
+            lambda: asyncio.ensure_future(schedule_member_invitation()))
+        asyncio.ensure_future(run_scheduler())
+    except Exception as e:
+        logger.exception(f"Ошибка: {e}")
 
 
 if __name__ == "__main__":

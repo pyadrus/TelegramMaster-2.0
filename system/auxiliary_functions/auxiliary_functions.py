@@ -80,6 +80,8 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
         os.replace(account_folder, new_account_folder)
     except PermissionError:
         logger.error("Не удалось перенести файлы в нужную папку")
+    except Exception as e:
+        logger.exception(f"Ошибка: {e}")
 
 
 async def record_inviting_results(time_range_1: int, time_range_2: int, username: str) -> None:
