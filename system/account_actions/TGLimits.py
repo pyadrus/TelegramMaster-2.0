@@ -16,8 +16,11 @@ class SettingLimits:
         :param table_name: название таблицы
         :param account_limits: лимиты на аккаунт
         """
-        logger.info(f"Лимит на аккаунт: {account_limits}")
-        number_usernames: list = await self.db_handler.open_db_func_lim(table_name=table_name,
-                                                                        account_limit=account_limits)
-        logger.info(f"Всего username: {len(number_usernames)}")
-        return number_usernames
+        try:
+            logger.info(f"Лимит на аккаунт: {account_limits}")
+            number_usernames: list = await self.db_handler.open_db_func_lim(table_name=table_name,
+                                                                            account_limit=account_limits)
+            logger.info(f"Всего username: {len(number_usernames)}")
+            return number_usernames
+        except Exception as e:
+            logger.exception(f"Ошибка: {e}")

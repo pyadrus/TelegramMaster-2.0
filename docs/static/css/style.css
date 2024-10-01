@@ -1,8 +1,8 @@
 body {
     font-family: 'Source Code Pro', sans-serif;
     margin: 0;
-    background-color: #323F4C; /* Подходящий фон под баннер */
-    color: #D6F0F0; /* Цвет текста по всем страницам */
+    background-color: #023047; /* Подходящий фон под баннер */
+    color: #8ecae6; /* Цвет текста по всем страницам */
 }
 
 .container {
@@ -51,10 +51,10 @@ body {
 
 h1 {
     text-align: center;
-    color: #59C3C3; /* Измените на желаемый цвет */
+    color: #00A6ED; /* Измените на желаемый цвет */
 }
 
 h2 {
     text-align: center;
-    color: #59C3C3; /* Измените на желаемый цвет */
+    color: #00A6ED; /* Измените на желаемый цвет */
 }

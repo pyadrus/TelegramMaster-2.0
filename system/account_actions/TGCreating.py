@@ -14,10 +14,13 @@ class CreatingGroupsAndChats:
 
     async def creating_groups_and_chats(self) -> None:
         """Создание групп (чатов) в автоматическом режиме"""
-        for file in find_files(directory_path="user_settings/accounts/creating", extension='session'):
-            client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/creating")
+        try:
+            for file in find_files(directory_path="user_settings/accounts/creating", extension='session'):
+                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/creating")
 
-            response = await client(functions.channels.CreateChannelRequest(title='My awesome title',
-                                                                            about='Description for your group',
-                                                                            megagroup=True))
-            logger.info(response.stringify())
+                response = await client(functions.channels.CreateChannelRequest(title='My awesome title',
+                                                                                about='Description for your group',
+                                                                                megagroup=True))
+                logger.info(response.stringify())
+        except Exception as e:
+            logger.exception(f"Ошибка: {e}")

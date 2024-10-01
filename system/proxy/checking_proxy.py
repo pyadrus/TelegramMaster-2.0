@@ -21,6 +21,8 @@ async def reading_proxy_data_from_the_database(db_handler):
     except IndexError:
         proxy = None
         return proxy
+    except Exception as e:
+        logger.exception(f"Ошибка: {e}")
 
 
 async def checking_the_proxy_for_work() -> None:
@@ -30,16 +32,19 @@ async def checking_the_proxy_for_work() -> None:
     используется для различных тестов.
 
     """
-    for proxy_dic in await DatabaseHandler().open_and_read_data("proxy"):
-        logger.info(proxy_dic)
-        # Подключение к proxy с проверкой на работоспособность
-        connecting_to_proxy_with_verification(proxy_type=proxy_dic[0],  # Тип proxy (например: SOCKS5)
-                                              addr=proxy_dic[1],  # Адрес (например: 194.67.248.9)
-                                              port=proxy_dic[2],  # Порт (например: 9795)
-                                              username=proxy_dic[3],  # Логин (например: username)
-                                              password=proxy_dic[4],  # Пароль (например: password)
-                                              rdns=proxy_dic[5],
-                                              db_handler=DatabaseHandler())
+    try:
+        for proxy_dic in await DatabaseHandler().open_and_read_data("proxy"):
+            logger.info(proxy_dic)
+            # Подключение к proxy с проверкой на работоспособность
+            connecting_to_proxy_with_verification(proxy_type=proxy_dic[0],  # Тип proxy (например: SOCKS5)
+                                                  addr=proxy_dic[1],  # Адрес (например: 194.67.248.9)
+                                                  port=proxy_dic[2],  # Порт (например: 9795)
+                                                  username=proxy_dic[3],  # Логин (например: username)
+                                                  password=proxy_dic[4],  # Пароль (например: password)
+                                                  rdns=proxy_dic[5],
+                                                  db_handler=DatabaseHandler())
+    except Exception as e:
+        logger.exception(f"Ошибка: {e}")
 
 
 def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler) -> None:
@@ -65,3 +70,5 @@ def connecting_to_proxy_with_verification(proxy_type, addr, port, username, pass
     except requests.exceptions.RequestException:
         logger.info('[-] Proxy не рабочий!')
         db_handler.deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns)
+    except Exception as e:
+        logger.exception(f"Ошибка: {e}")
