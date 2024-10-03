@@ -25,24 +25,37 @@ class ParsingGroupMembers:
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
+    async def checking_for_account_in_the_folder(self):
+        """Проверка наличия аккаунта в папке с аккаунтами"""
+        try:
+            logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+            entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
+            if not entities:
+                logger.error('[+] Нет аккаунта в папке parsing')
+                return None  # Если нет аккаунта в папке parsing
+        except Exception as e:
+            logger.exception(f"Ошибка: {e}")
+
     async def parse_groups(self) -> None:
         """Парсинг групп"""
         try:
-            for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
-                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
-
-                # Открываем базу с группами для дальнейшего parsing
-                records: list = await self.db_handler.open_and_read_data("writing_group_links")
-                for groups in records:  # Поочередно выводим записанные группы
-                    logger.info(f'[+] Парсинг группы: {groups[0]}')
-                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                    await self.parse_group(client, groups[0])  # Parsing групп
-                    await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
-                                                        value=groups)
-                await self.db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
-                await self.db_handler.delete_duplicates(table_name="members",
-                                                        column_name="id")  # Чистка дублирующих username по столбцу id
-                await client.disconnect()
+            # Проверка наличия аккаунта в папке с аккаунтами parsing
+            if await self.checking_for_account_in_the_folder() is None:
+                return  # Прерываем выполнение функции, если аккаунт не найден
+            else:
+                for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
+                    client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
+                    # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
+                    for groups in await self.db_handler.open_and_read_data("writing_group_links"):
+                        logger.info(f'[+] Парсинг группы: {groups[0]}')
+                        await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
+                        await self.parse_group(client, groups[0])  # Parsing групп
+                        await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups)
+                    # Чистка списка parsing списка, если нет username
+                    await self.db_handler.clean_no_username()
+                    # Чистка дублирующих username по столбцу id
+                    await self.db_handler.delete_duplicates(table_name="members", column_name="id")
+                    await client.disconnect()
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
@@ -50,7 +63,7 @@ class ParsingGroupMembers:
         """
         Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
         @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
-        :param client: клиент Telegram
+        :param client: Клиент Telegram
         :param groups_wr: ссылка на группу
         """
         try:
@@ -69,7 +82,8 @@ class ParsingGroupMembers:
         """
         try:
             for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
-                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
+                client = await self.tg_connect.get_telegram_client(file,
+                                                                   account_directory="user_settings/accounts/parsing")
 
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat_input)
                 time_activity_user_1, time_activity_user_2 = self.config_reader.get_time_activity_user()
@@ -88,7 +102,8 @@ class ParsingGroupMembers:
             # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
             for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
+                client = await self.tg_connect.get_telegram_client(file,
+                                                                   account_directory="user_settings/accounts/parsing")
                 logger.info("""Parsing групп / каналов на которые подписан аккаунт""")
                 await self.forming_a_list_of_groups(client)
                 await client.disconnect()  # Разрываем соединение telegram
@@ -120,7 +135,8 @@ class ParsingGroupMembers:
         """Выбираем группу из подписанных и запускаем парсинг"""
         try:
             for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
-                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
+                client = await self.tg_connect.get_telegram_client(file,
+                                                                   account_directory="user_settings/accounts/parsing")
                 chats: list = []
                 last_date = None
                 groups: list = []
@@ -316,7 +332,8 @@ class ParsingGroupMembers:
                     parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                     log_message = f"{dialog_id}, {chs_title}, {chat_about}, https://t.me/{username}, {members_count}, {parsing_time}"
                     logger.info(log_message)
-                    entities = [dialog_id, chs_title, chat_about, f"https://t.me/{username}", members_count, parsing_time]
+                    entities = [dialog_id, chs_title, chat_about, f"https://t.me/{username}", members_count,
+                                parsing_time]
                     await self.db_handler.write_data_to_db(
                         creating_a_table="CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link, members_count, parsing_time)",
                         writing_data_to_a_table="INSERT INTO groups_and_channels (id, title, about, link, members_count, parsing_time) VALUES (?, ?, ?, ?, ?, ?)",
@@ -333,11 +350,13 @@ class ParsingGroupMembers:
         """
         try:
             # Поле для ввода ссылки на чат
-            chat_input = ft.TextField(label="Введите ссылку на чат, с которого будем собирать активных:", multiline=False,
+            chat_input = ft.TextField(label="Введите ссылку на чат, с которого будем собирать активных:",
+                                      multiline=False,
                                       max_lines=1)
 
             # Поле для ввода количества сообщений
-            limit_active_user = ft.TextField(label="Введите количество сообщений, которые будем парсить:", multiline=False,
+            limit_active_user = ft.TextField(label="Введите количество сообщений, которые будем парсить:",
+                                             multiline=False,
                                              max_lines=1)
 
             # Функция-обработчик для кнопки "Готово"
