@@ -18,7 +18,7 @@ from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_files, find_folders
+from system.auxiliary_functions.auxiliary_functions import find_files, find_folders, all_find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.menu_gui.menu_gui import (line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
@@ -64,8 +64,7 @@ async def main():
     # Запускаем сервер Quart в фоновом режиме
     quart_task = asyncio.create_task(run_quart())
 
-    # Ваш код Flet
-    page = ft.Page()
+    page = ft.Page()  # код Flet
     telegram_master_main(page)
 
     await quart_task  # Ждём завершения задачи сервера Quart
@@ -144,9 +143,11 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/inviting_every_day":
             await log_and_parse("Инвайтинг каждый день", launching_invite_every_day_certain_time)
         elif page.route == "/checking_accounts":  # Проверка аккаунтов
+
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Проверка аккаунтов началась")
+
             await TGConnect().verify_all_accounts(account_directory="user_settings/accounts",
                                                   extension="session")  # Вызываем метод для проверки аккаунтов
             folders = find_folders(directory_path="user_settings/accounts")
@@ -163,6 +164,7 @@ def telegram_master_main(page: ft.Page):
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
             logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             await subscribe_and_unsubscribe_menu(page)
         elif page.route == "/subscription_all":
@@ -180,7 +182,11 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/parsing":  # Меню "Парсинг"
             await menu_parsing(page)
         elif page.route == "/parsing_single_groups":
+
+
             await log_and_parse("Парсинг одной группы / групп", ParsingGroupMembers().parse_groups)
+
+
         elif page.route == "/parsing_selected_group_user_subscribed":
             await log_and_parse("Парсинг выбранной группы", ParsingGroupMembers().choose_and_parse_group, page)
         elif page.route == "/parsing_active_group_members":
