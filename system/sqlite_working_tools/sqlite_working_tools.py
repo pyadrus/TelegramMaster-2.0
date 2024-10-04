@@ -130,10 +130,12 @@ class DatabaseHandler:
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     async def delete_row_db(self, table, column, value) -> None:
-        """Удаляет строку из таблицы
+        """
+        Удаляет строку из таблицы
         :param table: имя таблицы
         :param column: имя колонки
-        :param value: значение"""
+        :param value: значение
+        """
         await self.connect()
         self.cursor.execute(f"SELECT * from {table}")  # Считываем таблицу
         try:

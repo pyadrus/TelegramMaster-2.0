@@ -183,7 +183,7 @@ def telegram_master_main(page: ft.Page):
             await menu_parsing(page)
         elif page.route == "/parsing_single_groups":
 
-            await log_and_parse("Парсинг одной группы / групп", ParsingGroupMembers().parse_groups)
+            await log_and_parse("Парсинг одной группы / групп", ParsingGroupMembers().parse_groups, page)
 
         elif page.route == "/parsing_selected_group_user_subscribed":
             await log_and_parse("Парсинг выбранной группы", ParsingGroupMembers().choose_and_parse_group, page)
@@ -290,6 +290,10 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/documentation":  # Открытие документации
             webbrowser.open_new("http://127.0.0.1:8000")
             await run_quart()
+
+        elif page.route == "/errors":
+            # Пустая страница с уведомлением
+            page.views.append(ft.View("/errors", []))
 
         page.update()
 

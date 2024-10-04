@@ -42,47 +42,32 @@ class SendTelegramMessages:
         """
         try:
             time_inviting = self.config_reader.get_time_inviting()
-            time_inviting_1 = time_inviting[0]
-            time_inviting_2 = time_inviting[1]
-            entities = find_files(directory_path="user_settings/accounts/send_message", extension='session')
-            for file in entities:
-                client = await self.tg_connect.get_telegram_client(file,
-                                                                   account_directory="user_settings/accounts/send_message")
+            for file in find_files(directory_path="user_settings/accounts/send_message", extension='session'):
+                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/send_message")
                 try:
-                    number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
-                                                                                         account_limits=account_limits)
-
-                    # Количество аккаунтов на данный момент в работе
-                    # logger.info(f"Всего username: {len(number_usernames)}")
-
-
-
-                    for rows in number_usernames:
-                        username = rows[0]  # Имя аккаунта пользователя в базе данных user_settings/software_database.db
-                        logger.info(f"[!] Отправляем сообщение: {username}")
+                    for username in await self.limits_class.get_usernames_with_limits(table_name="members", account_limits=account_limits):
+                        # username - имя аккаунта пользователя в базе данных user_settings/software_database.db
+                        logger.info(f"[!] Отправляем сообщение: {username[0]}")
                         try:
-                            user_to_add = await client.get_input_entity(username)
                             entities = find_files(directory_path="user_settings/message", extension="json")
                             logger.info(entities)
                             data = await self.select_and_read_random_file(entities, folder="message")
-                            await client.send_message(user_to_add, data.format(username))
+                            await client.send_message(await client.get_input_entity(username[0]), data.format(username[0]))
                             # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
-                            logger.error(f"""Отправляем сообщение в личку {username}. Сообщение отправлено 
-                                             пользователю {username}.""")
-                            await record_inviting_results(time_inviting_1, time_inviting_2, username)
+                            logger.info(f"""Отправляем сообщение в личку {username[0]}. Сообщение отправлено пользователю {username[0]}.""")
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username[0])
                         except FloodWaitError as e:
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
+                            record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except PeerFloodError:
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
+                            record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except UserNotMutualContactError:
-                            logger.error(
-                                f"Отправляем сообщение в личку {username}. {username} не является взаимным контактом.")
+                            logger.error(f"Отправляем сообщение в личку {username[0]}. {username[0]} не является взаимным контактом.")
                         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                            logger.error(f"Отправляем сообщение в личку {username}. Не корректное имя {username}.")
+                            logger.error(f"Отправляем сообщение в личку {username[0]}. Не корректное имя {username[0]}.")
                         except ChatWriteForbiddenError:
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
+                            record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except (TypeError, UnboundLocalError):
                             continue  # Записываем ошибку в software_database.db и продолжаем работу

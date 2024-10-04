@@ -25,22 +25,32 @@ class ParsingGroupMembers:
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def checking_for_account_in_the_folder(self):
+    async def show_notification(self, page: ft.Page):
+        dlg = ft.AlertDialog(
+            title=ft.Text("Нет аккаунта в папке parsing"),
+            on_dismiss=lambda e: page.go("/"),  # Переход обратно после закрытия диалога
+        )
+        page.dialog = dlg
+        dlg.open = True
+        page.update()
+
+    async def checking_for_account_in_the_folder(self, page):
         """Проверка наличия аккаунта в папке с аккаунтами"""
         try:
             logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
             entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
             if not entities:
                 logger.error('[+] Нет аккаунта в папке parsing')
+                await self.show_notification(page)
                 return None  # Если нет аккаунта в папке parsing
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def parse_groups(self) -> None:
+    async def parse_groups(self, page) -> None:
         """Парсинг групп"""
         try:
             # Проверка наличия аккаунта в папке с аккаунтами parsing
-            if await self.checking_for_account_in_the_folder() is None:
+            if await self.checking_for_account_in_the_folder(page) is None:
                 return  # Прерываем выполнение функции, если аккаунт не найден
             else:
                 for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
