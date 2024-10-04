@@ -22,11 +22,21 @@ from system.auxiliary_functions.auxiliary_functions import find_files, find_fold
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.menu_gui.menu_gui import (line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
-                                      subscribe_and_unsubscribe_menu)
+                                      subscribe_and_unsubscribe_menu, account_verification_menu)
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
+
+
+async def show_notification(page: ft.Page):
+    dlg = ft.AlertDialog(
+        title=ft.Text("Нет аккаунта в папке parsing"),
+        on_dismiss=lambda e: page.go("/"),  # Переход обратно после закрытия диалога
+    )
+    page.overlay.append(dlg)
+    dlg.open = True
+    page.update()
 
 
 async def log_and_execute_with_args(task_name, execute_method, *args, **kwargs):
@@ -121,7 +131,7 @@ def telegram_master_main(page: ft.Page):
                               ft.Row([ft.ElevatedButton(width=270, height=30, text="Работа с реакциями",
                                                         on_click=lambda _: page.go("/working_with_reactions")),
                                       ft.ElevatedButton(width=270, height=30, text="Проверка аккаунтов",
-                                                        on_click=lambda _: page.go("/checking_accounts")), ]),
+                                                        on_click=lambda _: page.go("/account_verification_menu")), ]),
                               ft.Row([ft.ElevatedButton(width=270, height=30, text="Создание групп (чатов)",
                                                         on_click=lambda _: page.go("/creating_groups")),
                                       ft.ElevatedButton(width=270, height=30, text="Редактирование_BIO",
@@ -142,24 +152,47 @@ def telegram_master_main(page: ft.Page):
             await log_and_parse("Инвайтинг в определенное время", schedule_invite)
         elif page.route == "/inviting_every_day":
             await log_and_parse("Инвайтинг каждый день", launching_invite_every_day_certain_time)
-        elif page.route == "/checking_accounts":  # Проверка аккаунтов
+
+        elif page.route == "/account_verification_menu": # Меню "Проверка аккаунтов"
+            await account_verification_menu(page)
+
+        elif page.route == "/validation_check":  # Проверка на валидность
 
             start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
             logger.info('Время старта: ' + str(start))
             logger.info("▶️ Проверка аккаунтов началась")
 
-            await TGConnect().verify_all_accounts(account_directory="user_settings/accounts",
-                                                  extension="session")  # Вызываем метод для проверки аккаунтов
             folders = find_folders(directory_path="user_settings/accounts")
+            logger.info(f"Найденный папки {folders}")
             for folder in folders:
                 logger.info(f'Проверка аккаунтов из папки 📁 {folder} через спам бот')
                 if folder == "invalid_account":
                     logger.info(f"⛔ Пропускаем папку 📁: {folder}")
                     continue  # Продолжаем цикл, пропуская эту итерацию
                 else:
-                    await TGConnect().verify_all_accounts(account_directory=f"user_settings/accounts/{folder}",
-                                                          extension="session")
-                    await TGConnect().check_for_spam(folder)
+                    await TGConnect().verify_all_accounts(account_directory=f"user_settings/accounts/{folder}", extension="session")
+
+            logger.info("🔚 Проверка аккаунтов завершена")
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            logger.info('Время окончания: ' + str(finish))
+            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
+        elif page.route == "/checking_for_spam_bots":  # Проверка через спам бот
+
+            start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+            logger.info('Время старта: ' + str(start))
+            logger.info("▶️ Проверка аккаунтов началась")
+
+            folders = find_folders(directory_path="user_settings/accounts")
+            logger.info(f"Найденный папки {folders}")
+            for folder in folders:
+                logger.info(f'Проверка аккаунтов из папки 📁 {folder} через спам бот')
+                if folder == "invalid_account":
+                    logger.info(f"⛔ Пропускаем папку 📁: {folder}")
+                    continue  # Продолжаем цикл, пропуская эту итерацию
+                else:
+                    await TGConnect().check_for_spam(folder_name=folder)
+
             logger.info("🔚 Проверка аккаунтов завершена")
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             logger.info('Время окончания: ' + str(finish))
@@ -181,11 +214,27 @@ def telegram_master_main(page: ft.Page):
             await log_and_parse("Автоматическое выставление реакций", WorkingWithReactions().setting_reactions)
         elif page.route == "/parsing":  # Меню "Парсинг"
             await menu_parsing(page)
+
         elif page.route == "/parsing_single_groups":
 
-            # await log_and_parse("Парсинг одной группы / групп", ParsingGroupMembers().parse_groups, page)
-
-            await ParsingGroupMembers().parse_groups()
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
+                if not entities:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page)
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало парсинга")
+                    await ParsingGroupMembers().parse_groups()
+                    logger.info("🔚 Конец парсинга")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
         elif page.route == "/parsing_selected_group_user_subscribed":
             await log_and_parse("Парсинг выбранной группы", ParsingGroupMembers().choose_and_parse_group, page)

@@ -181,3 +181,26 @@ async def subscribe_and_unsubscribe_menu(page):
                      ft.ElevatedButton(width=line_width, height=30, text="Отписываемся",
                                        on_click=lambda _: page.go("/unsubscribe_all")),
                  ])]))
+
+
+async def account_verification_menu(page):
+    """Меню проверки аккаунтов"""
+    page.views.append(
+        ft.View("/account_verification_menu",
+                [ft.AppBar(title=ft.Text("Главное меню"),
+                           bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+
+                     ft.ElevatedButton(width=line_width, height=30, text="Проверка через спам бот",
+                                       on_click=lambda _: page.go("/checking_for_spam_bots")),
+
+                     ft.ElevatedButton(width=line_width, height=30, text="Проверка на валидность",
+                                       on_click=lambda _: page.go("/validation_check")),
+
+                     ft.ElevatedButton(width=line_width, height=30, text="Переименование аккаунтов",
+                                       on_click=lambda _: page.go("/renaming_accounts")),
+
+                     ft.ElevatedButton(width=line_width, height=30, text="Полная проверка",
+                                       on_click=lambda _: page.go("/full_verification")),
+
+                 ])]))

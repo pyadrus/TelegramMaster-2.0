@@ -25,42 +25,18 @@ class ParsingGroupMembers:
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    # async def show_notification(self, page: ft.Page):
-    #     dlg = ft.AlertDialog(
-    #         title=ft.Text("Нет аккаунта в папке parsing"),
-    #         on_dismiss=lambda e: page.go("/"),  # Переход обратно после закрытия диалога
-    #     )
-    #     page.dialog = dlg
-    #     dlg.open = True
-    #     page.update()
-
-    # async def checking_for_account_in_the_folder(self, page):
-    #     """Проверка наличия аккаунта в папке с аккаунтами"""
-    #     try:
-    #         logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
-    #         entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-    #         if not entities:
-    #             logger.error('[+] Нет аккаунта в папке parsing')
-    #             await self.show_notification(page)
-    #             return None  # Если нет аккаунта в папке parsing
-    #     except Exception as e:
-    #         logger.exception(f"Ошибка: {e}")
 
     async def parse_groups(self) -> None:
         """Парсинг групп"""
         try:
-            # Проверка наличия аккаунта в папке с аккаунтами parsing
-            # if await self.checking_for_account_in_the_folder(page) is None:
-            #     return  # Прерываем выполнение функции, если аккаунт не найден
-            # else:
-            akk = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-
-            logger.info(f'[+] Аккаунты в папке parsing: {akk}')
-
-            for file in akk:
+            for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
                 logger.info(f'[+] Парсинг группы: {file}')
-                client = await self.tg_connect.get_telegram_client(file,
-                                                                   account_directory="user_settings/accounts/parsing")
+                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
+
+                me = await client.get_me()
+                phone = me.phone
+                logger.info(f'[+] Номер аккаунта: {phone}')
+
                 # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
                 for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                     logger.info(f'[+] Парсинг группы: {groups[0]}')

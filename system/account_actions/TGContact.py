@@ -76,7 +76,7 @@ class TGContact:
         """
         Показываем и удаляем контакт телефонной книги
         :param client: Телеграм клиент
-        :param user: Телеграм пользователя пользователя
+        :param user: Телеграм пользователя
         """
         try:
             await client(functions.contacts.DeleteContactsRequest(id=[user.id]))

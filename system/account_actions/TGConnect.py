@@ -13,7 +13,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, Use
 from telethon.tl.functions.users import GetFullUserRequest
 from thefuzz import fuzz
 
-from system.auxiliary_functions.auxiliary_functions import find_files, working_with_accounts
+from system.auxiliary_functions.auxiliary_functions import find_files, working_with_accounts, find_filess
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
@@ -53,15 +53,19 @@ class TGConnect:
         :param session_name: Имя аккаунта для проверки аккаунта
         """
         try:
-            logger.info(
-                f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
-            telegram_client = await self.get_telegram_client(session_name[0], account_directory)
+            logger.info(f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
+            telegram_client = await self.get_telegram_client(session_name, account_directory)
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
                 if not await telegram_client.is_user_authorized():  # Если аккаунт не авторизирован, то удаляем сессию
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    working_with_accounts(account_folder=f"{account_directory}/{session_name.split('/')[-1]}.session",
-                                          new_account_folder=f"user_settings/accounts/invalid_account/{session_name.split('/')[-1]}.session")
+
+                    logger.error(f'Проверка аккаунта!!!!!!! {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}')
+
+                    working_with_accounts(
+                        account_folder=f"{account_directory}/{session_name.split('/')[-1]}",
+                        new_account_folder=f"user_settings/accounts/invalid_account/{session_name.split('/')[-1]}"
+                    )
                     time.sleep(1)
                     return  # Возвращаемся из функции, так как аккаунт не авторизован
                 await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
@@ -72,8 +76,10 @@ class TGConnect:
                 telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
                 logger.error(
                     f"⛔ Битый файл или аккаунт забанен: {session_name.split('/')[-1]}.session. Возможно, запущен под другим IP")
-                working_with_accounts(account_folder=f"{account_directory}/{session_name.split('/')[-1]}.session",
-                                      new_account_folder=f"user_settings/accounts/invalid_account/{session_name.split('/')[-1]}.session")
+                working_with_accounts(
+                    account_folder=f"{account_directory}/{session_name.split('/')[-1]}.session",
+                    new_account_folder=f"user_settings/accounts/invalid_account/{session_name.split('/')[-1]}.session"
+                )
             except TimedOutError as e:
                 logger.exception(e)
                 time.sleep(2)
@@ -148,43 +154,47 @@ class TGConnect:
             logger.info(f"Запуск проверки аккаунтов Telegram из папки 📁: {account_directory}")
             await checking_the_proxy_for_work()  # Проверка proxy
             # Сканирование каталога с аккаунтами
-            for session_file in find_files(account_directory, extension):
-                logger.info(f"⚠️ Проверяемый аккаунт: {account_directory}/{session_file[0]}")
+            for session_file in find_filess(account_directory, extension):
+                logger.info(f"⚠️ Проверяемый аккаунт: {account_directory}/{session_file}")
                 # Проверка аккаунтов
-                await self.verify_account(account_directory, session_file[0])
+                await self.verify_account(account_directory, session_file)
+
+
+
                 # Получение данных аккаунта
-                telegram_client = await self.get_telegram_client(file=session_file, account_directory=account_directory)
-                try:
-                    first_name, last_name, phone_number = await self.get_account_details(telegram_client,
-                                                                                         account_name="me",
-                                                                                         account_directory=account_directory,
-                                                                                         session_name=session_file[0])
+                # telegram_client = await self.get_telegram_client(file=session_file, account_directory=account_directory)
+                # try:
+                #     phone_number = await self.get_account_details(telegram_client,
+                #                                                                          account_directory=account_directory,
+                #                                                                          session_name=session_file)
                     # Выводим результат полученного имени и номера телефона
-                    logger.info(f"📔 Данные аккаунта: {first_name} {last_name} {phone_number}")
+                    # logger.info(f"📔 Данные аккаунта: {phone_number}")
                     # Переименовываем сессию
-                    await self.rename_session_file(telegram_client, session_file[0], phone_number, account_directory)
-                except TypeError as e:
-                    logger.error(f"TypeError: {e}")  # Ошибка
+                    # await self.rename_session_file(telegram_client, session_file, phone_number, account_directory)
+                # except TypeError as e:
+                #     logger.error(f"TypeError: {e}")  # Ошибка
+
+
 
             logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁: {account_directory}")
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def get_account_details(self, telegram_client, account_name, account_directory, session_name):
+    async def get_account_details(self, telegram_client, account_directory, session_name):
         """
         Получает информацию о Telegram аккаунте.
         :param telegram_client: Клиент для работы с Telegram
-        :param account_name: Имя аккаунта для проверки аккаунта
         :param account_directory: Путь к файлу
         :param session_name: Имя session файла
         """
         try:
-            full_user = await telegram_client(GetFullUserRequest(account_name))
-            for user in full_user.users:
-                first_name = user.first_name if user.first_name else ""
-                last_name = user.last_name if user.last_name else ""
-                phone_number = user.phone if user.phone else ""
-                return first_name, last_name, phone_number
+            me = await telegram_client.get_me()
+            # first_name = me.first_name
+            # last_name = me.last_name
+            phone = me.phone
+            if phone is None:
+                phone = ''
+            return phone
         except TypeNotFoundError:
             await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
             logger.error(
@@ -211,10 +221,10 @@ class TGConnect:
         await telegram_client.disconnect()  # Отключаемся от аккаунта для освобождения session файла
         try:
             # Переименование session файла
-            os.rename(f"{account_directory}/{phone_old}.session", f"{account_directory}/{phone}.session", )
+            os.rename(f"{account_directory}/{phone_old}", f"{account_directory}/{phone}.session", )
         except FileExistsError:
             # Если файл существует, то удаляем дубликат
-            os.remove(f"{account_directory}/{phone_old}.session")
+            os.remove(f"{account_directory}/{phone_old}")
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
@@ -226,9 +236,11 @@ class TGConnect:
         :param file: Файл сессии (file[0] - session файл)
         :return TelegramClient: TelegramClient
         """
-        logger.info(
-            f"Подключение к аккаунту: {account_directory}/{file[0]}")  # Имя файла сессии file[0] - session файл
-        telegram_client = await self.connect_to_telegram(file[0], account_directory)
+
+        logger.info(f"Имя сессии !!!!!!!!: {account_directory}/{file}")  # Имя файла сессии file[0] - session файл
+
+        logger.info(f"Подключение к аккаунту: {account_directory}/{file}")  # Имя файла сессии file[0] - session файл
+        telegram_client = await self.connect_to_telegram(file, account_directory)
         try:
             await telegram_client.connect()
             return telegram_client
