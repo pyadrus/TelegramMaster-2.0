@@ -25,49 +25,54 @@ class ParsingGroupMembers:
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def show_notification(self, page: ft.Page):
-        dlg = ft.AlertDialog(
-            title=ft.Text("Нет аккаунта в папке parsing"),
-            on_dismiss=lambda e: page.go("/"),  # Переход обратно после закрытия диалога
-        )
-        page.dialog = dlg
-        dlg.open = True
-        page.update()
+    # async def show_notification(self, page: ft.Page):
+    #     dlg = ft.AlertDialog(
+    #         title=ft.Text("Нет аккаунта в папке parsing"),
+    #         on_dismiss=lambda e: page.go("/"),  # Переход обратно после закрытия диалога
+    #     )
+    #     page.dialog = dlg
+    #     dlg.open = True
+    #     page.update()
 
-    async def checking_for_account_in_the_folder(self, page):
-        """Проверка наличия аккаунта в папке с аккаунтами"""
-        try:
-            logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
-            entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
-            if not entities:
-                logger.error('[+] Нет аккаунта в папке parsing')
-                await self.show_notification(page)
-                return None  # Если нет аккаунта в папке parsing
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+    # async def checking_for_account_in_the_folder(self, page):
+    #     """Проверка наличия аккаунта в папке с аккаунтами"""
+    #     try:
+    #         logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+    #         entities = find_files(directory_path="user_settings/accounts/parsing", extension='session')
+    #         if not entities:
+    #             logger.error('[+] Нет аккаунта в папке parsing')
+    #             await self.show_notification(page)
+    #             return None  # Если нет аккаунта в папке parsing
+    #     except Exception as e:
+    #         logger.exception(f"Ошибка: {e}")
 
-    async def parse_groups(self, page) -> None:
+    async def parse_groups(self) -> None:
         """Парсинг групп"""
         try:
             # Проверка наличия аккаунта в папке с аккаунтами parsing
-            if await self.checking_for_account_in_the_folder(page) is None:
-                return  # Прерываем выполнение функции, если аккаунт не найден
-            else:
-                for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
-                    client = await self.tg_connect.get_telegram_client(file,
-                                                                       account_directory="user_settings/accounts/parsing")
-                    # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
-                    for groups in await self.db_handler.open_and_read_data("writing_group_links"):
-                        logger.info(f'[+] Парсинг группы: {groups[0]}')
-                        await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                        await self.parse_group(client, groups[0])  # Parsing групп
-                        await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
-                                                            value=groups)
-                    # Чистка списка parsing списка, если нет username
-                    await self.db_handler.clean_no_username()
-                    # Чистка дублирующих username по столбцу id
-                    await self.db_handler.delete_duplicates(table_name="members", column_name="id")
-                    await client.disconnect()
+            # if await self.checking_for_account_in_the_folder(page) is None:
+            #     return  # Прерываем выполнение функции, если аккаунт не найден
+            # else:
+            akk = find_files(directory_path="user_settings/accounts/parsing", extension='session')
+
+            logger.info(f'[+] Аккаунты в папке parsing: {akk}')
+
+            for file in akk:
+                logger.info(f'[+] Парсинг группы: {file}')
+                client = await self.tg_connect.get_telegram_client(file,
+                                                                   account_directory="user_settings/accounts/parsing")
+                # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
+                for groups in await self.db_handler.open_and_read_data("writing_group_links"):
+                    logger.info(f'[+] Парсинг группы: {groups[0]}')
+                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
+                    await self.parse_group(client, groups[0])  # Parsing групп
+                    await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
+                                                        value=groups)
+                # Чистка списка parsing списка, если нет username
+                await self.db_handler.clean_no_username()
+                # Чистка дублирующих username по столбцу id
+                await self.db_handler.delete_duplicates(table_name="members", column_name="id")
+                await client.disconnect()
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 

@@ -183,7 +183,9 @@ def telegram_master_main(page: ft.Page):
             await menu_parsing(page)
         elif page.route == "/parsing_single_groups":
 
-            await log_and_parse("Парсинг одной группы / групп", ParsingGroupMembers().parse_groups, page)
+            # await log_and_parse("Парсинг одной группы / групп", ParsingGroupMembers().parse_groups, page)
+
+            await ParsingGroupMembers().parse_groups()
 
         elif page.route == "/parsing_selected_group_user_subscribed":
             await log_and_parse("Парсинг выбранной группы", ParsingGroupMembers().choose_and_parse_group, page)
