@@ -27,7 +27,8 @@ class TGContact:
         try:
             for file in find_files(directory_path="user_settings/accounts/contact", extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/contact")
+                client = await self.tg_connect.get_telegram_client(file,
+                                                                   account_directory="user_settings/accounts/contact")
                 await self.parsing_and_recording_contacts_in_the_database(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as e:
@@ -89,7 +90,8 @@ class TGContact:
         try:
             for file in find_files(directory_path="user_settings/accounts/contact", extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/contact")
+                client = await self.tg_connect.get_telegram_client(file,
+                                                                   account_directory="user_settings/accounts/contact")
                 await self.we_get_the_account_id(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as e:
@@ -101,7 +103,8 @@ class TGContact:
             # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
             for file in find_files(directory_path="user_settings/accounts/contact", extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/contact")
+                client = await self.tg_connect.get_telegram_client(file,
+                                                                   account_directory="user_settings/accounts/contact")
                 await self.add_contact_to_phone_book(client)
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
@@ -120,9 +123,9 @@ class TGContact:
                 phone = user["phone"]
                 # Добавляем контакт в телефонную книгу
                 await client(functions.contacts.ImportContactsRequest(contacts=[types.InputPhoneContact(client_id=0,
-                                                                                                  phone=phone,
-                                                                                                  first_name="Номер",
-                                                                                                  last_name=phone)]))
+                                                                                                        phone=phone,
+                                                                                                        first_name="Номер",
+                                                                                                        last_name=phone)]))
                 try:
                     # Получаем данные номера телефона https://docs.telethon.dev/en/stable/concepts/entities.html
                     contact = await client.get_entity(phone)
@@ -133,7 +136,8 @@ class TGContact:
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
                 except ValueError:
-                    logger.info(f"[+] Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
+                    logger.info(
+                        f"[+] Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
             client.disconnect()  # Разрываем соединение telegram
@@ -179,5 +183,3 @@ class TGContact:
                  user_premium])
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
-
-

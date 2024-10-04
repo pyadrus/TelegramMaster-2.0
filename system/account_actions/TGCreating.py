@@ -16,7 +16,8 @@ class CreatingGroupsAndChats:
         """Создание групп (чатов) в автоматическом режиме"""
         try:
             for file in find_files(directory_path="user_settings/accounts/creating", extension='session'):
-                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/creating")
+                client = await self.tg_connect.get_telegram_client(file,
+                                                                   account_directory="user_settings/accounts/creating")
 
                 response = await client(functions.channels.CreateChannelRequest(title='My awesome title',
                                                                                 about='Description for your group',

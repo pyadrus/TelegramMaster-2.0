@@ -51,8 +51,12 @@ class SendTelegramMessages:
                 try:
                     number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
                                                                                          account_limits=account_limits)
+
                     # Количество аккаунтов на данный момент в работе
-                    logger.info(f"Всего username: {len(number_usernames)}")
+                    # logger.info(f"Всего username: {len(number_usernames)}")
+
+
+
                     for rows in number_usernames:
                         username = rows[0]  # Имя аккаунта пользователя в базе данных user_settings/software_database.db
                         logger.info(f"[!] Отправляем сообщение: {username}")
@@ -312,7 +316,8 @@ class SendTelegramMessages:
                         await client.send_message(chat[0], f'{data}')
                         logger.info(f'Сообщение {data} отправлено в чат {chat[0]}')
                     except UserBannedInChannelError:
-                        logger.error('Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
+                        logger.error(
+                            'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
                     await self.random_dream()  # Прерываем работу и меняем аккаунт
 
                 await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента

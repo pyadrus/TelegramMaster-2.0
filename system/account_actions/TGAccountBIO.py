@@ -85,7 +85,6 @@ class AccountBIO:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-
     async def change_bio_profile(self, user_input):
         """
         Изменение описания профиля
@@ -148,7 +147,8 @@ class AccountBIO:
     async def change_last_name_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
         try:
-            user_input = ft.TextField(label="Введите фамилию профиля, не более 64 символов: ", multiline=True, max_lines=19)
+            user_input = ft.TextField(label="Введите фамилию профиля, не более 64 символов: ", multiline=True,
+                                      max_lines=19)
 
             async def btn_click(e) -> None:
                 await self.change_last_name_profile(user_input.value)

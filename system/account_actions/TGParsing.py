@@ -44,13 +44,15 @@ class ParsingGroupMembers:
                 return  # Прерываем выполнение функции, если аккаунт не найден
             else:
                 for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
-                    client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
+                    client = await self.tg_connect.get_telegram_client(file,
+                                                                       account_directory="user_settings/accounts/parsing")
                     # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
                     for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                         logger.info(f'[+] Парсинг группы: {groups[0]}')
                         await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
                         await self.parse_group(client, groups[0])  # Parsing групп
-                        await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups)
+                        await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
+                                                            value=groups)
                     # Чистка списка parsing списка, если нет username
                     await self.db_handler.clean_no_username()
                     # Чистка дублирующих username по столбцу id

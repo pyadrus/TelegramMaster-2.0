@@ -4,6 +4,7 @@ import os.path
 import sqlite3
 import time
 
+import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import TelegramClient
 from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, UserDeactivatedBanError, TimedOutError,
@@ -11,7 +12,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, Use
                              ApiIdInvalidError, YouBlockedUserError)
 from telethon.tl.functions.users import GetFullUserRequest
 from thefuzz import fuzz
-import flet as ft  # Импортируем библиотеку flet
+
 from system.auxiliary_functions.auxiliary_functions import find_files, working_with_accounts
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.proxy.checking_proxy import checking_the_proxy_for_work
@@ -37,7 +38,8 @@ class TGConnect:
         """
         try:
             logger.info(f"Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
-            telegram_client = TelegramClient(f"{account_directory}/{session}", api_id=self.api_id, api_hash=self.api_hash,
+            telegram_client = TelegramClient(f"{account_directory}/{session}", api_id=self.api_id,
+                                             api_hash=self.api_hash,
                                              system_version="4.16.30-vxCUSTOM",
                                              proxy=await reading_proxy_data_from_the_database(self.db_handler))
             return telegram_client
@@ -51,7 +53,8 @@ class TGConnect:
         :param session_name: Имя аккаунта для проверки аккаунта
         """
         try:
-            logger.info(f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
+            logger.info(
+                f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
             telegram_client = await self.get_telegram_client(session_name[0], account_directory)
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
@@ -152,7 +155,8 @@ class TGConnect:
                 # Получение данных аккаунта
                 telegram_client = await self.get_telegram_client(file=session_file, account_directory=account_directory)
                 try:
-                    first_name, last_name, phone_number = await self.get_account_details(telegram_client, account_name="me",
+                    first_name, last_name, phone_number = await self.get_account_details(telegram_client,
+                                                                                         account_name="me",
                                                                                          account_directory=account_directory,
                                                                                          session_name=session_file[0])
                     # Выводим результат полученного имени и номера телефона

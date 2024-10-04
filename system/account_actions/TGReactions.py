@@ -73,7 +73,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         try:
             entities = find_files(directory_path="user_settings/accounts/viewing", extension='session')
             for file in entities:
-                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/viewing")
+                client = await self.tg_connect.get_telegram_client(file,
+                                                                   account_directory="user_settings/accounts/viewing")
                 records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
