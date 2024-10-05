@@ -8,6 +8,7 @@ from loguru import logger
 
 from docs.app import run_quart, program_version, date_of_program_change
 from system.account_actions.TGAccountBIO import AccountBIO
+from system.account_actions.TGChek import TGChek
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
 from system.account_actions.TGCreating import CreatingGroupsAndChats
@@ -18,7 +19,7 @@ from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_files, find_folders
+from system.auxiliary_functions.auxiliary_functions import find_files
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.menu_gui.menu_gui import (line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
@@ -155,48 +156,14 @@ def telegram_master_main(page: ft.Page):
 
         elif page.route == "/account_verification_menu": # Меню "Проверка аккаунтов"
             await account_verification_menu(page)
-
         elif page.route == "/validation_check":  # Проверка на валидность
-
-            start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-            logger.info('Время старта: ' + str(start))
-            logger.info("▶️ Проверка аккаунтов началась")
-
-            folders = find_folders(directory_path="user_settings/accounts")
-            logger.info(f"Найденный папки {folders}")
-            for folder in folders:
-                logger.info(f'Проверка аккаунтов из папки 📁 {folder} через спам бот')
-                if folder == "invalid_account":
-                    logger.info(f"⛔ Пропускаем папку 📁: {folder}")
-                    continue  # Продолжаем цикл, пропуская эту итерацию
-                else:
-                    await TGConnect().verify_all_accounts(account_directory=f"user_settings/accounts/{folder}", extension="session")
-
-            logger.info("🔚 Проверка аккаунтов завершена")
-            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-            logger.info('Время окончания: ' + str(finish))
-            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-
+            await TGChek().validation_check()
         elif page.route == "/checking_for_spam_bots":  # Проверка через спам бот
-
-            start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-            logger.info('Время старта: ' + str(start))
-            logger.info("▶️ Проверка аккаунтов началась")
-
-            folders = find_folders(directory_path="user_settings/accounts")
-            logger.info(f"Найденный папки {folders}")
-            for folder in folders:
-                logger.info(f'Проверка аккаунтов из папки 📁 {folder} через спам бот')
-                if folder == "invalid_account":
-                    logger.info(f"⛔ Пропускаем папку 📁: {folder}")
-                    continue  # Продолжаем цикл, пропуская эту итерацию
-                else:
-                    await TGConnect().check_for_spam(folder_name=folder)
-
-            logger.info("🔚 Проверка аккаунтов завершена")
-            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-            logger.info('Время окончания: ' + str(finish))
-            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            await TGChek().checking_for_spam_bots()
+        elif page.route == "/renaming_accounts":  # Переименование аккаунтов
+            await TGChek().renaming_accounts()
+        elif page.route == "/full_verification":  # Полная проверка
+            await TGChek().full_verification()
 
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             await subscribe_and_unsubscribe_menu(page)

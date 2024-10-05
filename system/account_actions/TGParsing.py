@@ -11,7 +11,7 @@ from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserSt
 import flet as ft  # Импортируем библиотеку flet
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_files
+from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
@@ -29,13 +29,9 @@ class ParsingGroupMembers:
     async def parse_groups(self) -> None:
         """Парсинг групп"""
         try:
-            for file in find_files(directory_path="user_settings/accounts/parsing", extension='session'):
+            for file in find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
                 logger.info(f'[+] Парсинг группы: {file}')
                 client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/parsing")
-
-                me = await client.get_me()
-                phone = me.phone
-                logger.info(f'[+] Номер аккаунта: {phone}')
 
                 # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
                 for groups in await self.db_handler.open_and_read_data("writing_group_links"):
