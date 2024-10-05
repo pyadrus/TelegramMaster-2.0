@@ -6,7 +6,7 @@ from telethon.errors import (AuthKeyUnregisteredError, UsernamePurchaseAvailable
                              UsernameInvalidError)
 
 from system.account_actions.TGConnect import TGConnect
-from system.auxiliary_functions.auxiliary_functions import find_files
+from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
 
 
 class AccountBIO:
@@ -51,9 +51,9 @@ class AccountBIO:
         :param user_input  - новое имя пользователя
         """
         try:
-            for file in find_files(directory_path=self.directory_path, extension=self.extension):
-                logger.info(f"{file[0]}")
-                client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
+            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+                logger.info(f"{session_name}")
+                client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
                 await client.connect()
                 try:
                     await client(functions.account.UpdateUsernameRequest(username=user_input))
@@ -92,9 +92,9 @@ class AccountBIO:
         """
         try:
             logger.info(f"Запуск смены  описания профиля")
-            for file in find_files(directory_path=self.directory_path, extension=self.extension):
-                logger.info(f"{file[0]}")
-                client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
+            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+                logger.info(f"{session_name}")
+                client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
                 await client.connect()
                 while True:
                     if len(user_input) <= 70:
@@ -131,9 +131,9 @@ class AccountBIO:
         :param user_input  - новое имя пользователя
         """
         try:
-            for file in find_files(directory_path=self.directory_path, extension=self.extension):
-                logger.info(f"{file[0]}")
-                client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
+            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+                logger.info(f"{session_name}")
+                client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
                 await client.connect()
                 try:
                     result = await client(functions.account.UpdateProfileRequest(first_name=user_input))
@@ -165,9 +165,9 @@ class AccountBIO:
         :param user_input  - новое имя пользователя Telegram
         """
         try:
-            for file in find_files(directory_path=self.directory_path, extension=self.extension):
-                logger.info(f"{file[0]}")
-                client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
+            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+                logger.info(f"{session_name}")
+                client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
                 await client.connect()
                 try:
                     result = await client(functions.account.UpdateProfileRequest(last_name=user_input))
@@ -181,9 +181,9 @@ class AccountBIO:
     async def change_photo_profile(self):
         """Изменение фото профиля."""
         try:
-            for file in find_files(directory_path=self.directory_path, extension=self.extension):
-                logger.info(f"{file[0]}")
-                client = await self.tg_connect.get_telegram_client(file, account_directory=self.directory_path)
+            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+                logger.info(f"{session_name}")
+                client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
                 await client.connect()
                 for photo_file in find_files(directory_path="user_settings/bio", extension='jpg'):
                     try:
