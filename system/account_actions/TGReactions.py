@@ -13,7 +13,7 @@ from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViews
 
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_files, read_json_file
+from system.auxiliary_functions.auxiliary_functions import read_json_file, find_filess
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -32,10 +32,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
 
             async def btn_click(e) -> None:
                 random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
-                entities = find_files(directory_path="user_settings/accounts/reactions", extension='session')
-                for file in entities:
-                    client = await self.tg_connect.get_telegram_client(file,
-                                                                       account_directory="user_settings/accounts/reactions")
+                for session_name in find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
+                    client = await self.tg_connect.get_telegram_client(session_name, account_directory="user_settings/accounts/reactions")
                     chat = read_json_file(filename='user_settings/reactions/link_channel.json')
                     logger.info(f'[+] Работаем с группой: {chat}')
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat)
@@ -71,9 +69,9 @@ class WorkingWithReactions:  # Класс для работы с реакция�
     async def viewing_posts(self) -> None:
         """Накрутка просмотров постов"""
         try:
-            entities = find_files(directory_path="user_settings/accounts/viewing", extension='session')
-            for file in entities:
-                client = await self.tg_connect.get_telegram_client(file, account_directory="user_settings/accounts/viewing")
+            for session_name in find_filess(directory_path="user_settings/accounts/viewing", extension='session'):
+                client = await self.tg_connect.get_telegram_client(session_name,
+                                                                   account_directory="user_settings/accounts/viewing")
                 records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
@@ -113,9 +111,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         :param chat: Ссылка на группу
         """
         try:
-            entities = find_files(directory_path="user_settings/accounts/reactions_list", extension='session')
-            for file in entities:
-                client = await self.tg_connect.get_telegram_client(file,
+            for session_name in find_filess(directory_path="user_settings/accounts/reactions_list", extension='session'):
+                client = await self.tg_connect.get_telegram_client(session_name,
                                                                    account_directory="user_settings/accounts/reactions_list")
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
                 await asyncio.sleep(5)
@@ -130,9 +127,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
     async def setting_reactions(self):
         """Выставление реакций на новые посты"""
         try:
-            entities = find_files(directory_path="user_settings/accounts/reactions", extension='session')
-            for file in entities:
-                client = await self.tg_connect.get_telegram_client(file,
+            for session_name in find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
+                client = await self.tg_connect.get_telegram_client(session_name,
                                                                    account_directory="user_settings/accounts/reactions")
                 chat = read_json_file(filename='user_settings/reactions/link_channel.json')
                 logger.info(chat)

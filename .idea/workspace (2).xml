@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7fd775ea-5ad2-44b3-abdb-6243ded7483b" name="Changes" comment="⬆️ Оптимизация и редактирование документации." />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="master/develop" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;pyadrus&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/pyadrus/TelegramMaster.git&quot;,
+    &quot;accountId&quot;: &quot;056025df-52f6-4140-ae06-360bd28059e3&quot;
+  }
+}</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2jLEzT8AcxlSU5BnSd2gJYCiNgU" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Python.app.executor": "Debug",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "develop",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/zhvit/YandexDisk/Фриланс/Python/TelegramMaster 2.0/docs",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\zhvit\YandexDisk\Фриланс\Python\TelegramMaster 2.0\docs" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\zhvit\YandexDisk\Фриланс\Python\TelegramMaster 2.0\docs\templates" />
+      <recent name="C:\Users\zhvit\YandexDisk\Фриланс\Python\TelegramMaster 2.0\docs\static" />
+      <recent name="C:\Users\zhvit\YandexDisk\Фриланс\Python\TelegramMaster 2.0\docs" />
+      <recent name="C:\Users\zhvit\YandexDisk\Фриланс\Python\TelegramMaster\docs" />
+      <recent name="C:\Users\zhvit\YandexDisk\Фриланс\Python\TelegramMaster\docs\menu" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.app">
+    <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="TelegramMaster" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/docs" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/docs/app.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="TelegramMaster" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.app" />
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-98f27166c754-ba05f1cad1b1-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.21829.153" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7fd775ea-5ad2-44b3-abdb-6243ded7483b" name="Changes" comment="" />
+      <created>1721158219694</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1721158219694</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Формирование бокового меню в html">
+      <option name="closed" value="true" />
+      <created>1724940793240</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1724940793240</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Рефакторинг кода">
+      <option name="closed" value="true" />
+      <created>1724941260577</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1724941260577</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Рефакторинг кода">
+      <option name="closed" value="true" />
+      <created>1724966877014</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1724966877014</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Рефакторинг кода">
+      <option name="closed" value="true" />
+      <created>1724968012577</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1724968012577</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Рефакторинг документации">
+      <option name="closed" value="true" />
+      <created>1725023062532</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1725023062532</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Добавлена кнопка открытия документации и функция открытия документации.">
+      <option name="closed" value="true" />
+      <created>1725023783394</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1725023783394</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Рефакторинг кода">
+      <option name="closed" value="true" />
+      <created>1725045276445</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1725045276445</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725054218957</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1725054218958</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725055203283</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1725055203283</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725056173102</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1725056173102</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725056540977</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1725056540977</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725056949540</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1725056949540</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725057271623</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1725057271623</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725058286775</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1725058286775</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725058488896</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1725058488896</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725128985592</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1725128985592</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725128992785</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1725128992785</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725129009178</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1725129009178</updated>
+    </task>
+    <task id="LOCAL-00066" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725129341869</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1725129341869</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725129622796</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1725129622796</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725129905782</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1725129905782</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725131443504</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1725131443504</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725132322243</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1725132322243</updated>
+    </task>
+    <task id="LOCAL-00071" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725133993710</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1725133993710</updated>
+    </task>
+    <task id="LOCAL-00072" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725138874717</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1725138874717</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725140285258</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1725140285258</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725142528866</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1725142528866</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725143861521</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1725143861521</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725144645571</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1725144645571</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725145293033</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1725145293033</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Миграция документации с md в html.">
+      <option name="closed" value="true" />
+      <created>1725146707125</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1725146707125</updated>
+    </task>
+    <task id="LOCAL-00079" summary="Перенос меню документации в отдельный html файл">
+      <option name="closed" value="true" />
+      <created>1725148101209</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1725148101209</updated>
+    </task>
+    <task id="LOCAL-00080" summary="Перенос меню документации в отдельный html файл">
+      <option name="closed" value="true" />
+      <created>1725149284971</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1725149284971</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Замена ввода данных в терминал на ввод данных в GUI TelegramMaster 2.0">
+      <option name="closed" value="true" />
+      <created>1725284315015</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1725284315016</updated>
+    </task>
+    <task id="LOCAL-00082" summary="Рефакторинг кода. Объединение и редактирование документации функции &quot;Парсинг&quot;.">
+      <option name="closed" value="true" />
+      <created>1725287727972</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1725287727972</updated>
+    </task>
+    <task id="LOCAL-00083" summary="Рефакторинг кода. Объединение и редактирование документации функции &quot;Инвайтинг&quot;.">
+      <option name="closed" value="true" />
+      <created>1725310606522</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1725310606522</updated>
+    </task>
+    <task id="LOCAL-00084" summary="Рефакторинг кода. Объединение и редактирование документации функции &quot;Инвайтинг&quot;.">
+      <option name="closed" value="true" />
+      <created>1725310891627</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1725310891627</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Рефакторинг кода. Добавлена ссылка на GitHub">
+      <option name="closed" value="true" />
+      <created>1725311599741</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1725311599741</updated>
+    </task>
+    <task id="LOCAL-00086" summary="Рефакторинг кода.">
+      <option name="closed" value="true" />
+      <created>1725390126452</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1725390126452</updated>
+    </task>
+    <task id="LOCAL-00087" summary="Рефакторинг кода.">
+      <option name="closed" value="true" />
+      <created>1725396807817</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1725396807817</updated>
+    </task>
+    <task id="LOCAL-00088" summary="Рефакторинг кода.">
+      <option name="closed" value="true" />
+      <created>1725657081382</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1725657081382</updated>
+    </task>
+    <task id="LOCAL-00089" summary="🐛 Рефакторинг кода.">
+      <option name="closed" value="true" />
+      <created>1725870929458</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1725870929458</updated>
+    </task>
+    <task id="LOCAL-00090" summary="🐛 Рефакторинг кода.">
+      <option name="closed" value="true" />
+      <created>1725872073584</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1725872073584</updated>
+    </task>
+    <task id="LOCAL-00091" summary="🐛 Рефакторинг кода.">
+      <option name="closed" value="true" />
+      <created>1725877834769</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1725877834770</updated>
+    </task>
+    <task id="LOCAL-00092" summary="⬆️ Оптимизация и редактирование документации.">
+      <option name="closed" value="true" />
+      <created>1725887847612</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1725887847612</updated>
+    </task>
+    <task id="LOCAL-00093" summary="⬆️ Оптимизация и редактирование документации.">
+      <option name="closed" value="true" />
+      <created>1725887860455</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1725887860455</updated>
+    </task>
+    <task id="LOCAL-00094" summary="⬆️ Оптимизация и редактирование документации.">
+      <option name="closed" value="true" />
+      <created>1725888612153</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1725888612153</updated>
+    </task>
+    <task id="LOCAL-00095" summary="⬆️ Оптимизация и редактирование документации.">
+      <option name="closed" value="true" />
+      <created>1725890074689</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1725890074689</updated>
+    </task>
+    <task id="LOCAL-00096" summary="⬆️ Оптимизация и редактирование документации.">
+      <option name="closed" value="true" />
+      <created>1725891788337</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1725891788337</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Редактирование и дополнение документации." />
+    <MESSAGE value="Добавленно удаление username пользователя из базы данных, которому было отправлено сообщение или отправлен файл." />
+    <MESSAGE value="Дополнение документации TelegramMaster" />
+    <MESSAGE value="Редактирование документации" />
+    <MESSAGE value="Добавлено: Сканирование папки user_settings/accounts на наличие папок с аккаунтами. Заменен page.window_width на page.window.width и так далее в связи с  устареванием: window_width устарел в версии 0.23.0 и будет удален в версии 0.26.0 в библиотеке Flet." />
+    <MESSAGE value="Реализована проверка аккаунтов функцией &quot;Проверка аккаунтов&quot;, а так же дополнение и редактирование документации &quot;Проверка_аккаунтов&quot;." />
+    <MESSAGE value="Добавлено измерение времени проверки аккаунтов." />
+    <MESSAGE value="Формирование HTML документации" />
+    <MESSAGE value="Добавлено время отображения начала инвайтинга и окончания, а так же парсинга." />
+    <MESSAGE value="Миграция документации с формата md в html. Убрана функция &quot;Инвайтинг с лимитами&quot;, так как на все действия в Telegram существуют лимиты." />
+    <MESSAGE value="Рефакторинг кода. Миграция документации &quot;Подключение аккаунтов&quot; с md в html." />
+    <MESSAGE value="Формирование бокового меню в html" />
+    <MESSAGE value="Рефакторинг документации" />
+    <MESSAGE value="Добавлена кнопка открытия документации и функция открытия документации." />
+    <MESSAGE value="Рефакторинг кода" />
+    <MESSAGE value="Миграция документации с md в html." />
+    <MESSAGE value="Перенос меню документации в отдельный html файл" />
+    <MESSAGE value="Замена ввода данных в терминал на ввод данных в GUI TelegramMaster 2.0" />
+    <MESSAGE value="Рефакторинг кода. Объединение и редактирование документации функции &quot;Парсинг&quot;." />
+    <MESSAGE value="Рефакторинг кода. Объединение и редактирование документации функции &quot;Инвайтинг&quot;." />
+    <MESSAGE value="Рефакторинг кода. Добавлена ссылка на GitHub" />
+    <MESSAGE value="Рефакторинг кода." />
+    <MESSAGE value=" Рефакторинг кода." />
+    <MESSAGE value=" Рефакторинг кода." />
+    <MESSAGE value="⬆️ Оптимизация и редактирование документации." />
+    <option name="LAST_COMMIT_MESSAGE" value="⬆️ Оптимизация и редактирование документации." />
+  </component>
+  <component name="com.gk646.codestats.settings.Save">
+    <option name="commitTimePoints">
+      <list>
+        <TimePoint>
+          <option name="timestamp" value="1721160136116" />
+          <option name="linesCode" value="3567" />
+          <option name="totalLines" value="80501" />
+          <option name="info" value="Редактирование .gitignore" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721160264039" />
+          <option name="linesCode" value="3303" />
+          <option name="totalLines" value="80235" />
+          <option name="info" value="Редактирование .gitignore" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721160648423" />
+          <option name="linesCode" value="3303" />
+          <option name="totalLines" value="80237" />
+          <option name="info" value="Редактирование .gitignore" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721162613300" />
+          <option name="linesCode" value="3287" />
+          <option name="totalLines" value="80238" />
+          <option name="info" value="Редактирование .gitignore" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721338017281" />
+          <option name="linesCode" value="3287" />
+          <option name="totalLines" value="80238" />
+          <option name="info" value="" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721338096292" />
+          <option name="linesCode" value="3287" />
+          <option name="totalLines" value="80238" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721595266806" />
+          <option name="linesCode" value="3334" />
+          <option name="totalLines" value="80304" />
+          <option name="info" value="" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721595738923" />
+          <option name="linesCode" value="3323" />
+          <option name="totalLines" value="80284" />
+          <option name="info" value="" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721598224490" />
+          <option name="linesCode" value="3282" />
+          <option name="totalLines" value="80494" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721600435411" />
+          <option name="linesCode" value="3279" />
+          <option name="totalLines" value="80755" />
+          <option name="info" value="Рефакторинг: переход от функционального подхода к " />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721600877306" />
+          <option name="linesCode" value="3267" />
+          <option name="totalLines" value="80745" />
+          <option name="info" value="Рефакторинг: переход от функционального подхода к " />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721855250843" />
+          <option name="linesCode" value="3446" />
+          <option name="totalLines" value="80882" />
+          <option name="info" value="Рефакторинг документации." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721855405513" />
+          <option name="linesCode" value="3462" />
+          <option name="totalLines" value="80902" />
+          <option name="info" value="Рефакторинг документации." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722800541290" />
+          <option name="linesCode" value="3473" />
+          <option name="totalLines" value="80914" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722800750112" />
+          <option name="linesCode" value="3473" />
+          <option name="totalLines" value="80914" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722972441834" />
+          <option name="linesCode" value="3473" />
+          <option name="totalLines" value="80913" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723927055586" />
+          <option name="linesCode" value="3479" />
+          <option name="totalLines" value="80907" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723928699929" />
+          <option name="linesCode" value="3495" />
+          <option name="totalLines" value="80928" />
+          <option name="info" value="Добавлено: Сканирование папки user_settings/accoun" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723937365985" />
+          <option name="linesCode" value="3524" />
+          <option name="totalLines" value="79962" />
+          <option name="info" value="Реализована проверка аккаунтов функцией &quot;Проверка " />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723938331821" />
+          <option name="linesCode" value="3516" />
+          <option name="totalLines" value="79946" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723940214687" />
+          <option name="linesCode" value="3515" />
+          <option name="totalLines" value="79948" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723941215188" />
+          <option name="linesCode" value="3520" />
+          <option name="totalLines" value="79964" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724102780792" />
+          <option name="linesCode" value="3664" />
+          <option name="totalLines" value="80111" />
+          <option name="info" value="" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724415895702" />
+          <option name="linesCode" value="3709" />
+          <option name="totalLines" value="19096" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724440395493" />
+          <option name="linesCode" value="3745" />
+          <option name="totalLines" value="77939" />
+          <option name="info" value="Добавлено время отображения начала инвайтинга и ок" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724449967134" />
+          <option name="linesCode" value="3786" />
+          <option name="totalLines" value="77988" />
+          <option name="info" value="Миграция документации с формата md в html. Убрана " />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724451466841" />
+          <option name="linesCode" value="3793" />
+          <option name="totalLines" value="78053" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724966877594" />
+          <option name="linesCode" value="4137" />
+          <option name="totalLines" value="54965" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724968012767" />
+          <option name="linesCode" value="4138" />
+          <option name="totalLines" value="54966" />
+          <option name="info" value="Рефакторинг кода" />
+        </TimePoint>
+      </list>
+    </option>
+    <option name="genericTimePoints">
+      <list>
+        <TimePoint>
+          <option name="timestamp" value="1721162613300" />
+          <option name="linesCode" value="3287" />
+          <option name="totalLines" value="80238" />
+          <option name="info" value="16 июл. 2024 г." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721338096292" />
+          <option name="linesCode" value="3287" />
+          <option name="totalLines" value="80238" />
+          <option name="info" value="19 июл. 2024 г." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721595266806" />
+          <option name="linesCode" value="3334" />
+          <option name="totalLines" value="80304" />
+          <option name="info" value="21 июл. 2024 г." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721855405513" />
+          <option name="linesCode" value="3462" />
+          <option name="totalLines" value="80902" />
+          <option name="info" value="25 июл. 2024 г." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722800750112" />
+          <option name="linesCode" value="3473" />
+          <option name="totalLines" value="80914" />
+          <option name="info" value="4 авг. 2024 г." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722972441834" />
+          <option name="linesCode" value="3473" />
+          <option name="totalLines" value="80913" />
+          <option name="info" value="6 авг. 2024 г." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723927055586" />
+          <option name="linesCode" value="3479" />
+          <option name="totalLines" value="80907" />
+          <option name="info" value="17 авг. 2024 г." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724102780792" />
+          <option name="linesCode" value="3664" />
+          <option name="totalLines" value="80111" />
+          <option name="info" value="20 авг. 2024 г." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724440395493" />
+          <option name="linesCode" value="3745" />
+          <option name="totalLines" value="77939" />
+          <option name="info" value="23 авг. 2024 г." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724968012767" />
+          <option name="linesCode" value="4138" />
+          <option name="totalLines" value="54966" />
+          <option name="info" value="30 авг. 2024 г." />
+        </TimePoint>
+      </list>
+    </option>
+  </component>
+</project>

@@ -11,3 +11,5 @@
 !/docs/.obsidian/
 !/TODO.md
 /.mypy_cache/
+!/.idea/
+!/.gigaide/

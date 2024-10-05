@@ -8,39 +8,37 @@ from loguru import logger
 
 from docs.app import run_quart, program_version, date_of_program_change
 from system.account_actions.TGAccountBIO import AccountBIO
+from system.account_actions.TGChek import TGChek
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
 from system.account_actions.TGCreating import CreatingGroupsAndChats
 from system.account_actions.TGInviting import InvitingToAGroup
 from system.account_actions.TGInvitingScheduler import (launching_an_invite_once_an_hour,
                                                         launching_invite_every_day_certain_time, schedule_invite)
+from system.account_actions.TGLimits import SettingLimits
 from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_files, find_folders, all_find_files
+from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.menu_gui.menu_gui import (line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
-                                      subscribe_and_unsubscribe_menu)
+                                      subscribe_and_unsubscribe_menu, account_verification_menu)
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
 
 
-async def log_and_execute_with_args(task_name, execute_method, *args, **kwargs):
-    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-    logger.info(f'Время старта: {start}')
-    logger.info(f"▶️ {task_name} начался")
-
-    # Выполняем переданный метод с аргументами
-    await execute_method(*args, **kwargs)
-
-    logger.info(f"🔚 {task_name} завершен")
-    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-    logger.info(f'Время окончания: {finish}')
-    logger.info(f'Время работы: {finish - start}')  # вычитаем время старта из времени окончания
+async def show_notification(page: ft.Page, message: str):
+    dlg = ft.AlertDialog(
+        title=ft.Text(message),
+        on_dismiss=lambda e: page.go("/"),  # Переход обратно после закрытия диалога
+    )
+    page.overlay.append(dlg)
+    dlg.open = True
+    page.update()
 
 
 async def log_and_parse(task_name, parse_method, page=None):
@@ -121,7 +119,7 @@ def telegram_master_main(page: ft.Page):
                               ft.Row([ft.ElevatedButton(width=270, height=30, text="Работа с реакциями",
                                                         on_click=lambda _: page.go("/working_with_reactions")),
                                       ft.ElevatedButton(width=270, height=30, text="Проверка аккаунтов",
-                                                        on_click=lambda _: page.go("/checking_accounts")), ]),
+                                                        on_click=lambda _: page.go("/account_verification_menu")), ]),
                               ft.Row([ft.ElevatedButton(width=270, height=30, text="Создание групп (чатов)",
                                                         on_click=lambda _: page.go("/creating_groups")),
                                       ft.ElevatedButton(width=270, height=30, text="Редактирование_BIO",
@@ -131,39 +129,133 @@ def telegram_master_main(page: ft.Page):
                               ft.ElevatedButton(width=line_width, height=30, text="Документация",
                                                 on_click=lambda _: page.go("/documentation")),
                           ]), ]))
+
         if page.route == "/inviting":  # Меню "Инвайтинг"
             await inviting_menu(page)
+
         elif page.route == "/inviting_without_limits":  # Инвайтинг
-            await log_and_execute_with_args(
-                "Инвайтинг", InvitingToAGroup().inviting_without_limits, account_limits=ConfigReader().get_limits())
-        elif page.route == "/inviting_1_time_per_hour":
-            await log_and_parse("Инвайтинг 1 раз в час", launching_an_invite_once_an_hour)
-        elif page.route == "/inviting_certain_time":
-            await log_and_parse("Инвайтинг в определенное время", schedule_invite)
-        elif page.route == "/inviting_every_day":
-            await log_and_parse("Инвайтинг каждый день", launching_invite_every_day_certain_time)
-        elif page.route == "/checking_accounts":  # Проверка аккаунтов
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/inviting", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке inviting')
+                    await show_notification(page, "Нет аккаунта в папке inviting")
+                    return None  # Если нет аккаунта в папке inviting
 
-            start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-            logger.info('Время старта: ' + str(start))
-            logger.info("▶️ Проверка аккаунтов началась")
+                number_usernames = await SettingLimits().get_usernames_with_limits(table_name="members",
+                                                                                   account_limits=ConfigReader().get_limits())
+                if len(number_usernames) == 0:
+                    logger.error('[+] В таблице members нет пользователей для инвайтинга')
+                    await show_notification(page, "В таблице members нет пользователей для инвайтинга")
+                    return None  # Если нет аккаунта в папке inviting
 
-            await TGConnect().verify_all_accounts(account_directory="user_settings/accounts",
-                                                  extension="session")  # Вызываем метод для проверки аккаунтов
-            folders = find_folders(directory_path="user_settings/accounts")
-            for folder in folders:
-                logger.info(f'Проверка аккаунтов из папки 📁 {folder} через спам бот')
-                if folder == "invalid_account":
-                    logger.info(f"⛔ Пропускаем папку 📁: {folder}")
-                    continue  # Продолжаем цикл, пропуская эту итерацию
                 else:
-                    await TGConnect().verify_all_accounts(account_directory=f"user_settings/accounts/{folder}",
-                                                          extension="session")
-                    await TGConnect().check_for_spam(folder)
-            logger.info("🔚 Проверка аккаунтов завершена")
-            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-            logger.info('Время окончания: ' + str(finish))
-            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Инвайтинга")
+                    await InvitingToAGroup().inviting_without_limits(account_limits=ConfigReader().get_limits())
+                    logger.info("🔚 Конец Инвайтинга")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/inviting", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке inviting')
+                    await show_notification(page, "Нет аккаунта в папке inviting")
+                    return None  # Если нет аккаунта в папке inviting
+
+                number_usernames = await SettingLimits().get_usernames_with_limits(table_name="members",
+                                                                                   account_limits=ConfigReader().get_limits())
+                if len(number_usernames) == 0:
+                    logger.error('[+] В таблице members нет пользователей для инвайтинга')
+                    await show_notification(page, "В таблице members нет пользователей для инвайтинга")
+                    return None  # Если нет аккаунта в папке inviting
+
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Инвайтинга")
+                    launching_an_invite_once_an_hour()
+                    logger.info("🔚 Конец Инвайтинга")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/inviting", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке inviting')
+                    await show_notification(page, "Нет аккаунта в папке inviting")
+                    return None  # Если нет аккаунта в папке inviting
+
+                number_usernames = await SettingLimits().get_usernames_with_limits(table_name="members",
+                                                                                   account_limits=ConfigReader().get_limits())
+                if len(number_usernames) == 0:
+                    logger.error('[+] В таблице members нет пользователей для инвайтинга')
+                    await show_notification(page, "В таблице members нет пользователей для инвайтинга")
+                    return None  # Если нет аккаунта в папке inviting
+
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Инвайтинга")
+                    schedule_invite()
+                    logger.info("🔚 Конец Инвайтинга")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/inviting", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке inviting')
+                    await show_notification(page, "Нет аккаунта в папке inviting")
+                    return None  # Если нет аккаунта в папке inviting
+
+                number_usernames = await SettingLimits().get_usernames_with_limits(table_name="members",
+                                                                                   account_limits=ConfigReader().get_limits())
+                if len(number_usernames) == 0:
+                    logger.error('[+] В таблице members нет пользователей для инвайтинга')
+                    await show_notification(page, "В таблице members нет пользователей для инвайтинга")
+                    return None  # Если нет аккаунта в папке inviting
+
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Инвайтинга")
+                    launching_invite_every_day_certain_time()
+                    logger.info("🔚 Конец Инвайтинга")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+
+        elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
+            await account_verification_menu(page)
+        elif page.route == "/validation_check":  # Проверка на валидность
+            await TGChek().validation_check()
+        elif page.route == "/checking_for_spam_bots":  # Проверка через спам бот
+            await TGChek().checking_for_spam_bots()
+        elif page.route == "/renaming_accounts":  # Переименование аккаунтов
+            await TGChek().renaming_accounts()
+        elif page.route == "/full_verification":  # Полная проверка
+            await TGChek().full_verification()
 
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             await subscribe_and_unsubscribe_menu(page)
@@ -179,21 +271,90 @@ def telegram_master_main(page: ft.Page):
             await log_and_parse("Накручиваем просмотры постов", WorkingWithReactions().viewing_posts)
         elif page.route == "/automatic_setting_of_reactions":
             await log_and_parse("Автоматическое выставление реакций", WorkingWithReactions().setting_reactions)
+
         elif page.route == "/parsing":  # Меню "Парсинг"
             await menu_parsing(page)
+
         elif page.route == "/parsing_single_groups":
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/parsing", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке parsing")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало парсинга")
+                    await ParsingGroupMembers().parse_groups()
+                    logger.info("🔚 Конец парсинга")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
+        elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/parsing", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке parsing")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало парсинга")
+                    await ParsingGroupMembers().choose_and_parse_group(page)
+                    logger.info("🔚 Конец парсинга")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
-            await log_and_parse("Парсинг одной группы / групп", ParsingGroupMembers().parse_groups)
+        elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/parsing", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке parsing")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало парсинга")
+                    await ParsingGroupMembers().entering_data_for_parsing_active(page)
+                    logger.info("🔚 Конец парсинга")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
+        elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов аккаунта
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/parsing", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке parsing")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало парсинга")
+                    await ParsingGroupMembers().parse_subscribed_groups()
+                    logger.info("🔚 Конец парсинга")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/parsing_selected_group_user_subscribed":
-            await log_and_parse("Парсинг выбранной группы", ParsingGroupMembers().choose_and_parse_group, page)
-        elif page.route == "/parsing_active_group_members":
-            await log_and_parse("Парсинг активных участников группы",
-                                ParsingGroupMembers().entering_data_for_parsing_active, page)
-        elif page.route == "/parsing_groups_channels_account_subscribed":
-            await log_and_parse("Парсинг групп / каналов аккаунта", ParsingGroupMembers().parse_subscribed_groups)
         elif page.route == "/clearing_list_previously_saved_data":
             await log_and_parse("Очистка списка от ранее спарсенных данных", DatabaseHandler().cleaning_db, "members")
         elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
@@ -227,8 +388,10 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/sending_messages_files_via_chats":
             await log_and_parse("Рассылка сообщений + файлов по чатам",
                                 SendTelegramMessages().sending_messages_files_via_chats)
+
         elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
             await SendTelegramMessages().send_message_from_all_accounts(account_limits=ConfigReader().get_limits())
+
         elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
             await SendTelegramMessages().send_files_to_personal_chats(account_limits=ConfigReader().get_limits())
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
@@ -290,6 +453,10 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/documentation":  # Открытие документации
             webbrowser.open_new("http://127.0.0.1:8000")
             await run_quart()
+
+        elif page.route == "/errors":
+            # Пустая страница с уведомлением
+            page.views.append(ft.View("/errors", []))
 
         page.update()
 
