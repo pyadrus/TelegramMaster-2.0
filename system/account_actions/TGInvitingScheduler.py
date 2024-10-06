@@ -4,7 +4,6 @@ import schedule
 from loguru import logger
 
 from system.account_actions.TGChek import TGChek
-from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGInviting import InvitingToAGroup
 from system.auxiliary_functions.global_variables import ConfigReader
 

@@ -94,36 +94,6 @@ class TGConnect:
         working_with_accounts(f"user_settings/accounts/{folder_name}/{session_name}.session",
                               f"user_settings/accounts/banned/{session_name}.session")
 
-    # async def working_with_accountss(self, account_folder, new_account_folder) -> None:
-    #     """
-    #     Асинхронная работа с аккаунтами.
-    #     :param account_folder: Путь к папке с аккаунтами
-    #     :param new_account_folder: Путь к новой папке для аккаунтов
-    #     """
-    #     try:
-            # Проверяем существование директории назначения, если её нет — создаем
-            # if not os.path.exists(new_account_folder):
-            #     os.makedirs(new_account_folder)
-
-            # Проверяем, существует ли уже файл в целевой директории
-            # target_file = os.path.join(new_account_folder, os.path.basename(account_folder))
-            # if os.path.exists(target_file):
-            #     logger.warning(f"Файл {target_file} уже существует. Удаляем дубликат.")
-            #     os.remove(target_file)  # Удаляем файл, если он существует
-
-            # Перемещаем файл
-            # os.replace(account_folder, target_file)
-            # logger.info(f"Аккаунт успешно перемещен из {account_folder} в {target_file}")
-
-        # except FileNotFoundError:
-        #     logger.error(f"Не удалось найти аккаунт: {account_folder}")
-        # except FileExistsError:
-        #     os.remove(account_folder)
-        #     logger.info(f"Файл {account_folder} удален, так как дубликат уже существует.")
-        # except PermissionError:
-        #     logger.error("Не удалось перенести файлы в нужную папку: недостаточно прав.")
-        # except Exception as e:
-        #     logger.exception(f"Ошибка при работе с аккаунтами: {e}")
 
     async def check_for_spam(self, folder_name) -> None:
         """
