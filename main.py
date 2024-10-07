@@ -267,10 +267,46 @@ def telegram_master_main(page: ft.Page):
             await reactions_menu(page)
         elif page.route == "/setting_reactions":
             await log_and_parse("Ставим реакции", WorkingWithReactions().send_reaction_request, page)
-        elif page.route == "/we_are_winding_up_post_views":
-            await log_and_parse("Накручиваем просмотры постов", WorkingWithReactions().viewing_posts)
-        elif page.route == "/automatic_setting_of_reactions":
-            await log_and_parse("Автоматическое выставление реакций", WorkingWithReactions().setting_reactions)
+
+        elif page.route == "/we_are_winding_up_post_views":# Накручиваем просмотры постов
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/reactions", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке reactions')
+                    await show_notification(page, "Нет аккаунта в папке reactions")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Накрутки просмотров постов")
+                    await WorkingWithReactions().viewing_posts()
+                    logger.info("🔚 Конец Накрутки просмотров постов")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/automatic_setting_of_reactions": # Автоматическое выставление реакций
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/reactions", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке reactions')
+                    await show_notification(page, "Нет аккаунта в папке reactions")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Автоматического выставления реакций")
+                    await WorkingWithReactions().setting_reactions()
+                    logger.info("🔚 Конец Автоматического выставления реакций")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
         elif page.route == "/parsing":  # Меню "Парсинг"
             await menu_parsing(page)
