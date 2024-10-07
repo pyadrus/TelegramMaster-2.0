@@ -261,8 +261,26 @@ def telegram_master_main(page: ft.Page):
             await subscribe_and_unsubscribe_menu(page)
         elif page.route == "/subscription_all":
             await log_and_parse("Подписка", SubscribeUnsubscribeTelegram().subscribe_telegram)
-        elif page.route == "/unsubscribe_all":
-            await log_and_parse("Отписываемся", SubscribeUnsubscribeTelegram().unsubscribe_all)
+
+        elif page.route == "/unsubscribe_all":# Отписываемся
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/unsubscribe", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке unsubscribe')
+                    await show_notification(page, "Нет аккаунта в папке unsubscribe")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Отписка")
+                    await SubscribeUnsubscribeTelegram().unsubscribe_all()
+                    logger.info("🔚 Конец Отписки")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             await reactions_menu(page)
