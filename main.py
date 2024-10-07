@@ -41,21 +41,21 @@ async def show_notification(page: ft.Page, message: str):
     page.update()
 
 
-async def log_and_parse(task_name, parse_method, page=None):
-    """Отображение времени начала и завершения работы"""
-    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-    logger.info(f'Время старта: {start}')
-    logger.info(f"▶️ {task_name} начался")
-
-    if page:
-        await parse_method(page)
-    else:
-        await parse_method()
-
-    logger.info(f"🔚 {task_name} завершен")
-    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-    logger.info(f'Время окончания: {finish}')
-    logger.info(f'Время работы: {finish - start}')  # вычитаем время старта из времени окончания
+# async def log_and_parse(task_name, parse_method, page=None):
+#     """Отображение времени начала и завершения работы"""
+#     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+#     logger.info(f'Время старта: {start}')
+#     logger.info(f"▶️ {task_name} начался")
+#
+#     if page:
+#         await parse_method(page)
+#     else:
+#         await parse_method()
+#
+#     logger.info(f"🔚 {task_name} завершен")
+#     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+#     logger.info(f'Время окончания: {finish}')
+#     logger.info(f'Время работы: {finish - start}')  # вычитаем время старта из времени окончания
 
 
 async def main():
@@ -372,8 +372,28 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/connecting_accounts":
             await log_and_parse("Подключение новых аккаунтов, методом ввода нового номера телефона",
                                 TGConnect().start_telegram_session, page)
-        elif page.route == "/creating_groups":
-            await log_and_parse("Создание групп (чатов)", CreatingGroupsAndChats().creating_groups_and_chats)
+
+        elif page.route == "/creating_groups":# Создание групп (чатов)
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/creating", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке creating')
+                    await show_notification(page, "Нет аккаунта в папке creating")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Создания групп (чатов)")
+                    await CreatingGroupsAndChats().creating_groups_and_chats()
+                    logger.info("🔚 Конец Создания групп (чатов)")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+
 
 
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
@@ -553,11 +573,10 @@ def telegram_master_main(page: ft.Page):
                 logger.exception(f"Ошибка: {e}")
 
 
-
         elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
             await settings_menu(page)
-        elif page.route == "/recording_api_id_api_hash":
-            await log_and_parse("Запись api_id, api_hash", SettingPage().writing_api_id_api_hash, page)
+        elif page.route == "/recording_api_id_api_hash": # Запись api_id, api_hash
+            await SettingPage().writing_api_id_api_hash(page)
         elif page.route == "/message_limits":  # Лимиты на сообщения
             SettingPage().record_setting(page, "message_limits", "Введите лимит на сообщения")
         elif page.route == "/account_limits":  # Лимиты на аккаунт
@@ -574,9 +593,8 @@ def telegram_master_main(page: ft.Page):
             await DatabaseHandler().cleaning_db("links_inviting")  # Удаление списка с группами
             SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга", "links_inviting",
                                                  "links_inviting", "/settings", "links_inviting")
-        elif page.route == "/proxy_entry":
-            await log_and_parse("Запись proxy",
-                                SettingPage().creating_the_main_window_for_proxy_data_entry, page)
+        elif page.route == "/proxy_entry":# Запись proxy
+            await SettingPage().creating_the_main_window_for_proxy_data_entry(page)
         elif page.route == "/message_recording":  # Запись сообщений
 
             SettingPage().recording_text_for_sending_messages(page, "Введите текст для сообщения",
@@ -586,8 +604,8 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
             SettingPage().recording_text_for_sending_messages(page, "Введите текст сообщения",
                                                               'user_settings/reactions/link_channel.json')
-        elif page.route == "/choice_of_reactions":
-            await log_and_parse("Выбор реакций", reaction_gui, page)
+        elif page.route == "/choice_of_reactions":# Выбор реакций
+            await reaction_gui(page)
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
             SettingPage().create_main_window(page, variable="time_sending_messages")
         elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
@@ -595,7 +613,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/changing_accounts":  # Смена аккаунтов
             SettingPage().create_main_window(page, variable="time_changing_accounts")
         elif page.route == "/time_between_subscriptions":  # TODO проверить на повторное использование
-            await log_and_parse("Запись времени", SettingPage().recording_the_time_to_launch_an_invite_every_day, page)
+            await SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
             SettingPage().create_main_window(page, variable="time_subscription")
         elif page.route == "/documentation":  # Открытие документации
