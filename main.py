@@ -263,10 +263,29 @@ def telegram_master_main(page: ft.Page):
             await log_and_parse("Подписка", SubscribeUnsubscribeTelegram().subscribe_telegram)
         elif page.route == "/unsubscribe_all":
             await log_and_parse("Отписываемся", SubscribeUnsubscribeTelegram().unsubscribe_all)
+
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             await reactions_menu(page)
-        elif page.route == "/setting_reactions":
-            await log_and_parse("Ставим реакции", WorkingWithReactions().send_reaction_request, page)
+
+        elif page.route == "/setting_reactions":# Ставим реакции
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/reactions", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке reactions')
+                    await show_notification(page, "Нет аккаунта в папке reactions")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Проставления реакций")
+                    await WorkingWithReactions().send_reaction_request(page)
+                    logger.info("🔚 Конец Проставления реакций")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
         elif page.route == "/we_are_winding_up_post_views":# Накручиваем просмотры постов
             try:
