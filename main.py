@@ -355,23 +355,96 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/clearing_list_previously_saved_data":
-            await log_and_parse("Очистка списка от ранее спарсенных данных", DatabaseHandler().cleaning_db, "members")
+        elif page.route == "/clearing_list_previously_saved_data": # Очистка списка от ранее спарсенных данных
+            await DatabaseHandler().cleaning_db("members")
+
         elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
             await working_with_contacts_menu(page)
+
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
-            await DatabaseHandler().open_and_read_data("contact")  # Удаление списка с контактами
-            SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
-                                                 "contact", "/working_with_contacts", "contact")
-        elif page.route == "/show_list_contacts":
-            await log_and_parse("Показать список контактов", TGContact().show_account_contact_list)
-        elif page.route == "/deleting_contacts":
-            await log_and_parse("Удаление контактов", TGContact().delete_contact)
-        elif page.route == "/adding_contacts":
-            await log_and_parse("Добавление контактов", TGContact().inviting_contact)
-        elif page.route == "/connecting_accounts":
-            await log_and_parse("Подключение новых аккаунтов, методом ввода нового номера телефона",
-                                TGConnect().start_telegram_session, page)
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке contact')
+                    await show_notification(page, "Нет аккаунта в папке contact")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Формирования списка контактов")
+                    await DatabaseHandler().open_and_read_data("contact")  # Удаление списка с контактами
+                    SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
+                                                         "contact", "/working_with_contacts", "contact")
+                    logger.info("🔚 Конец Формирования списка контактов")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/show_list_contacts":# Показать список контактов
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке contact')
+                    await show_notification(page, "Нет аккаунта в папке contact")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Показа списка контактов")
+                    await TGContact().show_account_contact_list()
+                    logger.info("🔚 Конец Показа списка контактов")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/deleting_contacts":# Удаление контактов
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке contact')
+                    await show_notification(page, "Нет аккаунта в папке contact")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Удаления контактов")
+                    await TGContact().delete_contact()
+                    logger.info("🔚 Конец Удаления контактов")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/adding_contacts":# Добавление контактов
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке contact')
+                    await show_notification(page, "Нет аккаунта в папке contact")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Добавления контактов")
+                    await TGContact().inviting_contact()
+                    logger.info("🔚 Конец Добавления контактов")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/connecting_accounts":# Подключение новых аккаунтов, методом ввода нового номера телефона
+            await TGConnect().start_telegram_session(page)
 
         elif page.route == "/creating_groups":# Создание групп (чатов)
             try:
@@ -393,9 +466,6 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-
-
-
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             await message_distribution_menu(page)
         elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
@@ -405,8 +475,28 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/sending_messages_via_chats_with_answering_machine":
             await log_and_parse("Рассылка сообщений по чатам с автоответчиком",
                                 SendTelegramMessages().answering_machine)
-        elif page.route == "/sending_files_via_chats":
-            await log_and_parse("Рассылка файлов по чатам", SendTelegramMessages().sending_files_via_chats)
+        
+
+
+        elif page.route == "/sending_files_via_chats":# Рассылка файлов по чатам
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке send_message")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Рассылки файлов по чатам")
+                    await SendTelegramMessages().sending_files_via_chats()
+                    logger.info("🔚 Конец Рассылки файлов по чатам")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
         elif page.route == "/sending_messages_files_via_chats":# Рассылка сообщений + файлов по чатам
             try:
