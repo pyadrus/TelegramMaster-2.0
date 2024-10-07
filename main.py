@@ -41,23 +41,6 @@ async def show_notification(page: ft.Page, message: str):
     page.update()
 
 
-# async def log_and_parse(task_name, parse_method, page=None):
-#     """Отображение времени начала и завершения работы"""
-#     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-#     logger.info(f'Время старта: {start}')
-#     logger.info(f"▶️ {task_name} начался")
-#
-#     if page:
-#         await parse_method(page)
-#     else:
-#         await parse_method()
-#
-#     logger.info(f"🔚 {task_name} завершен")
-#     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-#     logger.info(f'Время окончания: {finish}')
-#     logger.info(f'Время работы: {finish - start}')  # вычитаем время старта из времени окончания
-
-
 async def main():
     # Запускаем сервер Quart в фоновом режиме
     quart_task = asyncio.create_task(run_quart())
@@ -245,7 +228,6 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-
         elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
             await account_verification_menu(page)
         elif page.route == "/validation_check":  # Проверка на валидность
@@ -259,16 +241,71 @@ def telegram_master_main(page: ft.Page):
 
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             await subscribe_and_unsubscribe_menu(page)
-        elif page.route == "/subscription_all":
-            await log_and_parse("Подписка", SubscribeUnsubscribeTelegram().subscribe_telegram)
-        elif page.route == "/unsubscribe_all":
-            await log_and_parse("Отписываемся", SubscribeUnsubscribeTelegram().unsubscribe_all)
+
+        elif page.route == "/subscription_all":  # Подписка
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/subscription", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке subscription')
+                    await show_notification(page, "Нет аккаунта в папке subscription")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Подписки")
+                    await SubscribeUnsubscribeTelegram().subscribe_telegram()
+                    logger.info("🔚 Конец Подписки")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/unsubscribe_all":  # Отписываемся
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/unsubscribe", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке unsubscribe')
+                    await show_notification(page, "Нет аккаунта в папке unsubscribe")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Отписка")
+                    await SubscribeUnsubscribeTelegram().unsubscribe_all()
+                    logger.info("🔚 Конец Отписки")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             await reactions_menu(page)
-        elif page.route == "/setting_reactions":
-            await log_and_parse("Ставим реакции", WorkingWithReactions().send_reaction_request, page)
 
-        elif page.route == "/we_are_winding_up_post_views":# Накручиваем просмотры постов
+        elif page.route == "/setting_reactions":  # Ставим реакции
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/reactions", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке reactions')
+                    await show_notification(page, "Нет аккаунта в папке reactions")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Проставления реакций")
+                    await WorkingWithReactions().send_reaction_request(page)
+                    logger.info("🔚 Конец Проставления реакций")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/reactions", extension='session')
@@ -288,7 +325,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/automatic_setting_of_reactions": # Автоматическое выставление реакций
+        elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/reactions", extension='session')
@@ -391,7 +428,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/clearing_list_previously_saved_data": # Очистка списка от ранее спарсенных данных
+        elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db("members")
 
         elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
@@ -419,7 +456,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/show_list_contacts":# Показать список контактов
+        elif page.route == "/show_list_contacts":  # Показать список контактов
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
@@ -439,7 +476,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/deleting_contacts":# Удаление контактов
+        elif page.route == "/deleting_contacts":  # Удаление контактов
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
@@ -459,7 +496,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/adding_contacts":# Добавление контактов
+        elif page.route == "/adding_contacts":  # Добавление контактов
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
@@ -479,10 +516,10 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/connecting_accounts":# Подключение новых аккаунтов, методом ввода нового номера телефона
+        elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
             await TGConnect().start_telegram_session(page)
 
-        elif page.route == "/creating_groups":# Создание групп (чатов)
+        elif page.route == "/creating_groups":  # Создание групп (чатов)
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/creating", extension='session')
@@ -527,7 +564,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/sending_messages_via_chats_with_answering_machine":# Рассылка сообщений по чатам с автоответчиком
+        elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
@@ -547,7 +584,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/sending_files_via_chats":# Рассылка файлов по чатам
+        elif page.route == "/sending_files_via_chats":  # Рассылка файлов по чатам
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
@@ -567,7 +604,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/sending_messages_files_via_chats":# Рассылка сообщений + файлов по чатам
+        elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
@@ -599,7 +636,8 @@ def telegram_master_main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало отправки сообщений в личку")
-                    await SendTelegramMessages().send_message_from_all_accounts(account_limits=ConfigReader().get_limits())
+                    await SendTelegramMessages().send_message_from_all_accounts(
+                        account_limits=ConfigReader().get_limits())
                     logger.info("🔚 Конец отправки сообщений в личку")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -619,7 +657,8 @@ def telegram_master_main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало отправки файлов в личку")
-                    await SendTelegramMessages().send_files_to_personal_chats(account_limits=ConfigReader().get_limits())
+                    await SendTelegramMessages().send_files_to_personal_chats(
+                        account_limits=ConfigReader().get_limits())
                     logger.info("🔚 Конец отправки файлов в личку")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -631,7 +670,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
             await bio_editing_menu(page)
 
-        elif page.route == "/edit_description": # Изменение описания
+        elif page.route == "/edit_description":  # Изменение описания
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
@@ -651,7 +690,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/name_change":# Изменение имени
+        elif page.route == "/name_change":  # Изменение имени
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
@@ -671,7 +710,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/change_surname":# Изменение фамилии
+        elif page.route == "/change_surname":  # Изменение фамилии
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
@@ -691,7 +730,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/edit_photo":# Изменение фото
+        elif page.route == "/edit_photo":  # Изменение фото
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
@@ -711,7 +750,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        elif page.route == "/changing_username":# Изменение username
+        elif page.route == "/changing_username":  # Изменение username
             try:
                 logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
                 session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
@@ -734,7 +773,7 @@ def telegram_master_main(page: ft.Page):
 
         elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
             await settings_menu(page)
-        elif page.route == "/recording_api_id_api_hash": # Запись api_id, api_hash
+        elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash
             await SettingPage().writing_api_id_api_hash(page)
         elif page.route == "/message_limits":  # Лимиты на сообщения
             SettingPage().record_setting(page, "message_limits", "Введите лимит на сообщения")
@@ -752,7 +791,7 @@ def telegram_master_main(page: ft.Page):
             await DatabaseHandler().cleaning_db("links_inviting")  # Удаление списка с группами
             SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга", "links_inviting",
                                                  "links_inviting", "/settings", "links_inviting")
-        elif page.route == "/proxy_entry":# Запись proxy
+        elif page.route == "/proxy_entry":  # Запись proxy
             await SettingPage().creating_the_main_window_for_proxy_data_entry(page)
         elif page.route == "/message_recording":  # Запись сообщений
 
@@ -763,7 +802,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
             SettingPage().recording_text_for_sending_messages(page, "Введите текст сообщения",
                                                               'user_settings/reactions/link_channel.json')
-        elif page.route == "/choice_of_reactions":# Выбор реакций
+        elif page.route == "/choice_of_reactions":  # Выбор реакций
             await reaction_gui(page)
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
             SettingPage().create_main_window(page, variable="time_sending_messages")
