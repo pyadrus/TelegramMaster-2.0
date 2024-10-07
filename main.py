@@ -374,6 +374,8 @@ def telegram_master_main(page: ft.Page):
                                 TGConnect().start_telegram_session, page)
         elif page.route == "/creating_groups":
             await log_and_parse("Создание групп (чатов)", CreatingGroupsAndChats().creating_groups_and_chats)
+
+
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             await message_distribution_menu(page)
         elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
@@ -385,27 +387,173 @@ def telegram_master_main(page: ft.Page):
                                 SendTelegramMessages().answering_machine)
         elif page.route == "/sending_files_via_chats":
             await log_and_parse("Рассылка файлов по чатам", SendTelegramMessages().sending_files_via_chats)
-        elif page.route == "/sending_messages_files_via_chats":
-            await log_and_parse("Рассылка сообщений + файлов по чатам",
-                                SendTelegramMessages().sending_messages_files_via_chats)
+
+        elif page.route == "/sending_messages_files_via_chats":# Рассылка сообщений + файлов по чатам
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке send_message")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало отправки сообщений + файлов по чатам")
+                    await SendTelegramMessages().sending_messages_files_via_chats()
+                    logger.info("🔚 Конец отправки сообщений + файлов по чатам")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
         elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
-            await SendTelegramMessages().send_message_from_all_accounts(account_limits=ConfigReader().get_limits())
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке send_message")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало отправки сообщений в личку")
+                    await SendTelegramMessages().send_message_from_all_accounts(account_limits=ConfigReader().get_limits())
+                    logger.info("🔚 Конец отправки сообщений в личку")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
         elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
-            await SendTelegramMessages().send_files_to_personal_chats(account_limits=ConfigReader().get_limits())
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке send_message")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало отправки файлов в личку")
+                    await SendTelegramMessages().send_files_to_personal_chats(account_limits=ConfigReader().get_limits())
+                    logger.info("🔚 Конец отправки файлов в личку")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
             await bio_editing_menu(page)
-        elif page.route == "/edit_description":
-            await log_and_parse("Изменение описания", AccountBIO().change_bio_profile_gui, page)
-        elif page.route == "/name_change":
-            await log_and_parse("Изменение имени", AccountBIO().change_name_profile_gui, page)
-        elif page.route == "/change_surname":
-            await log_and_parse("Изменение фамилии", AccountBIO().change_last_name_profile_gui, page)
-        elif page.route == "/edit_photo":
-            await log_and_parse("Изменение фото", AccountBIO().change_photo_profile)
-        elif page.route == "/changing_username":
-            await log_and_parse("Изменение username", AccountBIO().change_username_profile_gui, page)
+
+        elif page.route == "/edit_description": # Изменение описания
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке bio")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Изменения описания")
+                    await AccountBIO().change_bio_profile_gui(page)
+                    logger.info("🔚 Конец Изменения описания")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/name_change":# Изменение имени
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке bio")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Изменения имени")
+                    await AccountBIO().change_name_profile_gui(page)
+                    logger.info("🔚 Конец Изменения имени")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/change_surname":# Изменение фамилии
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке bio")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Изменения фамилии")
+                    await AccountBIO().change_last_name_profile_gui(page)
+                    logger.info("🔚 Конец Изменения фамилии")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/edit_photo":# Изменение фото
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке bio")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Изменения фото")
+                    await AccountBIO().change_photo_profile()
+                    logger.info("🔚 Конец Изменения фото")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/changing_username":# Изменение username
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке bio")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Изменения username")
+                    await AccountBIO().change_username_profile_gui(page)
+                    logger.info("🔚 Конец Изменения username")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+
+
         elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
             await settings_menu(page)
         elif page.route == "/recording_api_id_api_hash":
