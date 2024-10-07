@@ -810,7 +810,7 @@ def telegram_master_main(page: ft.Page):
             SettingPage().create_main_window(page, variable="time_inviting")
         elif page.route == "/changing_accounts":  # Смена аккаунтов
             SettingPage().create_main_window(page, variable="time_changing_accounts")
-        elif page.route == "/time_between_subscriptions":  # TODO проверить на повторное использование
+        elif page.route == "/time_between_subscriptions":
             await SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
             SettingPage().create_main_window(page, variable="time_subscription")
