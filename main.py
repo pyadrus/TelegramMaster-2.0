@@ -374,6 +374,8 @@ def telegram_master_main(page: ft.Page):
                                 TGConnect().start_telegram_session, page)
         elif page.route == "/creating_groups":
             await log_and_parse("Создание групп (чатов)", CreatingGroupsAndChats().creating_groups_and_chats)
+
+
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             await message_distribution_menu(page)
         elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
@@ -385,15 +387,66 @@ def telegram_master_main(page: ft.Page):
                                 SendTelegramMessages().answering_machine)
         elif page.route == "/sending_files_via_chats":
             await log_and_parse("Рассылка файлов по чатам", SendTelegramMessages().sending_files_via_chats)
-        elif page.route == "/sending_messages_files_via_chats":
-            await log_and_parse("Рассылка сообщений + файлов по чатам",
-                                SendTelegramMessages().sending_messages_files_via_chats)
+
+        elif page.route == "/sending_messages_files_via_chats":# Рассылка сообщений + файлов по чатам
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке send_message")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало отправки сообщений + файлов по чатам")
+                    await SendTelegramMessages().sending_messages_files_via_chats()
+                    logger.info("🔚 Конец отправки сообщений + файлов по чатам")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
         elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
-            await SendTelegramMessages().send_message_from_all_accounts(account_limits=ConfigReader().get_limits())
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке send_message")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало отправки сообщений в личку")
+                    await SendTelegramMessages().send_message_from_all_accounts(account_limits=ConfigReader().get_limits())
+                    logger.info("🔚 Конец отправки сообщений в личку")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
         elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
-            await SendTelegramMessages().send_files_to_personal_chats(account_limits=ConfigReader().get_limits())
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке send_message")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало отправки файлов в личку")
+                    await SendTelegramMessages().send_files_to_personal_chats(account_limits=ConfigReader().get_limits())
+                    logger.info("🔚 Конец отправки файлов в личку")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
 
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
@@ -498,6 +551,8 @@ def telegram_master_main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
+
+
 
         elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
             await settings_menu(page)
