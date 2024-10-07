@@ -235,8 +235,7 @@ class SendTelegramMessages:
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                    entitiess = find_files(directory_path="user_settings/message", extension="json")
-                    data = await self.select_and_read_random_file(entitiess, folder="message")
+                    data = await self.select_and_read_random_file(find_files(directory_path="user_settings/message", extension="json"), folder="message")
                     try:
                         await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
@@ -260,6 +259,7 @@ class SendTelegramMessages:
                     except ChatWriteForbiddenError:
                         record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
+
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
