@@ -5,7 +5,7 @@ from quart import Quart, render_template
 
 app = Quart(__name__, template_folder='templates')
 
-program_version, date_of_program_change = "2.2.1", "05.10.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "2.2.2", "07.10.2024"  # Версия программы, дата изменения
 
 
 @app.route('/')

@@ -111,6 +111,7 @@ class SubscribeUnsubscribeTelegram:
         except PeerFloodError:
             logger.error(f"Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.")
             time.sleep(random.randrange(50, 60))
+
         except FloodWaitError as e:
             logger.error(f"Попытка подписки на группу / канал {groups_wr}. Flood! wait for "
                          f"{str(datetime.timedelta(seconds=e.seconds))}")
