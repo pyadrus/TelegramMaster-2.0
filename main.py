@@ -468,15 +468,48 @@ def telegram_master_main(page: ft.Page):
 
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             await message_distribution_menu(page)
-        elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
-            entities = find_files(directory_path="user_settings/message", extension="json")
-            logger.info(entities)
-            await SendTelegramMessages().sending_messages_via_chats_times()
-        elif page.route == "/sending_messages_via_chats_with_answering_machine":
-            await log_and_parse("Рассылка сообщений по чатам с автоответчиком",
-                                SendTelegramMessages().answering_machine)
-        
 
+        elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке send_message")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Рассылки сообщений по чатам")
+                    entities = find_files(directory_path="user_settings/message", extension="json")
+                    logger.info(entities)
+                    await SendTelegramMessages().sending_messages_via_chats_times()
+                    logger.info("🔚 Конец Рассылки сообщений по чатам")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+        elif page.route == "/sending_messages_via_chats_with_answering_machine":# Рассылка сообщений по чатам с автоответчиком
+            try:
+                logger.info("[+] Проверка наличия аккаунта в папке с аккаунтами")
+                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
+                if not session_name:
+                    logger.error('[+] Нет аккаунта в папке parsing')
+                    await show_notification(page, "Нет аккаунта в папке send_message")
+                    return None  # Если нет аккаунта в папке parsing
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Рассылки сообщений по чатам с автоответчиком")
+                    await SendTelegramMessages().answering_machine()
+                    logger.info("🔚 Конец Рассылки сообщений по чатам с автоответчиком")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
 
         elif page.route == "/sending_files_via_chats":# Рассылка файлов по чатам
             try:
