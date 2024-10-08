@@ -15,8 +15,8 @@ from telethon.tl.functions.channels import JoinChannelRequest
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGLimits import SettingLimits
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_files, all_find_files, record_inviting_results, \
-    find_filess
+from system.auxiliary_functions.auxiliary_functions import (find_files, all_find_files, record_inviting_results,
+                                                            find_filess)
 from system.auxiliary_functions.auxiliary_functions import read_json_file
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
 from system.auxiliary_functions.global_variables import ConfigReader
@@ -56,7 +56,7 @@ class SendTelegramMessages:
                             await client.send_message(await client.get_input_entity(username[0]), data.format(username[0]))
                             # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
                             logger.info(f"""Отправляем сообщение в личку {username[0]}. Сообщение отправлено пользователю {username[0]}.""")
-                            await record_inviting_results(time_inviting[0], time_inviting[1], username[0])
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
                         except FloodWaitError as e:
                             record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
@@ -85,8 +85,6 @@ class SendTelegramMessages:
         try:
             # Просим пользователя ввести расширение сообщения
             time_inviting = self.config_reader.get_time_inviting()
-            time_inviting_1 = time_inviting[0]
-            time_inviting_2 = time_inviting[1]
             for session_name in find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
                                                                    account_directory="user_settings/accounts/send_message")
@@ -105,12 +103,12 @@ class SendTelegramMessages:
                                 await client.send_file(user_to_add, f"user_settings/files_to_send/{files}")
                                 logger.info(f"""Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю 
                                                  {username}.""")
-                                await record_inviting_results(time_inviting_1, time_inviting_2, username)
+                                await record_inviting_results(time_inviting[0], time_inviting[1], username)
                         except FloodWaitError as e:
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
+                            record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except PeerFloodError:
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
+                            record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except UserNotMutualContactError:
                             logger.error(
@@ -118,7 +116,7 @@ class SendTelegramMessages:
                         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                             logger.error(f"Отправляем сообщение в личку {username}. Не корректное имя {username}.")
                         except ChatWriteForbiddenError:
-                            record_and_interrupt(time_inviting_1, time_inviting_2)
+                            record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except (TypeError, UnboundLocalError):
                             continue  # Записываем ошибку в software_database.db и продолжаем работу

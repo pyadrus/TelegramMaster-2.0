@@ -83,7 +83,7 @@ class InvitingToAGroup:
                         """Инвайтинг в группу по полученному списку"""
                         time_inviting = self.config_reader.get_time_inviting()
                         try:
-                            await self.inviting_to_a_group_according_to_the_received_list(client, link, username)
+                            await self.inviting_to_a_group_according_to_the_received_list(client, link, username, time_inviting)
                         except PeerFloodError:
                             logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки "
                                          f"конфиденциальности {username} не позволяют вам inviting")

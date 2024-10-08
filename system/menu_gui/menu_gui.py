@@ -204,3 +204,34 @@ async def account_verification_menu(page):
                                        on_click=lambda _: page.go("/full_verification")),
 
                  ])]))
+
+
+async  def account_connection_menu(page):
+    """Меню подключения аккаунтов"""
+    page.views.append(
+        ft.View("/account_connection_menu",
+                [ft.AppBar(title=ft.Text("Главное меню"),
+                           bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                   ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для инвайтинга",
+                                     on_click=lambda _: page.go("/account_connection_for_iviting")),
+                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для парсинга",
+                                       on_click=lambda _: page.go("/account_connection_for_parsing")),
+                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для подписки",
+                                       on_click=lambda _: page.go("/account_connection_for_subscription")),
+                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для отписки",
+                                       on_click=lambda _: page.go("/account_connection_for_unsubscribe")),
+                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для рассылки сообщений",
+                                       on_click=lambda _: page.go("/account_connection_for_sending_messages")),
+                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для работы с контактами",
+                                       on_click=lambda _: page.go("/account_connection_for_sending_contacts")),
+                     ft.ElevatedButton(width=line_width, height=30,
+                                       text="Подключение аккаунтов для работы с реакциями",
+                                       on_click=lambda _: page.go("/account_connection_for_reactions")),
+                     ft.ElevatedButton(width=line_width, height=30,
+                                       text="Подключение аккаунтов для редактирования био",
+                                       on_click=lambda _: page.go("/account_connection_for_bio_editing")),
+                     ft.ElevatedButton(width=line_width, height=30,
+                                       text="Подключение аккаунтов для создания групп",
+                                       on_click=lambda _: page.go("/account_connection_for_creating_groups")),
+                   ])]))

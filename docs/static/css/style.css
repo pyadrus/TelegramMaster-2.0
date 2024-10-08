@@ -10,11 +10,11 @@ body {
 }
 
 .sidebar {
-    width: 250px;
+    width: auto;
     padding: 15px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     position: fixed;
-    height: 100%;
+    height: auto;
     overflow: auto;
     font-size: 13px;
     background-color: #f4f5f8; /* Цвет фона */
@@ -40,7 +40,7 @@ body {
 }
 
 .banner {
-    width: 100%;
+    width: auto;
     height: auto;
     display: block;
     margin: 0 auto 20px;
