@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import random
-from loguru import logger
+
 import requests
+from loguru import logger
 
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 

@@ -1,9 +1,10 @@
+import asyncio
+
 from hypercorn.asyncio import serve
 from hypercorn.config import Config
 from loguru import logger
 from quart import Quart, render_template
 from watchfiles import awatch
-import asyncio
 
 app = Quart(__name__, template_folder='templates')
 
