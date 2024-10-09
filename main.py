@@ -516,7 +516,7 @@ def telegram_master_main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-        #______________________________________________________________________________________________________________
+        # ______________________________________________________________________________________________________________
         elif page.route == "/account_connection_menu":  # Подключение аккаунтов меню.
             await account_connection_menu(page)
 
@@ -544,7 +544,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        #_______________________________________________________________________________________________________________
+        # _______________________________________________________________________________________________________________
 
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             await message_distribution_menu(page)
@@ -599,7 +599,8 @@ def telegram_master_main(page: ft.Page):
                 session_name = find_filess(directory_path="user_settings/answering_machine", extension='json')
                 if not session_name:
                     logger.error('⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine')
-                    await show_notification(page, "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
+                    await show_notification(page,
+                                            "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
                     return None
 
                 else:
@@ -712,7 +713,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        #______________________________________________________________________________________________________________
+        # ______________________________________________________________________________________________________________
 
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
             await bio_editing_menu(page)

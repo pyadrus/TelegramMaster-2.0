@@ -34,7 +34,8 @@ class InvitingToAGroup:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def inviting_to_a_group_according_to_the_received_list(self, client, link_row, username, time_inviting) -> None:
+    async def inviting_to_a_group_according_to_the_received_list(self, client, link_row, username,
+                                                                 time_inviting) -> None:
         """
         Инвайтинг в группу
         :param client: Телеграм клиент
@@ -83,7 +84,8 @@ class InvitingToAGroup:
                         """Инвайтинг в группу по полученному списку"""
                         time_inviting = self.config_reader.get_time_inviting()
                         try:
-                            await self.inviting_to_a_group_according_to_the_received_list(client, link, username, time_inviting)
+                            await self.inviting_to_a_group_according_to_the_received_list(client, link, username,
+                                                                                          time_inviting)
                         except PeerFloodError:
                             logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки "
                                          f"конфиденциальности {username} не позволяют вам inviting")

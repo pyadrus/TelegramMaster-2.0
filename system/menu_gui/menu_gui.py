@@ -278,7 +278,7 @@ async def account_verification_menu(page):
                  ])]))
 
 
-async  def account_connection_menu(page):
+async def account_connection_menu(page):
     """Меню подключения аккаунтов"""
     page.views.append(
         ft.View("/account_connection_menu",
@@ -294,8 +294,8 @@ async  def account_connection_menu(page):
                                                                                   ft.colors.PURPLE])), ), ), ], ),
 
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                   ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для инвайтинга",
-                                     on_click=lambda _: page.go("/account_connection_for_iviting")),
+                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для инвайтинга",
+                                       on_click=lambda _: page.go("/account_connection_for_iviting")),
                      ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для парсинга",
                                        on_click=lambda _: page.go("/account_connection_for_parsing")),
                      ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для подписки",
@@ -304,7 +304,8 @@ async  def account_connection_menu(page):
                                        on_click=lambda _: page.go("/account_connection_for_unsubscribe")),
                      ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для рассылки сообщений",
                                        on_click=lambda _: page.go("/account_connection_for_sending_messages")),
-                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для работы с контактами",
+                     ft.ElevatedButton(width=line_width, height=30,
+                                       text="Подключение аккаунтов для работы с контактами",
                                        on_click=lambda _: page.go("/account_connection_for_sending_contacts")),
                      ft.ElevatedButton(width=line_width, height=30,
                                        text="Подключение аккаунтов для работы с реакциями",
@@ -315,4 +316,4 @@ async  def account_connection_menu(page):
                      ft.ElevatedButton(width=line_width, height=30,
                                        text="Подключение аккаунтов для создания групп",
                                        on_click=lambda _: page.go("/account_connection_for_creating_groups")),
-                   ])]))
+                 ])]))

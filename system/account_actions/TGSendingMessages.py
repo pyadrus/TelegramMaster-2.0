@@ -44,18 +44,22 @@ class SendTelegramMessages:
         try:
             time_inviting = self.config_reader.get_time_inviting()
             for session_name in find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name, account_directory="user_settings/accounts/send_message")
+                client = await self.tg_connect.get_telegram_client(session_name,
+                                                                   account_directory="user_settings/accounts/send_message")
                 try:
-                    for username in await self.limits_class.get_usernames_with_limits(table_name="members", account_limits=account_limits):
+                    for username in await self.limits_class.get_usernames_with_limits(table_name="members",
+                                                                                      account_limits=account_limits):
                         # username - имя аккаунта пользователя в базе данных user_settings/software_database.db
                         logger.info(f"[!] Отправляем сообщение: {username[0]}")
                         try:
                             entities = find_files(directory_path="user_settings/message", extension="json")
                             logger.info(entities)
                             data = await self.select_and_read_random_file(entities, folder="message")
-                            await client.send_message(await client.get_input_entity(username[0]), data.format(username[0]))
+                            await client.send_message(await client.get_input_entity(username[0]),
+                                                      data.format(username[0]))
                             # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
-                            logger.info(f"""Отправляем сообщение в личку {username[0]}. Сообщение отправлено пользователю {username[0]}.""")
+                            logger.info(
+                                f"""Отправляем сообщение в личку {username[0]}. Сообщение отправлено пользователю {username[0]}.""")
                             await record_inviting_results(time_inviting[0], time_inviting[1], username)
                         except FloodWaitError as e:
                             record_and_interrupt(time_inviting[0], time_inviting[1])
@@ -64,9 +68,11 @@ class SendTelegramMessages:
                             record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except UserNotMutualContactError:
-                            logger.error(f"Отправляем сообщение в личку {username[0]}. {username[0]} не является взаимным контактом.")
+                            logger.error(
+                                f"Отправляем сообщение в личку {username[0]}. {username[0]} не является взаимным контактом.")
                         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                            logger.error(f"Отправляем сообщение в личку {username[0]}. Не корректное имя {username[0]}.")
+                            logger.error(
+                                f"Отправляем сообщение в личку {username[0]}. Не корректное имя {username[0]}.")
                         except ChatWriteForbiddenError:
                             record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
@@ -233,7 +239,8 @@ class SendTelegramMessages:
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                    data = await self.select_and_read_random_file(find_files(directory_path="user_settings/message", extension="json"), folder="message")
+                    data = await self.select_and_read_random_file(
+                        find_files(directory_path="user_settings/message", extension="json"), folder="message")
                     try:
                         await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
@@ -273,7 +280,8 @@ class SendTelegramMessages:
     async def answering_machine(self):
         """Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)"""
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/answering_machine", extension='session'):
+            for session_name in find_filess(directory_path="user_settings/accounts/answering_machine",
+                                            extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
                                                                    account_directory="user_settings/accounts/answering_machine")
 
