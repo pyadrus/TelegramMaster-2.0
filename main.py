@@ -24,7 +24,9 @@ from system.auxiliary_functions.auxiliary_functions import find_files, find_file
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.menu_gui.menu_gui import (line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
-                                      subscribe_and_unsubscribe_menu, account_verification_menu)
+                                      subscribe_and_unsubscribe_menu, account_verification_menu,
+                                      account_connection_menu, connecting_accounts_by_number_menu,
+                                      connecting_accounts_by_session_menu)
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
@@ -96,7 +98,7 @@ def telegram_master_main(page: ft.Page):
                                       ft.ElevatedButton(width=270, height=30, text="Подписка, отписка",
                                                         on_click=lambda _: page.go("/subscribe_unsubscribe")), ]),
                               ft.Row([ft.ElevatedButton(width=270, height=30, text="Подключение аккаунтов",
-                                                        on_click=lambda _: page.go("/connecting_accounts")),
+                                                        on_click=lambda _: page.go("/account_connection_menu")),
                                       ft.ElevatedButton(width=270, height=30, text="Рассылка сообщений",
                                                         on_click=lambda _: page.go("/sending_messages")), ]),
                               ft.Row([ft.ElevatedButton(width=270, height=30, text="Работа с реакциями",
@@ -112,7 +114,7 @@ def telegram_master_main(page: ft.Page):
                               ft.ElevatedButton(width=line_width, height=30, text="Документация",
                                                 on_click=lambda _: page.go("/documentation")),
                           ]), ]))
-
+        # ______________________________________________________________________________________________________________
         if page.route == "/inviting":  # Меню "Инвайтинг"
             await inviting_menu(page)
 
@@ -227,7 +229,7 @@ def telegram_master_main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
+        # ______________________________________________________________________________________________________________
         elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
             await account_verification_menu(page)
         elif page.route == "/validation_check":  # Проверка на валидность
@@ -238,7 +240,7 @@ def telegram_master_main(page: ft.Page):
             await TGChek().renaming_accounts()
         elif page.route == "/full_verification":  # Полная проверка
             await TGChek().full_verification()
-
+        # ______________________________________________________________________________________________________________
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             await subscribe_and_unsubscribe_menu(page)
 
@@ -281,7 +283,7 @@ def telegram_master_main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
+        # ______________________________________________________________________________________________________________
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             await reactions_menu(page)
 
@@ -344,7 +346,7 @@ def telegram_master_main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
+        # ______________________________________________________________________________________________________________
         elif page.route == "/parsing":  # Меню "Парсинг"
             await menu_parsing(page)
 
@@ -430,7 +432,7 @@ def telegram_master_main(page: ft.Page):
 
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db("members")
-
+        # ______________________________________________________________________________________________________________
         elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
             await working_with_contacts_menu(page)
 
@@ -515,10 +517,68 @@ def telegram_master_main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
+        # ______________________________________________________________________________________________________________
+        elif page.route == "/account_connection_menu":  # Подключение аккаунтов 'меню'.
+            await account_connection_menu(page)
 
-        elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-            await TGConnect().start_telegram_session(page)
+        elif page.route == "/connecting_accounts_by_number":  # Подключение аккаунтов по номеру телефона 'Меню'
+            await connecting_accounts_by_number_menu(page)
 
+        elif page.route == "/account_connection_number_answering_machine":  # Для автоответчика
+            await TGConnect().connecting_number_accounts(page, 'answering_machine', 'автоответчика')
+        elif page.route == "/account_connection_number_bio":  # Для редактирования BIO
+            await TGConnect().connecting_number_accounts(page, 'bio', 'редактирования BIO')
+        elif page.route == "/account_connection_number_contact":  # Для работы с номерами
+            await TGConnect().connecting_number_accounts(page, 'contact', 'работы с номерами')
+        elif page.route == "/account_connection_number_creating":  # Для создания групп
+            await TGConnect().connecting_number_accounts(page, 'creating', 'создания групп')
+        elif page.route == "/account_connection_number_inviting":  # Для инвайтинга
+            await TGConnect().connecting_number_accounts(page, 'inviting', 'инвайтинга')
+        elif page.route == "/account_connection_number_parsing":  # Для парсинга
+            await TGConnect().connecting_number_accounts(page, 'parsing', 'парсинга')
+        elif page.route == "/account_connection_number_reactions":  # Для работы с реакциями
+            await TGConnect().connecting_number_accounts(page, 'reactions', 'работы с реакциями')
+        elif page.route == "/account_connection_number_reactions_list":  # Для проставления реакций
+            await TGConnect().connecting_number_accounts(page, 'reactions_list', 'проставления реакций')
+        elif page.route == "/account_connection_number_send_message":  # Для рассылки сообщений
+            await TGConnect().connecting_number_accounts(page, 'send_message', 'рассылки сообщений')
+        elif page.route == "/account_connection_number_subscription":  # Для подписки
+            await TGConnect().connecting_number_accounts(page, 'subscription', 'подписки')
+        elif page.route == "/account_connection_number_unsubscribe":  # Для отписки
+            await TGConnect().connecting_number_accounts(page, 'unsubscribe', 'отписки')
+        elif page.route == "/account_connection_number_viewing":  # Для накрутки просмотров
+            await TGConnect().connecting_number_accounts(page, 'viewing', 'накрутки просмотров')
+
+
+        elif page.route == "/connecting_accounts_by_session":  # Подключение аккаунтов по номеру телефона 'Меню'
+            await connecting_accounts_by_session_menu(page)
+
+        elif page.route == "/account_connection_session_answering_machine":  # Для автоответчика (session)
+            await TGConnect().connecting_session_accounts(page, 'answering_machine', 'автоответчика')
+        elif page.route == "/account_connection_session_bio":  # Для редактирования BIO (session)
+            await TGConnect().connecting_session_accounts(page, 'bio', 'редактирования BIO')
+        elif page.route == "/account_connection_session_contact":  # Для работы с номерами (session)
+            await TGConnect().connecting_session_accounts(page, 'contact', 'работы с номерами')
+        elif page.route == "/account_connection_session_creating":  # Для создания групп (session)
+            await TGConnect().connecting_session_accounts(page, 'creating', 'создания групп')
+        elif page.route == "/account_connection_session_inviting":  # Для инвайтинга (session)
+            await TGConnect().connecting_session_accounts(page, 'inviting', 'инвайтинга')
+        elif page.route == "/account_connection_session_parsing":  # Для парсинга (session)
+            await TGConnect().connecting_session_accounts(page, 'parsing', 'парсинга')
+        elif page.route == "/account_connection_session_reactions":  # Для работы с реакциями (session)
+            await TGConnect().connecting_session_accounts(page, 'reactions', 'работы с реакциями')
+        elif page.route == "/account_connection_session_reactions_list":  # Для проставления реакций (session)
+            await TGConnect().connecting_session_accounts(page, 'reactions_list', 'проставления реакций')
+        elif page.route == "/account_connection_session_send_message":  # Для рассылки сообщений (session)
+            await TGConnect().connecting_session_accounts(page, 'send_message', 'рассылки сообщений')
+        elif page.route == "/account_connection_session_subscription":  # Для подписки (session)
+            await TGConnect().connecting_session_accounts(page, 'subscription', 'подписки')
+        elif page.route == "/account_connection_session_unsubscribe":  # Для отписки (session)
+            await TGConnect().connecting_session_accounts(page, 'unsubscribe', 'отписки')
+        elif page.route == "/account_connection_session_viewing":  # Для накрутки просмотров (session)
+            await TGConnect().connecting_session_accounts(page, 'viewing', 'накрутки просмотров')
+
+        # _______________________________________________________________________________________________________________
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -539,7 +599,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        #_______________________________________________________________________________________________________________
+        # _______________________________________________________________________________________________________________
 
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             await message_distribution_menu(page)
@@ -594,7 +654,8 @@ def telegram_master_main(page: ft.Page):
                 session_name = find_filess(directory_path="user_settings/answering_machine", extension='json')
                 if not session_name:
                     logger.error('⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine')
-                    await show_notification(page, "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
+                    await show_notification(page,
+                                            "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
                     return None
 
                 else:
@@ -707,7 +768,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-        #______________________________________________________________________________________________________________
+        # ______________________________________________________________________________________________________________
 
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
             await bio_editing_menu(page)
@@ -812,7 +873,7 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-
+        # ______________________________________________________________________________________________________________
         elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
             await settings_menu(page)
         elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash

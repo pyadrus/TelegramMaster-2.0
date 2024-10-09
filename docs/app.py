@@ -1,11 +1,14 @@
+import asyncio
+
 from hypercorn.asyncio import serve
 from hypercorn.config import Config
 from loguru import logger
 from quart import Quart, render_template
+from watchfiles import awatch
 
 app = Quart(__name__, template_folder='templates')
 
-program_version, date_of_program_change = "2.2.2", "07.10.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "2.2.4", "09.10.2024"  # Версия программы, дата изменения
 
 
 @app.route('/')
@@ -99,3 +102,23 @@ async def run_quart():
         await serve(app, config)
     except Exception as e:
         logger.error(f"Ошибка при запуске сервера: {e}")
+
+
+async def watch_for_changes():
+    async for changes in awatch('./templates'):
+        logger.info(f"Изменения обнаружены: {changes}")
+        # Здесь можно перезапустить сервер или просто логировать изменения
+        # В данном примере просто остановка программы для перезапуска вручную
+        # Если хотите автоматический перезапуск сервера, можно использовать systemd или что-то подобное
+
+
+async def main():
+    # Запускаем сервер и отслеживание изменений параллельно
+    server_task = asyncio.create_task(run_quart())
+    watch_task = asyncio.create_task(watch_for_changes())
+
+    await asyncio.gather(server_task, watch_task)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

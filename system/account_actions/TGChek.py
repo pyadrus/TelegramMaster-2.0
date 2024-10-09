@@ -17,9 +17,7 @@ class TGChek:
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
 
-        folders = find_folders(directory_path="user_settings/accounts")
-        logger.info(f"Найденные папки: {folders}")
-        for folder in folders:
+        for folder in find_folders(directory_path="user_settings/accounts"):
             logger.info(f'Проверка аккаунтов из папки 📁 {folder} на валидность')
             if folder == "invalid_account":
                 logger.info(f"⛔ Пропускаем папку 📁: {folder}")
@@ -36,16 +34,13 @@ class TGChek:
         logger.info('Время окончания: ' + str(finish))
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
-
     async def checking_for_spam_bots(self):
         """Проверка на спам ботов"""
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
 
-        folders = find_folders(directory_path="user_settings/accounts")
-        logger.info(f"Найденный папки {folders}")
-        for folder in folders:
+        for folder in find_folders(directory_path="user_settings/accounts"):
             logger.info(f'Проверка аккаунтов из папки 📁 {folder} через спам бот')
             if folder == "invalid_account":
                 logger.info(f"⛔ Пропускаем папку 📁: {folder}")
@@ -64,9 +59,7 @@ class TGChek:
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
 
-        folders = find_folders(directory_path="user_settings/accounts")
-        logger.info(f"Найденный папки {folders}")
-        for folder in folders:
+        for folder in find_folders(directory_path="user_settings/accounts"):
             logger.info(f'Переименование аккаунтов из папки 📁 {folder}')
             if folder == "invalid_account":
                 logger.info(f"⛔ Пропускаем папку 📁: {folder}")
@@ -85,9 +78,9 @@ class TGChek:
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
 
-        await self.validation_check() # Проверка валидности аккаунтов
-        await self.renaming_accounts() # Переименование аккаунтов
-        await self.checking_for_spam_bots() # Проверка на спам ботов
+        await self.validation_check()  # Проверка валидности аккаунтов
+        await self.renaming_accounts()  # Переименование аккаунтов
+        await self.checking_for_spam_bots()  # Проверка на спам ботов
 
         logger.info("🔚 Проверка аккаунтов завершена")
         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода

@@ -33,7 +33,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
             async def btn_click(e) -> None:
                 random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
                 for session_name in find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
-                    client = await self.tg_connect.get_telegram_client(session_name, account_directory="user_settings/accounts/reactions")
+                    client = await self.tg_connect.get_telegram_client(session_name,
+                                                                       account_directory="user_settings/accounts/reactions")
                     chat = read_json_file(filename='user_settings/reactions/link_channel.json')
                     logger.info(f'[+] Работаем с группой: {chat}')
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat)
@@ -57,7 +58,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                     "/working_with_reactions",  # Маршрут для этого представления
                     [
                         message,  # Поле ввода ссылки на чат
-                        # limit_active_user,  # Поле ввода количества сообщений
+                        # limit_active_user, # Поле ввода количества сообщений
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
                         button  # Кнопка "Готово"
                     ]
@@ -111,7 +112,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         :param chat: Ссылка на группу
         """
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/reactions_list", extension='session'):
+            for session_name in find_filess(directory_path="user_settings/accounts/reactions_list",
+                                            extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
                                                                    account_directory="user_settings/accounts/reactions_list")
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу

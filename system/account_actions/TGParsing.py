@@ -26,12 +26,12 @@ class ParsingGroupMembers:
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-
     async def parse_groups(self) -> None:
         """Парсинг групп"""
         try:
             for session_name in find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name, account_directory="user_settings/accounts/parsing")
+                client = await self.tg_connect.get_telegram_client(session_name,
+                                                                   account_directory="user_settings/accounts/parsing")
 
                 # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
                 for groups in await self.db_handler.open_and_read_data("writing_group_links"):
@@ -71,7 +71,8 @@ class ParsingGroupMembers:
         """
         try:
             for session_name in find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name, account_directory="user_settings/accounts/parsing")
+                client = await self.tg_connect.get_telegram_client(session_name,
+                                                                   account_directory="user_settings/accounts/parsing")
 
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat_input)
                 time_activity_user_1, time_activity_user_2 = self.config_reader.get_time_activity_user()

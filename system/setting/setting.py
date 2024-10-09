@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import configparser
+import io
 import json
 import os
 import sys
-import io
+
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
+
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)

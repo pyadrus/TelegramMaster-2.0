@@ -35,6 +35,7 @@ def all_find_files(directory_path) -> list:
 
     return entities  # Возвращаем список файлов
 
+
 def find_filess(directory_path, extension) -> list:
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
@@ -52,11 +53,12 @@ def find_filess(directory_path, extension) -> list:
 
     return entities  # Возвращаем список json файлов
 
+
 def find_folders(directory_path) -> list:
     """
     Поиск всех папок в указанной директории.
     :param directory_path: Путь к директории
-    :return list: Список имен найденных папок
+    :return list: Список имен 🔍 найденных папок
     """
     folders = []  # Создаем список для хранения имен найденных папок
     for x in os.listdir(directory_path):
@@ -97,7 +99,7 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
         try:
             os.makedirs(new_account_folder)
             os.replace(account_folder, new_account_folder)
-        except FileExistsError: # Если файл уже существует, то удаляем его
+        except FileExistsError:  # Если файл уже существует, то удаляем его
             os.remove(account_folder)
     except PermissionError:
         logger.error("Не удалось перенести файлы в нужную папку")
