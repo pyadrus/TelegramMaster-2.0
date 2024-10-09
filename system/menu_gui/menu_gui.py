@@ -9,6 +9,14 @@ async def settings_menu(page):
         ft.View("/settings",
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Настройки",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.Row([ft.ElevatedButton(width=270, height=30, text="Выбор реакций",
                                                on_click=lambda _: page.go("/choice_of_reactions")),
@@ -50,6 +58,14 @@ async def bio_editing_menu(page):
         ft.View("/bio_editing",
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Редактирование БИО",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.ElevatedButton(width=line_width, height=30, text="Изменение username",
                                        on_click=lambda _: page.go("/changing_username")),
@@ -70,6 +86,14 @@ async def inviting_menu(page):
         ft.View("/inviting",
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Инвайтинг",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.ElevatedButton(width=line_width, height=30, text="Инвайтинг",
                                        on_click=lambda _: page.go("/inviting_without_limits")),
@@ -88,6 +112,14 @@ async def message_distribution_menu(page):
         ft.View("/sending_messages",
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Рассылка сообщений",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.ElevatedButton(width=line_width, height=30, text="Рассылка сообщений по чатам",
                                        on_click=lambda _: page.go("/sending_messages_via_chats")),
@@ -115,6 +147,14 @@ async def working_with_contacts_menu(page):
         ft.View("/working_with_contacts",
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Работа с контактами",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.ElevatedButton(width=line_width, height=30, text="Формирование списка контактов",
                                        on_click=lambda _: page.go("/creating_contact_list")),
@@ -133,6 +173,14 @@ async def menu_parsing(page):
         ft.View("/parsing",
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Парсинг",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.ElevatedButton(width=line_width, height=30,
                                        text="Парсинг одной группы / групп",
@@ -159,6 +207,14 @@ async def reactions_menu(page):
         ft.View("/working_with_reactions",
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Работа с реакциями",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.ElevatedButton(width=line_width, height=30, text="Ставим реакции",
                                        on_click=lambda _: page.go("/setting_reactions")),
@@ -175,6 +231,14 @@ async def subscribe_and_unsubscribe_menu(page):
         ft.View("/subscribe_unsubscribe",
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Подписка / отписка",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.ElevatedButton(width=line_width, height=30, text="Подписка",
                                        on_click=lambda _: page.go("/subscription_all")),
@@ -189,6 +253,14 @@ async def account_verification_menu(page):
         ft.View("/account_verification_menu",
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Проверка аккаунтов",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
 
                      ft.ElevatedButton(width=line_width, height=30, text="Проверка через спам бот",
@@ -212,6 +284,15 @@ async  def account_connection_menu(page):
         ft.View("/account_connection_menu",
                 [ft.AppBar(title=ft.Text("Главное меню"),
                            bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Подключение аккаунтов",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
+
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                    ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для инвайтинга",
                                      on_click=lambda _: page.go("/account_connection_for_iviting")),

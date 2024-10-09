@@ -516,12 +516,12 @@ def telegram_master_main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
+        #______________________________________________________________________________________________________________
         elif page.route == "/account_connection_menu":  # Подключение аккаунтов меню.
             await account_connection_menu(page)
 
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-            # await TGConnect().start_telegram_session(page)
+            await TGConnect().start_telegram_session(page)
             pass
 
         elif page.route == "/creating_groups":  # Создание групп (чатов)
