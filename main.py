@@ -24,7 +24,8 @@ from system.auxiliary_functions.auxiliary_functions import find_files, find_file
 from system.auxiliary_functions.global_variables import ConfigReader
 from system.menu_gui.menu_gui import (line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
-                                      subscribe_and_unsubscribe_menu, account_verification_menu)
+                                      subscribe_and_unsubscribe_menu, account_verification_menu,
+                                      account_connection_menu)
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
@@ -96,7 +97,7 @@ def telegram_master_main(page: ft.Page):
                                       ft.ElevatedButton(width=270, height=30, text="Подписка, отписка",
                                                         on_click=lambda _: page.go("/subscribe_unsubscribe")), ]),
                               ft.Row([ft.ElevatedButton(width=270, height=30, text="Подключение аккаунтов",
-                                                        on_click=lambda _: page.go("/connecting_accounts")),
+                                                        on_click=lambda _: page.go("/account_connection_menu")),
                                       ft.ElevatedButton(width=270, height=30, text="Рассылка сообщений",
                                                         on_click=lambda _: page.go("/sending_messages")), ]),
                               ft.Row([ft.ElevatedButton(width=270, height=30, text="Работа с реакциями",
@@ -516,8 +517,12 @@ def telegram_master_main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
+        elif page.route == "/account_connection_menu":  # Подключение аккаунтов меню.
+            await account_connection_menu(page)
+
         elif page.route == "/connecting_accounts":  # Подключение новых аккаунтов, методом ввода нового номера телефона
-            await TGConnect().start_telegram_session(page)
+            # await TGConnect().start_telegram_session(page)
+            pass
 
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             try:
