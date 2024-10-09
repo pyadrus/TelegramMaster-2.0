@@ -294,26 +294,111 @@ async def account_connection_menu(page):
                                                                                   ft.colors.PURPLE])), ), ), ], ),
 
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для инвайтинга",
-                                       on_click=lambda _: page.go("/account_connection_for_iviting")),
-                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для парсинга",
-                                       on_click=lambda _: page.go("/account_connection_for_parsing")),
-                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для подписки",
-                                       on_click=lambda _: page.go("/account_connection_for_subscription")),
-                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для отписки",
-                                       on_click=lambda _: page.go("/account_connection_for_unsubscribe")),
-                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов для рассылки сообщений",
-                                       on_click=lambda _: page.go("/account_connection_for_sending_messages")),
-                     ft.ElevatedButton(width=line_width, height=30,
-                                       text="Подключение аккаунтов для работы с контактами",
-                                       on_click=lambda _: page.go("/account_connection_for_sending_contacts")),
-                     ft.ElevatedButton(width=line_width, height=30,
-                                       text="Подключение аккаунтов для работы с реакциями",
-                                       on_click=lambda _: page.go("/account_connection_for_reactions")),
-                     ft.ElevatedButton(width=line_width, height=30,
-                                       text="Подключение аккаунтов для редактирования био",
-                                       on_click=lambda _: page.go("/account_connection_for_bio_editing")),
-                     ft.ElevatedButton(width=line_width, height=30,
-                                       text="Подключение аккаунтов для создания групп",
-                                       on_click=lambda _: page.go("/account_connection_for_creating_groups")),
+
+                     ft.ElevatedButton(width=line_width, height=30, text="Подключение аккаунтов по номеру телефона",
+                                       on_click=lambda _: page.go("/connecting_accounts_by_number")),
+                     ft.ElevatedButton(width=line_width, height=30, text="Подключение session аккаунтов",
+                                       on_click=lambda _: page.go("/connecting_accounts_by_session")),
+                 ])]))
+
+
+async def connecting_accounts_by_number_menu(page):
+    """Меню подключения аккаунтов по номеру телефона"""
+    page.views.append(
+        ft.View("/connecting_accounts_by_number",
+                [ft.AppBar(title=ft.Text("Главное меню"),
+                           bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Подключение аккаунтов по номеру телефона",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для автоответчика",
+                                               on_click=lambda _: page.go("/account_connection_number_answering_machine")),
+                             ft.ElevatedButton(width=270, height=30, text="Для редактирования BIO",
+                                               on_click=lambda _: page.go("/account_connection_number_bio"))]),
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для работы с номерами",
+                                               on_click=lambda _: page.go("/account_connection_number_contact")),
+                             ft.ElevatedButton(width=270, height=30, text="Для создания групп",
+                                               on_click=lambda _: page.go("/account_connection_number_creating"))]),
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для инвайтинга",
+                                               on_click=lambda _: page.go("/account_connection_number_inviting")),
+                             ft.ElevatedButton(width=270, height=30, text="Для парсинга",
+                                               on_click=lambda _: page.go("/account_connection_number_parsing"))]),
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для работы с реакциями",
+                                               on_click=lambda _: page.go("/account_connection_number_reactions")),
+                             ft.ElevatedButton(width=270, height=30, text="Для проставления реакций",
+                                               on_click=lambda _: page.go("/account_connection_number_reactions_list"))]),
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для рассылки сообщений",
+                                               on_click=lambda _: page.go("/account_connection_number_send_message")),
+                             ft.ElevatedButton(width=270, height=30, text="Для подписки",
+                                               on_click=lambda _: page.go("/account_connection_number_subscription"))]),
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для отписки",
+                                               on_click=lambda _: page.go("/account_connection_number_unsubscribe")),
+                             ft.ElevatedButton(width=270, height=30, text="Для накрутки просмотров",
+                                               on_click=lambda _: page.go("/account_connection_number_viewing"))]),
+
+                 ])]))
+
+async def connecting_accounts_by_session_menu(page):
+    """Меню подключения аккаунтов по номеру телефона"""
+    page.views.append(
+        ft.View("/connecting_accounts_by_session",
+                [ft.AppBar(title=ft.Text("Главное меню"),
+                           bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Подключение session аккаунтов",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для автоответчика",
+                                               on_click=lambda _: page.go(
+                                                   "/account_connection_session_answering_machine")),
+                             ft.ElevatedButton(width=270, height=30, text="Для редактирования BIO",
+                                               on_click=lambda _: page.go("/account_connection_session_bio"))]),
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для работы с номерами",
+                                               on_click=lambda _: page.go("/account_connection_session_contact")),
+                             ft.ElevatedButton(width=270, height=30, text="Для создания групп",
+                                               on_click=lambda _: page.go("/account_connection_session_creating"))]),
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для инвайтинга",
+                                               on_click=lambda _: page.go("/account_connection_session_inviting")),
+                             ft.ElevatedButton(width=270, height=30, text="Для парсинга",
+                                               on_click=lambda _: page.go("/account_connection_session_parsing"))]),
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для работы с реакциями",
+                                               on_click=lambda _: page.go("/account_connection_session_reactions")),
+                             ft.ElevatedButton(width=270, height=30, text="Для проставления реакций",
+                                               on_click=lambda _: page.go(
+                                                   "/account_connection_session_reactions_list"))]),
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для рассылки сообщений",
+                                               on_click=lambda _: page.go(
+                                                   "/account_connection_session_send_message")),
+                             ft.ElevatedButton(width=270, height=30, text="Для подписки",
+                                               on_click=lambda _: page.go(
+                                                   "/account_connection_session_subscription"))]),
+
+                     ft.Row([ft.ElevatedButton(width=270, height=30, text="Для отписки",
+                                               on_click=lambda _: page.go(
+                                                   "/account_connection_session_unsubscribe")),
+                             ft.ElevatedButton(width=270, height=30, text="Для накрутки просмотров",
+                                               on_click=lambda _: page.go("/account_connection_session_viewing"))]),
+
                  ])]))

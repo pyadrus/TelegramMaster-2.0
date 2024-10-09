@@ -17,9 +17,7 @@ class TGChek:
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
 
-        folders = find_folders(directory_path="user_settings/accounts")
-        logger.info(f"Найденные папки: {folders}")
-        for folder in folders:
+        for folder in find_folders(directory_path="user_settings/accounts"):
             logger.info(f'Проверка аккаунтов из папки 📁 {folder} на валидность')
             if folder == "invalid_account":
                 logger.info(f"⛔ Пропускаем папку 📁: {folder}")
@@ -42,9 +40,7 @@ class TGChek:
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
 
-        folders = find_folders(directory_path="user_settings/accounts")
-        logger.info(f"Найденный папки {folders}")
-        for folder in folders:
+        for folder in find_folders(directory_path="user_settings/accounts"):
             logger.info(f'Проверка аккаунтов из папки 📁 {folder} через спам бот')
             if folder == "invalid_account":
                 logger.info(f"⛔ Пропускаем папку 📁: {folder}")
@@ -63,9 +59,7 @@ class TGChek:
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
 
-        folders = find_folders(directory_path="user_settings/accounts")
-        logger.info(f"Найденный папки {folders}")
-        for folder in folders:
+        for folder in find_folders(directory_path="user_settings/accounts"):
             logger.info(f'Переименование аккаунтов из папки 📁 {folder}')
             if folder == "invalid_account":
                 logger.info(f"⛔ Пропускаем папку 📁: {folder}")

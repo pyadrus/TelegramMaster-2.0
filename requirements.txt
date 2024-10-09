@@ -9,3 +9,4 @@ PySocks
 Flask==3.0.3
 Quart==0.19.6
 Hypercorn==0.17.3
+watchfiles~=0.24.0

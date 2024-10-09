@@ -58,8 +58,7 @@ class SendTelegramMessages:
                             await client.send_message(await client.get_input_entity(username[0]),
                                                       data.format(username[0]))
                             # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
-                            logger.info(
-                                f"""Отправляем сообщение в личку {username[0]}. Сообщение отправлено пользователю {username[0]}.""")
+                            logger.info(f"Отправляем сообщение в личку {username[0]}. Сообщение отправлено пользователю {username[0]}.")
                             await record_inviting_results(time_inviting[0], time_inviting[1], username)
                         except FloodWaitError as e:
                             record_and_interrupt(time_inviting[0], time_inviting[1])
@@ -68,11 +67,9 @@ class SendTelegramMessages:
                             record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except UserNotMutualContactError:
-                            logger.error(
-                                f"Отправляем сообщение в личку {username[0]}. {username[0]} не является взаимным контактом.")
+                            logger.error(f"Отправляем сообщение в личку {username[0]}. {username[0]} не является взаимным контактом.")
                         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                            logger.error(
-                                f"Отправляем сообщение в личку {username[0]}. Не корректное имя {username[0]}.")
+                            logger.error(f"Отправляем сообщение в личку {username[0]}. Не корректное имя {username[0]}.")
                         except ChatWriteForbiddenError:
                             record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
@@ -107,8 +104,7 @@ class SendTelegramMessages:
                             user_to_add = await client.get_input_entity(username)
                             for files in all_find_files(directory_path="user_settings/files_to_send"):
                                 await client.send_file(user_to_add, f"user_settings/files_to_send/{files}")
-                                logger.info(f"""Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю 
-                                                 {username}.""")
+                                logger.info(f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                         except FloodWaitError as e:
                             record_and_interrupt(time_inviting[0], time_inviting[1])
@@ -117,8 +113,7 @@ class SendTelegramMessages:
                             record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except UserNotMutualContactError:
-                            logger.error(
-                                f"Отправляем сообщение в личку {username}. {username} не является взаимным контактом.")
+                            logger.error(f"Отправляем сообщение в личку {username}. {username} не является взаимным контактом.")
                         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                             logger.error(f"Отправляем сообщение в личку {username}. Не корректное имя {username}.")
                         except ChatWriteForbiddenError:
@@ -146,18 +141,15 @@ class SendTelegramMessages:
                         for file in all_find_files(directory_path="user_settings/files_to_send"):
                             await client.send_file(groups[0], f"user_settings/files_to_send/{file}")
                             # Работу записываем в лог файл, для удобства слежения, за изменениями
-                            logger.error(
-                                f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!""")
+                            logger.error(f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
                             await self.random_dream()  # Прерываем работу и меняем аккаунт
                     except ChannelPrivateError:
-                        logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} 
-                                         является приватным, или вам запретили подписываться.""")
+                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
                         record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
-                        logger.error(f"""Рассылка файлов в группу: {groups[0]}. Flood! wait for 
-                                         {str(datetime.timedelta(seconds=e.seconds))}""")
+                        logger.error(f"Рассылка файлов в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         time.sleep(e.seconds)
                     except UserBannedInChannelError:
                         record_and_interrupt(time_subscription_1, time_subscription_2)
@@ -188,18 +180,15 @@ class SendTelegramMessages:
                         for file in file_entities:
                             await client.send_file(groups[0], f"user_settings/files_to_send/{file}", caption=data)
                             # Работу записываем в лог файл, для удобства слежения, за изменениями
-                            logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Файл {file} отправлен в группу 
-                                             {groups[0]}.""")
+                            logger.error(f"Рассылка сообщений в группу: {groups[0]}. Файл {file} отправлен в группу {groups[0]}.")
                             await self.random_dream()  # Прерываем работу и меняем аккаунт
                     except ChannelPrivateError:
-                        logger.error(f"""Рассылка сообщений + файлов в группу: {groups[0]}. Указанный канал / группа  
-                                         {groups[0]} является приватным, или вам запретили подписываться.""")
+                        logger.error(f"Рассылка сообщений + файлов в группу: {groups[0]}. Указанный канал / группа {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
                         record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
-                        logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Flood! wait for 
-                                         {str(datetime.timedelta(seconds=e.seconds))}""")
+                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         time.sleep(e.seconds)
                     except UserBannedInChannelError:
                         record_and_interrupt(time_subscription_1, time_subscription_2)
@@ -244,17 +233,14 @@ class SendTelegramMessages:
                     try:
                         await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
-                        logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} 
-                                         написано!""")
+                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
                     except ChannelPrivateError:
-                        logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} 
-                                         является приватным, или вам запретили подписываться.""")
+                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
                         record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
-                        logger.error(f"""Рассылка сообщений в группу: {groups[0]}. Flood! wait for 
-                                         {str(datetime.timedelta(seconds=e.seconds))}""")
+                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         time.sleep(e.seconds)
                     except UserBannedInChannelError:
                         record_and_interrupt(time_subscription_1, time_subscription_2)
@@ -308,8 +294,7 @@ class SendTelegramMessages:
                         await client.send_message(chat[0], f'{data}')
                         logger.info(f'Сообщение {data} отправлено в чат {chat[0]}')
                     except UserBannedInChannelError:
-                        logger.error(
-                            'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
+                        logger.error('Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
                     await self.random_dream()  # Прерываем работу и меняем аккаунт
 
                 await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
