@@ -121,15 +121,13 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/inviting_without_limits":  # Инвайтинг
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/inviting", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/inviting", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
 
-                number_usernames = await SettingLimits().get_usernames_with_limits(table_name="members",
-                                                                                   account_limits=ConfigReader().get_limits())
-                if len(number_usernames) == 0:
+                if len(await SettingLimits().get_usernames_with_limits(table_name="members",
+                                                                       account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
@@ -149,15 +147,13 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/inviting", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/inviting", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
 
-                number_usernames = await SettingLimits().get_usernames_with_limits(table_name="members",
-                                                                                   account_limits=ConfigReader().get_limits())
-                if len(number_usernames) == 0:
+                if len(await SettingLimits().get_usernames_with_limits(table_name="members",
+                                                                       account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
@@ -177,15 +173,13 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/inviting", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/inviting", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
 
-                number_usernames = await SettingLimits().get_usernames_with_limits(table_name="members",
-                                                                                   account_limits=ConfigReader().get_limits())
-                if len(number_usernames) == 0:
+                if len(await SettingLimits().get_usernames_with_limits(table_name="members",
+                                                                       account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
@@ -205,15 +199,13 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/inviting", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/inviting", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
 
-                number_usernames = await SettingLimits().get_usernames_with_limits(table_name="members",
-                                                                                   account_limits=ConfigReader().get_limits())
-                if len(number_usernames) == 0:
+                if len(await SettingLimits().get_usernames_with_limits(table_name="members",
+                                                                       account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
@@ -247,8 +239,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/subscription_all":  # Подписка
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/subscription", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/subscription", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке subscription')
                     await show_notification(page, "⛔ Нет аккаунта в папке subscription")
                     return None
@@ -267,8 +258,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/unsubscribe_all":  # Отписываемся
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/unsubscribe", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/unsubscribe", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке unsubscribe')
                     await show_notification(page, "⛔ Нет аккаунта в папке unsubscribe")
                     return None
@@ -290,8 +280,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/setting_reactions":  # Ставим реакции
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/reactions", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке reactions')
                     await show_notification(page, "⛔ Нет аккаунта в папке reactions")
                     return None
@@ -310,8 +299,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/reactions", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке reactions')
                     await show_notification(page, "⛔ Нет аккаунта в папке reactions")
                     return None
@@ -330,8 +318,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/reactions", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке reactions')
                     await show_notification(page, "⛔ Нет аккаунта в папке reactions")
                     return None
@@ -353,8 +340,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/parsing_single_groups":
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/parsing", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
@@ -373,8 +359,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/parsing", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
@@ -393,8 +378,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/parsing", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
@@ -413,8 +397,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов аккаунта
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/parsing", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
@@ -439,8 +422,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/contact", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке contact')
                     await show_notification(page, "⛔ Нет аккаунта в папке contact")
                     return None
@@ -461,8 +443,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/show_list_contacts":  # Показать список контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/contact", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке contact')
                     await show_notification(page, "⛔ Нет аккаунта в папке contact")
                     return None
@@ -481,8 +462,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/deleting_contacts":  # Удаление контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/contact", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке contact')
                     await show_notification(page, "⛔ Нет аккаунта в папке contact")
                     return None
@@ -501,8 +481,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/adding_contacts":  # Добавление контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/contact", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/contact", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке contact')
                     await show_notification(page, "⛔ Нет аккаунта в папке contact")
                     return None
@@ -549,7 +528,6 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/account_connection_number_viewing":  # Для накрутки просмотров
             await TGConnect().connecting_number_accounts(page, 'viewing', 'накрутки просмотров')
 
-
         elif page.route == "/connecting_accounts_by_session":  # Подключение аккаунтов по номеру телефона 'Меню'
             await connecting_accounts_by_session_menu(page)
 
@@ -582,8 +560,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/creating", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/creating", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке creating')
                     await show_notification(page, "⛔ Нет аккаунта в папке creating")
                     return None
@@ -607,15 +584,13 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "Нет аккаунта в папке send_message")
                     return None
 
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                session_name = find_filess(directory_path="user_settings/message", extension='json')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
@@ -637,22 +612,19 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
 
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                session_name = find_filess(directory_path="user_settings/message", extension='json')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
 
                 logger.info("⛔ Проверка папки с сообщениями для автоответчика")
-                session_name = find_filess(directory_path="user_settings/answering_machine", extension='json')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/answering_machine", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine')
                     await show_notification(page,
                                             "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
@@ -673,8 +645,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/sending_files_via_chats":  # Рассылка файлов по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
@@ -693,15 +664,13 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
 
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                session_name = find_filess(directory_path="user_settings/message", extension='json')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
@@ -721,15 +690,13 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
 
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                session_name = find_filess(directory_path="user_settings/message", extension='json')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
@@ -750,8 +717,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/send_message", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
@@ -776,8 +742,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/edit_description":  # Изменение описания
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/bio", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
@@ -796,8 +761,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/name_change":  # Изменение имени
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/bio", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
@@ -816,8 +780,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/change_surname":  # Изменение фамилии
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/bio", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
@@ -836,8 +799,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/edit_photo":  # Изменение фото
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/bio", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
@@ -856,8 +818,7 @@ def telegram_master_main(page: ft.Page):
         elif page.route == "/changing_username":  # Изменение username
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                session_name = find_filess(directory_path="user_settings/accounts/bio", extension='session')
-                if not session_name:
+                if not find_filess(directory_path="user_settings/accounts/bio", extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
