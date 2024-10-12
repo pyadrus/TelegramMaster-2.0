@@ -42,13 +42,6 @@ async def show_notification(page: ft.Page, message: str):
     dlg.open = True
     page.update()
 
-# def setup_page(page, program_version, date_of_program_change, line_width):
-#     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
-#     page.window.width = line_width
-#     page.window.height = 550
-#     page.window.resizable = False
-#     logger.info(f"Program version: {program_version}. Date of change: {date_of_program_change}")
-
 
 def main(page: ft.Page):
 
