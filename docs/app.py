@@ -1,5 +1,5 @@
 import asyncio
-
+import webbrowser
 from hypercorn.asyncio import serve
 from hypercorn.config import Config
 from loguru import logger
@@ -99,6 +99,10 @@ async def run_quart():
         config = Config()
         config.bind = ["127.0.0.1:8000"]
         logger.info("Запуск сервера Quart...")
+
+        # Открытие браузера после запуска сервера
+        webbrowser.open_new("http://127.0.0.1:8000")
+
         await serve(app, config)
     except Exception as e:
         logger.error(f"Ошибка при запуске сервера: {e}")
@@ -116,7 +120,6 @@ async def main():
     # Запускаем сервер и отслеживание изменений параллельно
     server_task = asyncio.create_task(run_quart())
     watch_task = asyncio.create_task(watch_for_changes())
-
     await asyncio.gather(server_task, watch_task)
 
 

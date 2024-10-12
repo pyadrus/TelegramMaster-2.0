@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import asyncio
 import datetime
-import webbrowser
 
 import flet as ft
 from loguru import logger
@@ -867,9 +865,6 @@ def main(page: ft.Page):
             SettingPage().create_main_window(page, variable="time_subscription")
         elif page.route == "/documentation":  # Открытие документации
 
-            asyncio.create_task(run_quart())
-
-            webbrowser.open_new("http://127.0.0.1:8000")
             await run_quart()
 
         elif page.route == "/errors":
