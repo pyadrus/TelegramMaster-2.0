@@ -5,6 +5,7 @@
 ![alt text](docs/static/images/TelegramMaster_2.png "TelegramMaster_2")
 
 <h2>📖 Описание</h2>
+
 - Project name: TelegramMaster 2.0 🚀<br>
 - Current version: 2.1.8 🆕<br>
 - Date of last update: 13.09.2024 📅<br><br>
@@ -19,6 +20,7 @@ offers many functions for account management, user interaction, and process auto
 TelegramMaster 2.0 is compatible with the following operating systems:<br><br>
 
 <p align="center">
+<img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows Badge">
   <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux Badge">
   <img src="https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white" alt="macOS Badge">
 </p>
@@ -33,7 +35,8 @@ The project was developed using the following programming languages:<br><br>
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white" alt="JavaScript Badge">
 </p>
 
-Created based on the libraries of: [Telethon](https://github.com/LonamiWebs/Telethon ), [Flask](https://flask.palletsprojects.com/en/3.0.x/), [Flet](https://github.com/flet-dev/flet).
+Created based on the libraries
+of: [Telethon](https://github.com/LonamiWebs/Telethon ), [Flask](https://flask.palletsprojects.com/en/3.0.x/), [Flet](https://github.com/flet-dev/flet).
 
 <h2>🚀 Main features</h2>
 
@@ -51,17 +54,19 @@ TelegramMaster provides the following functionality:
 
 The full list can be found in the full list of functions: "[Full list of functions](docs/Полный_перечень_функций.md )"
 
-Thanks to flexible settings and the ability to work with multiple 
+Thanks to flexible settings and the ability to work with multiple
 accounts, despite restrictions from <code>Telegram</code> <code>TelegramMaster</code> significantly saves
-time and increases work efficiency. 
+time and increases work efficiency.
 
-In addition, <code>TelegramMaster</code> provides the ability to connect 
+In addition, <code>TelegramMaster</code> provides the ability to connect
 proxy servers 🛡️.
 
-It is important to note that <code>TelegramMaster</code>🚀 has been actively developing since <b>01/29/2022</b> and is regularly updated and supplemented with new
+It is important to note that <code>TelegramMaster</code>🚀 has been actively developing since <b>01/29/2022</b> and is
+regularly updated and supplemented with new
 features to meet the changing market requirements and user needs 🤝.
 
-> ⚠️ This project is a personal (open) repository created for the development of new versions of the program. Fully functional
+> ⚠️ This project is a personal (open) repository created for the development of new versions of the program. Fully
+> functional
 > the version can be found on the channel https://t.me/master_tg_d .
 
 <h2>📦 Installation</h2>
@@ -82,6 +87,7 @@ python --version
 2. Installing the TelegramMaster 🚀:
 
 * Clone the repository:
+
 ```sh
 https://github.com/pyadrus/TelegramMaster-2.0.git
 ``
@@ -91,9 +97,11 @@ pip install -r requirements.txt
 ```
 
 <h3>macOS 🍏</h3>
+
 1. Installing Python:
 
 * Open the terminal and install Homebrew 🍺 if it is not already available:
+
 ```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
@@ -141,7 +149,8 @@ python3 --version
 <hr align="center"/>
 
 <h2>🔧 Documentation and usage examples</h2>
-Detailed documentation on working with TelegramMaster can be found in the docs section, as well as the launch of documentation directly from the program.
+Detailed documentation on working with TelegramMaster can be found in the docs section, as well as the launch of
+documentation directly from the program.
 There you will find instructions for each module and code examples for automating tasks.
 
 <hr align="center"/>

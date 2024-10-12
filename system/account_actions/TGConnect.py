@@ -237,10 +237,6 @@ class TGConnect:
         :param session_name: Файл сессии (file[0] - session файл)
         :return TelegramClient: TelegramClient
         """
-
-        logger.info(
-            f"Имя сессии !!!!!!!!: {account_directory}/{session_name}")  # Имя файла сессии file[0] - session файл
-
         logger.info(
             f"Подключение к аккаунту: {account_directory}/{session_name}")  # Имя файла сессии file[0] - session файл
         telegram_client = await self.connect_to_telegram(session_name, account_directory)
@@ -249,7 +245,7 @@ class TGConnect:
             return telegram_client
         except AuthKeyDuplicatedError:
             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
-            logger.info(f"На данный момент аккаунт {session_name} запущен под другим ip")  # TODO посмотреть правильный путь
+            logger.info(f"На данный момент аккаунт {session_name} запущен под другим ip")
             working_with_accounts(f"{account_directory}/{session_name}.session",
                                   f"user_settings/accounts/banned/{session_name}.session")
         except Exception as e:
@@ -276,7 +272,8 @@ class TGConnect:
 
                 # Дальнейшая обработка после записи номера телефона
                 proxy_settings = await reading_proxy_data_from_the_database(self.db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
-                telegram_client = TelegramClient(f"user_settings/accounts/{account_directory}/{phone_number_value}", api_id=self.api_id,
+                telegram_client = TelegramClient(f"user_settings/accounts/{account_directory}/{phone_number_value}",
+                                                 api_id=self.api_id,
                                                  api_hash=self.api_hash,
                                                  system_version="4.16.30-vxCUSTOM", proxy=proxy_settings)
                 await telegram_client.connect()  # Подключаемся к Telegram
@@ -293,7 +290,8 @@ class TGConnect:
                             logger.info(f"Код telegram: {passww.value}")
                             await telegram_client.sign_in(phone_number_value, passww.value)  # Авторизация с кодом
                             telegram_client.disconnect()
-                            page.go("/connecting_accounts_by_number")  # Перенаправление в настройки, если 2FA не требуется
+                            page.go(
+                                "/connecting_accounts_by_number")  # Перенаправление в настройки, если 2FA не требуется
                             page.update()
                         except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
                             logger.info("Требуется двухфакторная аутентификация. Введите пароль.")
@@ -305,7 +303,8 @@ class TGConnect:
                                     await telegram_client.sign_in(password=pass_2fa.value)
                                     logger.info("Успешная авторизация.")
                                     telegram_client.disconnect()
-                                    page.go("/connecting_accounts_by_number")  # Изменение маршрута в представлении существующих настроек
+                                    page.go(
+                                        "/connecting_accounts_by_number")  # Изменение маршрута в представлении существующих настроек
                                     page.update()
                                 except Exception as ex:
                                     logger.error(f"Ошибка при вводе пароля: {ex}")
@@ -335,7 +334,8 @@ class TGConnect:
             button_back = ft.ElevatedButton(width=550, height=30, text="Назад", on_click=back_button_clicked)
 
             input_view = ft.View(
-                controls=[header_text, phone_number, button, button_back])  # Создаем вид, который будет содержать поле ввода и кнопку
+                controls=[header_text, phone_number, button,
+                          button_back])  # Создаем вид, который будет содержать поле ввода и кнопку
 
             page.views.append(input_view)  # Добавляем созданный вид на страницу
             page.update()
@@ -343,7 +343,7 @@ class TGConnect:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def connecting_session_accounts(self, page: ft.Page,account_directory ,  appointment):
+    async def connecting_session_accounts(self, page: ft.Page, account_directory, appointment):
         """
         Подключение сессии Telegram
         :param page: страница
@@ -353,7 +353,8 @@ class TGConnect:
         logger.info(f"Подключение session аккаунта Telegram для {appointment} в {account_directory}")
         try:
             # Создаем текстовый элемент и добавляем его на страницу
-            header_text = ft.Text(f"Подключение аккаунтов Telegram для {appointment}.\n\n Выберите session файл\n", size=15,
+            header_text = ft.Text(f"Подключение аккаунтов Telegram для {appointment}.\n\n Выберите session файл\n",
+                                  size=15,
                                   # color="pink600"
                                   )
 
@@ -393,17 +394,15 @@ class TGConnect:
                 """Кнопка возврата в меню настроек"""
                 page.go("/connecting_accounts_by_session")
 
-            # Инициализация выбора файлов
-            pick_files_dialog = ft.FilePicker(on_result=btn_click)
+            pick_files_dialog = ft.FilePicker(on_result=btn_click)  # Инициализация выбора файлов
 
-            # Добавляем FilePicker на страницу
-            page.overlay.append(pick_files_dialog)
+            page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
 
             # Кнопка для открытия диалога выбора файлов
             button_select_file = ft.ElevatedButton(width=550, height=30,
-                text="Выбрать session файл",
-                on_click=lambda _: pick_files_dialog.pick_files()
-            )
+                                                   text="Выбрать session файл",
+                                                   on_click=lambda _: pick_files_dialog.pick_files()
+                                                   )
 
             # Кнопка возврата
             button_back = ft.ElevatedButton(width=550, height=30, text="Назад", on_click=back_button_clicked)
@@ -423,5 +422,3 @@ class TGConnect:
 
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
-
-
