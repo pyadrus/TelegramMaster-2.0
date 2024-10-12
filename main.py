@@ -42,32 +42,21 @@ async def show_notification(page: ft.Page, message: str):
     dlg.open = True
     page.update()
 
-
-# async def main():
-    # Запускаем сервер Quart в фоновом режиме
-    # quart_task = asyncio.create_task(run_quart())
-
-    # page = ft.Page()  # код Flet
-    # telegram_master_main(page)
-    #
-    # await quart_task  # Ждём завершения задачи сервера Quart
+# def setup_page(page, program_version, date_of_program_change, line_width):
+#     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
+#     page.window.width = line_width
+#     page.window.height = 550
+#     page.window.resizable = False
+#     logger.info(f"Program version: {program_version}. Date of change: {date_of_program_change}")
 
 
-def setup_page(page, program_version, date_of_program_change, line_width):
+def main(page: ft.Page):
+
     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
     page.window.width = line_width
     page.window.height = 550
     page.window.resizable = False
     logger.info(f"Program version: {program_version}. Date of change: {date_of_program_change}")
-
-
-def main():
-    page = ft.Page()  # код Flet
-
-    setup_page(page, program_version, date_of_program_change, line_width)
-
-    # Запускаем сервер Quart в фоновом режиме
-    quart_task = asyncio.create_task(run_quart())
 
     async def route_change(route):
         page.views.clear()
@@ -884,6 +873,9 @@ def main():
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
             SettingPage().create_main_window(page, variable="time_subscription")
         elif page.route == "/documentation":  # Открытие документации
+
+            asyncio.create_task(run_quart())
+
             webbrowser.open_new("http://127.0.0.1:8000")
             await run_quart()
 
@@ -904,6 +896,3 @@ def main():
 
 
 ft.app(target=main)
-
-if __name__ == "__main__":
-    asyncio.run(main)
