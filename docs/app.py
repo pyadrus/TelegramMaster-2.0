@@ -8,7 +8,7 @@ from watchfiles import awatch
 
 app = Quart(__name__, template_folder='templates')
 
-program_version, date_of_program_change = "2.2.6", "11.10.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "2.2.7", "13.10.2024"  # Версия программы, дата изменения
 
 
 @app.route('/')

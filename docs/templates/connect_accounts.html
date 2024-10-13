@@ -68,27 +68,48 @@
             Для вашего удобства предоставляю ссылки на магазины, которые пользуются популярностью среди
             пользователей TelegramMaster:</p>
 
-        <blockquote>
-            1️⃣ <a href="https://zelenka.market">https://zelenka.market</a><br>
-            2️⃣ <a href="https://hstock.org">https://hstock.org</a><br>
-            3️⃣ <a href="https://darkstore.su">https://darkstore.su</a><br>
-            4️⃣ <a href="https://accsmarket.com">https://accsmarket.com</a><br>
-            5️⃣ <a href="https://retriv.biz">https://retriv.biz</a><br>
-            6️⃣ <a href="https://tgseller.ru">https://tgseller.ru</a><br>
-        </blockquote>
+        <style>
+            .card {
+                width: auto;
+                height: auto;
+                border-radius: 10px;
+                background: #e0e0e0;
+                padding: 0;
+                border: 2px solid #ccc; /* рамка */
+                 color: black; /* черный текст */
+                border-left: 5px solid #ccc;
+                padding-left: 0;
+                margin: 0;
+                font-family: 'Arial', sans-serif;
+            }
 
+        </style>
+        <div class="card">
+
+            <blockquote>
+                1️⃣ <a href="https://zelenka.market">https://zelenka.market</a><br>
+                2️⃣ <a href="https://hstock.org">https://hstock.org</a><br>
+                3️⃣ <a href="https://darkstore.su">https://darkstore.su</a><br>
+                4️⃣ <a href="https://accsmarket.com">https://accsmarket.com</a><br>
+                5️⃣ <a href="https://retriv.biz">https://retriv.biz</a><br>
+                6️⃣ <a href="https://tgseller.ru">https://tgseller.ru</a><br>
+            </blockquote>
+        </div>
         <h2>Подключение аккаунтов в формате tdata</h2>
 
         <p>Чтобы подключить аккаунт в формате tdata, выполните следующие действия:</p>
 
-        <blockquote>
-            1️⃣ Загрузите купленный аккаунт и распакуйте его в удобное место. В архиве вы найдёте папку с названием
-            tdata и файл password2FA, который может содержать пароль.<br>
-            2️⃣ Скачайте портативную версию Telegram с официального сайта по адресу <a
-                href="https://desktop.telegram.org">https://desktop.telegram.org</a>.<br>
-            3️⃣ Распакуйте архив и скопируйте файлы Telegram.exe и modules в папку с вашим аккаунтом в формате
-            tdata.<br>
-        </blockquote>
+
+        <div class="card">
+            <blockquote>
+                1️⃣ Загрузите купленный аккаунт и распакуйте его в удобное место. В архиве вы найдёте папку с названием
+                tdata и файл password2FA, который может содержать пароль.<br>
+                2️⃣ Скачайте портативную версию Telegram с официального сайта по адресу <a
+                    href="https://desktop.telegram.org">https://desktop.telegram.org</a>.<br>
+                3️⃣ Распакуйте архив и скопируйте файлы Telegram.exe и modules в папку с вашим аккаунтом в формате
+                tdata.<br>
+            </blockquote>
+        </div>
 
         <p>После того как вы выполните все эти действия, запустите Telegram.exe. Если ваш аккаунт активен, то после
             запуска Telegram откроется его окно.</p>
@@ -105,16 +126,19 @@
 
         <h2>Чтобы подключить аккаунт в <b>TelegramMaster</b>:</h2>
 
-        <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
-            2️⃣ Запустить функцию «Подключение аккаунтов».<br>
-            3️⃣ Ввести номер телефона без пробелов, начиная с символа + (например, +79490000000).<br>
-            4️⃣ Ввести код подтверждения от Telegram. Если код не пришел в течение минуты, повторите процедуру.<br>
-            5️⃣ Если на аккаунте есть пароль, то ввести пароль. Если к аккаунту привязана двухфакторная
-            аутентификация, программа запросит ввод пароля.<br>
-        </blockquote>
-
+        <div class="card">
+            <blockquote>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+                TelegramMaster</a>).<br>
+                2️⃣ Запустить функцию «Подключение аккаунтов».<br>
+                3️⃣ Запустить функцию «Подключение аккаунтов по номеру телефона».<br>
+                4️⃣ Выбрать функцию для которой хотите подключить аккаунт.<br>
+                5️⃣ Ввести номер телефона без пробелов, начиная с символа + (например, +79490000000).<br>
+                6️⃣ Ввести код подтверждения от Telegram. Если код не пришел в течение минуты, повторите процедуру.<br>
+                7️⃣ Если на аккаунте есть пароль, то ввести пароль. Если к аккаунту привязана двухфакторная
+                аутентификация, программа запросит ввод пароля.<br>
+            </blockquote>
+        </div>
 
         <div
                 style="border: 2px solid #f5c6cbf5; background-color: #f8d7da; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif;">
@@ -128,6 +152,9 @@
 
         <p>После успешного подключения будет создан файл с названием номер_телефона.session и будет расположен в
             директории <code>TelegramMaster/user_settings/accounts</code>.</p>
+
+        <hr align="center"/>
+
 
         <h2>Подключение аккаунтов в формате session</h2>
 
@@ -143,28 +170,105 @@
             чатам, то поместите аккаунт в папку <code>TelegramMaster/user_settings/accounts/send_message</code>.
         </p>
 
-        <h2>Структура папок с аккаунтами:</h2>
 
-        <blockquote>
-            1️⃣ <code>TelegramMaster/user_settings/accounts/answering_machine</code> — аккаунты для автоответчика<br>
-            2️⃣ <code>TelegramMaster/user_settings/accounts/banned</code> — забаненные аккаунты, аккаунты, которые
-            перемещены в данную папку, это аккаунты, перемещенные после проверки аккаунтов<br>
-            3️⃣ <code>TelegramMaster/user_settings/accounts/bio</code> — аккаунты для редактирования BIO<br>
-            4️⃣ <code>TelegramMaster/user_settings/accounts/contact</code> — аккаунты для работы с телефонными
-            номерами<br>
-            5️⃣ <code>TelegramMaster/user_settings/accounts/creating</code> — аккаунты для создания групп<br>
-            6️⃣ <code>TelegramMaster/user_settings/accounts/invalid_account</code> — невалидные аккаунты<br>
-            7️⃣<code>TelegramMaster/user_settings/accounts/inviting</code> — аккаунты для инвайтинга<br>
-            8️⃣ <code>TelegramMaster/user_settings/accounts/parsing</code> — аккаунты для парсинга<br>
-            9️⃣<code>TelegramMaster/user_settings/accounts/reactions</code> — аккаунты для работы с реакциями<br>
-            1️⃣0️⃣ <code>TelegramMaster/user_settings/accounts/reactions_list</code> — аккаунты для проставления реакций<br>
-            1️⃣1️⃣ <code>TelegramMaster/user_settings/accounts/send_message</code> — аккаунты для рассылки сообщений<br>
-            1️⃣2️⃣ <code>TelegramMaster/user_settings/accounts/subscription</code> — аккаунты для подписки на группы и
-            каналы<br>
-            1️⃣3️⃣ <code>TelegramMaster/user_settings/accounts/unsubscribe</code> — аккаунты для отписки от групп и
-            каналов<br>
-            1️⃣4️⃣ <code>TelegramMaster/user_settings/accounts/viewing</code> — аккаунты для накрутки просмотров постов.<br>
-        </blockquote>
+        <div class="card">
+            <blockquote>
+                1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
+                2️⃣ Запустить функцию «Подключение аккаунтов».<br>
+                3️⃣ Запустить функцию «Подключение session аккаунтов».<br>
+                4️⃣ Выбрать функцию для которой хотите подключить аккаунт.<br>
+                5️⃣ Выбрать session аккаунт для подключения.<br>
+            </blockquote>
+        </div>
+
+
+        <h2>Структура папок с аккаунтами:</h2>
+        <table border="1">
+            <thead>
+
+            <tr>
+                <th>Номер</th>
+                <th>Путь</th>
+                <th>Описание</th>
+            </tr>
+
+            </thead>
+            <tbody>
+            <tr>
+                <td>1️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/answering_machine</td>
+                <td>Аккаунты для автоответчика</td>
+            </tr>
+
+            <tr>
+                <td>2️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/banned</td>
+                <td>Забаненные аккаунты, аккаунты, которые перемещены в данную папку, это аккаунты, перемещенные после
+                    проверки аккаунтов
+                </td>
+            </tr>
+            <tr>
+                <td>3️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/bio</td>
+                <td>Аккаунты для редактирования BIO</td>
+            </tr>
+            <tr>
+                <td>4️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/contact</td>
+                <td>Аккаунты для работы с телефонными номерами</td>
+            </tr>
+            <tr>
+                <td>5️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/creating</td>
+                <td>Аккаунты для создания групп</td>
+            </tr>
+            <tr>
+                <td>6️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/invalid_account</td>
+                <td>Невалидные аккаунты</td>
+            </tr>
+            <tr>
+                <td>7️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/inviting</td>
+                <td>Аккаунты для инвайтинга</td>
+            </tr>
+            <tr>
+                <td>8️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/parsing</td>
+                <td>аккаунты для парсинга</td>
+            </tr>
+            <tr>
+                <td>9️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/reactions</td>
+                <td>Аккаунты для работы с реакциями</td>
+            </tr>
+            <tr>
+                <td>1️⃣0️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/reactions_list</td>
+                <td>Аккаунты для проставления реакций</td>
+            </tr>
+            <tr>
+                <td>1️⃣1️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/send_message</td>
+                <td>Аккаунты для рассылки сообщений</td>
+            </tr>
+            <tr>
+                <td>1️⃣2️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/subscription</td>
+                <td>Аккаунты для подписки на группы и каналы</td>
+            </tr>
+            <tr>
+                <td>1️⃣3️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/unsubscribe</td>
+                <td>Аккаунты для отписки от групп и каналов</td>
+            </tr>
+            <tr>
+                <td>1️⃣4️⃣</td>
+                <td>TelegramMaster/user_settings/accounts/viewing</td>
+                <td>Аккаунты для накрутки просмотров постов.</td>
+            </tr>
+            </tbody>
+        </table>
 
 
         <div
