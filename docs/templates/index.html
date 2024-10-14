@@ -15,8 +15,8 @@
             fetch('/menu')
                 .then(response => response.text())
                 .then(data => {
-                document.getElementById('menu-placeholder').innerHTML = data;
-            })
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
                 .catch(error => console.error('Ошибка загрузки меню:', error));
         }
 
