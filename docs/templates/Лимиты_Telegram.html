@@ -1,3 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Лимиты Telegram</title>
+
+    <!-- Правильный способ подключения CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        function loadMenu() {
+            fetch('/menu')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
+                .catch(error => console.error('Ошибка загрузки меню:', error));
+        }
+
+        // Вызов функции загрузки меню при загрузке страницы
+        window.onload = loadMenu;
+    </script>
+
+</head>
+
+
+
 <a href="https://github.com/pyadrus" class="github-corner" aria-label="Github" title="Github">
     <svg width="80" height="80" viewBox="0 0 250 250"
          style="z-index:99999; fill:#000000; color:#fff; position: fixed; top: 0; border: 0; right: 0;"
@@ -135,3 +162,13 @@ Telegram, даже если это не так.**
 2️⃣3️⃣. `Срок, после которого установленный username на аккаунте / канале можно выставить на торги на Fragment.com`<br>
 ✅ *Ограничения:* **минимально 15 максимально нет ограничений**<br>
 ✅ *Обход ограничения*: **Подождать, не меняя username**<br>
+
+
+        <hr align="center"/>
+
+    </div>
+</div>
+
+</body>
+
+</html>

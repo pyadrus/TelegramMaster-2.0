@@ -1,3 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Обновление программы</title>
+
+    <!-- Правильный способ подключения CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        function loadMenu() {
+            fetch('/menu')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
+                .catch(error => console.error('Ошибка загрузки меню:', error));
+        }
+
+        // Вызов функции загрузки меню при загрузке страницы
+        window.onload = loadMenu;
+    </script>
+
+</head>
+
 <a href="https://github.com/pyadrus" class="github-corner" aria-label="Github" title="Github">
     <svg width="80" height="80" viewBox="0 0 250 250"
          style="z-index:99999; fill:#000000; color:#fff; position: fixed; top: 0; border: 0; right: 0;"
@@ -33,3 +58,12 @@
 
 ![Обновление программы изменение от 14.05.2023, изображение
 №4](https://sun9-42.userapi.com/impg/tgdIQmBnUzazrKJx_yKBEVAjBGLSiD3eZYNeUA/Xek5AcIsm7k.jpg?size=807x308&quality=96&sign=c2614910e000cdbe2a0b365eab692c0f&type=album)
+
+        <hr align="center"/>
+
+    </div>
+</div>
+
+</body>
+
+</html>
