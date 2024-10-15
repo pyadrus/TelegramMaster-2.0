@@ -8,7 +8,7 @@ from watchfiles import awatch
 
 app = Quart(__name__, template_folder='templates')
 
-program_version, date_of_program_change = "2.2.7", "13.10.2024"  # Версия программы, дата изменения
+program_version, date_of_program_change = "2.2.8", "15.10.2024"  # Версия программы, дата изменения
 
 
 @app.route('/')
@@ -93,6 +93,17 @@ async def launch_telegrammaster():
     """Запуск TelegramMaster"""
     return await render_template('launch_telegrammaster.html')
 
+
+@app.route('/working_with_errors_telegrammaster')
+async def working_with_errors_telegrammaster():
+    """Работа с ошибками TelegramMaster 2.0"""
+    return await render_template('working_with_errors_telegrammaster.html')
+
+
+@app.route('/telegram_limits')
+async def telegram_limits():
+    """Лимиты Telegram"""
+    return await render_template('telegram_limits.html')
 
 async def run_quart():
     try:
