@@ -14,7 +14,7 @@ body {
     padding: 15px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     position: fixed;
-    height: auto;
+    height: 100vh; /* Меню растянуто на всю высоту экрана */
     overflow: auto;
     font-size: 13px;
     background-color: #f4f5f8; /* Цвет фона */
@@ -45,9 +45,8 @@ body {
     display: block;
     margin: 0 auto 20px;
     border-radius: 8px;
-    position: fixed; /* Предполагаю, что баннер должен быть фиксирован */
+    /* Убрано position: fixed, чтобы баннер не перекрывал меню */
 }
-
 
 h1 {
     text-align: center;
