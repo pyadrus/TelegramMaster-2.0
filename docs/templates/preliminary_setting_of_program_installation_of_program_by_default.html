@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
-    <title>Настройка программы</title>
-
+    <title>Парсинг</title>
     <!-- Правильный способ подключения CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
@@ -20,10 +18,9 @@
         // Вызов функции загрузки меню при загрузке страницы
         window.onload = loadMenu;
     </script>
-
 </head>
-
-
+<body>
+<div class="container">
     <a href="https://github.com/pyadrus" class="github-corner" aria-label="Github" title="Github">
         <svg width="80" height="80" viewBox="0 0 250 250"
              style="z-index:99999; fill:#000000; color:#fff; position: fixed; top: 0; border: 0; right: 0;"
@@ -37,7 +34,10 @@
                   fill="currentColor"></path>
         </svg>
     </a>
-
+ <!-- Подключение бокового меню -->
+    <div id="menu-placeholder"></div>
+    <!-- Основной контент -->
+    <div class="content">
     <p>
         После того как установили <a href="https://www.python.org/" aria-label="python" title="python ">python</a> и все
         необходимые библиотеки, вам необходимо произвести

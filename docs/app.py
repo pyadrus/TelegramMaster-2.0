@@ -100,6 +100,20 @@ async def working_with_errors_telegrammaster():
     """Работа с ошибками TelegramMaster 2.0"""
     return await render_template('working_with_errors_telegrammaster.html')
 
+@app.route('/install_python_update_pip')
+async def install_python_update_pip():
+    """Установка Python, обновление PIP"""
+    return await render_template('install_python_update_pip.html')
+
+@app.route('/preliminary_setting_of_program_installation_of_program_by_default')
+async def preliminary_setting_of_program_installation_of_program_by_default():
+    """Предварительная настройка программы"""
+    return await render_template('preliminary_setting_of_program_installation_of_program_by_default.html')
+
+@app.route('/registration_api_id_api_hash')
+async def registration_api_id_api_hash():
+    """Получение api и hash"""
+    return await render_template('registration_api_id_api_hash.html')
 
 @app.route('/telegram_limits')
 async def telegram_limits():
