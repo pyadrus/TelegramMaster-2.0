@@ -8,12 +8,13 @@ from watchfiles import awatch
 
 app = Quart(__name__, template_folder='templates')
 
-program_version, date_of_program_change = "2.2.8", "15.10.2024"  # Версия программы, дата изменения
-
+program_version, date_of_program_change = "2.2.9", "17.10.2024"  # Версия программы, дата изменения
+program_name = "TelegramMaster 2.0"  # Название программы
 
 @app.route('/')
 async def index():
-    return await render_template('index.html')  # Маршрут для главной страницы
+    """Главная страница документации"""
+    return await render_template('index.html', program_name=program_name)  # Маршрут для главной страницы
 
 
 @app.route('/menu')
