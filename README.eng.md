@@ -1,6 +1,6 @@
 <h1 align="center">TelegramMaster 🚀 by. <a href="https://t.me/PyAdminRU" target="_blank">PyAdminRU</a></h1>
 
-[English readme](README.Eng.md) • [Русский readme](README.md)
+[English readme](README.eng.md) • [Русский readme](README.md) • [Lengua española readme](README.es.md)
 
 ![alt text](docs/static/images/TelegramMaster_2.png "TelegramMaster_2")
 
@@ -13,7 +13,7 @@
 [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
 [![made-with-PyAdminRU](https://img.shields.io/badge/Made%20with-PyAdminRU-1f425f.svg)](https://t.me/PyAdminRU)
 
-TelegramMaster 2.0 is a powerful tool for working with <a href="https://telegram.org /">Telegram</a> 📨. The program
+TelegramMaster 2.0 is a powerful tool for working with <a href="https://telegram.org/">Telegram</a> 📨. The program
 offers many functions for account management, user interaction, and process automation.
 
 <h2>💻 Supported platforms</h2>
