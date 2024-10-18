@@ -149,6 +149,9 @@ python3 --version
 <hr align="center"/>
 
 <h2>🔧 Documentation and usage examples</h2>
+
+![alt text](docs/static/images/documentation.png "Documentation")
+
 Detailed documentation on working with TelegramMaster can be found in the docs section, as well as the launch of
 documentation directly from the program.
 There you will find instructions for each module and code examples for automating tasks.

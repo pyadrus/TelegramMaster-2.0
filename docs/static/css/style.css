@@ -1,7 +1,7 @@
 body {
     font-family: 'Source Code Pro', sans-serif;
     margin: 0;
-    background-color: #415a77; /* Подходящий фон под баннер */
+    background-color: #f4f5f8; /* Подходящий фон под баннер */
     color: #e0e1dd; /* Цвет текста по всем страницам */
 }
 
@@ -37,6 +37,10 @@ body {
     padding: 20px;
     position: relative;
     z-index: 30;
+    background-color: #ffffff; /* Белый фон для документации */
+    color: #000000; /* Черный цвет текста */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Тень для выделения контента */
 }
 
 .banner {
@@ -45,15 +49,9 @@ body {
     display: block;
     margin: 0 auto 20px;
     border-radius: 8px;
-    /* Убрано position: fixed, чтобы баннер не перекрывал меню */
 }
 
-h1 {
-    text-align: center;
-    color: #00A6ED; /* Измените на желаемый цвет */
-}
-
-h2 {
+h1, h2 {
     text-align: center;
     color: #00A6ED; /* Измените на желаемый цвет */
 }
