@@ -7,8 +7,8 @@
 <h2>📖 Descripción</h2>
 
 - Nombre del proyecto: TelegramMaster 2.0 🚀<br>
-- Versión actual: 2.1.8 🆕<br>
-- Última fecha de actualización: 13.09.2024 📅<br > <br>
+- Versión actual: 2.2.10 🆕<br>
+- Última fecha de actualización: 20.10.2024 📅<br > <br>
 
 [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
 [![made-with-PyAdminRU](https://img.shields.io/badge/Made%20with-PyAdminRU-1f425f.svg)](https://t.me/PyAdminRU)
