@@ -42,7 +42,6 @@ async def show_notification(page: ft.Page, message: str):
 
 
 def main(page: ft.Page):
-
     page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
     page.window.width = line_width
     page.window.height = 550

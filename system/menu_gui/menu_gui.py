@@ -319,7 +319,8 @@ async def connecting_accounts_by_number_menu(page):
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
 
                      ft.Row([ft.ElevatedButton(width=270, height=30, text="Для автоответчика",
-                                               on_click=lambda _: page.go("/account_connection_number_answering_machine")),
+                                               on_click=lambda _: page.go(
+                                                   "/account_connection_number_answering_machine")),
                              ft.ElevatedButton(width=270, height=30, text="Для редактирования BIO",
                                                on_click=lambda _: page.go("/account_connection_number_bio"))]),
 
@@ -336,7 +337,8 @@ async def connecting_accounts_by_number_menu(page):
                      ft.Row([ft.ElevatedButton(width=270, height=30, text="Для работы с реакциями",
                                                on_click=lambda _: page.go("/account_connection_number_reactions")),
                              ft.ElevatedButton(width=270, height=30, text="Для проставления реакций",
-                                               on_click=lambda _: page.go("/account_connection_number_reactions_list"))]),
+                                               on_click=lambda _: page.go(
+                                                   "/account_connection_number_reactions_list"))]),
 
                      ft.Row([ft.ElevatedButton(width=270, height=30, text="Для рассылки сообщений",
                                                on_click=lambda _: page.go("/account_connection_number_send_message")),
@@ -349,6 +351,7 @@ async def connecting_accounts_by_number_menu(page):
                                                on_click=lambda _: page.go("/account_connection_number_viewing"))]),
 
                  ])]))
+
 
 async def connecting_accounts_by_session_menu(page):
     """Меню подключения аккаунтов по номеру телефона"""
