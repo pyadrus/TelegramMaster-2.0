@@ -4,7 +4,7 @@ import datetime
 import flet as ft
 from loguru import logger
 
-from docs.app import run_quart, program_version, date_of_program_change
+from docs.app import run_quart, program_version, date_of_program_change, program_name
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGChek import TGChek
 from system.account_actions.TGConnect import TGConnect
@@ -42,7 +42,7 @@ async def show_notification(page: ft.Page, message: str):
 
 
 def main(page: ft.Page):
-    page.title = f"TelegramMaster: {program_version} (Дата изменения {date_of_program_change})"
+    page.title = f"{program_name}: {program_version} (Дата изменения {date_of_program_change})"
     page.window.width = line_width
     page.window.height = 550
     page.window.resizable = False
@@ -55,7 +55,7 @@ def main(page: ft.Page):
             ft.View("/", [ft.AppBar(title=ft.Text("Главное меню"),
                                     bgcolor=ft.colors.SURFACE_VARIANT),
                           ft.Text(spans=[ft.TextSpan(
-                              "TelegramMaster 2.0",
+                              f"{program_name}",
                               ft.TextStyle(
                                   size=40,
                                   weight=ft.FontWeight.BOLD,

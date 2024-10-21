@@ -26,25 +26,25 @@ async def menu():
 @app.route('/inviting')
 async def inviting():
     """Инвайтинг"""
-    return await render_template('inviting.html')
+    return await render_template('inviting.html', program_name=program_name)
 
 
 @app.route('/sending_messages')
 async def sending_messages():
     """Рассылка сообщений"""
-    return await render_template('sending_messages.html')
+    return await render_template('sending_messages.html', program_name=program_name)
 
 
 @app.route('/editing_bio')
 async def editing_bio():
     """Редактирование БИЛ"""
-    return await render_template('editing_bio.html')
+    return await render_template('editing_bio.html', program_name=program_name)
 
 
 @app.route('/working_with_contacts')
 async def working_with_contacts():
     """Работа с контактами"""
-    return await render_template('working_with_contacts.html')
+    return await render_template('working_with_contacts.html', program_name=program_name)
 
 
 @app.route('/settings')
@@ -56,43 +56,43 @@ async def settings():
 @app.route('/working_with_reactions')
 async def working_with_reactions():
     """Работа с реакциями"""
-    return await render_template('working_with_reactions.html')
+    return await render_template('working_with_reactions.html', program_name=program_name)
 
 
 @app.route('/parsing')
 async def parsing():
     """Парсинг"""
-    return await render_template('parsing.html')
+    return await render_template('parsing.html', program_name=program_name)
 
 
 @app.route('/subscribe_unsubscribe')
 async def subscribe_unsubscribe():
     """Подписка, отписка"""
-    return await render_template('subscribe_unsubscribe.html')
+    return await render_template('subscribe_unsubscribe.html', program_name=program_name)
 
 
 @app.route('/connect_accounts')
 async def connect_accounts():
     """Подключение аккаунтов"""
-    return await render_template('connect_accounts.html')
+    return await render_template('connect_accounts.html', program_name=program_name)
 
 
 @app.route('/account_verification')
 async def account_verification():
     """Проверка аккаунтов"""
-    return await render_template('account_verification.html')
+    return await render_template('account_verification.html', program_name=program_name)
 
 
 @app.route('/creating_groups')
 async def creating_groups():
     """Создание групп (чатов)"""
-    return await render_template('creating_groups.html')
+    return await render_template('creating_groups.html', program_name=program_name)
 
 
 @app.route('/launch_telegrammaster')
 async def launch_telegrammaster():
     """Запуск TelegramMaster"""
-    return await render_template('launch_telegrammaster.html')
+    return await render_template('launch_telegrammaster.html', program_name=program_name)
 
 
 @app.route('/working_with_errors_telegrammaster')
@@ -103,7 +103,7 @@ async def working_with_errors_telegrammaster():
 @app.route('/install_python_update_pip')
 async def install_python_update_pip():
     """Установка Python, обновление PIP"""
-    return await render_template('install_python_update_pip.html')
+    return await render_template('install_python_update_pip.html', program_name=program_name)
 
 @app.route('/preliminary_setting_of_program_installation_of_program_by_default')
 async def preliminary_setting_of_program_installation_of_program_by_default():

@@ -45,7 +45,7 @@
 
     <!-- Основной контент -->
     <div class="content">
-        <h1 id="telegrammaster-">Создание групп (чатов)</h1>
+        <h1 id="{{ program_name }}-">Создание групп (чатов)</h1>
         <hr align="center"/>
 
         <p>
@@ -53,10 +53,10 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск TelegramMaster</a>).<br>
-            2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
-            аккаунтов Telegram к TelegramMaster)</a> или
-            скопировать session файл аккаунта в папку `TelegramMaster/user_settings/accounts/creating`<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск {{ program_name }}</a>).<br>
+            2️⃣ Подключить аккаунты к {{ program_name }} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+            аккаунтов Telegram к {{ program_name }})</a> или
+            скопировать session файл аккаунта в папку `{{ program_name }}/user_settings/accounts/creating`<br>
             3️⃣ Запустить функцию "Создание групп (чатов)".<br>
         </blockquote>
 
