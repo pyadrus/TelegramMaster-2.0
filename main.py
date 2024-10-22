@@ -101,7 +101,6 @@ def main(page: ft.Page):
         # ______________________________________________________________________________________________________________
         if page.route == "/inviting":  # Меню "Инвайтинг"
             await inviting_menu(page)
-
         elif page.route == "/inviting_without_limits":  # Инвайтинг
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -109,13 +108,11 @@ def main(page: ft.Page):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
-
                 if len(await SettingLimits().get_usernames_with_limits(table_name="members",
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
-
                 else:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
@@ -127,7 +124,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -135,13 +131,11 @@ def main(page: ft.Page):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
-
                 if len(await SettingLimits().get_usernames_with_limits(table_name="members",
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
-
                 else:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
@@ -153,7 +147,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -161,13 +154,11 @@ def main(page: ft.Page):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
-
                 if len(await SettingLimits().get_usernames_with_limits(table_name="members",
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
-
                 else:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
@@ -179,7 +170,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -187,13 +177,11 @@ def main(page: ft.Page):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
-
                 if len(await SettingLimits().get_usernames_with_limits(table_name="members",
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
-
                 else:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
@@ -219,7 +207,6 @@ def main(page: ft.Page):
         # ______________________________________________________________________________________________________________
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             await subscribe_and_unsubscribe_menu(page)
-
         elif page.route == "/subscription_all":  # Подписка
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -238,7 +225,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/unsubscribe_all":  # Отписываемся
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -260,7 +246,6 @@ def main(page: ft.Page):
         # ______________________________________________________________________________________________________________
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             await reactions_menu(page)
-
         elif page.route == "/setting_reactions":  # Ставим реакции
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -279,7 +264,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -298,7 +282,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -320,7 +303,6 @@ def main(page: ft.Page):
         # ______________________________________________________________________________________________________________
         elif page.route == "/parsing":  # Меню "Парсинг"
             await menu_parsing(page)
-
         elif page.route == "/parsing_single_groups":
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -339,7 +321,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -358,7 +339,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -377,7 +357,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов аккаунта
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -396,13 +375,11 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db("members")
         # ______________________________________________________________________________________________________________
         elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
             await working_with_contacts_menu(page)
-
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -423,7 +400,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/show_list_contacts":  # Показать список контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -442,7 +418,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/deleting_contacts":  # Удаление контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -461,7 +436,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/adding_contacts":  # Добавление контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -483,10 +457,10 @@ def main(page: ft.Page):
         # ______________________________________________________________________________________________________________
         elif page.route == "/account_connection_menu":  # Подключение аккаунтов 'меню'.
             await account_connection_menu(page)
-
+        # _______________________________________________________________________________________________________________
         elif page.route == "/connecting_accounts_by_number":  # Подключение аккаунтов по номеру телефона 'Меню'
             await connecting_accounts_by_number_menu(page)
-
+        # _______________________________________________________________________________________________________________
         elif page.route == "/account_connection_number_answering_machine":  # Для автоответчика
             await TGConnect().connecting_number_accounts(page, 'answering_machine', 'автоответчика')
         elif page.route == "/account_connection_number_bio":  # Для редактирования BIO
@@ -511,10 +485,9 @@ def main(page: ft.Page):
             await TGConnect().connecting_number_accounts(page, 'unsubscribe', 'отписки')
         elif page.route == "/account_connection_number_viewing":  # Для накрутки просмотров
             await TGConnect().connecting_number_accounts(page, 'viewing', 'накрутки просмотров')
-
+        # _______________________________________________________________________________________________________________
         elif page.route == "/connecting_accounts_by_session":  # Подключение аккаунтов по номеру телефона 'Меню'
             await connecting_accounts_by_session_menu(page)
-
         elif page.route == "/account_connection_session_answering_machine":  # Для автоответчика (session)
             await TGConnect().connecting_session_accounts(page, 'answering_machine', 'автоответчика')
         elif page.route == "/account_connection_session_bio":  # Для редактирования BIO (session)
@@ -539,7 +512,6 @@ def main(page: ft.Page):
             await TGConnect().connecting_session_accounts(page, 'unsubscribe', 'отписки')
         elif page.route == "/account_connection_session_viewing":  # Для накрутки просмотров (session)
             await TGConnect().connecting_session_accounts(page, 'viewing', 'накрутки просмотров')
-
         # _______________________________________________________________________________________________________________
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             try:
@@ -559,12 +531,9 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         # _______________________________________________________________________________________________________________
-
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             await message_distribution_menu(page)
-
         elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -572,13 +541,11 @@ def main(page: ft.Page):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "Нет аккаунта в папке send_message")
                     return None
-
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
                 if not find_filess(directory_path="user_settings/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
-
                 else:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
@@ -592,7 +559,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -600,20 +566,17 @@ def main(page: ft.Page):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
-
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
                 if not find_filess(directory_path="user_settings/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
-
                 logger.info("⛔ Проверка папки с сообщениями для автоответчика")
                 if not find_filess(directory_path="user_settings/answering_machine", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine')
                     await show_notification(page,
                                             "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
                     return None
-
                 else:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
@@ -625,7 +588,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/sending_files_via_chats":  # Рассылка файлов по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -644,7 +606,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -652,13 +613,11 @@ def main(page: ft.Page):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
-
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
                 if not find_filess(directory_path="user_settings/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
-
                 else:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
@@ -670,7 +629,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -684,7 +642,6 @@ def main(page: ft.Page):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
-
                 else:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
@@ -697,7 +654,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -717,12 +673,9 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         # ______________________________________________________________________________________________________________
-
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
             await bio_editing_menu(page)
-
         elif page.route == "/edit_description":  # Изменение описания
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -741,7 +694,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/name_change":  # Изменение имени
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -760,7 +712,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/change_surname":  # Изменение фамилии
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -779,7 +730,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/edit_photo":  # Изменение фото
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -798,7 +748,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         elif page.route == "/changing_username":  # Изменение username
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -817,7 +766,6 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
         # ______________________________________________________________________________________________________________
         elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
             await settings_menu(page)
@@ -842,11 +790,9 @@ def main(page: ft.Page):
         elif page.route == "/proxy_entry":  # Запись proxy
             await SettingPage().creating_the_main_window_for_proxy_data_entry(page)
         elif page.route == "/message_recording":  # Запись сообщений
-
             SettingPage().recording_text_for_sending_messages(page, "Введите текст для сообщения",
                                                               get_unique_filename(
                                                                   base_filename='user_settings/message/message'))
-
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
             SettingPage().recording_text_for_sending_messages(page, "Введите текст сообщения",
                                                               'user_settings/reactions/link_channel.json')
@@ -863,9 +809,7 @@ def main(page: ft.Page):
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
             SettingPage().create_main_window(page, variable="time_subscription")
         elif page.route == "/documentation":  # Открытие документации
-
             await run_quart()
-
         elif page.route == "/errors":
             # Пустая страница с уведомлением
             page.views.append(ft.View("/errors", []))

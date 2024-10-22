@@ -21,6 +21,28 @@
         window.onload = loadMenu;
     </script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <!-- Стили для кнопки "Вверх" -->
+    <style>
+        #to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #to-top:hover {
+            background-color: #555;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -130,26 +152,31 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{ program_name }}</a>).<br>
+            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{program_name}}</a>).<br>
             2️⃣ Перейти в Настройки.<br>
             3️⃣ Сформировать список каналов в разделе «Формирование_списка_чатов_каналов»<br>
-            4️⃣ Подключить аккаунты к {{ program_name }} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
-            аккаунтов Telegram к {{ program_name }})</a> или
-            скопировать session файл аккаунта в папку <code>{{ program_name }}/user_settings/accounts/viewing</code><br>
+            4️⃣ Подключить аккаунты к {{program_name}} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+            аккаунтов Telegram к {{program_name}})</a> или
+            скопировать session файл аккаунта в папку <code>{{program_name}}/user_settings/accounts/viewing</code><br>
             5️⃣ Перейти в «Работа с реакциями».<br>
             6️⃣ Запустить функцию «Накручиваем просмотры постов».<br>
         </blockquote>
 
         <blockquote>
             Если ранее вы выполняли действия по настройке {{program_name}}, то выполните следующие действия:<br>
-            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{ program_name }}</a>).<br>
+            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{program_name}}</a>).<br>
             2️⃣ Перейти в «Работа с реакциями».<br>
             3️⃣ Запустить функцию «Накручиваем просмотры постов».<br>
         </blockquote>
 
         <hr align="center"/>
+
+        <!-- Кнопка "Вверх" -->
+        <a href="#" id="to-top" title="Вверх">
+            <i class="fas fa-chevron-up" aria-hidden="true"></i>
+        </a>
 
     </div>
 </div>

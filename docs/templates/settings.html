@@ -21,6 +21,28 @@
         window.onload = loadMenu;
     </script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <!-- Стили для кнопки "Вверх" -->
+    <style>
+        #to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #to-top:hover {
+            background-color: #555;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -54,8 +76,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Выбор реакций".<br>
             4️⃣ С помощью чек-бокса выбрать необходимые реакции. <br>
@@ -64,7 +86,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/reactions/reactions.json</code>.
+            <code>{{ program_name }}/user_settings/reactions/reactions.json</code>.
         </p>
 
         <h1 style="text-align: center;">⚙️ Запись proxy</h1>
@@ -75,9 +97,9 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
-            2️⃣ Подключить аккаунты к TelegramMaster (см. Подключение аккаунтов Telegram к TelegramMaster).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
+            2️⃣ Подключить аккаунты к {{ program_name }} (см. Подключение аккаунтов Telegram к {{ program_name }}).<br>
             3️⃣ Перейти в раздел «<a href="{{ url_for('settings') }}">⚙️ Настройки</a>»<br>
             4️⃣ Выбрать функцию «Запись_proxy».<br>
             5️⃣ В графическое окно введите:<br>
@@ -91,7 +113,7 @@
 
         <p>
             Список username записывается в базу данных (в файл
-            <code>TelegramMaster/user_settings/software_database.db</code> в таблицу **proxy**).
+            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу **proxy**).
         </p>
 
         <h1 id="telegrammaster-">⚙️ Смена аккаунтов</h1>
@@ -102,8 +124,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Смена_аккаунтов".<br>
             4️⃣ Ввести время.<br>
@@ -112,7 +134,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/config.ini</code>.
+            <code>{{ program_name }}/user_settings/config.ini</code>.
         </p>
 
 
@@ -125,8 +147,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Запись api_id, api_hash".<br>
             4️⃣ Ввести api_id<br>
@@ -136,13 +158,13 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/config.ini</code>.
+            <code>{{ program_name }}/user_settings/config.ini</code>.
         </p>
 
         <blockquote>
             Убедитесь в правильности ввода api_id, api_hash, если поля ввода будут пустыми, то и в файл
-            <code>TelegramMaster/user_settings/config.ini</code> запишутся пустые данные, что повлечет за собой
-            ошибки TelegramMaster.
+            <code>{{ program_name }}/user_settings/config.ini</code> запишутся пустые данные, что повлечет за собой
+            ошибки {{ program_name }}.
         </blockquote>
 
         <h1 style="text-align: center;">⚙️ Запись времени</h1>
@@ -152,8 +174,8 @@
             Для записи времени, выполните следующие действия:
         </p>
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Запись_времени".<br>
             4️⃣ Ввести:<br>
@@ -164,7 +186,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/config.ini</code>.
+            <code>{{ program_name }}/user_settings/config.ini</code>.
         </p>
 
         <h1 style="text-align: center;">⚙️ Запись сообщений</h1>
@@ -174,8 +196,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Запись_сообщений".<br>
             4️⃣ Ввести сообщение.<br>
@@ -184,7 +206,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/message/message/message.json</code>. При записи повторного ввода
+            <code>{{ program_name }}/user_settings/message/message/message.json</code>. При записи повторного ввода
             сообщения, будет создан файл с именем <code>user_settings/message/message/message_1.json</code>, далее
             <code>user_settings/message/message/message_2.json</code> и так далее.
         </p>
@@ -198,8 +220,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "[Запись_ссылки](Запись_ссылки_для_инвайтинга.html)".<br>
             4️⃣ Ввеcти ссылку на группу в которую будет происходить Инвайтинг (например: https://t.me/test),
@@ -209,7 +231,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в базу данных (в
-            файл <code>TelegramMaster/user_settings/software_database.db</code> в таблицу
+            файл <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу
             <code>links_inviting</code>), предварительно очистив таблицу <code>links_inviting</code>.
         </p>
 
@@ -229,8 +251,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Лимиты_на_аккаунт".<br>
             4️⃣ Ввести лимит на сообщения.<br>
@@ -239,7 +261,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/config.ini</code>.
+            <code>{{ program_name }}/user_settings/config.ini</code>.
         </p>
 
         <h1 id="telegramddddmaster-">⚙️ Лимиты на сообщения</h1>
@@ -250,8 +272,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Лимиты_на_сообщения".<br>
             4️⃣ Ввести лимит на сообщения.<br>
@@ -260,7 +282,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/config.ini</code>.
+            <code>{{ program_name }}/user_settings/config.ini</code>.
         </p>
 
         <h1 id="telegraccccmmaster-">⚙️ Формирование списка пользователей (username)</h1>
@@ -271,8 +293,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел «<a href="{{ url_for('settings') }}">⚙️ Настройки</a>»<br>
             3️⃣ Выбрать функцию «Формирование_списка_username».<br>
             4️⃣ В графическое окно программы вставить список username<br>
@@ -281,11 +303,11 @@
 
         <p>
             Список username записывается в базу данных (в файл
-            <code>TelegramMaster/user_settings/software_database.db</code> в таблицу <code>members</code>)
+            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу <code>members</code>)
         </p>
         <p>
             Если вы уже выполняли "Парсинг" ранее, программа добавит username в ранее созданный список (в файл
-            <code>TelegramMaster/user_settings/software_database.db</code> в таблицу <b>members</b>).
+            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу <b>members</b>).
         </p>
 
         <h1 style="text-align: center;">⚙️ Время между подпиской</h1>
@@ -296,8 +318,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Время_между_подпиской".<br>
             4️⃣ Ввести время.<br>
@@ -306,7 +328,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/config.ini</code>.
+            <code>{{ program_name }}/user_settings/config.ini</code>.
         </p>
 
         <h1 style="text-align: center;">⚙️ Запись времени между сообщениями</h1>
@@ -317,8 +339,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Запись_времени_между_сообщениями".<br>
             4️⃣ Ввести имя аккаунта.<br>
@@ -327,7 +349,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/config.ini</code>.
+            <code>{{ program_name }}/user_settings/config.ini</code>.
         </p>
 
         <h1 style="text-align: center;">⚙️ Время между инвайтингом и рассылкой сообщений</h1>
@@ -338,8 +360,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Время_между_инвайтингом_рассылка_сообщений".<br>
             4️⃣ Ввести имя аккаунта.<br>
@@ -348,7 +370,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/config.ini</code>.
+            <code>{{ program_name }}/user_settings/config.ini</code>.
         </p>
 
         <h1 id="telegrambbbbbbmaster-">⚙️ Запись ссылки для реакций</h1>
@@ -359,8 +381,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Запись_ссылки_для_реакций".<br>
             4️⃣ Ввести время.<br>
@@ -369,7 +391,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>TelegramMaster/user_settings/reactions/link_channel.json</code>.
+            <code>{{ program_name }}/user_settings/reactions/link_channel.json</code>.
         </p>
 
         <h1 id="telegrammaccccccster-">⚙️ Формирование списка чатов - каналов</h1>
@@ -380,8 +402,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
             3️⃣ Запустить функцию "Формирование_списка_чатов_каналов".<br>
             4️⃣ Ввести список чатов - каналов.<br>
@@ -390,11 +412,16 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в базу данных (в
-            файл <code>TelegramMaster/user_settings/software_database.db</code> в таблицу
+            файл <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу
             <code>writing_group_links</code>).
         </p>
 
         <hr align="center"/>
+
+        <!-- Кнопка "Вверх" -->
+        <a href="#" id="to-top" title="Вверх">
+            <i class="fas fa-chevron-up" aria-hidden="true"></i>
+        </a>
 
 
     </div>

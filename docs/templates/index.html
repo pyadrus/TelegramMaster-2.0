@@ -24,6 +24,28 @@
         window.onload = loadMenu;
     </script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <!-- Стили для кнопки "Вверх" -->
+    <style>
+        #to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #to-top:hover {
+            background-color: #555;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -212,11 +234,16 @@
         <p>📣 Не забудьте поделиться своим опытом и отзывами!</p>
         <p>🚀 Приятного использования! 🚀</p>
 
+
+        <!-- Кнопка "Вверх" -->
+        <a href="#" id="to-top" title="Вверх">
+            <i class="fas fa-chevron-up" aria-hidden="true"></i>
+        </a>
+
         <hr/>
+
+
     </div>
-
 </div>
-
 </body>
-
 </html>

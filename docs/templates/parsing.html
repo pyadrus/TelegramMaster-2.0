@@ -18,6 +18,29 @@
         // Вызов функции загрузки меню при загрузке страницы
         window.onload = loadMenu;
     </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <!-- Стили для кнопки "Вверх" -->
+    <style>
+        #to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #to-top:hover {
+            background-color: #555;
+        }
+    </style>
+
 </head>
 <body>
 <div class="container">
@@ -99,19 +122,19 @@
 
         <blockquote>
             1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
-            2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
-            аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
-            <code>TelegramMaster/user_settings/accounts/parsing</code><br>
+            {{ program_name }}</a>).<br>
+            2️⃣ Подключить аккаунты к {{ program_name }} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+            аккаунтов Telegram к {{ program_name }})</a> или скопировать session файл аккаунта в папку
+            <code>{{ program_name }}/user_settings/accounts/parsing</code><br>
             3️⃣ Перейти в раздел «Парсинг»<br>
             4️⃣ Выбрать функцию «Парсинг групп каналов на которые подписан аккаунт».<br>
         </blockquote>
 
         <p>
             Во время парсинга результаты записываются в базу данных (в файл
-            <code>TelegramMaster/user_settings/software_database.db</code> в таблицу groups_and_channels)<br>
+            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу groups_and_channels)<br>
             Если вы уже выполняли Парсинг ранее, программа добавит группы - каналы в ранее созданный список (в файл
-            <code>TelegramMaster/user_settings/software_database.db</code> в таблицу groups_and_channels).<br>
+            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу groups_and_channels).<br>
         </p>
 
 
@@ -126,11 +149,11 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
-            2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
+            2️⃣ Подключить аккаунты к {{ program_name }} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
             аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
-            <code>TelegramMaster/user_settings/accounts/parsing</code><br>
+            <code>{{ program_name }}/user_settings/accounts/parsing</code><br>
             3️⃣ Перейти в раздел «Парсинг»<br>
             4️⃣ Выбрать функцию «<a href="{{ url_for('parsing') }}">🔍 Парсинг активных участников группы</a>».<br>
             5️⃣ Ввести ссылку в графическое меню на чат с которого будет происходить сбор "<b>активных
@@ -141,9 +164,9 @@
 
         <p>
             Во время парсинга результаты записываются в базу данных (в базу данных
-            <code>TelegramMaster/user_settings/software_database.db</code> в таблицу members)<br>
+            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу members)<br>
             Если вы уже выполняли "Парсинг" ранее, программа добавит участников в ранее созданный список (в файл
-            <code>TelegramMaster/user_settings/software_database.db</code> в таблицу <b>members</b>).<br>
+            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу <b>members</b>).<br>
         </p>
 
 
@@ -160,11 +183,11 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
-            2️⃣ Подключить аккаунты к TelegramMaster <a href="{{ url_for('connect_accounts') }}">(см. Подключение
-            аккаунтов Telegram к TelegramMaster)</a> или скопировать session файл аккаунта в папку
-            <code>TelegramMaster/user_settings/accounts/parsing</code><br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
+            2️⃣ Подключить аккаунты к {{ program_name }} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+            аккаунтов Telegram к {{ program_name }})</a> или скопировать session файл аккаунта в папку
+            <code>{{ program_name }}/user_settings/accounts/parsing</code><br>
             3️⃣ Перейти в раздел «Парсинг».<br>
             4️⃣ Выбрать функцию «Парсинг выбранной группы из подписанных пользователем».<br>
             5️⃣ Ввести номер соответствующий группе, которую нужно парсить.<br>
@@ -172,9 +195,9 @@
 
         <p>
             Во время парсинга результаты записываются в базу данных (в файл
-            <code>TelegramMaster/user_settings/software_database.db</code> в таблицу members)<br>
+            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу members)<br>
             Если вы уже выполняли Парсинг ранее, программа добавит участников в ранее созданный список (в файл
-            <code>TelegramMaster/user_settings/software_database.db</code> в таблицу members).<br>
+            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу members).<br>
         </p>
 
         <hr align="center"/>
@@ -188,18 +211,23 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить TelegramMaster (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            TelegramMaster</a>).<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
             2️⃣ Перейти в раздел «<a href="{{ url_for('parsing') }}">🔍 Парсинг</a>»<br>
             3️⃣ Выбрать функцию «Очистка списка от ранее спарсенных данных».<br>
         </blockquote>
 
         <p>
             После выполненных действий TelegramMaster очистит базу данных (файл
-            <code>TelegramMaster/user_settings/software_database.db</code> в таблицу members).<br>
+            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу members).<br>
         </p>
 
         <hr align="center"/>
+
+        <!-- Кнопка "Вверх" -->
+        <a href="#" id="to-top" title="Вверх">
+            <i class="fas fa-chevron-up" aria-hidden="true"></i>
+        </a>
 
     </div>
 </div>
