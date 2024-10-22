@@ -45,5 +45,10 @@ class ConfigReader:
         """Получение высоты кнопки"""
         return self.config.get('line_height', 'height_button', fallback=None)
 
+    def get_small_button_width(self):
+        """Получение ширины мало малой кнопки"""
+        return self.config.get('small_button_width', 'small_button_width', fallback=None)
+
 
 height_button = ConfigReader().get_line_width_button() # Высота кнопки
+small_button_width = ConfigReader().get_line_width_button() # Ширина малой кнопки

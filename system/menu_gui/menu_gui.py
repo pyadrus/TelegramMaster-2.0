@@ -1,11 +1,8 @@
 import flet as ft
 
-from system.auxiliary_functions.config import height_button
+from system.auxiliary_functions.config import height_button, small_button_width
 
 line_width = 580  # Ширина окна и ширина строки
-
-# line_width = ConfigReader().get_line_width_button() # Ширина кнопки
-
 
 async def settings_menu(page):
     """Меню настройки"""
@@ -22,25 +19,25 @@ async def settings_menu(page):
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
                                                                                   ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Выбор реакций",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Выбор реакций",
                                                on_click=lambda _: page.go("/choice_of_reactions")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Запись proxy",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Запись proxy",
                                                on_click=lambda _: page.go("/proxy_entry"))]),
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Смена аккаунтов",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Смена аккаунтов",
                                                on_click=lambda _: page.go("/changing_accounts")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Запись api_id, api_hash",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Запись api_id, api_hash",
                                                on_click=lambda _: page.go("/recording_api_id_api_hash"))]),
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Запись времени",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Запись времени",
                                                on_click=lambda _: page.go("/time_between_subscriptions")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Запись сообщений",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Запись сообщений",
                                                on_click=lambda _: page.go("/message_recording"))]),
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Запись ссылки для инвайтинга",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Запись ссылки для инвайтинга",
                                                on_click=lambda _: page.go("/link_entry")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Лимиты на аккаунт",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Лимиты на аккаунт",
                                                on_click=lambda _: page.go("/account_limits"))]),
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Лимиты на сообщения",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Лимиты на сообщения",
                                                on_click=lambda _: page.go("/message_limits")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Время между подпиской",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Время между подпиской",
                                                on_click=lambda _: page.go("/time_between_subscriptionss")), ]),
                      ft.ElevatedButton(width=line_width, height=height_button, text="Формирование списка username",
                                        on_click=lambda _: page.go("/creating_username_list")),
@@ -322,36 +319,36 @@ async def connecting_accounts_by_number_menu(page):
                                                                                   ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для автоответчика",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для автоответчика",
                                                on_click=lambda _: page.go(
                                                    "/account_connection_number_answering_machine")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для редактирования BIO",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для редактирования BIO",
                                                on_click=lambda _: page.go("/account_connection_number_bio"))]),
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для работы с номерами",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для работы с номерами",
                                                on_click=lambda _: page.go("/account_connection_number_contact")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для создания групп",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для создания групп",
                                                on_click=lambda _: page.go("/account_connection_number_creating"))]),
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для инвайтинга",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для инвайтинга",
                                                on_click=lambda _: page.go("/account_connection_number_inviting")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для парсинга",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для парсинга",
                                                on_click=lambda _: page.go("/account_connection_number_parsing"))]),
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для работы с реакциями",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для работы с реакциями",
                                                on_click=lambda _: page.go("/account_connection_number_reactions")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для проставления реакций",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для проставления реакций",
                                                on_click=lambda _: page.go(
                                                    "/account_connection_number_reactions_list"))]),
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для рассылки сообщений",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для рассылки сообщений",
                                                on_click=lambda _: page.go("/account_connection_number_send_message")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для подписки",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для подписки",
                                                on_click=lambda _: page.go("/account_connection_number_subscription"))]),
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для отписки",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для отписки",
                                                on_click=lambda _: page.go("/account_connection_number_unsubscribe")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для накрутки просмотров",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для накрутки просмотров",
                                                on_click=lambda _: page.go("/account_connection_number_viewing"))]),
 
                  ])]))
@@ -373,39 +370,39 @@ async def connecting_accounts_by_session_menu(page):
                                                                                   ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для автоответчика",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для автоответчика",
                                                on_click=lambda _: page.go(
                                                    "/account_connection_session_answering_machine")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для редактирования BIO",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для редактирования BIO",
                                                on_click=lambda _: page.go("/account_connection_session_bio"))]),
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для работы с номерами",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для работы с номерами",
                                                on_click=lambda _: page.go("/account_connection_session_contact")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для создания групп",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для создания групп",
                                                on_click=lambda _: page.go("/account_connection_session_creating"))]),
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для инвайтинга",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для инвайтинга",
                                                on_click=lambda _: page.go("/account_connection_session_inviting")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для парсинга",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для парсинга",
                                                on_click=lambda _: page.go("/account_connection_session_parsing"))]),
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для работы с реакциями",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для работы с реакциями",
                                                on_click=lambda _: page.go("/account_connection_session_reactions")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для проставления реакций",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для проставления реакций",
                                                on_click=lambda _: page.go(
                                                    "/account_connection_session_reactions_list"))]),
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для рассылки сообщений",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для рассылки сообщений",
                                                on_click=lambda _: page.go(
                                                    "/account_connection_session_send_message")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для подписки",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для подписки",
                                                on_click=lambda _: page.go(
                                                    "/account_connection_session_subscription"))]),
 
-                     ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Для отписки",
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Для отписки",
                                                on_click=lambda _: page.go(
                                                    "/account_connection_session_unsubscribe")),
-                             ft.ElevatedButton(width=270, height=height_button, text="Для накрутки просмотров",
+                             ft.ElevatedButton(width=small_button_width, height=height_button, text="Для накрутки просмотров",
                                                on_click=lambda _: page.go("/account_connection_session_viewing"))]),
 
                  ])]))

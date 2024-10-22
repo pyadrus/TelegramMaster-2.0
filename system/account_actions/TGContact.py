@@ -10,7 +10,6 @@ from telethon.tl.types import (UserStatusRecently, UserStatusOffline, UserStatus
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_filess
-from system.auxiliary_functions.config import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -20,7 +19,6 @@ class TGContact:
     def __init__(self):
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
-        self.config_reader = ConfigReader()
 
     async def show_account_contact_list(self) -> None:
         """Показать список контактов аккаунтов и запись результатов в файл"""
