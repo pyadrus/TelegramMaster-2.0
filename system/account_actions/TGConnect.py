@@ -14,7 +14,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, Use
 from thefuzz import fuzz
 
 from system.auxiliary_functions.auxiliary_functions import working_with_accounts, find_filess
-from system.auxiliary_functions.global_variables import ConfigReader
+from system.auxiliary_functions.config import ConfigReader, height_button
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -330,8 +330,8 @@ class TGConnect:
                 """Кнопка возврата в меню настроек"""
                 page.go("/connecting_accounts_by_number")
 
-            button = ft.ElevatedButton(width=550, height=30, text="Готово", on_click=btn_click)
-            button_back = ft.ElevatedButton(width=550, height=30, text="Назад", on_click=back_button_clicked)
+            button = ft.ElevatedButton(width=550, height=height_button, text="Готово", on_click=btn_click)
+            button_back = ft.ElevatedButton(width=550, height=height_button, text="Назад", on_click=back_button_clicked)
 
             input_view = ft.View(
                 controls=[header_text, phone_number, button,
@@ -399,13 +399,13 @@ class TGConnect:
             page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
 
             # Кнопка для открытия диалога выбора файлов
-            button_select_file = ft.ElevatedButton(width=550, height=30,
+            button_select_file = ft.ElevatedButton(width=550, height=height_button,
                                                    text="Выбрать session файл",
                                                    on_click=lambda _: pick_files_dialog.pick_files()
                                                    )
 
             # Кнопка возврата
-            button_back = ft.ElevatedButton(width=550, height=30, text="Назад", on_click=back_button_clicked)
+            button_back = ft.ElevatedButton(width=550, height=height_button, text="Назад", on_click=back_button_clicked)
 
             # Добавляем все элементы на страницу
             input_view = ft.View(

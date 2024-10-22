@@ -7,6 +7,8 @@ class ConfigReader:
     def __init__(self):
         self.config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
         self.config.read('user_settings/config.ini')
+        self.config_gui = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
+        self.config_gui.read('user_settings/config_gui.ini')
 
     def get_time_subscription(self):
         return (self.config.getint('time_subscription', 'time_subscription_1', fallback=None),
@@ -35,6 +37,13 @@ class ConfigReader:
         return (self.config.get('hour_minutes_every_day', 'hour', fallback=None),
                 self.config.get('hour_minutes_every_day', 'minutes', fallback=None))
 
+    def get_line_width_button(self):
+        """Получение ширины кнопки"""
+        return self.config.get('line_width', 'line_width_button', fallback=None)
 
-# Пример использования
-config_reader = ConfigReader()
+    def get_line_height_button(self):
+        """Получение высоты кнопки"""
+        return self.config.get('line_height', 'height_button', fallback=None)
+
+
+height_button = ConfigReader().get_line_width_button() # Высота кнопки

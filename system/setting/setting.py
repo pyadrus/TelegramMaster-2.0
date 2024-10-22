@@ -8,6 +8,7 @@ import sys
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 
+from system.auxiliary_functions.config import height_button
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
@@ -171,8 +172,8 @@ class SettingPage:
             page.go("/settings")
 
         # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
-        button = ft.ElevatedButton(width=550, height=30, text="Готово", on_click=btn_click)
-        button_back = ft.ElevatedButton(width=550, height=30, text="Назад", on_click=back_button_clicked)
+        button = ft.ElevatedButton(width=550, height=height_button, text="Готово", on_click=btn_click)
+        button_back = ft.ElevatedButton(width=550, height=height_button, text="Назад", on_click=back_button_clicked)
 
         page.views.append(
             ft.View(
@@ -268,8 +269,8 @@ async def reaction_gui(page: ft.Page):
         page.go("/settings")
 
     # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
-    button = ft.ElevatedButton(width=550, height=30, text="Готово", on_click=button_clicked)
-    button_back = ft.ElevatedButton(width=550, height=30, text="Назад", on_click=back_button_clicked)
+    button = ft.ElevatedButton(width=550, height=height_button, text="Готово", on_click=button_clicked)
+    button_back = ft.ElevatedButton(width=550, height=height_button, text="Назад", on_click=back_button_clicked)
 
     page.views.append(
         ft.View(

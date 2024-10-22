@@ -19,7 +19,7 @@ from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
-from system.auxiliary_functions.global_variables import ConfigReader
+from system.auxiliary_functions.config import ConfigReader, height_button
 from system.menu_gui.menu_gui import (line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
@@ -73,29 +73,29 @@ def main(page: ft.Page):
                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                      url="https://t.me/master_tg_d", ), ], ),
                           ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Инвайтинг",
+                              ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Инвайтинг",
                                                         on_click=lambda _: page.go("/inviting")),
-                                      ft.ElevatedButton(width=270, height=30, text="Парсинг",
+                                      ft.ElevatedButton(width=270, height=height_button, text="Парсинг",
                                                         on_click=lambda _: page.go("/parsing")), ]),
-                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Работа с контактами",
+                              ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Работа с контактами",
                                                         on_click=lambda _: page.go("/working_with_contacts")),
-                                      ft.ElevatedButton(width=270, height=30, text="Подписка, отписка",
+                                      ft.ElevatedButton(width=270, height=height_button, text="Подписка, отписка",
                                                         on_click=lambda _: page.go("/subscribe_unsubscribe")), ]),
-                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Подключение аккаунтов",
+                              ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Подключение аккаунтов",
                                                         on_click=lambda _: page.go("/account_connection_menu")),
-                                      ft.ElevatedButton(width=270, height=30, text="Рассылка сообщений",
+                                      ft.ElevatedButton(width=270, height=height_button, text="Рассылка сообщений",
                                                         on_click=lambda _: page.go("/sending_messages")), ]),
-                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Работа с реакциями",
+                              ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Работа с реакциями",
                                                         on_click=lambda _: page.go("/working_with_reactions")),
-                                      ft.ElevatedButton(width=270, height=30, text="Проверка аккаунтов",
+                                      ft.ElevatedButton(width=270, height=height_button, text="Проверка аккаунтов",
                                                         on_click=lambda _: page.go("/account_verification_menu")), ]),
-                              ft.Row([ft.ElevatedButton(width=270, height=30, text="Создание групп (чатов)",
+                              ft.Row([ft.ElevatedButton(width=270, height=height_button, text="Создание групп (чатов)",
                                                         on_click=lambda _: page.go("/creating_groups")),
-                                      ft.ElevatedButton(width=270, height=30, text="Редактирование_BIO",
+                                      ft.ElevatedButton(width=270, height=height_button, text="Редактирование_BIO",
                                                         on_click=lambda _: page.go("/bio_editing")), ]),
-                              ft.ElevatedButton(width=line_width, height=30, text="Настройки",
+                              ft.ElevatedButton(width=line_width, height=height_button, text="Настройки",
                                                 on_click=lambda _: page.go("/settings")),
-                              ft.ElevatedButton(width=line_width, height=30, text="Документация",
+                              ft.ElevatedButton(width=line_width, height=height_button, text="Документация",
                                                 on_click=lambda _: page.go("/documentation")),
                           ]), ]))
         # ______________________________________________________________________________________________________________

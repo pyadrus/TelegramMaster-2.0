@@ -19,7 +19,7 @@ from system.auxiliary_functions.auxiliary_functions import (find_files, all_find
                                                             find_filess)
 from system.auxiliary_functions.auxiliary_functions import read_json_file
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.auxiliary_functions.global_variables import ConfigReader
+from system.auxiliary_functions.config import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_sending_messages()

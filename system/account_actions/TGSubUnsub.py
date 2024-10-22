@@ -11,7 +11,7 @@ from telethon.tl.functions.channels import LeaveChannelRequest
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, find_filess
-from system.auxiliary_functions.global_variables import ConfigReader
+from system.auxiliary_functions.config import ConfigReader
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
