@@ -8,7 +8,7 @@ class ConfigReader:
         self.config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
         self.config.read('user_settings/config.ini')
         self.config_gui = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
-        self.config_gui.read('user_settings/config_gui.ini')
+        self.config_gui.read('user_settings/config/config_gui.ini')
 
     def get_time_subscription(self):
         return (self.config.getint('time_subscription', 'time_subscription_1', fallback=None),
@@ -39,16 +39,53 @@ class ConfigReader:
 
     def get_line_width_button(self):
         """Получение ширины кнопки"""
-        return self.config.get('line_width', 'line_width_button', fallback=None)
+        return self.config_gui.get('line_width_button', 'line_width_button', fallback=None)
 
     def get_line_height_button(self):
         """Получение высоты кнопки"""
-        return self.config.get('line_height', 'height_button', fallback=None)
+        return self.config_gui.get('height_button', 'height_button', fallback=None)
 
     def get_small_button_width(self):
         """Получение ширины мало малой кнопки"""
-        return self.config.get('small_button_width', 'small_button_width', fallback=None)
+        return self.config_gui.get('small_button_width', 'small_button_width', fallback=None)
 
+    def line_width(self):
+        """Ширина окна и ширина строки"""
+        return self.config_gui.get('line_width', 'line_width', fallback=None)
 
-height_button = ConfigReader().get_line_width_button() # Высота кнопки
-small_button_width = ConfigReader().get_line_width_button() # Ширина малой кнопки
+    def program_name(self):
+        """Имя программы"""
+        return self.config_gui.get('program_name', 'program_name', fallback=None)
+
+    def program_version(self):
+        """Версия программы"""
+        return self.config_gui.get('program_version', 'program_version', fallback=None)
+
+    def date_of_program_change(self):
+        """Дата изменения"""
+        return self.config_gui.get('date_of_program_change', 'date_of_program_change', fallback=None)
+
+    def window_width(self):
+        """Ширина программы"""
+        return self.config_gui.get('window_width', 'window_width', fallback=None)
+
+    def window_height(self):
+        """Высота программы"""
+        return self.config_gui.get('window_height', 'window_height', fallback=None)
+
+    def window_resizable(self):
+        """Разрешение на изменение размера программы, если False, то запрещено изменять размер программы"""
+        return self.config_gui.get('window_resizable', 'window_resizable', fallback=None)
+
+line_width_button = ConfigReader().get_line_width_button() # Получение ширины кнопки
+height_button = ConfigReader().get_line_height_button() # Получение ширины кнопки
+small_button_width = ConfigReader().get_small_button_width() # Ширина малой кнопки
+line_width = ConfigReader().line_width() # Ширина окна и ширина строки
+
+program_name = ConfigReader().program_name() # Имя программы
+program_version = ConfigReader().program_version() # Версия программы
+date_of_program_change = ConfigReader().date_of_program_change() # Версия программы
+
+window_width = ConfigReader().window_width() # Ширина программы
+window_height = ConfigReader().window_height() # Ширина программы
+window_resizable = ConfigReader().window_resizable() # Ширина программы

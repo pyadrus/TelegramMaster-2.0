@@ -1,8 +1,6 @@
 import flet as ft
 
-from system.auxiliary_functions.config import height_button, small_button_width
-
-line_width = 580  # Ширина окна и ширина строки
+from system.auxiliary_functions.config import height_button, small_button_width, line_width
 
 async def settings_menu(page):
     """Меню настройки"""

@@ -6,10 +6,9 @@ from loguru import logger
 from quart import Quart, render_template
 from watchfiles import awatch
 
-app = Quart(__name__, template_folder='templates')
+from system.auxiliary_functions.config import program_name, program_version, date_of_program_change
 
-program_version, date_of_program_change = "2.2.10", "20.10.2024"  # Версия программы, дата изменения
-program_name = "TelegramMaster 2.0"  # Название программы
+app = Quart(__name__, template_folder='templates')
 
 @app.route('/')
 async def index():

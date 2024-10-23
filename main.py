@@ -4,7 +4,7 @@ import datetime
 import flet as ft
 from loguru import logger
 
-from docs.app import run_quart, program_version, date_of_program_change, program_name
+from docs.app import run_quart
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGChek import TGChek
 from system.account_actions.TGConnect import TGConnect
@@ -19,8 +19,10 @@ from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
-from system.auxiliary_functions.config import ConfigReader, height_button, small_button_width
-from system.menu_gui.menu_gui import (line_width, inviting_menu, working_with_contacts_menu, message_distribution_menu,
+from system.auxiliary_functions.config import (ConfigReader, height_button, small_button_width, line_width_button,
+                                               program_name, program_version, date_of_program_change, window_width,
+                                               window_height, window_resizable)
+from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
                                       account_connection_menu, connecting_accounts_by_number_menu,
@@ -43,9 +45,9 @@ async def show_notification(page: ft.Page, message: str):
 
 def main(page: ft.Page):
     page.title = f"{program_name}: {program_version} (Дата изменения {date_of_program_change})"
-    page.window.width = line_width
-    page.window.height = 550
-    page.window.resizable = False
+    page.window.width = window_width  # Ширина окна
+    page.window.height = window_height  # Высота окна
+    page.window.resizable = window_resizable  # Разрешение изменения размера окна
     logger.info(f"Program version: {program_version}. Date of change: {date_of_program_change}")
 
     async def route_change(route):
@@ -73,29 +75,38 @@ def main(page: ft.Page):
                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                      url="https://t.me/master_tg_d", ), ], ),
                           ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Инвайтинг",
-                                                        on_click=lambda _: page.go("/inviting")),
-                                      ft.ElevatedButton(width=small_button_width, height=height_button, text="Парсинг",
-                                                        on_click=lambda _: page.go("/parsing")), ]),
-                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Работа с контактами",
+                              ft.Row(
+                                  [ft.ElevatedButton(width=small_button_width, height=height_button, text="Инвайтинг",
+                                                     on_click=lambda _: page.go("/inviting")),
+                                   ft.ElevatedButton(width=small_button_width, height=height_button, text="Парсинг",
+                                                     on_click=lambda _: page.go("/parsing")), ]),
+                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                        text="Работа с контактами",
                                                         on_click=lambda _: page.go("/working_with_contacts")),
-                                      ft.ElevatedButton(width=small_button_width, height=height_button, text="Подписка, отписка",
+                                      ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                        text="Подписка, отписка",
                                                         on_click=lambda _: page.go("/subscribe_unsubscribe")), ]),
-                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Подключение аккаунтов",
+                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                        text="Подключение аккаунтов",
                                                         on_click=lambda _: page.go("/account_connection_menu")),
-                                      ft.ElevatedButton(width=small_button_width, height=height_button, text="Рассылка сообщений",
+                                      ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                        text="Рассылка сообщений",
                                                         on_click=lambda _: page.go("/sending_messages")), ]),
-                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Работа с реакциями",
+                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                        text="Работа с реакциями",
                                                         on_click=lambda _: page.go("/working_with_reactions")),
-                                      ft.ElevatedButton(width=small_button_width, height=height_button, text="Проверка аккаунтов",
+                                      ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                        text="Проверка аккаунтов",
                                                         on_click=lambda _: page.go("/account_verification_menu")), ]),
-                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button, text="Создание групп (чатов)",
+                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                        text="Создание групп (чатов)",
                                                         on_click=lambda _: page.go("/creating_groups")),
-                                      ft.ElevatedButton(width=small_button_width, height=height_button, text="Редактирование_BIO",
+                                      ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                        text="Редактирование_BIO",
                                                         on_click=lambda _: page.go("/bio_editing")), ]),
-                              ft.ElevatedButton(width=line_width, height=height_button, text="Настройки",
+                              ft.ElevatedButton(width=line_width_button, height=height_button, text="Настройки",
                                                 on_click=lambda _: page.go("/settings")),
-                              ft.ElevatedButton(width=line_width, height=height_button, text="Документация",
+                              ft.ElevatedButton(width=line_width_button, height=height_button, text="Документация",
                                                 on_click=lambda _: page.go("/documentation")),
                           ]), ]))
         # ______________________________________________________________________________________________________________
