@@ -12,7 +12,7 @@ from system.auxiliary_functions.config import height_button
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
-config.read("user_settings/config.ini")
+config.read("user_settings/config/config.ini")
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
@@ -186,7 +186,7 @@ class SettingPage:
 
 def writing_settings_to_a_file(config) -> None:
     """Запись данных в файл user_settings/config.ini"""
-    with open("user_settings/config.ini", "w") as setup:  # Открываем файл в режиме записи
+    with open("user_settings/config/config.ini", "w") as setup:  # Открываем файл в режиме записи
         config.write(setup)  # Записываем данные в файл
 
 
@@ -205,7 +205,7 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
         return config
     except configparser.NoSectionError as error:
         logger.error(
-            f"Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_settings/config.ini")
+            f"Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_settings/config/config.ini")
 
 
 def write_data_to_json_file(reactions, path_to_the_file):
