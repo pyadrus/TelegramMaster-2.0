@@ -85,8 +85,6 @@ class ParsingGroupMembers:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-
-
     async def parse_subscribed_groups(self) -> None:
         """Parsing групп / каналов на которые подписан аккаунт и сохраняем в файл software_database.db"""
         try:
@@ -102,9 +100,6 @@ class ParsingGroupMembers:
                                                     column_name="id")  # Чистка дубликатов в базе данных
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
-
-
-
 
     async def get_active_users(self, client, chat, limit_active_user) -> None:
         """
@@ -125,60 +120,87 @@ class ParsingGroupMembers:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
+    async def filtering_groups(self, chats):
+        """
+        Фильтруем группы
+        :param chats: список групп
+        """
+        groups = []
+
+        for chat in chats:
+            try:
+                if chat.megagroup:
+                    groups.append(chat)
+            except AttributeError:
+                continue  # Игнорируем объекты без атрибута 'megagroup'
+
+        return groups
+
+    async def name_of_the_groups(self, groups):
+        """Возвращаем список названий групп"""
+        group_names = []  # Создаем новый список для названий групп
+
+        for group in groups:
+            logger.info(f"{group}")  # Логируем сам объект группы
+            logger.info(f"{group.title}")  # Логируем название группы
+            group_names.append(group.title)  # Добавляем название группы в список
+
+        return group_names
+
     async def choose_and_parse_group(self, page: ft.Page) -> None:
-        """Выбираем группу из подписанных и запускаем парсинг"""
+        """
+        Выбираем группу из подписанных и запускаем парсинг
+        :param page: страница программы
+        """
+
         try:
             for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory=path_parsing_folder)
-                chats: list = []
+                client = await self.tg_connect.get_telegram_client(session_name, account_directory=path_parsing_folder)
+                chats = []
                 last_date = None
-                groups: list = []
-                result = await client(GetDialogsRequest(offset_date=last_date, offset_id=0,
-                                                        offset_peer=InputPeerEmpty(), limit=200, hash=0))
-                chats.extend(result.chats)
-                for chat in chats:  # Фильтруем группы
-                    try:
-                        if chat.megagroup:
-                            groups.append(chat)
-                    except AttributeError:
-                        continue  # Игнорируем объекты, у которых нет атрибута 'megagroup'
-                i = 0
-                for g in groups:
-                    logger.info(f"[{str(i)}] - {g.title}")
-                    i += 1
-                logger.info("")
-                # Поле для ввода ссылки на чат
-                group_input = ft.TextField(label="Введите номер группы:", multiline=False, max_lines=1)
 
-                async def btn_click(e) -> None:
-                    target_group = groups[int(group_input.value)]
-                    # Изменение маршрута на новый (если необходимо)
-                    page.go("/parsing")
-                    page.update()  # Обновление страницы для отображения изменений
+                result = await client(GetDialogsRequest(offset_date=last_date, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+                chats.extend(result.chats)
+
+                groups = await self.filtering_groups(chats)  # Получаем отфильтрованные группы
+                group_titles = await self.name_of_the_groups(groups)  # Получаем названия групп
+                logger.info(group_titles)
+
+                # Создаем текст для отображения результата
+                result_text = ft.Text(value="Выберите группу для парсинга")
+
+                # Обработчик нажатия кнопки выбора группы
+                async def handle_button_click(event) -> None:
+                    selected_channel = dropdown.value  # Получаем выбранное значение
+                    result_text.value = f"Выбрана группа: {selected_channel}"  # Обновляем текст результата
+                    page.update()
+
                     # Запускаем парсинг выбранной группы
-                    await self.parse_group(client, target_group)
-                    # Чистка и обновление базы данных
+                    await self.parse_group(client, selected_channel)
+
+                    # Очищаем и обновляем базу данных
                     await self.db_handler.clean_no_username()
                     await self.db_handler.delete_duplicates(table_name="members", column_name="id")
-                    await client.disconnect()  # Разрываем соединение telegram
+                    await client.disconnect()
 
-                # Кнопка для подтверждения и запуска парсинга
-                button = ft.ElevatedButton("Готово", on_click=btn_click)
-                # Добавление представления на страницу
-                page.views.append(
-                    ft.View(
-                        "/parsing",  # Маршрут для этого представления
-                        [
-                            group_input,  # Поле ввода ссылки на чат
-                            ft.Column(),  # Колонка для размещения других элементов (при необходимости)
-                            button  # Кнопка "Готово"
-                        ]
-                    )
-                )
-                page.update()  # Обновляем страницу, чтобы отобразить новый вид
+                    # Переходим на экран парсинга только после завершения всех действий
+                    page.go("/parsing")
+
+                # Создаем кнопку для подтверждения выбора
+                select_button = ft.ElevatedButton(text="Выбрать группу", on_click=handle_button_click)
+
+                # Создаем выпадающий список с названиями групп
+                dropdown = ft.Dropdown(width=500, options=[ft.dropdown.Option(title) for title in group_titles], autofocus=True)
+
+                # Объединяем все элементы в колонку
+                content = ft.Column(controls=[dropdown, select_button, result_text])
+
+                page.views.append(content)  # Добавляем созданный вид на страницу
+                page.update()
+
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
+
 
     async def parse_users(self, client, target_group) -> list:
         """

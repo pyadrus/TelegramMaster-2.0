@@ -335,6 +335,10 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
+
+
+
+
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -353,6 +357,10 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
+
+
+
+
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
