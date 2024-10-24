@@ -13,7 +13,7 @@ from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGLimits import SettingLimits
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, record_inviting_results, find_filess
-from system.auxiliary_functions.config import ConfigReader
+from system.auxiliary_functions.config import ConfigReader, path_inviting_folder
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -62,9 +62,9 @@ class InvitingToAGroup:
         """
         try:
             logger.info(f"Запуск инвайтинга без лимитов")
-            for session_name in find_filess(directory_path="user_settings/accounts/inviting", extension='session'):
+            for session_name in find_filess(directory_path=path_inviting_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/inviting")
+                                                                   account_directory=path_inviting_folder)
                 """Получение ссылки для инвайтинга"""
                 for link in await self.getting_an_invitation_link_from_the_database():
                     logger.info(f"{link[0]}")

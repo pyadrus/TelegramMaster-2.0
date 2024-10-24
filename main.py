@@ -21,7 +21,8 @@ from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
 from system.auxiliary_functions.config import (ConfigReader, height_button, small_button_width, line_width_button,
                                                program_name, program_version, date_of_program_change, window_width,
-                                               window_height, window_resizable, path_parsing_folder)
+                                               window_height, window_resizable, path_parsing_folder,
+                                               path_inviting_folder)
 from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
@@ -115,7 +116,7 @@ def main(page: ft.Page):
         elif page.route == "/inviting_without_limits":  # Инвайтинг
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/inviting", extension='session'):
+                if not find_filess(directory_path=path_inviting_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
@@ -138,7 +139,7 @@ def main(page: ft.Page):
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/inviting", extension='session'):
+                if not find_filess(directory_path=path_inviting_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
@@ -161,7 +162,7 @@ def main(page: ft.Page):
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/inviting", extension='session'):
+                if not find_filess(directory_path=path_inviting_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None
@@ -184,7 +185,7 @@ def main(page: ft.Page):
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/inviting", extension='session'):
+                if not find_filess(directory_path=path_inviting_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке inviting')
                     await show_notification(page, "⛔ Нет аккаунта в папке inviting")
                     return None

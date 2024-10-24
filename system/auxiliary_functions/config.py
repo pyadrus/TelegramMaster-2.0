@@ -85,6 +85,10 @@ class ConfigReader:
         """Путь к папке для парсинга"""
         return self.config_path.get('path_parsing_folder', 'path_parsing_folder', fallback=None)
 
+    def path_inviting_folder(self) -> str | None:
+        """Путь к папке для инвайтинга"""
+        return self.config_path.get('path_inviting_folder', 'path_inviting_folder', fallback=None)
+
 
 line_width_button = ConfigReader().get_line_width_button()  # Получение ширины кнопки
 height_button = ConfigReader().get_line_height_button()  # Получение ширины кнопки
@@ -100,3 +104,4 @@ window_height = ConfigReader().window_height()  # Ширина программ�
 window_resizable = ConfigReader().window_resizable()  # Ширина программы
 
 path_parsing_folder = ConfigReader().path_parsing_folder()  # Путь к папке для парсинга
+path_inviting_folder = ConfigReader().path_inviting_folder()  # Путь к папке для инвайтинга
