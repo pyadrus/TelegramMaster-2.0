@@ -76,37 +76,37 @@ def main(page: ft.Page):
                                                      url="https://t.me/master_tg_d", ), ], ),
                           ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                               ft.Row(
-                                  [ft.ElevatedButton(width=small_button_width, height=height_button, text="Инвайтинг",
+                                  [ft.ElevatedButton(width=small_button_width, height=height_button, text="🚀 Инвайтинг",
                                                      on_click=lambda _: page.go("/inviting")),
-                                   ft.ElevatedButton(width=small_button_width, height=height_button, text="Парсинг",
+                                   ft.ElevatedButton(width=small_button_width, height=height_button, text="📊 Парсинг",
                                                      on_click=lambda _: page.go("/parsing")), ]),
                               ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="Работа с контактами",
+                                                        text="📇 Работа с контактами",
                                                         on_click=lambda _: page.go("/working_with_contacts")),
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="Подписка, отписка",
+                                                        text="🔄 Подписка, отписка",
                                                         on_click=lambda _: page.go("/subscribe_unsubscribe")), ]),
                               ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="Подключение аккаунтов",
+                                                        text="🔐 Подключение аккаунтов",
                                                         on_click=lambda _: page.go("/account_connection_menu")),
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="Рассылка сообщений",
+                                                        text="📤 Рассылка сообщений",
                                                         on_click=lambda _: page.go("/sending_messages")), ]),
                               ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="Работа с реакциями",
+                                                        text="❤️ Работа с реакциями",
                                                         on_click=lambda _: page.go("/working_with_reactions")),
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="Проверка аккаунтов",
+                                                        text="🔍 Проверка аккаунтов",
                                                         on_click=lambda _: page.go("/account_verification_menu")), ]),
                               ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="Создание групп (чатов)",
+                                                        text="👥 Создание групп (чатов)",
                                                         on_click=lambda _: page.go("/creating_groups")),
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="Редактирование_BIO",
+                                                        text="✏️ Редактирование_BIO",
                                                         on_click=lambda _: page.go("/bio_editing")), ]),
-                              ft.ElevatedButton(width=line_width_button, height=height_button, text="Настройки",
+                              ft.ElevatedButton(width=line_width_button, height=height_button, text="⚙️ Настройки",
                                                 on_click=lambda _: page.go("/settings")),
-                              ft.ElevatedButton(width=line_width_button, height=height_button, text="Документация",
+                              ft.ElevatedButton(width=line_width_button, height=height_button, text="📖 Документация",
                                                 on_click=lambda _: page.go("/documentation")),
                           ]), ]))
         # ______________________________________________________________________________________________________________
@@ -471,7 +471,6 @@ def main(page: ft.Page):
         # _______________________________________________________________________________________________________________
         elif page.route == "/connecting_accounts_by_number":  # Подключение аккаунтов по номеру телефона 'Меню'
             await connecting_accounts_by_number_menu(page)
-        # _______________________________________________________________________________________________________________
         elif page.route == "/account_connection_number_answering_machine":  # Для автоответчика
             await TGConnect().connecting_number_accounts(page, 'answering_machine', 'автоответчика')
         elif page.route == "/account_connection_number_bio":  # Для редактирования BIO
@@ -497,7 +496,7 @@ def main(page: ft.Page):
         elif page.route == "/account_connection_number_viewing":  # Для накрутки просмотров
             await TGConnect().connecting_number_accounts(page, 'viewing', 'накрутки просмотров')
         # _______________________________________________________________________________________________________________
-        elif page.route == "/connecting_accounts_by_session":  # Подключение аккаунтов по номеру телефона 'Меню'
+        elif page.route == "/connecting_accounts_by_session":  # Подключение session аккаунтов 'Меню'
             await connecting_accounts_by_session_menu(page)
         elif page.route == "/account_connection_session_answering_machine":  # Для автоответчика (session)
             await TGConnect().connecting_session_accounts(page, 'answering_machine', 'автоответчика')
