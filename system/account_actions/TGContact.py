@@ -10,6 +10,7 @@ from telethon.tl.types import (UserStatusRecently, UserStatusOffline, UserStatus
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_filess
+from system.auxiliary_functions.config import path_contact_folder
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -23,10 +24,10 @@ class TGContact:
     async def show_account_contact_list(self) -> None:
         """Показать список контактов аккаунтов и запись результатов в файл"""
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/contact", extension='session'):
+            for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/contact")
+                                                                   account_directory=path_contact_folder)
                 await self.parsing_and_recording_contacts_in_the_database(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as e:
@@ -86,10 +87,10 @@ class TGContact:
     async def delete_contact(self) -> None:
         """Удаляем контакты с аккаунтов"""
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/contact", extension='session'):
+            for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/contact")
+                                                                   account_directory=path_contact_folder)
                 await self.we_get_the_account_id(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as e:
@@ -99,10 +100,10 @@ class TGContact:
         """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
         try:
             # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-            for session_name in find_filess(directory_path="user_settings/accounts/contact", extension='session'):
+            for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/contact")
+                                                                   account_directory=path_contact_folder)
                 await self.add_contact_to_phone_book(client)
         except Exception as e:
             logger.exception(f"Ошибка: {e}")

@@ -19,7 +19,7 @@ from system.auxiliary_functions.auxiliary_functions import (find_files, all_find
                                                             find_filess)
 from system.auxiliary_functions.auxiliary_functions import read_json_file
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.auxiliary_functions.config import ConfigReader
+from system.auxiliary_functions.config import ConfigReader, path_send_message_folder
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_sending_messages()
@@ -43,9 +43,9 @@ class SendTelegramMessages:
         """
         try:
             time_inviting = self.config_reader.get_time_inviting()
-            for session_name in find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/send_message")
+                                                                   account_directory=path_send_message_folder)
                 try:
                     for username in await self.limits_class.get_usernames_with_limits(table_name="members",
                                                                                       account_limits=account_limits):
@@ -91,9 +91,9 @@ class SendTelegramMessages:
         try:
             # Просим пользователя ввести расширение сообщения
             time_inviting = self.config_reader.get_time_inviting()
-            for session_name in find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/send_message")
+                                                                   account_directory=path_send_message_folder)
                 try:
                     # Открываем parsing список user_settings/software_database.db для inviting в группу
                     number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
@@ -135,9 +135,9 @@ class SendTelegramMessages:
         """Рассылка файлов по чатам (docs/Рассылка_сообщений/⛔️ Рассылка_файлов_по_чатам.html)"""
         try:
             # Спрашиваем у пользователя, через какое время будем отправлять сообщения
-            for session_name in find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/send_message")
+                                                                   account_directory=path_send_message_folder)
                 records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
@@ -174,9 +174,9 @@ class SendTelegramMessages:
     async def sending_messages_files_via_chats(self) -> None:
         """Рассылка сообщений + файлов по чатам"""
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/send_message")
+                                                                   account_directory=path_send_message_folder)
                 records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
@@ -232,9 +232,9 @@ class SendTelegramMessages:
     async def sending_messages_via_chats_times(self) -> None:
         """Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)"""
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/send_message")
+                                                                   account_directory=path_send_message_folder)
                 records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы

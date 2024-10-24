@@ -7,12 +7,13 @@ from telethon.errors import (AuthKeyUnregisteredError, UsernamePurchaseAvailable
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
+from system.auxiliary_functions.config import path_bio_folder
 
 
 class AccountBIO:
 
     def __init__(self):
-        self.directory_path = "user_settings/accounts/bio"
+        self.directory_path = path_bio_folder
         self.extension = 'session'
         self.tg_connect = TGConnect()
 

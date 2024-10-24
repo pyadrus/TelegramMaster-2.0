@@ -4,6 +4,7 @@ from telethon import functions
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_filess
+from system.auxiliary_functions.config import path_creating_folder
 
 
 class CreatingGroupsAndChats:
@@ -15,9 +16,9 @@ class CreatingGroupsAndChats:
     async def creating_groups_and_chats(self) -> None:
         """Создание групп (чатов) в автоматическом режиме"""
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/creating", extension='session'):
+            for session_name in find_filess(directory_path=path_creating_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/creating")
+                                                                   account_directory=path_creating_folder)
 
                 response = await client(functions.channels.CreateChannelRequest(title='My awesome title',
                                                                                 about='Description for your group',

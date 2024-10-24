@@ -22,7 +22,9 @@ from system.auxiliary_functions.auxiliary_functions import find_files, find_file
 from system.auxiliary_functions.config import (ConfigReader, height_button, small_button_width, line_width_button,
                                                program_name, program_version, date_of_program_change, window_width,
                                                window_height, window_resizable, path_parsing_folder,
-                                               path_inviting_folder)
+                                               path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
+                                               path_reactions_folder, path_contact_folder, path_creating_folder,
+                                               path_send_message_folder, path_bio_folder)
 from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
@@ -222,7 +224,7 @@ def main(page: ft.Page):
         elif page.route == "/subscription_all":  # Подписка
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/subscription", extension='session'):
+                if not find_filess(directory_path=path_subscription_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке subscription')
                     await show_notification(page, "⛔ Нет аккаунта в папке subscription")
                     return None
@@ -240,7 +242,7 @@ def main(page: ft.Page):
         elif page.route == "/unsubscribe_all":  # Отписываемся
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/unsubscribe", extension='session'):
+                if not find_filess(directory_path=path_unsubscribe_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке unsubscribe')
                     await show_notification(page, "⛔ Нет аккаунта в папке unsubscribe")
                     return None
@@ -261,7 +263,7 @@ def main(page: ft.Page):
         elif page.route == "/setting_reactions":  # Ставим реакции
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
+                if not find_filess(directory_path=path_reactions_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке reactions')
                     await show_notification(page, "⛔ Нет аккаунта в папке reactions")
                     return None
@@ -279,7 +281,7 @@ def main(page: ft.Page):
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
+                if not find_filess(directory_path=path_reactions_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке reactions')
                     await show_notification(page, "⛔ Нет аккаунта в папке reactions")
                     return None
@@ -297,7 +299,7 @@ def main(page: ft.Page):
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
+                if not find_filess(directory_path=path_reactions_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке reactions')
                     await show_notification(page, "⛔ Нет аккаунта в папке reactions")
                     return None
@@ -401,7 +403,7 @@ def main(page: ft.Page):
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/contact", extension='session'):
+                if not find_filess(directory_path=path_contact_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке contact')
                     await show_notification(page, "⛔ Нет аккаунта в папке contact")
                     return None
@@ -421,7 +423,7 @@ def main(page: ft.Page):
         elif page.route == "/show_list_contacts":  # Показать список контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/contact", extension='session'):
+                if not find_filess(directory_path=path_contact_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке contact')
                     await show_notification(page, "⛔ Нет аккаунта в папке contact")
                     return None
@@ -439,7 +441,7 @@ def main(page: ft.Page):
         elif page.route == "/deleting_contacts":  # Удаление контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/contact", extension='session'):
+                if not find_filess(directory_path=path_contact_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке contact')
                     await show_notification(page, "⛔ Нет аккаунта в папке contact")
                     return None
@@ -457,7 +459,7 @@ def main(page: ft.Page):
         elif page.route == "/adding_contacts":  # Добавление контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/contact", extension='session'):
+                if not find_filess(directory_path=path_contact_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке contact')
                     await show_notification(page, "⛔ Нет аккаунта в папке contact")
                     return None
@@ -533,7 +535,7 @@ def main(page: ft.Page):
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/creating", extension='session'):
+                if not find_filess(directory_path=path_creating_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке creating')
                     await show_notification(page, "⛔ Нет аккаунта в папке creating")
                     return None
@@ -554,7 +556,7 @@ def main(page: ft.Page):
         elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+                if not find_filess(directory_path=path_send_message_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "Нет аккаунта в папке send_message")
                     return None
@@ -579,7 +581,7 @@ def main(page: ft.Page):
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+                if not find_filess(directory_path=path_send_message_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
@@ -608,7 +610,7 @@ def main(page: ft.Page):
         elif page.route == "/sending_files_via_chats":  # Рассылка файлов по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+                if not find_filess(directory_path=path_send_message_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
@@ -626,7 +628,7 @@ def main(page: ft.Page):
         elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+                if not find_filess(directory_path=path_send_message_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
@@ -649,7 +651,7 @@ def main(page: ft.Page):
         elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+                if not find_filess(directory_path=path_send_message_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
@@ -674,7 +676,7 @@ def main(page: ft.Page):
         elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/send_message", extension='session'):
+                if not find_filess(directory_path=path_send_message_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
@@ -696,7 +698,7 @@ def main(page: ft.Page):
         elif page.route == "/edit_description":  # Изменение описания
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/bio", extension='session'):
+                if not find_filess(directory_path=path_bio_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
@@ -714,7 +716,7 @@ def main(page: ft.Page):
         elif page.route == "/name_change":  # Изменение имени
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/bio", extension='session'):
+                if not find_filess(directory_path=path_bio_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
@@ -732,7 +734,7 @@ def main(page: ft.Page):
         elif page.route == "/change_surname":  # Изменение фамилии
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/bio", extension='session'):
+                if not find_filess(directory_path=path_bio_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
@@ -750,7 +752,7 @@ def main(page: ft.Page):
         elif page.route == "/edit_photo":  # Изменение фото
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/bio", extension='session'):
+                if not find_filess(directory_path=path_bio_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
@@ -768,7 +770,7 @@ def main(page: ft.Page):
         elif page.route == "/changing_username":  # Изменение username
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/bio", extension='session'):
+                if not find_filess(directory_path=path_bio_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None

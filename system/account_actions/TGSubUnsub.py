@@ -11,7 +11,7 @@ from telethon.tl.functions.channels import LeaveChannelRequest
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, find_filess
-from system.auxiliary_functions.config import ConfigReader
+from system.auxiliary_functions.config import ConfigReader, path_subscription_folder, path_unsubscribe_folder
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -27,9 +27,9 @@ class SubscribeUnsubscribeTelegram:
         """Подписка на группы / каналы Telegram"""
         try:
             logger.info(f"Запуск подписки на группы / каналы Telegram")
-            for session_name in find_filess(directory_path="user_settings/accounts/subscription", extension='session'):
+            for session_name in find_filess(directory_path=path_subscription_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/subscription")
+                                                                   account_directory=path_subscription_folder)
                 """Получение ссылки для инвайтинга"""
                 links_inviting: list = await self.db_handler.open_and_read_data(
                     "writing_group_links")  # Открываем базу данных
@@ -46,9 +46,9 @@ class SubscribeUnsubscribeTelegram:
     async def unsubscribe_all(self) -> None:
         """Отписываемся от групп, каналов, личных сообщений"""
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/unsubscribe", extension='session'):
+            for session_name in find_filess(directory_path=path_unsubscribe_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/unsubscribe")
+                                                                   account_directory=path_unsubscribe_folder)
                 dialogs = client.iter_dialogs()
                 logger.info(f"Диалоги: {dialogs}")
                 async for dialog in dialogs:
@@ -111,7 +111,6 @@ class SubscribeUnsubscribeTelegram:
         except PeerFloodError:
             logger.error(f"Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.")
             time.sleep(random.randrange(50, 60))
-
         except FloodWaitError as e:
             logger.error(f"Попытка подписки на группу / канал {groups_wr}. Flood! wait for "
                          f"{str(datetime.timedelta(seconds=e.seconds))}")

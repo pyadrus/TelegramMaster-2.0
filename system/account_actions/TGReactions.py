@@ -14,6 +14,7 @@ from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViews
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import read_json_file, find_filess
+from system.auxiliary_functions.config import path_reactions_folder
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -32,9 +33,9 @@ class WorkingWithReactions:  # Класс для работы с реакция�
 
             async def btn_click(e) -> None:
                 random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
-                for session_name in find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
+                for session_name in find_filess(directory_path=path_reactions_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(session_name,
-                                                                       account_directory="user_settings/accounts/reactions")
+                                                                       account_directory=path_reactions_folder)
                     chat = read_json_file(filename='user_settings/reactions/link_channel.json')
                     logger.info(f'[+] Работаем с группой: {chat}')
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat)
@@ -129,9 +130,9 @@ class WorkingWithReactions:  # Класс для работы с реакция�
     async def setting_reactions(self):
         """Выставление реакций на новые посты"""
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/reactions", extension='session'):
+            for session_name in find_filess(directory_path=path_reactions_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/reactions")
+                                                                   account_directory=path_reactions_folder)
                 chat = read_json_file(filename='user_settings/reactions/link_channel.json')
                 logger.info(chat)
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу

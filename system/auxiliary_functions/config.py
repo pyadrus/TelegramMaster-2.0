@@ -89,6 +89,34 @@ class ConfigReader:
         """Путь к папке для инвайтинга"""
         return self.config_path.get('path_inviting_folder', 'path_inviting_folder', fallback=None)
 
+    def path_subscription_folder(self) -> str | None:
+        """Путь к папке для подписки"""
+        return self.config_path.get('path_subscription_folder', 'path_subscription_folder', fallback=None)
+
+    def path_unsubscribe_folder(self) -> str | None:
+        """Путь к папке для отписки"""
+        return self.config_path.get('path_unsubscribe_folder', 'path_unsubscribe_folder', fallback=None)
+
+    def path_reactions_folder(self) -> str | None:
+        """Путь к папке для реакций"""
+        return self.config_path.get('path_reactions_folder', 'path_reactions_folder', fallback=None)
+
+    def path_contact_folder(self) -> str | None:
+        """Путь к папке для контактов"""
+        return self.config_path.get('path_contact_folder', 'path_contact_folder', fallback=None)
+
+    def path_creating_folder(self) -> str | None:
+        """Путь к папке для создания"""
+        return self.config_path.get('path_creating_folder', 'path_creating_folder', fallback=None)
+
+    def path_send_message_folder(self) -> str | None:
+        """Путь к папке для отправки сообщений"""
+        return self.config_path.get('path_send_message_folder', 'path_send_message_folder', fallback=None)
+
+    def path_bio_folder(self) -> str | None:
+        """Путь к папке для работы с био"""
+        return self.config_path.get('path_bio_folder', 'path_bio_folder', fallback=None)
+
 
 line_width_button = ConfigReader().get_line_width_button()  # Получение ширины кнопки
 height_button = ConfigReader().get_line_height_button()  # Получение ширины кнопки
@@ -105,3 +133,10 @@ window_resizable = ConfigReader().window_resizable()  # Ширина прогр�
 
 path_parsing_folder = ConfigReader().path_parsing_folder()  # Путь к папке для парсинга
 path_inviting_folder = ConfigReader().path_inviting_folder()  # Путь к папке для инвайтинга
+path_subscription_folder = ConfigReader().path_subscription_folder()  # Путь к папке для подписки
+path_unsubscribe_folder = ConfigReader().path_unsubscribe_folder()  # Путь к папке для отписки
+path_reactions_folder = ConfigReader().path_reactions_folder()  # Путь к папке для реакций
+path_contact_folder = ConfigReader().path_contact_folder()  # Путь к папке для контактов
+path_creating_folder = ConfigReader().path_creating_folder()  # Путь к папке для создания
+path_send_message_folder = ConfigReader().path_send_message_folder()  # Путь к папке для отправки сообщений
+path_bio_folder = ConfigReader().path_bio_folder()  # Путь к папке для работы с био
