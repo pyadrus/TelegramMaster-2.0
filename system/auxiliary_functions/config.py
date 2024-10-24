@@ -7,8 +7,12 @@ class ConfigReader:
     def __init__(self):
         self.config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
         self.config.read('user_settings/config/config.ini')
+
         self.config_gui = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
         self.config_gui.read('user_settings/config/config_gui.ini')
+
+        self.config_path = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
+        self.config_path.read('user_settings/config/config_path.ini')
 
     def get_time_subscription(self):
         return (self.config.getint('time_subscription', 'time_subscription_1', fallback=None),
@@ -77,6 +81,10 @@ class ConfigReader:
         """Разрешение на изменение размера программы, если False, то запрещено изменять размер программы"""
         return self.config_gui.get('window_resizable', 'window_resizable', fallback=None)
 
+    def path_parsing_folder(self) -> str | None:
+        """Путь к папке для парсинга"""
+        return self.config_path.get('path_parsing_folder', 'path_parsing_folder', fallback=None)
+
 
 line_width_button = ConfigReader().get_line_width_button()  # Получение ширины кнопки
 height_button = ConfigReader().get_line_height_button()  # Получение ширины кнопки
@@ -90,3 +98,5 @@ date_of_program_change = ConfigReader().date_of_program_change()  # Версия
 window_width = ConfigReader().window_width()  # Ширина программы
 window_height = ConfigReader().window_height()  # Ширина программы
 window_resizable = ConfigReader().window_resizable()  # Ширина программы
+
+path_parsing_folder = ConfigReader().path_parsing_folder()  # Путь к папке для парсинга

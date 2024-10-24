@@ -13,7 +13,7 @@ from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserSt
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_filess
-from system.auxiliary_functions.config import ConfigReader
+from system.auxiliary_functions.config import ConfigReader, path_parsing_folder
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -29,9 +29,9 @@ class ParsingGroupMembers:
     async def parse_groups(self) -> None:
         """Парсинг групп"""
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
+            for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/parsing")
+                                                                   account_directory=path_parsing_folder)
 
                 # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
                 for groups in await self.db_handler.open_and_read_data("writing_group_links"):
@@ -70,9 +70,9 @@ class ParsingGroupMembers:
         :param limit_active_user: лимит активных участников
         """
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
+            for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/parsing")
+                                                                   account_directory=path_parsing_folder)
 
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat_input)
                 time_activity_user_1, time_activity_user_2 = self.config_reader.get_time_activity_user()
@@ -85,14 +85,16 @@ class ParsingGroupMembers:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
+
+
     async def parse_subscribed_groups(self) -> None:
         """Parsing групп / каналов на которые подписан аккаунт и сохраняем в файл software_database.db"""
         try:
             # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
-            for session_name in find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
+            for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/parsing")
+                                                                   account_directory=path_parsing_folder)
                 logger.info("Parsing групп / каналов на которые подписан аккаунт")
                 await self.forming_a_list_of_groups(client)
                 await client.disconnect()  # Разрываем соединение telegram
@@ -100,6 +102,9 @@ class ParsingGroupMembers:
                                                     column_name="id")  # Чистка дубликатов в базе данных
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
+
+
+
 
     async def get_active_users(self, client, chat, limit_active_user) -> None:
         """
@@ -123,9 +128,9 @@ class ParsingGroupMembers:
     async def choose_and_parse_group(self, page: ft.Page) -> None:
         """Выбираем группу из подписанных и запускаем парсинг"""
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
+            for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/parsing")
+                                                                   account_directory=path_parsing_folder)
                 chats: list = []
                 last_date = None
                 groups: list = []

@@ -21,7 +21,7 @@ from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
 from system.auxiliary_functions.config import (ConfigReader, height_button, small_button_width, line_width_button,
                                                program_name, program_version, date_of_program_change, window_width,
-                                               window_height, window_resizable)
+                                               window_height, window_resizable, path_parsing_folder)
 from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
@@ -317,7 +317,7 @@ def main(page: ft.Page):
         elif page.route == "/parsing_single_groups":
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
+                if not find_filess(directory_path=path_parsing_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
@@ -335,7 +335,7 @@ def main(page: ft.Page):
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
+                if not find_filess(directory_path=path_parsing_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
@@ -353,7 +353,7 @@ def main(page: ft.Page):
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
+                if not find_filess(directory_path=path_parsing_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
@@ -368,10 +368,13 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
+
+
+
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов аккаунта
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path="user_settings/accounts/parsing", extension='session'):
+                if not find_filess(directory_path=path_parsing_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
@@ -386,6 +389,9 @@ def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
+
+
+
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db("members")
         # ______________________________________________________________________________________________________________
