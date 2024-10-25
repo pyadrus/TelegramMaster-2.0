@@ -7,8 +7,12 @@ from quart import Quart, render_template
 from watchfiles import awatch
 
 from system.auxiliary_functions.config import program_name, program_version, date_of_program_change
+from system.localization.localization import (parse_selected_user_subscribed_group, parse_single_or_multiple_groups,
+                                              parse_active_group_members, clear_previously_parsed_data_list,
+                                              parse_account_subscribed_groups_channels)
 
 app = Quart(__name__, template_folder='templates')
+
 
 @app.route('/')
 async def index():
@@ -61,7 +65,12 @@ async def working_with_reactions():
 @app.route('/parsing')
 async def parsing():
     """Парсинг"""
-    return await render_template('parsing.html', program_name=program_name)
+    return await render_template('parsing.html', program_name=program_name,
+                                 parse_single_or_multiple_groups=parse_single_or_multiple_groups,
+                                 parse_selected_user_subscribed_group=parse_selected_user_subscribed_group,
+                                 parse_active_group_members=parse_active_group_members,
+                                 parse_account_subscribed_groups_channels=parse_account_subscribed_groups_channels,
+                                 clear_previously_parsed_data_list=clear_previously_parsed_data_list)
 
 
 @app.route('/subscribe_unsubscribe')
@@ -99,25 +108,30 @@ async def working_with_errors_telegrammaster():
     """Работа с ошибками TelegramMaster 2.0"""
     return await render_template('working_with_errors_telegrammaster.html')
 
+
 @app.route('/install_python_update_pip')
 async def install_python_update_pip():
     """Установка Python, обновление PIP"""
     return await render_template('install_python_update_pip.html', program_name=program_name)
+
 
 @app.route('/preliminary_setting_of_program_installation_of_program_by_default')
 async def preliminary_setting_of_program_installation_of_program_by_default():
     """Предварительная настройка программы"""
     return await render_template('preliminary_setting_of_program_installation_of_program_by_default.html')
 
+
 @app.route('/registration_api_id_api_hash')
 async def registration_api_id_api_hash():
     """Получение api и hash"""
     return await render_template('registration_api_id_api_hash.html')
 
+
 @app.route('/telegram_limits')
 async def telegram_limits():
     """Лимиты Telegram"""
     return await render_template('telegram_limits.html')
+
 
 async def run_quart():
     try:
