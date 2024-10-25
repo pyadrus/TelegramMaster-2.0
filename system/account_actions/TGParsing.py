@@ -13,7 +13,8 @@ from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserSt
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_filess
-from system.auxiliary_functions.config import ConfigReader, path_parsing_folder
+from system.auxiliary_functions.config import (path_parsing_folder, line_width_button, height_button,
+                                               time_activity_user_2)
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -23,7 +24,6 @@ class ParsingGroupMembers:
     def __init__(self):
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
-        self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
     async def parse_groups(self) -> None:
@@ -75,7 +75,6 @@ class ParsingGroupMembers:
                                                                    account_directory=path_parsing_folder)
 
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat_input)
-                time_activity_user_1, time_activity_user_2 = self.config_reader.get_time_activity_user()
                 time.sleep(time_activity_user_2)
                 await self.get_active_users(client, chat_input, limit_active_user)
                 await client.disconnect()  # Разрываем соединение telegram
@@ -159,7 +158,9 @@ class ParsingGroupMembers:
                 chats = []
                 last_date = None
 
-                result = await client(GetDialogsRequest(offset_date=last_date, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+                result = await client(
+                    GetDialogsRequest(offset_date=last_date, offset_id=0, offset_peer=InputPeerEmpty(), limit=200,
+                                      hash=0))
                 chats.extend(result.chats)
 
                 groups = await self.filtering_groups(chats)  # Получаем отфильтрованные группы
@@ -186,21 +187,29 @@ class ParsingGroupMembers:
                     # Переходим на экран парсинга только после завершения всех действий
                     page.go("/parsing")
 
+                async def back_button_clicked(e):
+                    """Кнопка возврата в меню настроек"""
+                    page.go("/parsing")
+
                 # Создаем кнопку для подтверждения выбора
                 select_button = ft.ElevatedButton(text="Выбрать группу", on_click=handle_button_click)
+                # Кнопка возврата
+                button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                                on_click=back_button_clicked)
 
                 # Создаем выпадающий список с названиями групп
-                dropdown = ft.Dropdown(width=500, options=[ft.dropdown.Option(title) for title in group_titles], autofocus=True)
+                dropdown = ft.Dropdown(width=line_width_button,
+                                       options=[ft.dropdown.Option(title) for title in group_titles],
+                                       autofocus=True)
 
                 # Объединяем все элементы в колонку
-                content = ft.Column(controls=[dropdown, select_button, result_text])
+                content = ft.Column(controls=[dropdown, select_button, button_back, result_text])
 
                 page.views.append(content)  # Добавляем созданный вид на страницу
                 page.update()
 
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
-
 
     async def parse_users(self, client, target_group) -> list:
         """

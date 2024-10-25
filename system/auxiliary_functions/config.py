@@ -29,6 +29,10 @@ class ConfigReader:
         return (self.config.getint('time_activity_user', 'time_activity_user_1', fallback=None),
                 self.config.getint('time_activity_user', 'time_activity_user_2', fallback=None))
 
+    def time_activity_user_2(self):
+        """   """
+        return self.config.get('time_activity_user', 'time_activity_user_2', fallback=None)
+
     def get_time_sending_messages(self):
         return (self.config.getint('time_sending_messages', 'time_sending_messages_1', fallback=None),
                 self.config.getint('time_sending_messages', 'time_sending_messages_2', fallback=None))
@@ -117,6 +121,7 @@ class ConfigReader:
         """Путь к папке для работы с био"""
         return self.config_path.get('path_bio_folder', 'path_bio_folder', fallback=None)
 
+time_activity_user_2 = ConfigReader().time_activity_user_2()
 
 line_width_button = ConfigReader().get_line_width_button()  # Получение ширины кнопки
 height_button = ConfigReader().get_line_height_button()  # Получение ширины кнопки
