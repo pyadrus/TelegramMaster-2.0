@@ -11,7 +11,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               parse_active_group_members, clear_previously_parsed_data_list,
                                               parse_account_subscribed_groups_channels, inviting,
                                               invitation_1_time_per_hour, invitation_at_a_certain_time,
-                                              inviting_every_day)
+                                              inviting_every_day, importing_a_list_of_parsed_data)
 
 app = Quart(__name__, template_folder='templates')
 
@@ -75,7 +75,8 @@ async def parsing():
                                  parse_selected_user_subscribed_group=parse_selected_user_subscribed_group,
                                  parse_active_group_members=parse_active_group_members,
                                  parse_account_subscribed_groups_channels=parse_account_subscribed_groups_channels,
-                                 clear_previously_parsed_data_list=clear_previously_parsed_data_list)
+                                 clear_previously_parsed_data_list=clear_previously_parsed_data_list,
+                                 importing_a_list_of_parsed_data=importing_a_list_of_parsed_data)
 
 
 @app.route('/subscribe_unsubscribe')

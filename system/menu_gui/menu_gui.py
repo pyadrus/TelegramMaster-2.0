@@ -5,7 +5,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               parse_active_group_members, parse_account_subscribed_groups_channels,
                                               clear_previously_parsed_data_list,
                                               inviting_every_day, invitation_at_a_certain_time,
-                                              invitation_1_time_per_hour, inviting)
+                                              invitation_1_time_per_hour, inviting, importing_a_list_of_parsed_data)
 
 
 async def settings_menu(page):
@@ -220,6 +220,12 @@ async def menu_parsing(page):
                      ft.ElevatedButton(width=line_width, height=height_button,
                                        text=clear_previously_parsed_data_list,
                                        on_click=lambda _: page.go("/clearing_list_previously_saved_data")),
+
+                     # 📋 Импорт списка от ранее спарсенных данных
+                     ft.ElevatedButton(width=line_width, height=height_button,
+                                       text=importing_a_list_of_parsed_data,
+                                       on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
+
                  ])]))
 
 

@@ -30,6 +30,7 @@ from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
                                       account_connection_menu, connecting_accounts_by_number_menu,
                                       connecting_accounts_by_session_menu)
+from system.receiving_and_recording.receiving_and_recording import ReceivingAndRecording
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
@@ -405,6 +406,10 @@ def main(page: ft.Page):
 
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db("members")
+
+
+        elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
+            await ReceivingAndRecording().write_data_to_excel(file_name="user_settings/parsed_chat_participants.xlsx")
         # ______________________________________________________________________________________________________________
         elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
             await working_with_contacts_menu(page)

@@ -202,3 +202,13 @@ class DatabaseHandler:
                 # Удаляем пользователя без username
                 self.cursor.execute("""DELETE from members where username = ?""", (username_name,))
                 self.sqlite_connection.commit()
+
+    async def read_parsed_chat_participants_from_db(self):
+        """
+        Чтение данных из базы данных.
+        """
+        await self.connect()
+        self.cursor.execute("SELECT * FROM members")
+        data = self.cursor.fetchall()
+        self.close()
+        return data

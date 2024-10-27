@@ -102,7 +102,7 @@
 
         {{program_name}} предлагает широкий спектр возможностей, включая:<br>
         <blockquote>
-            <a href="{{ url_for('inviting') }}">Инвайтинг</a> (приглашение пользователей) 💌,<br>
+            <a href="{{ url_for('inviting_page') }}">Инвайтинг</a> (приглашение пользователей) 💌,<br>
             <a href="{{ url_for('parsing') }}">Парсинг</a> (сбор информации о пользователях и группах)
             🕵️‍♂️,<br>
             Работу с контактами 📇,<br>
@@ -168,12 +168,12 @@
         <!-- Основные функции TelegramMaster -->
         <h3>Основные функции {{ program_name }}:</h3>
         <ul>
-            <li><a href="{{ url_for('inviting') }}">🚀 Инвайтинг:</a></li>
+            <li><a href="{{ url_for('inviting_page') }}">🚀 Инвайтинг:</a></li>
 
             <ul>
-                <li><a href="{{ url_for('inviting') }}">🚀 Инвайтинг 1 раз в час</a></li>
-                <li><a href="{{ url_for('inviting') }}">🚀 Инвайтинг в определенное время</a></li>
-                <li><a href="{{ url_for('inviting') }}">🚀 Инвайтинг каждый день</a></li>
+                <li><a href="{{ url_for('inviting_page') }}">🚀 Инвайтинг 1 раз в час</a></li>
+                <li><a href="{{ url_for('inviting_page') }}">🚀 Инвайтинг в определенное время</a></li>
+                <li><a href="{{ url_for('inviting_page') }}">🚀 Инвайтинг каждый день</a></li>
             </ul>
 
             <li><a href="{{ url_for('parsing') }}">🔍 Парсинг:</a></li>
