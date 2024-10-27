@@ -9,7 +9,9 @@ from watchfiles import awatch
 from system.auxiliary_functions.config import program_name, program_version, date_of_program_change
 from system.localization.localization import (parse_selected_user_subscribed_group, parse_single_or_multiple_groups,
                                               parse_active_group_members, clear_previously_parsed_data_list,
-                                              parse_account_subscribed_groups_channels)
+                                              parse_account_subscribed_groups_channels, inviting,
+                                              invitation_1_time_per_hour, invitation_at_a_certain_time,
+                                              inviting_every_day)
 
 app = Quart(__name__, template_folder='templates')
 
@@ -27,9 +29,12 @@ async def menu():
 
 
 @app.route('/inviting')
-async def inviting():
+async def inviting_page():
     """Инвайтинг"""
-    return await render_template('inviting.html', program_name=program_name)
+    return await render_template('inviting.html', program_name=program_name, inviting=inviting,
+                                 invitation_1_time_per_hour=invitation_1_time_per_hour,
+                                 invitation_at_a_certain_time=invitation_at_a_certain_time,
+                                 inviting_every_day=inviting_every_day)
 
 
 @app.route('/sending_messages')
