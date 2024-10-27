@@ -2,7 +2,8 @@ import flet as ft
 
 from system.auxiliary_functions.config import height_button, small_button_width, line_width
 from system.localization.localization import parse_single_or_multiple_groups, parse_selected_user_subscribed_group, \
-    parse_active_group_members, parse_account_subscribed_groups_channels, clear_previously_parsed_data_list
+    parse_active_group_members, parse_account_subscribed_groups_channels, clear_previously_parsed_data_list, \
+    inviting_every_day, invitation_at_a_certain_time, invitation_1_time_per_hour, inviting
 
 
 async def settings_menu(page):
@@ -105,13 +106,17 @@ async def inviting_menu(page):
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
                                                                                   ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     ft.ElevatedButton(width=line_width, height=height_button, text="🚀 Инвайтинг",
+                     # 🚀 Инвайтинг
+                     ft.ElevatedButton(width=line_width, height=height_button, text=inviting,
                                        on_click=lambda _: page.go("/inviting_without_limits")),
-                     ft.ElevatedButton(width=line_width, height=height_button, text="⏰ Инвайтинг 1 раз в час",
+                     # ⏰ Инвайтинг 1 раз в час
+                     ft.ElevatedButton(width=line_width, height=height_button, text=invitation_1_time_per_hour,
                                        on_click=lambda _: page.go("/inviting_1_time_per_hour")),
-                     ft.ElevatedButton(width=line_width, height=height_button, text="🕒 Инвайтинг в определенное время",
+                     # 🕒 Инвайтинг в определенное время
+                     ft.ElevatedButton(width=line_width, height=height_button, text=invitation_at_a_certain_time,
                                        on_click=lambda _: page.go("/inviting_certain_time")),
-                     ft.ElevatedButton(width=line_width, height=height_button, text="📅 Инвайтинг каждый день",
+                     # 📅 Инвайтинг каждый день
+                     ft.ElevatedButton(width=line_width, height=height_button, text=inviting_every_day,
                                        on_click=lambda _: page.go("/inviting_every_day")),
                  ])]))
 
