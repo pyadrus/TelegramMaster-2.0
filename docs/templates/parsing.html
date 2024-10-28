@@ -20,7 +20,7 @@
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
 
     <!-- Стили для кнопки "Вверх" -->
     <style>
@@ -63,23 +63,55 @@
     <div class="content">
         <h1 style="text-align: center;">🔎 Парсинг ({{program_name}} 2.0)</h1>
 
-        <!-- Меню навигации -->
-        <div class="menu">
-            <!-- 🔎 Парсинг одной группы - групп -->
-            <a href="#parsing_one_group">{{parse_single_or_multiple_groups}}</a><br>
-            <!-- 📂 Парсинг выбранной группы из подписанных пользователем -->
-            <a href="#parsing_groups_channels">{{parse_selected_user_subscribed_group}}</a><br>
-            <!-- 👥 Парсинг активных участников группы -->
-            <a href="#parsing_active_members">{{parse_active_group_members}}</a><br>
-            <!-- 📜 Парсинг групп / каналов на которые подписан аккаунт -->
-            <a href="#parsing_selected_group">{{parse_account_subscribed_groups_channels}}</a><br>
-            <!-- 🗑️ Очистка списка от ранее спарсенных данных -->
-            <a href="#clear_list">{{clear_previously_parsed_data_list}}</a><br>
 
-            <!-- 📋 Импорт списка от ранее спарсенных данных -->
-            <a href="#importing_a_list_of_parsed_data">{{importing_a_list_of_parsed_data}}</a><br>
+        <div class="card-container">
+
+            <div class="card">
+                <!-- 🔎 Парсинг одной группы - групп -->
+                <p class="heading">🔎 Парсинг</p>
+                <p>{{parse_single_or_multiple_groups}}</p>
+                <button class="card-button"><a href="#parsing_one_group">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 📂 Парсинг выбранной группы из подписанных пользователем -->
+                <p class="heading">📂 Парсинг</p>
+                <p>{{parse_selected_user_subscribed_group}}</p>
+                <button class="card-button"><a href="#parsing_groups_channels">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 👥 Парсинг активных участников группы -->
+                <p class="heading">👥 Парсинг</p>
+                <p>{{parse_active_group_members}}</p>
+                <button class="card-button"><a href="#parsing_active_members">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 🗑️ Очистка списка от ранее спарсенных данных -->
+                <p class="heading">🗑️ Очистка</p>
+                <p>{{parse_account_subscribed_groups_channels}}</p>
+                <button class="card-button"><a href="#parsing_selected_group">Перейти</a></button>
+            </div>
+
+
+            <div class="card">
+                <!-- 📜 Парсинг групп / каналов на которые подписан аккаунт -->
+                <p class="heading">📜 Парсинг</p>
+                <p>{{clear_previously_parsed_data_list}}</p>
+                <button class="card-button"><a href="#clear_list">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 📋 Импорт списка от ранее спарсенных данных -->
+                <p class="heading">📋 Импорт</p>
+                <p>{{importing_a_list_of_parsed_data}}</p>
+                <button class="card-button"><a href="#importing_a_list_of_parsed_data">Перейти</a></button>
+            </div>
 
         </div>
+
+
 
         <div
                 style="border: 2px solid #f5c6cbf5; background-color: #f8d7da; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif;">
@@ -349,7 +381,8 @@
 
         <p>
             После выполнения этих действий {{program_name}} сохранит данные в файле
-            <code>{{program_name}}/user_settings/parsed_chat_participants.xlsx</code>. Эти данные будут взяты из таблицы members.
+            <code>{{program_name}}/user_settings/parsed_chat_participants.xlsx</code>. Эти данные будут взяты из таблицы
+            members.
             Обратите внимание, что файл <code>parsed_chat_participants.xlsx</code> будет перезаписан.
         </p>
 
