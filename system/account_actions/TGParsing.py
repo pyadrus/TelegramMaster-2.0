@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
-
+import datetime
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
@@ -16,6 +16,7 @@ from system.auxiliary_functions.auxiliary_functions import find_filess
 from system.auxiliary_functions.config import (path_parsing_folder, line_width_button, height_button,
                                                time_activity_user_2)
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+import asyncio
 
 
 class ParsingGroupMembers:
@@ -26,27 +27,63 @@ class ParsingGroupMembers:
         self.tg_connect = TGConnect()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def parse_groups(self) -> None:
+    async def parse_groups(self, page: ft.Page) -> None:
         """Парсинг групп"""
-        try:
-            for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory=path_parsing_folder)
+        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
 
-                # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
-                for groups in await self.db_handler.open_and_read_data("writing_group_links"):
-                    logger.info(f'[+] Парсинг группы: {groups[0]}')
-                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                    await self.parse_group(client, groups[0])  # Parsing групп
-                    await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
-                                                        value=groups)
-                # Чистка списка parsing списка, если нет username
-                await self.db_handler.clean_no_username()
-                # Чистка дублирующих username по столбцу id
-                await self.db_handler.delete_duplicates(table_name="members", column_name="id")
-                await client.disconnect()
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(lv)
+        page.update()  # Убедитесь, что ListView добавлен на страницу перед запуском цикла
+
+        async def add_items(e):
+            # Индикация начала парсинга
+            lv.controls.append(ft.Text("Парсинг начался..."))
+            lv.controls.append(ft.Text('Время старта: ' + str(start)))
+            lv.controls.append(ft.Text('▶️ Начало парсинга'))
+            page.update()  # Обновите страницу, чтобы сразу показать сообщение
+
+            try:
+                for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
+                    client = await self.tg_connect.get_telegram_client(session_name,
+                                                                       account_directory=path_parsing_folder)
+                    # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
+                    for groups in await self.db_handler.open_and_read_data("writing_group_links"):
+                        logger.info(f'[+] Парсинг группы: {groups[0]}')
+                        lv.controls.append(ft.Text(f'[+] Парсинг группы: {groups[0]}'))
+                        page.update()  # Обновление страницы для каждого элемента данных
+                        await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
+                        await self.parse_group(client, groups[0])  # Parsing групп
+                        await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
+                                                            value=groups)
+
+                    # Чистка списка parsing списка, если нет username
+                    await self.db_handler.clean_no_username()
+                    # Чистка дублирующих username по столбцу id
+                    await self.db_handler.delete_duplicates(table_name="members", column_name="id")
+                    await client.disconnect()
+            except Exception as e:
+                logger.exception(f"Ошибка: {e}")
+
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            lv.controls.append(ft.Text('🔚 Конец парсинга'))
+            lv.controls.append(ft.Text('Время окончания: ' + str(finish)))
+            lv.controls.append(ft.Text('Время работы: ' + str(finish - start)))  # вычитаем время старта из времени окончания
+            page.update()  # Обновите страницу, чтобы сразу показать сообщение
+
+        button = ft.ElevatedButton("Начать парсинг", on_click=add_items)
+
+        page.views.append(
+            ft.View(
+                "/settings",
+                [
+                    lv,
+                    ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                    button,
+                ],
+            )
+        )
+
+        page.update()
 
     async def parse_group(self, client, groups_wr) -> None:
         """
@@ -418,3 +455,44 @@ class ParsingGroupMembers:
             )
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
+
+    async def parsing_mass_parsing_of_groupss(self):
+        # Пример асинхронной функции парсинга, возвращающей список данных
+
+        await asyncio.sleep(2)  # Имитация задержки парсинга
+        return ["Данные 1", "Данные 2", "Данные 3"]  # Возвращаемые данные
+
+    async def parsing_gui(self, page: ft.Page):
+        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(lv)
+        page.update()  # Убедитесь, что ListView добавлен на страницу перед запуском цикла
+
+        async def add_items(e):
+            # Индикация начала парсинга
+            lv.controls.append(ft.Text("Парсинг начался..."))
+            page.update()  # Обновите страницу, чтобы сразу показать сообщение
+
+            data = await self.parsing_mass_parsing_of_groupss()  # Парсинг участников чата
+
+            # Выводим полученные данные в окно
+            for item in data:
+                lv.controls.append(ft.Text(f"Получено: {item}"))
+                page.update()  # Обновление страницы для каждого элемента данных
+
+            # Добавление сообщения о завершении парсинга        lv.controls.append(ft.Text("Парсинг завершен"))
+            page.update()  # Обновление страницы для показа сообщения о завершении
+
+        button = ft.ElevatedButton("Начать парсинг", on_click=add_items)
+
+        page.views.append(
+            ft.View(
+                "/settings",
+                [
+                    lv,
+                    ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                    button,
+                ],
+            )
+        )
+
+        page.update()

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import asyncio
 import datetime
 
 import flet as ft
@@ -48,18 +49,14 @@ async def show_notification(page: ft.Page, message: str):
     page.update()
 
 
-def main(page: ft.Page):
+async def main(page: ft.Page):
     page.title = f"{program_name}: {program_version} (Дата изменения {date_of_program_change})"
     page.window.width = window_width  # Ширина окна
     page.window.height = window_height  # Высота окна
     page.window.resizable = window_resizable  # Разрешение изменения размера окна
     logger.info(f"Program version: {program_version}. Date of change: {date_of_program_change}")
 
-
-
     async def route_change(route):
-
-        await loging()
 
         page.views.clear()
         # Меню "Главное меню"
@@ -324,6 +321,7 @@ def main(page: ft.Page):
         # ______________________________________________________________________________________________________________
         elif page.route == "/parsing":  # Меню "Парсинг"
             await menu_parsing(page)
+
         elif page.route == "/parsing_single_groups":
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -332,14 +330,7 @@ def main(page: ft.Page):
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало парсинга")
-                    await ParsingGroupMembers().parse_groups()
-                    logger.info("🔚 Конец парсинга")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                    await ParsingGroupMembers().parse_groups(page)
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
@@ -864,4 +855,16 @@ def main(page: ft.Page):
     page.go(page.route)
 
 
-ft.app(target=main)
+async def main_run():
+    """Запуск программы"""
+    await loging()
+
+
+if __name__ == '__main__':
+
+    try:
+        asyncio.run(main_run())
+    except Exception as e:
+        logger.exception(e)
+
+    ft.app(target=main)
