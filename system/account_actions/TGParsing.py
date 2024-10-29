@@ -59,6 +59,7 @@ class ParsingGroupMembers:
             logger.info(f"[+] Спарсили данные с группы {groups_wr}")
             # Записываем parsing данные в файл user_settings/software_database.db
             entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr))
+
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
@@ -228,7 +229,7 @@ class ParsingGroupMembers:
                     participants = await client(
                         GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter,
                                                limit=200, hash=0))
-
+                    logger.info(participants)
                     all_participants.extend(participants.users)
                     offset += len(participants.users)
                     if len(participants.users) < 1:

@@ -121,6 +121,7 @@ class ConfigReader:
         """Путь к папке для работы с био"""
         return self.config_path.get('path_bio_folder', 'path_bio_folder', fallback=None)
 
+
 time_activity_user_2 = ConfigReader().time_activity_user_2()
 
 line_width_button = ConfigReader().get_line_width_button()  # Получение ширины кнопки

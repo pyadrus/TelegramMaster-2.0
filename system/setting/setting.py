@@ -173,7 +173,8 @@ class SettingPage:
 
         # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
         button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=btn_click)
-        button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад", on_click=back_button_clicked)
+        button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                        on_click=back_button_clicked)
 
         page.views.append(
             ft.View(
@@ -270,7 +271,8 @@ async def reaction_gui(page: ft.Page):
 
     # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
     button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=button_clicked)
-    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад", on_click=back_button_clicked)
+    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                    on_click=back_button_clicked)
 
     page.views.append(
         ft.View(

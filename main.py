@@ -25,6 +25,7 @@ from system.auxiliary_functions.config import (ConfigReader, height_button, smal
                                                path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
                                                path_reactions_folder, path_contact_folder, path_creating_folder,
                                                path_send_message_folder, path_bio_folder)
+from system.logging_in.logging_in import loging
 from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
@@ -54,7 +55,12 @@ def main(page: ft.Page):
     page.window.resizable = window_resizable  # Разрешение изменения размера окна
     logger.info(f"Program version: {program_version}. Date of change: {date_of_program_change}")
 
+
+
     async def route_change(route):
+
+        await loging()
+
         page.views.clear()
         # Меню "Главное меню"
         page.views.append(

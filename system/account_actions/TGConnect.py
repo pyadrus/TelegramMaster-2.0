@@ -331,7 +331,8 @@ class TGConnect:
                 page.go("/connecting_accounts_by_number")
 
             button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=btn_click)
-            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад", on_click=back_button_clicked)
+            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                            on_click=back_button_clicked)
 
             input_view = ft.View(
                 controls=[header_text, phone_number, button,
@@ -405,7 +406,8 @@ class TGConnect:
                                                    )
 
             # Кнопка возврата
-            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад", on_click=back_button_clicked)
+            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                            on_click=back_button_clicked)
 
             # Добавляем все элементы на страницу
             input_view = ft.View(

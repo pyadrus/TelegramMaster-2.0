@@ -3,7 +3,6 @@ import openpyxl
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
-
 class ReceivingAndRecording:
 
     def __init__(self):
