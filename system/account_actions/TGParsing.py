@@ -40,6 +40,8 @@ class ParsingGroupMembers:
             lv.controls.append(ft.Text("Парсинг начался..."))
             lv.controls.append(ft.Text('Время старта: ' + str(start)))
             lv.controls.append(ft.Text('▶️ Начало парсинга'))
+            logger.info('Время старта: ' + str(start))
+            logger.info("▶️ Начало парсинга")
             page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
             try:
@@ -52,7 +54,7 @@ class ParsingGroupMembers:
                         lv.controls.append(ft.Text(f'[+] Парсинг группы: {groups[0]}'))
                         page.update()  # Обновление страницы для каждого элемента данных
                         await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                        await self.parse_group(client, groups[0])  # Parsing групп
+                        await self.parse_group(client, groups[0], lv, page)  # Parsing групп
                         await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
                                                             value=groups)
 
@@ -68,34 +70,47 @@ class ParsingGroupMembers:
             lv.controls.append(ft.Text('🔚 Конец парсинга'))
             lv.controls.append(ft.Text('Время окончания: ' + str(finish)))
             lv.controls.append(ft.Text('Время работы: ' + str(finish - start)))  # вычитаем время старта из времени окончания
+            logger.info('Время окончания: ' + str(finish))
+            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
-        button = ft.ElevatedButton("Начать парсинг", on_click=add_items)
+        async def back_button_clicked(e):
+            """Кнопка возврата в меню настроек"""
+            page.go("/parsing")
+
+        button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Начать парсинг", on_click=add_items)
+        button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                        on_click=back_button_clicked)
 
         page.views.append(
             ft.View(
-                "/settings",
+                "/parsing",
                 [
                     lv,
                     ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                    button,
+                    button, button_back
                 ],
             )
         )
 
         page.update()
 
-    async def parse_group(self, client, groups_wr) -> None:
+    async def parse_group(self, client, groups_wr, lv, page) -> None:
         """
         Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
         @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
         :param client: Клиент Telegram
         :param groups_wr: ссылка на группу
+        :param lv: ListView
+        :param page: страница
         """
         try:
             logger.info(f"[+] Спарсили данные с группы {groups_wr}")
+            lv.controls.append(ft.Text(f"[+] Спарсили данные с группы {groups_wr}"))
+            page.update()  # Обновление страницы для каждого элемента данных
+
             # Записываем parsing данные в файл user_settings/software_database.db
-            entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr))
+            entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, lv, page), lv, page)
 
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as e:
@@ -249,14 +264,19 @@ class ParsingGroupMembers:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def parse_users(self, client, target_group) -> list:
+    async def parse_users(self, client, target_group, lv, page) -> list:
         """
         Собираем данные user и записываем в файл members.db (создание нового файла members.db)
         :param client: клиент Telegram
-        :param target_group: группа / канал"""
+        :param target_group: группа / канал
+        :param lv: ListView
+        :param page: страница программы
+        :return: список пользователей
+        """
         try:
             logger.info("[+] Ищем участников... Сохраняем в файл software_database.db...")
-
+            lv.controls.append(ft.Text("[+] Ищем участников... Сохраняем в файл software_database.db..."))
+            page.update()  # Обновление страницы для каждого элемента данных
             all_participants: list = []
             while_condition = True
             my_filter = ChannelParticipantsSearch("")
@@ -266,21 +286,19 @@ class ParsingGroupMembers:
                     participants = await client(
                         GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter,
                                                limit=200, hash=0))
-                    logger.info(participants)
                     all_participants.extend(participants.users)
                     offset += len(participants.users)
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    logger.info(
-                        f'Ошибка parsing: не верное имя или cсылка {target_group} не является группой / каналом: {target_group}')
+                    logger.info(f'Ошибка parsing: не верное имя или cсылка {target_group} не является группой / каналом: {target_group}')
                     time.sleep(2)
                     break
             return all_participants
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def get_all_participants(self, all_participants) -> list:
+    async def get_all_participants(self, all_participants, lv, page) -> list:
         """
         Формируем список user_settings/software_database.db
         :param all_participants: список пользователей
@@ -289,12 +307,12 @@ class ParsingGroupMembers:
         try:
             entities: list = []  # Создаем словарь
             for user in all_participants:
-                await self.get_user_data(user, entities)
+                await self.get_user_data(user, entities, lv, page)
             return entities  # Возвращаем словарь пользователей
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def get_user_data(self, user, entities) -> None:
+    async def get_user_data(self, user, entities, lv, page) -> None:
         """
         Получаем данные пользователя
         :param user: пользователь
@@ -305,8 +323,7 @@ class ParsingGroupMembers:
             user_phone = user.phone if user.phone else "Номер телефона скрыт"
             first_name = user.first_name if user.first_name else ""
             last_name = user.last_name if user.last_name else ""
-            photos_id = (
-                "Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
+            photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
             online_at = "Был(а) недавно"
             # Статусы пользователя https://core.telegram.org/type/UserStatus
             if isinstance(user.status, (
@@ -329,6 +346,8 @@ class ParsingGroupMembers:
             entities.append(
                 [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
                  user_premium])
+            lv.controls.append(ft.Text(f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
+            page.update()  # Обновление страницы для каждого элемента данных
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
@@ -342,8 +361,7 @@ class ParsingGroupMembers:
             user_phone = user.phone if user.phone else "Номер телефона скрыт"
             first_name = user.first_name if user.first_name else ""
             last_name = user.last_name if user.last_name else ""
-            photos_id = (
-                "Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
+            photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
             online_at = "Был(а) недавно"
             # Статусы пользователя https://core.telegram.org/type/UserStatus
             if isinstance(user.status, (
@@ -455,44 +473,3 @@ class ParsingGroupMembers:
             )
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
-
-    async def parsing_mass_parsing_of_groupss(self):
-        # Пример асинхронной функции парсинга, возвращающей список данных
-
-        await asyncio.sleep(2)  # Имитация задержки парсинга
-        return ["Данные 1", "Данные 2", "Данные 3"]  # Возвращаемые данные
-
-    async def parsing_gui(self, page: ft.Page):
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)
-        page.update()  # Убедитесь, что ListView добавлен на страницу перед запуском цикла
-
-        async def add_items(e):
-            # Индикация начала парсинга
-            lv.controls.append(ft.Text("Парсинг начался..."))
-            page.update()  # Обновите страницу, чтобы сразу показать сообщение
-
-            data = await self.parsing_mass_parsing_of_groupss()  # Парсинг участников чата
-
-            # Выводим полученные данные в окно
-            for item in data:
-                lv.controls.append(ft.Text(f"Получено: {item}"))
-                page.update()  # Обновление страницы для каждого элемента данных
-
-            # Добавление сообщения о завершении парсинга        lv.controls.append(ft.Text("Парсинг завершен"))
-            page.update()  # Обновление страницы для показа сообщения о завершении
-
-        button = ft.ElevatedButton("Начать парсинг", on_click=add_items)
-
-        page.views.append(
-            ft.View(
-                "/settings",
-                [
-                    lv,
-                    ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                    button,
-                ],
-            )
-        )
-
-        page.update()
