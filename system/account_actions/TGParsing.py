@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import time
 import datetime
+import time
+
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
@@ -16,7 +17,6 @@ from system.auxiliary_functions.auxiliary_functions import find_filess
 from system.auxiliary_functions.config import (path_parsing_folder, line_width_button, height_button,
                                                time_activity_user_2)
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-import asyncio
 
 
 class ParsingGroupMembers:
@@ -456,8 +456,15 @@ class ParsingGroupMembers:
                 page.go("/parsing")
                 page.update()  # Обновление страницы для отображения изменений
 
+
+            async def back_button_clicked(e):
+                """Кнопка возврата в меню настроек"""
+                page.go("/parsing")
+
             # Кнопка для подтверждения и запуска парсинга
-            button = ft.ElevatedButton("Готово", on_click=btn_click)
+            button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=btn_click)
+            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                            on_click=back_button_clicked)
 
             # Добавление представления на страницу
             page.views.append(
@@ -467,7 +474,8 @@ class ParsingGroupMembers:
                         chat_input,  # Поле ввода ссылки на чат
                         limit_active_user,  # Поле ввода количества сообщений
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
-                        button  # Кнопка "Готово"
+                        button,  # Кнопка "Готово"
+                        button_back  # Кнопка "Назад"
                     ]
                 )
             )
