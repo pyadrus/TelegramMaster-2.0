@@ -265,7 +265,6 @@ async def main(page: ft.Page):
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             await reactions_menu(page)
 
-        
         elif page.route == "/setting_reactions":  # Ставим реакции
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -284,7 +283,6 @@ async def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
 
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
             try:
@@ -337,9 +335,6 @@ async def main(page: ft.Page):
                     await ParsingGroupMembers().parse_groups(page)
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
-
-
 
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
             try:

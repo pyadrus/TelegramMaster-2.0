@@ -34,69 +34,78 @@ class ParsingGroupMembers:
         # Удаление дублирующихся записей по идентификатору
         await self.db_handler.remove_duplicate_ids(table_name="members", column_name="id")
 
+    async def log_and_display(self, message: str, lv, page):
+        """
+        Выводит сообщение в GUI и записывает лог.
+
+        Аргументы:
+        :param message: Текст сообщения для отображения и записи в лог.
+        :param lv: ListView для отображения сообщений.
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
+        logger.info(message)  # записываем сообщение в лог
+        lv.controls.append(ft.Text(message))  # отображаем сообщение в ListView
+        page.update()  # обновляем страницу для отображения нового сообщения
+
     async def parse_groups(self, page: ft.Page) -> None:
-        """Парсинг групп"""
-        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+        """
+        Запускает процесс парсинга групп Telegram и отображает статус процесса в GUI.
+
+        Аргументы:
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
+        start = datetime.datetime.now()  # фиксируем время начала выполнения кода
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)
-        page.update()  # Убедитесь, что ListView добавлен на страницу перед запуском цикла
-
-
-        async def log_and_display(message: str):
-            logger.info(message)
-            lv.controls.append(ft.Text(message))
-            page.update()  # Обновите страницу, чтобы сразу показать сообщение
-
+        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов
+        page.update()  # обновляем страницу, чтобы сразу показать ListView
 
         async def add_items(e):
+            """
+            Запускает процесс парсинга групп и отображает статус в интерфейсе.
+            """
             # Индикация начала парсинга
-
-            await log_and_display("Парсинг начался...")
-
-            # lv.controls.append(ft.Text("Парсинг начался..."))
-            lv.controls.append(ft.Text('Время старта: ' + str(start)))
-            lv.controls.append(ft.Text('▶️ Начало парсинга'))
-            logger.info('Время старта: ' + str(start))
-            logger.info("▶️ Начало парсинга")
+            await self.log_and_display(f"▶️ Начало парсинга.\nВремя старта: {str(start)}")
             page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
             try:
+                # Обрабатываем все файлы сессий по очереди
                 for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(session_name,
                                                                        account_directory=path_parsing_folder)
-                    # Открываем базу с группами для дальнейшего parsing. Поочередно выводим записанные группы
+                    # Получаем список групп для парсинга из базы данных
                     for groups in await self.db_handler.open_and_read_data("writing_group_links"):
-                        logger.info(f'[+] Парсинг группы: {groups[0]}')
-                        lv.controls.append(ft.Text(f'[+] Парсинг группы: {groups[0]}'))
-                        page.update()  # Обновление страницы для каждого элемента данных
-                        await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                        await self.parse_group(client, groups[0], lv, page)  # Parsing групп
+                        await self.log_and_display(f'[+] Парсинг группы: {groups[0]}')
+                        await self.sub_unsub_tg.subscribe_to_group_or_channel(client,
+                                                                              groups[0])  # подписываемся на группу
+                        await self.parse_group(client, groups[0], lv, page)  # выполняем парсинг группы
+                        # Удаляем группу из списка после завершения парсинга
                         await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
                                                             value=groups)
+                    # Очищаем список и удаляем дубликаты после завершения обработки всех групп
                     await self.clean_parsing_list_and_remove_duplicates()
+                    # Завершаем работу клиента после завершения парсинга
                     await client.disconnect()
             except Exception as e:
-                logger.exception(f"Ошибка: {e}")
+                logger.exception(f"Ошибка: {e}")  # логируем исключения
 
-            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-            lv.controls.append(ft.Text('🔚 Конец парсинга'))
-            lv.controls.append(ft.Text('Время окончания: ' + str(finish)))
-            lv.controls.append(
-                ft.Text('Время работы: ' + str(finish - start)))  # вычитаем время старта из времени окончания
-            logger.info('Время окончания: ' + str(finish))
-            logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-            page.update()  # Обновите страницу, чтобы сразу показать сообщение
+            finish = datetime.datetime.now()  # фиксируем время окончания парсинга
+            # Логируем и отображаем время окончания работы
+            await self.log_and_display(f"🔚 Конец парсинга.\nВремя окончания: {finish}.\nВремя работы: {finish - start}")
+            # page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
         async def back_button_clicked(e):
-            """Кнопка возврата в меню настроек"""
-            page.go("/parsing")
+            """
+            Обрабатывает нажатие кнопки "Назад", возвращая в меню парсинга.
+            """
+            page.go("/parsing")  # переходим к основному меню парсинга
 
+        # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
             ft.View(
                 "/parsing",
                 [
-                    lv,
-                    ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
+                    lv,  # отображение логов
+                    ft.Column(),  # резерв для приветствия или других элементов интерфейса
                     ft.ElevatedButton(width=line_width_button, height=height_button, text="Начать парсинг",
                                       on_click=add_items),  # Кнопка "Начать парсинг"
                     ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
@@ -105,7 +114,7 @@ class ParsingGroupMembers:
             )
         )
 
-        page.update()
+        page.update()  # обновляем страницу после добавления элементов управления
 
     async def parse_group(self, client, groups_wr, lv, page) -> None:
         """
@@ -369,7 +378,8 @@ class ParsingGroupMembers:
             username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(
                 user)
             entity = (
-            username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium)
+                username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
+                user_premium)
             return entity
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
