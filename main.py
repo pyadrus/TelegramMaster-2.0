@@ -355,9 +355,6 @@ async def main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-
-
-
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -376,8 +373,6 @@ async def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
-
-
 
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов аккаунта
             try:
@@ -398,11 +393,8 @@ async def main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
-
-
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db("members")
-
 
         elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
             await ReceivingAndRecording().write_data_to_excel(file_name="user_settings/parsed_chat_participants.xlsx")

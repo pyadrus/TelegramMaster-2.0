@@ -23,6 +23,7 @@
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
 
 
     <!-- Стили для кнопки "Вверх" -->
@@ -68,16 +69,39 @@
         </a>
 
         <h1 style="text-align: center;">🚀 Инвайтинг ({{program_name}})</h1>
+
         <!-- Меню навигации -->
-        <div class="menu">
-            <!-- 🚀 Инвайтинг -->
-            <a href="#Inviting_with_limits_in_TelegramMaster">{{inviting}}</a><br>
-            <!-- ⏰ Инвайтинг 1 раз в час -->
-            <a href="#Inviting_1_time_per_hour">{{invitation_1_time_per_hour}}</a><br>
-            <!-- 🕒 Инвайтинг в определенное время -->
-            <a href="#Inviting_at_a_certain_time">{{invitation_at_a_certain_time}}</a><br>
-            <!-- 📅 Инвайтинг каждый день -->
-            <a href="#Inviting_every_day">{{inviting_every_day}}</a><br>
+        <div class="card-container">
+
+            <div class="card">
+                <!-- 🚀 Инвайтинг -->
+                <p class="heading">🚀 Инвайтинг</p>
+                <p>{{inviting}}</p>
+                <button class="card-button"><a href="#Inviting_with_limits_in_TelegramMaster">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- ⏰ Инвайтинг 1 раз в час -->
+                <p class="heading">⏰ Инвайтинг</p>
+                <p>{{invitation_1_time_per_hour}}</p>
+                <button class="card-button"><a href="#Inviting_1_time_per_hour">Перейти</a></button>
+            </div>
+
+
+            <div class="card">
+                <!-- 🕒 Инвайтинг в определенное время -->
+                <p class="heading">🕒 Инвайтинг</p>
+                <p>{{invitation_at_a_certain_time}}</p>
+                <button class="card-button"><a href="#Inviting_at_a_certain_time">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 📅 Инвайтинг каждый день -->
+                <p class="heading">📅 Инвайтинг</p>
+                <p>{{inviting_every_day}}</p>
+                <button class="card-button"><a href="#Inviting_every_day">Перейти</a></button>
+            </div>
+
         </div>
 
         <div

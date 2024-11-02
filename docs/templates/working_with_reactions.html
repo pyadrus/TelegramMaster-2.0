@@ -22,6 +22,7 @@
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
 
 
     <!-- Стили для кнопки "Вверх" -->
@@ -67,8 +68,36 @@
             </svg>
         </a>
 
-        <h1 id="telegrammaster-">Ставим реакции</h1>
-        <hr align="center"/>
+        <h1 style="text-align: center;">👍 Работа с реакциями и просмотрами ({{program_name}})</h1>
+
+        <!-- Меню навигации -->
+        <div class="card-container">
+
+            <div class="card">
+                <!-- 👍 Ставим реакции -->
+                <p class="heading">👍 Ставим реакции</p>
+                <p>{{setting_reactions}}</p>
+                <button class="card-button"><a href="#setting_reactions">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 👁️‍🗨️ Накручиваем просмотры постов -->
+                <p class="heading">👁️‍🗨️ Накрутка просмотров</p>
+                <p>{{we_are_winding_up_post_views}}</p>
+                <button class="card-button"><a href="#we_are_winding_up_post_views">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 🤖 Автоматическое выставление реакций -->
+                <p class="heading">🤖 Автоматическое выставление реакций</p>
+                <p>{{automatic_setting_of_reactions}}</p>
+                <button class="card-button"><a href="#automatic_setting_of_reactions">Перейти</a></button>
+            </div>
+
+        </div>
+
+        <!-- 👍 Ставим реакции -->
+        <h2 id="setting_reactions" style="text-align: center;">{{setting_reactions}}</h2>
 
         <p>
             В настройках {{program_name}} перейдите в пункт Выбор реакции<br>
@@ -132,9 +161,8 @@
 
         <hr align="center"/>
 
-
-        <h1 id="telegrammaste-">Автоматическое выставление реакций</h1>
-        <hr align="center"/>
+        <!-- 🤖 Автоматическое выставление реакций -->
+        <h2 id="automatic_setting_of_reactions" style="text-align: center;">{{automatic_setting_of_reactions}}</h2>
 
         <p>
             Перед началом выполнения накрутки просмотров в вашем канале, выполните следующие действия:<br>
@@ -191,8 +219,8 @@
 
         <hr align="center"/>
 
-        <h1 id="telegrammast-">Накручиваем просмотры постов</h1>
-        <hr align="center"/>
+        <!-- 👁️‍🗨️ Накручиваем просмотры постов -->
+        <h2 id="we_are_winding_up_post_views" style="text-align: center;">{{we_are_winding_up_post_views}}</h2>
 
         <p>
             Функция «Накручиваем просмотры постов» в {{program_name}} позволяет накрутить неограниченное число

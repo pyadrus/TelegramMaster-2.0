@@ -11,7 +11,8 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               parse_active_group_members, clear_previously_parsed_data_list,
                                               parse_account_subscribed_groups_channels, inviting,
                                               invitation_1_time_per_hour, invitation_at_a_certain_time,
-                                              inviting_every_day, importing_a_list_of_parsed_data)
+                                              inviting_every_day, importing_a_list_of_parsed_data, setting_reactions,
+                                              we_are_winding_up_post_views, automatic_setting_of_reactions)
 
 app = Quart(__name__, template_folder='templates')
 
@@ -30,7 +31,7 @@ async def menu():
 
 @app.route('/inviting')
 async def inviting_page():
-    """Инвайтинг"""
+    """🚀 Инвайтинг"""
     return await render_template('inviting.html', program_name=program_name, inviting=inviting,
                                  invitation_1_time_per_hour=invitation_1_time_per_hour,
                                  invitation_at_a_certain_time=invitation_at_a_certain_time,
@@ -63,13 +64,16 @@ async def settings():
 
 @app.route('/working_with_reactions')
 async def working_with_reactions():
-    """Работа с реакциями"""
-    return await render_template('working_with_reactions.html', program_name=program_name)
+    """👍 Работа с реакциями"""
+    return await render_template('working_with_reactions.html', program_name=program_name,
+                                 setting_reactions=setting_reactions,
+                                 we_are_winding_up_post_views=we_are_winding_up_post_views,
+                                 automatic_setting_of_reactions=automatic_setting_of_reactions)
 
 
 @app.route('/parsing')
 async def parsing():
-    """Парсинг"""
+    """🔍 Парсинг"""
     return await render_template('parsing.html', program_name=program_name,
                                  parse_single_or_multiple_groups=parse_single_or_multiple_groups,
                                  parse_selected_user_subscribed_group=parse_selected_user_subscribed_group,

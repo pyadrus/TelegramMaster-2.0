@@ -5,7 +5,9 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               parse_active_group_members, parse_account_subscribed_groups_channels,
                                               clear_previously_parsed_data_list,
                                               inviting_every_day, invitation_at_a_certain_time,
-                                              invitation_1_time_per_hour, inviting, importing_a_list_of_parsed_data)
+                                              invitation_1_time_per_hour, inviting, importing_a_list_of_parsed_data,
+                                              setting_reactions, we_are_winding_up_post_views,
+                                              automatic_setting_of_reactions)
 
 
 async def settings_menu(page):
@@ -244,13 +246,16 @@ async def reactions_menu(page):
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
                                                                                   ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     ft.ElevatedButton(width=line_width, height=height_button, text="👍 Ставим реакции",
+                     # 👍 Ставим реакции
+                     ft.ElevatedButton(width=line_width, height=height_button, text=setting_reactions,
                                        on_click=lambda _: page.go("/setting_reactions")),
+                     # 👁️‍🗨️ Накручиваем просмотры постов
                      ft.ElevatedButton(width=line_width, height=height_button,
-                                       text="👁️‍🗨️ Накручиваем просмотры постов",
+                                       text=we_are_winding_up_post_views,
                                        on_click=lambda _: page.go("/we_are_winding_up_post_views")),
+                     # 🤖 Автоматическое выставление реакций
                      ft.ElevatedButton(width=line_width, height=height_button,
-                                       text="🤖 Автоматическое выставление реакций",
+                                       text=automatic_setting_of_reactions,
                                        on_click=lambda _: page.go("/automatic_setting_of_reactions")),
                  ])]))
 
