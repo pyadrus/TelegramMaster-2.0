@@ -141,7 +141,7 @@ class TGContact:
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
             client.disconnect()  # Разрываем соединение telegram
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
-            await self.db_handler.clean_no_username()  # Чистка списка parsing списка, если нет username
+            await self.db_handler.remove_records_without_username()  # Чистка списка parsing списка, если нет username
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 

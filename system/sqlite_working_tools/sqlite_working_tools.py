@@ -28,7 +28,7 @@ class DatabaseHandler:
         self.close()
         return records
 
-    async def delete_duplicates(self, table_name, column_name) -> None:
+    async def remove_duplicate_ids(self, table_name, column_name) -> None:
         """
         Этот запрос удаляет все дублирующиеся записи в поле id. Данный запрос использует функцию MIN(), которая возвращает
         минимальное значение из списка значений. Функция MIN() будет применена к полю rowid, которое является уникальным
@@ -187,7 +187,7 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def clean_no_username(self) -> None:
+    async def remove_records_without_username(self) -> None:
         """Чистка списка от участников у которых нет username"""
         logger.info("Чищу список software_database.db от участников у которых нет username")
         await self.connect()

@@ -27,12 +27,12 @@ class ParsingGroupMembers:
         self.tg_connect = TGConnect()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def cleaning_the_parsing_list_if_there_is_no_username_and_removing_duplicates_by_id(self):
-        """Очистка списка парсинга, если нет никнейма и удаление дубликатов по id"""
-        # Чистка списка parsing списка, если нет username
-        await self.db_handler.clean_no_username()
-        # Чистка дублирующих username по столбцу id
-        await self.db_handler.delete_duplicates(table_name="members", column_name="id")
+    async def clean_parsing_list_and_remove_duplicates(self):
+        """Очищает список парсинга от записей без имени пользователя и удаляет дубликаты по идентификатору."""
+        # Очистка списка парсинга от записей без имени пользователя
+        await self.db_handler.remove_records_without_username()
+        # Удаление дублирующихся записей по идентификатору
+        await self.db_handler.remove_duplicate_ids(table_name="members", column_name="id")
 
     async def parse_groups(self, page: ft.Page) -> None:
         """Парсинг групп"""
@@ -63,7 +63,7 @@ class ParsingGroupMembers:
                         await self.parse_group(client, groups[0], lv, page)  # Parsing групп
                         await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
                                                             value=groups)
-                    await self.cleaning_the_parsing_list_if_there_is_no_username_and_removing_duplicates_by_id()
+                    await self.clean_parsing_list_and_remove_duplicates()
                     await client.disconnect()
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
@@ -71,7 +71,8 @@ class ParsingGroupMembers:
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             lv.controls.append(ft.Text('🔚 Конец парсинга'))
             lv.controls.append(ft.Text('Время окончания: ' + str(finish)))
-            lv.controls.append(ft.Text('Время работы: ' + str(finish - start)))  # вычитаем время старта из времени окончания
+            lv.controls.append(
+                ft.Text('Время работы: ' + str(finish - start)))  # вычитаем время старта из времени окончания
             logger.info('Время окончания: ' + str(finish))
             logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             page.update()  # Обновите страницу, чтобы сразу показать сообщение
@@ -86,8 +87,10 @@ class ParsingGroupMembers:
                 [
                     lv,
                     ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text="Начать парсинг", on_click=add_items), # Кнопка "Начать парсинг"
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад", on_click=back_button_clicked) # Кнопка "Назад"
+                    ft.ElevatedButton(width=line_width_button, height=height_button, text="Начать парсинг",
+                                      on_click=add_items),  # Кнопка "Начать парсинг"
+                    ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                      on_click=back_button_clicked)  # Кнопка "Назад"
                 ],
             )
         )
@@ -108,7 +111,8 @@ class ParsingGroupMembers:
             lv.controls.append(ft.Text(f"[+] Спарсили данные с группы {groups_wr}"))
             page.update()  # Обновление страницы для каждого элемента данных
             # Записываем parsing данные в файл user_settings/software_database.db
-            entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, lv, page), lv, page)
+            entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, lv, page), lv,
+                                                             page)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
@@ -127,7 +131,7 @@ class ParsingGroupMembers:
                 time.sleep(int(time_activity_user_2))
                 await self.get_active_users(client, chat_input, limit_active_user)
                 await client.disconnect()  # Разрываем соединение telegram
-            await self.cleaning_the_parsing_list_if_there_is_no_username_and_removing_duplicates_by_id()
+            await self.clean_parsing_list_and_remove_duplicates()
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
@@ -142,8 +146,8 @@ class ParsingGroupMembers:
                 logger.info("Parsing групп / каналов на которые подписан аккаунт")
                 await self.forming_a_list_of_groups(client)
                 await client.disconnect()  # Разрываем соединение telegram
-            await self.db_handler.delete_duplicates(table_name="groups_and_channels",
-                                                    column_name="id")  # Чистка дубликатов в базе данных
+            await self.db_handler.remove_duplicate_ids(table_name="groups_and_channels",
+                                                       column_name="id")  # Чистка дубликатов в базе данных
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
@@ -211,12 +215,13 @@ class ParsingGroupMembers:
                 logger.info(group_titles)
                 # Создаем текст для отображения результата
                 result_text = ft.Text(value="Выберите группу для парсинга")
+
                 # Обработчик нажатия кнопки выбора группы
                 async def handle_button_click(event) -> None:
                     lv.controls.append(ft.Text(f"Выбрана группа: {dropdown.value}"))
                     page.update()  # Обновление страницы для каждого элемента данных
-                    await self.parse_group(client, dropdown.value,lv, page) # Запускаем парсинг выбранной группы
-                    await self.cleaning_the_parsing_list_if_there_is_no_username_and_removing_duplicates_by_id()
+                    await self.parse_group(client, dropdown.value, lv, page)  # Запускаем парсинг выбранной группы
+                    await self.clean_parsing_list_and_remove_duplicates()
                     await client.disconnect()
                     # Переходим на экран парсинга только после завершения всех действий
                     page.go("/parsing")
@@ -231,16 +236,18 @@ class ParsingGroupMembers:
                                        autofocus=True)
                 page.views.append(
                     ft.View(
-                "/parsing",
+                        "/parsing",
                         [
                             ft.Column(controls=[
                                 dropdown,
-                                ft.ElevatedButton(width=line_width_button, height=height_button, text="Выбрать группу", on_click=handle_button_click),
-                                ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад", on_click=back_button_clicked),
+                                ft.ElevatedButton(width=line_width_button, height=height_button, text="Выбрать группу",
+                                                  on_click=handle_button_click),
+                                ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                                  on_click=back_button_clicked),
                                 result_text, lv,
                             ])
                         ],
-                )  # Добавляем созданный вид на страницу
+                    )  # Добавляем созданный вид на страницу
                 )
                 page.update()
 
@@ -274,7 +281,8 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    logger.info(f'Ошибка parsing: не верное имя или 🔗 cсылка {target_group} не является группой / каналом: {target_group}')
+                    logger.info(
+                        f'Ошибка parsing: не верное имя или 🔗 cсылка {target_group} не является группой / каналом: {target_group}')
                     time.sleep(2)
                     break
             return all_participants
@@ -302,9 +310,13 @@ class ParsingGroupMembers:
         :param entities: список пользователей
         """
         try:
-            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(user)
-            entities.append([username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium])
-            lv.controls.append(ft.Text(f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
+            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(
+                user)
+            entities.append(
+                [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
+                 user_premium])
+            lv.controls.append(ft.Text(
+                f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
             page.update()  # Обновление страницы для каждого элемента данных
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
@@ -315,7 +327,8 @@ class ParsingGroupMembers:
         user_phone = user.phone if user.phone else "Номер телефона скрыт"
         first_name = user.first_name if user.first_name else ""
         last_name = user.last_name if user.last_name else ""
-        photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
+        photos_id = (
+            "Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
         online_at = "Был(а) недавно"
         # Статусы пользователя https://core.telegram.org/type/UserStatus
         if isinstance(user.status, (
@@ -343,8 +356,10 @@ class ParsingGroupMembers:
         :param user: пользователь
         """
         try:
-            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(user)
-            entity = (username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium)
+            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(
+                user)
+            entity = (
+            username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium)
             return entity
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
@@ -367,8 +382,10 @@ class ParsingGroupMembers:
                         members_count = 0
                     # Время синтаксического анализа
                     parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-                    logger.info(f"{dialog.id}, {chs.title}, {result.full_chat.about}, https://t.me/{chs.username}, {members_count}, {parsing_time}")
-                    entities = [dialog.id, chs.title, result.full_chat.about, f"https://t.me/{chs.username}", members_count,
+                    logger.info(
+                        f"{dialog.id}, {chs.title}, {result.full_chat.about}, https://t.me/{chs.username}, {members_count}, {parsing_time}")
+                    entities = [dialog.id, chs.title, result.full_chat.about, f"https://t.me/{chs.username}",
+                                members_count,
                                 parsing_time]
                     await self.db_handler.write_data_to_db(
                         creating_a_table="CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link, members_count, parsing_time)",
@@ -404,7 +421,6 @@ class ParsingGroupMembers:
                 page.go("/parsing")
                 page.update()  # Обновление страницы для отображения изменений
 
-
             async def back_button_clicked(e):
                 """Кнопка возврата в меню настроек"""
                 page.go("/parsing")
@@ -417,8 +433,10 @@ class ParsingGroupMembers:
                         chat_input,  # Поле ввода ссылки на чат
                         limit_active_user,  # Поле ввода количества сообщений
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
-                        ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=btn_click),  # Кнопка "Готово"
-                        ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад", on_click=back_button_clicked)  # Кнопка "Назад"
+                        ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово",
+                                          on_click=btn_click),  # Кнопка "Готово"
+                        ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                          on_click=back_button_clicked)  # Кнопка "Назад"
                     ]
                 )
             )
