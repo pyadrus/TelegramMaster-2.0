@@ -75,15 +75,59 @@
             Выберите реакции, которые нужно поставить на пост. <br>
         </p>
 
-        <blockquote>
-            ПРИМЕЧАНИЕ<br>
-            ⚠️ {{program_name}} выбирает рандомно реакцию из выбранных пользователем<br>
-        </blockquote>
+        <div
+                style="border: 2px solid #f5c6cbf5; background-color: #f8d7da; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif;">
+            <h3 style="color: #721c24; margin: 0 0 10px;">ПРИМЕЧАНИЕ:</h3>
+            <p style="color: #721c24; margin: 0; font-size: 16px;">
+                ⚠️ {{program_name}} выбирает рандомно реакцию из выбранных пользователем.<br>
+            </p>
+        </div>
 
         <blockquote>
-            1️⃣ Ввести ссылку на группу / канал<br>
-            2️⃣ Ввести ссылку на сообщение или пост<br>
-            3️⃣ Ввести количество аккаунтов для выставления реакций<br>
+            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
+
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="{{ url_for('static', filename='images/TelegramMaster_2.png') }}" alt="Telegram Master"
+                     width="40%">
+            </p>
+
+            2️⃣ Подключить аккаунты к {{ program_name }} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+            аккаунтов Telegram к {{ program_name }})</a> или
+            скопировать session файл аккаунта в папку
+            <code>{{ program_name }}/user_settings/accounts/reactions</code><br>
+
+            3️⃣ Перейти в <a href="{{ url_for('settings') }}">Настройки.</a><br>
+
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="{{ url_for('static', filename='images/settings.png') }}" alt="Telegram Master"
+                     width="40%">
+            </p>
+
+            4️⃣ Перейти в Выбор реакции и выбрать реакции, которые будут проставляться. <br>
+
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="{{ url_for('static', filename='images/settings_reactions.png') }}" alt="Telegram Master"
+                     width="40%">
+            </p>
+
+            5️⃣ Перейти в "Работа с реакциями"<br>
+
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="{{ url_for('static', filename='images/reactions.png') }}" alt="Telegram Master"
+                     width="40%">
+            </p>
+
+            6️⃣ Перейти в "Ставим реакции"<br>
+
         </blockquote>
 
         <hr align="center"/>
