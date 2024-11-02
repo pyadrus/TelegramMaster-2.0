@@ -32,7 +32,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
             message = ft.TextField(label="Введите ссылку на сообщение или пост:", multiline=False, max_lines=1)
 
             async def btn_click(e) -> None:
-                random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
+                # random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
                 for session_name in find_filess(directory_path=path_reactions_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(session_name,
                                                                        account_directory=path_reactions_folder)
@@ -42,7 +42,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                     msg_id = int(re.search(r'/(\d+)$', message.value).group(1))  # Получаем id сообщения из ссылки
                     time.sleep(5)
                     await client(SendReactionRequest(peer=chat, msg_id=msg_id,
-                                                     reaction=[types.ReactionEmoji(emoticon=f'{random_value}')]))
+                                                     reaction=[types.ReactionEmoji(emoticon=f'{self.choosing_random_reaction()}')]))
                     time.sleep(1)
                     await client.disconnect()
 
@@ -96,7 +96,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def choosing_random_reaction(self):
+    def choosing_random_reaction(self):
         """Выбираем случайное значение из списка (реакция)"""
         try:
             reaction_input = read_json_file(filename='user_settings/reactions/reactions.json')
@@ -119,9 +119,9 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                                                                    account_directory="user_settings/accounts/reactions_list")
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
                 await asyncio.sleep(5)
-                random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
+                # random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
                 await client(SendReactionRequest(peer=chat, msg_id=int(number),
-                                                 reaction=[types.ReactionEmoji(emoticon=f'{random_value}')]))
+                                                 reaction=[types.ReactionEmoji(emoticon=f'{self.choosing_random_reaction()}')]))
                 await asyncio.sleep(1)
                 await client.disconnect()
         except Exception as e:

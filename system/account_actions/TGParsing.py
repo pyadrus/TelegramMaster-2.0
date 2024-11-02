@@ -41,9 +41,19 @@ class ParsingGroupMembers:
         page.controls.append(lv)
         page.update()  # Убедитесь, что ListView добавлен на страницу перед запуском цикла
 
+
+        async def log_and_display(message: str):
+            logger.info(message)
+            lv.controls.append(ft.Text(message))
+            page.update()  # Обновите страницу, чтобы сразу показать сообщение
+
+
         async def add_items(e):
             # Индикация начала парсинга
-            lv.controls.append(ft.Text("Парсинг начался..."))
+
+            await log_and_display("Парсинг начался...")
+
+            # lv.controls.append(ft.Text("Парсинг начался..."))
             lv.controls.append(ft.Text('Время старта: ' + str(start)))
             lv.controls.append(ft.Text('▶️ Начало парсинга'))
             logger.info('Время старта: ' + str(start))

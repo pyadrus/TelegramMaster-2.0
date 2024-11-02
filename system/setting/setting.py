@@ -230,87 +230,50 @@ async def reaction_gui(page: ft.Page):
 
     t = ft.Text(value='Выберите реакцию')  # Создает текстовое поле (t).
 
+    # Создаем все чекбоксы единожды и сохраняем их в списке
+    checkboxes = [
+        ft.Checkbox(label="😀"), ft.Checkbox(label="😎"), ft.Checkbox(label="😍"),
+        ft.Checkbox(label="😂"), ft.Checkbox(label="😡"), ft.Checkbox(label="😱"),
+        ft.Checkbox(label="😭"), ft.Checkbox(label="👍"), ft.Checkbox(label="👎"),
+        ft.Checkbox(label="❤"), ft.Checkbox(label="🔥"), ft.Checkbox(label="🎉"),
+        ft.Checkbox(label="😁"), ft.Checkbox(label="😢"), ft.Checkbox(label="💩"),
+        ft.Checkbox(label="👏"), ft.Checkbox(label="🤷‍♀️"), ft.Checkbox(label="🤷"),
+        ft.Checkbox(label="🤷‍♂️"), ft.Checkbox(label="👾"), ft.Checkbox(label="🙊"),
+        ft.Checkbox(label="💊"), ft.Checkbox(label="😘"), ft.Checkbox(label="🦄"),
+        ft.Checkbox(label="💘"), ft.Checkbox(label="🆒"), ft.Checkbox(label="🗿"),
+        ft.Checkbox(label="🤪"), ft.Checkbox(label="💅"), ft.Checkbox(label="☃️"),
+        ft.Checkbox(label="🎄"), ft.Checkbox(label="🎅"), ft.Checkbox(label="🤗"),
+        ft.Checkbox(label="🤬"), ft.Checkbox(label="🤮"), ft.Checkbox(label="🤡"),
+        ft.Checkbox(label="🥴"), ft.Checkbox(label="💯"), ft.Checkbox(label="🌭"),
+        ft.Checkbox(label="⚡️"), ft.Checkbox(label="🍌"), ft.Checkbox(label="🖕"),
+        ft.Checkbox(label="💋"), ft.Checkbox(label="👀"), ft.Checkbox(label="🤝"),
+        ft.Checkbox(label="🍾"), ft.Checkbox(label="🏆"), ft.Checkbox(label="🥱"),
+        ft.Checkbox(label="🕊"), ft.Checkbox(label="😭")
+    ]
+
     def button_clicked(e):
         """Выбранная реакция"""
-        selected_reactions = []  # Создает пустой список selected_reactions для хранения выбранных реакций.
-        for checkbox in [
-            ft.Checkbox(label="😀"), ft.Checkbox(label="😎"), ft.Checkbox(label="😍"),
-            ft.Checkbox(label="😂"), ft.Checkbox(label="😡"), ft.Checkbox(label="😱"),
-            ft.Checkbox(label="😭"), ft.Checkbox(label="👍"), ft.Checkbox(label="👎"),
-
-            ft.Checkbox(label="❤"), ft.Checkbox(label="🔥"), ft.Checkbox(label="🎉"),
-            ft.Checkbox(label="😁"), ft.Checkbox(label="😢"), ft.Checkbox(label="💩"),
-            ft.Checkbox(label="👏"), ft.Checkbox(label="🤷‍♀️"), ft.Checkbox(label="🤷"),
-
-            ft.Checkbox(label="🤷‍♂️"), ft.Checkbox(label="👾"), ft.Checkbox(label="🙊"),
-            ft.Checkbox(label="💊"), ft.Checkbox(label="😘"), ft.Checkbox(label="🦄"),
-            ft.Checkbox(label="💘"), ft.Checkbox(label="🆒"), ft.Checkbox(label="🗿"),
-
-            ft.Checkbox(label="🤪"), ft.Checkbox(label="💅"), ft.Checkbox(label="☃️"),
-            ft.Checkbox(label="🎄"), ft.Checkbox(label="🎅"), ft.Checkbox(label="🤗"),
-            ft.Checkbox(label="🤬"), ft.Checkbox(label="🤮"), ft.Checkbox(label="🤡"),
-
-            ft.Checkbox(label="🥴"), ft.Checkbox(label="💯"), ft.Checkbox(label="🌭"),
-            ft.Checkbox(label="⚡️"), ft.Checkbox(label="🍌"), ft.Checkbox(label="🖕"),
-            ft.Checkbox(label="💋"), ft.Checkbox(label="👀"), ft.Checkbox(label="🤝"),
-
-            ft.Checkbox(label="🍾"), ft.Checkbox(label="🏆"), ft.Checkbox(label="🥱"),
-            ft.Checkbox(label="🕊"), ft.Checkbox(label="😭")
-        ]:
-            if checkbox.value:  # Проверяет, отмечен ли чекбокс.
-                # Если чекбокс отмечен, добавляет его текст (метку) в список selected_reactions.
-                selected_reactions.append(checkbox.label)
-
-        write_data_to_json_file(reactions=selected_reactions,
-                                path_to_the_file='user_settings/reactions/reactions.json')  # Сохраняем реакцию в json файл
-        page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        selected_reactions = [checkbox.label for checkbox in checkboxes if checkbox.value]  # Получаем только выбранные реакции
+        write_data_to_json_file(reactions=selected_reactions, path_to_the_file='user_settings/reactions/reactions.json')
+        page.go("/settings")  # Переход к странице настроек
 
     def back_button_clicked(e):
         """Кнопка возврата в меню настроек"""
         page.go("/settings")
 
-    # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
+    # Кнопка "Готово" и "Назад"
     button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=button_clicked)
-    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
-                                    on_click=back_button_clicked)
+    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад", on_click=back_button_clicked)
 
+    # Добавляем элементы на страницу
     page.views.append(
         ft.View(
             "/settings",
             controls=[
-                t,  # Добавляет текстовое поле t на страницу (page).
-                ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                    ft.Row([
-                        ft.Checkbox(label="😀"), ft.Checkbox(label="😎"), ft.Checkbox(label="😍"),
-                        ft.Checkbox(label="😂"), ft.Checkbox(label="😡"), ft.Checkbox(label="😱"),
-                        ft.Checkbox(label="😭"), ft.Checkbox(label="👍"), ft.Checkbox(label="👎")
-                    ]),
-                    ft.Row([
-                        ft.Checkbox(label="❤"), ft.Checkbox(label="🔥"), ft.Checkbox(label="🎉"),
-                        ft.Checkbox(label="😁"), ft.Checkbox(label="😢"), ft.Checkbox(label="💩"),
-                        ft.Checkbox(label="👏"), ft.Checkbox(label="🤷‍♀️"), ft.Checkbox(label="🤷"),
-                    ]),
-                    ft.Row([
-                        ft.Checkbox(label="🤷‍♂️"), ft.Checkbox(label="👾"), ft.Checkbox(label="🙊"),
-                        ft.Checkbox(label="💊"), ft.Checkbox(label="😘"), ft.Checkbox(label="🦄"),
-                        ft.Checkbox(label="💘"), ft.Checkbox(label="🆒"), ft.Checkbox(label="🗿"),
-                    ]),
-                    ft.Row([
-                        ft.Checkbox(label="🤪"), ft.Checkbox(label="💅"), ft.Checkbox(label="☃️"),
-                        ft.Checkbox(label="🎄"), ft.Checkbox(label="🎅"), ft.Checkbox(label="🤗"),
-                        ft.Checkbox(label="🤬"), ft.Checkbox(label="🤮"), ft.Checkbox(label="🤡"),
-                    ]),
-                    ft.Row([
-                        ft.Checkbox(label="🥴"), ft.Checkbox(label="💯"), ft.Checkbox(label="🌭"),
-                        ft.Checkbox(label="⚡️"), ft.Checkbox(label="🍌"), ft.Checkbox(label="🖕"),
-                        ft.Checkbox(label="💋"), ft.Checkbox(label="👀"), ft.Checkbox(label="🤝"),
-                    ]),
-                    ft.Row([
-                        ft.Checkbox(label="🍾"), ft.Checkbox(label="🏆"), ft.Checkbox(label="🥱"),
-                        ft.Checkbox(label="🕊"), ft.Checkbox(label="😭")
-                    ]),
-                ]),
-                button, button_back  # Добавляет кнопку на страницу (page).
+                t,
+                ft.Column([ft.Row(checkboxes[i:i + 9]) for i in range(0, len(checkboxes), 9)]),  # Чекбоксы в колонках
+                button,
+                button_back
             ]
         )
     )
