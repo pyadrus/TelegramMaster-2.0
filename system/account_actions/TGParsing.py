@@ -64,7 +64,7 @@ class ParsingGroupMembers:
             Запускает процесс парсинга групп и отображает статус в интерфейсе.
             """
             # Индикация начала парсинга
-            await self.log_and_display(f"▶️ Начало парсинга.\nВремя старта: {str(start)}")
+            await self.log_and_display(f"▶️ Начало парсинга.\nВремя старта: {str(start)}", lv, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
             try:
@@ -74,7 +74,7 @@ class ParsingGroupMembers:
                                                                        account_directory=path_parsing_folder)
                     # Получаем список групп для парсинга из базы данных
                     for groups in await self.db_handler.open_and_read_data("writing_group_links"):
-                        await self.log_and_display(f'[+] Парсинг группы: {groups[0]}')
+                        await self.log_and_display(f'[+] Парсинг группы: {groups[0]}', lv, page)
                         await self.sub_unsub_tg.subscribe_to_group_or_channel(client,
                                                                               groups[0])  # подписываемся на группу
                         await self.parse_group(client, groups[0], lv, page)  # выполняем парсинг группы
@@ -90,7 +90,7 @@ class ParsingGroupMembers:
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга
             # Логируем и отображаем время окончания работы
-            await self.log_and_display(f"🔚 Конец парсинга.\nВремя окончания: {finish}.\nВремя работы: {finish - start}")
+            await self.log_and_display(f"🔚 Конец парсинга.\nВремя окончания: {finish}.\nВремя работы: {finish - start}", lv, page)
             # page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
         async def back_button_clicked(e):
