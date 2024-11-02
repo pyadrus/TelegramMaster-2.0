@@ -344,14 +344,7 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало парсинга")
                     await ParsingGroupMembers().choose_and_parse_group(page)
-                    logger.info("🔚 Конец парсинга")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 

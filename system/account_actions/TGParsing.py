@@ -125,17 +125,16 @@ class ParsingGroupMembers:
         :param page: страница
         """
         try:
-            logger.info(f"[+] Спарсили данные с группы {groups_wr}")
-            lv.controls.append(ft.Text(f"[+] Спарсили данные с группы {groups_wr}"))
-            page.update()  # Обновление страницы для каждого элемента данных
+            # await self.log_and_display(f"[+] Спарсили данные с группы {groups_wr}", lv, page)
             # Записываем parsing данные в файл user_settings/software_database.db
             entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, lv, page), lv,
                                                              page)
+            await self.log_and_display(f"{entities}", lv, page)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def parse_active_users(self, chat_input, limit_active_user) -> None:
+    async def parse_active_users(self, chat_input, limit_active_user, lv, page) -> None:
         """
         Parsing участников, которые пишут в чат (активных участников)
         :param chat_input: ссылка на чат
@@ -143,11 +142,10 @@ class ParsingGroupMembers:
         """
         try:
             for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory=path_parsing_folder)
+                client = await self.tg_connect.get_telegram_client(session_name, account_directory=path_parsing_folder)
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat_input)
                 time.sleep(int(time_activity_user_2))
-                await self.get_active_users(client, chat_input, limit_active_user)
+                await self.get_active_users(client, chat_input, limit_active_user, lv, page)
                 await client.disconnect()  # Разрываем соединение telegram
             await self.clean_parsing_list_and_remove_duplicates()
         except Exception as e:
@@ -215,7 +213,7 @@ class ParsingGroupMembers:
 
 
 
-    async def get_active_users(self, client, chat, limit_active_user) -> None:
+    async def get_active_users(self, client, chat, limit_active_user, lv, page) -> None:
         """
         Получаем данные участников группы которые писали сообщения
         :param client: клиент Telegram
@@ -227,7 +225,7 @@ class ParsingGroupMembers:
                 if message.from_id is not None and hasattr(message.from_id, 'user_id'):
                     from_user = await client.get_entity(message.from_id.user_id)  # Получаем отправителя по ИД
                     entities = await self.get_active_user_data(from_user)
-                    logger.info(entities)
+                    await self.log_and_display(f"{entities}", lv, page)
                     await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
                 else:
                     logger.warning(f"Message {message.id} does not have a valid from_id.")
@@ -252,8 +250,8 @@ class ParsingGroupMembers:
         """Возвращаем список названий групп"""
         group_names = []  # Создаем новый список для названий групп
         for group in groups:
-            logger.info(f"{group}")  # Логируем сам объект группы
-            logger.info(f"{group.title}")  # Логируем название группы
+            # logger.info(f"{group}")  # Логируем сам объект группы
+            # logger.info(f"{group.title}")  # Логируем название группы
             group_names.append(group.title)  # Добавляем название группы в список
         return group_names
 
@@ -282,12 +280,18 @@ class ParsingGroupMembers:
 
                 # Обработчик нажатия кнопки выбора группы
                 async def handle_button_click(event) -> None:
-                    lv.controls.append(ft.Text(f"Выбрана группа: {dropdown.value}"))
-                    page.update()  # Обновление страницы для каждого элемента данных
+                    start = datetime.datetime.now()  # фиксируем время начала выполнения кода
+
+                    await self.log_and_display(f"▶️ Начало парсинга.\nВремя старта: {str(start)}", lv, page)
+                    await self.log_and_display(f"Выбрана группа: {dropdown.value}", lv, page)
+
                     await self.parse_group(client, dropdown.value, lv, page)  # Запускаем парсинг выбранной группы
                     await self.clean_parsing_list_and_remove_duplicates()
                     await client.disconnect()
                     # Переходим на экран парсинга только после завершения всех действий
+                    finish = datetime.datetime.now()  # фиксируем время окончания парсинга
+                    # Логируем и отображаем время окончания работы
+                    await self.log_and_display(f"🔚 Конец парсинга.\nВремя окончания: {finish}.\nВремя работы: {finish - start}", lv, page)
                     page.go("/parsing")
 
                 async def back_button_clicked(e):
@@ -328,25 +332,22 @@ class ParsingGroupMembers:
         :return: список пользователей
         """
         try:
-            logger.info("[+] Ищем участников... Сохраняем в файл software_database.db...")
-            lv.controls.append(ft.Text("[+] Ищем участников... Сохраняем в файл software_database.db..."))
-            page.update()  # Обновление страницы для каждого элемента данных
+            await self.log_and_display(f"[+] Ищем участников... Сохраняем в файл software_database.db...", lv, page)
+
             all_participants: list = []
             while_condition = True
             my_filter = ChannelParticipantsSearch("")
             offset = 0
             while while_condition:
                 try:
-                    participants = await client(
-                        GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter,
-                                               limit=200, hash=0))
+                    participants = await client(GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200, hash=0))
+
                     all_participants.extend(participants.users)
                     offset += len(participants.users)
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    logger.info(
-                        f'Ошибка parsing: не верное имя или 🔗 cсылка {target_group} не является группой / каналом: {target_group}')
+                    logger.info(f'Ошибка parsing: не верное имя или 🔗 cсылка {target_group} не является группой / каналом: {target_group}')
                     time.sleep(2)
                     break
             return all_participants
@@ -470,6 +471,11 @@ class ParsingGroupMembers:
         Создает интерфейс с полем ввода для ссылки на чат и количеством сообщений.
         """
         try:
+
+            lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+            page.controls.append(lv)  # добавляем ListView на страницу для отображения логов
+            page.update()  # обновляем страницу, чтобы сразу показать ListView
+
             # Поле для ввода ссылки на чат
             chat_input = ft.TextField(label="Введите ссылку на чат, с которого будем собирать активных:",
                                       multiline=False,
@@ -481,23 +487,25 @@ class ParsingGroupMembers:
 
             async def btn_click(e) -> None:
                 """Функция-обработчик для кнопки "Готово"""
-                # Логирование введенных данных
-                logger.info(f"Ссылка на чат: {chat_input.value}. Количество сообщений: {limit_active_user.value}")
+                await self.log_and_display(f"Ссылка на чат: {chat_input.value}. Количество сообщений: {limit_active_user.value}", lv, page)
                 # Вызов функции для парсинга активных пользователей (функция должна быть реализована)
-                await self.parse_active_users(chat_input.value, int(limit_active_user.value))
+                await self.parse_active_users(chat_input.value, int(limit_active_user.value), lv, page)
                 # Изменение маршрута на новый (если необходимо)
                 page.go("/parsing")
                 page.update()  # Обновление страницы для отображения изменений
 
             async def back_button_clicked(e):
-                """Кнопка возврата в меню настроек"""
-                page.go("/parsing")
+                """
+                Обрабатывает нажатие кнопки "Назад", возвращая в меню парсинга.
+                """
+                page.go("/parsing")  # переходим к основному меню парсинга
 
             # Добавление представления на страницу
             page.views.append(
                 ft.View(
                     "/parsing",  # Маршрут для этого представления
                     [
+                        lv,  # отображение логов
                         chat_input,  # Поле ввода ссылки на чат
                         limit_active_user,  # Поле ввода количества сообщений
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
@@ -510,4 +518,3 @@ class ParsingGroupMembers:
             )
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
-# TODO сократить не используемый код или повторяющийся 463 - строк
