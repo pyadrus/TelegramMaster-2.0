@@ -374,6 +374,9 @@ async def main(page: ft.Page):
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
 
+
+
+
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов аккаунта
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -382,16 +385,13 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
                     return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало парсинга")
-                    await ParsingGroupMembers().parse_subscribed_groups()
-                    logger.info("🔚 Конец парсинга")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                    await ParsingGroupMembers().parse_subscribed_groups(page)
             except Exception as e:
                 logger.exception(f"Ошибка: {e}")
+
+
+
+
 
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db("members")
