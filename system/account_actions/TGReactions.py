@@ -29,6 +29,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         """Ставим реакции на сообщения"""
         try:
             # Поле для ввода ссылки на чат
+            chat = ft.TextField(label="Введите ссылку на группу / чат:", multiline=False, max_lines=1)
             message = ft.TextField(label="Введите ссылку на сообщение или пост:", multiline=False, max_lines=1)
 
             async def btn_click(e) -> None:
@@ -36,12 +37,12 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 for session_name in find_filess(directory_path=path_reactions_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(session_name,
                                                                        account_directory=path_reactions_folder)
-                    chat = read_json_file(filename='user_settings/reactions/link_channel.json')
-                    logger.info(f'[+] Работаем с группой: {chat}')
-                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat)
+
+                    logger.info(f'[+] Работаем с группой: {chat.value}')
+                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat.value)
                     msg_id = int(re.search(r'/(\d+)$', message.value).group(1))  # Получаем id сообщения из ссылки
                     time.sleep(5)
-                    await client(SendReactionRequest(peer=chat, msg_id=msg_id,
+                    await client(SendReactionRequest(peer=chat.value, msg_id=msg_id,
                                                      reaction=[types.ReactionEmoji(emoticon=f'{self.choosing_random_reaction()}')]))
                     time.sleep(1)
                     await client.disconnect()
@@ -58,7 +59,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 ft.View(
                     "/working_with_reactions",  # Маршрут для этого представления
                     [
-                        message,  # Поле ввода ссылки на чат
+                        chat, # Поле ввода ссылки на чат
+                        message,  # Поле ввода ссылки пост
                         # limit_active_user, # Поле ввода количества сообщений
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
                         button  # Кнопка "Готово"
