@@ -20,3 +20,4 @@ automatic_setting_of_reactions: str  = "🤖 Автоматическое выс
 # Наименование кнопок
 back_button: str = "⬅️ Назад"
 start_parsing_button: str = "🚀 Начать парсинг"
+done_button: str = "✅ Готово"
