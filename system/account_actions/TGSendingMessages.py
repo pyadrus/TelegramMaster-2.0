@@ -3,7 +3,6 @@ import asyncio
 import datetime
 import random
 import sys
-import time
 
 from loguru import logger
 from telethon import events
@@ -62,10 +61,10 @@ class SendTelegramMessages:
                                 f"Отправляем сообщение в личку {username[0]}. Сообщение отправлено пользователю {username[0]}.")
                             await record_inviting_results(time_inviting[0], time_inviting[1], username)
                         except FloodWaitError as e:
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except PeerFloodError:
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except UserNotMutualContactError:
                             logger.error(
@@ -74,7 +73,7 @@ class SendTelegramMessages:
                             logger.error(
                                 f"Отправляем сообщение в личку {username[0]}. Не корректное имя {username[0]}.")
                         except ChatWriteForbiddenError:
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except (TypeError, UnboundLocalError):
                             continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -111,10 +110,10 @@ class SendTelegramMessages:
                                     f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                         except FloodWaitError as e:
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except PeerFloodError:
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except UserNotMutualContactError:
                             logger.error(
@@ -122,7 +121,7 @@ class SendTelegramMessages:
                         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                             logger.error(f"Отправляем сообщение в личку {username}. Не корректное имя {username}.")
                         except ChatWriteForbiddenError:
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except (TypeError, UnboundLocalError):
                             continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -153,17 +152,17 @@ class SendTelegramMessages:
                         logger.error(
                             f"Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
-                        record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
                         logger.error(
                             f"Рассылка файлов в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
-                        time.sleep(e.seconds)
+                        await asyncio.sleep(e.seconds)
                     except UserBannedInChannelError:
-                        record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except ChatWriteForbiddenError:
-                        record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except (TypeError, UnboundLocalError):
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -195,17 +194,17 @@ class SendTelegramMessages:
                         logger.error(
                             f"Рассылка сообщений + файлов в группу: {groups[0]}. Указанный канал / группа {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
-                        record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
                         logger.error(
                             f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
-                        time.sleep(e.seconds)
+                        await asyncio.sleep(e.seconds)
                     except UserBannedInChannelError:
-                        record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except ChatWriteForbiddenError:
-                        record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except (TypeError, UnboundLocalError):
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -213,7 +212,8 @@ class SendTelegramMessages:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def select_and_read_random_file(self, entities, folder):
+    @staticmethod
+    async def select_and_read_random_file(entities, folder):
         """
         Выбираем рандомный файл для чтения
         :param entities: список файлов для чтения
@@ -250,25 +250,26 @@ class SendTelegramMessages:
                         logger.error(
                             f"Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
-                        record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
                         logger.error(
                             f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
-                        time.sleep(e.seconds)
+                        await asyncio.sleep(e.seconds)
                     except UserBannedInChannelError:
-                        record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except (TypeError, UnboundLocalError):
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
                     except ChatWriteForbiddenError:
-                        record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
 
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def random_dream(self):
+    @staticmethod
+    async def random_dream():
         """Рандомный сон"""
         try:
             time_in_seconds = random.randrange(time_sending_messages_1, time_sending_messages_2) * 60

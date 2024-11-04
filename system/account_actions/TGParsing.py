@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import asyncio
 import datetime
 import time
 
@@ -152,7 +153,7 @@ class ParsingGroupMembers:
             for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name, account_directory=path_parsing_folder)
                 await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
-                time.sleep(int(time_activity_user_2))
+                await asyncio.sleep(int(time_activity_user_2))
                 await self.get_active_users(client, chat_input, limit_active_user, lv, page)
                 await client.disconnect()  # Разрываем соединение telegram
             await self.clean_parsing_list_and_remove_duplicates()
@@ -375,9 +376,8 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    logger.info(
-                        f'Ошибка parsing: не верное имя или 🔗 cсылка {target_group} не является группой / каналом: {target_group}')
-                    time.sleep(2)
+                    logger.info(f'Ошибка parsing: не верное имя или 🔗 cсылка {target_group} не является группой / каналом: {target_group}')
+                    await asyncio.sleep(2)
                     break
             return all_participants
         except Exception as e:
@@ -415,17 +415,14 @@ class ParsingGroupMembers:
         """
         try:
             # Получение данных пользователя
-            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(
-                user)
+            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(user)
 
             # Добавление данных в список сущностей
-            entities.append(
-                [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
+            entities.append([username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
                  user_premium])
 
             # Отображение данных на странице
-            lv.controls.append(ft.Text(
-                f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
+            lv.controls.append(ft.Text(f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
             page.update()  # Обновление страницы для каждого элемента данных
         except Exception as e:
             logger.exception(f"Ошибка: {e}") # Логируем возникшее исключение вместе с сообщением об ошибке.
@@ -476,11 +473,8 @@ class ParsingGroupMembers:
         :param user: пользователь
         """
         try:
-            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(
-                user)
-            entity = (
-                username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
-                user_premium)
+            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(user)
+            entity = (username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium)
             return entity
         except Exception as e:
             logger.exception(f"Ошибка: {e}") # Логируем возникшее исключение вместе с сообщением об ошибке.

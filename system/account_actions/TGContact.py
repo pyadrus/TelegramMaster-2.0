@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+import asyncio
 import random
-import time
 
 from loguru import logger
 from telethon import functions
@@ -57,7 +57,8 @@ class TGContact:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def get_and_parse_contacts(self, client) -> list:
+    @staticmethod
+    async def get_and_parse_contacts(client) -> list:
         """
         Получаем контакты
         :param client: Телеграм клиент
@@ -71,7 +72,8 @@ class TGContact:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def we_show_and_delete_the_contact_of_the_phone_book(self, client, user) -> None:
+    @staticmethod
+    async def we_show_and_delete_the_contact_of_the_phone_book(client, user) -> None:
         """
         Показываем и удаляем контакт телефонной книги
         :param client: Телеграм клиент
@@ -80,7 +82,7 @@ class TGContact:
         try:
             await client(functions.contacts.DeleteContactsRequest(id=[user.id]))
             logger.info("Подождите 2 - 4 секунды")
-            time.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
+            await asyncio.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
@@ -130,7 +132,7 @@ class TGContact:
                     contact = await client.get_entity(phone)
                     await self.get_user_data(contact, entities)
                     logger.info(f"[+] Контакт с добавлен в телефонную книгу!")
-                    time.sleep(4)
+                    await asyncio.sleep(4)
                     # Запись результатов parsing в файл members_contacts.db, для дальнейшего inviting
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
@@ -145,7 +147,8 @@ class TGContact:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def get_user_data(self, user, entities) -> None:
+    @staticmethod
+    async def get_user_data(user, entities) -> None:
         """
         Получаем данные пользователя
         :param user: Телеграм пользователя
@@ -156,8 +159,7 @@ class TGContact:
             user_phone = user.phone if user.phone else "Номер телефона скрыт"
             first_name = user.first_name if user.first_name else ""
             last_name = user.last_name if user.last_name else ""
-            photos_id = (
-                "Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
+            photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
             online_at = "Был(а) недавно"
             # Статусы пользователя https://core.telegram.org/type/UserStatus
             if isinstance(user.status, (

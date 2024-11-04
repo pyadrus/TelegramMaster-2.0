@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import time
+import asyncio
 
 from loguru import logger
 from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitError, UserPrivacyRestrictedError,
@@ -34,7 +34,8 @@ class InvitingToAGroup:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def inviting_to_a_group_according_to_the_received_list(self, client, link_row, username,
+    @staticmethod
+    async def inviting_to_a_group_according_to_the_received_list(client, link_row, username,
                                                                  time_inviting) -> None:
         """
         Инвайтинг в группу
@@ -47,11 +48,11 @@ class InvitingToAGroup:
             logger.info(f"Попытка приглашения {username[0]} в группу {link_row[0]}.")
             await client(InviteToChannelRequest(link_row[0], [username[0]]))
             logger.info(f'Удачно! Спим 5 секунд')
-            time.sleep(5)  # TODO заменить на асинхронную функцию
+            await asyncio.sleep(5)
         except PeerFloodError:
             logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Настройки "
                          f"конфиденциальности {username} не позволяют вам inviting")
-            record_and_interrupt(time_inviting[0], time_inviting[1])
+            await record_and_interrupt(time_inviting[0], time_inviting[1])
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
@@ -89,14 +90,14 @@ class InvitingToAGroup:
                         except PeerFloodError:
                             logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки "
                                          f"конфиденциальности {username} не позволяют вам inviting")
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except AuthKeyDuplicatedError:
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except FloodWaitError as error:
                             logger.error(f'{error}')
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except UserPrivacyRestrictedError:
                             logger.error(
@@ -110,7 +111,7 @@ class InvitingToAGroup:
                             await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             continue
                         except UserBannedInChannelError:
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except ChatWriteForbiddenError:
                             logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки в чате не дают "
@@ -135,7 +136,7 @@ class InvitingToAGroup:
                                          f"ранее из супергруппы.")
                             await record_inviting_results(time_inviting[0], time_inviting[1], username)
                         except ChannelPrivateError:
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                             await record_inviting_results(time_inviting[0], time_inviting[1], username)
@@ -151,7 +152,7 @@ class InvitingToAGroup:
                             await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             break  # Прерываем работу и меняем аккаунт
                         except TypeNotFoundError:
-                            record_and_interrupt(time_inviting[0], time_inviting[1])
+                            await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except KeyboardInterrupt:  # Закрытие окна программы
                             client.disconnect()  # Разрываем соединение telegram

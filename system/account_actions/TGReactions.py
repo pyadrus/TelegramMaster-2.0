@@ -3,7 +3,6 @@ import asyncio
 import random
 import re
 import sys
-import time
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger  # Импортируем библиотеку loguru для логирования
@@ -41,10 +40,10 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                     logger.info(f'[+] Работаем с группой: {chat.value}')
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat.value)
                     msg_id = int(re.search(r'/(\d+)$', message.value).group(1))  # Получаем id сообщения из ссылки
-                    time.sleep(5)
+                    await asyncio.sleep(5)
                     await client(SendReactionRequest(peer=chat.value, msg_id=msg_id,
                                                      reaction=[types.ReactionEmoji(emoticon=f'{self.choosing_random_reaction()}')]))
-                    time.sleep(1)
+                    await asyncio.sleep(1)
                     await client.disconnect()
 
                     # Изменение маршрута на новый (если необходимо)
@@ -83,13 +82,13 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                     try:
                         await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
                         channel = await client.get_entity(groups[0])  # Получение информации о канале
-                        time.sleep(5)
+                        await asyncio.sleep(5)
                         posts = await client.get_messages(channel, limit=10)  # Получение последних 10 постов из канала
                         for post in posts:  # Вывод информации о постах
                             logger.info(f"Ссылка на пост:",
                                         f"{groups[0]}/{post.id}\nDate: {post.date}\nText: {post.text}\n")
                             number = re.search(r"/(\d+)$", f"{groups[0]}/{post.id}").group(1)
-                            time.sleep(5)
+                            await asyncio.sleep(5)
                             await client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))
                     except KeyError:
                         sys.exit(1)
@@ -98,7 +97,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    def choosing_random_reaction(self):
+    @staticmethod
+    def choosing_random_reaction():
         """Выбираем случайное значение из списка (реакция)"""
         try:
             reaction_input = read_json_file(filename='user_settings/reactions/reactions.json')

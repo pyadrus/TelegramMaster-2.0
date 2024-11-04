@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+import asyncio
 import json
 import os
 import os.path
 import random  # Импортируем модуль random, чтобы генерировать случайное число
-import time  # Импортируем модуль time, чтобы работать с временем
 
 from loguru import logger
 
@@ -118,10 +118,10 @@ async def record_inviting_results(time_range_1: int, time_range_2: int, username
     # Открываем базу с аккаунтами и с выставленными лимитами
     await DatabaseHandler().delete_row_db(table="members", column="username", value=username[0])
     # Смена username через случайное количество секунд
-    record_and_interrupt(time_range_1, time_range_2)
+    await record_and_interrupt(time_range_1, time_range_2)
 
 
-def record_and_interrupt(time_range_1, time_range_2) -> None:
+async def record_and_interrupt(time_range_1, time_range_2) -> None:
     """
     Запись данных в базу данных и прерывание выполнения кода.
     :param time_range_1:  - диапазон времени смены аккаунта
@@ -130,4 +130,4 @@ def record_and_interrupt(time_range_1, time_range_2) -> None:
     # Смена аккаунта через случайное количество секунд
     selected_shift_time = random.randrange(int(time_range_1), int(time_range_2))
     logger.info(f"Переход к новому username через {selected_shift_time} секунд")
-    time.sleep(selected_shift_time)
+    await asyncio.sleep(selected_shift_time)

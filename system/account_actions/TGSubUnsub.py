@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+import asyncio
 import datetime
 import random
-import time
 
 from loguru import logger
 from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
@@ -58,7 +58,8 @@ class SubscribeUnsubscribeTelegram:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def unsubscribe_from_the_group(self, client, group_link) -> None:
+    @staticmethod
+    async def unsubscribe_from_the_group(client, group_link) -> None:
         """
         Отписываемся от группы.
         :param group_link: Группа или канал
@@ -110,11 +111,11 @@ class SubscribeUnsubscribeTelegram:
                                                    groups_wr)
         except PeerFloodError:
             logger.error(f"Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.")
-            time.sleep(random.randrange(50, 60))
+            await asyncio.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
             logger.error(f"Попытка подписки на группу / канал {groups_wr}. Flood! wait for "
                          f"{str(datetime.timedelta(seconds=e.seconds))}")
-            record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
+            await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
             # Прерываем работу и меняем аккаунт
             raise
         except InviteRequestSentError:

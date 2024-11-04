@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+import asyncio
 import os
 import os.path
 import shutil
 import sqlite3
-import time
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
@@ -53,14 +53,13 @@ class TGConnect:
         :param folder_name: Папка с аккаунтами
         """
         try:
-            logger.info(
-                f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
+            logger.info(f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
             telegram_client = await self.get_telegram_client(session_name, f"user_settings/accounts/{folder_name}")
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
                 if not await telegram_client.is_user_authorized():  # Если аккаунт не авторизирован
                     await telegram_client.disconnect()
-                    time.sleep(5)
+                    await asyncio.sleep(5)
                     working_with_accounts(f"user_settings/accounts/{folder_name}/{session_name}.session",
                                           f"user_settings/accounts/banned/{session_name}.session")
                 else:
@@ -71,7 +70,7 @@ class TGConnect:
                 await self.handle_banned_account(telegram_client, folder_name, session_name, e)
             except TimedOutError as e:
                 logger.exception(f"Ошибка таймаута: {e}")
-                time.sleep(2)
+                await asyncio.sleep(2)
             except sqlite3.OperationalError:
                 await telegram_client.disconnect()
                 working_with_accounts(f"user_settings/accounts/{folder_name}/{session_name}.session",
@@ -79,7 +78,8 @@ class TGConnect:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def handle_banned_account(self, telegram_client, folder_name, session_name, exception):
+    @staticmethod
+    async def handle_banned_account(telegram_client, folder_name, session_name, exception):
         """
         Обработка забаненных аккаунтов.
         telegram_client.disconnect() - Отключение от Telegram.
@@ -210,7 +210,8 @@ class TGConnect:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def rename_session_file(self, telegram_client, phone_old, phone, folder_name) -> None:
+    @staticmethod
+    async def rename_session_file(telegram_client, phone_old, phone, folder_name) -> None:
         """
         Переименовывает session файлы.
         :param telegram_client: Клиент для работы с Telegram
@@ -281,7 +282,7 @@ class TGConnect:
                 if not await telegram_client.is_user_authorized():
                     logger.info("Пользователь не авторизован")
                     await telegram_client.send_code_request(phone_number_value)  # Отправка кода на телефон
-                    time.sleep(2)
+                    await asyncio.sleep(2)
 
                     passww = ft.TextField(label="Введите код telegram:", multiline=True, max_lines=1)
 
@@ -344,7 +345,8 @@ class TGConnect:
         except Exception as e:
             logger.exception(f"Ошибка: {e}")
 
-    async def connecting_session_accounts(self, page: ft.Page, account_directory, appointment):
+    @staticmethod
+    async def connecting_session_accounts(page: ft.Page, account_directory, appointment):
         """
         Подключение сессии Telegram
         :param page: страница
