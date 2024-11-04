@@ -9,7 +9,7 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 
 from system.auxiliary_functions.config import height_button, line_width_button
-from system.localization.localization import back_button
+from system.localization.localization import back_button, done_button
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
@@ -174,7 +174,7 @@ class SettingPage:
             page.go("/settings")
 
         # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
-        button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=btn_click)
+        button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=btn_click)
         button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
                                         on_click=back_button_clicked)
 
@@ -264,8 +264,8 @@ async def reaction_gui(page: ft.Page):
         page.go("/settings")
 
     # Кнопка "Готово" и "Назад"
-    button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=button_clicked)
-    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button, on_click=back_button_clicked)
+    button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=button_clicked) # Кнопка "Готово"
+    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button, on_click=back_button_clicked) # Кнопка "Назад"
 
     # Добавляем элементы на страницу
     page.views.append(

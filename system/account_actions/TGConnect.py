@@ -15,7 +15,7 @@ from thefuzz import fuzz
 
 from system.auxiliary_functions.auxiliary_functions import working_with_accounts, find_filess
 from system.auxiliary_functions.config import ConfigReader, height_button, line_width_button
-from system.localization.localization import back_button
+from system.localization.localization import back_button, done_button
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -311,7 +311,7 @@ class TGConnect:
                                 except Exception as ex:
                                     logger.error(f"Ошибка при вводе пароля: {ex}")
 
-                            button_password = ft.ElevatedButton("Готово", on_click=btn_click_password)
+                            button_password = ft.ElevatedButton(done_button, on_click=btn_click_password) # Кнопка "Готово"
                             page.views.append(ft.View(controls=[pass_2fa, button_password]))
                             page.update()  # Обновляем страницу, чтобы интерфейс отобразился
 
@@ -322,7 +322,7 @@ class TGConnect:
                             logger.error(f"Ошибка при авторизации: {error}")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
 
-                    button_code = ft.ElevatedButton("Готово", on_click=btn_click_code)
+                    button_code = ft.ElevatedButton(done_button, on_click=btn_click_code) # Кнопка "Готово"
                     page.views.append(ft.View(controls=[passww, button_code]))
                     page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
 
@@ -332,9 +332,9 @@ class TGConnect:
                 """Кнопка возврата в меню настроек"""
                 page.go("/connecting_accounts_by_number")
 
-            button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=btn_click)
+            button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=btn_click) # Кнопка "Готово"
             button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
-                                            on_click=back_button_clicked)
+                                            on_click=back_button_clicked) # Кнопка "Назад"
 
             input_view = ft.View(
                 controls=[header_text, phone_number, button,

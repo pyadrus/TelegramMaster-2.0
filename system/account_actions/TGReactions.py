@@ -14,6 +14,7 @@ from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import read_json_file, find_filess
 from system.auxiliary_functions.config import path_reactions_folder
+from system.localization.localization import done_button
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -51,7 +52,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                     page.update()  # Обновление страницы для отображения изменений
 
             # Кнопка для подтверждения и запуска парсинга
-            button = ft.ElevatedButton("Готово", on_click=btn_click)
+            button = ft.ElevatedButton(done_button, on_click=btn_click)
 
             # Добавление представления на страницу
             page.views.append(
