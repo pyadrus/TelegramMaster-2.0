@@ -31,8 +31,8 @@ class InvitingToAGroup:
             links_inviting: list = await self.db_handler.open_and_read_data("links_inviting")  # Открываем базу данных
             logger.info(f"Ссылка для инвайтинга:  {links_inviting}")
             return links_inviting
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     @staticmethod
     async def inviting_to_a_group_according_to_the_received_list(client, link_row, username,
@@ -53,8 +53,8 @@ class InvitingToAGroup:
             logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Настройки "
                          f"конфиденциальности {username} не позволяют вам inviting")
             await record_and_interrupt(time_inviting[0], time_inviting[1])
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def inviting_without_limits(self, account_limits) -> None:
         """
@@ -163,5 +163,5 @@ class InvitingToAGroup:
 
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, link[0])
             logger.info("[!] Инвайтинг окончен!")
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")

@@ -43,8 +43,8 @@ class AccountBIO:
                 page.update()
 
             self.function_button_ready(page, btn_click, user_input)
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def change_username_profile(self, user_input) -> None:
         """
@@ -68,8 +68,8 @@ class AccountBIO:
                 except UsernameInvalidError:
                     logger.error("Неверный никнейм")
                     client.disconnect()
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def change_bio_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
@@ -83,8 +83,8 @@ class AccountBIO:
                 page.update()
 
             self.function_button_ready(page, btn_click, user_input)
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def change_bio_profile(self, user_input):
         """
@@ -109,8 +109,8 @@ class AccountBIO:
                     await client.disconnect()
                 except AuthKeyUnregisteredError:
                     logger.error("Ошибка соединения с профилем")
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def change_name_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
@@ -123,8 +123,8 @@ class AccountBIO:
                 page.update()
 
             self.function_button_ready(page, btn_click, user_input)
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def change_name_profile(self, user_input):
         """
@@ -142,8 +142,8 @@ class AccountBIO:
                     await client.disconnect()
                 except AuthKeyUnregisteredError:
                     logger.error("Ошибка соединения с профилем")
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def change_last_name_profile_gui(self, page: ft.Page) -> None:
         """Изменение био профиля Telegram в графическое окно Flet"""
@@ -157,8 +157,8 @@ class AccountBIO:
                 page.update()
 
             self.function_button_ready(page, btn_click, user_input)
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def change_last_name_profile(self, user_input):
         """
@@ -176,8 +176,8 @@ class AccountBIO:
                     await client.disconnect()
                 except AuthKeyUnregisteredError:
                     logger.error("Ошибка соединения с профилем")
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def change_photo_profile(self):
         """Изменение фото профиля."""
@@ -196,5 +196,5 @@ class AccountBIO:
                         logger.error("Ошибка соединения с профилем")
                     finally:
                         await client.disconnect()
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")

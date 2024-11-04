@@ -44,8 +44,8 @@ class TGConnect:
                                              system_version="4.16.30-vxCUSTOM",
                                              proxy=await reading_proxy_data_from_the_database(self.db_handler))
             return telegram_client
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def verify_account(self, folder_name, session_name) -> None:
         """
@@ -69,15 +69,15 @@ class TGConnect:
             except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound,
                     AuthKeyUnregisteredError, AuthKeyDuplicatedError) as e:
                 await self.handle_banned_account(telegram_client, folder_name, session_name, e)
-            except TimedOutError as e:
-                logger.exception(f"Ошибка таймаута: {e}")
+            except TimedOutError as error:
+                logger.exception(f"Ошибка таймаута: {error}")
                 await asyncio.sleep(2)
             except sqlite3.OperationalError:
                 await telegram_client.disconnect()
                 working_with_accounts(f"user_settings/accounts/{folder_name}/{session_name}.session",
                                       f"user_settings/accounts/banned/{session_name}.session")
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     @staticmethod
     async def handle_banned_account(telegram_client, folder_name, session_name, exception):
@@ -151,8 +151,8 @@ class TGConnect:
                 except (AttributeError, AuthKeyUnregisteredError) as e:
                     logger.error(e)
                     continue
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def verify_all_accounts(self, folder_name) -> None:
         """
@@ -169,8 +169,8 @@ class TGConnect:
                 # Проверка аккаунтов
                 await self.verify_account(folder_name=folder_name, session_name=session_file)
             logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁: {folder_name}")
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def get_account_details(self, folder_name):
         """
@@ -208,8 +208,8 @@ class TGConnect:
                         f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP")
                     working_with_accounts(f"user_settings/accounts/{folder_name}/{session_name}.session",
                                           f"user_settings/accounts/banned/{session_name}.session")
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     @staticmethod
     async def rename_session_file(telegram_client, phone_old, phone, folder_name) -> None:
@@ -228,8 +228,8 @@ class TGConnect:
         except FileExistsError:
             # Если файл существует, то удаляем дубликат
             os.remove(f"user_settings/accounts/{folder_name}/{phone_old}.session")
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def get_telegram_client(self, session_name, account_directory):
         """
@@ -250,8 +250,8 @@ class TGConnect:
             logger.info(f"На данный момент аккаунт {session_name} запущен под другим ip")
             working_with_accounts(f"{account_directory}/{session_name}.session",
                                   f"user_settings/accounts/banned/{session_name}.session")
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def connecting_number_accounts(self, page: ft.Page, account_directory, appointment):
         """
@@ -318,8 +318,8 @@ class TGConnect:
                         except ApiIdInvalidError:
                             logger.error("[!] Неверные API ID или API Hash.")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
-                        except Exception as ex:
-                            logger.error(f"Ошибка при авторизации: {ex}")
+                        except Exception as error:
+                            logger.error(f"Ошибка при авторизации: {error}")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
 
                     button_code = ft.ElevatedButton("Готово", on_click=btn_click_code)
@@ -343,8 +343,8 @@ class TGConnect:
             page.views.append(input_view)  # Добавляем созданный вид на страницу
             page.update()
 
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     @staticmethod
     async def connecting_session_accounts(page: ft.Page, account_directory, appointment):
@@ -425,5 +425,5 @@ class TGConnect:
             page.views.append(input_view)  # Добавляем созданный вид на страницу
             page.update()
 
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")

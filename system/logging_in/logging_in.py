@@ -12,7 +12,7 @@ def get_external_ip():
         response.raise_for_status()
         external_ip = response.json().get("origin")
         return external_ip
-    except requests.RequestException as e:
+    except requests.RequestException as error:
         return None
 
 

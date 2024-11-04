@@ -79,8 +79,8 @@ class SendTelegramMessages:
                             continue  # Записываем ошибку в software_database.db и продолжаем работу
                 except KeyError:  # В случае отсутствия ключа в базе данных (нет аккаунтов в базе данных).
                     sys.exit(1)
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def send_files_to_personal_chats(self, account_limits) -> None:
         """
@@ -127,8 +127,8 @@ class SendTelegramMessages:
                             continue  # Записываем ошибку в software_database.db и продолжаем работу
                 except KeyError:
                     sys.exit(1)
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def sending_files_via_chats(self) -> None:
         """Рассылка файлов по чатам (docs/Рассылка_сообщений/⛔️ Рассылка_файлов_по_чатам.html)"""
@@ -167,8 +167,8 @@ class SendTelegramMessages:
                     except (TypeError, UnboundLocalError):
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
                     client.disconnect()  # Разрываем соединение Telegram
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def sending_messages_files_via_chats(self) -> None:
         """Рассылка сообщений + файлов по чатам"""
@@ -209,8 +209,8 @@ class SendTelegramMessages:
                     except (TypeError, UnboundLocalError):
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
                 await client.disconnect()  # Разрываем соединение Telegram
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     @staticmethod
     async def select_and_read_random_file(entities, folder):
@@ -226,8 +226,8 @@ class SendTelegramMessages:
                 logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
                 data = read_json_file(filename=f"user_settings/{folder}/{random_file[0]}.json")
             return data  # Возвращаем данные из файла
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def sending_messages_via_chats_times(self) -> None:
         """Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)"""
@@ -265,8 +265,8 @@ class SendTelegramMessages:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
 
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     @staticmethod
     async def random_dream():
@@ -275,8 +275,8 @@ class SendTelegramMessages:
             time_in_seconds = random.randrange(time_sending_messages_1, time_sending_messages_2) * 60
             logger.info(f'Спим {time_in_seconds / 60} минуты / минут...')
             await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")
 
     async def answering_machine(self):
         """Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)"""
@@ -315,5 +315,5 @@ class SendTelegramMessages:
 
                 await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
 
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")

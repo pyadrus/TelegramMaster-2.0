@@ -8,6 +8,7 @@ from peewee import fn, SqliteDatabase, Model, IntegerField, CharField, TextField
 db = SqliteDatabase('user_settings/software_database.db')
 
 class groups_and_channels(Model):
+    """Список групп и каналов в таблице groups_and_channels"""
     id = IntegerField(primary_key=True)
     title = CharField(max_length=255)
     about = TextField(null=True)
@@ -20,6 +21,8 @@ class groups_and_channels(Model):
 
 
 def remove_duplicates():
+    """Удаление дублирующихся id в таблице groups_and_channels"""
+
     # Находим все записи с дублирующимися id
     duplicate_ids = (
         groups_and_channels

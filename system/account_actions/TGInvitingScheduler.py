@@ -15,8 +15,8 @@ async def schedule_member_invitation() -> None:
     try:
         await TGChek().validation_check()
         await InvitingToAGroup().inviting_without_limits(account_limits=ConfigReader().get_limits())
-    except Exception as e:
-        logger.exception(f"Ошибка: {e}")
+    except Exception as error:
+        logger.exception(f"Ошибка: {error}")
 
 
 async def run_scheduler():
@@ -31,8 +31,8 @@ def launching_invite_every_day_certain_time() -> None:
         schedule.every().day.at(f"{int(hour):02d}:{int(minutes):02d}").do(
             lambda: asyncio.ensure_future(schedule_member_invitation()))
         asyncio.ensure_future(run_scheduler())
-    except Exception as e:
-        logger.exception(f"Ошибка: {e}")
+    except Exception as error:
+        logger.exception(f"Ошибка: {error}")
 
 
 def launching_an_invite_once_an_hour() -> None:
@@ -41,8 +41,8 @@ def launching_an_invite_once_an_hour() -> None:
         logger.info("Запуск программы в 00 минут")
         schedule.every().hour.at(":00").do(lambda: asyncio.ensure_future(schedule_member_invitation()))
         asyncio.ensure_future(run_scheduler())
-    except Exception as e:
-        logger.exception(f"Ошибка: {e}")
+    except Exception as error:
+        logger.exception(f"Ошибка: {error}")
 
 
 def schedule_invite() -> None:
@@ -53,8 +53,8 @@ def schedule_invite() -> None:
         schedule.every().day.at(f"{hour}:{minutes}").do(
             lambda: asyncio.ensure_future(schedule_member_invitation()))
         asyncio.ensure_future(run_scheduler())
-    except Exception as e:
-        logger.exception(f"Ошибка: {e}")
+    except Exception as error:
+        logger.exception(f"Ошибка: {error}")
 
 
 if __name__ == "__main__":

@@ -22,8 +22,8 @@ async def reading_proxy_data_from_the_database(db_handler):
     except IndexError:
         proxy = None
         return proxy
-    except Exception as e:
-        logger.exception(f"Ошибка: {e}")
+    except Exception as error:
+        logger.exception(f"Ошибка: {error}")
 
 
 async def checking_the_proxy_for_work() -> None:
@@ -44,8 +44,8 @@ async def checking_the_proxy_for_work() -> None:
                                                         password=proxy_dic[4],  # Пароль (например: password)
                                                         rdns=proxy_dic[5],
                                                         db_handler=DatabaseHandler())
-    except Exception as e:
-        logger.exception(f"Ошибка: {e}")
+    except Exception as error:
+        logger.exception(f"Ошибка: {error}")
 
 
 async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler) -> None:
@@ -71,5 +71,5 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
     except requests.exceptions.RequestException:
         logger.info('[-] Proxy не рабочий!')
         await db_handler.deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns)
-    except Exception as e:
-        logger.exception(f"Ошибка: {e}")
+    except Exception as error:
+        logger.exception(f"Ошибка: {error}")

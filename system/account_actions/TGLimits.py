@@ -22,5 +22,5 @@ class SettingLimits:
                                                                             account_limit=account_limits)
             logger.info(f"Всего username: {len(number_usernames)}")
             return number_usernames
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")

@@ -24,5 +24,5 @@ class CreatingGroupsAndChats:
                                                                                 about='Description for your group',
                                                                                 megagroup=True))
                 logger.info(response.stringify())
-        except Exception as e:
-            logger.exception(f"Ошибка: {e}")
+        except Exception as error:
+            logger.exception(f"Ошибка: {error}")

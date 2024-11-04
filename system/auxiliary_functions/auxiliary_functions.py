@@ -103,8 +103,8 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
             os.remove(account_folder)
     except PermissionError:
         logger.error("Не удалось перенести файлы в нужную папку")
-    except Exception as e:
-        logger.exception(f"Ошибка: {e}")
+    except Exception as error:
+        logger.exception(f"Ошибка: {error}")
 
 
 async def record_inviting_results(time_range_1: int, time_range_2: int, username: str) -> None:

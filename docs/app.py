@@ -153,8 +153,8 @@ async def run_quart():
         webbrowser.open_new("http://127.0.0.1:8000")
 
         await serve(app, config)
-    except Exception as e:
-        logger.error(f"Ошибка при запуске сервера: {e}")
+    except Exception as error:
+        logger.error(f"Ошибка при запуске сервера: {error}")
 
 
 async def watch_for_changes():

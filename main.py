@@ -326,7 +326,7 @@ async def main(page: ft.Page):
 
         elif page.route == "/parsing_single_groups":
             try:
-                logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
+                logger.info(f"⛔ Проверка наличия аккаунта в папке {path_parsing_folder} с аккаунтами")
                 if not find_filess(directory_path=path_parsing_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке parsing")
