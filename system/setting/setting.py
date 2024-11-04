@@ -9,6 +9,7 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 
 from system.auxiliary_functions.config import height_button, line_width_button
+from system.localization.localization import back_button
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
@@ -165,7 +166,7 @@ class SettingPage:
         Добавляет представление с заданными текстовыми полями и кнопкой.
         :param page: Страница, на которую нужно добавить представление
         :param fields: Список текстовых полей для добавления
-        :param button: Кнопка для добавления
+        :param btn_click: Кнопка для добавления
         """
 
         def back_button_clicked(e):
@@ -174,7 +175,7 @@ class SettingPage:
 
         # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
         button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=btn_click)
-        button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+        button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
                                         on_click=back_button_clicked)
 
         page.views.append(
@@ -264,7 +265,7 @@ async def reaction_gui(page: ft.Page):
 
     # Кнопка "Готово" и "Назад"
     button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=button_clicked)
-    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад", on_click=back_button_clicked)
+    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button, on_click=back_button_clicked)
 
     # Добавляем элементы на страницу
     page.views.append(

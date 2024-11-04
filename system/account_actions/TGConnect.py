@@ -15,6 +15,7 @@ from thefuzz import fuzz
 
 from system.auxiliary_functions.auxiliary_functions import working_with_accounts, find_filess
 from system.auxiliary_functions.config import ConfigReader, height_button, line_width_button
+from system.localization.localization import back_button
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -332,7 +333,7 @@ class TGConnect:
                 page.go("/connecting_accounts_by_number")
 
             button = ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово", on_click=btn_click)
-            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
                                             on_click=back_button_clicked)
 
             input_view = ft.View(
@@ -408,7 +409,7 @@ class TGConnect:
                                                    )
 
             # Кнопка возврата
-            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
                                             on_click=back_button_clicked)
 
             # Добавляем все элементы на страницу

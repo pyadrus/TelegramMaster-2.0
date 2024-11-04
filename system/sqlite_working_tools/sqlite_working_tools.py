@@ -1,7 +1,46 @@
 # -*- coding: utf-8 -*-
+import datetime
 import sqlite3
 
 from loguru import logger
+from peewee import fn, SqliteDatabase, Model, IntegerField, CharField, TextField, DateTimeField
+
+db = SqliteDatabase('user_settings/software_database.db')
+
+class groups_and_channels(Model):
+    id = IntegerField(primary_key=True)
+    title = CharField(max_length=255)
+    about = TextField(null=True)
+    link = CharField(max_length=255)
+    members_count = IntegerField(default=0)
+    parsing_time = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = db
+
+
+def remove_duplicates():
+    # Находим все записи с дублирующимися id
+    duplicate_ids = (
+        groups_and_channels
+        .select(groups_and_channels.id)
+        .group_by(groups_and_channels.id)
+        .having(fn.COUNT(groups_and_channels.id) > 1)
+    )
+
+    # Для каждого дублирующегося id оставляем только первую запись, остальные удаляем
+    for duplicate in duplicate_ids:
+        # Находим все записи с этим id, сортируем по времени парсинга
+        duplicates = (
+            groups_and_channels
+            .select()
+            .where(groups_and_channels.id == duplicate.id)
+            .order_by(groups_and_channels.parsing_time)
+        )
+
+        # Оставляем только первую запись, остальные удаляем
+        for record in duplicates[1:]:
+            record.delete_instance()
 
 
 class DatabaseHandler:

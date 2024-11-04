@@ -17,7 +17,8 @@ from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import find_filess
 from system.auxiliary_functions.config import (path_parsing_folder, line_width_button, height_button,
                                                time_activity_user_2)
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from system.localization.localization import back_button, start_parsing_button
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler, db, groups_and_channels, remove_duplicates
 
 
 class ParsingGroupMembers:
@@ -111,7 +112,7 @@ class ParsingGroupMembers:
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
                     ft.ElevatedButton(width=line_width_button, height=height_button, text="Начать парсинг",
                                       on_click=add_items),  # Кнопка "Начать парсинг"
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                    ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
                                       on_click=back_button_clicked)  # Кнопка "Назад"
                 ],
             )
@@ -161,67 +162,70 @@ class ParsingGroupMembers:
             logger.exception(f"Ошибка: {e}") # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def parse_subscribed_groups(self, page: ft.Page) -> None:
-        """Парсинг групп/каналов, на которые подписан аккаунт, и сохранение результатов в файл.
+        """
+        🔍 Парсинг групп/каналов, на которые подписан аккаунт, и сохранение результатов в файл.
 
         Метод начинает процесс парсинга групп/каналов, на которые подписан текущий аккаунт, и сохраняет результаты в файл.
 
         Аргументы:
         :param page: Страница Flet, на которой будет размещен интерфейс.
         """
-        start = datetime.datetime.now()  # фиксируем время начала выполнения кода
+
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов
-        page.update()  # обновляем страницу, чтобы сразу показать ListView
+        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
         async def add_items(_):
             """
-            Запускает процесс парсинга групп и отображает статус в интерфейсе.
+            🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе.
             """
+            start = datetime.datetime.now()  # фиксируем время начала выполнения кода
             # Индикация начала парсинга
-            await self.log_and_display(f"▶️ Начало парсинга.\nВремя старта: {str(start)}", lv, page)
+            await self.log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
             try:
-                # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
+                # Открываем базу данных для работы с аккаунтами user_settings/software_database.db 📂
                 for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
-                    # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
+                    # Подключение к Telegram и вывод имя аккаунта в консоль / терминал 📲
                     client = await self.tg_connect.get_telegram_client(session_name,
                                                                        account_directory=path_parsing_folder)
-                    await self.log_and_display(f"Parsing групп / каналов на которые подписан аккаунт", lv, page)
+                    await self.log_and_display(f"🔗 Подключение к аккаунту: {session_name}", lv, page)
+                    await self.log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", lv, page)
                     await self.forming_a_list_of_groups(client, lv, page)
                     await client.disconnect()  # Разрываем соединение telegram
-                await self.db_handler.remove_duplicate_ids(table_name="groups_and_channels",
-                                                           column_name="id")  # Чистка дубликатов в базе данных
-            except Exception as e:
-                logger.exception(f"Ошибка: {e}") # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-            finish = datetime.datetime.now()  # фиксируем время окончания парсинга
+                    remove_duplicates() # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
+            except Exception as e:
+                logger.exception(f"❌ Ошибка: {e}") # Логируем возникшее исключение вместе с сообщением об ошибке.
+
+            finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
             # Логируем и отображаем время окончания работы
-            await self.log_and_display(f"🔚 Конец парсинга.\nВремя окончания: {finish}.\nВремя работы: {finish - start}",
+            await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                                        lv, page)
 
         async def back_button_clicked(_):
             """
-            Обрабатывает нажатие кнопки "Назад", возвращая в меню парсинга.
+            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню парсинга.
             """
-            page.go("/parsing")  # переходим к основному меню парсинга
+            page.go("/parsing")  # переходим к основному меню парсинга 🏠
 
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
             ft.View(
                 "/parsing",
                 [
-                    lv,  # отображение логов
+                    lv,  # отображение логов 📝
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text="Начать парсинг",
-                                      on_click=add_items),  # Кнопка "Начать парсинг"
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
-                                      on_click=back_button_clicked)  # Кнопка "Назад"
+                    ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+                                      on_click=add_items),  # Кнопка "🚀 Начать парсинг"
+                    ft.ElevatedButton(width=line_width_button, height=height_button, text=start_parsing_button,
+                                      on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
                 ],
             )
         )
 
-        page.update()  # обновляем страницу после добавления элементов управления
+        page.update()  # обновляем страницу после добавления элементов управления 🔄
 
     async def get_active_users(self, client, chat, limit_active_user, lv, page) -> None:
         """
@@ -334,7 +338,7 @@ class ParsingGroupMembers:
                                 dropdown,
                                 ft.ElevatedButton(width=line_width_button, height=height_button, text="Выбрать группу",
                                                   on_click=handle_button_click),
-                                ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                                ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
                                                   on_click=back_button_clicked),
                                 result_text, lv,
                             ])
@@ -503,15 +507,20 @@ class ParsingGroupMembers:
 
                     # Время синтаксического анализа
                     parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-                    await self.log_and_display(
-                        f"{dialog.id}, {channel_details.title}, {full_channel_info.full_chat.about}, https://t.me/{channel_details.username}, {participants_count}, {parsing_time}",
-                        lv, page)
-                    entities = [dialog.id, channel_details.title, full_channel_info.full_chat.about,
-                                f"https://t.me/{channel_details.username}", participants_count, parsing_time]
-                    await self.db_handler.write_data_to_db(
-                        creating_a_table="CREATE TABLE IF NOT EXISTS groups_and_channels(id, title, about, link, members_count, parsing_time)",
-                        writing_data_to_a_table="INSERT INTO groups_and_channels (id, title, about, link, members_count, parsing_time) VALUES (?, ?, ?, ?, ?, ?)",
-                        entities=entities)
+                    await self.log_and_display(f"{dialog.id}, {channel_details.title}, "
+                                               f"https://t.me/{channel_details.username}, {participants_count}",
+                                               lv, page)
+
+                    with db.atomic():  # Атомарная транзакция для записи данных
+                        groups_and_channels.create(
+                            id=dialog.id,
+                            title=channel_details.title,
+                            about=full_channel_info.full_chat.about,
+                            link=f"https://t.me/{channel_details.username}",
+                            members_count=participants_count,
+                            parsing_time=parsing_time
+                        )
+
                 except TypeError:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
         except Exception as e:
@@ -574,7 +583,7 @@ class ParsingGroupMembers:
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
                         ft.ElevatedButton(width=line_width_button, height=height_button, text="Готово",
                                           on_click=btn_click),  # Кнопка "Готово"
-                        ft.ElevatedButton(width=line_width_button, height=height_button, text="Назад",
+                        ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
                                           on_click=back_button_clicked)  # Кнопка "Назад"
                     ]
                 )
