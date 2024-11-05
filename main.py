@@ -141,7 +141,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -164,7 +164,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -187,7 +187,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -210,7 +210,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         # ______________________________________________________________________________________________________________
         elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
             await account_verification_menu(page)
@@ -242,7 +242,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/unsubscribe_all":  # Отписываемся
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -260,7 +260,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         # ______________________________________________________________________________________________________________
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             await reactions_menu(page)
@@ -282,7 +282,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
         elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
             try:
@@ -301,7 +301,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -319,7 +319,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         # ______________________________________________________________________________________________________________
         elif page.route == "/parsing":  # Меню "Парсинг"
             await menu_parsing(page)
@@ -334,7 +334,7 @@ async def main(page: ft.Page):
                 else:
                     await ParsingGroupMembers().parse_groups(page)
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
         elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
             try:
@@ -346,7 +346,7 @@ async def main(page: ft.Page):
                 else:
                     await ParsingGroupMembers().choose_and_parse_group(page)
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
         elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
             try:
@@ -358,7 +358,7 @@ async def main(page: ft.Page):
                 else:
                     await ParsingGroupMembers().entering_data_for_parsing_active(page)
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
         elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов аккаунта
             try:
@@ -370,7 +370,7 @@ async def main(page: ft.Page):
                 else:
                     await ParsingGroupMembers().parse_subscribed_groups(page)
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
         elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
             await DatabaseHandler().cleaning_db("members")
@@ -399,7 +399,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/show_list_contacts":  # Показать список контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -417,7 +417,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/deleting_contacts":  # Удаление контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -435,7 +435,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/adding_contacts":  # Добавление контактов
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -453,7 +453,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         # ______________________________________________________________________________________________________________
         elif page.route == "/account_connection_menu":  # Подключение аккаунтов 'меню'.
             await account_connection_menu(page)
@@ -529,7 +529,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         # _______________________________________________________________________________________________________________
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             await message_distribution_menu(page)
@@ -557,7 +557,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -586,7 +586,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/sending_files_via_chats":  # Рассылка файлов по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -604,7 +604,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -627,7 +627,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -652,7 +652,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -671,7 +671,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         # ______________________________________________________________________________________________________________
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
             await bio_editing_menu(page)
@@ -692,7 +692,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/name_change":  # Изменение имени
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -710,7 +710,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/change_surname":  # Изменение фамилии
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -728,7 +728,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/edit_photo":  # Изменение фото
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -746,7 +746,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/changing_username":  # Изменение username
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -764,7 +764,7 @@ async def main(page: ft.Page):
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
-                logger.exception(f"Ошибка: {error}")
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         # ______________________________________________________________________________________________________________
         elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
             await settings_menu(page)
@@ -834,7 +834,7 @@ if __name__ == '__main__':
 
     try:
         asyncio.run(main_run())
-    except Exception as e:
-        logger.exception(e)
+    except Exception as error:
+        logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     ft.app(target=main)

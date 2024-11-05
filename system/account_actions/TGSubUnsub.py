@@ -41,7 +41,7 @@ class SubscribeUnsubscribeTelegram:
 
             logger.info(f"Окончание подписки на группы / каналы Telegram")
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def unsubscribe_all(self) -> None:
         """Отписываемся от групп, каналов, личных сообщений"""
@@ -56,7 +56,7 @@ class SubscribeUnsubscribeTelegram:
                     await client.delete_dialog(dialog)
                 await client.disconnect()
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     @staticmethod
     async def unsubscribe_from_the_group(client, group_link) -> None:
@@ -73,7 +73,7 @@ class SubscribeUnsubscribeTelegram:
             logger.error(
                 f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         finally:
             await client.disconnect()  # Разрываем соединение с Telegram
 
@@ -122,4 +122,4 @@ class SubscribeUnsubscribeTelegram:
             logger.error(f"Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения "
                          f"администратором на вступление в группу")
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.

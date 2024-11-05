@@ -25,4 +25,4 @@ class CreatingGroupsAndChats:
                                                                                 megagroup=True))
                 logger.info(response.stringify())
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.

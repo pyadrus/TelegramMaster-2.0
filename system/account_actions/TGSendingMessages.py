@@ -80,7 +80,7 @@ class SendTelegramMessages:
                 except KeyError:  # В случае отсутствия ключа в базе данных (нет аккаунтов в базе данных).
                     sys.exit(1)
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def send_files_to_personal_chats(self, account_limits) -> None:
         """
@@ -128,7 +128,7 @@ class SendTelegramMessages:
                 except KeyError:
                     sys.exit(1)
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def sending_files_via_chats(self) -> None:
         """Рассылка файлов по чатам (docs/Рассылка_сообщений/⛔️ Рассылка_файлов_по_чатам.html)"""
@@ -168,7 +168,7 @@ class SendTelegramMessages:
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
                     client.disconnect()  # Разрываем соединение Telegram
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def sending_messages_files_via_chats(self) -> None:
         """Рассылка сообщений + файлов по чатам"""
@@ -210,7 +210,7 @@ class SendTelegramMessages:
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
                 await client.disconnect()  # Разрываем соединение Telegram
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     @staticmethod
     async def select_and_read_random_file(entities, folder):
@@ -227,7 +227,7 @@ class SendTelegramMessages:
                 data = read_json_file(filename=f"user_settings/{folder}/{random_file[0]}.json")
             return data  # Возвращаем данные из файла
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def sending_messages_via_chats_times(self) -> None:
         """Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)"""
@@ -266,7 +266,7 @@ class SendTelegramMessages:
                         break  # Прерываем работу и меняем аккаунт
 
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     @staticmethod
     async def random_dream():
@@ -276,7 +276,7 @@ class SendTelegramMessages:
             logger.info(f'Спим {time_in_seconds / 60} минуты / минут...')
             await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def answering_machine(self):
         """Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)"""
@@ -316,4 +316,4 @@ class SendTelegramMessages:
                 await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
 
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.

@@ -31,7 +31,7 @@ class TGContact:
                 await self.parsing_and_recording_contacts_in_the_database(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def parsing_and_recording_contacts_in_the_database(self, client) -> None:
         """
@@ -44,7 +44,7 @@ class TGContact:
                 await self.get_user_data(contact, entities)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def we_get_the_account_id(self, client) -> None:
         """Получаем id аккаунта"""
@@ -55,7 +55,7 @@ class TGContact:
                 await self.we_show_and_delete_the_contact_of_the_phone_book(client, user)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     @staticmethod
     async def get_and_parse_contacts(client) -> list:
@@ -70,7 +70,7 @@ class TGContact:
             all_participants.extend(result.users)
             return all_participants
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     @staticmethod
     async def we_show_and_delete_the_contact_of_the_phone_book(client, user) -> None:
@@ -84,7 +84,7 @@ class TGContact:
             logger.info("Подождите 2 - 4 секунды")
             await asyncio.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def delete_contact(self) -> None:
         """Удаляем контакты с аккаунтов"""
@@ -96,7 +96,7 @@ class TGContact:
                 await self.we_get_the_account_id(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def inviting_contact(self) -> None:
         """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
@@ -108,7 +108,7 @@ class TGContact:
                                                                    account_directory=path_contact_folder)
                 await self.add_contact_to_phone_book(client)
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def add_contact_to_phone_book(self, client) -> None:
         """
@@ -145,7 +145,7 @@ class TGContact:
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
             await self.db_handler.remove_records_without_username()  # Чистка списка parsing списка, если нет username
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     @staticmethod
     async def get_user_data(user, entities) -> None:
@@ -183,4 +183,4 @@ class TGContact:
                 [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
                  user_premium])
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.

@@ -281,7 +281,7 @@ class ParsingGroupMembers:
 
     async def choose_and_parse_group(self, page: ft.Page) -> None:
         """
-        Выбираем группу из подписанных и запускаем парсинг
+        📌 Выбираем группу из подписанных и запускаем парсинг
 
         Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
@@ -302,14 +302,14 @@ class ParsingGroupMembers:
                 group_titles = await self.name_of_the_groups(groups)  # Получаем названия групп
                 logger.info(group_titles)
                 # Создаем текст для отображения результата
-                result_text = ft.Text(value="Выберите группу для парсинга")
+                result_text = ft.Text(value="📂 Выберите группу для парсинга")
 
                 # Обработчик нажатия кнопки выбора группы
                 async def handle_button_click(_) -> None:
                     start = datetime.datetime.now()  # фиксируем время начала выполнения кода
 
-                    await self.log_and_display(f"▶️ Начало парсинга.\nВремя старта: {str(start)}", lv, page)
-                    await self.log_and_display(f"Выбрана группа: {dropdown.value}", lv, page)
+                    await self.log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
+                    await self.log_and_display(f"📂 Выбрана группа: {dropdown.value}", lv, page)
 
                     await self.parse_group(client, dropdown.value, lv, page)  # Запускаем парсинг выбранной группы
                     await self.clean_parsing_list_and_remove_duplicates()
@@ -317,12 +317,11 @@ class ParsingGroupMembers:
                     # Переходим на экран парсинга только после завершения всех действий
                     finish = datetime.datetime.now()  # фиксируем время окончания парсинга
                     # Логируем и отображаем время окончания работы
-                    await self.log_and_display(
-                        f"🔚 Конец парсинга.\nВремя окончания: {finish}.\nВремя работы: {finish - start}", lv, page)
+                    await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
                     page.go("/parsing")
 
                 async def back_button_clicked(_):
-                    """Кнопка возврата в меню настроек"""
+                    """⬅️ Кнопка возврата в меню настроек"""
                     page.go("/parsing")
 
                 # Создаем выпадающий список с названиями групп
@@ -335,8 +334,8 @@ class ParsingGroupMembers:
                         [
                             ft.Column(controls=[
                                 dropdown,
-                                ft.ElevatedButton(width=line_width_button, height=height_button, text="Выбрать группу",
-                                                  on_click=handle_button_click),
+                                ft.ElevatedButton(width=line_width_button, height=height_button, text="📂 Выбрать группу",
+                                                  on_click=handle_button_click), # Кнопка "Выбрать группу" 📂
                                 ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
                                                   on_click=back_button_clicked), # Кнопка "⬅️ Назад"
                                 result_text, lv,
@@ -350,7 +349,8 @@ class ParsingGroupMembers:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def parse_users(self, client, target_group, lv, page) -> list:
-        """Парсинг и сбор данных пользователей группы или канала.
+        """
+        🧑‍🤝‍🧑 Парсинг и сбор данных пользователей группы или канала.
 
         Метод осуществляет поиск участников в указанной группе или канале, собирает их данные и сохраняет в файле.
 
@@ -362,7 +362,7 @@ class ParsingGroupMembers:
         :return: Список участников.
         """
         try:
-            await self.log_and_display(f"[+] Ищем участников... Сохраняем в файл software_database.db...", lv, page)
+            await self.log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", lv, page)
 
             all_participants: list = []
             while_condition = True
@@ -379,7 +379,8 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    logger.info(f'Ошибка parsing: не верное имя или 🔗 cсылка {target_group} не является группой / каналом: {target_group}')
+                    logger.info(f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
+                    await self.log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page)
                     await asyncio.sleep(2)
                     break
             return all_participants

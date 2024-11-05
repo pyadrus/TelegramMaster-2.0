@@ -45,7 +45,7 @@ class TGConnect:
                                              proxy=await reading_proxy_data_from_the_database(self.db_handler))
             return telegram_client
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def verify_account(self, folder_name, session_name) -> None:
         """

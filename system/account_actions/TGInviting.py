@@ -53,8 +53,23 @@ class InvitingToAGroup:
             logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Настройки "
                          f"конфиденциальности {username} не позволяют вам inviting")
             await record_and_interrupt(time_inviting[0], time_inviting[1])
+        except UserChannelsTooMuchError:
+            logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Превышен лимит у user каналов / супергрупп.")
+            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+        except UserNotMutualContactError:
+            logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. User не является"
+                         f" взаимным контактом.")
+            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+        except UserKickedError:
+            logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Пользователь был удален "
+                         f"ранее из супергруппы.")
+            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+        except FloodWaitError as error:
+            logger.error(f'{error}')
+            await record_and_interrupt(time_inviting[0], time_inviting[1])
         except Exception as error:
             logger.exception(f"Ошибка: {error}")
+
 
     async def inviting_without_limits(self, account_limits) -> None:
         """
