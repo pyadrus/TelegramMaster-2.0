@@ -17,7 +17,13 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               sending_messages_via_chats_with_answering_machine,
                                               sending_files_via_chats, sending_messages_files_via_chats,
                                               sending_personal_messages_with_limits,
-                                              sending_files_to_personal_account_with_limits)
+                                              sending_files_to_personal_account_with_limits, choice_of_reactions,
+                                              proxy_entry, changing_accounts, recording_api_id_api_hash,
+                                              time_between_subscriptions, message_recording, link_entry, account_limits,
+                                              message_limits, time_between_subscriptionss, creating_username_list,
+                                              recording_the_time_between_messages,
+                                              time_between_invites_sending_messages, recording_reaction_link,
+                                              forming_list_of_chats_channels)
 
 app = Quart(__name__, template_folder='templates')
 
@@ -69,8 +75,24 @@ async def working_with_contacts():
 
 @app.route('/settings')
 async def settings():
-    """Настройки"""
-    return await render_template('settings.html')
+    """⚙️ Настройки"""
+    return await render_template('settings.html', program_name=program_name,
+                                 choice_of_reactions=choice_of_reactions,
+                                 proxy_entry=proxy_entry,
+                                 changing_accounts=changing_accounts,
+                                 recording_api_id_api_hash=recording_api_id_api_hash,
+                                 time_between_subscriptions=time_between_subscriptions,
+                                 message_recording=message_recording,
+                                 link_entry=link_entry,
+                                 account_limits=account_limits,
+                                 message_limits=message_limits,
+                                 time_between_subscriptionss=time_between_subscriptionss,
+                                 creating_username_list=creating_username_list,
+                                 recording_the_time_between_messages=recording_the_time_between_messages,
+                                 time_between_invites_sending_messages=time_between_invites_sending_messages,
+                                 recording_reaction_link=recording_reaction_link,
+                                 forming_list_of_chats_channels=forming_list_of_chats_channels,
+                                 )
 
 
 @app.route('/working_with_reactions')
@@ -127,7 +149,7 @@ async def launch_telegrammaster():
 @app.route('/working_with_errors_telegrammaster')
 async def working_with_errors_telegrammaster():
     """Работа с ошибками TelegramMaster 2.0"""
-    return await render_template('working_with_errors_telegrammaster.html')
+    return await render_template('working_with_errors_telegrammaster.html', program_name=program_name)
 
 
 @app.route('/install_python_update_pip')
@@ -139,19 +161,20 @@ async def install_python_update_pip():
 @app.route('/preliminary_setting_of_program_installation_of_program_by_default')
 async def preliminary_setting_of_program_installation_of_program_by_default():
     """Предварительная настройка программы"""
-    return await render_template('preliminary_setting_of_program_installation_of_program_by_default.html')
+    return await render_template('preliminary_setting_of_program_installation_of_program_by_default.html',
+                                 program_name=program_name)
 
 
 @app.route('/registration_api_id_api_hash')
 async def registration_api_id_api_hash():
     """Получение api и hash"""
-    return await render_template('registration_api_id_api_hash.html')
+    return await render_template('registration_api_id_api_hash.html', program_name=program_name)
 
 
 @app.route('/telegram_limits')
 async def telegram_limits():
     """Лимиты Telegram"""
-    return await render_template('telegram_limits.html')
+    return await render_template('telegram_limits.html', program_name=program_name)
 
 
 async def run_quart():

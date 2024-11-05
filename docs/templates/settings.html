@@ -7,6 +7,8 @@
 
     <!-- Правильный способ подключения CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
+
     <script>
         function loadMenu() {
             fetch('/menu')
@@ -68,7 +70,138 @@
             </svg>
         </a>
 
-        <h1 style="text-align: center;">⚙️ Выбор реакции</h1>
+        <h1 style="text-align: center;">⚙️ Настройки ({{program_name}})</h1>
+
+        <!-- Меню навигации -->
+
+        <hr align="center"/>
+
+        <div class="card-container">
+
+            <div class="card">
+                <!-- 👍 Выбор реакций -->
+                <p class="heading">👍 Выбор реакций</p>
+                <p>{{choice_of_reactions}}</p>
+                <button class="card-button"><a href="#choice_of_reactions">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 🔐 Запись proxy -->
+                <p class="heading">🔐 Запись proxy</p>
+                <p>{{proxy_entry}}</p>
+                <button class="card-button"><a href="#proxy_entry">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 🔄 Смена аккаунтов -->
+                <p class="heading">🔄 Смена аккаунтов</p>
+                <p>{{changing_accounts}}</p>
+                <button class="card-button"><a href="#changing_accounts">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 📝 Запись api_id, api_hash -->
+                <p class="heading">📝 Запись api_id, api_hash</p>
+                <p>{{recording_api_id_api_hash}}</p>
+                <button class="card-button"><a href="#recording_api_id_api_hash">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- ⏰ Запись времени -->
+                <p class="heading">⏰ Запись времени</p>
+                <p>{{time_between_subscriptions}}</p>
+                <button class="card-button"><a href="#time_between_subscriptions">Перейти</a></button>
+            </div>
+
+        </div>
+
+        <hr align="center"/>
+
+        <div class="card-container">
+
+
+            <div class="card">
+                <!-- ✉️ Запись сообщений -->
+                <p class="heading">✉️ Запись сообщений</p>
+                <p>{{message_recording}}</p>
+                <button class="card-button"><a href="#message_recording">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 🔗 Запись ссылки для инвайтинга -->
+                <p class="heading">🔗 Запись ссылки для инвайтинга</p>
+                <p>{{link_entry}}</p>
+                <button class="card-button"><a href="#link_entry">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 📊 Лимиты на аккаунт -->
+                <p class="heading">📊 Лимиты на аккаунт</p>
+                <p>{{account_limits}}</p>
+                <button class="card-button"><a href="#account_limits">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 📨 Лимиты на сообщения -->
+                <p class="heading">📨 Лимиты на сообщения</p>
+                <p>{{message_limits}}</p>
+                <button class="card-button"><a href="#message_limits">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- ⏳ Время между подпиской -->
+                <p class="heading">⏳ Время между подпиской</p>
+                <p>{{time_between_subscriptionss}}</p>
+                <button class="card-button"><a href="#time_between_subscriptionss">Перейти</a></button>
+            </div>
+
+
+        </div>
+
+        <hr align="center"/>
+
+        <div class="card-container">
+
+
+            <div class="card">
+                <!-- 📋 Формирование списка username -->
+                <p class="heading">📋 Формирование username</p>
+                <p>{{creating_username_list}}</p>
+                <button class="card-button"><a href="#creating_username_list">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- ⏱️ Запись времени между сообщениями -->
+                <p class="heading">⏱️ Запись времени между сообщениями</p>
+                <p>{{recording_the_time_between_messages}}</p>
+                <button class="card-button"><a href="#recording_the_time_between_messages">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 🕒 Время между инвайтингом, рассылка сообщений -->
+                <p class="heading">🕒 Время инвайтинга, рассылки</p>
+                <p>{{time_between_invites_sending_messages}}</p>
+                <button class="card-button"><a href="#time_between_invites_sending_messages">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 🔗 Запись ссылки для реакций -->
+                <p class="heading">🔗 Запись ссылки для реакций</p>
+                <p>{{recording_reaction_link}}</p>
+                <button class="card-button"><a href="#recording_reaction_link">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 📑 Формирование списка чатов/каналов -->
+                <p class="heading">📑 Формирование списка чатов</p>
+                <p>{{forming_list_of_chats_channels}}</p>
+                <button class="card-button"><a href="#forming_list_of_chats_channels">Перейти</a></button>
+            </div>
+
+        </div>
+
+        <!-- 👍 Выбор реакций -->
+        <h2 id="choice_of_reactions" style="text-align: center;">{{choice_of_reactions}}</h2>
         <hr align="center"/>
 
         <p>
@@ -76,8 +209,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{ program_name }}</a>).<br>
+            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{program_name}}</a>).<br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -94,10 +227,12 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>{{ program_name }}/user_settings/reactions/reactions.json</code>.
+            <code>{{program_name}}/user_settings/reactions/reactions.json</code>.
         </p>
 
-        <h1 style="text-align: center;">⚙️ Запись proxy</h1>
+
+        <!-- 🔐 Запись proxy -->
+        <h2 id="proxy_entry" style="text-align: center;">{{proxy_entry}}</h2>
         <hr align="center"/>
 
         <p>
@@ -105,8 +240,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{ program_name }}</a>).<br>
+            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{program_name}}</a>).<br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -115,7 +250,7 @@
                      width="40%">
             </p>
 
-            2️⃣ Подключить аккаунты к {{ program_name }} (см. Подключение аккаунтов Telegram к {{ program_name }}).<br>
+            2️⃣ Подключить аккаунты к {{program_name}} (см. Подключение аккаунтов Telegram к {{program_name}}).<br>
             3️⃣ Перейти в раздел «<a href="{{ url_for('settings') }}">⚙️ Настройки</a>»<br>
             4️⃣ Выбрать функцию «Запись_proxy».<br>
             5️⃣ В графическое окно введите:<br>
@@ -129,10 +264,11 @@
 
         <p>
             Список username записывается в базу данных (в файл
-            <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу **proxy**).
+            <code>{{program_name}}/user_settings/software_database.db</code> в таблицу **proxy**).
         </p>
 
-        <h1 id="telegrammaster-">⚙️ Смена аккаунтов</h1>
+        <!-- 🔄 Смена аккаунтов -->
+        <h2 id="changing_accounts" style="text-align: center;">{{changing_accounts}}</h2>
         <hr align="center"/>
 
         <p>
@@ -140,8 +276,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{ program_name }}</a>).<br>
+            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{program_name}}</a>).<br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -158,11 +294,11 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>{{ program_name }}/user_settings/config/config.ini</code>.
+            <code>{{program_name}}/user_settings/config/config.ini</code>.
         </p>
 
-
-        <h1 id="telegramm-">⚙️ Запись api_id, api_hash</h1>
+        <!-- 📝 Запись api_id, api_hash -->
+        <h2 id="recording_api_id_api_hash" style="text-align: center;">{{recording_api_id_api_hash}}</h2>
         <hr align="center"/>
 
         <p>
@@ -171,8 +307,8 @@
         </p>
 
         <blockquote>
-            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{ program_name }}</a>).<br>
+            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{program_name}}</a>).<br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -190,17 +326,19 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>{{ program_name }}/user_settings/config/config.ini</code>.
+            <code>{{program_name}}/user_settings/config/config.ini</code>.
         </p>
 
         <blockquote>
             Убедитесь в правильности ввода api_id, api_hash, если поля ввода будут пустыми, то и в файл
-            <code>{{ program_name }}/user_settings/config/config.ini</code> запишутся пустые данные, что повлечет за
+            <code>{{program_name}}/user_settings/config/config.ini</code> запишутся пустые данные, что повлечет за
             собой
             ошибки {{program_name}}.
         </blockquote>
 
-        <h1 style="text-align: center;">⚙️ Запись времени</h1>
+
+        <!-- ⏰ Запись времени -->
+        <h2 id="time_between_subscriptions" style="text-align: center;">{{time_between_subscriptions}}</h2>
         <hr align="center"/>
 
         <p>
@@ -230,8 +368,10 @@
             <code>{{program_name}}/user_settings/config/config.ini</code>.
         </p>
 
-        <h1 style="text-align: center;">⚙️ Запись сообщений</h1>
+        <!-- ✉️ Запись сообщений -->
+        <h2 id="message_recording" style="text-align: center;">{{message_recording}}</h2>
         <hr align="center"/>
+
         <p>
             Для записи сообщений, выполните следующие действия:
         </p>
@@ -260,7 +400,9 @@
             <code>user_settings/message/message/message_2.json</code> и так далее.
         </p>
 
-        <h1 id="teleg-">⚙️ Запись ссылки для инвайтинга</h1>
+
+        <!-- 🔗 Запись ссылки для инвайтинга -->
+        <h2 id="link_entry" style="text-align: center;">{{link_entry}}</h2>
         <hr align="center"/>
 
         <p>
@@ -300,7 +442,8 @@
             </p>
         </div>
 
-        <h1 id="telegrafff-">⚙️ Лимиты на аккаунт</h1>
+        <!-- 📊 Лимиты на аккаунт -->
+        <h2 id="account_limits" style="text-align: center;">{{account_limits}}</h2>
         <hr align="center"/>
 
         <p>
@@ -329,7 +472,8 @@
             <code>{{program_name}}/user_settings/config/config.ini</code>.
         </p>
 
-        <h1 id="telegramddddmaster-">⚙️ Лимиты на сообщения</h1>
+        <!-- 📨 Лимиты на сообщения -->
+        <h2 id="message_limits" style="text-align: center;">{{message_limits}}</h2>
         <hr align="center"/>
 
         <p>
@@ -358,7 +502,8 @@
             <code>{{program_name}}/user_settings/config/config.ini</code>.
         </p>
 
-        <h1 id="telegraccccmmaster-">⚙️ Формирование списка пользователей (username)</h1>
+        <!-- 📋 Формирование списка username -->
+        <h2 id="creating_username_list" style="text-align: center;">{{creating_username_list}}</h2>
         <hr align="center"/>
 
         <p>
@@ -391,7 +536,8 @@
             <code>{{program_name}}/user_settings/software_database.db</code> в таблицу <b>members</b>).
         </p>
 
-        <h1 style="text-align: center;">⚙️ Время между подпиской</h1>
+        <!-- ⏳ Время между подпиской -->
+        <h2 id="time_between_subscriptionss" style="text-align: center;">{{time_between_subscriptionss}}</h2>
         <hr align="center"/>
 
         <p>
@@ -420,7 +566,8 @@
             <code>{{program_name}}/user_settings/config/config.ini</code>.
         </p>
 
-        <h1 style="text-align: center;">⚙️ Запись времени между сообщениями</h1>
+        <!-- ⏱️ Запись времени между сообщениями -->
+        <h2 id="recording_the_time_between_messages" style="text-align: center;">{{recording_the_time_between_messages}}</h2>
         <hr align="center"/>
 
         <p>
@@ -449,8 +596,10 @@
             <code>{{program_name}}/user_settings/config/config.ini</code>.
         </p>
 
-        <h1 style="text-align: center;">⚙️ Время между инвайтингом и рассылкой сообщений</h1>
+         <!-- 🕒 Время между инвайтингом, рассылка сообщений -->
+        <h2 id="time_between_invites_sending_messages" style="text-align: center;">{{time_between_invites_sending_messages}}</h2>
         <hr align="center"/>
+
 
         <p>
             Чтобы записать времени между инвайтингом и рассылкой сообщений, вам нужно выполнить следующие действия:
@@ -478,7 +627,8 @@
             <code>{{program_name}}/user_settings/config/config.ini</code>.
         </p>
 
-        <h1 id="telegrambbbbbbmaster-">⚙️ Запись ссылки для реакций</h1>
+        <!-- 🔗 Запись ссылки для реакций -->
+        <h2 id="recording_reaction_link" style="text-align: center;">{{recording_reaction_link}}</h2>
         <hr align="center"/>
 
         <p>
@@ -507,7 +657,8 @@
             <code>{{program_name}}/user_settings/reactions/link_channel.json</code>.
         </p>
 
-        <h1 id="telegrammaccccccster-">⚙️ Формирование списка чатов - каналов</h1>
+        <!-- 📑 Формирование списка чатов / каналов -->
+        <h2 id="forming_list_of_chats_channels" style="text-align: center;">{{forming_list_of_chats_channels}}</h2>
         <hr align="center"/>
 
         <p>
@@ -533,7 +684,7 @@
 
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в базу данных (в
-            файл <code>{{ program_name }}/user_settings/software_database.db</code> в таблицу
+            файл <code>{{program_name}}/user_settings/software_database.db</code> в таблицу
             <code>writing_group_links</code>).
         </p>
 
