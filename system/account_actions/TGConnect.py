@@ -311,7 +311,7 @@ class TGConnect:
                                 except Exception as ex:
                                     logger.error(f"Ошибка при вводе пароля: {ex}")
 
-                            button_password = ft.ElevatedButton(done_button, on_click=btn_click_password) # Кнопка "Готово"
+                            button_password = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=btn_click_password) # Кнопка "Готово"
                             page.views.append(ft.View(controls=[pass_2fa, button_password]))
                             page.update()  # Обновляем страницу, чтобы интерфейс отобразился
 
@@ -322,7 +322,7 @@ class TGConnect:
                             logger.error(f"Ошибка при авторизации: {error}")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
 
-                    button_code = ft.ElevatedButton(done_button, on_click=btn_click_code) # Кнопка "Готово"
+                    button_code = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=btn_click_code) # Кнопка "Готово"
                     page.views.append(ft.View(controls=[passww, button_code]))
                     page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
 

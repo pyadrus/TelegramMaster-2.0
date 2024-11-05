@@ -7,7 +7,7 @@ from telethon.errors import (AuthKeyUnregisteredError, UsernamePurchaseAvailable
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
-from system.auxiliary_functions.config import path_bio_folder
+from system.auxiliary_functions.config import path_bio_folder, line_width_button, height_button
 from system.localization.localization import done_button
 
 
@@ -20,7 +20,7 @@ class AccountBIO:
 
     @classmethod
     def function_button_ready(cls, page: ft.Page, btn_click, user_input):
-        button = ft.ElevatedButton(done_button, on_click=btn_click) # Кнопка "Готово"
+        button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=btn_click) # Кнопка "Готово"
         page.views.append(
             ft.View(
                 "/bio_editing",
