@@ -13,11 +13,19 @@ invitation_at_a_certain_time: str = "🕒 Инвайтинг в определе
 inviting_every_day: str = "📅 Инвайтинг каждый день"
 
 # Реакции меню
-setting_reactions: str  = "👍 Ставим реакции"
-we_are_winding_up_post_views: str  = "👁️‍🗨️ Накручиваем просмотры постов"
-automatic_setting_of_reactions: str  = "🤖 Автоматическое выставление реакций"
+setting_reactions: str = "👍 Ставим реакции"
+we_are_winding_up_post_views: str = "👁️‍🗨️ Накручиваем просмотры постов"
+automatic_setting_of_reactions: str = "🤖 Автоматическое выставление реакций"
 
 # Наименование кнопок
 back_button: str = "⬅️ Назад"
 start_parsing_button: str = "🚀 Начать парсинг"
 done_button: str = "✅ Готово"
+
+# Рассылка сообщений меню
+sending_messages_via_chats: str = "💬 Рассылка сообщений по чатам"
+sending_messages_via_chats_with_answering_machine: str = "🤖 Рассылка сообщений по чатам с автоответчиком"
+sending_files_via_chats: str = "📂 Рассылка файлов по чатам"
+sending_messages_files_via_chats: str = "💬📂 Рассылка сообщений + файлов по чатам"
+sending_personal_messages_with_limits: str = "📨 Отправка сообщений в личку"
+sending_files_to_personal_account_with_limits: str = "📁 Отправка файлов в личку"

@@ -7,6 +7,8 @@
 
     <!-- Правильный способ подключения CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
+
     <script>
         function loadMenu() {
             fetch('/menu')
@@ -70,19 +72,51 @@
 
 
         <h1 style="text-align: center;">📧 Рассылка сообщений ({{program_name}})</h1>
-        <!-- Меню навигации -->
-        <div class="menu">
-            <a href="#Sending_messages_via_PM">📧 Отправка сообщений в личку</a><br>
-            <a href="#Sending_files_via_PM">📧 Отправка файлов в личку</a><br>
-            <a href="#Sending_files_via_chats">📧 Рассылка файлов по чатам</a><br>
-            <a href="#Sending_messages_via_chats_with_an_answering_machine">📧 Рассылка сообщений по чатам с
-                автоответчиком</a><br>
-            <a href="#Sending_messages_via_chats">📧 Рассылка сообщений по чатам</a><br>
-            <a href="#Sending_messages_files_via_chats">📧 Рассылка сообщений + файлов по чатам</a><br>
-            <a href="#Sending_messages_in_PM_(with_limits)">📧 Отправка сообщений в личку (с лимитами)</a><br>
-            <a href="#Sending_files_via_PM_(with_limits)">📧 Отправка файлов в личку (с лимитами)</a><br>
-        </div>
 
+
+        <!-- Меню навигации -->
+        <div class="card-container">
+
+            <div class="card">
+                <!-- 💬 Рассылка сообщений по чатам -->
+                <p class="heading">💬 Рассылка сообщений</p>
+                <p>{{sending_messages_via_chats}}</p>
+                <button class="card-button"><a href="#Sending_messages_via_chats">Перейти</a></button>
+            </div>
+            <div class="card">
+                <!-- 💬📂 Рассылка сообщений + файлов по чатам -->
+                <p class="heading">💬📂 Рассылка сообщений</p>
+                <p>{{sending_messages_files_via_chats}}</p>
+                <button class="card-button"><a href="#Sending_messages_files_via_chats">Перейти</a></button>
+            </div>
+            <div class="card">
+                <!-- 📨 Отправка сообщений в личку -->
+                <p class="heading">📨 Отправка сообщений</p>
+                <p>{{sending_personal_messages_with_limits}}</p>
+                <button class="card-button"><a href="#Sending_messages_in_PM_(with_limits)">Перейти</a></button>
+            </div>
+            <div class="card">
+                <!-- 📁 Отправка файлов в личку -->
+                <p class="heading">📁 Отправка файлов</p>
+                <p>{{sending_files_to_personal_account_with_limits}}</p>
+                <button class="card-button"><a href="#Sending_files_via_PM_(with_limits)">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 🤖 Рассылка сообщений по чатам с автоответчиком -->
+                <p class="heading">🤖 Рассылка сообщений</p>
+                <p>{{sending_messages_via_chats_with_answering_machine}}</p>
+                <button class="card-button"><a href="#Sending_messages_via_chats_with_an_answering_machine">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 📂 Рассылка файлов по чатам -->
+                <p class="heading">📂 Рассылка файлов</p>
+                <p>{{sending_files_via_chats}}</p>
+                <button class="card-button"><a href="#Sending_files_via_chats">Перейти</a></button>
+            </div>
+
+        </div>
 
         <div
                 style="border: 2px solid #f5c6cbf5; background-color: #f8d7da; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif;">

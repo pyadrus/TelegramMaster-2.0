@@ -7,7 +7,11 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               inviting_every_day, invitation_at_a_certain_time,
                                               invitation_1_time_per_hour, inviting, importing_a_list_of_parsed_data,
                                               setting_reactions, we_are_winding_up_post_views,
-                                              automatic_setting_of_reactions)
+                                              automatic_setting_of_reactions, sending_messages_via_chats,
+                                              sending_messages_via_chats_with_answering_machine,
+                                              sending_files_via_chats, sending_messages_files_via_chats,
+                                              sending_personal_messages_with_limits,
+                                              sending_files_to_personal_account_with_limits)
 
 
 async def settings_menu(page):
@@ -140,24 +144,28 @@ async def message_distribution_menu(page):
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
                                                                                   ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     ft.ElevatedButton(width=line_width, height=height_button, text="💬 Рассылка сообщений по чатам",
+                     # 💬 Рассылка сообщений по чатам
+                     ft.ElevatedButton(width=line_width, height=height_button, text=sending_messages_via_chats,
                                        on_click=lambda _: page.go("/sending_messages_via_chats")),
+                     # 🤖 Рассылка сообщений по чатам с автоответчиком
                      ft.ElevatedButton(width=line_width, height=height_button,
-                                       text="🤖 Рассылка сообщений по чатам с автоответчиком",
-                                       on_click=lambda _: page.go(
-                                           "/sending_messages_via_chats_with_answering_machine")),
-                     ft.ElevatedButton(width=line_width, height=height_button, text="📂 Рассылка файлов по чатам",
+                                       text=sending_messages_via_chats_with_answering_machine,
+                                       on_click=lambda _: page.go("/sending_messages_via_chats_with_answering_machine")),
+                     # 📂 Рассылка файлов по чатам
+                     ft.ElevatedButton(width=line_width, height=height_button, text=sending_files_via_chats,
                                        on_click=lambda _: page.go("/sending_files_via_chats")),
+                     # 💬📂 Рассылка сообщений + файлов по чатам
                      ft.ElevatedButton(width=line_width, height=height_button,
-                                       text="💬📂 Рассылка сообщений + файлов по чатам",
+                                       text=sending_messages_files_via_chats,
                                        on_click=lambda _: page.go("/sending_messages_files_via_chats")),
 
+                     # 📨 Отправка сообщений в личку
                      ft.ElevatedButton(width=line_width, height=height_button,
-                                       text="📨 Отправка сообщений в личку",
+                                       text=sending_personal_messages_with_limits,
                                        on_click=lambda _: page.go("/sending_personal_messages_with_limits")),
-                     ft.ElevatedButton(width=line_width, height=height_button, text="📁 Отправка файлов в личку",
-                                       on_click=lambda _: page.go(
-                                           "/sending_files_to_personal_account_with_limits")),
+                     # 📁 Отправка файлов в личку
+                     ft.ElevatedButton(width=line_width, height=height_button, text=sending_files_to_personal_account_with_limits,
+                                       on_click=lambda _: page.go("/sending_files_to_personal_account_with_limits")),
                  ])]))
 
 
