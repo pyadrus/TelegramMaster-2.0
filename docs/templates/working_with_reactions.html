@@ -184,10 +184,26 @@
             скопировать session файл аккаунта в папку
             <code>{{ program_name }}/user_settings/accounts/reactions</code><br>
             3️⃣ Перейти в Настройки.<br>
+
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="{{url_for('static', filename='images/settings/settings.png')}}" alt="Telegram Master"
+                     width="40%">
+            </p>
+
             4️⃣ Перейти в "Запись_ссылки_для_реакций"<br>
             5️⃣ Вставить в графическое окно ссылку на группу или канал, на котором будут ставиться реакции на новые
             посты.<br>
             6️⃣ Перейти в Настройки.<br>
+
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="{{url_for('static', filename='images/settings/settings.png')}}" alt="Telegram Master"
+                     width="40%">
+            </p>
+
             7️⃣ Перейти в Выбор реакции и выбрать реакции, которые будут проставляться. <br>
             8️⃣ Перейти в "Работа с реакциями"<br>
             9️⃣ Перейти в "Автоматическое выставление реакций"<br>
@@ -195,8 +211,8 @@
 
         <blockquote>
             Если ранее вы выполняли действия по настройке {{program_name}}, то выполните следующие действия:<br>
-            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{ program_name }}</a>).<br>
+            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{program_name}}</a>).<br>
             2️⃣ Перейти в "Работа с реакциями"<br>
             3️⃣ Запустить функцию "Автоматическое выставление реакций"<br>
         </blockquote>
@@ -208,13 +224,13 @@
         <p>
             Слежение за каналом/группой:<br>
             - Один аккаунт отслеживает выбранный канал/группу на предмет новых сообщений. Этот аккаунт располагается
-            в папке <code>{{ program_name }}/user_settings/accounts/reactions</code><br>
+            в папке <code>{{program_name}}/user_settings/accounts/reactions</code><br>
         </p>
 
         <p>
             Аккаунты для реакций:<br>
             - Остальные аккаунты, предназначенные для установки реакций, находятся в папке
-            <code>{{ program_name }}/user_settings/accounts/reactions_list</code><br>
+            <code>{{program_name}}/user_settings/accounts/reactions_list</code><br>
         </p>
 
         <hr align="center"/>
@@ -243,6 +259,14 @@
             </p>
 
             2️⃣ Перейти в Настройки.<br>
+
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="{{url_for('static', filename='images/settings/settings.png')}}" alt="Telegram Master"
+                     width="40%">
+            </p>
+
             3️⃣ Сформировать список каналов в разделе «Формирование_списка_чатов_каналов»<br>
             4️⃣ Подключить аккаунты к {{program_name}} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
             аккаунтов Telegram к {{program_name}})</a> или

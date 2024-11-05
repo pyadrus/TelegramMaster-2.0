@@ -80,7 +80,8 @@ class ParsingGroupMembers:
                     for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                         await self.log_and_display(f"🔍 Парсинг группы: {groups[0]}", lv, page)
                         await self.tg_subscription_manager.subscribe_to_group_or_channel(client,
-                                                                                         groups[0])  # подписываемся на группу
+                                                                                         groups[
+                                                                                             0])  # подписываемся на группу
                         await self.parse_group(client, groups[0], lv, page)  # выполняем парсинг группы
                         # Удаляем группу из списка после завершения парсинга 🗑️
                         await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
@@ -94,7 +95,8 @@ class ParsingGroupMembers:
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
             # Логируем и отображаем время окончания работы
-            await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
+            await self.log_and_display(
+                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
 
         async def back_button_clicked(_):
             """
@@ -194,14 +196,15 @@ class ParsingGroupMembers:
                     await self.forming_a_list_of_groups(client, lv, page)
                     await client.disconnect()  # Разрываем соединение telegram
 
-                    remove_duplicates() # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
+                    remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
             except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}") # Логируем возникшее исключение вместе с сообщением об ошибке.
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
             # Логируем и отображаем время окончания работы
-            await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
-                                       lv, page)
+            await self.log_and_display(
+                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
+                lv, page)
 
         async def back_button_clicked(_):
             """
@@ -317,7 +320,8 @@ class ParsingGroupMembers:
                     # Переходим на экран парсинга только после завершения всех действий
                     finish = datetime.datetime.now()  # фиксируем время окончания парсинга
                     # Логируем и отображаем время окончания работы
-                    await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
+                    await self.log_and_display(
+                        f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
                     page.go("/parsing")
 
                 async def back_button_clicked(_):
@@ -334,10 +338,11 @@ class ParsingGroupMembers:
                         [
                             ft.Column(controls=[
                                 dropdown,
-                                ft.ElevatedButton(width=line_width_button, height=height_button, text="📂 Выбрать группу",
-                                                  on_click=handle_button_click), # Кнопка "Выбрать группу" 📂
+                                ft.ElevatedButton(width=line_width_button, height=height_button,
+                                                  text="📂 Выбрать группу",
+                                                  on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
                                 ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
-                                                  on_click=back_button_clicked), # Кнопка "⬅️ Назад"
+                                                  on_click=back_button_clicked),  # Кнопка "⬅️ Назад"
                                 result_text, lv,
                             ])
                         ],
@@ -379,7 +384,8 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    logger.info(f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
+                    logger.info(
+                        f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
                     await self.log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page)
                     await asyncio.sleep(2)
                     break
@@ -419,14 +425,17 @@ class ParsingGroupMembers:
         """
         try:
             # Получение данных пользователя
-            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(user)
+            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(
+                user)
 
             # Добавление данных в список сущностей
-            entities.append([username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
+            entities.append(
+                [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
                  user_premium])
 
             # Отображение данных на странице
-            lv.controls.append(ft.Text(f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
+            lv.controls.append(ft.Text(
+                f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
             page.update()  # Обновление страницы для каждого элемента данных
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
@@ -477,8 +486,10 @@ class ParsingGroupMembers:
         :param user: пользователь
         """
         try:
-            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(user)
-            entity = (username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium)
+            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(
+                user)
+            entity = (
+            username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium)
             return entity
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.

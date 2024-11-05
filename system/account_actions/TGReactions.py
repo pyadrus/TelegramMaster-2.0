@@ -43,7 +43,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                     msg_id = int(re.search(r'/(\d+)$', message.value).group(1))  # Получаем id сообщения из ссылки
                     await asyncio.sleep(5)
                     await client(SendReactionRequest(peer=chat.value, msg_id=msg_id,
-                                                     reaction=[types.ReactionEmoji(emoticon=f'{self.choosing_random_reaction()}')]))
+                                                     reaction=[types.ReactionEmoji(
+                                                         emoticon=f'{self.choosing_random_reaction()}')]))
                     await asyncio.sleep(1)
                     await client.disconnect()
 
@@ -59,7 +60,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 ft.View(
                     "/working_with_reactions",  # Маршрут для этого представления
                     [
-                        chat, # Поле ввода ссылки на чат
+                        chat,  # Поле ввода ссылки на чат
                         message,  # Поле ввода ссылки пост
                         # limit_active_user, # Поле ввода количества сообщений
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
@@ -124,7 +125,8 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 await asyncio.sleep(5)
                 # random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
                 await client(SendReactionRequest(peer=chat, msg_id=int(number),
-                                                 reaction=[types.ReactionEmoji(emoticon=f'{self.choosing_random_reaction()}')]))
+                                                 reaction=[types.ReactionEmoji(
+                                                     emoticon=f'{self.choosing_random_reaction()}')]))
                 await asyncio.sleep(1)
                 await client.disconnect()
         except Exception as error:

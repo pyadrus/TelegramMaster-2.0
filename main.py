@@ -324,7 +324,7 @@ async def main(page: ft.Page):
         elif page.route == "/parsing":  # Меню "Парсинг"
             await menu_parsing(page)
 
-        elif page.route == "/parsing_single_groups": # 🔍 Парсинг одной группы / групп
+        elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
             try:
                 logger.info(f"⛔ Проверка наличия аккаунта в папке {path_parsing_folder} с аккаунтами")
                 if not find_filess(directory_path=path_parsing_folder, extension='session'):

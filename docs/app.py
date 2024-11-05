@@ -177,7 +177,8 @@ async def install_python_update_pip():
 @app.route('/preliminary_setting_of_program_installation_of_program_by_default')
 async def preliminary_setting_of_program_installation_of_program_by_default():
     """Предварительная настройка программы"""
-    logger.info("Запущена страница документации, о предварительной настройке программы, установке программы по умолчанию")
+    logger.info(
+        "Запущена страница документации, о предварительной настройке программы, установке программы по умолчанию")
     return await render_template('preliminary_setting_of_program_installation_of_program_by_default.html',
                                  program_name=program_name)
 

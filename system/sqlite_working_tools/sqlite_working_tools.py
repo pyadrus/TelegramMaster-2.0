@@ -7,6 +7,7 @@ from peewee import fn, SqliteDatabase, Model, IntegerField, CharField, TextField
 
 db = SqliteDatabase('user_settings/software_database.db')
 
+
 class groups_and_channels(Model):
     """Список групп и каналов в таблице groups_and_channels"""
     id = IntegerField(primary_key=True)

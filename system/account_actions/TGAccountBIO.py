@@ -20,7 +20,8 @@ class AccountBIO:
 
     @classmethod
     def function_button_ready(cls, page: ft.Page, btn_click, user_input):
-        button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=btn_click) # Кнопка "Готово"
+        button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
+                                   on_click=btn_click)  # Кнопка "Готово"
         page.views.append(
             ft.View(
                 "/bio_editing",

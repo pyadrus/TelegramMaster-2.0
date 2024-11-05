@@ -54,7 +54,8 @@ class TGConnect:
         :param folder_name: Папка с аккаунтами
         """
         try:
-            logger.info(f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
+            logger.info(
+                f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
             telegram_client = await self.get_telegram_client(session_name, f"user_settings/accounts/{folder_name}")
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
@@ -311,7 +312,9 @@ class TGConnect:
                                 except Exception as ex:
                                     logger.error(f"Ошибка при вводе пароля: {ex}")
 
-                            button_password = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=btn_click_password) # Кнопка "Готово"
+                            button_password = ft.ElevatedButton(width=line_width_button, height=height_button,
+                                                                text=done_button,
+                                                                on_click=btn_click_password)  # Кнопка "Готово"
                             page.views.append(ft.View(controls=[pass_2fa, button_password]))
                             page.update()  # Обновляем страницу, чтобы интерфейс отобразился
 
@@ -322,7 +325,8 @@ class TGConnect:
                             logger.error(f"Ошибка при авторизации: {error}")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
 
-                    button_code = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=btn_click_code) # Кнопка "Готово"
+                    button_code = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
+                                                    on_click=btn_click_code)  # Кнопка "Готово"
                     page.views.append(ft.View(controls=[passww, button_code]))
                     page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
 
@@ -332,9 +336,10 @@ class TGConnect:
                 """Кнопка возврата в меню настроек"""
                 page.go("/connecting_accounts_by_number")
 
-            button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=btn_click) # Кнопка "Готово"
+            button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
+                                       on_click=btn_click)  # Кнопка "Готово"
             button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
-                                            on_click=back_button_clicked) # Кнопка "Назад"
+                                            on_click=back_button_clicked)  # Кнопка "Назад"
 
             input_view = ft.View(
                 controls=[header_text, phone_number, button,

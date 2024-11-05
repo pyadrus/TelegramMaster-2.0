@@ -128,12 +128,11 @@
 
         <h2>Ввод номера в программу</h2>
 
-        <h2>Чтобы подключить аккаунт в <b>{{ program_name }}</b>:</h2>
+        <h2>Чтобы подключить аккаунт в <b>{{program_name}}</b>:</h2>
 
 
         <blockquote>
-            1️⃣ Запустить {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{ program_name }}</a>).<br>
+            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск {{program_name}}</a>).<br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -156,14 +155,14 @@
                 style="border: 2px solid #f5c6cbf5; background-color: #f8d7da; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif;">
             <p style="color: #721c24; margin: 0; font-size: 16px;">
                 ⚠️ Если не пришел код подтверждения, удалите session файл из
-                <code>{{ program_name }}/user_settings/accounts</code>. Для этого откройте
-                <code>{{ program_name }}/user_settings/accounts</code>, найдите session файл с номером телефона,
+                <code>{{program_name}}/user_settings/accounts</code>. Для этого откройте
+                <code>{{program_name}}/user_settings/accounts</code>, найдите session файл с номером телефона,
                 введенным ранее.
             </p>.
         </div>
 
         <p>После успешного подключения будет создан файл с названием номер_телефона.session и будет расположен в
-            директории <code>{{ program_name }}/user_settings/accounts</code>.</p>
+            директории <code>{{program_name}}/user_settings/accounts</code>.</p>
 
         <hr align="center"/>
 
@@ -184,8 +183,7 @@
 
 
         <blockquote>
-            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{program_name}}</a>).<br>
+            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск {{program_name}}</a>).<br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">

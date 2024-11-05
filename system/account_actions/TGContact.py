@@ -159,7 +159,8 @@ class TGContact:
             user_phone = user.phone if user.phone else "Номер телефона скрыт"
             first_name = user.first_name if user.first_name else ""
             last_name = user.last_name if user.last_name else ""
-            photos_id = ("Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
+            photos_id = (
+                "Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
             online_at = "Был(а) недавно"
             # Статусы пользователя https://core.telegram.org/type/UserStatus
             if isinstance(user.status, (

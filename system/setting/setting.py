@@ -255,7 +255,8 @@ async def reaction_gui(page: ft.Page):
 
     def button_clicked(e):
         """Выбранная реакция"""
-        selected_reactions = [checkbox.label for checkbox in checkboxes if checkbox.value]  # Получаем только выбранные реакции
+        selected_reactions = [checkbox.label for checkbox in checkboxes if
+                              checkbox.value]  # Получаем только выбранные реакции
         write_data_to_json_file(reactions=selected_reactions, path_to_the_file='user_settings/reactions/reactions.json')
         page.go("/settings")  # Переход к странице настроек
 
@@ -264,8 +265,10 @@ async def reaction_gui(page: ft.Page):
         page.go("/settings")
 
     # Кнопка "Готово" и "Назад"
-    button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button, on_click=button_clicked) # Кнопка "Готово"
-    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button, on_click=back_button_clicked) # Кнопка "Назад"
+    button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
+                               on_click=button_clicked)  # Кнопка "Готово"
+    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+                                    on_click=back_button_clicked)  # Кнопка "Назад"
 
     # Добавляем элементы на страницу
     page.views.append(
