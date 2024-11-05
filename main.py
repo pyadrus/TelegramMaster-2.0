@@ -793,7 +793,7 @@ async def main(page: ft.Page):
                                                               get_unique_filename(
                                                                   base_filename='user_settings/message/message'))
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
-            SettingPage().recording_text_for_sending_messages(page, "Введите текст сообщения",
+            SettingPage().recording_text_for_sending_messages(page, "Введите ссылку для реакций",
                                                               'user_settings/reactions/link_channel.json')
         elif page.route == "/choice_of_reactions":  # Выбор реакций
             await reaction_gui(page)
