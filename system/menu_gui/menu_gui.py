@@ -1,6 +1,6 @@
 import flet as ft
 
-from system.auxiliary_functions.config import height_button, small_button_width, line_width
+from system.auxiliary_functions.config import height_button, small_button_width, line_width, line_width_button
 from system.localization.localization import (parse_single_or_multiple_groups, parse_selected_user_subscribed_group,
                                               parse_active_group_members, parse_account_subscribed_groups_channels,
                                               clear_previously_parsed_data_list,
@@ -17,7 +17,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               message_limits, time_between_subscriptionss, creating_username_list,
                                               recording_the_time_between_messages,
                                               time_between_invites_sending_messages, recording_reaction_link,
-                                              forming_list_of_chats_channels)
+                                              forming_list_of_chats_channels, we_are_winding_up_post_views)
 
 
 async def settings_menu(page):
@@ -306,6 +306,28 @@ async def reactions_menu(page):
                                        on_click=lambda _: page.go("/automatic_setting_of_reactions")),
                  ])]))
 
+async def viewing_posts_menu(page):
+    """
+    Меню работа с просмотрами
+    """
+    page.views.append(
+        ft.View("/viewing_posts_menu",
+                [ft.AppBar(title=ft.Text("Главное меню"),
+                           bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     "Работа с просмотрами",
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                     # 👁️‍🗨️ Накручиваем просмотры постов
+                     ft.ElevatedButton(width=line_width_button, height=height_button,
+                                       text=we_are_winding_up_post_views,
+                                       on_click=lambda _: page.go("/we_are_winding_up_post_views")),
+                 ])]))
 
 async def subscribe_and_unsubscribe_menu(page):
     """

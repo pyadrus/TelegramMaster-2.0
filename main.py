@@ -19,20 +19,21 @@ from system.account_actions.TGParsing import ParsingGroupMembers
 from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
+from system.account_actions.TGViewingPosts import ViewingPosts
 from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
 from system.auxiliary_functions.config import (ConfigReader, height_button, small_button_width, line_width_button,
                                                program_name, program_version, date_of_program_change, window_width,
                                                window_height, window_resizable, path_parsing_folder,
                                                path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
                                                path_reactions_folder, path_contact_folder, path_creating_folder,
-                                               path_send_message_folder, path_bio_folder, line_width)
+                                               path_send_message_folder, path_bio_folder, path_viewing_folder)
 from system.localization.localization import we_are_winding_up_post_views
 from system.logging_in.logging_in import loging
 from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
                                       account_connection_menu, connecting_accounts_by_number_menu,
-                                      connecting_accounts_by_session_menu)
+                                      connecting_accounts_by_session_menu, viewing_posts_menu)
 from system.receiving_and_recording.receiving_and_recording import ReceivingAndRecording
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -116,7 +117,7 @@ async def main(page: ft.Page):
                               # 👁️‍🗨️ Накручиваем просмотры постов
                               ft.ElevatedButton(width=line_width_button, height=height_button,
                                                 text=we_are_winding_up_post_views,
-                                                on_click=lambda _: page.go("/we_are_winding_up_post_views")),
+                                                on_click=lambda _: page.go("/viewing_posts_menu")),
 
 
                               ft.ElevatedButton(width=line_width_button, height=height_button, text="⚙️ Настройки",
@@ -292,24 +293,7 @@ async def main(page: ft.Page):
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-        elif page.route == "/we_are_winding_up_post_views":  # Накручиваем просмотры постов
-            try:
-                logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path=path_reactions_folder, extension='session'):
-                    logger.error('⛔ Нет аккаунта в папке reactions')
-                    await show_notification(page, "⛔ Нет аккаунта в папке reactions")
-                    return None
-                else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Накрутки просмотров постов")
-                    await WorkingWithReactions().viewing_posts()
-                    logger.info("🔚 Конец Накрутки просмотров постов")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-            except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+
         elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -323,6 +307,27 @@ async def main(page: ft.Page):
                     logger.info("▶️ Начало Автоматического выставления реакций")
                     await WorkingWithReactions().setting_reactions()
                     logger.info("🔚 Конец Автоматического выставления реакций")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            except Exception as error:
+                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+        # ______________________________________________________________________________________________________________
+        elif page.route == "/viewing_posts_menu":  # Автоматическое выставление просмотров меню
+            await viewing_posts_menu(page)
+        elif page.route == "/we_are_winding_up_post_views":  # ️‍🗨️ Накручиваем просмотры постов
+            try:
+                logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
+                if not find_filess(directory_path=path_viewing_folder, extension='session'):
+                    logger.error('⛔ Нет аккаунта в папке viewing')
+                    await show_notification(page, "⛔ Нет аккаунта в папке viewing")
+                    return None
+                else:
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Накрутки просмотров постов")
+                    await ViewingPosts().viewing_posts_request(page)
+                    logger.info("🔚 Конец Накрутки просмотров постов")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
