@@ -37,43 +37,44 @@ class InvitingToAGroup:
         except Exception as error:
             logger.exception(f"Ошибка: {error}")
 
-    @staticmethod
-    async def inviting_to_a_group_according_to_the_received_list(client, link_row, username,
-                                                                 time_inviting) -> None:
-        """
-        Инвайтинг в группу
-
-        :param client: Телеграм клиент
-        :param link_row: Ссылка для инвайтинга
-        :param username: username
-        :param time_inviting: время инвайтинга
-        """
-        try:
-            logger.info(f"Попытка приглашения {username[0]} в группу {link_row[0]}.")
-            await client(InviteToChannelRequest(link_row[0], [username[0]]))
-            logger.info(f'Удачно! Спим 5 секунд')
-            await asyncio.sleep(5)
-        except PeerFloodError:
-            logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Настройки "
-                         f"конфиденциальности {username} не позволяют вам inviting")
-            await record_and_interrupt(time_inviting[0], time_inviting[1])
-        except UserChannelsTooMuchError:
-            logger.error(
-                f"Попытка приглашения {username} в группу {link_row[0]}. Превышен лимит у user каналов / супергрупп.")
-            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-        except UserNotMutualContactError:
-            logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. User не является"
-                         f" взаимным контактом.")
-            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-        except UserKickedError:
-            logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Пользователь был удален "
-                         f"ранее из супергруппы.")
-            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-        except FloodWaitError as error:
-            logger.error(f'{error}')
-            await record_and_interrupt(time_inviting[0], time_inviting[1])
-        except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+    # @staticmethod
+    # async def invite_to_group(client, link_row, username, time_inviting) -> None:
+    #     """
+    #     Инвайтинг в группу
+    #
+    #     :param client: Телеграм клиент
+    #     :param link_row: Ссылка для инвайтинга
+    #     :param username: username
+    #     :param time_inviting: время инвайтинга
+    #     """
+    #     try:
+    #         logger.info(f"Попытка приглашения {username[0]} в группу {link_row[0]}.")
+    #         await client(InviteToChannelRequest(link_row[0], [username[0]]))
+    #         logger.info(f'Удачно! Спим 5 секунд')
+    #         await asyncio.sleep(5)
+    #     except PeerFloodError:
+    #         logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Настройки конфиденциальности {username} не позволяют вам inviting")
+    #         await record_and_interrupt(time_inviting[0], time_inviting[1])
+    #     except UserChannelsTooMuchError:
+    #         logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Превышен лимит у user каналов / супергрупп.")
+    #         await record_inviting_results(time_inviting[0], time_inviting[1], username)
+    #     except UserNotMutualContactError:
+    #         logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. User не является взаимным контактом.")
+    #         await record_inviting_results(time_inviting[0], time_inviting[1], username)
+    #     except UserKickedError:
+    #         logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Пользователь был удален ранее из супергруппы.")
+    #         await record_inviting_results(time_inviting[0], time_inviting[1], username)
+    #     except FloodWaitError as error:
+    #         logger.error(f'{error}')
+    #         await record_and_interrupt(time_inviting[0], time_inviting[1])
+    #     except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
+    #         await record_inviting_results(time_inviting[0], time_inviting[1], username)
+    #         logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Не корректное имя {username}")
+    #     except ChatAdminRequiredError:
+    #         logger.error(f"Попытка приглашения {username} в группу {link_row[0]}. Требуются права администратора.")
+    #         await record_inviting_results(time_inviting[0], time_inviting[1], username)
+    #     except Exception as error:
+    #         logger.exception(f"Ошибка: {error}")
 
     async def inviting_without_limits(self, account_limits) -> None:
         """
@@ -86,12 +87,12 @@ class InvitingToAGroup:
             for session_name in find_filess(directory_path=path_inviting_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
                                                                    account_directory=path_inviting_folder)
-                """Получение ссылки для инвайтинга"""
+                # Получение ссылки для инвайтинга
                 for link in await self.getting_an_invitation_link_from_the_database():
                     logger.info(f"{link[0]}")
-                    """Подписка на группу для инвайтинга"""
+                    # Подписка на группу для инвайтинга
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link[0])
-                    """Получение списка usernames"""
+                    # Получение списка usernames
                     number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
                                                                                          account_limits=account_limits)
 
@@ -102,81 +103,68 @@ class InvitingToAGroup:
 
                     for username in number_usernames:
                         logger.info(f"Пользователь username:{username[0]}")
-                        """Инвайтинг в группу по полученному списку"""
+                        # Инвайтинг в группу по полученному списку
                         time_inviting = self.config_reader.get_time_inviting()
                         try:
-                            await self.inviting_to_a_group_according_to_the_received_list(client, link, username,
-                                                                                          time_inviting)
-                        except PeerFloodError:
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки "
-                                         f"конфиденциальности {username} не позволяют вам inviting")
-                            await record_and_interrupt(time_inviting[0], time_inviting[1])
+
+                            logger.info(f"Попытка приглашения {username[0]} в группу {link[0]}.")
+                            await client(InviteToChannelRequest(link[0], [username[0]]))
+                            logger.info(f'Удачно! Спим 5 секунд')
+                            await asyncio.sleep(5)
+                        # Ошибка инвайтинга продолжаем работу
+                        except UserChannelsTooMuchError:
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Превышен лимит у user каналов / супергрупп.")
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+                        except UserNotMutualContactError:
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. User не является взаимным контактом.")
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+                        except UserKickedError:
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Пользователь был удален ранее из супергруппы.")
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+                        except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Не корректное имя {username}")
+                        except ChatAdminRequiredError:
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Требуются права администратора.")
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+                        except UserPrivacyRestrictedError:
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки конфиденциальности {username} не позволяют вам inviting")
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+                        except BotGroupsBlockedError:
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Вы не можете добавить бота в группу.")
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+                        except (TypeError, UnboundLocalError):
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}")
+                        # Ошибка инвайтинга прерываем работу
+                        except ChatWriteForbiddenError:
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки в чате не дают добавлять людей в чат, возможно стоит бот админ и нужно подписаться на другие проекты")
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             break  # Прерываем работу и меняем аккаунт
-                        except AuthKeyDuplicatedError:
+                        except InviteRequestSentError:
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Доступ к функциям группы станет возможен после утверждения заявки администратором на {link[0]}")
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+                            break  # Прерываем работу и меняем аккаунт
+                        except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
+                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Не корректное имя {username}")
+                            break  # Прерываем работу и меняем аккаунт
+                        except (ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError, UserBannedInChannelError):
                             await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
                         except FloodWaitError as error:
                             logger.error(f'{error}')
                             await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
-                        except UserPrivacyRestrictedError:
-                            logger.error(
-                                f"Попытка приглашения {username} в группу {link[0]}. Настройки конфиденциальности "
-                                f"{username} не позволяют вам inviting")
-                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                        except UserChannelsTooMuchError:
-                            logger.error(
-                                f"Попытка приглашения {username} в группу {link[0]}. Превышен лимит у user каналов / "
-                                f"супергрупп.")
-                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                            continue
-                        except UserBannedInChannelError:
+                        except PeerFloodError:
+                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки конфиденциальности {username} не позволяют вам inviting")
                             await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
-                        except ChatWriteForbiddenError:
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки в чате не дают "
-                                         f"добавлять людей в чат, возможно стоит бот админ и нужно подписаться на "
-                                         f"другие проекты")
-                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                            break  # Прерываем работу и меняем аккаунт
-                        except BotGroupsBlockedError:
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Вы не можете добавить "
-                                         f"бота в группу.")
-                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                        except UserNotMutualContactError:
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. User не является"
-                                         f" взаимным контактом.")
-                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                        except ChatAdminRequiredError:
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Требуются права "
-                                         f"администратора.")
-                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                        except UserKickedError:
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Пользователь был удален "
-                                         f"ранее из супергруппы.")
-                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                        except ChannelPrivateError:
-                            await record_and_interrupt(time_inviting[0], time_inviting[1])
-                            break  # Прерываем работу и меняем аккаунт
-                        except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Не корректное имя "
-                                         f"{username}")
-                            break  # Прерываем работу и меняем аккаунт
-                        except (TypeError, UnboundLocalError):
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}")
-                            continue  # Записываем ошибку в software_database.db и продолжаем работу
-                        except InviteRequestSentError:
-                            logger.error(f"Попытка приглашения {username} в группу {link[0]}. Доступ к функциям группы "
-                                         f"станет возможен после утверждения заявки администратором на {link[0]}")
-                            await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                            break  # Прерываем работу и меняем аккаунт
-                        except TypeNotFoundError:
-                            await record_and_interrupt(time_inviting[0], time_inviting[1])
-                            break  # Прерываем работу и меняем аккаунт
+
                         except KeyboardInterrupt:  # Закрытие окна программы
                             client.disconnect()  # Разрываем соединение telegram
                             logger.info("[!] Скрипт остановлен!")
+                        except Exception as error:
+                            logger.exception(f"Ошибка: {error}")
                         else:
                             logger.info(f"[+] Участник {username} добавлен, если не состоит в чате {link[0]}")
                             await record_inviting_results(time_inviting[0], time_inviting[1], username)
