@@ -17,7 +17,9 @@ def get_external_ip():
 
 
 async def loging():
-    """Логирование TelegramMaster 2.0"""
+    """
+    Логирование TelegramMaster 2.0
+    """
 
     local_ip = get_external_ip()
 

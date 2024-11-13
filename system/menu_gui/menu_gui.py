@@ -21,7 +21,9 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
 
 
 async def settings_menu(page):
-    """Меню настройки"""
+    """
+    Меню настройки
+    """
     page.views.append(
         ft.View("/settings",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -99,7 +101,9 @@ async def settings_menu(page):
 
 
 async def bio_editing_menu(page):
-    """Меню редактирование БИО"""
+    """
+    Меню редактирование БИО
+    """
     page.views.append(
         ft.View("/bio_editing",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -127,7 +131,9 @@ async def bio_editing_menu(page):
 
 
 async def inviting_menu(page):
-    """Меню инвайтинг"""
+    """
+    Меню инвайтинг
+    """
     page.views.append(
         ft.View("/inviting",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -157,7 +163,9 @@ async def inviting_menu(page):
 
 
 async def message_distribution_menu(page):
-    """Меню рассылка сообщений"""
+    """
+    Меню рассылка сообщений
+    """
     page.views.append(
         ft.View("/sending_messages",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -199,7 +207,9 @@ async def message_distribution_menu(page):
 
 
 async def working_with_contacts_menu(page):
-    """Меню работа с контактами"""
+    """
+    Меню работа с контактами
+    """
     page.views.append(
         ft.View("/working_with_contacts",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -225,7 +235,9 @@ async def working_with_contacts_menu(page):
 
 
 async def menu_parsing(page):
-    """Парсинг меню"""
+    """
+    Парсинг меню
+    """
     page.views.append(
         ft.View("/parsing",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -269,7 +281,9 @@ async def menu_parsing(page):
 
 
 async def reactions_menu(page):
-    """Меню работа с реакциями"""
+    """
+    Меню работа с реакциями
+    """
     page.views.append(
         ft.View("/working_with_reactions",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -298,7 +312,9 @@ async def reactions_menu(page):
 
 
 async def subscribe_and_unsubscribe_menu(page):
-    """Меню подписка и отписка"""
+    """
+    Меню подписка и отписка
+    """
     page.views.append(
         ft.View("/subscribe_unsubscribe",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -320,7 +336,9 @@ async def subscribe_and_unsubscribe_menu(page):
 
 
 async def account_verification_menu(page):
-    """Меню проверки аккаунтов"""
+    """
+    Меню проверки аккаунтов
+    """
     page.views.append(
         ft.View("/account_verification_menu",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -351,7 +369,9 @@ async def account_verification_menu(page):
 
 
 async def account_connection_menu(page):
-    """Меню подключения аккаунтов"""
+    """
+    Меню подключения аккаунтов
+    """
     page.views.append(
         ft.View("/account_connection_menu",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -376,7 +396,9 @@ async def account_connection_menu(page):
 
 
 async def connecting_accounts_by_number_menu(page):
-    """Меню подключения аккаунтов по номеру телефона"""
+    """
+    Меню подключения аккаунтов по номеру телефона
+    """
     page.views.append(
         ft.View("/connecting_accounts_by_number",
                 [ft.AppBar(title=ft.Text("Главное меню"),
@@ -435,7 +457,9 @@ async def connecting_accounts_by_number_menu(page):
 
 
 async def connecting_accounts_by_session_menu(page):
-    """Меню подключения аккаунтов по номеру телефона"""
+    """
+    Меню подключения аккаунтов по номеру телефона
+    """
     page.views.append(
         ft.View("/connecting_accounts_by_session",
                 [ft.AppBar(title=ft.Text("Главное меню"),

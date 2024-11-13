@@ -8,13 +8,17 @@ from system.auxiliary_functions.config import path_creating_folder
 
 
 class CreatingGroupsAndChats:
-    """Создание групп (чатов) в автоматическом режиме"""
+    """
+    Создание групп (чатов) в автоматическом режиме
+    """
 
     def __init__(self):
         self.tg_connect = TGConnect()
 
     async def creating_groups_and_chats(self) -> None:
-        """Создание групп (чатов) в автоматическом режиме"""
+        """
+        Создание групп (чатов) в автоматическом режиме
+        """
         try:
             for session_name in find_filess(directory_path=path_creating_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,

@@ -15,14 +15,18 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
 class TGContact:
-    """Работа с контактами Telegram"""
+    """
+    Работа с контактами Telegram
+    """
 
     def __init__(self):
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
 
     async def show_account_contact_list(self) -> None:
-        """Показать список контактов аккаунтов и запись результатов в файл"""
+        """
+        Показать список контактов аккаунтов и запись результатов в файл
+        """
         try:
             for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
@@ -36,6 +40,7 @@ class TGContact:
     async def parsing_and_recording_contacts_in_the_database(self, client) -> None:
         """
         Парсинг и запись контактов в базу данных
+
         :param client: Телеграм клиент
         """
         try:
@@ -61,6 +66,7 @@ class TGContact:
     async def get_and_parse_contacts(client) -> list:
         """
         Получаем контакты
+
         :param client: Телеграм клиент
         """
         try:
@@ -76,6 +82,7 @@ class TGContact:
     async def we_show_and_delete_the_contact_of_the_phone_book(client, user) -> None:
         """
         Показываем и удаляем контакт телефонной книги
+
         :param client: Телеграм клиент
         :param user: Телеграм пользователя
         """
@@ -113,6 +120,7 @@ class TGContact:
     async def add_contact_to_phone_book(self, client) -> None:
         """
         Добавляем контакт в телефонную книгу
+
         :param client: Телеграм клиент
         """
         try:
@@ -151,6 +159,7 @@ class TGContact:
     async def get_user_data(user, entities) -> None:
         """
         Получаем данные пользователя
+
         :param user: Телеграм пользователя
         :param entities: Список сущностей
         """

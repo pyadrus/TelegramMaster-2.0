@@ -26,7 +26,9 @@ time_subscription_1, time_subscription_2 = ConfigReader().get_time_subscription(
 
 
 class SendTelegramMessages:
-    """Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных."""
+    """
+    Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
+    """
 
     def __init__(self):
         self.db_handler = DatabaseHandler()
@@ -38,6 +40,7 @@ class SendTelegramMessages:
     async def send_message_from_all_accounts(self, account_limits) -> None:
         """
         Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
+
         :param account_limits: Лимит на аккаунты
         """
         try:
@@ -85,6 +88,7 @@ class SendTelegramMessages:
     async def send_files_to_personal_chats(self, account_limits) -> None:
         """
         Отправка файлов в личку
+
         :param account_limits: Лимит на аккаунты
         """
         try:
@@ -131,7 +135,9 @@ class SendTelegramMessages:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def sending_files_via_chats(self) -> None:
-        """Рассылка файлов по чатам (docs/Рассылка_сообщений/⛔️ Рассылка_файлов_по_чатам.html)"""
+        """
+        Рассылка файлов по чатам (docs/Рассылка_сообщений/⛔️ Рассылка_файлов_по_чатам.html)
+        """
         try:
             # Спрашиваем у пользователя, через какое время будем отправлять сообщения
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
@@ -171,7 +177,9 @@ class SendTelegramMessages:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def sending_messages_files_via_chats(self) -> None:
-        """Рассылка сообщений + файлов по чатам"""
+        """
+        Рассылка сообщений + файлов по чатам
+        """
         try:
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
@@ -216,6 +224,7 @@ class SendTelegramMessages:
     async def select_and_read_random_file(entities, folder):
         """
         Выбираем рандомный файл для чтения
+
         :param entities: список файлов для чтения
         :param folder: папка для сохранения файлов
         """
@@ -230,7 +239,9 @@ class SendTelegramMessages:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def sending_messages_via_chats_times(self) -> None:
-        """Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)"""
+        """
+        Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)
+        """
         try:
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
@@ -270,7 +281,9 @@ class SendTelegramMessages:
 
     @staticmethod
     async def random_dream():
-        """Рандомный сон"""
+        """
+        Рандомный сон
+        """
         try:
             time_in_seconds = random.randrange(time_sending_messages_1, time_sending_messages_2) * 60
             logger.info(f'Спим {time_in_seconds / 60} минуты / минут...')
@@ -279,7 +292,9 @@ class SendTelegramMessages:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def answering_machine(self):
-        """Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)"""
+        """
+        Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)
+        """
         try:
             for session_name in find_filess(directory_path="user_settings/accounts/answering_machine",
                                             extension='session'):

@@ -5,7 +5,9 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
 class SettingLimits:
-    """Лимиты на действия TelegramMaster"""
+    """
+    Лимиты на действия TelegramMaster
+    """
 
     def __init__(self):
         self.db_handler = DatabaseHandler()
@@ -13,6 +15,7 @@ class SettingLimits:
     async def get_usernames_with_limits(self, table_name, account_limits) -> list:
         """
         Получение списка пользователей из базы данных с учетом лимитов
+
         :param table_name: название таблицы
         :param account_limits: лимиты на аккаунт
         """

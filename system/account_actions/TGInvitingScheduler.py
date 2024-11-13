@@ -11,7 +11,9 @@ hour, minutes = ConfigReader().get_hour_minutes_every_day()
 
 
 async def schedule_member_invitation() -> None:
-    """Запуск inviting"""
+    """
+    Запуск inviting
+    """
     try:
         await TGChek().validation_check()
         await InvitingToAGroup().inviting_without_limits(account_limits=ConfigReader().get_limits())
@@ -26,7 +28,9 @@ async def run_scheduler():
 
 
 def launching_invite_every_day_certain_time() -> None:
-    """Запуск inviting каждый день в определенное время выбранное пользователем"""
+    """
+    Запуск inviting каждый день в определенное время выбранное пользователем
+    """
     try:
         schedule.every().day.at(f"{int(hour):02d}:{int(minutes):02d}").do(
             lambda: asyncio.ensure_future(schedule_member_invitation()))
@@ -36,7 +40,9 @@ def launching_invite_every_day_certain_time() -> None:
 
 
 def launching_an_invite_once_an_hour() -> None:
-    """Запуск inviting 1 раз в час"""
+    """
+    Запуск inviting 1 раз в час
+    """
     try:
         logger.info("Запуск программы в 00 минут")
         schedule.every().hour.at(":00").do(lambda: asyncio.ensure_future(schedule_member_invitation()))
@@ -46,7 +52,9 @@ def launching_an_invite_once_an_hour() -> None:
 
 
 def schedule_invite() -> None:
-    """Запуск автоматической отправки приглашений участникам"""
+    """
+    Запуск автоматической отправки приглашений участникам
+    """
     try:
         logger.info(f"Скрипт будет запускаться каждый день в {hour}:{minutes}")
         # Запускаем автоматизацию

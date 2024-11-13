@@ -18,6 +18,7 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
 class InvitingToAGroup:
+
     def __init__(self):
         self.db_handler = DatabaseHandler()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
@@ -26,7 +27,9 @@ class InvitingToAGroup:
         self.config_reader = ConfigReader()
 
     async def getting_an_invitation_link_from_the_database(self):
-        """"Получение ссылки для инвайтинга"""
+        """"
+        Получение ссылки для инвайтинга
+        """
         try:
             links_inviting: list = await self.db_handler.open_and_read_data("links_inviting")  # Открываем базу данных
             logger.info(f"Ссылка для инвайтинга:  {links_inviting}")
@@ -39,6 +42,7 @@ class InvitingToAGroup:
                                                                  time_inviting) -> None:
         """
         Инвайтинг в группу
+
         :param client: Телеграм клиент
         :param link_row: Ссылка для инвайтинга
         :param username: username
@@ -74,6 +78,7 @@ class InvitingToAGroup:
     async def inviting_without_limits(self, account_limits) -> None:
         """
         Инвайтинг без лимитов
+
         :param account_limits: Таблица с лимитами
         """
         try:

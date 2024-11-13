@@ -26,7 +26,9 @@ class WorkingWithReactions:  # Класс для работы с реакция�
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
     async def send_reaction_request(self, page: ft.Page) -> None:
-        """Ставим реакции на сообщения"""
+        """
+        Ставим реакции на сообщения
+        """
         try:
             # Поле для ввода ссылки на чат
             chat = ft.TextField(label="Введите ссылку на группу / чат:", multiline=False, max_lines=1)
@@ -72,7 +74,9 @@ class WorkingWithReactions:  # Класс для работы с реакция�
             logger.exception(f"Ошибка: {error}")
 
     async def viewing_posts(self) -> None:
-        """Накрутка просмотров постов"""
+        """
+        Накрутка просмотров постов
+        """
         try:
             for session_name in find_filess(directory_path="user_settings/accounts/viewing", extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,

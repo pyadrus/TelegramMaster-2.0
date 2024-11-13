@@ -24,7 +24,9 @@ class SubscribeUnsubscribeTelegram:
         self.time_subscription_1, self.time_subscription_2 = self.configs_reader.get_time_subscription()
 
     async def subscribe_telegram(self) -> None:
-        """Подписка на группы / каналы Telegram"""
+        """
+        Подписка на группы / каналы Telegram
+        """
         try:
             logger.info(f"Запуск подписки на группы / каналы Telegram")
             for session_name in find_filess(directory_path=path_subscription_folder, extension='session'):
@@ -44,7 +46,9 @@ class SubscribeUnsubscribeTelegram:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def unsubscribe_all(self) -> None:
-        """Отписываемся от групп, каналов, личных сообщений"""
+        """
+        Отписываемся от групп, каналов, личных сообщений
+        """
         try:
             for session_name in find_filess(directory_path=path_unsubscribe_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name,
@@ -62,6 +66,7 @@ class SubscribeUnsubscribeTelegram:
     async def unsubscribe_from_the_group(client, group_link) -> None:
         """
         Отписываемся от группы.
+
         :param group_link: Группа или канал
         :param client: Телеграм клиент
         """
@@ -80,8 +85,9 @@ class SubscribeUnsubscribeTelegram:
     async def subscribe_to_group_or_channel(self, client, groups_wr) -> None:
         """
         Подписываемся на группу или канал
+
         :param groups_wr: str - группа или канал
-        :param client: TelegramClient - объект клиента
+        :param client:    TelegramClient - объект клиента
         """
         # цикл for нужен для того, что бы сработала команда brake команда break в Python используется только для выхода из
         # цикла, а не выхода из программы в целом.

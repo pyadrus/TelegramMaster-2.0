@@ -8,7 +8,8 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
 async def reading_proxy_data_from_the_database(db_handler):
-    """Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
+    """
+    Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
     username - логин (например: username), password - пароль (например: password)
     :param db_handler - объект класса DatabaseHandler
@@ -31,7 +32,6 @@ async def checking_the_proxy_for_work() -> None:
     Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
     уровня, который используется для демонстрации работы сетевых протоколов. На этом сайте нет никакого контента, но он
     используется для различных тестов.
-
     """
     try:
         for proxy_dic in await DatabaseHandler().open_and_read_data("proxy"):
@@ -52,6 +52,7 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
     """Подключение к proxy с проверкой на работоспособность где: proxy_type - тип proxy (например: SOCKS5),
     addr - адрес (например: 194.67.248.9), port - порт (например: 9795), username - логин (например: username),
     password - пароль (например: password)
+
     :param proxy_type: тип proxy (например: SOCKS5)
     :param addr: адрес (например: 194.67.248.9)
     :param port: порт (например: 9795)

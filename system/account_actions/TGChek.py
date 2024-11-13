@@ -12,7 +12,9 @@ class TGChek:
         self.TGConnect = TGConnect()
 
     async def validation_check(self):
-        """Проверка валидности аккаунтов"""
+        """
+        Проверка валидности аккаунтов
+        """
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
@@ -35,7 +37,9 @@ class TGChek:
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
     async def checking_for_spam_bots(self):
-        """Проверка на спам ботов"""
+        """
+        Проверка на спам ботов
+        """
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
@@ -54,7 +58,9 @@ class TGChek:
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
     async def renaming_accounts(self):
-        """Переименование аккаунтов"""
+        """
+        Переименование аккаунтов
+        """
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
@@ -73,7 +79,9 @@ class TGChek:
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
     async def full_verification(self):
-        """Полная проверка аккаунтов"""
+        """
+        Полная проверка аккаунтов
+        """
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")

@@ -11,6 +11,7 @@ class ReceivingAndRecording:
     async def write_data_to_excel(self, file_name):
         """
         Запись данных в Excel файл.
+
         :param file_name: Имя файла для сохранения данных
         """
         data = await self.db_handler.read_parsed_chat_participants_from_db()

@@ -13,8 +13,9 @@ from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 def read_json_file(filename):
     """
     Чтение данных из файла JSON.
+
     :param filename: Полный путь к файлу JSON.
-    :return: Данные из файла JSON в виде словаря.
+    :return:         Данные из файла JSON в виде словаря.
     """
     with open(filename, 'r', encoding="utf-8") as file:
         data = json.load(file)
@@ -24,8 +25,9 @@ def read_json_file(filename):
 def all_find_files(directory_path) -> list:
     """
     Поиск файлов в директории.
-    :param directory_path: - путь к директории
-    :return list: - список имен найденных файлов
+
+    :param directory_path:  Путь к директории
+    :return list:           Список имен найденных файлов
     """
 
     entities = []  # Создаем список с именами найденных файлов
@@ -39,6 +41,7 @@ def all_find_files(directory_path) -> list:
 def find_filess(directory_path, extension) -> list:
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
+
     :param directory_path: Путь к директории
     :param extension: Расширение файла (указанное без точки)
     :return list: Список имен найденных файлов
@@ -57,6 +60,7 @@ def find_filess(directory_path, extension) -> list:
 def find_folders(directory_path) -> list:
     """
     Поиск всех папок в указанной директории.
+
     :param directory_path: Путь к директории
     :return list: Список имен 🔍 найденных папок
     """
@@ -72,6 +76,7 @@ def find_folders(directory_path) -> list:
 def find_files(directory_path, extension) -> list:
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
+
     :param directory_path: Путь к директории
     :param extension: Расширение файла (указанное без точки)
     :return list: Список имен найденных файлов
@@ -90,6 +95,7 @@ def find_files(directory_path, extension) -> list:
 def working_with_accounts(account_folder, new_account_folder) -> None:
     """
     Работа с аккаунтами
+
     :param account_folder: Исходный путь к файлу
     :param new_account_folder: Путь к новой папке, куда нужно переместить файл
     """
@@ -110,6 +116,7 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
 async def record_inviting_results(time_range_1: int, time_range_2: int, username: str) -> None:
     """
     Запись результатов inviting, отправка сообщений в базу данных.
+
     :param time_range_1:  - диапазон времени смены аккаунта
     :param time_range_2:  - диапазон времени смены аккаунта
     :param username: - username аккаунта
@@ -124,6 +131,7 @@ async def record_inviting_results(time_range_1: int, time_range_2: int, username
 async def record_and_interrupt(time_range_1, time_range_2) -> None:
     """
     Запись данных в базу данных и прерывание выполнения кода.
+
     :param time_range_1:  - диапазон времени смены аккаунта
     :param time_range_2:  - диапазон времени смены аккаунта
     """

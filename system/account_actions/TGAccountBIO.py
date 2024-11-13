@@ -20,6 +20,14 @@ class AccountBIO:
 
     @classmethod
     def function_button_ready(cls, page: ft.Page, btn_click, user_input):
+        """
+        Функция для кнопки "Готово"
+
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param btn_click:
+        :param user_input:
+        :return:
+        """
         button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
                                    on_click=btn_click)  # Кнопка "Готово"
         page.views.append(
@@ -34,7 +42,11 @@ class AccountBIO:
         )
 
     async def change_username_profile_gui(self, page: ft.Page) -> None:
-        """Изменение био профиля Telegram в графическое окно Flet"""
+        """
+        Изменение био профиля Telegram в графическое окно Flet
+
+        :param page: Страница интерфейса Flet для
+        """
         try:
             user_input = ft.TextField(label="Введите username профиля (не более 32 символов): ", multiline=True,
                                       max_lines=19)
@@ -51,6 +63,7 @@ class AccountBIO:
     async def change_username_profile(self, user_input) -> None:
         """
         Изменение username профиля Telegram
+
         :param user_input  - новое имя пользователя
         """
         try:
@@ -74,7 +87,11 @@ class AccountBIO:
             logger.exception(f"Ошибка: {error}")
 
     async def change_bio_profile_gui(self, page: ft.Page) -> None:
-        """Изменение био профиля Telegram в графическое окно Flet"""
+        """
+        Изменение био профиля Telegram в графическое окно Flet.
+
+        :param page: Страница интерфейса Flet для
+        """
         try:
             user_input = ft.TextField(label="Введите описание профиля, не более 70 символов: ", multiline=True,
                                       max_lines=19)
@@ -90,7 +107,8 @@ class AccountBIO:
 
     async def change_bio_profile(self, user_input):
         """
-        Изменение описания профиля
+        Изменение описания профиля.
+
         :param user_input  - новое описание профиля Telegram
         """
         try:
@@ -115,7 +133,11 @@ class AccountBIO:
             logger.exception(f"Ошибка: {error}")
 
     async def change_name_profile_gui(self, page: ft.Page) -> None:
-        """Изменение био профиля Telegram в графическое окно Flet"""
+        """
+        Изменение био профиля Telegram в графическое окно Flet
+
+        :param page: Страница интерфейса Flet для
+        """
         try:
             user_input = ft.TextField(label="Введите имя профиля, не более 64 символов: ", multiline=True, max_lines=19)
 
@@ -131,6 +153,7 @@ class AccountBIO:
     async def change_name_profile(self, user_input):
         """
         Изменение имени профиля
+
         :param user_input  - новое имя пользователя
         """
         try:
@@ -148,7 +171,11 @@ class AccountBIO:
             logger.exception(f"Ошибка: {error}")
 
     async def change_last_name_profile_gui(self, page: ft.Page) -> None:
-        """Изменение био профиля Telegram в графическое окно Flet"""
+        """
+        Изменение био профиля Telegram в графическое окно Flet
+
+        :param page: Страница интерфейса Flet для
+        """
         try:
             user_input = ft.TextField(label="Введите фамилию профиля, не более 64 символов: ", multiline=True,
                                       max_lines=19)
@@ -165,6 +192,7 @@ class AccountBIO:
     async def change_last_name_profile(self, user_input):
         """
         Изменение фамилии профиля
+
         :param user_input  - новое имя пользователя Telegram
         """
         try:

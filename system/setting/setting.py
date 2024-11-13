@@ -59,7 +59,9 @@ class SettingPage:
 
     def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str,
                                into_columns: str) -> None:
-        """Окно ввода для записи списка контактов telegram"""
+        """
+        Окно ввода для записи списка контактов telegram
+        """
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
 
         async def btn_click(e) -> None:
@@ -75,7 +77,9 @@ class SettingPage:
         self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
 
     def record_setting(self, page: ft.Page, limit_type: str, label: str):
-        """Запись лимитов на аккаунт или сообщение"""
+        """
+        Запись лимитов на аккаунт или сообщение
+        """
         limits = ft.TextField(label=label, multiline=True, max_lines=19)
 
         def btn_click(e) -> None:
@@ -89,7 +93,9 @@ class SettingPage:
         self.add_view_with_fields_and_button(page, [limits], btn_click)
 
     async def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
-        """Запись времени для запуска inviting в определенное время"""
+        """
+        Запись времени для запуска inviting в определенное время
+        """
         hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
         minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
 
@@ -145,7 +151,9 @@ class SettingPage:
         self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click)
 
     async def writing_api_id_api_hash(self, page: ft.Page):
-        """Записываем api, hash полученный с помощью регистрации приложения на сайте https://my.telegram.org/auth"""
+        """
+        Записываем api, hash полученный с помощью регистрации приложения на сайте https://my.telegram.org/auth
+        """
         api_id_data = ft.TextField(label="Введите api_id", multiline=True, max_lines=19)
         api_hash_data = ft.TextField(label="Введите api_hash", multiline=True, max_lines=19)
 
@@ -164,6 +172,7 @@ class SettingPage:
     def add_view_with_fields_and_button(page: ft.Page, fields: list, btn_click) -> None:
         """
         Добавляет представление с заданными текстовыми полями и кнопкой.
+
         :param page: Страница, на которую нужно добавить представление
         :param fields: Список текстовых полей для добавления
         :param btn_click: Кнопка для добавления
@@ -196,6 +205,7 @@ def writing_settings_to_a_file(config) -> None:
 def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigParser:
     """
     Запись данных в файл TelegramMaster/user_settings/config.ini
+
     :param time_1: Время в секундах
     :param time_2: Время в секундах
     :param variable: Название переменной в файле config.ini

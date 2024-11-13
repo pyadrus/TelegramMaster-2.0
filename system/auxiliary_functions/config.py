@@ -46,79 +46,117 @@ class ConfigReader:
                 self.config.get('hour_minutes_every_day', 'minutes', fallback=None))
 
     def get_line_width_button(self) -> str | None:
-        """Получение ширины кнопки"""
+        """
+        Получение ширины кнопки
+        """
         return self.config_gui.get('line_width_button', 'line_width_button', fallback=None)
 
     def get_line_height_button(self) -> str | None:
-        """Получение высоты кнопки"""
+        """
+        Получение высоты кнопки
+        """
         return self.config_gui.get('height_button', 'height_button', fallback=None)
 
     def get_small_button_width(self) -> str | None:
-        """Получение ширины мало малой кнопки"""
+        """
+        Получение ширины мало малой кнопки
+        """
         return self.config_gui.get('small_button_width', 'small_button_width', fallback=None)
 
     def line_width(self) -> str | None:
-        """Ширина окна и ширина строки"""
+        """
+        Ширина окна и ширина строки
+        """
         return self.config_gui.get('line_width', 'line_width', fallback=None)
 
     def program_name(self) -> str | None:
-        """Имя программы"""
+        """
+        Имя программы
+        """
         return self.config_gui.get('program_name', 'program_name', fallback=None)
 
     def program_version(self) -> str | None:
-        """Версия программы"""
+        """
+        Версия программы
+        """
         return self.config_gui.get('program_version', 'program_version', fallback=None)
 
     def date_of_program_change(self) -> str | None:
-        """Дата изменения"""
+        """
+        Дата изменения
+        """
         return self.config_gui.get('date_of_program_change', 'date_of_program_change', fallback=None)
 
     def window_width(self) -> str | None:
-        """Ширина программы"""
+        """
+        Ширина программы
+        """
         return self.config_gui.get('window_width', 'window_width', fallback=None)
 
     def window_height(self) -> str | None:
-        """Высота программы"""
+        """
+        Высота программы
+        """
         return self.config_gui.get('window_height', 'window_height', fallback=None)
 
     def window_resizable(self) -> str | None:
-        """Разрешение на изменение размера программы, если False, то запрещено изменять размер программы"""
+        """
+        Разрешение на изменение размера программы, если False, то запрещено изменять размер программы
+        """
         return self.config_gui.get('window_resizable', 'window_resizable', fallback=None)
 
     def path_parsing_folder(self) -> str | None:
-        """Путь к папке для парсинга"""
+        """
+        Путь к папке для парсинга
+        """
         return self.config_path.get('path_parsing_folder', 'path_parsing_folder', fallback=None)
 
     def path_inviting_folder(self) -> str | None:
-        """Путь к папке для инвайтинга"""
+        """
+        Путь к папке для инвайтинга
+        """
         return self.config_path.get('path_inviting_folder', 'path_inviting_folder', fallback=None)
 
     def path_subscription_folder(self) -> str | None:
-        """Путь к папке для подписки"""
+        """
+        Путь к папке для подписки
+        """
         return self.config_path.get('path_subscription_folder', 'path_subscription_folder', fallback=None)
 
     def path_unsubscribe_folder(self) -> str | None:
-        """Путь к папке для отписки"""
+        """
+        Путь к папке для отписки
+        """
         return self.config_path.get('path_unsubscribe_folder', 'path_unsubscribe_folder', fallback=None)
 
     def path_reactions_folder(self) -> str | None:
-        """Путь к папке для реакций"""
+        """
+        Путь к папке для реакций
+        """
         return self.config_path.get('path_reactions_folder', 'path_reactions_folder', fallback=None)
 
     def path_contact_folder(self) -> str | None:
-        """Путь к папке для контактов"""
+        """
+        Путь к папке для контактов
+        """
         return self.config_path.get('path_contact_folder', 'path_contact_folder', fallback=None)
 
     def path_creating_folder(self) -> str | None:
-        """Путь к папке для создания"""
+        """
+        Путь к папке для создания
+        """
         return self.config_path.get('path_creating_folder', 'path_creating_folder', fallback=None)
 
     def path_send_message_folder(self) -> str | None:
-        """Путь к папке для отправки сообщений"""
+        """
+        Путь к папке для отправки сообщений
+        """
         return self.config_path.get('path_send_message_folder', 'path_send_message_folder', fallback=None)
 
     def path_bio_folder(self) -> str | None:
-        """Путь к папке для работы с био"""
+        """
+        Путь к папке для работы с био
+        """
         return self.config_path.get('path_bio_folder', 'path_bio_folder', fallback=None)
 
 

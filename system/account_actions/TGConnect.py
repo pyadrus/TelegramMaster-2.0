@@ -33,6 +33,7 @@ class TGConnect:
     async def connect_to_telegram(self, session_name, account_directory) -> TelegramClient:
         """
         Создает клиент для подключения к Telegram. Proxy IPV6 - НЕ РАБОТАЮТ.
+
         :param session_name: Имя сессии
         :param account_directory: Путь к директории
         :return TelegramClient: TelegramClient
@@ -50,6 +51,7 @@ class TGConnect:
     async def verify_account(self, folder_name, session_name) -> None:
         """
         Проверяет и сортирует аккаунты.
+
         :param session_name: Имя аккаунта для проверки аккаунта
         :param folder_name: Папка с аккаунтами
         """
@@ -87,6 +89,7 @@ class TGConnect:
         telegram_client.disconnect() - Отключение от Telegram.
         working_with_accounts() - Перемещение файла. Исходный путь к файлу - account_folder. Путь к новой папке,
         куда нужно переместить файл - new_account_folder
+
         :param telegram_client: TelegramClient
         :param folder_name: Папка с аккаунтами
         :param session_name: Имя аккаунта
@@ -100,6 +103,7 @@ class TGConnect:
     async def check_for_spam(self, folder_name) -> None:
         """
         Проверка аккаунта на спам через @SpamBot
+
         :param folder_name: папка с аккаунтами
         """
         try:
@@ -158,6 +162,7 @@ class TGConnect:
     async def verify_all_accounts(self, folder_name) -> None:
         """
         Проверяет все аккаунты Telegram в указанной директории.
+
         :folder_name: Имя каталога с аккаунтами
         """
         try:
@@ -176,6 +181,7 @@ class TGConnect:
     async def get_account_details(self, folder_name):
         """
         Получает информацию о Telegram аккаунте.
+
         :param folder_name: Имя каталога
         """
         try:
@@ -216,6 +222,7 @@ class TGConnect:
     async def rename_session_file(telegram_client, phone_old, phone, folder_name) -> None:
         """
         Переименовывает session файлы.
+
         :param telegram_client: Клиент для работы с Telegram
         :param phone_old: Номер телефона для переименования
         :param phone: Номер телефона для переименования (новое название для session файла)
@@ -236,6 +243,7 @@ class TGConnect:
         """
         Подключение к Telegram, используя файл session.
         Имя файла сессии file[0] - session файл
+
         :param account_directory: Путь к директории
         :param session_name: Файл сессии (file[0] - session файл)
         :return TelegramClient: TelegramClient
@@ -257,6 +265,7 @@ class TGConnect:
     async def connecting_number_accounts(self, page: ft.Page, account_directory, appointment):
         """
         Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код
+
         :param page: Page
         :param account_directory: Папка с аккаунтами
         :param appointment: Назначение аккаунта
@@ -333,7 +342,9 @@ class TGConnect:
                 page.update()
 
             async def back_button_clicked(e):
-                """Кнопка возврата в меню настроек"""
+                """
+                Кнопка возврата в меню настроек
+                """
                 page.go("/connecting_accounts_by_number")
 
             button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
@@ -355,6 +366,7 @@ class TGConnect:
     async def connecting_session_accounts(page: ft.Page, account_directory, appointment):
         """
         Подключение сессии Telegram
+
         :param page: страница
         :param account_directory: директория аккаунтов
         :param appointment: назначение
