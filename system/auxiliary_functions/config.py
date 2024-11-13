@@ -107,57 +107,63 @@ class ConfigReader:
 
     def path_parsing_folder(self) -> str | None:
         """
-        Путь к папке для парсинга
+        Путь к папке для парсинга (путь к config файлу user_settings/config/config_path.ini)
         """
         return self.config_path.get('path_parsing_folder', 'path_parsing_folder', fallback=None)
 
     def path_inviting_folder(self) -> str | None:
         """
-        Путь к папке для инвайтинга
+        Путь к папке для инвайтинга (путь к config файлу user_settings/config/config_path.ini)
         """
         return self.config_path.get('path_inviting_folder', 'path_inviting_folder', fallback=None)
 
     def path_subscription_folder(self) -> str | None:
         """
-        Путь к папке для подписки
+        Путь к папке для подписки (путь к config файлу user_settings/config/config_path.ini)
         """
         return self.config_path.get('path_subscription_folder', 'path_subscription_folder', fallback=None)
 
     def path_unsubscribe_folder(self) -> str | None:
         """
-        Путь к папке для отписки
+        Путь к папке для отписки (путь к config файлу user_settings/config/config_path.ini)
         """
         return self.config_path.get('path_unsubscribe_folder', 'path_unsubscribe_folder', fallback=None)
 
     def path_reactions_folder(self) -> str | None:
         """
-        Путь к папке для реакций
+        Путь к папке для реакций (путь к config файлу user_settings/config/config_path.ini)
         """
         return self.config_path.get('path_reactions_folder', 'path_reactions_folder', fallback=None)
 
     def path_contact_folder(self) -> str | None:
         """
-        Путь к папке для контактов
+        Путь к папке для контактов (путь к config файлу user_settings/config/config_path.ini)
         """
         return self.config_path.get('path_contact_folder', 'path_contact_folder', fallback=None)
 
     def path_creating_folder(self) -> str | None:
         """
-        Путь к папке для создания
+        Путь к папке для создания (путь к config файлу user_settings/config/config_path.ini)
         """
         return self.config_path.get('path_creating_folder', 'path_creating_folder', fallback=None)
 
     def path_send_message_folder(self) -> str | None:
         """
-        Путь к папке для отправки сообщений
+        Путь к папке для отправки сообщений (путь к config файлу user_settings/config/config_path.ini)
         """
         return self.config_path.get('path_send_message_folder', 'path_send_message_folder', fallback=None)
 
     def path_bio_folder(self) -> str | None:
         """
-        Путь к папке для работы с био
+        Путь к папке для работы с био (путь к config файлу user_settings/config/config_path.ini)
         """
         return self.config_path.get('path_bio_folder', 'path_bio_folder', fallback=None)
+
+    def path_viewing_folder(self) -> str | None:
+        """
+        Путь к папке для просмотров постов (путь к config файлу user_settings/config/config_path.ini)
+        """
+        return self.config_path.get('path_viewing_folder', 'path_viewing_folder', fallback=None)
 
 
 time_activity_user_2 = ConfigReader().time_activity_user_2()
@@ -184,3 +190,4 @@ path_contact_folder = ConfigReader().path_contact_folder()  # Путь к пап
 path_creating_folder = ConfigReader().path_creating_folder()  # Путь к папке для создания
 path_send_message_folder = ConfigReader().path_send_message_folder()  # Путь к папке для отправки сообщений
 path_bio_folder = ConfigReader().path_bio_folder()  # Путь к папке для работы с био
+path_viewing_folder = ConfigReader().path_viewing_folder()  # Путь к папке для просмотров постов

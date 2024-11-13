@@ -25,7 +25,8 @@ from system.auxiliary_functions.config import (ConfigReader, height_button, smal
                                                window_height, window_resizable, path_parsing_folder,
                                                path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
                                                path_reactions_folder, path_contact_folder, path_creating_folder,
-                                               path_send_message_folder, path_bio_folder)
+                                               path_send_message_folder, path_bio_folder, line_width)
+from system.localization.localization import we_are_winding_up_post_views
 from system.logging_in.logging_in import loging
 from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
@@ -111,6 +112,13 @@ async def main(page: ft.Page):
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
                                                         text="✏️ Редактирование_BIO",
                                                         on_click=lambda _: page.go("/bio_editing")), ]),
+
+                              # 👁️‍🗨️ Накручиваем просмотры постов
+                              ft.ElevatedButton(width=line_width_button, height=height_button,
+                                                text=we_are_winding_up_post_views,
+                                                on_click=lambda _: page.go("/we_are_winding_up_post_views")),
+
+
                               ft.ElevatedButton(width=line_width_button, height=height_button, text="⚙️ Настройки",
                                                 on_click=lambda _: page.go("/settings")),
                               ft.ElevatedButton(width=line_width_button, height=height_button, text="📖 Документация",

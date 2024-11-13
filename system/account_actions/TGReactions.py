@@ -2,13 +2,12 @@
 import asyncio
 import random
 import re
-import sys
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger  # Импортируем библиотеку loguru для логирования
 from telethon import events, types
 from telethon.tl.functions.channels import JoinChannelRequest
-from telethon.tl.functions.messages import SendReactionRequest, GetMessagesViewsRequest
+from telethon.tl.functions.messages import SendReactionRequest
 
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -70,36 +69,6 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                     ]
                 )
             )
-        except Exception as error:
-            logger.exception(f"Ошибка: {error}")
-
-    async def viewing_posts(self) -> None:
-        """
-        Накрутка просмотров постов
-        """
-        try:
-            for session_name in find_filess(directory_path="user_settings/accounts/viewing", extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory="user_settings/accounts/viewing")
-                records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
-                logger.info(f"Всего групп: {len(records)}")
-                for groups in records:  # Поочередно выводим записанные группы
-                    logger.info(f"Группа: {groups}")
-                    try:
-                        await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                        channel = await client.get_entity(groups[0])  # Получение информации о канале
-                        await asyncio.sleep(5)
-                        posts = await client.get_messages(channel, limit=10)  # Получение последних 10 постов из канала
-                        for post in posts:  # Вывод информации о постах
-                            logger.info(f"Ссылка на пост:",
-                                        f"{groups[0]}/{post.id}\nDate: {post.date}\nText: {post.text}\n")
-                            number = re.search(r"/(\d+)$", f"{groups[0]}/{post.id}").group(1)
-                            await asyncio.sleep(5)
-                            await client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))
-                    except KeyError:
-                        sys.exit(1)
-                    finally:
-                        client.disconnect()
         except Exception as error:
             logger.exception(f"Ошибка: {error}")
 

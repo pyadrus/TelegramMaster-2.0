@@ -6,8 +6,8 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               clear_previously_parsed_data_list,
                                               inviting_every_day, invitation_at_a_certain_time,
                                               invitation_1_time_per_hour, inviting, importing_a_list_of_parsed_data,
-                                              setting_reactions, we_are_winding_up_post_views,
-                                              automatic_setting_of_reactions, sending_messages_via_chats,
+                                              setting_reactions, automatic_setting_of_reactions,
+                                              sending_messages_via_chats,
                                               sending_messages_via_chats_with_answering_machine,
                                               sending_files_via_chats, sending_messages_files_via_chats,
                                               sending_personal_messages_with_limits,
@@ -300,10 +300,6 @@ async def reactions_menu(page):
                      # 👍 Ставим реакции
                      ft.ElevatedButton(width=line_width, height=height_button, text=setting_reactions,
                                        on_click=lambda _: page.go("/setting_reactions")),
-                     # 👁️‍🗨️ Накручиваем просмотры постов
-                     ft.ElevatedButton(width=line_width, height=height_button,
-                                       text=we_are_winding_up_post_views,
-                                       on_click=lambda _: page.go("/we_are_winding_up_post_views")),
                      # 🤖 Автоматическое выставление реакций
                      ft.ElevatedButton(width=line_width, height=height_button,
                                        text=automatic_setting_of_reactions,
