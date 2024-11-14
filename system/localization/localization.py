@@ -21,6 +21,7 @@ automatic_setting_of_reactions: str = "🤖 Автоматическое выс�
 back_button: str = "⬅️ Назад"
 start_parsing_button: str = "🚀 Начать парсинг"
 done_button: str = "✅ Готово"
+start_inviting_button: str = "🚀 Начать инвайтинг"
 
 # Рассылка сообщений меню
 sending_messages_via_chats: str = "💬 Рассылка сообщений по чатам"

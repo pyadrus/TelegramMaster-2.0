@@ -42,6 +42,12 @@ logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # �
 
 
 async def show_notification(page: ft.Page, message: str):
+    """
+    Функция для показа уведомления
+    
+    Аргументы:
+    :param page: Страница интерфейса Flet для отображения элементов управления.
+    """
     dlg = ft.AlertDialog(
         title=ft.Text(message),
         on_dismiss=lambda e: page.go("/"),  # Переход обратно после закрытия диалога
@@ -141,14 +147,14 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Инвайтинга")
-                    await InvitingToAGroup().inviting_without_limits(account_limits=ConfigReader().get_limits())
-                    logger.info("🔚 Конец Инвайтинга")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                    # start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    # logger.info('Время старта: ' + str(start))
+                    # logger.info("▶️ Начало Инвайтинга")
+                    await InvitingToAGroup().inviting_without_limits(page=page, account_limits=ConfigReader().get_limits())
+                    # logger.info("🔚 Конец Инвайтинга")
+                    # finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    # logger.info('Время окончания: ' + str(finish))
+                    # logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
