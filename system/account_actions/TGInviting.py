@@ -52,7 +52,7 @@ class InvitingToAGroup:
         lv.controls.append(ft.Text(message))  # отображаем сообщение в ListView
         page.update()  # обновляем страницу для отображения нового сообщения
 
-    async def inviting_without_limits(self,page: ft.Page,  account_limits) -> None:
+    async def inviting_without_limits(self, page: ft.Page, account_limits) -> None:
         """
         Инвайтинг без лимитов
 
@@ -77,14 +77,16 @@ class InvitingToAGroup:
             try:
                 # logger.info(f"Запуск инвайтинга без лимитов")
                 for session_name in find_filess(directory_path=path_inviting_folder, extension='session'):
-                    client = await self.tg_connect.get_telegram_client(session_name, account_directory=path_inviting_folder)
+                    client = await self.tg_connect.get_telegram_client(session_name,
+                                                                       account_directory=path_inviting_folder)
                     # Получение ссылки для инвайтинга
                     for link in await self.getting_an_invitation_link_from_the_database():
                         logger.info(f"{link[0]}")
                         # Подписка на группу для инвайтинга
                         await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link[0])
                         # Получение списка usernames
-                        number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members", account_limits=account_limits)
+                        number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
+                                                                                             account_limits=account_limits)
 
                         if len(number_usernames) == 0:
                             await self.log_and_display(f"В таблице members нет пользователей для инвайтинга", lv, page)
@@ -96,16 +98,21 @@ class InvitingToAGroup:
                             # Инвайтинг в группу по полученному списку
                             time_inviting = self.config_reader.get_time_inviting()
                             try:
-                                await self.log_and_display(f"Попытка приглашения {username[0]} в группу {link[0]}.", lv, page)
+                                await self.log_and_display(f"Попытка приглашения {username[0]} в группу {link[0]}.", lv,
+                                                           page)
                                 await client(InviteToChannelRequest(link[0], [username[0]]))
                                 await self.log_and_display(f"Удачно! Спим 5 секунд", lv, page)
                                 await asyncio.sleep(5)
                             # Ошибка инвайтинга продолжаем работу
                             except UserChannelsTooMuchError:
-                                await self.log_and_display(f"Попытка приглашения {username} в группу {link[0]}. Превышен лимит у user каналов / супергрупп.", lv, page)
+                                await self.log_and_display(
+                                    f"Попытка приглашения {username} в группу {link[0]}. Превышен лимит у user каналов / супергрупп.",
+                                    lv, page)
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             except UserNotMutualContactError:
-                                await self.log_and_display(f"Попытка приглашения {username} в группу {link[0]}. User не является взаимным контактом.", lv, page)
+                                await self.log_and_display(
+                                    f"Попытка приглашения {username} в группу {link[0]}. User не является взаимным контактом.",
+                                    lv, page)
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             except UserKickedError:
                                 await self.log_and_display(
@@ -113,26 +120,32 @@ class InvitingToAGroup:
                                     lv, page)
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                                logger.error(f"Попытка приглашения {username} в группу {link[0]}. Не корректное имя {username}")
+                                logger.error(
+                                    f"Попытка приглашения {username} в группу {link[0]}. Не корректное имя {username}")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             except ChatAdminRequiredError:
-                                logger.error(f"Попытка приглашения {username} в группу {link[0]}. Требуются права администратора.")
+                                logger.error(
+                                    f"Попытка приглашения {username} в группу {link[0]}. Требуются права администратора.")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             except UserPrivacyRestrictedError:
-                                logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки конфиденциальности {username} не позволяют вам inviting")
+                                logger.error(
+                                    f"Попытка приглашения {username} в группу {link[0]}. Настройки конфиденциальности {username} не позволяют вам inviting")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             except BotGroupsBlockedError:
-                                logger.error(f"Попытка приглашения {username} в группу {link[0]}. Вы не можете добавить бота в группу.")
+                                logger.error(
+                                    f"Попытка приглашения {username} в группу {link[0]}. Вы не можете добавить бота в группу.")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             except (TypeError, UnboundLocalError):
                                 logger.error(f"Попытка приглашения {username} в группу {link[0]}")
                             # Ошибка инвайтинга прерываем работу
                             except ChatWriteForbiddenError:
-                                logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки в чате не дают добавлять людей в чат, возможно стоит бот админ и нужно подписаться на другие проекты")
+                                logger.error(
+                                    f"Попытка приглашения {username} в группу {link[0]}. Настройки в чате не дают добавлять людей в чат, возможно стоит бот админ и нужно подписаться на другие проекты")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                                 break  # Прерываем работу и меняем аккаунт
                             except InviteRequestSentError:
-                                logger.error(f"Попытка приглашения {username} в группу {link[0]}. Доступ к функциям группы станет возможен после утверждения заявки администратором на {link[0]}")
+                                logger.error(
+                                    f"Попытка приглашения {username} в группу {link[0]}. Доступ к функциям группы станет возможен после утверждения заявки администратором на {link[0]}")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                                 break  # Прерываем работу и меняем аккаунт
                             # except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
@@ -140,7 +153,8 @@ class InvitingToAGroup:
                             #     await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             #     break  # Прерываем работу и меняем аккаунт
                             except (
-                            ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError, UserBannedInChannelError):
+                                    ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError,
+                                    UserBannedInChannelError):
                                 await record_and_interrupt(time_inviting[0], time_inviting[1])
                                 break  # Прерываем работу и меняем аккаунт
                             except FloodWaitError as error:
@@ -148,7 +162,8 @@ class InvitingToAGroup:
                                 await record_and_interrupt(time_inviting[0], time_inviting[1])
                                 break  # Прерываем работу и меняем аккаунт
                             except PeerFloodError:
-                                logger.error(f"Попытка приглашения {username} в группу {link[0]}. Настройки конфиденциальности {username} не позволяют вам inviting")
+                                logger.error(
+                                    f"Попытка приглашения {username} в группу {link[0]}. Настройки конфиденциальности {username} не позволяют вам inviting")
                                 await record_and_interrupt(time_inviting[0], time_inviting[1])
                                 break  # Прерываем работу и меняем аккаунт
 
@@ -168,15 +183,14 @@ class InvitingToAGroup:
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
             # Логируем и отображаем время окончания работы
-            await self.log_and_display(f"🔚 Конец инвайтинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
-
+            await self.log_and_display(
+                f"🔚 Конец инвайтинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
 
         async def back_button_clicked(_):
             """
             ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню инвайтинга.
             """
             page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
-
 
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(

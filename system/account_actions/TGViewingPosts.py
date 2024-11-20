@@ -40,7 +40,8 @@ class ViewingPosts:
             async def btn_click(e) -> None:
 
                 for session_name in find_filess(directory_path=path_viewing_folder, extension='session'):
-                    client = await self.tg_connect.get_telegram_client(session_name, account_directory=path_viewing_folder)
+                    client = await self.tg_connect.get_telegram_client(session_name,
+                                                                       account_directory=path_viewing_folder)
                     logger.info(f'[+] Работаем с каналом: {link_channel.value}')
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel.value)
                     msg_id = int(re.search(r'/(\d+)$', link_post.value).group(1))  # Получаем id сообщения из ссылки

@@ -2,7 +2,6 @@ import os
 
 os.system("""pip install -r requirements.txt""")
 
-
 # Список всех необходимых директорий
 directories = [
     'user_settings/accounts/answering_machine',

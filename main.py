@@ -47,6 +47,7 @@ async def show_notification(page: ft.Page, message: str):
     
     Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
+    :param message: Текст уведомления.
     """
     dlg = ft.AlertDialog(
         title=ft.Text(message),
@@ -125,7 +126,6 @@ async def main(page: ft.Page):
                                                 text=we_are_winding_up_post_views,
                                                 on_click=lambda _: page.go("/viewing_posts_menu")),
 
-
                               ft.ElevatedButton(width=line_width_button, height=height_button, text="⚙️ Настройки",
                                                 on_click=lambda _: page.go("/settings")),
                               ft.ElevatedButton(width=line_width_button, height=height_button, text="📖 Документация",
@@ -150,7 +150,8 @@ async def main(page: ft.Page):
                     # start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     # logger.info('Время старта: ' + str(start))
                     # logger.info("▶️ Начало Инвайтинга")
-                    await InvitingToAGroup().inviting_without_limits(page=page, account_limits=ConfigReader().get_limits())
+                    await InvitingToAGroup().inviting_without_limits(page=page,
+                                                                     account_limits=ConfigReader().get_limits())
                     # logger.info("🔚 Конец Инвайтинга")
                     # finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     # logger.info('Время окончания: ' + str(finish))

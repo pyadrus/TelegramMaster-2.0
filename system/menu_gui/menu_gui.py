@@ -306,6 +306,7 @@ async def reactions_menu(page):
                                        on_click=lambda _: page.go("/automatic_setting_of_reactions")),
                  ])]))
 
+
 async def viewing_posts_menu(page):
     """
     Меню работа с просмотрами
@@ -328,6 +329,7 @@ async def viewing_posts_menu(page):
                                        text=we_are_winding_up_post_views,
                                        on_click=lambda _: page.go("/we_are_winding_up_post_views")),
                  ])]))
+
 
 async def subscribe_and_unsubscribe_menu(page):
     """

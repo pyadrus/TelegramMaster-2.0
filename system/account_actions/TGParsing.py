@@ -95,7 +95,8 @@ class ParsingGroupMembers:
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
             # Логируем и отображаем время окончания работы
-            await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
+            await self.log_and_display(
+                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
 
         async def back_button_clicked(_):
             """
@@ -488,7 +489,8 @@ class ParsingGroupMembers:
             username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(
                 user)
             entity = (
-            username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id, user_premium)
+                username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
+                user_premium)
             return entity
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
