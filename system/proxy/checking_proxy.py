@@ -4,6 +4,7 @@ import random
 import requests
 from loguru import logger
 
+from system.logging_in.logging_in import get_country_flag
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -65,6 +66,8 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
     try:
         # Указываем параметры прокси
         proxy = {'http': f'{proxy_type}://{username}:{password}@{addr}:{port}'}
+        emoji, country = get_country_flag(addr)
+        logger.info(f"Проверяемый прокси: {proxy_type}://{username}:{password}@{addr}:{port}. Страна proxy {country} {emoji}")
         requests.get('http://example.org', proxies=proxy)
         logger.info(f'⚠️ Proxy: {proxy_type}://{username}:{password}@{addr}:{port} рабочий!')
     # RequestException исключение возникает при ошибках, которые могут быть вызваны при запросе к веб-серверу.
