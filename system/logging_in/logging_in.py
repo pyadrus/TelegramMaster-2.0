@@ -9,6 +9,13 @@ from system.auxiliary_functions.config import program_version, date_of_program_c
 
 
 def get_country_flag(ip_address):
+    """Определение страны по ip адресу на основе сервиса https://ipwhois.io/ru/documentation.
+    Возвращает флаг и название страны.
+
+    Аргументы:
+    :param ip_address: ip адрес
+    :return: флаг и название страны
+    """
     response = urlopen(f'http://ipwho.is/{ip_address}')
     ipwhois = json.load(response)
 
@@ -17,6 +24,7 @@ def get_country_flag(ip_address):
     return emoji, country
 
 def get_external_ip():
+    """Получение внешнего ip адреса"""
     try:
         response = requests.get('https://httpbin.org/ip')
         response.raise_for_status()
