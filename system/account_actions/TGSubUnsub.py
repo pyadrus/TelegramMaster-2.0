@@ -71,23 +71,17 @@ class SubscribeUnsubscribeTelegram:
         :param group_link: Группа или канал
         :param client: Телеграм клиент
         """
-        if client is None:
-            logger.error("❌ Ошибка: Клиент Telegram не был правильно инициализирован.")
-            return  # Выход из функции, если клиент не существует
-
         try:
             entity = await client.get_entity(group_link)
             if entity:
                 await client(LeaveChannelRequest(entity))
         except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
-            logger.error(f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
+            logger.error(
+                f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         finally:
-            if client.is_connected():  # Проверка, что клиент подключен, перед разрывом соединения
-                await client.disconnect()  # Разрываем соединение с Telegram
-            else:
-                logger.warning(f"Клиент не подключен, пропускаем отключение.")
+            await client.disconnect()  # Разрываем соединение с Telegram
 
     async def subscribe_to_group_or_channel(self, client, groups_wr) -> None:
         """
