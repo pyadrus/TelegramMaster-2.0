@@ -6,7 +6,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitEr
                              UserChannelsTooMuchError, BotGroupsBlockedError, ChatWriteForbiddenError,
                              UserBannedInChannelError, UserNotMutualContactError, ChatAdminRequiredError,
                              UserKickedError, ChannelPrivateError, UserIdInvalidError, UsernameNotOccupiedError,
-                             UsernameInvalidError, InviteRequestSentError, TypeNotFoundError)
+                             UsernameInvalidError, InviteRequestSentError, TypeNotFoundError, SessionRevokedError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 import datetime
 from system.account_actions.TGConnect import TGConnect
@@ -154,7 +154,7 @@ class InvitingToAGroup:
                             #     break  # Прерываем работу и меняем аккаунт
                             except (
                                     ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError,
-                                    UserBannedInChannelError):
+                                    UserBannedInChannelError, SessionRevokedError):
                                 await record_and_interrupt(time_inviting[0], time_inviting[1])
                                 break  # Прерываем работу и меняем аккаунт
                             except FloodWaitError as error:
