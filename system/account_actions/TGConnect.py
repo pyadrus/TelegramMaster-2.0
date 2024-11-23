@@ -266,11 +266,16 @@ class TGConnect:
             return telegram_client
         except AuthKeyDuplicatedError:
             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
-            logger.info(f"На данный момент аккаунт {session_name} запущен под другим ip")
+            logger.info(f"❌ На данный момент аккаунт {session_name} запущен под другим ip")
             working_with_accounts(f"{account_directory}/{session_name}.session",
                                   f"user_settings/accounts/banned/{session_name}.session")
         except AttributeError as error:
             logger.error(f"❌ Ошибка: {error}")
+        except sqlite3.OperationalError as error:
+            await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
+            logger.info(f"❌ Аккаунт {session_name} поврежден.")
+            working_with_accounts(f"{account_directory}/{session_name}.session",
+                                  f"user_settings/accounts/banned/{session_name}.session")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
