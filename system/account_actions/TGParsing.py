@@ -155,7 +155,15 @@ class ParsingGroupMembers:
             for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(session_name, account_directory=path_parsing_folder)
                 await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
-                await asyncio.sleep(int(time_activity_user_2))
+
+                try:
+                    # Преобразуем значение time_activity_user_2 в целое число (если оно None, используем 5 по умолчанию).
+                    await asyncio.sleep(int(time_activity_user_2 or 5))  # По умолчанию 5, если None или некорректный тип
+                except TypeError:
+                    # Если произошла ошибка преобразования (например, time_activity_user_2 имеет неподдерживаемый тип),
+                    # то делаем паузу по умолчанию в 5 секунд.
+                    await asyncio.sleep(5)  # По умолчанию 5, если None или неправильный тип
+
                 await self.get_active_users(client, chat_input, limit_active_user, lv, page)
                 await client.disconnect()  # Разрываем соединение telegram
             await self.clean_parsing_list_and_remove_duplicates()
