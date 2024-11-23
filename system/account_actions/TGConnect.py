@@ -267,8 +267,10 @@ class TGConnect:
             logger.info(f"На данный момент аккаунт {session_name} запущен под другим ip")
             working_with_accounts(f"{account_directory}/{session_name}.session",
                                   f"user_settings/accounts/banned/{session_name}.session")
+        except AttributeError as error:
+            logger.error(f"❌ Ошибка: {error}")
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def connecting_number_accounts(self, page: ft.Page, account_directory, appointment):
         """
@@ -328,7 +330,7 @@ class TGConnect:
                                         "/connecting_accounts_by_number")  # Изменение маршрута в представлении существующих настроек
                                     page.update()
                                 except Exception as ex:
-                                    logger.error(f"Ошибка при вводе пароля: {ex}")
+                                    logger.exception(f"❌ Ошибка при вводе пароля: {ex}")
 
                             button_password = ft.ElevatedButton(width=line_width_button, height=height_button,
                                                                 text=done_button,
@@ -340,7 +342,7 @@ class TGConnect:
                             logger.error("[!] Неверные API ID или API Hash.")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
                         except Exception as error:
-                            logger.error(f"Ошибка при авторизации: {error}")
+                            logger.exception(f"❌ Ошибка при авторизации: {error}")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
 
                     button_code = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
@@ -369,7 +371,7 @@ class TGConnect:
             page.update()
 
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
     async def connecting_session_accounts(page: ft.Page, account_directory, appointment):
@@ -453,4 +455,4 @@ class TGConnect:
             page.update()
 
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")

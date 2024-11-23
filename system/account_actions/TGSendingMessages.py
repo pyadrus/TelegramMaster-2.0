@@ -83,6 +83,7 @@ class SendTelegramMessages:
                             continue  # Записываем ошибку в software_database.db и продолжаем работу
                 except KeyError:  # В случае отсутствия ключа в базе данных (нет аккаунтов в базе данных).
                     sys.exit(1)
+
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
