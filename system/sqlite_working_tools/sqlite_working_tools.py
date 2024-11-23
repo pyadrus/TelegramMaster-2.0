@@ -8,7 +8,7 @@ from peewee import fn, SqliteDatabase, Model, IntegerField, CharField, TextField
 db = SqliteDatabase('user_settings/software_database.db')
 
 
-class groups_and_channels(Model):
+class GroupsAndChannels(Model):
     """
     Список групп и каналов в таблице groups_and_channels
     """
@@ -30,20 +30,20 @@ def remove_duplicates():
 
     # Находим все записи с дублирующимися id
     duplicate_ids = (
-        groups_and_channels
-        .select(groups_and_channels.id)
-        .group_by(groups_and_channels.id)
-        .having(fn.COUNT(groups_and_channels.id) > 1)
+        GroupsAndChannels
+        .select(GroupsAndChannels.id)
+        .group_by(GroupsAndChannels.id)
+        .having(fn.COUNT(GroupsAndChannels.id) > 1)
     )
 
     # Для каждого дублирующегося id оставляем только первую запись, остальные удаляем
     for duplicate in duplicate_ids:
         # Находим все записи с этим id, сортируем по времени парсинга
         duplicates = (
-            groups_and_channels
+            GroupsAndChannels
             .select()
-            .where(groups_and_channels.id == duplicate.id)
-            .order_by(groups_and_channels.parsing_time)
+            .where(GroupsAndChannels.id == duplicate.id)
+            .order_by(GroupsAndChannels.parsing_time)
         )
 
         # Оставляем только первую запись, остальные удаляем

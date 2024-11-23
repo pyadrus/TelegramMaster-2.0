@@ -18,7 +18,7 @@ from system.auxiliary_functions.auxiliary_functions import find_filess
 from system.auxiliary_functions.config import (path_parsing_folder, line_width_button, height_button,
                                                time_activity_user_2)
 from system.localization.localization import back_button, start_parsing_button, done_button
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler, db, groups_and_channels, remove_duplicates
+from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates
 
 
 class ParsingGroupMembers:
@@ -524,7 +524,7 @@ class ParsingGroupMembers:
                                                lv, page)
 
                     with db.atomic():  # Атомарная транзакция для записи данных
-                        groups_and_channels.create(
+                        GroupsAndChannels.create(
                             id=dialog.id,
                             title=channel_details.title,
                             about=full_channel_info.full_chat.about,
