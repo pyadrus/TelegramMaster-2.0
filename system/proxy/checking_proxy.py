@@ -70,13 +70,14 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
         # Указываем параметры прокси
         proxy = {'http': f'{proxy_type}://{username}:{password}@{addr}:{port}'}
         emoji, country = get_country_flag(addr)
-        logger.info(f"Проверяемый прокси: {proxy_type}://{username}:{password}@{addr}:{port}. Страна proxy {country} {emoji}")
+        logger.info(
+            f"Проверяемый прокси: {proxy_type}://{username}:{password}@{addr}:{port}. Страна proxy {country} {emoji}")
         requests.get('http://example.org', proxies=proxy)
         logger.info(f'⚠️ Proxy: {proxy_type}://{username}:{password}@{addr}:{port} рабочий!')
     # RequestException исключение возникает при ошибках, которые могут быть вызваны при запросе к веб-серверу.
     # Это может быть из-за недоступности сервера, ошибочного URL или других проблем с соединением.
     except requests.exceptions.RequestException:
-        logger.info('[-] Proxy не рабочий!')
+        logger.info('❌ Proxy не рабочий!')
         await db_handler.deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns)
     except Exception as error:
         logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.

@@ -72,10 +72,10 @@ class SendTelegramMessages:
                             break  # Прерываем работу и меняем аккаунт
                         except UserNotMutualContactError:
                             logger.error(
-                                f"Отправляем сообщение в личку {username[0]}. {username[0]} не является взаимным контактом.")
+                                f"❌ Отправляем сообщение в личку {username[0]}. {username[0]} не является взаимным контактом.")
                         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                             logger.error(
-                                f"Отправляем сообщение в личку {username[0]}. Не корректное имя {username[0]}.")
+                                f"❌ Отправляем сообщение в личку {username[0]}. Не корректное имя {username[0]}.")
                         except ChatWriteForbiddenError:
                             await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
@@ -124,9 +124,9 @@ class SendTelegramMessages:
                             break  # Прерываем работу и меняем аккаунт
                         except UserNotMutualContactError:
                             logger.error(
-                                f"Отправляем сообщение в личку {username}. {username} не является взаимным контактом.")
+                                f"❌ Отправляем сообщение в личку {username}. {username} не является взаимным контактом.")
                         except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                            logger.error(f"Отправляем сообщение в личку {username}. Не корректное имя {username}.")
+                            logger.error(f"❌ Отправляем сообщение в личку {username}. Не корректное имя {username}.")
                         except ChatWriteForbiddenError:
                             await record_and_interrupt(time_inviting[0], time_inviting[1])
                             break  # Прерываем работу и меняем аккаунт
@@ -159,13 +159,13 @@ class SendTelegramMessages:
                             await self.random_dream()  # Прерываем работу и меняем аккаунт
                     except ChannelPrivateError:
                         logger.error(
-                            f"Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
+                            f"❌ Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
                         logger.error(
-                            f"Рассылка файлов в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                            f"❌ Рассылка файлов в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         await asyncio.sleep(e.seconds)
                     except UserBannedInChannelError:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)

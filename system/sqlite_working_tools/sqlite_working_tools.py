@@ -85,14 +85,14 @@ class DatabaseHandler:
             records = self.cursor.fetchall()
             self.close()
             return records
-        except sqlite3.DatabaseError as error: # Ошибка при открытии базы данных
+        except sqlite3.DatabaseError as error:  # Ошибка при открытии базы данных
             logger.error(f"❌ Ошибка при открытии базы данных, возможно база данных повреждена: {error}")
             return []
-        except sqlite3.Error as error: # Ошибка при открытии базы данных
+        except sqlite3.Error as error:  # Ошибка при открытии базы данных
             logger.error(f"❌ Ошибка при открытии базы данных: {error}")
             return []
         finally:
-            self.close() # Закрываем соединение
+            self.close()  # Закрываем соединение
 
     async def remove_duplicate_ids(self, table_name, column_name) -> None:
         """

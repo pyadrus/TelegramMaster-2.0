@@ -262,7 +262,7 @@ class ParsingGroupMembers:
                         await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
                     except ValueError as e:
                         # Логируем ошибку, если не удалось получить входную сущность
-                        logger.warning(f"Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}")
+                        logger.warning(f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}")
                 else:
                     logger.warning(f"Сообщение {message.id} не имеет действительного from_id.")
         except Exception as error:

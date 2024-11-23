@@ -26,6 +26,7 @@ def get_country_flag(ip_address):
     country = ipwhois['country']
     return emoji, country
 
+
 def get_external_ip():
     """Получение внешнего ip адреса"""
     try:

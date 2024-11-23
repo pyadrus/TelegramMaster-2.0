@@ -155,7 +155,7 @@ class TGContact:
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
                 except ValueError:
                     logger.info(
-                        f"[+] Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
+                        f"❌ Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
             client.disconnect()  # Разрываем соединение telegram

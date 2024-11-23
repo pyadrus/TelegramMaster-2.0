@@ -77,14 +77,14 @@ class TGConnect:
                     AuthKeyUnregisteredError, AuthKeyDuplicatedError) as e:
                 await self.handle_banned_account(telegram_client, folder_name, session_name, e)
             except TimedOutError as error:
-                logger.exception(f"Ошибка таймаута: {error}")
+                logger.exception(f"❌ Ошибка таймаута: {error}")
                 await asyncio.sleep(2)
             except sqlite3.OperationalError:
                 await telegram_client.disconnect()
                 working_with_accounts(f"user_settings/accounts/{folder_name}/{session_name}.session",
                                       f"user_settings/accounts/banned/{session_name}.session")
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
     async def handle_banned_account(telegram_client, folder_name, session_name, exception):
@@ -163,7 +163,7 @@ class TGConnect:
                     logger.error(e)
                     continue
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def verify_all_accounts(self, folder_name) -> None:
         """
@@ -183,7 +183,7 @@ class TGConnect:
                 await self.verify_account(folder_name=folder_name, session_name=session_file)
             logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁: {folder_name}")
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def get_account_details(self, folder_name):
         """
@@ -224,7 +224,7 @@ class TGConnect:
                     working_with_accounts(f"user_settings/accounts/{folder_name}/{session_name}.session",
                                           f"user_settings/accounts/banned/{session_name}.session")
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
     async def rename_session_file(telegram_client, phone_old, phone, folder_name) -> None:
@@ -246,7 +246,7 @@ class TGConnect:
             # Если файл существует, то удаляем дубликат
             os.remove(f"user_settings/accounts/{folder_name}/{phone_old}.session")
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def get_telegram_client(self, session_name, account_directory):
         """
@@ -258,7 +258,8 @@ class TGConnect:
         :param session_name: Файл сессии (file[0] - session файл)
         :return TelegramClient: TelegramClient
         """
-        logger.info(f"Подключение к аккаунту: {account_directory}/{session_name}")  # Имя файла сессии file[0] - session файл
+        logger.info(
+            f"Подключение к аккаунту: {account_directory}/{session_name}")  # Имя файла сессии file[0] - session файл
         telegram_client = await self.connect_to_telegram(session_name, account_directory)
         try:
             await telegram_client.connect()
@@ -325,7 +326,7 @@ class TGConnect:
                                 "/connecting_accounts_by_number")  # Перенаправление в настройки, если 2FA не требуется
                             page.update()
                         except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
-                            logger.info("Требуется двухфакторная аутентификация. Введите пароль.")
+                            logger.info("❌ Требуется двухфакторная аутентификация. Введите пароль.")
                             pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
 
                             async def btn_click_password(e) -> None:

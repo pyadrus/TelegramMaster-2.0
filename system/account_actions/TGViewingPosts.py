@@ -70,7 +70,7 @@ class ViewingPosts:
                 )
             )
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def viewing_posts(self, client, link_post, number, link_channel) -> None:
         """
@@ -105,4 +105,4 @@ class ViewingPosts:
             # finally:
             #     client.disconnect()
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")

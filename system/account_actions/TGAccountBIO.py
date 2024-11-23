@@ -60,7 +60,7 @@ class AccountBIO:
 
             self.function_button_ready(page, btn_click, user_input)
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def change_username_profile(self, user_input) -> None:
         """
@@ -79,15 +79,15 @@ class AccountBIO:
                     logger.info(f'Никнейм успешно обновлен на {user_input}')
                     client.disconnect()
                 except AuthKeyUnregisteredError:
-                    logger.error("Ошибка соединения с профилем")
+                    logger.error("❌ Ошибка соединения с профилем")
                 except (UsernamePurchaseAvailableError, UsernameOccupiedError):
-                    logger.error("Никнейм уже занят")
+                    logger.error("❌ Никнейм уже занят")
                     client.disconnect()
                 except UsernameInvalidError:
-                    logger.error("Неверный никнейм")
+                    logger.error("❌ Неверный никнейм")
                     client.disconnect()
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def change_bio_profile_gui(self, page: ft.Page) -> None:
         """
@@ -107,7 +107,7 @@ class AccountBIO:
 
             self.function_button_ready(page, btn_click, user_input)
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def change_bio_profile(self, user_input):
         """
@@ -126,16 +126,16 @@ class AccountBIO:
                     if len(user_input) <= 70:
                         break
                     else:
-                        logger.info(f"Описание профиля превышает 70 символов. Пожалуйста, введите снова. Описание "
+                        logger.info(f"❌ Описание профиля превышает 70 символов. Пожалуйста, введите снова. Описание "
                                     f"профиля: {len(user_input)} символов")
                 try:
                     result = await client(functions.account.UpdateProfileRequest(about=user_input))
                     logger.info(f'{result}\nПрофиль успешно обновлен!')
                     await client.disconnect()
                 except AuthKeyUnregisteredError:
-                    logger.error("Ошибка соединения с профилем")
+                    logger.error("❌ Ошибка соединения с профилем")
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def change_name_profile_gui(self, page: ft.Page) -> None:
         """
@@ -154,7 +154,7 @@ class AccountBIO:
 
             self.function_button_ready(page, btn_click, user_input)
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def change_name_profile(self, user_input):
         """
@@ -173,9 +173,9 @@ class AccountBIO:
                     logger.info(f'{result}\nИмя успешно обновлено!')
                     await client.disconnect()
                 except AuthKeyUnregisteredError:
-                    logger.error("Ошибка соединения с профилем")
+                    logger.error("❌ Ошибка соединения с профилем")
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def change_last_name_profile_gui(self, page: ft.Page) -> None:
         """
@@ -195,7 +195,7 @@ class AccountBIO:
 
             self.function_button_ready(page, btn_click, user_input)
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def change_last_name_profile(self, user_input):
         """
@@ -214,9 +214,9 @@ class AccountBIO:
                     logger.info(f'{result}\nФамилия успешно обновлена!')
                     await client.disconnect()
                 except AuthKeyUnregisteredError:
-                    logger.error("Ошибка соединения с профилем")
+                    logger.error("❌ Ошибка соединения с профилем")
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def change_photo_profile(self):
         """Изменение фото профиля."""
@@ -242,17 +242,16 @@ class AccountBIO:
                             ))
                             logger.info(f'{result}\nФото успешно обновлено!')
                         except Exception as e:
-                            logger.error(f"Ошибка загрузки фото {photo_file[0]}: {e}")
+                            logger.error(f"❌ Ошибка загрузки фото {photo_file[0]}: {e}")
 
                 except AuthKeyUnregisteredError:
-                    logger.error("Ошибка соединения с профилем, неверный ключ авторизации.")
+                    logger.error("❌ Ошибка соединения с профилем, неверный ключ авторизации.")
                 except Exception as e:
-                    logger.exception(f"Ошибка при подключении или выполнении запроса для {session_name}: {e}")
+                    logger.exception(f"❌ Ошибка при подключении или выполнении запроса для {session_name}: {e}")
                 finally:
                     # Убедитесь, что клиент отключен после обработки сеанса.
                     if await client.is_connected():
                         await client.disconnect()
 
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
-
+            logger.exception(f"❌ Ошибка: {error}")

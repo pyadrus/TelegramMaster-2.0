@@ -79,7 +79,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 )
             )
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
     def choosing_random_reaction():
@@ -90,7 +90,7 @@ class WorkingWithReactions:  # Класс для работы с реакция�
             logger.info(random_value)
             return random_value
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def reactions_for_groups_and_messages_test(self, number, chat) -> None:
         """
@@ -115,11 +115,11 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                     await asyncio.sleep(1)
                     await client.disconnect()
                 except ReactionInvalidError:
-                    logger.info(f"Ошибка : Предоставлена неверная реакция")
+                    logger.info(f"❌ Ошибка : Предоставлена неверная реакция")
                     await asyncio.sleep(1)
                     await client.disconnect()
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def setting_reactions(self):
         """Выставление реакций на новые посты"""
@@ -142,4 +142,4 @@ class WorkingWithReactions:  # Класс для работы с реакция�
 
                 await client.run_until_disconnected()  # Запуск клиента в режиме ожидания событий
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(f"❌ Ошибка: {error}")

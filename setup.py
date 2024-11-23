@@ -25,4 +25,4 @@ for directory in directories:
         os.makedirs(directory, exist_ok=True)
         print(f"Папка '{directory}' создана")
     except OSError as e:
-        print(f"Ошибка создания папки '{directory}': {e}")
+        print(f"❌ Ошибка создания папки '{directory}': {e}")

@@ -98,9 +98,10 @@ class SubscribeUnsubscribeTelegram:
             await client(JoinChannelRequest(groups_wr))
             logger.info(f"Аккаунт подписался на группу / канал: {groups_wr}")
         except SessionRevokedError:
-            logger.error(f"Попытка подписки на группу / канал {groups_wr}. Авторизация была признана недействительной из-за того, что пользователь завершил все сеансы.")
+            logger.error(
+                f"❌ Попытка подписки на группу / канал {groups_wr}. Авторизация была признана недействительной из-за того, что пользователь завершил все сеансы.")
         except UserDeactivatedBanError:
-            logger.error(f"Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.")
+            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.")
         except ChannelsTooMuchError:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             async for dialog in client.iter_dialogs():
@@ -110,28 +111,28 @@ class SubscribeUnsubscribeTelegram:
                     await client.disconnect()
                 except ConnectionError:
                     break
-            logger.info("[+] Список почистили, и в файл записали.")
+            logger.info("❌  Список почистили, и в файл записали.")
         except ChannelPrivateError:
-            logger.error(f"Попытка подписки на группу / канал {groups_wr}. Указанный канал / группа {groups_wr} "
+            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Указанный канал / группа {groups_wr} "
                          f"является приватным, или вам запретили подписываться.")
         except (UsernameInvalidError, ValueError, TypeError):
             logger.error(
-                f"Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не "
+                f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не "
                 f"является группой / каналом: {groups_wr}")
             await self.db_handler.write_data_to_db("""SELECT * from writing_group_links""",
                                                    """DELETE from writing_group_links where writing_group_links = ?""",
                                                    groups_wr)
         except PeerFloodError:
-            logger.error(f"Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.")
+            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.")
             await asyncio.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
-            logger.error(f"Попытка подписки на группу / канал {groups_wr}. Flood! wait for "
+            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Flood! wait for "
                          f"{str(datetime.timedelta(seconds=e.seconds))}")
             await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
             # Прерываем работу и меняем аккаунт
             raise
         except InviteRequestSentError:
-            logger.error(f"Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения "
+            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения "
                          f"администратором на вступление в группу")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.

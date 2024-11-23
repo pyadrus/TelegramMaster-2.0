@@ -218,7 +218,7 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
         return config
     except configparser.NoSectionError as error:
         logger.error(
-            f"Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_settings/config/config.ini")
+            f"❌ Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_settings/config/config.ini")
 
 
 def write_data_to_json_file(reactions, path_to_the_file):
