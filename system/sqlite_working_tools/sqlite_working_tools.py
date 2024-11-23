@@ -69,13 +69,30 @@ class DatabaseHandler:
         Открываем базу и считываем данные из указанной таблицы
 
         Аргументы:
-        :param table_name: название таблицы
-        :return: список записей из таблицы"""
-        await self.connect()
-        self.cursor.execute(f"SELECT * FROM {table_name}")
-        records = self.cursor.fetchall()
-        self.close()
-        return records
+        :param table_name: Название таблицы, данные из которой требуется извлечь.
+
+        Возвращаемое значение:
+        :return: список записей из таблицы
+
+        Исключения:
+        В случае ошибок базы данных (например, поврежденный файл базы данных или некорректный запрос)
+        метод ловит исключения типа `sqlite3.Error` и записывает ошибку в лог, но не выбрасывает её дальше.
+        Это предотвращает аварийное завершение работы программы и позволяет продолжить выполнение.
+        """
+        try:
+            await self.connect()
+            self.cursor.execute(f"SELECT * FROM {table_name}")
+            records = self.cursor.fetchall()
+            self.close()
+            return records
+        except sqlite3.DatabaseError as error: # Ошибка при открытии базы данных
+            logger.error(f"❌ Ошибка при открытии базы данных, возможно база данных повреждена: {error}")
+            return []
+        except sqlite3.Error as error: # Ошибка при открытии базы данных
+            logger.error(f"❌ Ошибка при открытии базы данных: {error}")
+            return []
+        finally:
+            self.close() # Закрываем соединение
 
     async def remove_duplicate_ids(self, table_name, column_name) -> None:
         """
@@ -86,8 +103,8 @@ class DatabaseHandler:
         Это позволяет оставить только уникальные значения в поле id.
 
         Аргументы:
-        :param table_name: Имя таблицы
-        :param column_name: имя столбца
+        :param table_name: Название таблицы, данные из которой требуется извлечь.
+        :param column_name: Имя столбца
         """
         await self.connect()
         self.cursor.execute(f"DELETE FROM {table_name} WHERE row{column_name} NOT IN (SELECT MIN(row{column_name}) "
@@ -101,8 +118,8 @@ class DatabaseHandler:
         возвращаем весь список
 
         Аргументы:
-        :param table_name: имя таблицы
-        :param account_limit: количество аккаунтов
+        :param table_name: Название таблицы, данные из которой требуется извлечь.
+        :param account_limit: Количество аккаунтов
         :return list: полученный список
         """
         await self.connect()

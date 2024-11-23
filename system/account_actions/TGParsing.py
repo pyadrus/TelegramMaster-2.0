@@ -7,6 +7,7 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
 from telethon import types
+from telethon.errors import ChatAdminRequiredError
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, UserStatusLastMonth,
@@ -392,9 +393,13 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    logger.info(
-                        f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
+                    logger.info(f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
                     await self.log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page)
+                    await asyncio.sleep(2)
+                    break
+                except ChatAdminRequiredError:
+                    logger.info(f'❌ Ошибка parsing: не хватает прав администратора {target_group}')
+                    await self.log_and_display(f"❌ Ошибка: не хватает прав администратора {target_group}", lv, page)
                     await asyncio.sleep(2)
                     break
             return all_participants
