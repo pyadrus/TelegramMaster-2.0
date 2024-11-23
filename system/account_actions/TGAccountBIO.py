@@ -221,19 +221,38 @@ class AccountBIO:
     async def change_photo_profile(self):
         """Изменение фото профиля."""
         try:
-            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in find_files(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
-                await client.connect()
-                for photo_file in find_files(directory_path="user_settings/bio", extension='jpg'):
-                    try:
-                        result = await client(functions.photos.UploadProfilePhotoRequest(
-                            file=await client.upload_file(f"user_settings/bio/{photo_file[0]}.jpg")
-                        ))
-                        logger.info(f'{result}\nФото успешно обновлено!')
-                    except AuthKeyUnregisteredError:
-                        logger.error("Ошибка соединения с профилем")
-                    finally:
+
+                # Попытайтесь подключить клиента
+                try:
+                    await client.connect()
+                    if not await client.is_connected():
+                        logger.error(f"Не удалось подключиться к клиенту {session_name}")
+                        continue  # Перейти к следующему сеансу, если соединение не установлено
+
+                    for photo_file in find_files(directory_path="user_settings/bio", extension='jpg'):
+                        try:
+                            file_path = f"user_settings/bio/{photo_file[0]}.jpg"
+
+                            # Загрузите файл
+                            result = await client(functions.photos.UploadProfilePhotoRequest(
+                                file=await client.upload_file(file_path)
+                            ))
+                            logger.info(f'{result}\nФото успешно обновлено!')
+                        except Exception as e:
+                            logger.error(f"Ошибка загрузки фото {photo_file[0]}: {e}")
+
+                except AuthKeyUnregisteredError:
+                    logger.error("Ошибка соединения с профилем, неверный ключ авторизации.")
+                except Exception as e:
+                    logger.exception(f"Ошибка при подключении или выполнении запроса для {session_name}: {e}")
+                finally:
+                    # Убедитесь, что клиент отключен после обработки сеанса.
+                    if await client.is_connected():
                         await client.disconnect()
+
         except Exception as error:
             logger.exception(f"Ошибка: {error}")
+

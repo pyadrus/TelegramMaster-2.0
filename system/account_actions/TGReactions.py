@@ -6,6 +6,7 @@ import re
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger  # Импортируем библиотеку loguru для логирования
 from telethon import events, types
+from telethon.errors import ReactionInvalidError
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest
 
@@ -46,11 +47,16 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat.value)
                     msg_id = int(re.search(r'/(\d+)$', message.value).group(1))  # Получаем id сообщения из ссылки
                     await asyncio.sleep(5)
-                    await client(SendReactionRequest(peer=chat.value, msg_id=msg_id,
-                                                     reaction=[types.ReactionEmoji(
-                                                         emoticon=f'{self.choosing_random_reaction()}')]))
-                    await asyncio.sleep(1)
-                    await client.disconnect()
+                    try:
+                        await client(SendReactionRequest(peer=chat.value, msg_id=msg_id,
+                                                         reaction=[types.ReactionEmoji(
+                                                             emoticon=f'{self.choosing_random_reaction()}')]))
+                        await asyncio.sleep(1)
+                        await client.disconnect()
+                    except ReactionInvalidError:
+                        logger.info(f"Ошибка : Предоставлена неверная реакция")
+                        await asyncio.sleep(1)
+                        await client.disconnect()
 
                     # Изменение маршрута на новый (если необходимо)
                     page.go("/working_with_reactions")
@@ -102,11 +108,16 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
                 await asyncio.sleep(5)
                 # random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
-                await client(SendReactionRequest(peer=chat, msg_id=int(number),
-                                                 reaction=[types.ReactionEmoji(
-                                                     emoticon=f'{self.choosing_random_reaction()}')]))
-                await asyncio.sleep(1)
-                await client.disconnect()
+                try:
+                    await client(SendReactionRequest(peer=chat, msg_id=int(number),
+                                                     reaction=[types.ReactionEmoji(
+                                                         emoticon=f'{self.choosing_random_reaction()}')]))
+                    await asyncio.sleep(1)
+                    await client.disconnect()
+                except ReactionInvalidError:
+                    logger.info(f"Ошибка : Предоставлена неверная реакция")
+                    await asyncio.sleep(1)
+                    await client.disconnect()
         except Exception as error:
             logger.exception(f"Ошибка: {error}")
 
