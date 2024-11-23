@@ -46,6 +46,8 @@ class TGConnect:
                                              system_version="4.16.30-vxCUSTOM",
                                              proxy=await reading_proxy_data_from_the_database(self.db_handler))
             return telegram_client
+        except ValueError:
+            logger.exception(f"❌ Неверные API ID или API Hash.")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
