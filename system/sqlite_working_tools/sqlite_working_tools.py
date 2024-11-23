@@ -12,6 +12,7 @@ class GroupsAndChannels(Model):
     """
     Список групп и каналов в таблице groups_and_channels
     """
+
     id = IntegerField(primary_key=True)
     title = CharField(max_length=255)
     about = TextField(null=True)
@@ -46,8 +47,7 @@ def remove_duplicates():
             .order_by(GroupsAndChannels.parsing_time)
         )
 
-        # Оставляем только первую запись, остальные удаляем
-        for record in duplicates[1:]:
+        for record in duplicates[1:]:  # Оставляем только первую запись, остальные удаляем
             record.delete_instance()
 
 
@@ -68,6 +68,7 @@ class DatabaseHandler:
         """
         Открываем базу и считываем данные из указанной таблицы
 
+        Аргументы:
         :param table_name: название таблицы
         :return: список записей из таблицы"""
         await self.connect()
@@ -84,6 +85,7 @@ class DatabaseHandler:
         каждой записи в поле id. Затем он удаляет все записи, у которых rowid не равен минимальному значению.
         Это позволяет оставить только уникальные значения в поле id.
 
+        Аргументы:
         :param table_name: Имя таблицы
         :param column_name: имя столбца
         """
@@ -98,6 +100,7 @@ class DatabaseHandler:
         Открытие базы данных для inviting (рассылка сообщений) c лимитами. Если number_of_accounts равно None,
         возвращаем весь список
 
+        Аргументы:
         :param table_name: имя таблицы
         :param account_limit: количество аккаунтов
         :return list: полученный список
@@ -117,6 +120,7 @@ class DatabaseHandler:
         """
         Запись результатов parsing участников чата
 
+        Аргументы:
         :param entities: список результатов parsing
         """
         await self.connect()
@@ -133,6 +137,7 @@ class DatabaseHandler:
         """
         Запись действий аккаунта в базу данных
 
+        Аргументы:
         :param creating_a_table: создание таблицы
         :param writing_data_to_a_table: запись данных в таблицу
         :param entities: список записей в таблице
