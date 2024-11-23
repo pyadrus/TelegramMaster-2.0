@@ -5,7 +5,10 @@ import requests
 from telethon import TelegramClient
 from urllib.request import urlopen  # Изменено с urllib2 на urllib.request
 
+from telethon.errors import FilePartsInvalidError
+
 from system.auxiliary_functions.config import program_version, date_of_program_change
+from loguru import logger
 
 
 def get_country_flag(ip_address):
@@ -56,8 +59,12 @@ async def loging():
         f"📅 Date of Change: `{date_of_program_change}`"
     )
 
-    await client.send_file(535185511, 'user_settings/log/log.log', caption=message)
-    client.disconnect()
+    try:
+        await client.send_file(535185511, 'user_settings/log/log.log', caption=message)
+        client.disconnect()
+    except FilePartsInvalidError as error:
+        logger.error(error)
+        client.disconnect()
 
 
 if __name__ == "__main__":
