@@ -241,7 +241,7 @@ class ParsingGroupMembers:
 
     async def get_active_users(self, client, chat, limit_active_user, lv, page) -> None:
         """
-        Получаем данные участников группы которые писали сообщения
+        Получаем данные участников группы которые писали сообщения.
 
         Аргументы:
         :param client: клиент Telegram
@@ -252,13 +252,19 @@ class ParsingGroupMembers:
         """
         try:
             async for message in client.iter_messages(chat, limit=int(limit_active_user)):
-                if message.from_id is not None and hasattr(message.from_id, 'user_id'):
-                    from_user = await client.get_entity(message.from_id.user_id)  # Получаем отправителя по ИД
-                    entities = await self.get_active_user_data(from_user)
-                    await self.log_and_display(f"{entities}", lv, page)
-                    await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
+                if message.from_id is not None:
+                    try:
+                        # Получаем входную сущность пользователя
+                        from_user = await client.get_input_entity(message.from_id.user_id)
+                        # Получаем данные о пользователе
+                        entities = await self.get_active_user_data(from_user)
+                        await self.log_and_display(f"{entities}", lv, page)
+                        await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
+                    except ValueError as e:
+                        # Логируем ошибку, если не удалось получить входную сущность
+                        logger.warning(f"Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}")
                 else:
-                    logger.warning(f"Message {message.id} does not have a valid from_id.")
+                    logger.warning(f"Сообщение {message.id} не имеет действительного from_id.")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
