@@ -258,8 +258,7 @@ class TGConnect:
         :param session_name: Файл сессии (file[0] - session файл)
         :return TelegramClient: TelegramClient
         """
-        logger.info(
-            f"Подключение к аккаунту: {account_directory}/{session_name}")  # Имя файла сессии file[0] - session файл
+        logger.info(f"Подключение к аккаунту: {account_directory}/{session_name}")  # Имя файла сессии file[0] - session файл
         telegram_client = await self.connect_to_telegram(session_name, account_directory)
         try:
             await telegram_client.connect()
@@ -276,6 +275,8 @@ class TGConnect:
             logger.info(f"❌ Аккаунт {session_name} поврежден.")
             working_with_accounts(f"{account_directory}/{session_name}.session",
                                   f"user_settings/accounts/banned/{session_name}.session")
+        except ValueError:
+            logger.info(f"❌ Ошибка подключения прокси к аккаунту {session_name}.")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
