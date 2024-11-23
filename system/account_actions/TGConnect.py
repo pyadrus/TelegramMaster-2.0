@@ -34,6 +34,7 @@ class TGConnect:
         """
         Создает клиент для подключения к Telegram. Proxy IPV6 - НЕ РАБОТАЮТ.
 
+        Аргументы:
         :param session_name: Имя сессии
         :param account_directory: Путь к директории
         :return TelegramClient: TelegramClient
@@ -52,6 +53,7 @@ class TGConnect:
         """
         Проверяет и сортирует аккаунты.
 
+        Аргументы:
         :param session_name: Имя аккаунта для проверки аккаунта
         :param folder_name: Папка с аккаунтами
         """
@@ -90,6 +92,7 @@ class TGConnect:
         working_with_accounts() - Перемещение файла. Исходный путь к файлу - account_folder. Путь к новой папке,
         куда нужно переместить файл - new_account_folder
 
+        Аргументы:
         :param telegram_client: TelegramClient
         :param folder_name: Папка с аккаунтами
         :param session_name: Имя аккаунта
@@ -104,6 +107,7 @@ class TGConnect:
         """
         Проверка аккаунта на спам через @SpamBot
 
+        Аргументы:
         :param folder_name: папка с аккаунтами
         """
         try:
@@ -163,6 +167,7 @@ class TGConnect:
         """
         Проверяет все аккаунты Telegram в указанной директории.
 
+        Аргументы:
         :folder_name: Имя каталога с аккаунтами
         """
         try:
@@ -182,6 +187,7 @@ class TGConnect:
         """
         Получает информацию о Telegram аккаунте.
 
+        Аргументы:
         :param folder_name: Имя каталога
         """
         try:
@@ -223,6 +229,7 @@ class TGConnect:
         """
         Переименовывает session файлы.
 
+        Аргументы:
         :param telegram_client: Клиент для работы с Telegram
         :param phone_old: Номер телефона для переименования
         :param phone: Номер телефона для переименования (новое название для session файла)
@@ -244,6 +251,7 @@ class TGConnect:
         Подключение к Telegram, используя файл session.
         Имя файла сессии file[0] - session файл
 
+        Аргументы:
         :param account_directory: Путь к директории
         :param session_name: Файл сессии (file[0] - session файл)
         :return TelegramClient: TelegramClient
@@ -266,6 +274,7 @@ class TGConnect:
         """
         Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код
 
+        Аргументы:
         :param page: Page
         :param account_directory: Папка с аккаунтами
         :param appointment: Назначение аккаунта
@@ -367,6 +376,7 @@ class TGConnect:
         """
         Подключение сессии Telegram
 
+        Аргументы:
         :param page: страница
         :param account_directory: директория аккаунтов
         :param appointment: назначение

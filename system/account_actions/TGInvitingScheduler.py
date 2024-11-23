@@ -22,6 +22,9 @@ async def schedule_member_invitation() -> None:
 
 
 async def run_scheduler():
+    """
+    Запуск планировщика
+    """
     while True:
         schedule.run_pending()
         await asyncio.sleep(1)  # Используем асинхронный sleep

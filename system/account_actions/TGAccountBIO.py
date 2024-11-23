@@ -23,6 +23,7 @@ class AccountBIO:
         """
         Функция для кнопки "Готово"
 
+        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param btn_click:
         :param user_input:
@@ -45,6 +46,7 @@ class AccountBIO:
         """
         Изменение био профиля Telegram в графическое окно Flet
 
+        Аргументы:
         :param page: Страница интерфейса Flet для
         """
         try:
@@ -64,6 +66,7 @@ class AccountBIO:
         """
         Изменение username профиля Telegram
 
+        Аргументы:
         :param user_input  - новое имя пользователя
         """
         try:
@@ -90,6 +93,7 @@ class AccountBIO:
         """
         Изменение био профиля Telegram в графическое окно Flet.
 
+        Аргументы:
         :param page: Страница интерфейса Flet для
         """
         try:
@@ -109,6 +113,7 @@ class AccountBIO:
         """
         Изменение описания профиля.
 
+        Аргументы:
         :param user_input  - новое описание профиля Telegram
         """
         try:
@@ -136,6 +141,7 @@ class AccountBIO:
         """
         Изменение био профиля Telegram в графическое окно Flet
 
+        Аргументы:
         :param page: Страница интерфейса Flet для
         """
         try:
@@ -154,7 +160,8 @@ class AccountBIO:
         """
         Изменение имени профиля
 
-        :param user_input  - новое имя пользователя
+        Аргументы:
+        :param user_input - новое имя пользователя
         """
         try:
             for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
@@ -174,6 +181,7 @@ class AccountBIO:
         """
         Изменение био профиля Telegram в графическое окно Flet
 
+        Аргументы:
         :param page: Страница интерфейса Flet для
         """
         try:
@@ -193,6 +201,7 @@ class AccountBIO:
         """
         Изменение фамилии профиля
 
+        Аргументы:
         :param user_input  - новое имя пользователя Telegram
         """
         try:

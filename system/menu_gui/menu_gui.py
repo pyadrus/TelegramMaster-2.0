@@ -23,6 +23,9 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
 async def settings_menu(page):
     """
     Меню настройки
+
+    Аргументы:
+    :param page: страница
     """
     page.views.append(
         ft.View("/settings",

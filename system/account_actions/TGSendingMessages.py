@@ -41,6 +41,7 @@ class SendTelegramMessages:
         """
         Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
 
+        Аргументы:
         :param account_limits: Лимит на аккаунты
         """
         try:
@@ -89,6 +90,7 @@ class SendTelegramMessages:
         """
         Отправка файлов в личку
 
+        Аргументы:
         :param account_limits: Лимит на аккаунты
         """
         try:
@@ -225,6 +227,7 @@ class SendTelegramMessages:
         """
         Выбираем рандомный файл для чтения
 
+        Аргументы:
         :param entities: список файлов для чтения
         :param folder: папка для сохранения файлов
         """

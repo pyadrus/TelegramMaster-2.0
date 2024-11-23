@@ -12,6 +12,7 @@ class ReceivingAndRecording:
         """
         Запись данных в Excel файл.
 
+        Аргументы:
         :param file_name: Имя файла для сохранения данных
         """
         data = await self.db_handler.read_parsed_chat_participants_from_db()

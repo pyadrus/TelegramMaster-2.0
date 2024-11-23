@@ -156,6 +156,7 @@ class DatabaseHandler:
         """
         Запись результатов parsing участников чата
 
+        Аргументы:
         :param entities: список результатов parsing
         """
         await self.connect()
@@ -172,6 +173,7 @@ class DatabaseHandler:
         """
         Удаляем не рабочий proxy с software_database.db, таблица proxy
 
+        Аргументы:
         :param proxy_type: тип proxy
         :param addr: адрес
         :param port: порт
@@ -192,6 +194,7 @@ class DatabaseHandler:
         """
         Удаляет строку из таблицы
 
+        Аргументы:
         :param table: имя таблицы
         :param column: имя колонки
         :param value: значение
@@ -219,6 +222,7 @@ class DatabaseHandler:
         """
         Запись данных в таблицу с одной колонкой в базу данных
 
+        Аргументы:
         :param name_database: название таблицы
         :param database_columns: название колон
         :param into_columns: название колонки в таблице
@@ -241,6 +245,7 @@ class DatabaseHandler:
         Этот метод устанавливает соединение с базой данных, удаляет все записи из указанной таблицы (name_database_table),
         затем фиксирует изменения. После этого закрывает соединение с базой данных.
 
+        Аргументы:
         :param name_database_table: Название таблицы в базе данных
         """
         await self.connect()

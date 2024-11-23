@@ -67,6 +67,7 @@ class SubscribeUnsubscribeTelegram:
         """
         Отписываемся от группы.
 
+        Аргументы:
         :param group_link: Группа или канал
         :param client: Телеграм клиент
         """
@@ -86,6 +87,7 @@ class SubscribeUnsubscribeTelegram:
         """
         Подписываемся на группу или канал
 
+        Аргументы:
         :param groups_wr: str - группа или канал
         :param client:    TelegramClient - объект клиента
         """

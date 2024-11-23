@@ -29,6 +29,7 @@ class ViewingPosts:
         """
         Ставим реакции на сообщения
 
+        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :return: None
         """
@@ -74,6 +75,8 @@ class ViewingPosts:
     async def viewing_posts(self, client, link_post, number, link_channel) -> None:
         """
         Накрутка просмотров постов
+
+        Аргументы:
         :param client: Клиент для работы с Telegram
         :param link_post: Ссылка на пост
         :param number: Количество просмотров

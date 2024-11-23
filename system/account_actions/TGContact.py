@@ -41,6 +41,7 @@ class TGContact:
         """
         Парсинг и запись контактов в базу данных
 
+        Аргументы:
         :param client: Телеграм клиент
         """
         try:
@@ -52,7 +53,12 @@ class TGContact:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def we_get_the_account_id(self, client) -> None:
-        """Получаем id аккаунта"""
+        """
+        Получаем id аккаунта
+
+        Аргументы:
+        :param client: Телеграм клиент
+        """
         try:
             entities: list = []  # Создаем список сущностей
             for user in await self.get_and_parse_contacts(client):  # Выводим результат parsing
@@ -67,6 +73,7 @@ class TGContact:
         """
         Получаем контакты
 
+        Аргументы:
         :param client: Телеграм клиент
         """
         try:
@@ -83,6 +90,7 @@ class TGContact:
         """
         Показываем и удаляем контакт телефонной книги
 
+        Аргументы:
         :param client: Телеграм клиент
         :param user: Телеграм пользователя
         """
@@ -121,6 +129,7 @@ class TGContact:
         """
         Добавляем контакт в телефонную книгу
 
+        Аргументы:
         :param client: Телеграм клиент
         """
         try:
@@ -160,6 +169,7 @@ class TGContact:
         """
         Получаем данные пользователя
 
+        Аргументы:
         :param user: Телеграм пользователя
         :param entities: Список сущностей
         """
