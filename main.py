@@ -59,6 +59,12 @@ async def show_notification(page: ft.Page, message: str):
 
 
 async def main(page: ft.Page):
+    """
+    Главное меню программы
+
+    Аргументы:
+    :param page: Страница интерфейса Flet для отображения элементов управления.
+    """
     page.title = f"{program_name}: {program_version} (Дата изменения {date_of_program_change})"
     page.window.width = window_width  # Ширина окна
     page.window.height = window_height  # Высота окна

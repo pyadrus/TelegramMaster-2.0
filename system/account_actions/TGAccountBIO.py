@@ -47,7 +47,7 @@ class AccountBIO:
         Изменение био профиля Telegram в графическое окно Flet
 
         Аргументы:
-        :param page: Страница интерфейса Flet для
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             user_input = ft.TextField(label="Введите username профиля (не более 32 символов): ", multiline=True,
@@ -94,7 +94,7 @@ class AccountBIO:
         Изменение био профиля Telegram в графическое окно Flet.
 
         Аргументы:
-        :param page: Страница интерфейса Flet для
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             user_input = ft.TextField(label="Введите описание профиля, не более 70 символов: ", multiline=True,

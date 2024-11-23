@@ -279,7 +279,7 @@ class TGConnect:
         Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код
 
         Аргументы:
-        :param page: Page
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         :param account_directory: Папка с аккаунтами
         :param appointment: Назначение аккаунта
         """
