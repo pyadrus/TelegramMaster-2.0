@@ -135,8 +135,12 @@ class InvitingToAGroup:
                                 logger.error(
                                     f"Попытка приглашения {username} в группу {link[0]}. Вы не можете добавить бота в группу.")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                            except (TypeError, UnboundLocalError):
+                            except (TypeError, UnboundLocalError): # TODO добавить проверку ссылки на наличие канала
                                 logger.error(f"Попытка приглашения {username} в группу {link[0]}")
+                            except TypeError: # TODO добавить проверку ссылки на наличие канала
+                                logger.error(f"Попытка приглашения {username} в группу {link[0]}")
+                                client.disconnect()
+                                break  # Прерываем работу и меняем аккаунт
                             # Ошибка инвайтинга прерываем работу
                             except ChatWriteForbiddenError:
                                 logger.error(
