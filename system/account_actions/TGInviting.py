@@ -6,7 +6,8 @@ from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitEr
                              UserChannelsTooMuchError, BotGroupsBlockedError, ChatWriteForbiddenError,
                              UserBannedInChannelError, UserNotMutualContactError, ChatAdminRequiredError,
                              UserKickedError, ChannelPrivateError, UserIdInvalidError, UsernameNotOccupiedError,
-                             UsernameInvalidError, InviteRequestSentError, TypeNotFoundError, SessionRevokedError)
+                             UsernameInvalidError, InviteRequestSentError, TypeNotFoundError, SessionRevokedError,
+                             UserDeactivatedBanError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 import datetime
 from system.account_actions.TGConnect import TGConnect
@@ -114,9 +115,9 @@ class InvitingToAGroup:
                                     f"Попытка приглашения {username} в группу {link[0]}. User не является взаимным контактом.",
                                     lv, page)
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                            except UserKickedError:
+                            except (UserKickedError, UserDeactivatedBanError):
                                 await self.log_and_display(
-                                    f"Попытка приглашения {username} в группу {link[0]}. Пользователь был удален ранее из супергруппы.",
+                                    f"Попытка приглашения {username} в группу {link[0]}. Пользователь был удален ранее из супергруппы или забанен.",
                                     lv, page)
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
