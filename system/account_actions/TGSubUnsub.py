@@ -5,7 +5,7 @@ import random
 
 from loguru import logger
 from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
-                             FloodWaitError, InviteRequestSentError)
+                             FloodWaitError, InviteRequestSentError, UserDeactivatedBanError)
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 
@@ -97,6 +97,8 @@ class SubscribeUnsubscribeTelegram:
         try:
             await client(JoinChannelRequest(groups_wr))
             logger.info(f"Аккаунт подписался на группу / канал: {groups_wr}")
+        except UserDeactivatedBanError:
+            logger.error(f"Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.")
         except ChannelsTooMuchError:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             async for dialog in client.iter_dialogs():
