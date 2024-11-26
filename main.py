@@ -36,29 +36,12 @@ from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
                                       account_connection_menu, connecting_accounts_by_number_menu,
-                                      connecting_accounts_by_session_menu, viewing_posts_menu)
+                                      connecting_accounts_by_session_menu, viewing_posts_menu, show_notification)
 from system.receiving_and_recording.receiving_and_recording import ReceivingAndRecording
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
-
-
-async def show_notification(page: ft.Page, message: str):
-    """
-    Функция для показа уведомления
-    
-    Аргументы:
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    :param message: Текст уведомления.
-    """
-    dlg = ft.AlertDialog(
-        title=ft.Text(message),
-        on_dismiss=lambda e: page.go("/"),  # Переход обратно после закрытия диалога
-    )
-    page.overlay.append(dlg)
-    dlg.open = True
-    page.update()
 
 
 async def main(page: ft.Page):
@@ -187,7 +170,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Инвайтинга")
-                    launching_an_invite_once_an_hour()
+                    launching_an_invite_once_an_hour(page=page)
                     logger.info("🔚 Конец Инвайтинга")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -210,7 +193,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Инвайтинга")
-                    schedule_invite()
+                    schedule_invite(page=page)
                     logger.info("🔚 Конец Инвайтинга")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -233,7 +216,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Инвайтинга")
-                    launching_invite_every_day_certain_time()
+                    launching_invite_every_day_certain_time(page=page)
                     logger.info("🔚 Конец Инвайтинга")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -244,13 +227,13 @@ async def main(page: ft.Page):
         elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
             await account_verification_menu(page)
         elif page.route == "/validation_check":  # Проверка на валидность
-            await TGChek().validation_check()
+            await TGChek().validation_check(page=page)
         elif page.route == "/checking_for_spam_bots":  # Проверка через спам бот
-            await TGChek().checking_for_spam_bots()
+            await TGChek().checking_for_spam_bots(page=page)
         elif page.route == "/renaming_accounts":  # Переименование аккаунтов
-            await TGChek().renaming_accounts()
+            await TGChek().renaming_accounts(page=page)
         elif page.route == "/full_verification":  # Полная проверка
-            await TGChek().full_verification()
+            await TGChek().full_verification(page=page)
         # ______________________________________________________________________________________________________________
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             await subscribe_and_unsubscribe_menu(page)
@@ -265,7 +248,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Подписки")
-                    await SubscribeUnsubscribeTelegram().subscribe_telegram()
+                    await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
                     logger.info("🔚 Конец Подписки")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -283,7 +266,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Отписка")
-                    await SubscribeUnsubscribeTelegram().unsubscribe_all()
+                    await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page)
                     logger.info("🔚 Конец Отписки")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -325,7 +308,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Автоматического выставления реакций")
-                    await WorkingWithReactions().setting_reactions()
+                    await WorkingWithReactions().setting_reactions(page=page)
                     logger.info("🔚 Конец Автоматического выставления реакций")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -444,7 +427,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Показа списка контактов")
-                    await TGContact().show_account_contact_list()
+                    await TGContact().show_account_contact_list(page=page)
                     logger.info("🔚 Конец Показа списка контактов")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -462,7 +445,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Удаления контактов")
-                    await TGContact().delete_contact()
+                    await TGContact().delete_contact(page=page)
                     logger.info("🔚 Конец Удаления контактов")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -480,7 +463,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Добавления контактов")
-                    await TGContact().inviting_contact()
+                    await TGContact().inviting_contact(page=page)
                     logger.info("🔚 Конец Добавления контактов")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -556,7 +539,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Создания групп (чатов)")
-                    await CreatingGroupsAndChats().creating_groups_and_chats()
+                    await CreatingGroupsAndChats().creating_groups_and_chats(page=page)
                     logger.info("🔚 Конец Создания групп (чатов)")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -584,7 +567,7 @@ async def main(page: ft.Page):
                     logger.info("▶️ Начало Рассылки сообщений по чатам")
                     entities = find_files(directory_path="user_settings/message", extension="json")
                     logger.info(entities)
-                    await SendTelegramMessages().sending_messages_via_chats_times()
+                    await SendTelegramMessages().sending_messages_via_chats_times(page=page)
                     logger.info("🔚 Конец Рассылки сообщений по чатам")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -613,7 +596,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Рассылки сообщений по чатам с автоответчиком")
-                    await SendTelegramMessages().answering_machine()
+                    await SendTelegramMessages().answering_machine(page=page)
                     logger.info("🔚 Конец Рассылки сообщений по чатам с автоответчиком")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -631,7 +614,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Рассылки файлов по чатам")
-                    await SendTelegramMessages().sending_files_via_chats()
+                    await SendTelegramMessages().sending_files_via_chats(page=page)
                     logger.info("🔚 Конец Рассылки файлов по чатам")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -654,7 +637,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало отправки сообщений + файлов по чатам")
-                    await SendTelegramMessages().sending_messages_files_via_chats()
+                    await SendTelegramMessages().sending_messages_files_via_chats(page=page)
                     logger.info("🔚 Конец отправки сообщений + файлов по чатам")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -679,7 +662,7 @@ async def main(page: ft.Page):
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало отправки сообщений в личку")
                     await SendTelegramMessages().send_message_from_all_accounts(
-                        account_limits=ConfigReader().get_limits())
+                        account_limits=ConfigReader().get_limits(), page=page)
                     logger.info("🔚 Конец отправки сообщений в личку")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -698,7 +681,7 @@ async def main(page: ft.Page):
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало отправки файлов в личку")
                     await SendTelegramMessages().send_files_to_personal_chats(
-                        account_limits=ConfigReader().get_limits())
+                        account_limits=ConfigReader().get_limits(), page=page)
                     logger.info("🔚 Конец отправки файлов в личку")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -773,7 +756,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Изменения фото")
-                    await AccountBIO().change_photo_profile()
+                    await AccountBIO().change_photo_profile(page=page)
                     logger.info("🔚 Конец Изменения фото")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))

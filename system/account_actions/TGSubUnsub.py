@@ -23,14 +23,14 @@ class SubscribeUnsubscribeTelegram:
         self.configs_reader = ConfigReader()
         self.time_subscription_1, self.time_subscription_2 = self.configs_reader.get_time_subscription()
 
-    async def subscribe_telegram(self) -> None:
+    async def subscribe_telegram(self, page) -> None:
         """
         Подписка на группы / каналы Telegram
         """
         try:
             logger.info(f"Запуск подписки на группы / каналы Telegram")
             for session_name in find_filess(directory_path=path_subscription_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_subscription_folder)
                 """Получение ссылки для инвайтинга"""
                 links_inviting: list = await self.db_handler.open_and_read_data(
@@ -45,13 +45,13 @@ class SubscribeUnsubscribeTelegram:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-    async def unsubscribe_all(self) -> None:
+    async def unsubscribe_all(self, page) -> None:
         """
         Отписываемся от групп, каналов, личных сообщений
         """
         try:
             for session_name in find_filess(directory_path=path_unsubscribe_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_unsubscribe_folder)
                 dialogs = client.iter_dialogs()
                 logger.info(f"Диалоги: {dialogs}")

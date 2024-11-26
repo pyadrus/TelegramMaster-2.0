@@ -23,14 +23,14 @@ class TGContact:
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
 
-    async def show_account_contact_list(self) -> None:
+    async def show_account_contact_list(self, page) -> None:
         """
         Показать список контактов аккаунтов и запись результатов в файл
         """
         try:
             for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_contact_folder)
                 await self.parsing_and_recording_contacts_in_the_database(client)
                 client.disconnect()  # Разрываем соединение telegram
@@ -101,25 +101,29 @@ class TGContact:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-    async def delete_contact(self) -> None:
-        """Удаляем контакты с аккаунтов"""
+    async def delete_contact(self, page) -> None:
+        """Удаляем контакты с аккаунтов
+
+        Аргументы:
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
         try:
             for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_contact_folder)
                 await self.we_get_the_account_id(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-    async def inviting_contact(self) -> None:
+    async def inviting_contact(self, page ) -> None:
         """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
         try:
             # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
             for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_contact_folder)
                 await self.add_contact_to_phone_book(client)
         except Exception as error:

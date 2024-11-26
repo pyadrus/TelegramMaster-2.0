@@ -11,9 +11,12 @@ class TGChek:
     def __init__(self):
         self.TGConnect = TGConnect()
 
-    async def validation_check(self):
+    async def validation_check(self, page):
         """
         Проверка валидности аккаунтов
+
+        Аргументы:
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
@@ -29,16 +32,19 @@ class TGChek:
                 continue  # Пропускаем эту папку
             else:
                 logger.info(f"Папка с которой работаем: {folder}")
-                await self.TGConnect.verify_all_accounts(folder_name=folder)
+                await self.TGConnect.verify_all_accounts(page=page, folder_name=folder)
 
         logger.info("🔚 Проверка аккаунтов завершена")
         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
         logger.info('Время окончания: ' + str(finish))
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
-    async def checking_for_spam_bots(self):
+    async def checking_for_spam_bots(self, page):
         """
         Проверка на спам ботов
+
+        Аргументы:
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
@@ -50,16 +56,19 @@ class TGChek:
                 logger.info(f"⛔ Пропускаем папку 📁: {folder}")
                 continue  # Продолжаем цикл, пропуская эту итерацию
             else:
-                await self.TGConnect.check_for_spam(folder_name=folder)
+                await self.TGConnect.check_for_spam(page=page, folder_name=folder)
 
         logger.info("🔚 Проверка аккаунтов завершена")
         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
         logger.info('Время окончания: ' + str(finish))
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
-    async def renaming_accounts(self):
+    async def renaming_accounts(self, page):
         """
         Переименование аккаунтов
+
+        Аргументы:
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
@@ -71,24 +80,27 @@ class TGChek:
                 logger.info(f"⛔ Пропускаем папку 📁: {folder}")
                 continue  # Продолжаем цикл, пропуская эту итерацию
             else:
-                await self.TGConnect.get_account_details(folder_name=folder)
+                await self.TGConnect.get_account_details(page=page, folder_name=folder)
 
         logger.info("🔚 Проверка аккаунтов завершена")
         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
         logger.info('Время окончания: ' + str(finish))
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
-    async def full_verification(self):
+    async def full_verification(self, page):
         """
         Полная проверка аккаунтов
+
+        Аргументы:
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
         logger.info('Время старта: ' + str(start))
         logger.info("▶️ Проверка аккаунтов началась")
 
-        await self.validation_check()  # Проверка валидности аккаунтов
-        await self.renaming_accounts()  # Переименование аккаунтов
-        await self.checking_for_spam_bots()  # Проверка на спам ботов
+        await self.validation_check(page=page)  # Проверка валидности аккаунтов
+        await self.renaming_accounts(page=page)  # Переименование аккаунтов
+        await self.checking_for_spam_bots(page=page)  # Проверка на спам ботов
 
         logger.info("🔚 Проверка аккаунтов завершена")
         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода

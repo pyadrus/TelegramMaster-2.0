@@ -75,7 +75,7 @@ class ParsingGroupMembers:
             try:
                 # Обрабатываем все файлы сессий по очереди 📂
                 for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
-                    client = await self.tg_connect.get_telegram_client(session_name,
+                    client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_parsing_folder)
                     # Получаем список групп для парсинга из базы данных 📋
                     for groups in await self.db_handler.open_and_read_data("writing_group_links"):
@@ -154,7 +154,7 @@ class ParsingGroupMembers:
         """
         try:
             for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name, account_directory=path_parsing_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_parsing_folder)
                 await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
 
                 try:
@@ -199,7 +199,7 @@ class ParsingGroupMembers:
                 # Открываем базу данных для работы с аккаунтами user_settings/software_database.db 📂
                 for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
                     # Подключение к Telegram и вывод имя аккаунта в консоль / терминал 📲
-                    client = await self.tg_connect.get_telegram_client(session_name,
+                    client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_parsing_folder)
                     await self.log_and_display(f"🔗 Подключение к аккаунту: {session_name}", lv, page)
                     await self.log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", lv, page)
@@ -310,7 +310,7 @@ class ParsingGroupMembers:
         page.controls.append(lv)
         try:
             for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name, account_directory=path_parsing_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_parsing_folder)
                 chats = []
                 last_date = None
                 result = await client(

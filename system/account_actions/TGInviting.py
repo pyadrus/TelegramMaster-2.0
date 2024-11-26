@@ -78,7 +78,7 @@ class InvitingToAGroup:
             try:
                 # logger.info(f"Запуск инвайтинга без лимитов")
                 for session_name in find_filess(directory_path=path_inviting_folder, extension='session'):
-                    client = await self.tg_connect.get_telegram_client(session_name,
+                    client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_inviting_folder)
                     # Получение ссылки для инвайтинга
                     for link in await self.getting_an_invitation_link_from_the_database():
@@ -149,10 +149,6 @@ class InvitingToAGroup:
                                     f"❌ Попытка приглашения {username} в группу {link[0]}. Доступ к функциям группы станет возможен после утверждения заявки администратором на {link[0]}")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                                 break  # Прерываем работу и меняем аккаунт
-                            # except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                            #     logger.error(f"Попытка приглашения {username} в группу {link[0]}. Не корректное имя {username}")
-                            #     await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                            #     break  # Прерываем работу и меняем аккаунт
                             except (
                                     ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError,
                                     UserBannedInChannelError, SessionRevokedError):

@@ -41,7 +41,7 @@ class ViewingPosts:
             async def btn_click(e) -> None:
 
                 for session_name in find_filess(directory_path=path_viewing_folder, extension='session'):
-                    client = await self.tg_connect.get_telegram_client(session_name,
+                    client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_viewing_folder)
                     logger.info(f'[+] Работаем с каналом: {link_channel.value}')
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel.value)
@@ -63,7 +63,6 @@ class ViewingPosts:
                     [
                         link_channel,  # Поле ввода ссылки на чат
                         link_post,  # Поле ввода ссылки пост
-                        # limit_active_user, # Поле ввода количества сообщений
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
                         button  # Кнопка "Готово"
                     ]
@@ -84,25 +83,14 @@ class ViewingPosts:
         :return: None
         """
         try:
-            # for session_name in find_filess(directory_path=path_viewing_folder, extension='session'):
-            #     client = await self.tg_connect.get_telegram_client(session_name, account_directory=path_viewing_folder)
-            # records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
-            # logger.info(f"Всего групп: {len(records)}")
-            # for groups in records:  # Поочередно выводим записанные группы
-            #     logger.info(f"Группа: {groups}")
             try:
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel)
                 channel = await client.get_entity(link_channel)  # Получение информации о канале
                 await asyncio.sleep(5)
-                # for post in await client.get_messages(channel, limit=10):  # Вывод информации о постах, Получение последних 10 постов из канала
                 logger.info(f"Ссылка на пост: {link_post}\n")
-                # number = re.search(r"/(\d+)$", f"{groups[0]}/{post.id}").group(1)
                 await asyncio.sleep(5)
                 await client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))
-
             except KeyError:
                 sys.exit(1)
-            # finally:
-            #     client.disconnect()
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")

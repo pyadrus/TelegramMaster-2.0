@@ -54,7 +54,7 @@ class AccountBIO:
                                       max_lines=19)
 
             async def btn_click(e) -> None:
-                await self.change_username_profile(user_input.value)
+                await self.change_username_profile(user_input.value, page)
                 page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
                 page.update()
 
@@ -62,17 +62,19 @@ class AccountBIO:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_username_profile(self, user_input) -> None:
+    async def change_username_profile(self, page, user_input) -> None:
         """
         Изменение username профиля Telegram
 
         Аргументы:
         :param user_input  - новое имя пользователя
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
-                client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=self.directory_path)
                 await client.connect()
                 try:
                     await client(functions.account.UpdateUsernameRequest(username=user_input))
@@ -101,7 +103,7 @@ class AccountBIO:
                                       max_lines=19)
 
             async def btn_click(e) -> None:
-                await self.change_bio_profile(user_input.value)
+                await self.change_bio_profile(page, user_input.value)
                 page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
                 page.update()
 
@@ -109,18 +111,20 @@ class AccountBIO:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_bio_profile(self, user_input):
+    async def change_bio_profile(self,page, user_input):
         """
         Изменение описания профиля.
 
         Аргументы:
-        :param user_input  - новое описание профиля Telegram
+        :param user_input - новое описание профиля Telegram
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             logger.info(f"Запуск смены  описания профиля")
             for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
-                client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=self.directory_path)
                 await client.connect()
                 while True:
                     if len(user_input) <= 70:
@@ -148,7 +152,7 @@ class AccountBIO:
             user_input = ft.TextField(label="Введите имя профиля, не более 64 символов: ", multiline=True, max_lines=19)
 
             async def btn_click(e) -> None:
-                await self.change_name_profile(user_input.value)
+                await self.change_name_profile(user_input.value, page)
                 page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
                 page.update()
 
@@ -156,17 +160,19 @@ class AccountBIO:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_name_profile(self, user_input):
+    async def change_name_profile(self,page, user_input):
         """
         Изменение имени профиля
 
         Аргументы:
         :param user_input - новое имя пользователя
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
-                client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=self.directory_path)
                 await client.connect()
                 try:
                     result = await client(functions.account.UpdateProfileRequest(first_name=user_input))
@@ -189,7 +195,7 @@ class AccountBIO:
                                       max_lines=19)
 
             async def btn_click(e) -> None:
-                await self.change_last_name_profile(user_input.value)
+                await self.change_last_name_profile(user_input.value, page)
                 page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
                 page.update()
 
@@ -197,17 +203,19 @@ class AccountBIO:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_last_name_profile(self, user_input):
+    async def change_last_name_profile(self,page, user_input):
         """
         Изменение фамилии профиля
 
         Аргументы:
-        :param user_input  - новое имя пользователя Telegram
+        :param user_input - новое имя пользователя Telegram
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
-                client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=self.directory_path)
                 await client.connect()
                 try:
                     result = await client(functions.account.UpdateProfileRequest(last_name=user_input))
@@ -218,18 +226,23 @@ class AccountBIO:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_photo_profile(self):
-        """Изменение фото профиля."""
+    async def change_photo_profile(self, page):
+        """Изменение фото профиля.
+
+        Аргументы:
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
         try:
             for session_name in find_files(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
-                client = await self.tg_connect.get_telegram_client(session_name, account_directory=self.directory_path)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=self.directory_path)
 
                 # Попытайтесь подключить клиента
                 try:
                     await client.connect()
                     if not await client.is_connected():
-                        logger.error(f"Не удалось подключиться к клиенту {session_name}")
+                        logger.error(f"❌ Не удалось подключиться к клиенту {session_name}")
                         continue  # Перейти к следующему сеансу, если соединение не установлено
 
                     for photo_file in find_files(directory_path="user_settings/bio", extension='jpg'):

@@ -37,17 +37,18 @@ class SendTelegramMessages:
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def send_message_from_all_accounts(self, account_limits) -> None:
+    async def send_message_from_all_accounts(self, account_limits, page) -> None:
         """
         Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
 
         Аргументы:
         :param account_limits: Лимит на аккаунты
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             time_inviting = self.config_reader.get_time_inviting()
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 try:
                     for username in await self.limits_class.get_usernames_with_limits(table_name="members",
@@ -87,18 +88,19 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-    async def send_files_to_personal_chats(self, account_limits) -> None:
+    async def send_files_to_personal_chats(self, account_limits, page) -> None:
         """
         Отправка файлов в личку
 
         Аргументы:
         :param account_limits: Лимит на аккаунты
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             # Просим пользователя ввести расширение сообщения
             time_inviting = self.config_reader.get_time_inviting()
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 try:
                     # Открываем parsing список user_settings/software_database.db для inviting в группу
@@ -137,14 +139,14 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-    async def sending_files_via_chats(self) -> None:
+    async def sending_files_via_chats(self, page) -> None:
         """
         Рассылка файлов по чатам (docs/Рассылка_сообщений/⛔️ Рассылка_файлов_по_чатам.html)
         """
         try:
             # Спрашиваем у пользователя, через какое время будем отправлять сообщения
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
@@ -179,13 +181,13 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-    async def sending_messages_files_via_chats(self) -> None:
+    async def sending_messages_files_via_chats(self, page) -> None:
         """
         Рассылка сообщений + файлов по чатам
         """
         try:
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
@@ -242,13 +244,13 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-    async def sending_messages_via_chats_times(self) -> None:
+    async def sending_messages_via_chats_times(self, page) -> None:
         """
         Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)
         """
         try:
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
@@ -295,14 +297,14 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-    async def answering_machine(self):
+    async def answering_machine(self, page):
         """
         Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)
         """
         try:
             for session_name in find_filess(directory_path="user_settings/accounts/answering_machine",
                                             extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory="user_settings/accounts/answering_machine")
 
                 @client.on(events.NewMessage(incoming=True))  # Обработчик личных сообщений

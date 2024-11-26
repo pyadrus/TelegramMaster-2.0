@@ -16,6 +16,7 @@ from thefuzz import fuzz
 from system.auxiliary_functions.auxiliary_functions import working_with_accounts, find_filess
 from system.auxiliary_functions.config import ConfigReader, height_button, line_width_button
 from system.localization.localization import back_button, done_button
+from system.menu_gui.menu_gui import show_notification
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -30,13 +31,14 @@ class TGConnect:
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
 
-    async def connect_to_telegram(self, session_name, account_directory) -> TelegramClient:
+    async def connect_to_telegram(self, page, session_name, account_directory) -> TelegramClient:
         """
         Создает клиент для подключения к Telegram. Proxy IPV6 - НЕ РАБОТАЮТ.
 
         Аргументы:
         :param session_name: Имя сессии
         :param account_directory: Путь к директории
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         :return TelegramClient: TelegramClient
         """
         try:
@@ -46,23 +48,28 @@ class TGConnect:
                                              system_version="4.16.30-vxCUSTOM",
                                              proxy=await reading_proxy_data_from_the_database(self.db_handler))
             return telegram_client
+        except sqlite3.OperationalError:
+            await show_notification(page,
+                                    f"⛔ Не рабочий аккаунт {account_directory}/{session_name}. Произведите проверку аккаунтов.")
         except ValueError:
             logger.exception(f"❌ Неверные API ID или API Hash.")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
-    async def verify_account(self, folder_name, session_name) -> None:
+    async def verify_account(self, page, folder_name, session_name) -> None:
         """
         Проверяет и сортирует аккаунты.
 
         Аргументы:
         :param session_name: Имя аккаунта для проверки аккаунта
         :param folder_name: Папка с аккаунтами
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             logger.info(
                 f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
-            telegram_client = await self.get_telegram_client(session_name, f"user_settings/accounts/{folder_name}")
+            telegram_client = await self.get_telegram_client(page, session_name,
+                                                             f"user_settings/accounts/{folder_name}")
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
                 if not await telegram_client.is_user_authorized():  # Если аккаунт не авторизирован
@@ -105,17 +112,18 @@ class TGConnect:
         working_with_accounts(f"user_settings/accounts/{folder_name}/{session_name}.session",
                               f"user_settings/accounts/banned/{session_name}.session")
 
-    async def check_for_spam(self, folder_name) -> None:
+    async def check_for_spam(self, page, folder_name) -> None:
         """
         Проверка аккаунта на спам через @SpamBot
 
         Аргументы:
         :param folder_name: папка с аккаунтами
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             for session_name in find_filess(directory_path=f"user_settings/accounts/{folder_name}",
                                             extension='session'):
-                telegram_client = await self.get_telegram_client(session_name,
+                telegram_client = await self.get_telegram_client(page, session_name,
                                                                  account_directory=f"user_settings/accounts/{folder_name}")
                 try:
                     await telegram_client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
@@ -165,12 +173,13 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def verify_all_accounts(self, folder_name) -> None:
+    async def verify_all_accounts(self, page, folder_name) -> None:
         """
         Проверяет все аккаунты Telegram в указанной директории.
 
         Аргументы:
-        :folder_name: Имя каталога с аккаунтами
+        :param folder_name: Имя каталога с аккаунтами
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             logger.info(f"Запуск проверки аккаунтов Telegram из папки 📁: {folder_name}")
@@ -180,17 +189,18 @@ class TGConnect:
                                             extension='session'):
                 logger.info(f"⚠️ Проверяемый аккаунт: user_settings/accounts/{session_file}")
                 # Проверка аккаунтов
-                await self.verify_account(folder_name=folder_name, session_name=session_file)
+                await self.verify_account(page=page, folder_name=folder_name, session_name=session_file)
             logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁: {folder_name}")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def get_account_details(self, folder_name):
+    async def get_account_details(self, page, folder_name):
         """
         Получает информацию о Telegram аккаунте.
 
         Аргументы:
         :param folder_name: Имя каталога
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             logger.info(f"Запуск переименования аккаунтов Telegram из папки 📁: {folder_name}")
@@ -203,7 +213,7 @@ class TGConnect:
                 logger.info(
                     f"Переименовывание аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
 
-                telegram_client = await self.get_telegram_client(session_name,
+                telegram_client = await self.get_telegram_client(page, session_name,
                                                                  account_directory=f"user_settings/accounts/{folder_name}")
 
                 try:
@@ -248,7 +258,7 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def get_telegram_client(self, session_name, account_directory):
+    async def get_telegram_client(self, page, session_name, account_directory):
         """
         Подключение к Telegram, используя файл session.
         Имя файла сессии file[0] - session файл
@@ -256,11 +266,12 @@ class TGConnect:
         Аргументы:
         :param account_directory: Путь к директории
         :param session_name: Файл сессии (file[0] - session файл)
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         :return TelegramClient: TelegramClient
         """
         logger.info(
             f"Подключение к аккаунту: {account_directory}/{session_name}")  # Имя файла сессии file[0] - session файл
-        telegram_client = await self.connect_to_telegram(session_name, account_directory)
+        telegram_client = await self.connect_to_telegram(page, session_name, account_directory)
         try:
             await telegram_client.connect()
             return telegram_client

@@ -617,3 +617,20 @@ async def connecting_accounts_by_session_menu(page):
                                                on_click=lambda _: page.go("/account_connection_session_viewing"))]),
 
                  ])]))
+
+
+async def show_notification(page: ft.Page, message: str):
+    """
+    Функция для показа уведомления
+
+    Аргументы:
+    :param page: Страница интерфейса Flet для отображения элементов управления.
+    :param message: Текст уведомления.
+    """
+    dlg = ft.AlertDialog(
+        title=ft.Text(message),
+        on_dismiss=lambda e: page.go("/"),  # Переход обратно после закрытия диалога
+    )
+    page.overlay.append(dlg)
+    dlg.open = True
+    page.update()
