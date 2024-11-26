@@ -27,7 +27,10 @@ from system.auxiliary_functions.config import (ConfigReader, height_button, smal
                                                path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
                                                path_reactions_folder, path_contact_folder, path_creating_folder,
                                                path_send_message_folder, path_bio_folder, path_viewing_folder)
-from system.localization.localization import we_are_winding_up_post_views
+from system.localization.localization import (we_are_winding_up_post_views, inviting, parsing, working_with_contacts,
+                                              subscribe_unsubscribe, connecting_accounts, sending_messages,
+                                              working_with_reactions, checking_accounts,
+                                              creating_groups_chats, editing_bio, settings, documentation, main_menu)
 from system.logging_in.logging_in import loging
 from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
@@ -76,7 +79,7 @@ async def main(page: ft.Page):
         page.views.clear()
         # Меню "Главное меню"
         page.views.append(
-            ft.View("/", [ft.AppBar(title=ft.Text("Главное меню"),
+            ft.View("/", [ft.AppBar(title=ft.Text(main_menu),
                                     bgcolor=ft.colors.SURFACE_VARIANT),
                           ft.Text(spans=[ft.TextSpan(
                               f"{program_name}",
@@ -98,43 +101,54 @@ async def main(page: ft.Page):
                                                      url="https://t.me/master_tg_d", ), ], ),
                           ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                               ft.Row(
-                                  [ft.ElevatedButton(width=small_button_width, height=height_button, text="🚀 Инвайтинг",
+                                  # 🚀 Инвайтинг
+                                  [ft.ElevatedButton(width=small_button_width, height=height_button, text=inviting,
                                                      on_click=lambda _: page.go("/inviting")),
-                                   ft.ElevatedButton(width=small_button_width, height=height_button, text="📊 Парсинг",
+                                   # 📊 Парсинг
+                                   ft.ElevatedButton(width=small_button_width, height=height_button, text=parsing,
                                                      on_click=lambda _: page.go("/parsing")), ]),
+                              # 📇 Работа с контактами
                               ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="📇 Работа с контактами",
+                                                        text=working_with_contacts,
                                                         on_click=lambda _: page.go("/working_with_contacts")),
+                                      # 🔄 Подписка, отписка
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="🔄 Подписка, отписка",
+                                                        text=subscribe_unsubscribe,
                                                         on_click=lambda _: page.go("/subscribe_unsubscribe")), ]),
+                              # 🔐 Подключение аккаунтов
                               ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="🔐 Подключение аккаунтов",
+                                                        text=connecting_accounts,
                                                         on_click=lambda _: page.go("/account_connection_menu")),
+                                      # 📤 Рассылка сообщений
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="📤 Рассылка сообщений",
+                                                        text=sending_messages,
                                                         on_click=lambda _: page.go("/sending_messages")), ]),
+                              # ❤️ Работа с реакциями
                               ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="❤️ Работа с реакциями",
+                                                        text=working_with_reactions,
                                                         on_click=lambda _: page.go("/working_with_reactions")),
+                                      # 🔍 Проверка аккаунтов
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="🔍 Проверка аккаунтов",
+                                                        text=checking_accounts,
                                                         on_click=lambda _: page.go("/account_verification_menu")), ]),
+                              # 👥 Создание групп (чатов)
                               ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="👥 Создание групп (чатов)",
+                                                        text=creating_groups_chats,
                                                         on_click=lambda _: page.go("/creating_groups")),
+                                      # ✏️ Редактирование_BIO
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text="✏️ Редактирование_BIO",
+                                                        text=editing_bio,
                                                         on_click=lambda _: page.go("/bio_editing")), ]),
 
                               # 👁️‍🗨️ Накручиваем просмотры постов
                               ft.ElevatedButton(width=line_width_button, height=height_button,
                                                 text=we_are_winding_up_post_views,
                                                 on_click=lambda _: page.go("/viewing_posts_menu")),
-
-                              ft.ElevatedButton(width=line_width_button, height=height_button, text="⚙️ Настройки",
+                              # ⚙️ Настройки
+                              ft.ElevatedButton(width=line_width_button, height=height_button, text=settings,
                                                 on_click=lambda _: page.go("/settings")),
-                              ft.ElevatedButton(width=line_width_button, height=height_button, text="📖 Документация",
+                              # 📖 Документация
+                              ft.ElevatedButton(width=line_width_button, height=height_button, text=documentation,
                                                 on_click=lambda _: page.go("/documentation")),
                           ]), ]))
         # ______________________________________________________________________________________________________________
@@ -153,15 +167,8 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
                 else:
-                    # start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    # logger.info('Время старта: ' + str(start))
-                    # logger.info("▶️ Начало Инвайтинга")
                     await InvitingToAGroup().inviting_without_limits(page=page,
                                                                      account_limits=ConfigReader().get_limits())
-                    # logger.info("🔚 Конец Инвайтинга")
-                    # finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    # logger.info('Время окончания: ' + str(finish))
-                    # logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
