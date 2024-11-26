@@ -32,4 +32,4 @@ class CreatingGroupsAndChats:
         except TypeError: # Обработка ошибки при создании групп, если аккаунт не рабочий
             pass
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")

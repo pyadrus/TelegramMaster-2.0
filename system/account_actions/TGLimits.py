@@ -27,4 +27,4 @@ class SettingLimits:
             logger.info(f"Всего username: {len(number_usernames)}")
             return number_usernames
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")

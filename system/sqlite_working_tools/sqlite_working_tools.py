@@ -114,7 +114,7 @@ class DatabaseHandler:
 
     async def open_db_func_lim(self, table_name, account_limit: int) -> list:
         """
-        Открытие базы данных для inviting (рассылка сообщений) c лимитами. Если number_of_accounts равно None,
+        Открытие базы данных для inviting (рассылка сообщений) с лимитами. Если number_of_accounts равно None,
         возвращаем весь список
 
         Аргументы:

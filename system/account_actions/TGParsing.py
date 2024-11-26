@@ -92,12 +92,10 @@ class ParsingGroupMembers:
                     # Завершаем работу клиента после завершения парсинга 🔌
                     await client.disconnect()
             except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+                logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            # Логируем и отображаем время окончания работы
-            await self.log_and_display(
-                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
+            await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
 
         async def back_button_clicked(_):
             """
@@ -140,7 +138,7 @@ class ParsingGroupMembers:
             await self.log_and_display(f"{entities}", lv, page)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def parse_active_users(self, chat_input, limit_active_user, lv, page) -> None:
         """
@@ -170,7 +168,7 @@ class ParsingGroupMembers:
                 await client.disconnect()  # Разрываем соединение telegram
             await self.clean_parsing_list_and_remove_duplicates()
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def parse_subscribed_groups(self, page: ft.Page) -> None:
         """
@@ -208,12 +206,10 @@ class ParsingGroupMembers:
 
                     remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
             except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+                logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            # Логируем и отображаем время окончания работы
-            await self.log_and_display(
-                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
+            await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                 lv, page)
 
         async def back_button_clicked(_):
@@ -261,12 +257,11 @@ class ParsingGroupMembers:
                         await self.log_and_display(f"{entities}", lv, page)
                         await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
                     except ValueError as e:
-                        # Логируем ошибку, если не удалось получить входную сущность
                         logger.warning(f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}")
                 else:
                     logger.warning(f"Сообщение {message.id} не имеет действительного from_id.")
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
     async def filtering_groups(chats):
@@ -335,9 +330,7 @@ class ParsingGroupMembers:
                     await client.disconnect()
                     # Переходим на экран парсинга только после завершения всех действий
                     finish = datetime.datetime.now()  # фиксируем время окончания парсинга
-                    # Логируем и отображаем время окончания работы
-                    await self.log_and_display(
-                        f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
+                    await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
                     page.go("/parsing")
 
                 async def back_button_clicked(_):
@@ -367,7 +360,7 @@ class ParsingGroupMembers:
                 page.update()
 
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def parse_users(self, client, target_group, lv, page) -> list:
         """
@@ -412,7 +405,7 @@ class ParsingGroupMembers:
                     break
             return all_participants
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def get_all_participants(self, all_participants, lv, page) -> list:
         """
@@ -432,10 +425,10 @@ class ParsingGroupMembers:
                 await self.get_user_data(user, entities, lv, page)
             return entities  # Возвращаем словарь пользователей
         except TypeError as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
             return []  # Возвращаем пустой список в случае ошибки
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
             return []  # Возвращаем пустой список в случае ошибки
 
     async def get_user_data(self, user, entities, lv, page) -> None:
@@ -464,7 +457,7 @@ class ParsingGroupMembers:
                 f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
             page.update()  # Обновление страницы для каждого элемента данных
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
     async def receiving_data(user):
@@ -519,7 +512,7 @@ class ParsingGroupMembers:
                 user_premium)
             return entity
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def forming_a_list_of_groups(self, client, lv, page) -> None:
         """Формирует список групп и каналов.
@@ -562,7 +555,7 @@ class ParsingGroupMembers:
                 except TypeError:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def entering_data_for_parsing_active(self, page: ft.Page) -> None:
         """
@@ -601,9 +594,7 @@ class ParsingGroupMembers:
                 # Изменение маршрута на новый (если необходимо)
 
                 finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-                # Логируем и отображаем время окончания работы
-                await self.log_and_display(
-                    f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
+                await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                     lv, page
                 )
 
@@ -633,4 +624,4 @@ class ParsingGroupMembers:
                 )
             )
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
+            logger.exception(f"❌ Ошибка: {error}")
