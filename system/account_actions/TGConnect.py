@@ -4,7 +4,7 @@ import os
 import os.path
 import shutil
 import sqlite3
-
+import asyncio
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import TelegramClient
@@ -16,7 +16,7 @@ from thefuzz import fuzz
 from system.auxiliary_functions.auxiliary_functions import working_with_accounts, find_filess
 from system.auxiliary_functions.config import ConfigReader, height_button, line_width_button
 from system.localization.localization import back_button, done_button
-from system.menu_gui.menu_gui import show_notification
+from system.logging_in.logging_in import getting_phone_number_data_by_phone_number
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -30,31 +30,6 @@ class TGConnect:
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
-
-    async def connect_to_telegram(self, page, session_name, account_directory) -> TelegramClient:
-        """
-        Создает клиент для подключения к Telegram. Proxy IPV6 - НЕ РАБОТАЮТ.
-
-        Аргументы:
-        :param session_name: Имя сессии
-        :param account_directory: Путь к директории
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :return TelegramClient: TelegramClient
-        """
-        try:
-            logger.info(f"Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
-            telegram_client = TelegramClient(f"{account_directory}/{session_name}", api_id=self.api_id,
-                                             api_hash=self.api_hash,
-                                             system_version="4.16.30-vxCUSTOM",
-                                             proxy=await reading_proxy_data_from_the_database(self.db_handler))
-            return telegram_client
-        except sqlite3.OperationalError:
-            await show_notification(page,
-                                    f"⛔ Не рабочий аккаунт {account_directory}/{session_name}. Произведите проверку аккаунтов.")
-        except ValueError:
-            logger.exception(f"❌ Неверные API ID или API Hash.")
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")  # Логируем возникшее исключение вместе с сообщением об ошибке.
 
     async def verify_account(self, page, folder_name, session_name) -> None:
         """
@@ -221,6 +196,9 @@ class TGConnect:
                     phone = me.phone
                     await self.rename_session_file(telegram_client, session_name, phone, folder_name)
 
+                except AttributeError:  # Если в get_me приходит NoneType (None)
+                    pass
+
                 except TypeNotFoundError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
                     logger.error(
@@ -258,6 +236,8 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
+        getting_phone_number_data_by_phone_number(phone)  # Выводим информацию о номере телефона
+
     async def get_telegram_client(self, page, session_name, account_directory):
         """
         Подключение к Telegram, используя файл session.
@@ -270,11 +250,20 @@ class TGConnect:
         :return TelegramClient: TelegramClient
         """
         logger.info(
-            f"Подключение к аккаунту: {account_directory}/{session_name}")  # Имя файла сессии file[0] - session файл
-        telegram_client = await self.connect_to_telegram(page, session_name, account_directory)
+            f"Подключение к аккаунту: {account_directory}/{session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")  # Имя файла сессии file[0] - session файл
+        telegram_client = None  # Инициализируем переменную
         try:
+            telegram_client = TelegramClient(f"{account_directory}/{session_name}", api_id=self.api_id,
+                                             api_hash=self.api_hash,
+                                             system_version="4.16.30-vxCUSTOM",
+                                             proxy=await reading_proxy_data_from_the_database(self.db_handler))
+
             await telegram_client.connect()
             return telegram_client
+        except sqlite3.OperationalError:  # TODO добавить удаление не валидных аккаунтов
+            logger.info(f"❌ Аккаунт {session_name} поврежден.")
+        except sqlite3.DatabaseError:  # TODO добавить удаление не валидных аккаунтов
+            logger.info(f"❌ Аккаунт {session_name} поврежден.")
         except AuthKeyDuplicatedError:
             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
             logger.info(f"❌ На данный момент аккаунт {session_name} запущен под другим ip")
@@ -282,14 +271,10 @@ class TGConnect:
                                   f"user_settings/accounts/banned/{session_name}.session")
         except AttributeError as error:
             logger.error(f"❌ Ошибка: {error}")
-        except sqlite3.OperationalError as error:
-            await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
-            logger.info(f"❌ Аккаунт {session_name} поврежден.")
-            working_with_accounts(f"{account_directory}/{session_name}.session",
-                                  f"user_settings/accounts/banned/{session_name}.session")
         except ValueError:
             logger.info(f"❌ Ошибка подключения прокси к аккаунту {session_name}.")
         except Exception as error:
+            await telegram_client.disconnect()
             logger.exception(f"❌ Ошибка: {error}")
 
     async def connecting_number_accounts(self, page: ft.Page, account_directory, appointment):

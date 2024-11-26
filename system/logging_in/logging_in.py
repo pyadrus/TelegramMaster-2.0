@@ -10,6 +10,23 @@ from telethon.errors import FilePartsInvalidError
 from system.auxiliary_functions.config import program_version, date_of_program_change
 from loguru import logger
 
+import phonenumbers
+from phonenumbers import carrier, geocoder
+
+
+def getting_phone_number_data_by_phone_number(phone_numbers):
+    # phone_numbers = "+79381708846"
+
+    # Пример номера телефона для анализа
+    number = phonenumbers.parse(f"+{phone_numbers}", None)
+
+    # Получение информации о стране и операторе на русском языке
+    country_name = geocoder.description_for_number(number, "ru")
+    operator_name = carrier.name_for_number(number, "ru")
+
+    # Вывод информации
+    logger.info(f"Номер: {phone_numbers}, Оператор: {operator_name}, Страна: {country_name}")
+
 
 def get_country_flag(ip_address):
     """Определение страны по ip адресу на основе сервиса https://ipwhois.io/ru/documentation.

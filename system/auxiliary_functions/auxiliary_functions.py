@@ -116,7 +116,8 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
             os.replace(account_folder, new_account_folder)
         except FileExistsError:  # Если файл уже существует, то удаляем его
             os.remove(account_folder)
-    except PermissionError:
+    except PermissionError as error:
+        logger.error(f"❌ Ошибка: {error}")
         logger.error("❌ Не удалось перенести файлы в нужную папку")
     except Exception as error:
         logger.exception(f"❌ Ошибка: {error}")

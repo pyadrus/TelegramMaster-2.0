@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from loguru import logger
 from telethon import functions
-
+import flet as ft
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_filess
 from system.auxiliary_functions.config import path_creating_folder
@@ -15,7 +15,7 @@ class CreatingGroupsAndChats:
     def __init__(self):
         self.tg_connect = TGConnect()
 
-    async def creating_groups_and_chats(self, page) -> None:
+    async def creating_groups_and_chats(self, page: ft.Page) -> None:
         """
         Создание групп (чатов) в автоматическом режиме
         """
