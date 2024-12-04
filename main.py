@@ -5,7 +5,7 @@ import datetime
 import flet as ft
 from loguru import logger
 
-from docs.app import run_quart
+from docs.app import start_app
 from system.account_actions.TGAccountBIO import AccountBIO
 from system.account_actions.TGChek import TGChek
 from system.account_actions.TGConnect import TGConnect
@@ -824,7 +824,7 @@ async def main(page: ft.Page):
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
             SettingPage().create_main_window(page, variable="time_subscription")
         elif page.route == "/documentation":  # Открытие документации
-            await run_quart()
+            start_app()
         elif page.route == "/errors":
             # Пустая страница с уведомлением
             page.views.append(ft.View("/errors", []))

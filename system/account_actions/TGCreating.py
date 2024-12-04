@@ -29,7 +29,7 @@ class CreatingGroupsAndChats:
                                                                                 megagroup=True))
                 logger.info(response.stringify())
 
-        except TypeError: # Обработка ошибки при создании групп, если аккаунт не рабочий
+        except TypeError:  # Обработка ошибки при создании групп, если аккаунт не рабочий
             pass
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")

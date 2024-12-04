@@ -14,3 +14,5 @@ notifiers
 peewee~=3.17.8
 emoji-country-flag
 phonenumbers~=8.13.50
+fastapi~=0.115.5
+uvicorn~=0.32.0

@@ -95,7 +95,8 @@ class ParsingGroupMembers:
                 logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
+            await self.log_and_display(
+                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
 
         async def back_button_clicked(_):
             """
@@ -152,7 +153,8 @@ class ParsingGroupMembers:
         """
         try:
             for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_parsing_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=path_parsing_folder)
                 await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
 
                 try:
@@ -209,7 +211,8 @@ class ParsingGroupMembers:
                 logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
+            await self.log_and_display(
+                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                 lv, page)
 
         async def back_button_clicked(_):
@@ -305,7 +308,8 @@ class ParsingGroupMembers:
         page.controls.append(lv)
         try:
             for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_parsing_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=path_parsing_folder)
                 chats = []
                 last_date = None
                 result = await client(
@@ -330,7 +334,8 @@ class ParsingGroupMembers:
                     await client.disconnect()
                     # Переходим на экран парсинга только после завершения всех действий
                     finish = datetime.datetime.now()  # фиксируем время окончания парсинга
-                    await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
+                    await self.log_and_display(
+                        f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
                     page.go("/parsing")
 
                 async def back_button_clicked(_):
@@ -594,9 +599,10 @@ class ParsingGroupMembers:
                 # Изменение маршрута на новый (если необходимо)
 
                 finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-                await self.log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
+                await self.log_and_display(
+                    f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                     lv, page
-                )
+                    )
 
                 page.go("/parsing")  # Возвращаемся к основному меню парсинга 🏠
                 page.update()  # Обновление страницы для отображения изменений 🔄

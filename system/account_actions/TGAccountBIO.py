@@ -111,7 +111,7 @@ class AccountBIO:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_bio_profile(self,page, user_input):
+    async def change_bio_profile(self, page, user_input):
         """
         Изменение описания профиля.
 
@@ -160,7 +160,7 @@ class AccountBIO:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_name_profile(self,page, user_input):
+    async def change_name_profile(self, page, user_input):
         """
         Изменение имени профиля
 
@@ -203,7 +203,7 @@ class AccountBIO:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_last_name_profile(self,page, user_input):
+    async def change_last_name_profile(self, page, user_input):
         """
         Изменение фамилии профиля
 

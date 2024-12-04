@@ -7,16 +7,16 @@
     <title>TelegramMaster 2.0</title>
 
     <!-- Правильный способ подключения CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
+    <!-- Подключение CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
 
     <script>
         function loadMenu() {
             fetch('/menu')
                 .then(response => response.text())
                 .then(data => {
-                document.getElementById('menu-placeholder').innerHTML = data;
-            })
+                    document.getElementById('menu-placeholder').innerHTML = data;
+                })
                 .catch(error => console.error('Ошибка загрузки меню:', error));
         }
 
@@ -73,7 +73,7 @@
 
 
         <!-- Заголовок с центровкой текста -->
-        <h1 style="text-align: center; color: #00A6ED;">{{ program_name }} 🚀</h1>
+        <h1 style="text-align: center; color: #00A6ED;">{{program_name}} 🚀</h1>
 
 
         <hr/> <!-- Горизонтальная линия-->
@@ -141,7 +141,7 @@
         <!-- Изображение с центровкой -->
         <p style="text-align: center;">
             <!-- Пример правильного пути к изображению -->
-            <img src="{{ url_for('static', filename='images/TelegramMaster_2.png') }}" alt="Telegram Master"
+            <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master"
                  width="40%">
         </p>
 

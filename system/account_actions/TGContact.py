@@ -117,7 +117,7 @@ class TGContact:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def inviting_contact(self, page ) -> None:
+    async def inviting_contact(self, page) -> None:
         """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
         try:
             # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
