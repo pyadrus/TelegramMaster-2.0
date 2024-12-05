@@ -52,7 +52,7 @@ def get_country_flag(ip_address):
         response = urlopen(f'http://ipwho.is/{ip_address}')
         ipwhois = json.load(response)
 
-        emoji = "🏳️" # флаг неизвестной страны, если флаг не указан или не определен
+        emoji = "🏳️"  # флаг неизвестной страны, если флаг не указан или не определен
         country = ipwhois['country']
         return emoji, country
 

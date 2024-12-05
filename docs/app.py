@@ -1,3 +1,4 @@
+import time
 import webbrowser
 from multiprocessing import Process
 
@@ -31,7 +32,8 @@ app = FastAPI()
 
 # Указываем путь к статическим файлам
 app.mount("/static", StaticFiles(directory="docs/static"), name="static")
-templates = Jinja2Templates(directory="docs/templates") # Указываем директорию с шаблонами.
+templates = Jinja2Templates(directory="docs/templates")  # Указываем директорию с шаблонами.
+
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
@@ -42,6 +44,7 @@ async def index(request: Request):
     except Exception as e:
         logger.exception(f"Error rendering the template: {e}")
         return {"error": "Failed to render template"}
+
 
 @app.get("/menu", response_class=HTMLResponse)
 async def menu(request: Request):
@@ -228,7 +231,7 @@ def start_app():
     try:
         server_process = Process(target=run_uvicorn)
         server_process.start()
-
+        time.sleep(10)
         # Открытие браузера после задержки, чтобы сервер успел запуститься.
 
         webbrowser.open("http://127.0.0.1:8000")
