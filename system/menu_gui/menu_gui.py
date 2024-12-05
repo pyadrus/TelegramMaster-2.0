@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import flet as ft
+from loguru import logger
 
 from system.auxiliary_functions.config import height_button, small_button_width, line_width, line_width_button
 from system.localization.localization import (parse_single_or_multiple_groups, parse_selected_user_subscribed_group,
@@ -30,7 +31,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               for_marking_reactions, to_work_with_reactions, for_parsing, for_inviting,
                                               to_create_groups, to_work_with_numbers, to_edit_bio,
                                               for_the_answering_machine, working_with_reactions, parsing,
-                                              sending_messages, settings, main_menu)
+                                              sending_messages, settings, main_menu, creating_groups_chats)
 
 
 async def settings_menu(page):
@@ -618,6 +619,48 @@ async def connecting_accounts_by_session_menu(page):
                                                on_click=lambda _: page.go("/account_connection_session_viewing"))]),
 
                  ])]))
+
+
+async def creating_groups_and_chats_menu(page):
+    """
+    Меню создания групп и чатов
+
+    Аргументы:
+    :param page: Страница интерфейса Flet для отображения элементов управления.
+    """
+
+    page.views.append(
+        ft.View("/creating_groups_and_chats_menu",
+                [ft.AppBar(title=ft.Text(main_menu),
+                           bgcolor=ft.colors.SURFACE_VARIANT),
+                 ft.Text(spans=[ft.TextSpan(
+                     creating_groups_chats,
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                     # 👥 Создание групп (чатов)
+                     ft.ElevatedButton(width=line_width_button, height=height_button,
+                                       text=creating_groups_chats,
+                                       on_click=lambda _: page.go("/creating_groups")),
+                 ])]))
+
+
+async def log_and_display(message: str, lv, page):
+    """
+    Выводит сообщение в GUI и записывает лог.
+
+    Аргументы:
+    :param message: Текст сообщения для отображения и записи в лог.
+    :param lv: ListView для отображения сообщений.
+    :param page: Страница интерфейса Flet для отображения элементов управления.
+    """
+    logger.info(message)  # записываем сообщение в лог
+    lv.controls.append(ft.Text(message))  # отображаем сообщение в ListView
+    page.update()  # обновляем страницу для отображения нового сообщения
 
 
 async def show_notification(page: ft.Page, message: str):

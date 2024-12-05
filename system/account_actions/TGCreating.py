@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
+import datetime
+
+import flet as ft
 from loguru import logger
 from telethon import functions
-import flet as ft
+
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_filess
-from system.auxiliary_functions.config import path_creating_folder
+from system.auxiliary_functions.config import path_creating_folder, line_width_button, height_button
+from system.localization.localization import back_button, creating_groups_button
+from system.menu_gui.menu_gui import log_and_display
 
 
 class CreatingGroupsAndChats:
@@ -21,17 +26,58 @@ class CreatingGroupsAndChats:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        try:
-            for session_name in find_filess(directory_path=path_creating_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_creating_folder)
+        start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
+        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
-                response = await client(functions.channels.CreateChannelRequest(title='My awesome title',
-                                                                                about='Description for your group',
-                                                                                megagroup=True))
-                logger.info(response.stringify())
+        async def add_items(_):
+            """
+            🚀 Запускает процесс создания групп и отображает статус в интерфейсе.
+            """
+            # Индикация начала создания групп
+            await log_and_display(f"▶️ Начало создания групп.\n🕒 Время старта: {str(start)}", lv, page)
+            page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
 
-        except TypeError:  # Обработка ошибки при создании групп, если аккаунт не рабочий
-            pass
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            try:
+                for session_name in find_filess(directory_path=path_creating_folder, extension='session'):
+                    client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                       account_directory=path_creating_folder)
+
+                    response = await client(functions.channels.CreateChannelRequest(title='My awesome title',
+                                                                                    about='Description for your group',
+                                                                                    megagroup=True))
+                    logger.info(response.stringify())
+
+            except TypeError:  # Обработка ошибки при создании групп, если аккаунт не рабочий
+                pass
+            except Exception as error:
+                logger.exception(f"❌ Ошибка: {error}")
+
+            finish = datetime.datetime.now()  # фиксируем время окончания создания групп ⏰
+            await log_and_display(
+                f"🔚 Конец создания групп.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
+                lv, page)
+
+        async def back_button_clicked(_):
+            """
+            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню создания групп.
+            """
+            page.go("/creating_groups_and_chats_menu")  # переходим к основному меню создания групп 🏠
+
+        # Добавляем кнопки и другие элементы управления на страницу
+        page.views.append(
+            ft.View(
+                "/creating_groups_and_chats_menu",
+                [
+                    lv,  # отображение логов 📝
+                    ft.Column(),  # резерв для приветствия или других элементов интерфейса
+                    ft.ElevatedButton(width=line_width_button, height=height_button, text=creating_groups_button,
+                                      on_click=add_items),  # Кнопка "🚀 Начать создание групп"
+                    ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+                                      on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
+                ],
+            )
+        )
+
+        page.update()  # обновляем страницу после добавления элементов управления 🔄

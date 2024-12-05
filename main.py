@@ -37,7 +37,8 @@ from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
                                       account_connection_menu, connecting_accounts_by_number_menu,
-                                      connecting_accounts_by_session_menu, viewing_posts_menu, show_notification)
+                                      connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
+                                      creating_groups_and_chats_menu)
 from system.receiving_and_recording.receiving_and_recording import ReceivingAndRecording
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -118,7 +119,7 @@ async def main(page: ft.Page):
                               # 👥 Создание групп (чатов)
                               ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
                                                         text=creating_groups_chats,
-                                                        on_click=lambda _: page.go("/creating_groups")),
+                                                        on_click=lambda _: page.go("/creating_groups_and_chats_menu")),
                                       # ✏️ Редактирование_BIO
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
                                                         text=editing_bio,
@@ -529,6 +530,10 @@ async def main(page: ft.Page):
         elif page.route == "/account_connection_session_viewing":  # Для накрутки просмотров (session)
             await TGConnect().connecting_session_accounts(page, 'viewing', 'накрутки просмотров')
         # _______________________________________________________________________________________________________________
+
+        elif page.route == "/creating_groups_and_chats_menu":  # Меню "Создание групп и чатов"
+            await creating_groups_and_chats_menu(page)
+
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -537,16 +542,10 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ Нет аккаунта в папке creating")
                     return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Создания групп (чатов)")
                     await CreatingGroupsAndChats().creating_groups_and_chats(page=page)
-                    logger.info("🔚 Конец Создания групп (чатов)")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
+
         # _______________________________________________________________________________________________________________
         elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
             await message_distribution_menu(page)

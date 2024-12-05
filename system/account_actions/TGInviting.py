@@ -16,6 +16,7 @@ from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, record_inviting_results, find_filess
 from system.auxiliary_functions.config import ConfigReader, path_inviting_folder, line_width_button, height_button
 from system.localization.localization import back_button, start_inviting_button
+from system.menu_gui.menu_gui import log_and_display
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 
@@ -72,7 +73,7 @@ class InvitingToAGroup:
             """
 
             # Индикация начала инвайтинга
-            await self.log_and_display(f"▶️ Начало инвайтинга.\n🕒 Время старта: {str(start)}", lv, page)
+            await log_and_display(f"▶️ Начало инвайтинга.\n🕒 Время старта: {str(start)}", lv, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
 
             try:
@@ -90,33 +91,33 @@ class InvitingToAGroup:
                                                                                              account_limits=account_limits)
 
                         if len(number_usernames) == 0:
-                            await self.log_and_display(f"В таблице members нет пользователей для инвайтинга", lv, page)
+                            await log_and_display(f"В таблице members нет пользователей для инвайтинга", lv, page)
                             await self.sub_unsub_tg.unsubscribe_from_the_group(client, link[0])
                             break  # Прерываем работу и меняем аккаунт
 
                         for username in number_usernames:
-                            await self.log_and_display(f"Пользователь username:{username[0]}", lv, page)
+                            await log_and_display(f"Пользователь username:{username[0]}", lv, page)
                             # Инвайтинг в группу по полученному списку
                             time_inviting = self.config_reader.get_time_inviting()
                             try:
-                                await self.log_and_display(f"Попытка приглашения {username[0]} в группу {link[0]}.", lv,
-                                                           page)
+                                await log_and_display(f"Попытка приглашения {username[0]} в группу {link[0]}.", lv,
+                                                      page)
                                 await client(InviteToChannelRequest(link[0], [username[0]]))
-                                await self.log_and_display(f"Удачно! Спим 5 секунд", lv, page)
+                                await log_and_display(f"Удачно! Спим 5 секунд", lv, page)
                                 await asyncio.sleep(5)
                             # Ошибка инвайтинга продолжаем работу
                             except UserChannelsTooMuchError:
-                                await self.log_and_display(
+                                await log_and_display(
                                     f"❌ Попытка приглашения {username} в группу {link[0]}. Превышен лимит у user каналов / супергрупп.",
                                     lv, page)
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             except UserNotMutualContactError:
-                                await self.log_and_display(
+                                await log_and_display(
                                     f"❌ Попытка приглашения {username} в группу {link[0]}. User не является взаимным контактом.",
                                     lv, page)
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
                             except (UserKickedError, UserDeactivatedBanError):
-                                await self.log_and_display(
+                                await log_and_display(
                                     f"❌ Попытка приглашения {username} в группу {link[0]}. Пользователь был удален ранее из супергруппы или забанен.",
                                     lv, page)
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
@@ -166,7 +167,7 @@ class InvitingToAGroup:
 
                             except KeyboardInterrupt:  # Закрытие окна программы
                                 client.disconnect()  # Разрываем соединение telegram
-                                await self.log_and_display(f"[!] Скрипт остановлен!", lv, page)
+                                await log_and_display(f"[!] Скрипт остановлен!", lv, page)
                             except Exception as error:
                                 logger.exception(f"❌ Ошибка: {error}")
                             else:
@@ -179,7 +180,7 @@ class InvitingToAGroup:
                 logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            await self.log_and_display(
+            await log_and_display(
                 f"🔚 Конец инвайтинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
 
         async def back_button_clicked(_):
