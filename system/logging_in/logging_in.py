@@ -36,12 +36,20 @@ def get_country_flag(ip_address):
     :param ip_address: ip адрес
     :return: флаг и название страны
     """
-    response = urlopen(f'http://ipwho.is/{ip_address}')
-    ipwhois = json.load(response)
+    try:
+        response = urlopen(f'http://ipwho.is/{ip_address}')
+        ipwhois = json.load(response)
 
-    emoji = ipwhois['flag']['emoji']
-    country = ipwhois['country']
-    return emoji, country
+        emoji = ipwhois['flag']['emoji']
+        country = ipwhois['country']
+        return emoji, country
+    except KeyError:
+        response = urlopen(f'http://ipwho.is/{ip_address}')
+        ipwhois = json.load(response)
+
+        emoji = "🏳️" # флаг неизвестной страны, если флаг не указан или не определен
+        country = ipwhois['country']
+        return emoji, country
 
 
 def get_external_ip():
