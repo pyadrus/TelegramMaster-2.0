@@ -49,11 +49,8 @@ def get_country_flag(ip_address):
         country = ipwhois['country']
         return emoji, country
     except KeyError:
-        response = urlopen(f'https://ipwho.is/{ip_address}')
-        ipwhois = json.load(response)
-
         emoji = "🏳️"  # флаг неизвестной страны, если флаг не указан или не определен
-        country = ipwhois['country']
+        country = "🌍"  # если страна не указана или не определена
         return emoji, country
 
 
