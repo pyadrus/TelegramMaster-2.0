@@ -17,6 +17,7 @@ from system.auxiliary_functions.auxiliary_functions import working_with_accounts
 from system.auxiliary_functions.config import ConfigReader, height_button, line_width_button
 from system.localization.localization import back_button, done_button
 from system.logging_in.logging_in import getting_phone_number_data_by_phone_number
+from system.menu_gui.menu_gui import show_notification
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -260,10 +261,25 @@ class TGConnect:
 
             await telegram_client.connect()
             return telegram_client
-        except sqlite3.OperationalError:  # TODO добавить удаление не валидных аккаунтов
+
+        except sqlite3.OperationalError:
+
+            logger.info(f"❌ Аккаунт {account_directory}/{session_name} поврежден.")
+            await show_notification(
+                page,
+                f"⚠️ У нас возникла проблема с аккаунтом {account_directory}/{session_name}.\n\n"
+                f"Чтобы избежать дальнейших ошибок, пожалуйста, удалите этот аккаунт вручную и попробуйте снова. 🔄"
+            )
+
+        except sqlite3.DatabaseError:
+
             logger.info(f"❌ Аккаунт {session_name} поврежден.")
-        except sqlite3.DatabaseError:  # TODO добавить удаление не валидных аккаунтов
-            logger.info(f"❌ Аккаунт {session_name} поврежден.")
+            await show_notification(
+                page,
+                f"⚠️ У нас возникла проблема с аккаунтом {account_directory}/{session_name}.\n\n"
+                f"Чтобы избежать дальнейших ошибок, пожалуйста, удалите этот аккаунт вручную и попробуйте снова. 🔄"
+            )
+
         except AuthKeyDuplicatedError:
             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
             logger.info(f"❌ На данный момент аккаунт {session_name} запущен под другим ip")
