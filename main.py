@@ -30,7 +30,8 @@ from system.auxiliary_functions.config import (ConfigReader, height_button, smal
 from system.localization.localization import (we_are_winding_up_post_views, inviting, parsing, working_with_contacts,
                                               subscribe_unsubscribe, connecting_accounts, sending_messages,
                                               working_with_reactions, checking_accounts,
-                                              creating_groups_chats, editing_bio, settings, documentation, main_menu)
+                                              creating_groups_chats, editing_bio, settings, documentation, main_menu,
+                                              text_1, text_link_1, text_2, text_link_2)
 from system.logging_in.logging_in import loging
 from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
@@ -73,15 +74,15 @@ async def main(page: ft.Page):
                                       gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
                                                                                            ft.colors.PURPLE])), ), ), ], ),
                           ft.Text(disabled=False,
-                                  spans=[ft.TextSpan('Аккаунт  Telegram: '),
-                                         ft.TextSpan("https://t.me/PyAdminRU",
+                                  spans=[ft.TextSpan(text_1),
+                                         ft.TextSpan(text_link_1,
                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                                                     url="https://t.me/PyAdminRU", ), ], ),
+                                                     url=text_link_1, ), ], ),
                           ft.Text(disabled=False,
-                                  spans=[ft.TextSpan("Канал Telegram: "),
-                                         ft.TextSpan("https://t.me/master_tg_d",
+                                  spans=[ft.TextSpan(text_2),
+                                         ft.TextSpan(text_link_2,
                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                                                     url="https://t.me/master_tg_d", ), ], ),
+                                                     url=text_link_2, ), ], ),
                           ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                               ft.Row(
                                   # 🚀 Инвайтинг
