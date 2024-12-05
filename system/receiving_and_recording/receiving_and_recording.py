@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import openpyxl
 
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler

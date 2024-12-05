@@ -42,14 +42,14 @@ def get_country_flag(ip_address):
     :return: флаг и название страны
     """
     try:
-        response = urlopen(f'http://ipwho.is/{ip_address}')
+        response = urlopen(f'https://ipwho.is/{ip_address}')
         ipwhois = json.load(response)
 
         emoji = ipwhois['flag']['emoji']
         country = ipwhois['country']
         return emoji, country
     except KeyError:
-        response = urlopen(f'http://ipwho.is/{ip_address}')
+        response = urlopen(f'https://ipwho.is/{ip_address}')
         ipwhois = json.load(response)
 
         emoji = "🏳️"  # флаг неизвестной страны, если флаг не указан или не определен

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import flet as ft
 
 from system.auxiliary_functions.config import height_button, small_button_width, line_width, line_width_button
