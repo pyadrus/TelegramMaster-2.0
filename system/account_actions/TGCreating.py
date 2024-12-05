@@ -18,6 +18,8 @@ class CreatingGroupsAndChats:
     async def creating_groups_and_chats(self, page: ft.Page) -> None:
         """
         Создание групп (чатов) в автоматическом режиме
+
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             for session_name in find_filess(directory_path=path_creating_folder, extension='session'):

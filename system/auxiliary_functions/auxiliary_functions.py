@@ -31,7 +31,6 @@ def all_find_files(directory_path) -> list:
     :param directory_path:  Путь к директории
     :return list:           Список имен найденных файлов
     """
-
     entities = []  # Создаем список с именами найденных файлов
     for x in os.listdir(directory_path):
         if os.path.isfile(os.path.join(directory_path, x)):  # Проверяем, является ли x файлом

@@ -146,7 +146,7 @@ class AccountBIO:
         Изменение био профиля Telegram в графическое окно Flet
 
         Аргументы:
-        :param page: Страница интерфейса Flet для
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             user_input = ft.TextField(label="Введите имя профиля, не более 64 символов: ", multiline=True, max_lines=19)
@@ -188,7 +188,7 @@ class AccountBIO:
         Изменение био профиля Telegram в графическое окно Flet
 
         Аргументы:
-        :param page: Страница интерфейса Flet для
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             user_input = ft.TextField(label="Введите фамилию профиля, не более 64 символов: ", multiline=True,
@@ -262,8 +262,7 @@ class AccountBIO:
                 except Exception as e:
                     logger.exception(f"❌ Ошибка при подключении или выполнении запроса для {session_name}: {e}")
                 finally:
-                    # Убедитесь, что клиент отключен после обработки сеанса.
-                    if await client.is_connected():
+                    if await client.is_connected():  # Убедитесь, что клиент отключен после обработки сеанса.
                         await client.disconnect()
 
         except Exception as error:

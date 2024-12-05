@@ -4,7 +4,7 @@ import os
 import os.path
 import shutil
 import sqlite3
-import asyncio
+
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import TelegramClient
@@ -384,8 +384,8 @@ class TGConnect:
         Подключение сессии Telegram
 
         Аргументы:
-        :param page: страница
-        :param account_directory: директория аккаунтов
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param account_directory: Директория аккаунтов
         :param appointment: назначение
         """
         logger.info(f"Подключение session аккаунта Telegram для {appointment} в {account_directory}")
