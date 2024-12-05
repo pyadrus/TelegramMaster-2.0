@@ -15,7 +15,12 @@ from phonenumbers import carrier, geocoder
 
 
 def getting_phone_number_data_by_phone_number(phone_numbers):
-    # phone_numbers = "+79381708846"
+    """
+    Определение страны и оператора по номеру телефона
+
+    :param phone_numbers: Номер телефона
+    :return: None
+    """
 
     # Пример номера телефона для анализа
     number = phonenumbers.parse(f"+{phone_numbers}", None)
