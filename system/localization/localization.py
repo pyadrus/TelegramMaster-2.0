@@ -53,7 +53,7 @@ forming_list_of_chats_channels: str = "📑 Формирование списк�
 
 # Главное меню
 parsing: str = "📊 Парсинг"
-working_with_contacts: str = "📇 Работа с контактами"
+working_with_contacts_menu_ru: str = "📇 Работа с контактами"
 subscribe_unsubscribe: str = "🔄 Подписка, отписка"
 connecting_accounts: str = "🔐 Подключение аккаунтов"
 sending_messages: str = "📤 Рассылка сообщений"

@@ -30,7 +30,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               forming_list_of_chats_channels, changing_the_username, changing_the_photo,
                                               changing_the_description, name_change_n, name_change_f,
                                               creating_a_contact_list, show_a_list_of_contacts, deleting_contacts,
-                                              adding_contacts)
+                                              adding_contacts, working_with_contacts_menu_ru)
 
 app = FastAPI()
 
@@ -104,6 +104,7 @@ async def working_with_contacts(request: Request):
                                                                      "show_a_list_of_contacts": show_a_list_of_contacts,
                                                                      "deleting_contacts": deleting_contacts,
                                                                      "adding_contacts": adding_contacts,
+                                                                     "working_with_contacts_menu_ru": working_with_contacts_menu_ru,
                                                                      })
 
 

@@ -23,7 +23,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               changing_the_username, changing_the_photo, changing_the_description,
                                               name_change_n, name_change_f, creating_a_contact_list,
                                               show_a_list_of_contacts, deleting_contacts, adding_contacts,
-                                              working_with_contacts, subscribe_unsubscribe, subscription, unsubscribe,
+                                              working_with_contacts_menu_ru, subscribe_unsubscribe, subscription, unsubscribe,
                                               checking_accounts, checking_through_a_spam_bot, validation_check,
                                               renaming_accounts, full_verification, connecting_accounts,
                                               connecting_accounts_by_phone_number, connecting_session_accounts,
@@ -249,7 +249,7 @@ async def working_with_contacts_menu(page):
                 [ft.AppBar(title=ft.Text(main_menu),
                            bgcolor=ft.colors.SURFACE_VARIANT),
                  ft.Text(spans=[ft.TextSpan(
-                     working_with_contacts,
+                     working_with_contacts_menu_ru,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,

@@ -27,18 +27,18 @@ from system.auxiliary_functions.config import (ConfigReader, height_button, smal
                                                path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
                                                path_reactions_folder, path_contact_folder, path_creating_folder,
                                                path_send_message_folder, path_bio_folder, path_viewing_folder)
-from system.localization.localization import (we_are_winding_up_post_views, inviting, parsing, working_with_contacts,
-                                              subscribe_unsubscribe, connecting_accounts, sending_messages,
+from system.localization.localization import (we_are_winding_up_post_views, inviting, parsing, subscribe_unsubscribe,
+                                              connecting_accounts, sending_messages,
                                               working_with_reactions, checking_accounts,
                                               creating_groups_chats, editing_bio, settings, documentation, main_menu,
                                               text_1, text_link_1, text_2, text_link_2)
 from system.logging_in.logging_in import loging
-from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu, message_distribution_menu,
+from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu_ru, message_distribution_menu,
                                       bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                                       subscribe_and_unsubscribe_menu, account_verification_menu,
                                       account_connection_menu, connecting_accounts_by_number_menu,
                                       connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
-                                      creating_groups_and_chats_menu)
+                                      creating_groups_and_chats_menu, working_with_contacts_menu)
 from system.receiving_and_recording.receiving_and_recording import ReceivingAndRecording
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -94,7 +94,7 @@ async def main(page: ft.Page):
                                                      on_click=lambda _: page.go("/parsing")), ]),
                               # 📇 Работа с контактами
                               ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text=working_with_contacts,
+                                                        text=working_with_contacts_menu_ru,
                                                         on_click=lambda _: page.go("/working_with_contacts")),
                                       # 🔄 Подписка, отписка
                                       ft.ElevatedButton(width=small_button_width, height=height_button,
