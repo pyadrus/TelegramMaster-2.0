@@ -6,7 +6,10 @@
     <title>Проверка аккаунтов</title>
 
     <!-- Правильный способ подключения CSS -->
+    <!-- Правильный способ подключения CSS -->
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/card.css">
 
     <script>
         function loadMenu() {
@@ -21,8 +24,6 @@
         // Вызов функции загрузки меню при загрузке страницы
         window.onload = loadMenu;
     </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
     <!-- Стили для кнопки "Вверх" -->
@@ -69,7 +70,44 @@
     <!-- Основной контент -->
     <div class="content">
 
-        <h1 style="text-align: center">Формирование списка контактов</h1>
+
+        <!-- Меню навигации -->
+        <div class="card-container">
+
+            <div class="card">
+                <!-- 📋 Формирование списка контактов -->
+                <p class="heading">{{creating_a_contact_list}}</p>
+                <p>{{creating_a_contact_list}}</p>
+                <button class="card-button"><a href="#creating_a_contact_list">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- 👥 Показать список контактов -->
+                <p class="heading">{{show_a_list_of_contacts}}</p>
+                <p>{{show_a_list_of_contacts}}</p>
+                <button class="card-button"><a href="#show_a_list_of_contacts">Перейти</a></button>
+            </div>
+
+
+            <div class="card">
+                <!-- 🗑️ Удаление контактов -->
+                <p class="heading">{{deleting_contacts}}</p>
+                <p>{{deleting_contacts}}</p>
+                <button class="card-button"><a href="#deleting_contacts">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <!-- ➕ Добавление контактов -->
+                <p class="heading">{{adding_contacts}}</p>
+                <p>{{adding_contacts}}</p>
+                <button class="card-button"><a href="#adding_contacts">Перейти</a></button>
+            </div>
+
+        </div>
+
+
+        <h2 id="creating_a_contact_list" style="text-align: center;">{{creating_a_contact_list}}</h2>
+
 
         <p>
             Для формирования списка номеров (контактов), для дальнейшего взаимодействия с ними), выполните следующие
@@ -108,8 +146,7 @@
 
         <hr align="center"/>
 
-        <h1 style="text-align: center">Показ списка контактов</h1>
-
+        <h2 id="show_a_list_of_contacts" style="text-align: center;">{{show_a_list_of_contacts}}</h2>
 
         <p>
             Для того что бы посмотреть телефонную книгу аккаунта Telegram, выполните следующие действия:<br>
@@ -136,7 +173,7 @@
 
         <hr align="center"/>
 
-        <h1 style="text-align: center">Удаление контактов</h1>
+        <h2 id="deleting_contacts" style="text-align: center;">{{deleting_contacts}}</h2>
 
         <p>
             Для удаления номеров (контактов) с телефонной книги Telegram, выполните следующие действия: <br>
@@ -163,7 +200,7 @@
 
         <hr align="center"/>
 
-        <h1 style="text-align: center">Добавление контактов</h1>
+        <h2 id="adding_contacts" style="text-align: center;">{{adding_contacts}}</h2>
 
         <p>
             Для добавления, перебора списка номеров (контактов), для дальнейшего взаимодействия с ними), выполните

@@ -28,7 +28,9 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               recording_the_time_between_messages,
                                               time_between_invites_sending_messages, recording_reaction_link,
                                               forming_list_of_chats_channels, changing_the_username, changing_the_photo,
-                                              changing_the_description, name_change_n, name_change_f)
+                                              changing_the_description, name_change_n, name_change_f,
+                                              creating_a_contact_list, show_a_list_of_contacts, deleting_contacts,
+                                              adding_contacts)
 
 app = FastAPI()
 
@@ -85,7 +87,7 @@ async def editing_bio(request: Request):
     """Редактирование БИЛ"""
     logger.info("Запущена страница редактирования БИО")
     return templates.TemplateResponse('editing_bio.html', {"request": request, "program_name": program_name,
-                                                           "changing_the_username":changing_the_username,
+                                                           "changing_the_username": changing_the_username,
                                                            "changing_the_photo": changing_the_photo,
                                                            "changing_the_description": changing_the_description,
                                                            "name_change_n": name_change_n,
@@ -97,7 +99,12 @@ async def editing_bio(request: Request):
 async def working_with_contacts(request: Request):
     """Работа с контактами"""
     logger.info("Запущена страница работы с контактами")
-    return templates.TemplateResponse('working_with_contacts.html', {"request": request, "program_name": program_name})
+    return templates.TemplateResponse('working_with_contacts.html', {"request": request, "program_name": program_name,
+                                                                     "creating_a_contact_list": creating_a_contact_list,
+                                                                     "show_a_list_of_contacts": show_a_list_of_contacts,
+                                                                     "deleting_contacts": deleting_contacts,
+                                                                     "adding_contacts": adding_contacts,
+                                                                     })
 
 
 @app.get('/settings', response_class=HTMLResponse)
