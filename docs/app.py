@@ -27,7 +27,8 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               message_limits, time_between_subscriptionss, creating_username_list,
                                               recording_the_time_between_messages,
                                               time_between_invites_sending_messages, recording_reaction_link,
-                                              forming_list_of_chats_channels)
+                                              forming_list_of_chats_channels, changing_the_username, changing_the_photo,
+                                              changing_the_description, name_change_n, name_change_f)
 
 app = FastAPI()
 
@@ -83,7 +84,13 @@ async def sending_messages(request: Request):
 async def editing_bio(request: Request):
     """Редактирование БИЛ"""
     logger.info("Запущена страница редактирования БИО")
-    return templates.TemplateResponse('editing_bio.html', {"request": request, "program_name": program_name})
+    return templates.TemplateResponse('editing_bio.html', {"request": request, "program_name": program_name,
+                                                           "changing_the_username":changing_the_username,
+                                                           "changing_the_photo": changing_the_photo,
+                                                           "changing_the_description": changing_the_description,
+                                                           "name_change_n": name_change_n,
+                                                           "name_change_f": name_change_f,
+                                                           })
 
 
 @app.get('/working_with_contacts', response_class=HTMLResponse)
