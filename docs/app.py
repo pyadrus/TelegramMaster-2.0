@@ -30,7 +30,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               forming_list_of_chats_channels, changing_the_username, changing_the_photo,
                                               changing_the_description, name_change_n, name_change_f,
                                               creating_a_contact_list, show_a_list_of_contacts, deleting_contacts,
-                                              adding_contacts, working_with_contacts_menu_ru)
+                                              adding_contacts, working_with_contacts_menu_ru, subscription, unsubscribe)
 
 app = FastAPI()
 
@@ -160,7 +160,8 @@ async def subscribe_unsubscribe(request: Request):
     """Подписка, отписка"""
     logger.info("Запущена страница подписки, отписки")
     return templates.TemplateResponse('subscribe_unsubscribe.html',
-                                      {"request": request, "program_name": program_name})
+                                      {"request": request, "program_name": program_name, "subscription": subscription,
+                                       "unsubscribe": unsubscribe})
 
 
 @app.get('/connect_accounts', response_class=HTMLResponse)
