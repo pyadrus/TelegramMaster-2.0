@@ -1,7 +1,7 @@
 .card-container {
     display: flex;
     /*justify-content: flex-end; !* Выравнивание карточек справа *!*/
-    gap: 20px; /* Расстояние между карточками */
+    gap: 50px 50px; /* Расстояние между карточками */
 }
 
 

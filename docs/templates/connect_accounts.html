@@ -5,8 +5,11 @@
     <meta charset="UTF-8">
     <title>Подключение аккаунтов к TelegramMaster</title>
 
-    <!-- Правильный способ подключения CSS -->
+   <!-- Правильный способ подключения CSS -->
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/card.css?version=0.1.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <script>
         function loadMenu() {
             fetch('/menu')
@@ -20,8 +23,6 @@
         // Вызов функции загрузки меню при загрузке страницы
         window.onload = loadMenu;
     </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
     <!-- Стили для кнопки "Вверх" -->
@@ -69,8 +70,32 @@
 
     <!-- Основной контент -->
     <div class="content">
-        <h1 style="text-align: center;">🚀 Покупка аккаунтов Telegram</h1>
-        <hr align="center"/>
+
+
+         <div class="card-container">
+
+            <div class="card">
+                <p class="heading">🚀 Покупка аккаунтов Telegram</p>
+                <p>🚀 Покупка аккаунтов Telegram</p>
+                <button class="card-button"><a href="#buying_telegram_accounts">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <p class="heading">{{connecting_accounts_by_phone_number}}</p>
+                <p>{{connecting_accounts_by_phone_number}}</p>
+                <button class="card-button"><a href="#connecting_accounts_by_phone_number">Перейти</a></button>
+            </div>
+
+            <div class="card">
+                <p class="heading">{{connecting_session_accounts}}</p>
+                <p>{{connecting_session_accounts}}</p>
+                <button class="card-button"><a href="#connecting_session_accounts">Перейти</a></button>
+            </div>
+
+        </div>
+
+
+        <h2 id="buying_telegram_accounts" style="text-align: center;">🚀 Покупка аккаунтов Telegram</h2>
 
         <b>{{program_name}}</b> не регистрирует аккаунты, а позволяет подключить уже существующие. Для этого можно
         использовать аккаунты в форматах <b>tdata</b>, <b>session</b> или перенести смартфонные аккаунты в
@@ -100,7 +125,7 @@
             6️⃣ <a href="https://tgseller.ru">https://tgseller.ru</a><br>
         </blockquote>
 
-        <h2>Подключение аккаунтов в формате tdata</h2>
+        <h2 id="connecting_accounts_by_phone_number" style="text-align: center;">{{connecting_accounts_by_phone_number}}</h2>
 
         <p>Чтобы подключить аккаунт в формате tdata, выполните следующие действия:</p>
 
@@ -185,8 +210,7 @@
 
         <hr align="center"/>
 
-
-        <h2>Подключение аккаунтов в формате session</h2>
+ <h2 id="connecting_session_accounts" style="text-align: center;">{{connecting_session_accounts}}</h2>
 
         <blockquote>
             <p>⚠️ <b>{{program_name}}</b> позволяет добавить неограниченное количество аккаунтов.</p>

@@ -30,7 +30,8 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               forming_list_of_chats_channels, changing_the_username, changing_the_photo,
                                               changing_the_description, name_change_n, name_change_f,
                                               creating_a_contact_list, show_a_list_of_contacts, deleting_contacts,
-                                              adding_contacts, working_with_contacts_menu_ru, subscription, unsubscribe)
+                                              adding_contacts, working_with_contacts_menu_ru, subscription, unsubscribe,
+                                              connecting_accounts_by_phone_number, connecting_session_accounts)
 
 app = FastAPI()
 
@@ -84,7 +85,7 @@ async def sending_messages(request: Request):
 
 @app.get('/editing_bio', response_class=HTMLResponse)
 async def editing_bio(request: Request):
-    """Редактирование БИЛ"""
+    """Редактирование BIO"""
     logger.info("Запущена страница редактирования БИО")
     return templates.TemplateResponse('editing_bio.html', {"request": request, "program_name": program_name,
                                                            "changing_the_username": changing_the_username,
@@ -169,7 +170,9 @@ async def connect_accounts(request: Request):
     """Подключение аккаунтов"""
     logger.info("Запущена страница подключения аккаунтов")
     return templates.TemplateResponse('connect_accounts.html',
-                                      {"request": request, "program_name": program_name})
+                                      {"request": request, "program_name": program_name,
+                                       "connecting_accounts_by_phone_number": connecting_accounts_by_phone_number,
+                                       "connecting_session_accounts": connecting_session_accounts})
 
 
 @app.get('/account_verification', response_class=HTMLResponse)
