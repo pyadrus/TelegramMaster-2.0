@@ -11,7 +11,7 @@ from telethon.errors import ChatAdminRequiredError
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, UserStatusLastMonth,
-                               UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently)
+                               UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently, InputUser)
 
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -239,10 +239,16 @@ class ParsingGroupMembers:
             async for message in client.iter_messages(chat, limit=int(limit_active_user)):
                 if message.from_id is not None:
                     try:
+                        logger.info(f"{message.from_id}")
+
                         # Получаем входную сущность пользователя
-                        from_user = await client.get_input_entity(message.from_id.user_id)
+                        user = await client.get_entity(message.from_id.user_id)  # Получаем полную сущность
+                        from_user = InputUser(user_id=user.id, access_hash=user.access_hash)  # Создаем InputUser
+                        logger.info(f"{from_user}")
+
+
                         # Получаем данные о пользователе
-                        entities = await self.get_active_user_data(from_user)
+                        entities = await self.get_active_user_data(user)
                         await log_and_display(f"{entities}", lv, page)
                         await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
                     except ValueError as e:
@@ -461,7 +467,7 @@ class ParsingGroupMembers:
         :param user: Объект пользователя.
         :return: Кортеж со значениями: username, user_phone, first_name, last_name, photos_id, online_at, user_premium.
         """
-        username = user.username if user.username else "NONE"
+        usernames = user.username if user.username else ""
         user_phone = user.phone if user.phone else "Номер телефона скрыт"
         first_name = user.first_name if user.first_name else ""
         last_name = user.last_name if user.last_name else ""
@@ -486,7 +492,7 @@ class ParsingGroupMembers:
                 online_at = "статус пользователя еще не определен"
         user_premium = "Пользователь с premium" if user.premium else ""
 
-        return username, user_phone, first_name, last_name, photos_id, online_at, user_premium
+        return usernames, user_phone, first_name, last_name, photos_id, online_at, user_premium
 
     async def get_active_user_data(self, user):
         """
