@@ -787,9 +787,9 @@ async def main(page: ft.Page):
         elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash
             await SettingPage().writing_api_id_api_hash(page)
         elif page.route == "/message_limits":  # Лимиты на сообщения
-            SettingPage().record_setting(page, "message_limits", "Введите лимит на сообщения")
+            await SettingPage().record_setting(page, "message_limits", "Введите лимит на сообщения")
         elif page.route == "/account_limits":  # Лимиты на аккаунт
-            SettingPage().record_setting(page, "account_limits", "Введите лимит на аккаунт")
+            await SettingPage().record_setting(page, "account_limits", "Введите лимит на аккаунт")
         elif page.route == "/creating_username_list":  # Формирование списка username
             SettingPage().output_the_input_field(page, "Введите список username", "members",
                                                  "username, id, access_hash, first_name, last_name, "
@@ -805,24 +805,24 @@ async def main(page: ft.Page):
         elif page.route == "/proxy_entry":  # Запись proxy
             await SettingPage().creating_the_main_window_for_proxy_data_entry(page)
         elif page.route == "/message_recording":  # Запись сообщений
-            SettingPage().recording_text_for_sending_messages(page, "Введите текст для сообщения",
+            await SettingPage().recording_text_for_sending_messages(page, "Введите текст для сообщения",
                                                               get_unique_filename(
                                                                   base_filename='user_settings/message/message'))
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
-            SettingPage().recording_text_for_sending_messages(page, "Введите ссылку для реакций",
+            await SettingPage().recording_text_for_sending_messages(page, "Введите ссылку для реакций",
                                                               'user_settings/reactions/link_channel.json')
         elif page.route == "/choice_of_reactions":  # Выбор реакций
             await reaction_gui(page)
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
-            SettingPage().create_main_window(page, variable="time_sending_messages")
+            await SettingPage().create_main_window(page, variable="time_sending_messages")
         elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
-            SettingPage().create_main_window(page, variable="time_inviting")
+            await SettingPage().create_main_window(page, variable="time_inviting")
         elif page.route == "/changing_accounts":  # Смена аккаунтов
-            SettingPage().create_main_window(page, variable="time_changing_accounts")
+            await SettingPage().create_main_window(page, variable="time_changing_accounts")
         elif page.route == "/time_between_subscriptions":
             await SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
-            SettingPage().create_main_window(page, variable="time_subscription")
+            await SettingPage().create_main_window(page, variable="time_subscription")
         elif page.route == "/documentation":  # Открытие документации
             start_app()
         elif page.route == "/errors":

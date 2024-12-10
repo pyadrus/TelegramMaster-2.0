@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import configparser
 import io
-import json
+import json  # TODO Использовать работу с json только в одной файле.
 import os
 import sys
 
@@ -10,6 +10,7 @@ from loguru import logger
 
 from system.auxiliary_functions.config import height_button, line_width_button
 from system.localization.localization import back_button, done_button
+from system.menu_gui.menu_gui import show_notification
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
@@ -40,24 +41,32 @@ class SettingPage:
             proxy = [proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
                      rdns_types]
             await self.db_handler.save_proxy_data_to_db(proxy=proxy)
+
+            await show_notification(page, "Данные успешно записаны!")
+
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
         self.add_view_with_fields_and_button(page, [proxy_type, addr_type, port_type, username_type, password_type],
                                              btn_click)
 
-    def recording_text_for_sending_messages(self, page: ft.Page, label, unique_filename) -> None:
+    async def recording_text_for_sending_messages(self, page: ft.Page, label, unique_filename) -> None:
         """
         Запись текста в файл для отправки сообщений в Telegram в формате JSON. Данные записываются в файл с именем
         <имя файла>.json и сохраняются в формате JSON.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param label: Текст для отображения в поле ввода.
+        :param unique_filename: Имя файла для записи данных.
         """
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
 
-        def btn_click(e) -> None:
+        async def btn_click(e) -> None:
             write_data_to_json_file(reactions=text_to_send.value,
                                     path_to_the_file=unique_filename)  # Сохраняем данные в файл
+
+            await show_notification(page, "Данные успешно записаны!")
+
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
@@ -69,6 +78,11 @@ class SettingPage:
         Окно ввода для записи списка контактов telegram
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param label: Текст для отображения в поле ввода.
+        :param table_name: Имя таблицы в базе данных.
+        :param column_name: Имя столбца в таблице.
+        :param route: Маршрут для перехода после записи данных.
+        :param into_columns: Имя столбца в таблице, в который будут записаны данные.
         """
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
 
@@ -79,23 +93,30 @@ class SettingPage:
                 into_columns=into_columns,
                 recorded_data=text_to_send.value.split()
             )
+
+            await show_notification(page, "Данные успешно записаны!")
+
             page.go(route)  # Изменение маршрута в представлении существующих настроек
             page.update()
 
         self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
 
-    def record_setting(self, page: ft.Page, limit_type: str, label: str):
+    async def record_setting(self, page: ft.Page, limit_type: str, label: str):
         """
         Запись лимитов на аккаунт или сообщение
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param limit_type: Тип лимита.
+        :param label: Текст для отображения в поле ввода.
         """
         limits = ft.TextField(label=label, multiline=True, max_lines=19)
 
-        def btn_click(e) -> None:
+        async def btn_click(e) -> None:
             config.get(limit_type, limit_type)
             config.set(limit_type, limit_type, limits.value)
             writing_settings_to_a_file(config)
+
+            await show_notification(page, "Данные успешно записаны!")
 
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
@@ -111,7 +132,7 @@ class SettingPage:
         hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
         minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
 
-        def btn_click(e) -> None:
+        async def btn_click(e) -> None:
             try:
                 hour = int(hour_textfield.value)
                 minutes = int(minutes_textfield.value)
@@ -129,6 +150,9 @@ class SettingPage:
                 config.get("hour_minutes_every_day", "minutes")
                 config.set("hour_minutes_every_day", "minutes", str(minutes))
                 writing_settings_to_a_file(config)
+
+                await show_notification(page, "Данные успешно записаны!")
+
                 page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             except ValueError:
                 logger.info('Введите числовые значения для часов и минут!')
@@ -136,16 +160,16 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click)
 
-    def create_main_window(self, page: ft.Page, variable) -> None:
+    async def create_main_window(self, page: ft.Page, variable) -> None:
         """
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param variable: название переменной в файле config.ini
+        :param variable: Название переменной в файле config.ini
         :return: None
         """
         smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
         larger_timex = ft.TextField(label="Время в секундах (большее)")
 
-        def btn_click(e) -> None:
+        async def btn_click(e) -> None:
             try:
                 smaller_times = int(smaller_timex.value)
                 larger_times = int(larger_timex.value)
@@ -154,6 +178,9 @@ class SettingPage:
                     # Если условие прошло проверку, то возвращаем первое и второе время
                     config = recording_limits_file(str(smaller_times), str(larger_times), variable=variable)
                     writing_settings_to_a_file(config)
+
+                    await show_notification(page, "Данные успешно записаны!")
+
                     page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             except ValueError:
                 pass
@@ -192,7 +219,7 @@ class SettingPage:
         :param btn_click: Кнопка для добавления
         """
 
-        def back_button_clicked(e):
+        def back_button_clicked(e) -> None:
             """Кнопка возврата в меню настроек"""
             page.go("/settings")
 
@@ -241,7 +268,7 @@ def write_data_to_json_file(reactions, path_to_the_file):
         json.dump(reactions, file, ensure_ascii=False, indent=4)
 
 
-def get_unique_filename(base_filename):
+def get_unique_filename(base_filename) -> str:
     """Функция для получения уникального имени файла"""
     index = 1
     while True:
@@ -281,14 +308,16 @@ async def reaction_gui(page: ft.Page):
         ft.Checkbox(label="🕊"), ft.Checkbox(label="😭")
     ]
 
-    def button_clicked(e):
+    async def button_clicked(e) -> None:
         """Выбранная реакция"""
         selected_reactions = [checkbox.label for checkbox in checkboxes if
                               checkbox.value]  # Получаем только выбранные реакции
         write_data_to_json_file(reactions=selected_reactions, path_to_the_file='user_settings/reactions/reactions.json')
+
+        await show_notification(page, "Данные успешно записаны!")
         page.go("/settings")  # Переход к странице настроек
 
-    def back_button_clicked(e):
+    async def back_button_clicked(e) -> None:
         """Кнопка возврата в меню настроек"""
         page.go("/settings")
 
