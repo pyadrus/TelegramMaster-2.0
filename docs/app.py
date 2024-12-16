@@ -22,7 +22,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               sending_files_via_chats, sending_messages_files_via_chats,
                                               sending_personal_messages_with_limits,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
-                                              proxy_entry, changing_accounts, recording_api_id_api_hash,
+                                              proxy_entry_ru, changing_accounts, recording_api_id_api_hash,
                                               time_between_subscriptions, message_recording, link_entry, account_limits,
                                               message_limits, time_between_subscriptionss, creating_username_list,
                                               recording_the_time_between_messages,
@@ -115,7 +115,7 @@ async def settings(request: Request):
     logger.info("Запущена страница настроек")
     return templates.TemplateResponse('settings.html', {"request": request, "program_name": program_name,
                                                         "choice_of_reactions_ru": choice_of_reactions_ru,
-                                                        "proxy_entry": proxy_entry,
+                                                        "proxy_entry_ru": proxy_entry_ru,
                                                         "changing_accounts": changing_accounts,
                                                         "recording_api_id_api_hash": recording_api_id_api_hash,
                                                         "time_between_subscriptions": time_between_subscriptions,
@@ -141,6 +141,19 @@ async def choice_of_reactions(request: Request):
         "program_name": program_name,
         "choice_of_reactions_ru": choice_of_reactions_ru,
     })
+
+
+@app.get('/settings/proxy_entry', response_class=HTMLResponse)
+async def proxy_entry(request: Request):
+    """🔐 Запись proxy"""
+    logger.info("Запущена страница выбора реакции")
+    return templates.TemplateResponse('settings/proxy_entry.html', {
+        "request": request,
+        "program_name": program_name,
+        "proxy_entry_ru": proxy_entry_ru,
+    })
+
+
 
 
 # Работа с реакциями

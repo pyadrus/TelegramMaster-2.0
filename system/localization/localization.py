@@ -36,7 +36,7 @@ sending_files_to_personal_account_with_limits: str = "📁 Отправка фа
 
 # Настройки меню
 choice_of_reactions_ru: str = "👍 Выбор реакций"
-proxy_entry: str = "🔐 Запись proxy"
+proxy_entry_ru: str = "🔐 Запись proxy"
 changing_accounts: str = "🔄 Смена аккаунтов"
 recording_api_id_api_hash: str = "📝 Запись api_id, api_hash"
 time_between_subscriptions: str = "⏰ Запись времени"

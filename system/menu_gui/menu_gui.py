@@ -14,7 +14,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               sending_files_via_chats, sending_messages_files_via_chats,
                                               sending_personal_messages_with_limits,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
-                                              proxy_entry, changing_accounts, recording_api_id_api_hash,
+                                              proxy_entry_ru, changing_accounts, recording_api_id_api_hash,
                                               time_between_subscriptions, message_recording, link_entry, account_limits,
                                               message_limits, time_between_subscriptionss, creating_username_list,
                                               recording_the_time_between_messages,
@@ -60,7 +60,7 @@ async def settings_menu(page):
                          ft.ElevatedButton(width=small_button_width, height=height_button, text=choice_of_reactions_ru,
                                            on_click=lambda _: page.go("/choice_of_reactions")),
                          # 🔐 Запись proxy
-                         ft.ElevatedButton(width=small_button_width, height=height_button, text=proxy_entry,
+                         ft.ElevatedButton(width=small_button_width, height=height_button, text=proxy_entry_ru,
                                            on_click=lambda _: page.go("/proxy_entry"))]),
                      ft.Row([
                          # 🔄 Смена аккаунтов
