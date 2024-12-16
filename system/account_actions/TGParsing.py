@@ -246,7 +246,6 @@ class ParsingGroupMembers:
                         from_user = InputUser(user_id=user.id, access_hash=user.access_hash)  # Создаем InputUser
                         logger.info(f"{from_user}")
 
-
                         # Получаем данные о пользователе
                         entities = await self.get_active_user_data(user)
                         await log_and_display(f"{entities}", lv, page)

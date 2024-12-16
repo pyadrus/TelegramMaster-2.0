@@ -112,11 +112,17 @@ class SettingPage:
         limits = ft.TextField(label=label, multiline=True, max_lines=19)
 
         async def btn_click(e) -> None:
-            config.get(limit_type, limit_type)
-            config.set(limit_type, limit_type, limits.value)
-            writing_settings_to_a_file(config)
+            try:
+                config.get(limit_type, limit_type)
+                config.set(limit_type, limit_type, limits.value)
+                writing_settings_to_a_file(config)
 
-            await show_notification(page, "Данные успешно записаны!")
+                await show_notification(page, "Данные успешно записаны!")
+
+            except configparser.NoSectionError as error:
+                await show_notification(page, "⚠️ Поврежден файл user_settings/config/config.ini")
+                logger.error(f"Ошибка: {error}")
+
 
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()

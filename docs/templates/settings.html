@@ -26,8 +26,6 @@
     </script>
 
 
-
-
     <!-- Стили для кнопки "Вверх" -->
     <style>
         #to-top {
@@ -72,7 +70,7 @@
             </svg>
         </a>
 
-        <h1 style="text-align: center;">⚙️ Настройки ({{program_name}})</h1>
+        <h1 style="text-align: center;">⚙️ Настройки</h1>
 
         <!-- Меню навигации -->
 
@@ -82,9 +80,9 @@
 
             <div class="card">
                 <!-- 👍 Выбор реакций -->
-                <p class="heading">👍 Выбор реакций</p>
-                <p>{{choice_of_reactions}}</p>
-                <button class="card-button"><a href="#choice_of_reactions">Перейти</a></button>
+                <p class="heading">{{ choice_of_reactions_ru }}</p>
+                <p>{{ choice_of_reactions_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('choice_of_reactions') }}">Перейти</a></button>
             </div>
 
             <div class="card">
@@ -159,7 +157,7 @@
 
         </div>
 
-<br><br>
+        <br><br>
         <div class="card-container">
 
 
@@ -199,62 +197,6 @@
             </div>
 
         </div>
-
-        <!-- 👍 Выбор реакций -->
-        <h2 id="choice_of_reactions" style="text-align: center;">{{choice_of_reactions}}</h2>
-        <hr align="center"/>
-
-        <p>
-            Для выбора реакции, выполните следующие действия:
-        </p>
-
-        <blockquote>
-            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{program_name}}</a>).<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/settings.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            3️⃣ Запустить функцию "Выбор реакций".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/choice_of_reactions.png"
-                     alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            4️⃣ С помощью чек-бокса выбрать необходимые реакции. <br>
-            5️⃣ Нажать "Готово".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/done_button.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-        </blockquote>
-
-        <p>
-            После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>{{program_name}}/user_settings/reactions/reactions.json</code>.
-        </p>
-
 
         <!-- 🔐 Запись proxy -->
         <h2 id="proxy_entry" style="text-align: center;">{{proxy_entry}}</h2>

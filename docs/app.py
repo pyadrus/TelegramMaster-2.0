@@ -21,7 +21,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               sending_messages_via_chats_with_answering_machine,
                                               sending_files_via_chats, sending_messages_files_via_chats,
                                               sending_personal_messages_with_limits,
-                                              sending_files_to_personal_account_with_limits, choice_of_reactions,
+                                              sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry, changing_accounts, recording_api_id_api_hash,
                                               time_between_subscriptions, message_recording, link_entry, account_limits,
                                               message_limits, time_between_subscriptionss, creating_username_list,
@@ -108,13 +108,13 @@ async def working_with_contacts(request: Request):
                                                                      "working_with_contacts_menu_ru": working_with_contacts_menu_ru,
                                                                      })
 
-
+# Настройки
 @app.get('/settings', response_class=HTMLResponse)
 async def settings(request: Request):
     """⚙️ Настройки"""
     logger.info("Запущена страница настроек")
     return templates.TemplateResponse('settings.html', {"request": request, "program_name": program_name,
-                                                        "choice_of_reactions": choice_of_reactions,
+                                                        "choice_of_reactions_ru": choice_of_reactions_ru,
                                                         "proxy_entry": proxy_entry,
                                                         "changing_accounts": changing_accounts,
                                                         "recording_api_id_api_hash": recording_api_id_api_hash,
@@ -131,6 +131,19 @@ async def settings(request: Request):
                                                         "forming_list_of_chats_channels": forming_list_of_chats_channels,
                                                         })
 
+
+@app.get('/settings/choice_of_reactions', response_class=HTMLResponse)
+async def choice_of_reactions(request: Request):
+    """👍 Выбор реакций"""
+    logger.info("Запущена страница выбора реакции")
+    return templates.TemplateResponse('settings/choice_of_reactions.html', {
+        "request": request,
+        "program_name": program_name,
+        "choice_of_reactions_ru": choice_of_reactions_ru,
+    })
+
+
+# Работа с реакциями
 
 @app.get('/working_with_reactions', response_class=HTMLResponse)
 async def working_with_reactions(request: Request):

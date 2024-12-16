@@ -13,7 +13,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               sending_messages_via_chats_with_answering_machine,
                                               sending_files_via_chats, sending_messages_files_via_chats,
                                               sending_personal_messages_with_limits,
-                                              sending_files_to_personal_account_with_limits, choice_of_reactions,
+                                              sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry, changing_accounts, recording_api_id_api_hash,
                                               time_between_subscriptions, message_recording, link_entry, account_limits,
                                               message_limits, time_between_subscriptionss, creating_username_list,
@@ -23,7 +23,8 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               changing_the_username, changing_the_photo, changing_the_description,
                                               name_change_n, name_change_f, creating_a_contact_list,
                                               show_a_list_of_contacts, deleting_contacts, adding_contacts,
-                                              working_with_contacts_menu_ru, subscribe_unsubscribe, subscription, unsubscribe,
+                                              working_with_contacts_menu_ru, subscribe_unsubscribe, subscription,
+                                              unsubscribe,
                                               checking_accounts, checking_through_a_spam_bot, validation_check,
                                               renaming_accounts, full_verification, connecting_accounts,
                                               connecting_accounts_by_phone_number, connecting_session_accounts,
@@ -56,7 +57,7 @@ async def settings_menu(page):
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.Row([
                          # 👍 Выбор реакций
-                         ft.ElevatedButton(width=small_button_width, height=height_button, text=choice_of_reactions,
+                         ft.ElevatedButton(width=small_button_width, height=height_button, text=choice_of_reactions_ru,
                                            on_click=lambda _: page.go("/choice_of_reactions")),
                          # 🔐 Запись proxy
                          ft.ElevatedButton(width=small_button_width, height=height_button, text=proxy_entry,
