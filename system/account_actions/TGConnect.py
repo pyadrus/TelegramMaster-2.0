@@ -293,9 +293,10 @@ class TGConnect:
             await telegram_client.disconnect()
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def connecting_number_accounts(self, page: ft.Page, account_directory, appointment):
+    async def connecting_number_accounts(self, page: ft.Page, account_directory: str, appointment: str):
         """
-        Account telegram connect, с проверкой на валидность, если ранее не было соединения, то запрашиваем код
+        Подключение номера Telegram аккаунта с проверкой на валидность. Если ранее не было соединения, то запрашивается
+        код.
 
         Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.

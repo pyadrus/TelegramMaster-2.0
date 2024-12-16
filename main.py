@@ -806,11 +806,11 @@ async def main(page: ft.Page):
             await SettingPage().creating_the_main_window_for_proxy_data_entry(page)
         elif page.route == "/message_recording":  # Запись сообщений
             await SettingPage().recording_text_for_sending_messages(page, "Введите текст для сообщения",
-                                                              get_unique_filename(
-                                                                  base_filename='user_settings/message/message'))
+                                                                    get_unique_filename(
+                                                                        base_filename='user_settings/message/message'))
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
             await SettingPage().recording_text_for_sending_messages(page, "Введите ссылку для реакций",
-                                                              'user_settings/reactions/link_channel.json')
+                                                                    'user_settings/reactions/link_channel.json')
         elif page.route == "/choice_of_reactions":  # Выбор реакций
             await reaction_gui(page)
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
