@@ -15,7 +15,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               sending_personal_messages_with_limits,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
-                                              time_between_subscriptions_ru, message_recording_ru, link_entry, account_limits,
+                                              time_between_subscriptions_ru, message_recording_ru, link_entry_ru, account_limits,
                                               message_limits, time_between_subscriptionss, creating_username_list,
                                               recording_the_time_between_messages,
                                               time_between_invites_sending_messages, recording_reaction_link,
@@ -82,7 +82,7 @@ async def settings_menu(page):
                      ft.Row([
                          # 🔗 Запись ссылки для инвайтинга
                          ft.ElevatedButton(width=small_button_width, height=height_button,
-                                           text=link_entry,
+                                           text=link_entry_ru,
                                            on_click=lambda _: page.go("/link_entry")),
                          # 📊 Лимиты на аккаунт
                          ft.ElevatedButton(width=small_button_width, height=height_button,
