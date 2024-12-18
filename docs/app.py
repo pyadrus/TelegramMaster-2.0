@@ -24,7 +24,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
                                               time_between_subscriptions_ru, message_recording_ru, link_entry_ru, account_limits_ru,
-                                              message_limits_ru, time_between_subscriptionss_ru, creating_username_list,
+                                              message_limits_ru, time_between_subscriptionss_ru, creating_username_list_ru,
                                               recording_the_time_between_messages,
                                               time_between_invites_sending_messages, recording_reaction_link,
                                               forming_list_of_chats_channels, changing_the_username, changing_the_photo,
@@ -124,7 +124,7 @@ async def settings(request: Request):
                                                         "account_limits_ru": account_limits_ru,
                                                         "message_limits_ru": message_limits_ru,
                                                         "time_between_subscriptionss_ru": time_between_subscriptionss_ru,
-                                                        "creating_username_list": creating_username_list,
+                                                        "creating_username_list_ru": creating_username_list_ru,
                                                         "recording_the_time_between_messages": recording_the_time_between_messages,
                                                         "time_between_invites_sending_messages": time_between_invites_sending_messages,
                                                         "recording_reaction_link": recording_reaction_link,
@@ -236,6 +236,15 @@ async def time_between_subscriptionss(request: Request):
         "time_between_subscriptionss_ru": time_between_subscriptionss_ru,
     })
 
+@app.get('/settings/creating_username_list', response_class=HTMLResponse)
+async def creating_username_list(request: Request):
+    """📋 Формирование списка username"""
+    logger.info("Запущена страница 📋 Формирование списка username")
+    return templates.TemplateResponse('settings/creating_username_list.html', {
+        "request": request,
+        "program_name": program_name,
+        "creating_username_list_ru": creating_username_list_ru,
+    })
 
 # Работа с реакциями
 
