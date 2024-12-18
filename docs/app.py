@@ -26,7 +26,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               time_between_subscriptions_ru, message_recording_ru, link_entry_ru, account_limits_ru,
                                               message_limits_ru, time_between_subscriptionss_ru, creating_username_list_ru,
                                               recording_the_time_between_messages_ru,
-                                              time_between_invites_sending_messages, recording_reaction_link,
+                                              time_between_invites_sending_messages_ru, recording_reaction_link,
                                               forming_list_of_chats_channels, changing_the_username, changing_the_photo,
                                               changing_the_description, name_change_n, name_change_f,
                                               creating_a_contact_list, show_a_list_of_contacts, deleting_contacts,
@@ -126,7 +126,7 @@ async def settings(request: Request):
                                                         "time_between_subscriptionss_ru": time_between_subscriptionss_ru,
                                                         "creating_username_list_ru": creating_username_list_ru,
                                                         "recording_the_time_between_messages_ru": recording_the_time_between_messages_ru,
-                                                        "time_between_invites_sending_messages": time_between_invites_sending_messages,
+                                                        "time_between_invites_sending_messages_ru": time_between_invites_sending_messages_ru,
                                                         "recording_reaction_link": recording_reaction_link,
                                                         "forming_list_of_chats_channels": forming_list_of_chats_channels,
                                                         })
@@ -256,6 +256,19 @@ async def recording_the_time_between_messages(request: Request):
         "program_name": program_name,
         "recording_the_time_between_messages_ru": recording_the_time_between_messages_ru,
     })
+
+
+@app.get('/settings/time_between_invites_sending_messages', response_class=HTMLResponse)
+async def time_between_invites_sending_messages(request: Request):
+    """🕒 Время между инвайтингом, рассылка сообщений"""
+    logger.info("Запущена страница 🕒 Время между инвайтингом, рассылка сообщений")
+    return templates.TemplateResponse('settings/time_between_invites_sending_messages.html', {
+        "request": request,
+        "program_name": program_name,
+        "time_between_invites_sending_messages_ru": time_between_invites_sending_messages_ru,
+    })
+
+
 
 
 # Работа с реакциями

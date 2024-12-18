@@ -18,7 +18,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               time_between_subscriptions_ru, message_recording_ru, link_entry_ru, account_limits_ru,
                                               message_limits_ru, time_between_subscriptionss_ru, creating_username_list_ru,
                                               recording_the_time_between_messages_ru,
-                                              time_between_invites_sending_messages, recording_reaction_link,
+                                              time_between_invites_sending_messages_ru, recording_reaction_link,
                                               forming_list_of_chats_channels, we_are_winding_up_post_views, editing_bio,
                                               changing_the_username, changing_the_photo, changing_the_description,
                                               name_change_n, name_change_f, creating_a_contact_list,
@@ -106,7 +106,7 @@ async def settings_menu(page):
                                        on_click=lambda _: page.go("/recording_the_time_between_messages")),
                      # 🕒 Время между инвайтингом, рассылка сообщений
                      ft.ElevatedButton(width=line_width, height=height_button,
-                                       text=time_between_invites_sending_messages,
+                                       text=time_between_invites_sending_messages_ru,
                                        on_click=lambda _: page.go("/time_between_invites_sending_messages")),
                      # 🔗 Запись ссылки для реакций
                      ft.ElevatedButton(width=line_width, height=height_button, text=recording_reaction_link,

@@ -70,14 +70,9 @@
                       fill="currentColor"></path>
             </svg>
         </a>
-
-        <h1 style="text-align: center;">⚙️ Настройки</h1>
-
-        <!-- Меню навигации -->
-
         <!-- 🕒 Время между инвайтингом, рассылка сообщений -->
-        <h2 id="time_between_invites_sending_messages" style="text-align: center;">
-            {{time_between_invites_sending_messages}}</h2>
+        <h1 style="text-align: center;">{{time_between_invites_sending_messages_ru}}</h1>
+
         <hr align="center"/>
 
 
@@ -130,117 +125,6 @@
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
             <code>{{program_name}}/user_settings/config/config.ini</code>.
-        </p>
-
-        <!-- 🔗 Запись ссылки для реакций -->
-        <h2 id="recording_reaction_link" style="text-align: center;">{{recording_reaction_link}}</h2>
-        <hr align="center"/>
-
-        <p>
-            Для записи ссылки для реакций, выполните следующие действия:
-        </p>
-
-        <blockquote>
-            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{program_name}}</a>).<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/settings.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            3️⃣ Запустить функцию "Запись ссылки для реакций".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/recording_reaction_link.png"
-                     alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            4️⃣ Ввести время.<br>
-            5️⃣ Нажать "Готово".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/done_button.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-        </blockquote>
-
-        <p>
-            После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>{{program_name}}/user_settings/reactions/link_channel.json</code>.
-        </p>
-
-        <!-- 📑 Формирование списка чатов / каналов -->
-        <h2 id="forming_list_of_chats_channels" style="text-align: center;">{{forming_list_of_chats_channels}}</h2>
-        <hr align="center"/>
-
-        <p>
-            Для формирования списка чатов - каналов, выполните следующие действия:
-        </p>
-
-        <blockquote>
-            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{program_name}}</a>).<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/settings.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            3️⃣ Запустить функцию "Формирование списка чатов каналов".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/forming_list_of_chats_channels.png"
-                     alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            4️⃣ Ввести список чатов - каналов.<br>
-            5️⃣ Нажать "Готово".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/done_button.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-        </blockquote>
-
-        <p>
-            После выполнения указанных действий программа автоматически запишет введенные данные в базу данных (в
-            файл <code>{{program_name}}/user_settings/software_database.db</code> в таблицу
-            <code>writing_group_links</code>).
         </p>
 
         <hr align="center"/>
