@@ -23,7 +23,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               sending_personal_messages_with_limits,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
-                                              time_between_subscriptions_ru, message_recording_ru, link_entry_ru, account_limits,
+                                              time_between_subscriptions_ru, message_recording_ru, link_entry_ru, account_limits_ru,
                                               message_limits, time_between_subscriptionss, creating_username_list,
                                               recording_the_time_between_messages,
                                               time_between_invites_sending_messages, recording_reaction_link,
@@ -121,7 +121,7 @@ async def settings(request: Request):
                                                         "time_between_subscriptions_ru": time_between_subscriptions_ru,
                                                         "message_recording_ru": message_recording_ru,
                                                         "link_entry_ru": link_entry_ru,
-                                                        "account_limits": account_limits,
+                                                        "account_limits_ru": account_limits_ru,
                                                         "message_limits": message_limits,
                                                         "time_between_subscriptionss": time_between_subscriptionss,
                                                         "creating_username_list": creating_username_list,
@@ -205,7 +205,15 @@ async def link_entry(request: Request):
         "link_entry_ru": link_entry_ru,
     })
 
-
+@app.get('/settings/account_limits', response_class=HTMLResponse)
+async def account_limits(request: Request):
+    """📊 Лимиты на аккаунт"""
+    logger.info("Запущена страница 📊 Лимиты на аккаунт")
+    return templates.TemplateResponse('settings/account_limits.html', {
+        "request": request,
+        "program_name": program_name,
+        "account_limits_ru": account_limits_ru,
+    })
 
 
 
