@@ -26,7 +26,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               time_between_subscriptions_ru, message_recording_ru, link_entry_ru, account_limits_ru,
                                               message_limits_ru, time_between_subscriptionss_ru, creating_username_list_ru,
                                               recording_the_time_between_messages_ru,
-                                              time_between_invites_sending_messages_ru, recording_reaction_link,
+                                              time_between_invites_sending_messages_ru, recording_reaction_link_ru,
                                               forming_list_of_chats_channels, changing_the_username, changing_the_photo,
                                               changing_the_description, name_change_n, name_change_f,
                                               creating_a_contact_list, show_a_list_of_contacts, deleting_contacts,
@@ -127,7 +127,7 @@ async def settings(request: Request):
                                                         "creating_username_list_ru": creating_username_list_ru,
                                                         "recording_the_time_between_messages_ru": recording_the_time_between_messages_ru,
                                                         "time_between_invites_sending_messages_ru": time_between_invites_sending_messages_ru,
-                                                        "recording_reaction_link": recording_reaction_link,
+                                                        "recording_reaction_link_ru": recording_reaction_link_ru,
                                                         "forming_list_of_chats_channels": forming_list_of_chats_channels,
                                                         })
 
@@ -268,6 +268,16 @@ async def time_between_invites_sending_messages(request: Request):
         "time_between_invites_sending_messages_ru": time_between_invites_sending_messages_ru,
     })
 
+
+@app.get('/settings/recording_reaction_link', response_class=HTMLResponse)
+async def recording_reaction_link(request: Request):
+    """🔗 Запись ссылки для реакций"""
+    logger.info("Запущена страница 🔗 Запись ссылки для реакций")
+    return templates.TemplateResponse('settings/recording_reaction_link.html', {
+        "request": request,
+        "program_name": program_name,
+        "recording_reaction_link_ru": recording_reaction_link_ru,
+    })
 
 
 
