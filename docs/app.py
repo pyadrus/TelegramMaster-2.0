@@ -23,7 +23,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               sending_personal_messages_with_limits,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
-                                              time_between_subscriptions_ru, message_recording, link_entry, account_limits,
+                                              time_between_subscriptions_ru, message_recording_ru, link_entry, account_limits,
                                               message_limits, time_between_subscriptionss, creating_username_list,
                                               recording_the_time_between_messages,
                                               time_between_invites_sending_messages, recording_reaction_link,
@@ -119,7 +119,7 @@ async def settings(request: Request):
                                                         "changing_accounts_ru": changing_accounts_ru,
                                                         "recording_api_id_api_hash_ru": recording_api_id_api_hash_ru,
                                                         "time_between_subscriptions_ru": time_between_subscriptions_ru,
-                                                        "message_recording": message_recording,
+                                                        "message_recording_ru": message_recording_ru,
                                                         "link_entry": link_entry,
                                                         "account_limits": account_limits,
                                                         "message_limits": message_limits,
@@ -184,6 +184,21 @@ async def time_between_subscriptions(request: Request):
         "program_name": program_name,
         "time_between_subscriptions_ru": time_between_subscriptions_ru,
     })
+
+@app.get('/settings/message_recording',response_class=HTMLResponse)
+async def message_recording(request: Request):
+    """✉️ Запись сообщений"""
+    logger.info("Запущена страница ✉️ Запись сообщений")
+    return templates.TemplateResponse('settings/message_recording.html', {
+        "request": request,
+        "program_name": program_name,
+        "message_recording_ru": message_recording_ru,
+    })
+
+
+
+
+
 
 
 # Работа с реакциями
