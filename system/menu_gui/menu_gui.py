@@ -19,7 +19,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               message_limits_ru, time_between_subscriptionss_ru, creating_username_list_ru,
                                               recording_the_time_between_messages_ru,
                                               time_between_invites_sending_messages_ru, recording_reaction_link_ru,
-                                              forming_list_of_chats_channels, we_are_winding_up_post_views, editing_bio,
+                                              forming_list_of_chats_channels_ru, we_are_winding_up_post_views, editing_bio,
                                               changing_the_username, changing_the_photo, changing_the_description,
                                               name_change_n, name_change_f, creating_a_contact_list,
                                               show_a_list_of_contacts, deleting_contacts, adding_contacts,
@@ -113,7 +113,7 @@ async def settings_menu(page):
                                        on_click=lambda _: page.go("/recording_reaction_link")),
                      # 📑 Формирование списка чатов / каналов
                      ft.ElevatedButton(width=line_width, height=height_button,
-                                       text=forming_list_of_chats_channels,
+                                       text=forming_list_of_chats_channels_ru,
                                        on_click=lambda _: page.go("/forming_list_of_chats_channels")),
                  ])]))
 

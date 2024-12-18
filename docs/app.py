@@ -23,11 +23,14 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               sending_personal_messages_with_limits,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
-                                              time_between_subscriptions_ru, message_recording_ru, link_entry_ru, account_limits_ru,
-                                              message_limits_ru, time_between_subscriptionss_ru, creating_username_list_ru,
+                                              time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
+                                              account_limits_ru,
+                                              message_limits_ru, time_between_subscriptionss_ru,
+                                              creating_username_list_ru,
                                               recording_the_time_between_messages_ru,
                                               time_between_invites_sending_messages_ru, recording_reaction_link_ru,
-                                              forming_list_of_chats_channels, changing_the_username, changing_the_photo,
+                                              forming_list_of_chats_channels_ru, changing_the_username,
+                                              changing_the_photo,
                                               changing_the_description, name_change_n, name_change_f,
                                               creating_a_contact_list, show_a_list_of_contacts, deleting_contacts,
                                               adding_contacts, working_with_contacts_menu_ru, subscription, unsubscribe,
@@ -108,6 +111,7 @@ async def working_with_contacts(request: Request):
                                                                      "working_with_contacts_menu_ru": working_with_contacts_menu_ru,
                                                                      })
 
+
 # Настройки
 @app.get('/settings', response_class=HTMLResponse)
 async def settings(request: Request):
@@ -128,7 +132,7 @@ async def settings(request: Request):
                                                         "recording_the_time_between_messages_ru": recording_the_time_between_messages_ru,
                                                         "time_between_invites_sending_messages_ru": time_between_invites_sending_messages_ru,
                                                         "recording_reaction_link_ru": recording_reaction_link_ru,
-                                                        "forming_list_of_chats_channels": forming_list_of_chats_channels,
+                                                        "forming_list_of_chats_channels": forming_list_of_chats_channels_ru,
                                                         })
 
 
@@ -175,6 +179,7 @@ async def recording_api_id_api_hash(request: Request):
         "recording_api_id_api_hash_ru": recording_api_id_api_hash_ru,
     })
 
+
 @app.get('/settings/time_between_subscriptions', response_class=HTMLResponse)
 async def time_between_subscriptions(request: Request):
     """⏰ Запись времени"""
@@ -185,7 +190,8 @@ async def time_between_subscriptions(request: Request):
         "time_between_subscriptions_ru": time_between_subscriptions_ru,
     })
 
-@app.get('/settings/message_recording',response_class=HTMLResponse)
+
+@app.get('/settings/message_recording', response_class=HTMLResponse)
 async def message_recording(request: Request):
     """✉️ Запись сообщений"""
     logger.info("Запущена страница ✉️ Запись сообщений")
@@ -194,6 +200,7 @@ async def message_recording(request: Request):
         "program_name": program_name,
         "message_recording_ru": message_recording_ru,
     })
+
 
 @app.get('/settings/link_entry', response_class=HTMLResponse)
 async def link_entry(request: Request):
@@ -205,6 +212,7 @@ async def link_entry(request: Request):
         "link_entry_ru": link_entry_ru,
     })
 
+
 @app.get('/settings/account_limits', response_class=HTMLResponse)
 async def account_limits(request: Request):
     """📊 Лимиты на аккаунт"""
@@ -214,6 +222,7 @@ async def account_limits(request: Request):
         "program_name": program_name,
         "account_limits_ru": account_limits_ru,
     })
+
 
 @app.get('/settings/message_limits', response_class=HTMLResponse)
 async def message_limits(request: Request):
@@ -235,6 +244,7 @@ async def time_between_subscriptionss(request: Request):
         "program_name": program_name,
         "time_between_subscriptionss_ru": time_between_subscriptionss_ru,
     })
+
 
 @app.get('/settings/creating_username_list', response_class=HTMLResponse)
 async def creating_username_list(request: Request):
@@ -279,6 +289,16 @@ async def recording_reaction_link(request: Request):
         "recording_reaction_link_ru": recording_reaction_link_ru,
     })
 
+
+@app.get('/settings/forming_list_of_chats_channels', response_class=HTMLResponse)
+async def forming_list_of_chats_channels(request: Request):
+    """📑 Формирование списка чатов / каналов"""
+    logger.info("Запущена страница 📑 Формирование списка чатов / каналов")
+    return templates.TemplateResponse('settings/forming_list_of_chats_channels.html', {
+        "request": request,
+        "program_name": program_name,
+        "forming_list_of_chats_channels_ru": forming_list_of_chats_channels_ru,
+    })
 
 
 # Работа с реакциями
