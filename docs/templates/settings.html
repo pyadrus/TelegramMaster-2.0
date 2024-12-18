@@ -101,9 +101,9 @@
 
             <div class="card">
                 <!-- 📝 Запись api_id, api_hash -->
-                <p class="heading">📝 Запись api_id, api_hash</p>
-                <p>{{recording_api_id_api_hash}}</p>
-                <button class="card-button"><a href="#recording_api_id_api_hash">Перейти</a></button>
+                <p class="heading">{{recording_api_id_api_hash_ru}}</p>
+                <p>{{recording_api_id_api_hash_ru}}</p>
+                <button class="card-button"><a href="{{ url_for('recording_api_id_api_hash') }}">Перейти</a></button>
             </div>
 
             <div class="card">
@@ -198,12 +198,13 @@
 
         </div>
 
-<!--        &lt;!&ndash; 🔄 Смена аккаунтов &ndash;&gt;-->
-<!--        <h2 id="changing_accounts" style="text-align: center;">{{changing_accounts}}</h2>-->
+<!--        &lt;!&ndash; 📝 Запись api_id, api_hash &ndash;&gt;-->
+<!--        <h2 id="recording_api_id_api_hash" style="text-align: center;">{{recording_api_id_api_hash}}</h2>-->
 <!--        <hr align="center"/>-->
 
 <!--        <p>-->
-<!--            Для записи времени смены аккаунтов, выполните следующие действия:-->
+<!--            Для записи api_id, api_hash и возможности дальнейшего взаимодействия с аккаунтами Telegram выполните-->
+<!--            следующие действия:-->
 <!--        </p>-->
 
 <!--        <blockquote>-->
@@ -226,25 +227,19 @@
 <!--                     width="40%">-->
 <!--            </p>-->
 
-<!--            3️⃣ Запустить функцию "Смена_аккаунтов".<br>-->
+<!--            3️⃣ Запустить функцию "Запись api_id, api_hash".<br>-->
 
 <!--            &lt;!&ndash; Изображение с центровкой &ndash;&gt;-->
 <!--            <p style="text-align: center;">-->
 <!--                &lt;!&ndash; Пример правильного пути к изображению &ndash;&gt;-->
-<!--                <img src="/static/images/settings/changing_accounts.png" alt="Telegram Master"-->
+<!--                <img src="/static/images/settings/recording_api_id_api_hash.png"-->
+<!--                     alt="Telegram Master"-->
 <!--                     width="40%">-->
 <!--            </p>-->
 
-<!--            4️⃣ Ввести время.<br>-->
-<!--            5️⃣ Нажать "Готово".<br>-->
-
-<!--            &lt;!&ndash; Изображение с центровкой &ndash;&gt;-->
-<!--            <p style="text-align: center;">-->
-<!--                &lt;!&ndash; Пример правильного пути к изображению &ndash;&gt;-->
-<!--                <img src="/static/images/done_button.png" alt="Telegram Master"-->
-<!--                     width="40%">-->
-<!--            </p>-->
-
+<!--            4️⃣ Ввести api_id<br>-->
+<!--            5️⃣ Ввести api_hash<br>-->
+<!--            6️⃣ После завершения этого процесса TelegramMaster перезапустится.<br>-->
 <!--        </blockquote>-->
 
 <!--        <p>-->
@@ -252,61 +247,12 @@
 <!--            <code>{{program_name}}/user_settings/config/config.ini</code>.-->
 <!--        </p>-->
 
-        <!-- 📝 Запись api_id, api_hash -->
-        <h2 id="recording_api_id_api_hash" style="text-align: center;">{{recording_api_id_api_hash}}</h2>
-        <hr align="center"/>
-
-        <p>
-            Для записи api_id, api_hash и возможности дальнейшего взаимодействия с аккаунтами Telegram выполните
-            следующие действия:
-        </p>
-
-        <blockquote>
-            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{program_name}}</a>).<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/settings.png" alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            3️⃣ Запустить функцию "Запись api_id, api_hash".<br>
-
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/recording_api_id_api_hash.png"
-                     alt="Telegram Master"
-                     width="40%">
-            </p>
-
-            4️⃣ Ввести api_id<br>
-            5️⃣ Ввести api_hash<br>
-            6️⃣ После завершения этого процесса TelegramMaster перезапустится.<br>
-        </blockquote>
-
-        <p>
-            После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>{{program_name}}/user_settings/config/config.ini</code>.
-        </p>
-
-        <blockquote>
-            Убедитесь в правильности ввода api_id, api_hash, если поля ввода будут пустыми, то и в файл
-            <code>{{program_name}}/user_settings/config/config.ini</code> запишутся пустые данные, что повлечет за
-            собой
-            ошибки {{program_name}}.
-        </blockquote>
+<!--        <blockquote>-->
+<!--            Убедитесь в правильности ввода api_id, api_hash, если поля ввода будут пустыми, то и в файл-->
+<!--            <code>{{program_name}}/user_settings/config/config.ini</code> запишутся пустые данные, что повлечет за-->
+<!--            собой-->
+<!--            ошибки {{program_name}}.-->
+<!--        </blockquote>-->
 
 
         <!-- ⏰ Запись времени -->

@@ -22,7 +22,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               sending_files_via_chats, sending_messages_files_via_chats,
                                               sending_personal_messages_with_limits,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
-                                              proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash,
+                                              proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
                                               time_between_subscriptions, message_recording, link_entry, account_limits,
                                               message_limits, time_between_subscriptionss, creating_username_list,
                                               recording_the_time_between_messages,
@@ -117,7 +117,7 @@ async def settings(request: Request):
                                                         "choice_of_reactions_ru": choice_of_reactions_ru,
                                                         "proxy_entry_ru": proxy_entry_ru,
                                                         "changing_accounts_ru": changing_accounts_ru,
-                                                        "recording_api_id_api_hash": recording_api_id_api_hash,
+                                                        "recording_api_id_api_hash_ru": recording_api_id_api_hash_ru,
                                                         "time_between_subscriptions": time_between_subscriptions,
                                                         "message_recording": message_recording,
                                                         "link_entry": link_entry,
@@ -162,6 +162,17 @@ async def changing_accounts(request: Request):
         "request": request,
         "program_name": program_name,
         "changing_accounts_ru": changing_accounts_ru,
+    })
+
+
+@app.get('/settings/recording_api_id_api_hash', response_class=HTMLResponse)
+async def recording_api_id_api_hash(request: Request):
+    """📝 Запись api_id, api_hash"""
+    logger.info("Запущена страница записи api_id api_hash")
+    return templates.TemplateResponse('settings/recording_api_id_api_hash.html', {
+        "request": request,
+        "program_name": program_name,
+        "recording_api_id_api_hash_ru": recording_api_id_api_hash_ru,
     })
 
 
