@@ -23,7 +23,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               sending_personal_messages_with_limits,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
-                                              time_between_subscriptions, message_recording, link_entry, account_limits,
+                                              time_between_subscriptions_ru, message_recording, link_entry, account_limits,
                                               message_limits, time_between_subscriptionss, creating_username_list,
                                               recording_the_time_between_messages,
                                               time_between_invites_sending_messages, recording_reaction_link,
@@ -118,7 +118,7 @@ async def settings(request: Request):
                                                         "proxy_entry_ru": proxy_entry_ru,
                                                         "changing_accounts_ru": changing_accounts_ru,
                                                         "recording_api_id_api_hash_ru": recording_api_id_api_hash_ru,
-                                                        "time_between_subscriptions": time_between_subscriptions,
+                                                        "time_between_subscriptions_ru": time_between_subscriptions_ru,
                                                         "message_recording": message_recording,
                                                         "link_entry": link_entry,
                                                         "account_limits": account_limits,
@@ -173,6 +173,16 @@ async def recording_api_id_api_hash(request: Request):
         "request": request,
         "program_name": program_name,
         "recording_api_id_api_hash_ru": recording_api_id_api_hash_ru,
+    })
+
+@app.get('/settings/time_between_subscriptions', response_class=HTMLResponse)
+async def time_between_subscriptions(request: Request):
+    """⏰ Запись времени"""
+    logger.info("Запущена страница ⏰ Запись времени")
+    return templates.TemplateResponse('settings/time_between_subscriptions.html', {
+        "request": request,
+        "program_name": program_name,
+        "time_between_subscriptions_ru": time_between_subscriptions_ru,
     })
 
 
