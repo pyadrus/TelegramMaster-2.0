@@ -16,7 +16,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
                                               time_between_subscriptions_ru, message_recording_ru, link_entry_ru, account_limits_ru,
-                                              message_limits, time_between_subscriptionss, creating_username_list,
+                                              message_limits_ru, time_between_subscriptionss, creating_username_list,
                                               recording_the_time_between_messages,
                                               time_between_invites_sending_messages, recording_reaction_link,
                                               forming_list_of_chats_channels, we_are_winding_up_post_views, editing_bio,
@@ -91,7 +91,7 @@ async def settings_menu(page):
                      ft.Row([
                          # 📨 Лимиты на сообщения
                          ft.ElevatedButton(width=small_button_width, height=height_button,
-                                           text=message_limits,
+                                           text=message_limits_ru,
                                            on_click=lambda _: page.go("/message_limits")),
                          # ⏳ Время между подпиской
                          ft.ElevatedButton(width=small_button_width, height=height_button,
