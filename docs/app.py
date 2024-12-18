@@ -132,7 +132,7 @@ async def settings(request: Request):
                                                         "recording_the_time_between_messages_ru": recording_the_time_between_messages_ru,
                                                         "time_between_invites_sending_messages_ru": time_between_invites_sending_messages_ru,
                                                         "recording_reaction_link_ru": recording_reaction_link_ru,
-                                                        "forming_list_of_chats_channels": forming_list_of_chats_channels_ru,
+                                                        "forming_list_of_chats_channels_ru": forming_list_of_chats_channels_ru,
                                                         })
 
 
