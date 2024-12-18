@@ -94,9 +94,9 @@
 
             <div class="card">
                 <!-- 🔄 Смена аккаунтов -->
-                <p class="heading">🔄 Смена аккаунтов</p>
-                <p>{{changing_accounts}}</p>
-                <button class="card-button"><a href="#changing_accounts">Перейти</a></button>
+                <p class="heading">{{changing_accounts_ru}}</p>
+                <p>{{changing_accounts_ru}}</p>
+                <button class="card-button"><a href="{{ url_for('changing_accounts') }}">Перейти</a></button>
             </div>
 
             <div class="card">
@@ -198,59 +198,59 @@
 
         </div>
 
-        <!-- 🔄 Смена аккаунтов -->
-        <h2 id="changing_accounts" style="text-align: center;">{{changing_accounts}}</h2>
-        <hr align="center"/>
+<!--        &lt;!&ndash; 🔄 Смена аккаунтов &ndash;&gt;-->
+<!--        <h2 id="changing_accounts" style="text-align: center;">{{changing_accounts}}</h2>-->
+<!--        <hr align="center"/>-->
 
-        <p>
-            Для записи времени смены аккаунтов, выполните следующие действия:
-        </p>
+<!--        <p>-->
+<!--            Для записи времени смены аккаунтов, выполните следующие действия:-->
+<!--        </p>-->
 
-        <blockquote>
-            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-            {{program_name}}</a>).<br>
+<!--        <blockquote>-->
+<!--            1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск-->
+<!--            {{program_name}}</a>).<br>-->
 
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master"
-                     width="40%">
-            </p>
+<!--            &lt;!&ndash; Изображение с центровкой &ndash;&gt;-->
+<!--            <p style="text-align: center;">-->
+<!--                &lt;!&ndash; Пример правильного пути к изображению &ndash;&gt;-->
+<!--                <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master"-->
+<!--                     width="40%">-->
+<!--            </p>-->
 
-            2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
+<!--            2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>-->
 
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/settings.png" alt="Telegram Master"
-                     width="40%">
-            </p>
+<!--            &lt;!&ndash; Изображение с центровкой &ndash;&gt;-->
+<!--            <p style="text-align: center;">-->
+<!--                &lt;!&ndash; Пример правильного пути к изображению &ndash;&gt;-->
+<!--                <img src="/static/images/settings/settings.png" alt="Telegram Master"-->
+<!--                     width="40%">-->
+<!--            </p>-->
 
-            3️⃣ Запустить функцию "Смена_аккаунтов".<br>
+<!--            3️⃣ Запустить функцию "Смена_аккаунтов".<br>-->
 
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/changing_accounts.png" alt="Telegram Master"
-                     width="40%">
-            </p>
+<!--            &lt;!&ndash; Изображение с центровкой &ndash;&gt;-->
+<!--            <p style="text-align: center;">-->
+<!--                &lt;!&ndash; Пример правильного пути к изображению &ndash;&gt;-->
+<!--                <img src="/static/images/settings/changing_accounts.png" alt="Telegram Master"-->
+<!--                     width="40%">-->
+<!--            </p>-->
 
-            4️⃣ Ввести время.<br>
-            5️⃣ Нажать "Готово".<br>
+<!--            4️⃣ Ввести время.<br>-->
+<!--            5️⃣ Нажать "Готово".<br>-->
 
-            <!-- Изображение с центровкой -->
-            <p style="text-align: center;">
-                <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/done_button.png" alt="Telegram Master"
-                     width="40%">
-            </p>
+<!--            &lt;!&ndash; Изображение с центровкой &ndash;&gt;-->
+<!--            <p style="text-align: center;">-->
+<!--                &lt;!&ndash; Пример правильного пути к изображению &ndash;&gt;-->
+<!--                <img src="/static/images/done_button.png" alt="Telegram Master"-->
+<!--                     width="40%">-->
+<!--            </p>-->
 
-        </blockquote>
+<!--        </blockquote>-->
 
-        <p>
-            После выполнения указанных действий программа автоматически запишет введенные данные в файл
-            <code>{{program_name}}/user_settings/config/config.ini</code>.
-        </p>
+<!--        <p>-->
+<!--            После выполнения указанных действий программа автоматически запишет введенные данные в файл-->
+<!--            <code>{{program_name}}/user_settings/config/config.ini</code>.-->
+<!--        </p>-->
 
         <!-- 📝 Запись api_id, api_hash -->
         <h2 id="recording_api_id_api_hash" style="text-align: center;">{{recording_api_id_api_hash}}</h2>
