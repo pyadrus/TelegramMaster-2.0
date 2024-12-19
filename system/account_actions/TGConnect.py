@@ -140,12 +140,18 @@ class TGConnect:
                             working_with_accounts(f"user_settings/accounts/{folder_name}/{session_name}.session",
                                                   f"user_settings/accounts/banned/{session_name}.session")
                         logger.error(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}")
-                        await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
+
+                        try:
+                            await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
+                        except sqlite3.OperationalError:
+                            logger.info(f"Ошибка при отключении аккаунта: {session_name}")
+
                 except YouBlockedUserError:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
                 except (AttributeError, AuthKeyUnregisteredError) as e:
                     logger.error(e)
                     continue
+
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
