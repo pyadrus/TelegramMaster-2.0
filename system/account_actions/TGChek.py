@@ -5,6 +5,7 @@ from loguru import logger
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_folders
+from system.menu_gui.menu_gui import show_notification
 
 
 class TGChek:
@@ -63,6 +64,7 @@ class TGChek:
         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
         logger.info('Время окончания: ' + str(finish))
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+        await show_notification(page, "🔚 Проверка аккаунтов завершена")
 
     async def renaming_accounts(self, page):
         """

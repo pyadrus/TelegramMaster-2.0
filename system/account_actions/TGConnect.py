@@ -143,8 +143,10 @@ class TGConnect:
 
                         try:
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
-                        except sqlite3.OperationalError:
+                        except sqlite3.OperationalError as e:
                             logger.info(f"Ошибка при отключении аккаунта: {session_name}")
+
+                            await self.handle_banned_account(telegram_client, folder_name, session_name, e)
 
                 except YouBlockedUserError:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу

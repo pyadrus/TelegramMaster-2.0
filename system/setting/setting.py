@@ -123,7 +123,6 @@ class SettingPage:
                 await show_notification(page, "⚠️ Поврежден файл user_settings/config/config.ini")
                 logger.error(f"Ошибка: {error}")
 
-
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
