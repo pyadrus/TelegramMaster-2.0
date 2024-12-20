@@ -5,7 +5,7 @@ from loguru import logger
 
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_folders
-from system.menu_gui.menu_gui import show_notification
+from system.gui.menu_gui import show_notification
 
 
 class TGChek:

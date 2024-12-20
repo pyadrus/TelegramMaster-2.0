@@ -18,7 +18,7 @@ from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.auxiliary_functions.auxiliary_functions import record_and_interrupt, record_inviting_results, find_filess
 from system.auxiliary_functions.config import ConfigReader, path_inviting_folder, line_width_button, height_button
 from system.localization.localization import back_button, start_inviting_button
-from system.menu_gui.menu_gui import log_and_display, show_notification
+from system.gui.menu_gui import log_and_display, show_notification
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 

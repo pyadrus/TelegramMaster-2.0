@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import TelegramClient
 from telethon import functions
 from telethon.errors import (AuthKeyUnregisteredError, UsernamePurchaseAvailableError, UsernameOccupiedError,
                              UsernameInvalidError)
-import datetime
+
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
-from system.auxiliary_functions.config import path_bio_folder, line_width_button, height_button
-from system.localization.localization import done_button
-from system.menu_gui.menu_gui import log_and_display, show_notification
+from system.auxiliary_functions.config import path_bio_folder
+from system.gui.buttons import function_button_ready
+from system.gui.menu_gui import log_and_display, show_notification
 
 
 class AccountBIO:
@@ -20,29 +22,7 @@ class AccountBIO:
         self.extension = 'session'
         self.tg_connect = TGConnect()
 
-    @classmethod
-    def function_button_ready(cls, page: ft.Page, btn_click, user_input):
-        """
-        Функция для кнопки "Готово"
 
-        Аргументы:
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param btn_click:
-        :param user_input:
-        :return:
-        """
-        button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
-                                   on_click=btn_click)  # Кнопка "Готово"
-        page.views.append(
-            ft.View(
-                "/bio_editing",
-                [
-                    user_input,
-                    ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                    button,
-                ],
-            )
-        )
 
     async def change_username_profile_gui(self, page: ft.Page) -> None:
         """
@@ -60,7 +40,7 @@ class AccountBIO:
                 page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
                 page.update()
 
-            self.function_button_ready(page, btn_click, user_input)
+            function_button_ready(page, btn_click, user_input)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -109,7 +89,7 @@ class AccountBIO:
                 page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
                 page.update()
 
-            self.function_button_ready(page, btn_click, user_input)
+            function_button_ready(page, btn_click, user_input)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -159,8 +139,6 @@ class AccountBIO:
         await show_notification(page, "🔚 Конец изменения описания профиля.")  # Выводим уведомление пользователю
         page.go("/bio_editing")  # переходим к основному меню инвайтинга 🏠
 
-
-
     async def change_name_profile_gui(self, page: ft.Page) -> None:
         """
         Изменение био профиля Telegram в графическое окно Flet
@@ -176,7 +154,7 @@ class AccountBIO:
                 page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
                 page.update()
 
-            self.function_button_ready(page, btn_click, user_input)
+            function_button_ready(page, btn_click, user_input)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -219,7 +197,7 @@ class AccountBIO:
                 page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
                 page.update()
 
-            self.function_button_ready(page, btn_click, user_input)
+            function_button_ready(page, btn_click, user_input)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 

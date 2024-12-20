@@ -9,7 +9,7 @@ from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_filess
 from system.auxiliary_functions.config import path_creating_folder, line_width_button, height_button
 from system.localization.localization import back_button, creating_groups_button
-from system.menu_gui.menu_gui import log_and_display
+from system.gui.menu_gui import log_and_display
 
 
 class CreatingGroupsAndChats:

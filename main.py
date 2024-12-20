@@ -33,12 +33,12 @@ from system.localization.localization import (we_are_winding_up_post_views, invi
                                               creating_groups_chats, editing_bio, settings, documentation, main_menu,
                                               text_1, text_link_1, text_2, text_link_2)
 from system.logging_in.logging_in import loging
-from system.menu_gui.menu_gui import (inviting_menu, working_with_contacts_menu_ru, message_distribution_menu,
-                                      bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
-                                      subscribe_and_unsubscribe_menu, account_verification_menu,
-                                      account_connection_menu, connecting_accounts_by_number_menu,
-                                      connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
-                                      creating_groups_and_chats_menu, working_with_contacts_menu)
+from system.gui.menu_gui import (inviting_menu, working_with_contacts_menu_ru, message_distribution_menu,
+                                 bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
+                                 subscribe_and_unsubscribe_menu, account_verification_menu,
+                                 account_connection_menu, connecting_accounts_by_number_menu,
+                                 connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
+                                 creating_groups_and_chats_menu, working_with_contacts_menu)
 from system.receiving_and_recording.receiving_and_recording import ReceivingAndRecording
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
