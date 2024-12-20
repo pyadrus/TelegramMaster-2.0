@@ -2,7 +2,7 @@
 import flet as ft
 from loguru import logger
 
-from system.auxiliary_functions.config import height_button, small_button_width, line_width, line_width_button
+from system.config.configs import height_button, small_button_width, line_width, line_width_button
 from system.localization.localization import (parse_single_or_multiple_groups, parse_selected_user_subscribed_group,
                                               parse_active_group_members, parse_account_subscribed_groups_channels,
                                               clear_previously_parsed_data_list,

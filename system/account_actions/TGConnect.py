@@ -13,11 +13,11 @@ from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, Use
                              ApiIdInvalidError, YouBlockedUserError)
 from thefuzz import fuzz
 
-from system.auxiliary_functions.auxiliary_functions import working_with_accounts, find_filess
-from system.auxiliary_functions.config import ConfigReader, height_button, line_width_button
+from system.utils.utils import working_with_accounts, find_filess
+from system.config.configs import ConfigReader, height_button, line_width_button
 from system.localization.localization import back_button, done_button
 from system.logging_in.logging_in import getting_phone_number_data_by_phone_number
-from system.gui.menu_gui import show_notification
+from system.gui.menu import show_notification
 from system.proxy.checking_proxy import checking_the_proxy_for_work
 from system.proxy.checking_proxy import reading_proxy_data_from_the_database
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler

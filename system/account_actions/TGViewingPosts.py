@@ -9,8 +9,8 @@ from telethon.tl.functions.messages import GetMessagesViewsRequest
 
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_filess
-from system.auxiliary_functions.config import path_viewing_folder
+from system.utils.utils import find_filess
+from system.config.configs import path_viewing_folder
 from system.localization.localization import done_button
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 

@@ -14,11 +14,11 @@ from telethon.tl.functions.channels import JoinChannelRequest
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGLimits import SettingLimits
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import (find_files, all_find_files, record_inviting_results,
-                                                            find_filess)
-from system.auxiliary_functions.auxiliary_functions import read_json_file
-from system.auxiliary_functions.auxiliary_functions import record_and_interrupt
-from system.auxiliary_functions.config import ConfigReader, path_send_message_folder
+from system.utils.utils import (find_files, all_find_files, record_inviting_results,
+                                find_filess)
+from system.utils.utils import read_json_file
+from system.utils.utils import record_and_interrupt
+from system.config.configs import ConfigReader, path_send_message_folder
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_sending_messages()

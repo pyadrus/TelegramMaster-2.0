@@ -6,7 +6,7 @@ from loguru import logger
 
 from system.account_actions.TGChek import TGChek
 from system.account_actions.TGInviting import InvitingToAGroup
-from system.auxiliary_functions.config import ConfigReader
+from system.config.configs import ConfigReader
 
 hour, minutes = ConfigReader().get_hour_minutes_every_day()
 

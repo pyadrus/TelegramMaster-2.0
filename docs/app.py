@@ -10,7 +10,7 @@ from fastapi.templating import Jinja2Templates
 from loguru import logger
 from fastapi.staticfiles import StaticFiles
 # Импорт необходимых переменных и функций
-from system.auxiliary_functions.config import program_name, program_version, date_of_program_change
+from system.config.configs import program_name, program_version, date_of_program_change
 from system.localization.localization import (parse_selected_user_subscribed_group, parse_single_or_multiple_groups,
                                               parse_active_group_members, clear_previously_parsed_data_list,
                                               parse_account_subscribed_groups_channels, inviting,

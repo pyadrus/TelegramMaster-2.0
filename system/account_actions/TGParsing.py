@@ -15,11 +15,11 @@ from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserSt
 
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.auxiliary_functions.auxiliary_functions import find_filess
-from system.auxiliary_functions.config import (path_parsing_folder, line_width_button, height_button,
-                                               time_activity_user_2)
+from system.utils.utils import find_filess
+from system.config.configs import (path_parsing_folder, line_width_button, height_button,
+                                   time_activity_user_2)
 from system.localization.localization import back_button, start_parsing_button, done_button
-from system.gui.menu_gui import log_and_display
+from system.gui.menu import log_and_display
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates
 
 

@@ -9,8 +9,8 @@ from telethon.tl.types import (UserStatusRecently, UserStatusOffline, UserStatus
                                UserStatusOnline, UserStatusEmpty)
 
 from system.account_actions.TGConnect import TGConnect
-from system.auxiliary_functions.auxiliary_functions import find_filess
-from system.auxiliary_functions.config import path_contact_folder
+from system.utils.utils import find_filess
+from system.config.configs import path_contact_folder
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 

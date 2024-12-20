@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flet as ft  # Импортируем библиотеку flet
 
-from system.auxiliary_functions.config import line_width_button, height_button
+from system.config.configs import line_width_button, height_button
 from system.localization.localization import done_button
 
 

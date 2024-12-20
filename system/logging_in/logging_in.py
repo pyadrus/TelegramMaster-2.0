@@ -7,7 +7,7 @@ from urllib.request import urlopen  # Изменено с urllib2 на urllib.re
 
 from telethon.errors import FilePartsInvalidError
 
-from system.auxiliary_functions.config import program_version, date_of_program_change
+from system.config.configs import program_version, date_of_program_change
 from loguru import logger
 
 import phonenumbers

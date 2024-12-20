@@ -6,7 +6,7 @@ import flet as ft
 from loguru import logger
 
 from docs.app import start_app
-from system.account_actions.TGAccountBIO import AccountBIO
+from system.account_actions.TGAccountBIO import AccountBIO, AccountActions
 from system.account_actions.TGChek import TGChek
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGContact import TGContact
@@ -20,25 +20,25 @@ from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.account_actions.TGViewingPosts import ViewingPosts
-from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
-from system.auxiliary_functions.config import (ConfigReader, height_button, small_button_width, line_width_button,
-                                               program_name, program_version, date_of_program_change, window_width,
-                                               window_height, window_resizable, path_parsing_folder,
-                                               path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
-                                               path_reactions_folder, path_contact_folder, path_creating_folder,
-                                               path_send_message_folder, path_bio_folder, path_viewing_folder)
+from system.utils.utils import find_files, find_filess
+from system.config.configs import (ConfigReader, height_button, small_button_width, line_width_button,
+                                   program_name, program_version, date_of_program_change, window_width,
+                                   window_height, window_resizable, path_parsing_folder,
+                                   path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
+                                   path_reactions_folder, path_contact_folder, path_creating_folder,
+                                   path_send_message_folder, path_bio_folder, path_viewing_folder)
 from system.localization.localization import (we_are_winding_up_post_views, inviting, parsing, subscribe_unsubscribe,
                                               connecting_accounts, sending_messages,
                                               working_with_reactions, checking_accounts,
                                               creating_groups_chats, editing_bio, settings, documentation, main_menu,
                                               text_1, text_link_1, text_2, text_link_2)
 from system.logging_in.logging_in import loging
-from system.gui.menu_gui import (inviting_menu, working_with_contacts_menu_ru, message_distribution_menu,
-                                 bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
-                                 subscribe_and_unsubscribe_menu, account_verification_menu,
-                                 account_connection_menu, connecting_accounts_by_number_menu,
-                                 connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
-                                 creating_groups_and_chats_menu, working_with_contacts_menu)
+from system.gui.menu import (inviting_menu, working_with_contacts_menu_ru, message_distribution_menu,
+                             bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
+                             subscribe_and_unsubscribe_menu, account_verification_menu,
+                             account_connection_menu, connecting_accounts_by_number_menu,
+                             connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
+                             creating_groups_and_chats_menu, working_with_contacts_menu)
 from system.receiving_and_recording.receiving_and_recording import ReceivingAndRecording
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
@@ -704,7 +704,8 @@ async def main(page: ft.Page):
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
-        elif page.route == "/name_change":  # Изменение имени
+        elif page.route == "/name_change":  # Изменение имени профиля Telegram
+
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
                 if not find_filess(directory_path=path_bio_folder, extension='session'):
@@ -712,18 +713,12 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Изменения имени")
                     await AccountBIO().change_name_profile_gui(page)
-                    logger.info("🔚 Конец Изменения имени")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                    await show_notification(page, "🔚 Имя изменено")  # Выводим уведомление пользователю
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
+
         elif page.route == "/change_surname":  # Изменение фамилии
+
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
                 if not find_filess(directory_path=path_bio_folder, extension='session'):
@@ -731,18 +726,12 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Изменения фамилии")
                     await AccountBIO().change_last_name_profile_gui(page)
-                    logger.info("🔚 Конец Изменения фамилии")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                    await show_notification(page, "🔚 Фамилия измененена")  # Выводим уведомление пользователю
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
+
         elif page.route == "/edit_photo":  # Изменение фото
+
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
                 if not find_filess(directory_path=path_bio_folder, extension='session'):
@@ -750,17 +739,11 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Изменения фото")
-                    await AccountBIO().change_photo_profile(page=page)
-                    logger.info("🔚 Конец Изменения фото")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                    await AccountBIO().change_photo_profile_gui(page)
                     await show_notification(page, "🔚 Фото изменено")  # Выводим уведомление пользователю
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
+
         elif page.route == "/changing_username":  # Изменение username
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -769,17 +752,10 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ Нет аккаунта в папке bio")
                     return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Изменения username")
                     await AccountBIO().change_username_profile_gui(page)
-                    logger.info("🔚 Конец Изменения username")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                    await show_notification(page, "🔚 Username изменен")  # Выводим уведомление пользователю
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
+
         # ______________________________________________________________________________________________________________
         elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
             await settings_menu(page)
