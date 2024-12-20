@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
+from telethon import TelegramClient
 from telethon import functions
 from telethon.errors import (AuthKeyUnregisteredError, UsernamePurchaseAvailableError, UsernameOccupiedError,
                              UsernameInvalidError)
-from telethon import TelegramClient
+import datetime
 from system.account_actions.TGConnect import TGConnect
 from system.auxiliary_functions.auxiliary_functions import find_files, find_filess
 from system.auxiliary_functions.config import path_bio_folder, line_width_button, height_button
 from system.localization.localization import done_button
+from system.menu_gui.menu_gui import log_and_display, show_notification
 
 
 class AccountBIO:
@@ -73,23 +75,20 @@ class AccountBIO:
         try:
             for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
-                telegram_client: TelegramClient = await self.tg_connect.get_telegram_client(page, session_name=session_name,
-                                                                   account_directory=self.directory_path)
+                telegram_client: TelegramClient = await self.tg_connect.get_telegram_client(page,
+                                                                                            session_name=session_name,
+                                                                                            account_directory=self.directory_path)
                 await telegram_client.connect()
                 try:
                     await telegram_client(functions.account.UpdateUsernameRequest(username=user_input))
                     logger.info(f'Никнейм успешно обновлен на {user_input}')
-                    # telegram_client.disconnect()
                 except AuthKeyUnregisteredError:
                     logger.error("❌ Ошибка соединения с профилем")
                 except (UsernamePurchaseAvailableError, UsernameOccupiedError):
                     logger.error("❌ Никнейм уже занят")
-                    # telegram_client.disconnect()
                 except UsernameInvalidError:
                     logger.error("❌ Неверный никнейм")
-                    # telegram_client.disconnect()
                 finally:
-                    # if await telegram_client.is_connected():
                     await telegram_client.disconnect()
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -122,6 +121,16 @@ class AccountBIO:
         :param user_input - новое описание профиля Telegram
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
+
+        start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
+        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
+
+        # Индикация начала инвайтинга
+        await log_and_display(f"▶️ Начало изменения описания профиля.\n🕒 Время старта: {str(start)}", lv, page)
+        page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
+
         try:
             logger.info(f"Запуск смены  описания профиля")
             for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
@@ -143,6 +152,14 @@ class AccountBIO:
                     logger.error("❌ Ошибка соединения с профилем")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
+
+        finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
+        await log_and_display(
+            f"🔚 Конец изменения описания профиля.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
+        await show_notification(page, "🔚 Конец изменения описания профиля.")  # Выводим уведомление пользователю
+        page.go("/bio_editing")  # переходим к основному меню инвайтинга 🏠
+
+
 
     async def change_name_profile_gui(self, page: ft.Page) -> None:
         """
