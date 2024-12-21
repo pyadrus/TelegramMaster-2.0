@@ -12,13 +12,16 @@ from telethon.tl.functions.messages import SendReactionRequest
 
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.utils.utils import read_json_file, find_filess
 from system.config.configs import path_reactions_folder
-from system.localization.localization import done_button
+from system.gui.buttons import function_button_ready_reactions
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from system.utils.utils import read_json_file, find_filess
 
 
-class WorkingWithReactions:  # Класс для работы с реакциями
+class WorkingWithReactions:
+    """
+    Класс для работы с реакциями
+    """
 
     def __init__(self):
         self.db_handler = DatabaseHandler()
@@ -62,22 +65,12 @@ class WorkingWithReactions:  # Класс для работы с реакция�
                     page.go("/working_with_reactions")
                     page.update()  # Обновление страницы для отображения изменений
 
-            # Кнопка для подтверждения и запуска парсинга
-            button = ft.ElevatedButton(done_button, on_click=btn_click)
+            def back_button_clicked(e) -> None:
+                """Кнопка возврата в меню проставления реакций"""
+                page.go("/working_with_reactions")
 
-            # Добавление представления на страницу
-            page.views.append(
-                ft.View(
-                    "/working_with_reactions",  # Маршрут для этого представления
-                    [
-                        chat,  # Поле ввода ссылки на чат
-                        message,  # Поле ввода ссылки пост
-                        # limit_active_user, # Поле ввода количества сообщений
-                        ft.Column(),  # Колонка для размещения других элементов (при необходимости)
-                        button  # Кнопка "Готово"
-                    ]
-                )
-            )
+            function_button_ready_reactions(page, btn_click, back_button_clicked, chat, message)
+
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 

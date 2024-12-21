@@ -33,7 +33,7 @@ class GUIManager:
                 page.update()
 
             def back_button_clicked(e) -> None:
-                """Кнопка возврата в меню настроек"""
+                """Кнопка возврата в меню изменения профиля."""
                 page.go("/bio_editing")
 
             function_button_ready(page, btn_click, back_button_clicked, user_input)  # Функция для кнопки "Готово"
