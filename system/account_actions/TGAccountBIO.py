@@ -12,9 +12,34 @@ from system.gui.menu import show_notification
 from system.utils.utils import find_files, find_filess
 
 
+class GUIManager:
+
+    @classmethod
+    async def create_profile_gui(cls, page: ft.Page, action, label: str) -> None:
+        """
+        Создание графического интерфейса для изменения профиля Telegram.
+
+        Аргументы:
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param action: Функция, которая выполняет специфическое действие с переданным значением.
+        :param label: Подпись для текстового поля.
+        """
+        try:
+            user_input = ft.TextField(label=label, multiline=True, max_lines=19)
+
+            async def btn_click(e) -> None:
+                await action(page, user_input.value)
+                page.go("/bio_editing")  # Изменение маршрута
+                page.update()
+
+            function_button_ready(page, btn_click, user_input)  # Функция для кнопки "Готово"
+        except Exception as error:
+            logger.exception(f"❌ Ошибка: {error}")
+
+
 class AccountBIO:
     """
-    Класс, отвечающий за вызов функций изменения данных аккаунта Telegram.
+    Класс для управления изменениями данных аккаунта Telegram через графический интерфейс Flet.
     """
 
     def __init__(self):
@@ -22,12 +47,12 @@ class AccountBIO:
         self.extension = 'session'
         self.tg_connect = TGConnect()
         self.account_actions = AccountActions(self.directory_path, self.extension, self.tg_connect)
+        self.gui_manager = GUIManager()
 
     async def change_photo_profile_gui(self, page: ft.Page) -> None:
         """
-        Изменение фото профиля Telegram в графическое окно Flet
+        Изменение фото профиля Telegram через интерфейс Flet.
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await self.account_actions.change_photo_profile(page)
@@ -39,18 +64,8 @@ class AccountBIO:
         Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        try:
-            user_input = ft.TextField(label="Введите username профиля (не более 32 символов): ", multiline=True,
-                                      max_lines=19)
-
-            async def btn_click(e) -> None:
-                await self.account_actions.change_username_profile(page, user_input.value)
-                page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
-                page.update()
-
-            function_button_ready(page, btn_click, user_input)  # Функция для кнопки "Готово"
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+        await self.gui_manager.create_profile_gui(page, self.account_actions.change_username_profile,
+                                                  label="Введите username профиля (не более 32 символов):")
 
     async def change_bio_profile_gui(self, page: ft.Page) -> None:
         """
@@ -59,18 +74,8 @@ class AccountBIO:
         Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        try:
-            user_input = ft.TextField(label="Введите описание профиля, не более 70 символов: ", multiline=True,
-                                      max_lines=19)
-
-            async def btn_click(e) -> None:
-                await self.account_actions.change_bio_profile(page, user_input.value)
-                page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
-                page.update()
-
-            function_button_ready(page, btn_click, user_input)  # Функция для кнопки "Готово"
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+        await self.gui_manager.create_profile_gui(page, self.account_actions.change_bio_profile,
+                                                  label="Введите описание профиля, не более 70 символов: ")
 
     async def change_name_profile_gui(self, page: ft.Page) -> None:
         """
@@ -79,17 +84,8 @@ class AccountBIO:
         Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        try:
-            user_input = ft.TextField(label="Введите имя профиля, не более 64 символов: ", multiline=True, max_lines=19)
-
-            async def btn_click(e) -> None:
-                await self.account_actions.change_name_profile(page, user_input.value)
-                page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
-                page.update()
-
-            function_button_ready(page, btn_click, user_input)  # Функция для кнопки "Готово"
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+        await self.gui_manager.create_profile_gui(page, self.account_actions.change_name_profile,
+                                                  label="Введите имя профиля, не более 64 символов: ")
 
     async def change_last_name_profile_gui(self, page: ft.Page) -> None:
         """
@@ -98,18 +94,8 @@ class AccountBIO:
         Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        try:
-            user_input = ft.TextField(label="Введите фамилию профиля, не более 64 символов: ", multiline=True,
-                                      max_lines=19)
-
-            async def btn_click(e) -> None:
-                await self.account_actions.change_last_name_profile(page, user_input.value)
-                page.go("/bio_editing")  # Изменение маршрута в представлении существующих настроек
-                page.update()
-
-            function_button_ready(page, btn_click, user_input)  # Функция для кнопки "Готово"
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+        await self.gui_manager.create_profile_gui(page, self.account_actions.change_last_name_profile,
+                                                  label="Введите фамилию профиля, не более 64 символов: ")
 
 
 class AccountActions:
@@ -154,7 +140,7 @@ class AccountActions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-        await show_notification(page, "Описание профиля изменено")  # Выводим уведомление пользователю
+        await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
         page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
 
     async def change_username_profile(self, page, user_input) -> None:
@@ -174,7 +160,8 @@ class AccountActions:
                 await client.connect()
                 try:
                     await client(functions.account.UpdateUsernameRequest(username=user_input))
-                    await show_notification(page, f'Никнейм успешно обновлен на {user_input}')  # Выводим уведомление пользователю
+                    await show_notification(page,
+                                            f'Работа окончена')  # Выводим уведомление пользователю
                 except AuthKeyUnregisteredError:
                     await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                 except (UsernamePurchaseAvailableError, UsernameOccupiedError):
@@ -208,7 +195,7 @@ class AccountActions:
                     await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                 finally:
                     await client.disconnect()
-                await show_notification(page, "Имя профиля изменено")  # Выводим уведомление пользователю
+                await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
                 page.go("/bio_editing")  # переходим к основному меню изменения имени профиля 🏠
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -235,7 +222,7 @@ class AccountActions:
                     await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                 finally:
                     await client.disconnect()
-                await show_notification(page, "🔚 Фамилия изменена")  # Выводим уведомление пользователю
+                await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -251,19 +238,20 @@ class AccountActions:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
 
-
                 for photo_file in find_files(directory_path="user_settings/bio", extension='jpg'):
                     try:
                         await client.connect()
-                        await client(functions.photos.UploadProfilePhotoRequest(file=await client.upload_file(f"user_settings/bio/{photo_file[0]}.jpg")))
+                        await client(functions.photos.UploadProfilePhotoRequest(
+                            file=await client.upload_file(f"user_settings/bio/{photo_file[0]}.jpg")))
                     except AuthKeyUnregisteredError:
-                        await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
+                        await show_notification(page,
+                                                "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                     finally:
                         await client.disconnect()
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-        await show_notification(page, "🔚 Фото изменено")  # Выводим уведомление пользователю
+        await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
         page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
 
 # 286
