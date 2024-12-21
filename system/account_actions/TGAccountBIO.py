@@ -32,7 +32,11 @@ class GUIManager:
                 page.go("/bio_editing")  # Изменение маршрута
                 page.update()
 
-            function_button_ready(page, btn_click, user_input)  # Функция для кнопки "Готово"
+            def back_button_clicked(e) -> None:
+                """Кнопка возврата в меню настроек"""
+                page.go("/bio_editing")
+
+            function_button_ready(page, btn_click, back_button_clicked, user_input)  # Функция для кнопки "Готово"
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
