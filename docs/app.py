@@ -16,7 +16,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               parse_account_subscribed_groups_channels, inviting,
                                               invitation_1_time_per_hour, invitation_at_a_certain_time,
                                               inviting_every_day, importing_a_list_of_parsed_data, setting_reactions,
-                                              we_are_winding_up_post_views, automatic_setting_of_reactions,
+                                              we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
                                               sending_messages_via_chats,
                                               sending_messages_via_chats_with_answering_machine,
                                               sending_files_via_chats, sending_messages_files_via_chats,
@@ -310,8 +310,21 @@ async def working_with_reactions(request: Request):
     return templates.TemplateResponse('working_with_reactions.html',
                                       {"request": request, "program_name": program_name,
                                        "setting_reactions": setting_reactions,
-                                       "we_are_winding_up_post_views": we_are_winding_up_post_views,
+                                       "we_are_winding_up_post_views_ru": we_are_winding_up_post_views_ru,
                                        "automatic_setting_of_reactions": automatic_setting_of_reactions})
+
+
+@app.get('/we_are_winding_up_post_views', response_class=HTMLResponse)
+async def we_are_winding_up_post_views(request: Request):
+    """👁️‍🗨️ Накручиваем просмотры постов"""
+    logger.info("Запущена страница '👁️‍🗨️ Накручиваем просмотры постов' ")
+    return templates.TemplateResponse('we_are_winding_up_post_views.html',
+                                      {"request": request, "program_name": program_name,
+                                       "setting_reactions": setting_reactions,
+                                       "we_are_winding_up_post_views_ru": we_are_winding_up_post_views_ru,
+                                       "automatic_setting_of_reactions": automatic_setting_of_reactions,
+                                       "forming_list_of_chats_channels_ru": forming_list_of_chats_channels_ru,
+                                       })
 
 
 @app.get('/parsing', response_class=HTMLResponse)

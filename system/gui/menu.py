@@ -21,7 +21,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               creating_username_list_ru,
                                               recording_the_time_between_messages_ru,
                                               time_between_invites_sending_messages_ru, recording_reaction_link_ru,
-                                              forming_list_of_chats_channels_ru, we_are_winding_up_post_views,
+                                              forming_list_of_chats_channels_ru, we_are_winding_up_post_views_ru,
                                               editing_bio,
                                               changing_the_username, changing_the_photo, changing_the_description,
                                               name_change_n, name_change_f, creating_a_contact_list,
@@ -367,7 +367,7 @@ async def viewing_posts_menu(page):
                 [ft.AppBar(title=ft.Text(main_menu),
                            bgcolor=ft.colors.SURFACE_VARIANT),
                  ft.Text(spans=[ft.TextSpan(
-                     we_are_winding_up_post_views,
+                     we_are_winding_up_post_views_ru,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
@@ -377,7 +377,7 @@ async def viewing_posts_menu(page):
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 👁️‍🗨️ Накручиваем просмотры постов
                      ft.ElevatedButton(width=line_width_button, height=height_button,
-                                       text=we_are_winding_up_post_views,
+                                       text=we_are_winding_up_post_views_ru,
                                        on_click=lambda _: page.go("/we_are_winding_up_post_views")),
                  ])]))
 

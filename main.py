@@ -32,7 +32,7 @@ from system.gui.menu import (inviting_menu, working_with_contacts_menu_ru, messa
                              account_connection_menu, connecting_accounts_by_number_menu,
                              connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
                              creating_groups_and_chats_menu, working_with_contacts_menu)
-from system.localization.localization import (we_are_winding_up_post_views, inviting, parsing, subscribe_unsubscribe,
+from system.localization.localization import (we_are_winding_up_post_views_ru, inviting, parsing, subscribe_unsubscribe,
                                               connecting_accounts, sending_messages,
                                               working_with_reactions, checking_accounts,
                                               creating_groups_chats, editing_bio, settings, documentation, main_menu,
@@ -127,7 +127,7 @@ async def main(page: ft.Page):
 
                               # 👁️‍🗨️ Накручиваем просмотры постов
                               ft.ElevatedButton(width=line_width_button, height=height_button,
-                                                text=we_are_winding_up_post_views,
+                                                text=we_are_winding_up_post_views_ru,
                                                 on_click=lambda _: page.go("/viewing_posts_menu")),
                               # ⚙️ Настройки
                               ft.ElevatedButton(width=line_width_button, height=height_button, text=settings,
