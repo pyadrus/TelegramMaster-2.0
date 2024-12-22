@@ -26,11 +26,12 @@ def function_button_ready(page: ft.Page, btn_click, back_button_clicked, user_in
             [
                 user_input,
                 ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button, # Кнопка "Готово"
-                button_back, #  Кнопка "Назад"
+                button,  # Кнопка "Готово"
+                button_back,  # Кнопка "Назад"
             ],
         )
     )
+
 
 def function_button_ready_reactions(page: ft.Page, btn_click, back_button_clicked, chat, message) -> None:
     """
@@ -52,11 +53,11 @@ def function_button_ready_reactions(page: ft.Page, btn_click, back_button_clicke
         ft.View(
             "/working_with_reactions",
             [
-                chat, # Поле ввода ссылки на чат
-                message, # Поле ввода ссылки пост
+                chat,  # Поле ввода ссылки на чат
+                message,  # Поле ввода ссылки пост
                 ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                button, # Кнопка "Готово"
-                button_back, # Кнопка "Назад"
+                button,  # Кнопка "Готово"
+                button_back,  # Кнопка "Назад"
             ],
         )
     )
