@@ -9,10 +9,10 @@ from telethon.tl.functions.messages import GetMessagesViewsRequest
 
 from system.account_actions.TGConnect import TGConnect
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.utils.utils import find_filess
 from system.config.configs import path_viewing_folder
-from system.localization.localization import done_button
+from system.gui.buttons import function_button_ready_viewing
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from system.utils.utils import find_filess
 
 
 class ViewingPosts:
@@ -53,21 +53,12 @@ class ViewingPosts:
                     page.go("/viewing_posts_menu")
                     page.update()  # Обновление страницы для отображения изменений
 
-            # Кнопка для подтверждения и запуска парсинга
-            button = ft.ElevatedButton(done_button, on_click=btn_click)
+            def back_button_clicked(e) -> None:
+                """Кнопка возврата в меню накрутки просмотров"""
+                page.go("/viewing_posts_menu")
 
-            # Добавление представления на страницу
-            page.views.append(
-                ft.View(
-                    "/working_with_reactions",  # Маршрут для этого представления
-                    [
-                        link_channel,  # Поле ввода ссылки на чат
-                        link_post,  # Поле ввода ссылки пост
-                        ft.Column(),  # Колонка для размещения других элементов (при необходимости)
-                        button  # Кнопка "Готово"
-                    ]
-                )
-            )
+            function_button_ready_viewing(page, btn_click, back_button_clicked, link_channel, link_post)
+
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
