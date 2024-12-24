@@ -12,7 +12,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               sending_messages_via_chats_ru,
                                               sending_messages_via_chats_with_answering_machine,
                                               sending_files_via_chats, sending_messages_files_via_chats_ru,
-                                              sending_personal_messages_with_limits,
+                                              sending_personal_messages_with_limits_ru,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
                                               time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
@@ -233,7 +233,7 @@ async def message_distribution_menu(page):
 
                      # 📨 Отправка сообщений в личку
                      ft.ElevatedButton(width=line_width, height=height_button,
-                                       text=sending_personal_messages_with_limits,
+                                       text=sending_personal_messages_with_limits_ru,
                                        on_click=lambda _: page.go("/sending_personal_messages_with_limits")),
                      # 📁 Отправка файлов в личку
                      ft.ElevatedButton(width=line_width, height=height_button,

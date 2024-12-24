@@ -31,7 +31,7 @@ sending_messages_via_chats_ru: str = "💬 Рассылка сообщений �
 sending_messages_via_chats_with_answering_machine: str = "🤖 Рассылка сообщений по чатам с автоответчиком"
 sending_files_via_chats: str = "📂 Рассылка файлов по чатам"
 sending_messages_files_via_chats_ru: str = "💬📂 Рассылка сообщений + файлов по чатам"
-sending_personal_messages_with_limits: str = "📨 Отправка сообщений в личку"
+sending_personal_messages_with_limits_ru: str = "📨 Отправка сообщений в личку"
 sending_files_to_personal_account_with_limits: str = "📁 Отправка файлов в личку"
 
 # Настройки меню
