@@ -8,7 +8,7 @@ from loguru import logger
 from telethon import events
 from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError, UserBannedInChannelError,
                              ChatWriteForbiddenError, UserNotMutualContactError, UserIdInvalidError,
-                             UsernameNotOccupiedError, UsernameInvalidError)
+                             UsernameNotOccupiedError, UsernameInvalidError, ChatAdminRequiredError)
 from telethon.tl.functions.channels import JoinChannelRequest
 
 from system.account_actions.TGConnect import TGConnect
@@ -261,17 +261,17 @@ class SendTelegramMessages:
                     try:
                         await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
-                        logger.error(
-                            f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
+                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
+
+                    except ChatAdminRequiredError:
+                        logger.error(f"К сожалению, у вас нет прав администратора в группе {groups[0]}, либо ссылка неверная или это канал. Пожалуйста, проверьте ссылку 🔄 {groups[0]}.")
                     except ChannelPrivateError:
-                        logger.error(
-                            f"Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
+                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
-                        logger.error(
-                            f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         await asyncio.sleep(e.seconds)
                     except UserBannedInChannelError:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)
