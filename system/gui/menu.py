@@ -10,7 +10,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               invitation_1_time_per_hour, inviting, importing_a_list_of_parsed_data,
                                               setting_reactions, automatic_setting_of_reactions,
                                               sending_messages_via_chats_ru,
-                                              sending_messages_via_chats_with_answering_machine,
+                                              sending_messages_via_chats_with_answering_machine_ru,
                                               sending_files_via_chats, sending_messages_files_via_chats_ru,
                                               sending_personal_messages_with_limits_ru,
                                               sending_files_to_personal_account_with_limits_ru, choice_of_reactions_ru,
@@ -220,7 +220,7 @@ async def message_distribution_menu(page):
                                        on_click=lambda _: page.go("/sending_messages_via_chats")),
                      # 🤖 Рассылка сообщений по чатам с автоответчиком
                      ft.ElevatedButton(width=line_width, height=height_button,
-                                       text=sending_messages_via_chats_with_answering_machine,
+                                       text=sending_messages_via_chats_with_answering_machine_ru,
                                        on_click=lambda _: page.go(
                                            "/sending_messages_via_chats_with_answering_machine")),
                      # 📂 Рассылка файлов по чатам
