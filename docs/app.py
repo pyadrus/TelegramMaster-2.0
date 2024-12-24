@@ -21,7 +21,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               sending_messages_via_chats_with_answering_machine,
                                               sending_files_via_chats, sending_messages_files_via_chats_ru,
                                               sending_personal_messages_with_limits_ru,
-                                              sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
+                                              sending_files_to_personal_account_with_limits_ru, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
                                               time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
                                               account_limits_ru,
@@ -85,7 +85,7 @@ async def sending_messages(request: Request):
                                                                 "sending_messages_via_chats_with_answering_machine": sending_messages_via_chats_with_answering_machine,
                                                                 "sending_files_via_chats": sending_files_via_chats,
                                                                 "sending_personal_messages_with_limits_ru": sending_personal_messages_with_limits_ru,
-                                                                "sending_files_to_personal_account_with_limits": sending_files_to_personal_account_with_limits
+                                                                "sending_files_to_personal_account_with_limits_ru": sending_files_to_personal_account_with_limits_ru
                                                                 })
 
 
@@ -118,6 +118,14 @@ async def sending_personal_messages_with_limits(request: Request):
                                        "sending_personal_messages_with_limits_ru": sending_personal_messages_with_limits_ru,
                                        })
 
+@app.get('/sending_messages/sending_files_to_personal_account_with_limits', response_class=HTMLResponse)
+async def sending_files_to_personal_account_with_limits(request: Request):
+    """📁 Отправка файлов в личку"""
+    logger.info("Запущена страница 📁 Отправка файлов в личку")
+    return templates.TemplateResponse('sending_messages/sending_files_to_personal_account_with_limits.html',
+                               {"request": request, "program_name": program_name,
+                                "sending_files_to_personal_account_with_limits_ru": sending_files_to_personal_account_with_limits_ru,
+                               })
 
 @app.get('/editing_bio', response_class=HTMLResponse)
 async def editing_bio(request: Request):
