@@ -25,7 +25,8 @@ from system.config.configs import (ConfigReader, height_button, small_button_wid
                                    window_height, window_resizable, path_parsing_folder,
                                    path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
                                    path_reactions_folder, path_contact_folder, path_creating_folder,
-                                   path_send_message_folder, path_bio_folder, path_viewing_folder)
+                                   path_send_message_folder, path_bio_folder, path_viewing_folder,
+                                   path_send_message_folder_answering_machine)
 from system.gui.menu import (inviting_menu, working_with_contacts_menu_ru, message_distribution_menu,
                              bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                              subscribe_and_unsubscribe_menu, account_verification_menu,
@@ -578,6 +579,12 @@ async def main(page: ft.Page):
         elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
             try:
                 logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
+
+                if not find_filess(directory_path=path_send_message_folder_answering_machine, extension='session'):
+                    logger.error('⛔ Нет аккаунта в папке parsing')
+                    await show_notification(page, "⛔ Нет аккаунта в папке answering_machine")
+                    return None
+
                 if not find_filess(directory_path=path_send_message_folder, extension='session'):
                     logger.error('⛔ Нет аккаунта в папке parsing')
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
