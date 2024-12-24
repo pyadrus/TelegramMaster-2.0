@@ -19,7 +19,7 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
                                               sending_messages_via_chats_ru,
                                               sending_messages_via_chats_with_answering_machine,
-                                              sending_files_via_chats, sending_messages_files_via_chats,
+                                              sending_files_via_chats, sending_messages_files_via_chats_ru,
                                               sending_personal_messages_with_limits,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
@@ -81,9 +81,9 @@ async def sending_messages(request: Request):
     logger.info("Запущено страница рассылки сообщений")
     return templates.TemplateResponse('sending_messages.html', {"request": request, "program_name": program_name,
                                                                 "sending_messages_via_chats_ru": sending_messages_via_chats_ru,
+                                                                "sending_messages_files_via_chats_ru": sending_messages_files_via_chats_ru,
                                                                 "sending_messages_via_chats_with_answering_machine": sending_messages_via_chats_with_answering_machine,
                                                                 "sending_files_via_chats": sending_files_via_chats,
-                                                                "sending_messages_files_via_chats": sending_messages_files_via_chats,
                                                                 "sending_personal_messages_with_limits": sending_personal_messages_with_limits,
                                                                 "sending_files_to_personal_account_with_limits": sending_files_to_personal_account_with_limits
                                                                 })
@@ -92,21 +92,21 @@ async def sending_messages(request: Request):
 @app.get('/sending_messages/sending_messages_via_chats', response_class=HTMLResponse)
 async def sending_messages_via_chats(request: Request):
     """💬 Рассылка сообщений по чатам"""
-    logger.info("Запущена страница подписки")
+    logger.info("Запущена страница 💬 Рассылка сообщений по чатам")
     return templates.TemplateResponse('sending_messages/sending_messages_via_chats.html',
                                       {"request": request, "program_name": program_name,
                                        "sending_messages_via_chats_ru": sending_messages_via_chats_ru,
-                                       # "sending_messages_via_chats_with_answering_machine": sending_messages_via_chats_with_answering_machine,
-                                       # "sending_files_via_chats": sending_files_via_chats,
-                                       # "sending_messages_files_via_chats": sending_messages_files_via_chats,
-                                       # "sending_personal_messages_with_limits": sending_personal_messages_with_limits,
-                                       # "sending_files_to_personal_account_with_limits": sending_files_to_personal_account_with_limits
                                        })
 
 
-
-
-
+@app.get('/sending_messages/sending_messages_files_via_chats', response_class=HTMLResponse)
+async def sending_messages_files_via_chats(request: Request):
+    """💬📂 Рассылка сообщений + файлов по чатам"""
+    logger.info("Запущена страница 💬📂 Рассылка сообщений + файлов по чатам")
+    return templates.TemplateResponse('sending_messages/sending_messages_files_via_chats.html',
+                                      {"request": request, "program_name": program_name,
+                                       "sending_messages_files_via_chats_ru": sending_messages_files_via_chats_ru,
+                                       })
 
 
 @app.get('/editing_bio', response_class=HTMLResponse)

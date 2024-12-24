@@ -11,7 +11,7 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               setting_reactions, automatic_setting_of_reactions,
                                               sending_messages_via_chats_ru,
                                               sending_messages_via_chats_with_answering_machine,
-                                              sending_files_via_chats, sending_messages_files_via_chats,
+                                              sending_files_via_chats, sending_messages_files_via_chats_ru,
                                               sending_personal_messages_with_limits,
                                               sending_files_to_personal_account_with_limits, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
@@ -228,7 +228,7 @@ async def message_distribution_menu(page):
                                        on_click=lambda _: page.go("/sending_files_via_chats")),
                      # 💬📂 Рассылка сообщений + файлов по чатам
                      ft.ElevatedButton(width=line_width, height=height_button,
-                                       text=sending_messages_files_via_chats,
+                                       text=sending_messages_files_via_chats_ru,
                                        on_click=lambda _: page.go("/sending_messages_files_via_chats")),
 
                      # 📨 Отправка сообщений в личку

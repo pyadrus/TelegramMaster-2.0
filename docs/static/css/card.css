@@ -8,8 +8,8 @@
 /* From Uiverse.io by Aryan-81 */
 .card {
     position: relative;
-    width: 170px;
-    height: 170px;
+    width: 200px;
+    height: 200px;
     background-color: #fff;
     display: flex;
     flex-direction: column;
