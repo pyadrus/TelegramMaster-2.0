@@ -19,22 +19,20 @@ from system.localization.localization import (parse_selected_user_subscribed_gro
                                               we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
                                               sending_messages_via_chats_ru,
                                               sending_messages_via_chats_with_answering_machine_ru,
-                                              sending_files_via_chats, sending_messages_files_via_chats_ru,
+                                              sending_files_via_chats_ru, sending_messages_files_via_chats_ru,
                                               sending_personal_messages_with_limits_ru,
                                               sending_files_to_personal_account_with_limits_ru, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
                                               time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
-                                              account_limits_ru,
-                                              message_limits_ru, time_between_subscriptionss_ru,
-                                              creating_username_list_ru,
-                                              recording_the_time_between_messages_ru,
+                                              account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
+                                              creating_username_list_ru, recording_the_time_between_messages_ru,
                                               time_between_invites_sending_messages_ru, recording_reaction_link_ru,
                                               forming_list_of_chats_channels_ru, changing_the_username,
-                                              changing_the_photo,
-                                              changing_the_description, name_change_n, name_change_f,
-                                              creating_a_contact_list, show_a_list_of_contacts, deleting_contacts,
-                                              adding_contacts, working_with_contacts_menu_ru, subscription, unsubscribe,
-                                              connecting_accounts_by_phone_number, connecting_session_accounts)
+                                              changing_the_photo, changing_the_description, name_change_n,
+                                              name_change_f, creating_a_contact_list, show_a_list_of_contacts,
+                                              deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
+                                              subscription, unsubscribe, connecting_accounts_by_phone_number,
+                                              connecting_session_accounts)
 
 app = FastAPI()
 
@@ -83,7 +81,7 @@ async def sending_messages(request: Request):
                                                                 "sending_messages_via_chats_ru": sending_messages_via_chats_ru,
                                                                 "sending_messages_files_via_chats_ru": sending_messages_files_via_chats_ru,
                                                                 "sending_messages_via_chats_with_answering_machine_ru": sending_messages_via_chats_with_answering_machine_ru,
-                                                                "sending_files_via_chats": sending_files_via_chats,
+                                                                "sending_files_via_chats_ru": sending_files_via_chats_ru,
                                                                 "sending_personal_messages_with_limits_ru": sending_personal_messages_with_limits_ru,
                                                                 "sending_files_to_personal_account_with_limits_ru": sending_files_to_personal_account_with_limits_ru
                                                                 })
@@ -136,6 +134,16 @@ async def sending_messages_via_chats_with_answering_machine(request: Request):
     return templates.TemplateResponse('sending_messages/sending_messages_via_chats_with_answering_machine.html',
                                       {"request": request, "program_name": program_name,
                                        "sending_messages_via_chats_with_answering_machine_ru": sending_messages_via_chats_with_answering_machine_ru,
+                                       })
+
+
+@app.get('/sending_messages/sending_files_via_chats', response_class=HTMLResponse)
+async def sending_files_via_chats(request: Request):
+    """📁 Рассылка файлов по чатам"""
+    logger.info("Запущена страница 📁 Рассылка файлов по чатам")
+    return templates.TemplateResponse('sending_messages/sending_files_via_chats.html',
+                                      {"request": request, "program_name": program_name,
+                                       "sending_files_via_chats_ru": sending_files_via_chats_ru,
                                        })
 
 
