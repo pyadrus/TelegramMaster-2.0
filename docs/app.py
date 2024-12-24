@@ -73,47 +73,40 @@ async def inviting_page(request: Request):
                                                         "inviting_every_day": inviting_every_day})
 
 
+# Рассылка сообщений по чатам, в личку
+
 @app.get('/sending_messages', response_class=HTMLResponse)
 async def sending_messages(request: Request):
     """💬 Рассылка сообщений"""
     logger.info("Запущено страница рассылки сообщений")
-    # try:
     return templates.TemplateResponse('sending_messages.html', {"request": request, "program_name": program_name,
                                                                 "sending_messages_via_chats_ru": sending_messages_via_chats_ru,
-                                                                # "sending_messages_via_chats_with_answering_machine": sending_messages_via_chats_with_answering_machine,
-                                                                # "sending_files_via_chats": sending_files_via_chats,
-                                                                # "sending_messages_files_via_chats": sending_messages_files_via_chats,
-                                                                # "sending_personal_messages_with_limits": sending_personal_messages_with_limits,
-                                                                # "sending_files_to_personal_account_with_limits": sending_files_to_personal_account_with_limits
+                                                                "sending_messages_via_chats_with_answering_machine": sending_messages_via_chats_with_answering_machine,
+                                                                "sending_files_via_chats": sending_files_via_chats,
+                                                                "sending_messages_files_via_chats": sending_messages_files_via_chats,
+                                                                "sending_personal_messages_with_limits": sending_personal_messages_with_limits,
+                                                                "sending_files_to_personal_account_with_limits": sending_files_to_personal_account_with_limits
                                                                 })
-    # except Exception as e:
-    #     logger.error(f"Ошибка при загрузке страницы рассылки сообщений: {e}")
-    #     return HTMLResponse(content="Произошла ошибка. Проверьте логи.", status_code=500)
-
-
-
-# @app.get('/settings/changing_accounts', response_class=HTMLResponse)
-# async def changing_accounts(request: Request):
-#     """🔄 Смена аккаунтов"""
-#     logger.info("Запущена страница 🔄 Смена аккаунтов")
-#     return templates.TemplateResponse('settings/changing_accounts.html', {
-#         "request": request,
-#         "program_name": program_name,
-#         "changing_accounts_ru": changing_accounts_ru,
-#     })
 
 
 @app.get('/sending_messages/sending_messages_via_chats', response_class=HTMLResponse)
 async def sending_messages_via_chats(request: Request):
     """💬 Рассылка сообщений по чатам"""
     logger.info("Запущена страница подписки")
-    return templates.TemplateResponse('sending_messages/sending_messages_via_chats.html', {"request": request, "program_name": program_name,
-                                                            "sending_messages_via_chats_ru": sending_messages_via_chats_ru,
-                                                            "sending_messages_via_chats_with_answering_machine": sending_messages_via_chats_with_answering_machine,
-                                                            # "sending_files_via_chats": sending_files_via_chats,
-                                                            # "sending_messages_files_via_chats": sending_messages_files_via_chats,
-                                                            "sending_personal_messages_with_limits": sending_personal_messages_with_limits,
-                                                            "sending_files_to_personal_account_with_limits": sending_files_to_personal_account_with_limits})
+    return templates.TemplateResponse('sending_messages/sending_messages_via_chats.html',
+                                      {"request": request, "program_name": program_name,
+                                       "sending_messages_via_chats_ru": sending_messages_via_chats_ru,
+                                       # "sending_messages_via_chats_with_answering_machine": sending_messages_via_chats_with_answering_machine,
+                                       # "sending_files_via_chats": sending_files_via_chats,
+                                       # "sending_messages_files_via_chats": sending_messages_files_via_chats,
+                                       # "sending_personal_messages_with_limits": sending_personal_messages_with_limits,
+                                       # "sending_files_to_personal_account_with_limits": sending_files_to_personal_account_with_limits
+                                       })
+
+
+
+
+
 
 
 @app.get('/editing_bio', response_class=HTMLResponse)
