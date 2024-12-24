@@ -27,7 +27,7 @@ start_inviting_button: str = "🚀 Начать инвайтинг"
 creating_groups_button: str = "🚀 Начать создание групп"
 
 # Рассылка сообщений меню
-sending_messages_via_chats: str = "💬 Рассылка сообщений по чатам"
+sending_messages_via_chats_ru: str = "💬 Рассылка сообщений по чатам"
 sending_messages_via_chats_with_answering_machine: str = "🤖 Рассылка сообщений по чатам с автоответчиком"
 sending_files_via_chats: str = "📂 Рассылка файлов по чатам"
 sending_messages_files_via_chats: str = "💬📂 Рассылка сообщений + файлов по чатам"

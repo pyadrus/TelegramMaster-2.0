@@ -681,7 +681,8 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало отправки файлов в личку")
-                    await SendTelegramMessages().send_files_to_personal_chats(account_limits=ConfigReader().get_limits(), page=page)
+                    await SendTelegramMessages().send_files_to_personal_chats(
+                        account_limits=ConfigReader().get_limits(), page=page)
                     logger.info("🔚 Конец отправки файлов в личку")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -690,7 +691,7 @@ async def main(page: ft.Page):
                 logger.exception(f"❌ Ошибка: {error}")
         elif page.route == "/clearing_generated_chat_list":  # 🧹 Очистка сформированного списка чатов
             await DatabaseHandler().cleaning_db("writing_group_links")
-            await show_notification(page, "Очистка списка окончена") # Сообщение пользователю
+            await show_notification(page, "Очистка списка окончена")  # Сообщение пользователю
         # ______________________________________________________________________________________________________________
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
             await bio_editing_menu(page)
