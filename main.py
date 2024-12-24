@@ -688,6 +688,8 @@ async def main(page: ft.Page):
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
+        elif page.route == "/clearing_generated_chat_list":  # 🧹 Очистка сформированного списка чатов
+            await DatabaseHandler().cleaning_db("writing_group_links")
         # ______________________________________________________________________________________________________________
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
             await bio_editing_menu(page)

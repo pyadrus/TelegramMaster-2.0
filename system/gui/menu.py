@@ -35,7 +35,8 @@ from system.localization.localization import (parse_single_or_multiple_groups, p
                                               for_marking_reactions, to_work_with_reactions, for_parsing, for_inviting,
                                               to_create_groups, to_work_with_numbers, to_edit_bio,
                                               for_the_answering_machine, working_with_reactions, parsing,
-                                              sending_messages, settings, main_menu, creating_groups_chats)
+                                              sending_messages, settings, main_menu, creating_groups_chats,
+                                              clearing_generated_chat_list)
 
 
 async def settings_menu(page):
@@ -238,6 +239,11 @@ async def message_distribution_menu(page):
                      ft.ElevatedButton(width=line_width, height=height_button,
                                        text=sending_files_to_personal_account_with_limits,
                                        on_click=lambda _: page.go("/sending_files_to_personal_account_with_limits")),
+
+                     # 🧹 Очистка сформированного списка чатов
+                     ft.ElevatedButton(width=line_width, height=height_button,
+                                       text=clearing_generated_chat_list,
+                                       on_click=lambda _: page.go("/clearing_generated_chat_list")),
                  ])]))
 
 

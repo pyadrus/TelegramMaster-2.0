@@ -112,3 +112,5 @@ text_1: str = 'Аккаунт  Telegram: '
 text_2: str = "Канал Telegram: "
 text_link_1: str = "https://t.me/PyAdminRU"
 text_link_2: str = "https://t.me/master_tg_d"
+
+clearing_generated_chat_list: str = '🧹 Очистка сформированного списка чатов'
