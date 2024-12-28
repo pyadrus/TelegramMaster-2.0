@@ -60,7 +60,7 @@ sending_messages: str = "📤 Рассылка сообщений"
 working_with_reactions: str = "❤️ Работа с реакциями"
 checking_accounts: str = "🔍 Проверка аккаунтов"
 creating_groups_chats: str = "👥 Создание групп (чатов)"
-editing_bio: str = "✏️ Редактирование_BIO"
+editing_bio: str = "✏️ Редактирование BIO"
 settings: str = "⚙️ Настройки"
 documentation: str = "📖 Документация"
 

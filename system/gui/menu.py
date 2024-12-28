@@ -2,41 +2,113 @@
 import flet as ft
 from loguru import logger
 
-from system.config.configs import height_button, small_button_width, line_width, line_width_button
+from system.config.configs import height_button, small_button_width, line_width, line_width_button, program_name
 from system.localization.localization import (parse_single_or_multiple_groups, parse_selected_user_subscribed_group,
                                               parse_active_group_members, parse_account_subscribed_groups_channels,
-                                              clear_previously_parsed_data_list,
-                                              inviting_every_day, invitation_at_a_certain_time,
-                                              invitation_1_time_per_hour, inviting, importing_a_list_of_parsed_data,
-                                              setting_reactions, automatic_setting_of_reactions,
-                                              sending_messages_via_chats_ru,
+                                              clear_previously_parsed_data_list, inviting_every_day,
+                                              invitation_at_a_certain_time, invitation_1_time_per_hour, inviting,
+                                              importing_a_list_of_parsed_data, setting_reactions,
+                                              automatic_setting_of_reactions, sending_messages_via_chats_ru,
                                               sending_messages_via_chats_with_answering_machine_ru,
                                               sending_files_via_chats_ru, sending_messages_files_via_chats_ru,
                                               sending_personal_messages_with_limits_ru,
                                               sending_files_to_personal_account_with_limits_ru, choice_of_reactions_ru,
                                               proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
                                               time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
-                                              account_limits_ru,
-                                              message_limits_ru, time_between_subscriptionss_ru,
-                                              creating_username_list_ru,
-                                              recording_the_time_between_messages_ru,
+                                              account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
+                                              creating_username_list_ru, recording_the_time_between_messages_ru,
                                               time_between_invites_sending_messages_ru, recording_reaction_link_ru,
                                               forming_list_of_chats_channels_ru, we_are_winding_up_post_views_ru,
-                                              editing_bio,
-                                              changing_the_username, changing_the_photo, changing_the_description,
-                                              name_change_n, name_change_f, creating_a_contact_list,
-                                              show_a_list_of_contacts, deleting_contacts, adding_contacts,
-                                              working_with_contacts_menu_ru, subscribe_unsubscribe, subscription,
-                                              unsubscribe,
-                                              checking_accounts, checking_through_a_spam_bot, validation_check,
-                                              renaming_accounts, full_verification, connecting_accounts,
-                                              connecting_accounts_by_phone_number, connecting_session_accounts,
-                                              to_boost_views, to_unsubscribe, to_subscribe, to_send_messages,
-                                              for_marking_reactions, to_work_with_reactions, for_parsing, for_inviting,
-                                              to_create_groups, to_work_with_numbers, to_edit_bio,
-                                              for_the_answering_machine, working_with_reactions, parsing,
+                                              editing_bio, changing_the_username, changing_the_photo,
+                                              changing_the_description, name_change_n, name_change_f,
+                                              creating_a_contact_list, show_a_list_of_contacts, deleting_contacts,
+                                              adding_contacts, working_with_contacts_menu_ru, subscribe_unsubscribe,
+                                              subscription, unsubscribe, checking_accounts, checking_through_a_spam_bot,
+                                              validation_check, renaming_accounts, full_verification,
+                                              connecting_accounts, connecting_accounts_by_phone_number,
+                                              connecting_session_accounts, to_boost_views, to_unsubscribe, to_subscribe,
+                                              to_send_messages, for_marking_reactions, to_work_with_reactions,
+                                              for_parsing, for_inviting, to_create_groups, to_work_with_numbers,
+                                              to_edit_bio, for_the_answering_machine, working_with_reactions, parsing,
                                               sending_messages, settings, main_menu, creating_groups_chats,
-                                              clearing_generated_chat_list)
+                                              clearing_generated_chat_list, text_1, text_link_1, text_2, text_link_2,
+                                              documentation)
+
+
+async def main_menu_program(page):
+    page.views.append(
+        ft.View("/", [ft.AppBar(title=ft.Text(main_menu),
+                                bgcolor=ft.colors.SURFACE_VARIANT),
+                      ft.Text(spans=[ft.TextSpan(
+                          f"{program_name}",
+                          ft.TextStyle(
+                              size=40,
+                              weight=ft.FontWeight.BOLD,
+                              foreground=ft.Paint(
+                                  gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
+                                                                                       ft.colors.PURPLE])), ), ), ], ),
+                      ft.Text(disabled=False,
+                              spans=[ft.TextSpan(text_1),
+                                     ft.TextSpan(text_link_1,
+                                                 ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
+                                                 url=text_link_1, ), ], ),
+                      ft.Text(disabled=False,
+                              spans=[ft.TextSpan(text_2),
+                                     ft.TextSpan(text_link_2,
+                                                 ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
+                                                 url=text_link_2, ), ], ),
+                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                          ft.Row(
+                              # 🚀 Инвайтинг
+                              [ft.ElevatedButton(width=small_button_width, height=height_button, text=inviting,
+                                                 on_click=lambda _: page.go("/inviting")),
+                               # 📊 Парсинг
+                               ft.ElevatedButton(width=small_button_width, height=height_button, text=parsing,
+                                                 on_click=lambda _: page.go("/parsing")), ]),
+                          # 📇 Работа с контактами
+                          ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                    text=working_with_contacts_menu_ru,
+                                                    on_click=lambda _: page.go("/working_with_contacts")),
+                                  # 🔄 Подписка, отписка
+                                  ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                    text=subscribe_unsubscribe,
+                                                    on_click=lambda _: page.go("/subscribe_unsubscribe")), ]),
+                          # 🔐 Подключение аккаунтов
+                          ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                    text=connecting_accounts,
+                                                    on_click=lambda _: page.go("/account_connection_menu")),
+                                  # 📤 Рассылка сообщений
+                                  ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                    text=sending_messages,
+                                                    on_click=lambda _: page.go("/sending_messages")), ]),
+                          # ❤️ Работа с реакциями
+                          ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                    text=working_with_reactions,
+                                                    on_click=lambda _: page.go("/working_with_reactions")),
+                                  # 🔍 Проверка аккаунтов
+                                  ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                    text=checking_accounts,
+                                                    on_click=lambda _: page.go("/account_verification_menu")), ]),
+                          # 👥 Создание групп (чатов)
+                          ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                    text=creating_groups_chats,
+                                                    on_click=lambda _: page.go("/creating_groups_and_chats_menu")),
+                                  # ✏️ Редактирование_BIO
+                                  ft.ElevatedButton(width=small_button_width, height=height_button,
+                                                    text=editing_bio,
+                                                    on_click=lambda _: page.go("/bio_editing")), ]),
+
+                          # 👁️‍🗨️ Накручиваем просмотры постов
+                          ft.ElevatedButton(width=line_width_button, height=height_button,
+                                            text=we_are_winding_up_post_views_ru,
+                                            on_click=lambda _: page.go("/viewing_posts_menu")),
+                          # ⚙️ Настройки
+                          ft.ElevatedButton(width=line_width_button, height=height_button, text=settings,
+                                            on_click=lambda _: page.go("/settings")),
+                          # 📖 Документация
+                          ft.ElevatedButton(width=line_width_button, height=height_button, text=documentation,
+                                            on_click=lambda _: page.go("/documentation")),
+                      ]), ]))
 
 
 async def settings_menu(page):

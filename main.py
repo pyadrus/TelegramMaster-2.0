@@ -20,24 +20,17 @@ from system.account_actions.TGReactions import WorkingWithReactions
 from system.account_actions.TGSendingMessages import SendTelegramMessages
 from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
 from system.account_actions.TGViewingPosts import ViewingPosts
-from system.config.configs import (ConfigReader, height_button, small_button_width, line_width_button,
-                                   program_name, program_version, date_of_program_change, window_width,
+from system.config.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
                                    window_height, window_resizable, path_parsing_folder,
                                    path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
                                    path_reactions_folder, path_contact_folder, path_creating_folder,
                                    path_send_message_folder, path_bio_folder, path_viewing_folder,
                                    path_send_message_folder_answering_machine)
-from system.gui.menu import (inviting_menu, working_with_contacts_menu_ru, message_distribution_menu,
-                             bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
-                             subscribe_and_unsubscribe_menu, account_verification_menu,
+from system.gui.menu import (inviting_menu, message_distribution_menu, bio_editing_menu, settings_menu, menu_parsing,
+                             reactions_menu, subscribe_and_unsubscribe_menu, account_verification_menu,
                              account_connection_menu, connecting_accounts_by_number_menu,
                              connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
-                             creating_groups_and_chats_menu, working_with_contacts_menu)
-from system.localization.localization import (we_are_winding_up_post_views_ru, inviting, parsing, subscribe_unsubscribe,
-                                              connecting_accounts, sending_messages,
-                                              working_with_reactions, checking_accounts,
-                                              creating_groups_chats, editing_bio, settings, documentation, main_menu,
-                                              text_1, text_link_1, text_2, text_link_2)
+                             creating_groups_and_chats_menu, working_with_contacts_menu, main_menu_program)
 from system.logging_in.logging_in import loging
 from system.receiving_and_recording.receiving_and_recording import ReceivingAndRecording
 from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
@@ -63,80 +56,8 @@ async def main(page: ft.Page):
     async def route_change(route):
 
         page.views.clear()
-        # Меню "Главное меню"
-        page.views.append(
-            ft.View("/", [ft.AppBar(title=ft.Text(main_menu),
-                                    bgcolor=ft.colors.SURFACE_VARIANT),
-                          ft.Text(spans=[ft.TextSpan(
-                              f"{program_name}",
-                              ft.TextStyle(
-                                  size=40,
-                                  weight=ft.FontWeight.BOLD,
-                                  foreground=ft.Paint(
-                                      gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                           ft.colors.PURPLE])), ), ), ], ),
-                          ft.Text(disabled=False,
-                                  spans=[ft.TextSpan(text_1),
-                                         ft.TextSpan(text_link_1,
-                                                     ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                                                     url=text_link_1, ), ], ),
-                          ft.Text(disabled=False,
-                                  spans=[ft.TextSpan(text_2),
-                                         ft.TextSpan(text_link_2,
-                                                     ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                                                     url=text_link_2, ), ], ),
-                          ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                              ft.Row(
-                                  # 🚀 Инвайтинг
-                                  [ft.ElevatedButton(width=small_button_width, height=height_button, text=inviting,
-                                                     on_click=lambda _: page.go("/inviting")),
-                                   # 📊 Парсинг
-                                   ft.ElevatedButton(width=small_button_width, height=height_button, text=parsing,
-                                                     on_click=lambda _: page.go("/parsing")), ]),
-                              # 📇 Работа с контактами
-                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text=working_with_contacts_menu_ru,
-                                                        on_click=lambda _: page.go("/working_with_contacts")),
-                                      # 🔄 Подписка, отписка
-                                      ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text=subscribe_unsubscribe,
-                                                        on_click=lambda _: page.go("/subscribe_unsubscribe")), ]),
-                              # 🔐 Подключение аккаунтов
-                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text=connecting_accounts,
-                                                        on_click=lambda _: page.go("/account_connection_menu")),
-                                      # 📤 Рассылка сообщений
-                                      ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text=sending_messages,
-                                                        on_click=lambda _: page.go("/sending_messages")), ]),
-                              # ❤️ Работа с реакциями
-                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text=working_with_reactions,
-                                                        on_click=lambda _: page.go("/working_with_reactions")),
-                                      # 🔍 Проверка аккаунтов
-                                      ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text=checking_accounts,
-                                                        on_click=lambda _: page.go("/account_verification_menu")), ]),
-                              # 👥 Создание групп (чатов)
-                              ft.Row([ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text=creating_groups_chats,
-                                                        on_click=lambda _: page.go("/creating_groups_and_chats_menu")),
-                                      # ✏️ Редактирование_BIO
-                                      ft.ElevatedButton(width=small_button_width, height=height_button,
-                                                        text=editing_bio,
-                                                        on_click=lambda _: page.go("/bio_editing")), ]),
-
-                              # 👁️‍🗨️ Накручиваем просмотры постов
-                              ft.ElevatedButton(width=line_width_button, height=height_button,
-                                                text=we_are_winding_up_post_views_ru,
-                                                on_click=lambda _: page.go("/viewing_posts_menu")),
-                              # ⚙️ Настройки
-                              ft.ElevatedButton(width=line_width_button, height=height_button, text=settings,
-                                                on_click=lambda _: page.go("/settings")),
-                              # 📖 Документация
-                              ft.ElevatedButton(width=line_width_button, height=height_button, text=documentation,
-                                                on_click=lambda _: page.go("/documentation")),
-                          ]), ]))
+        # ______________________________________________________________________________________________________________
+        await main_menu_program(page) # Главное меню программы
         # ______________________________________________________________________________________________________________
         if page.route == "/inviting":  # Меню "Инвайтинг"
             await inviting_menu(page)
