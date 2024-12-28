@@ -16,3 +16,4 @@ emoji-country-flag
 phonenumbers~=8.13.50
 fastapi~=0.115.5
 uvicorn~=0.32.0
+aioschedule
