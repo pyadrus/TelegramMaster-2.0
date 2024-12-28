@@ -202,8 +202,7 @@ class SendTelegramMessages:
                         for file in file_entities:
                             await client.send_file(groups[0], f"user_settings/files_to_send/{file}", caption=data)
                             # Работу записываем в лог файл, для удобства слежения, за изменениями
-                            logger.error(
-                                f"Рассылка сообщений в группу: {groups[0]}. Файл {file} отправлен в группу {groups[0]}.")
+                            logger.error(f"Рассылка сообщений в группу: {groups[0]}. Файл {file} отправлен в группу {groups[0]}.")
                             await self.random_dream()  # Прерываем работу и меняем аккаунт
                     except ChannelPrivateError:
                         logger.error(f"Рассылка сообщений + файлов в группу: {groups[0]}. Указанный канал / группа {groups[0]} является приватным, или вам запретили подписываться.")
