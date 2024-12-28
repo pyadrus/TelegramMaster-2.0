@@ -117,7 +117,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Инвайтинга")
-                    schedule_invite(page=page)
+                    await schedule_invite(page=page)
                     logger.info("🔚 Конец Инвайтинга")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))
@@ -140,7 +140,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Инвайтинга")
-                    launching_invite_every_day_certain_time(page=page)
+                    await launching_invite_every_day_certain_time(page=page)
                     logger.info("🔚 Конец Инвайтинга")
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                     logger.info('Время окончания: ' + str(finish))

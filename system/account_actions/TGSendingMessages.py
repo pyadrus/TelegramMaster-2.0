@@ -166,14 +166,16 @@ class SendTelegramMessages:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
-                        logger.error(
-                            f"❌ Рассылка файлов в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                        logger.error(f"❌ Рассылка файлов в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         await asyncio.sleep(e.seconds)
                     except UserBannedInChannelError:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except ChatWriteForbiddenError:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)
+                        break  # Прерываем работу и меняем аккаунт
+                    except ChatAdminRequiredError:
+                        logger.error(f"❌ В группу или чат запрещено отправлять файлы")
                         break  # Прерываем работу и меняем аккаунт
                     except (TypeError, UnboundLocalError):
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
