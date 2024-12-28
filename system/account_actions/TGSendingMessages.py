@@ -206,8 +206,7 @@ class SendTelegramMessages:
                                 f"Рассылка сообщений в группу: {groups[0]}. Файл {file} отправлен в группу {groups[0]}.")
                             await self.random_dream()  # Прерываем работу и меняем аккаунт
                     except ChannelPrivateError:
-                        logger.error(
-                            f"Рассылка сообщений + файлов в группу: {groups[0]}. Указанный канал / группа {groups[0]} является приватным, или вам запретили подписываться.")
+                        logger.error(f"Рассылка сообщений + файлов в группу: {groups[0]}. Указанный канал / группа {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
@@ -217,6 +216,9 @@ class SendTelegramMessages:
                     except UserBannedInChannelError:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
+                    except ChatAdminRequiredError:
+                        logger.error(f"❌ В группу или чат запрещено отправлять файлы и сообщения")
+                        break
                     except ChatWriteForbiddenError:
                         await record_and_interrupt(time_subscription_1, time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
