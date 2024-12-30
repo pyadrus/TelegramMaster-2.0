@@ -739,7 +739,13 @@ async def main(page: ft.Page):
         elif page.route == "/time_between_subscriptions":
             await SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
-            await SettingPage().create_main_window(page, variable="time_subscription")
+
+            time_subscription_1, time_subscription_2 = ConfigReader().get_time_subscription()
+            time_subscription = [time_subscription_1, time_subscription_2]
+            await SettingPage().create_main_window(page, variable="time_subscription", time_changing_accounts=time_subscription)
+
+
+
         elif page.route == "/documentation":  # Открытие документации
             start_app()
         elif page.route == "/errors":
