@@ -10,7 +10,7 @@ from loguru import logger
 
 from system.config.configs import height_button, line_width_button
 from system.localization.localization import back_button, done_button
-from system.gui.menu import show_notification
+from system.gui.menu import show_notification, log_and_display
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
@@ -165,16 +165,26 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click)
 
-    async def create_main_window(self, page: ft.Page, variable) -> None:
+    async def create_main_window(self, page: ft.Page, variable, time_changing_accounts) -> None:
         """
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param variable: Название переменной в файле config.ini
+        :param time_changing_accounts: Имя файла, в который будут записаны данные
         :return: None
         """
+
+        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+
+        for time_changing_accountss in time_changing_accounts:
+            lv.controls.append(ft.Text(f"Записанные данные в файле {time_changing_accountss}"))  # отображаем сообщение в ListView
+
         smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
         larger_timex = ft.TextField(label="Время в секундах (большее)")
 
         async def btn_click(e) -> None:
+            """Обработчик клика по кнопке"""
+
             try:
                 smaller_times = int(smaller_timex.value)
                 larger_times = int(larger_timex.value)
@@ -184,15 +194,17 @@ class SettingPage:
                     config = recording_limits_file(str(smaller_times), str(larger_times), variable=variable)
                     writing_settings_to_a_file(config)
 
+                    lv.controls.append(ft.Text("Данные успешно записаны!"))  # отображаем сообщение в ListView
                     await show_notification(page, "Данные успешно записаны!")
-
                     page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+                else:
+                    lv.controls.append(ft.Text("Ошибка: первое время должно быть меньше второго!"))
             except ValueError:
-                pass
+                lv.controls.append(ft.Text("Ошибка: введите числовые значения!"))
 
-            page.update()
+            page.update()  # обновляем страницу
 
-        self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click)
+        self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click, lv)
 
     async def writing_api_id_api_hash(self, page: ft.Page):
         """
@@ -215,7 +227,7 @@ class SettingPage:
         self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], btn_click)
 
     @staticmethod
-    def add_view_with_fields_and_button(page: ft.Page, fields: list, btn_click) -> None:
+    def add_view_with_fields_and_button(page: ft.Page, fields: list, btn_click, lv) -> None:
         """
         Добавляет представление с заданными текстовыми полями и кнопкой.
 
@@ -233,11 +245,16 @@ class SettingPage:
         button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
                                         on_click=back_button_clicked)
 
+        # Создание View с элементами
         page.views.append(
             ft.View(
                 "/settings",
-                fields + [ft.Column(), button, button_back]
-                # Заполнитель для приветствия или другого содержимого (необязательно)
+                controls=[
+                    lv,  # отображение логов 📝
+                    ft.Column(
+                        controls=fields + [button, button_back]
+                    )
+                ]
             )
         )
 

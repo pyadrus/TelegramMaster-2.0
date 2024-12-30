@@ -14,6 +14,11 @@ class ConfigReader:
         self.config_path = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
         self.config_path.read('user_settings/config/config_path.ini')
 
+    def get_config_time_changing_accounts(self):
+        """Получение времени смены аккаунтов"""
+        return (self.config.get('time_changing_accounts', 'time_changing_accounts_1', fallback=None),
+                self.config.get('time_changing_accounts', 'time_changing_accounts_2', fallback=None))
+
     def get_time_subscription(self):
         return (self.config.getint('time_subscription', 'time_subscription_1', fallback=None),
                 self.config.getint('time_subscription', 'time_subscription_2', fallback=None))

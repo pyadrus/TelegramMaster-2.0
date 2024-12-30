@@ -358,7 +358,8 @@ class ParsingGroupMembers:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def parse_users(self, client, target_group, lv, page) -> list:
+    @staticmethod
+    async def parse_users(client, target_group, lv, page) -> list:
         """
         🧑‍🤝‍🧑 Парсинг и сбор данных пользователей группы или канала.
 
@@ -510,7 +511,8 @@ class ParsingGroupMembers:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def forming_a_list_of_groups(self, client, lv, page) -> None:
+    @staticmethod
+    async def forming_a_list_of_groups(client, lv, page) -> None:
         """Формирует список групп и каналов.
 
         Метод собирает информацию о группах и каналах, включая их ID,

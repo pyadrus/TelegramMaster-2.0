@@ -724,8 +724,14 @@ async def main(page: ft.Page):
             await SettingPage().create_main_window(page, variable="time_sending_messages")
         elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
             await SettingPage().create_main_window(page, variable="time_inviting")
+
+
         elif page.route == "/changing_accounts":  # Смена аккаунтов
-            await SettingPage().create_main_window(page, variable="time_changing_accounts")
+
+            time_changing_accounts_1, time_changing_accounts_2 = ConfigReader().get_config_time_changing_accounts()  # Время смены аккаунтов
+            time_changing_accounts = [time_changing_accounts_1, time_changing_accounts_2]
+            await SettingPage().create_main_window(page, variable="time_changing_accounts", time_changing_accounts=time_changing_accounts)
+
         elif page.route == "/time_between_subscriptions":
             await SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
