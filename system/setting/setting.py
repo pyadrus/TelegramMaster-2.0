@@ -165,19 +165,19 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click)
 
-    async def create_main_window(self, page: ft.Page, variable, time_changing_accounts) -> None:
+    async def create_main_window(self, page: ft.Page, variable, time_range) -> None:
         """
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param variable: Название переменной в файле config.ini
-        :param time_changing_accounts: Имя файла, в который будут записаны данные
+        :param time_range: Имя файла, в который будут записаны данные
         :return: None
         """
 
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
 
-        for time_changing_accountss in time_changing_accounts:
-            lv.controls.append(ft.Text(f"Записанные данные в файле {time_changing_accountss}"))  # отображаем сообщение в ListView
+        for time_range_message in time_range:
+            lv.controls.append(ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
 
         smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
         larger_timex = ft.TextField(label="Время в секундах (большее)")

@@ -721,31 +721,23 @@ async def main(page: ft.Page):
         elif page.route == "/choice_of_reactions":  # Выбор реакций
             await reaction_gui(page)
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
-            await SettingPage().create_main_window(page, variable="time_sending_messages")
-
+            time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_inviting()  # Время между сообщениями
+            time_sending_messages = [time_sending_messages_1, time_sending_messages_2]
+            await SettingPage().create_main_window(page, variable="time_sending_messages", time_range=time_sending_messages)
         elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
-
             time_inviting_1, time_inviting_2 = ConfigReader().get_time_inviting()  # Время между инвайтингом, рассылка сообщений
             time_inviting = [time_inviting_1, time_inviting_2]
-            await SettingPage().create_main_window(page, variable="time_inviting", time_changing_accounts=time_inviting)
-
-
+            await SettingPage().create_main_window(page, variable="time_inviting", time_range=time_inviting)
         elif page.route == "/changing_accounts":  # Смена аккаунтов
-
             time_changing_accounts_1, time_changing_accounts_2 = ConfigReader().get_config_time_changing_accounts()  # Время смены аккаунтов
             time_changing_accounts = [time_changing_accounts_1, time_changing_accounts_2]
-            await SettingPage().create_main_window(page, variable="time_changing_accounts", time_changing_accounts=time_changing_accounts)
-
+            await SettingPage().create_main_window(page, variable="time_changing_accounts", time_range=time_changing_accounts)
         elif page.route == "/time_between_subscriptions":
             await SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
-
             time_subscription_1, time_subscription_2 = ConfigReader().get_time_subscription()
             time_subscription = [time_subscription_1, time_subscription_2]
-            await SettingPage().create_main_window(page, variable="time_subscription", time_changing_accounts=time_subscription)
-
-
-
+            await SettingPage().create_main_window(page, variable="time_subscription", time_range=time_subscription)
         elif page.route == "/documentation":  # Открытие документации
             start_app()
         elif page.route == "/errors":
