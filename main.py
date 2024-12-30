@@ -722,8 +722,12 @@ async def main(page: ft.Page):
             await reaction_gui(page)
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
             await SettingPage().create_main_window(page, variable="time_sending_messages")
+
         elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
-            await SettingPage().create_main_window(page, variable="time_inviting")
+
+            time_inviting_1, time_inviting_2 = ConfigReader().get_time_inviting()  # Время между инвайтингом, рассылка сообщений
+            time_inviting = [time_inviting_1, time_inviting_2]
+            await SettingPage().create_main_window(page, variable="time_inviting", time_changing_accounts=time_inviting)
 
 
         elif page.route == "/changing_accounts":  # Смена аккаунтов
