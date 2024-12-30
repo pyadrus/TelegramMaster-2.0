@@ -169,7 +169,9 @@ class ConfigReader:
         """
         Путь к папке для автоответчика (путь к config файлу user_settings/config/config_path.ini)
         """
-        return self.config_path.get('path_send_message_folder_answering_machine', 'path_send_message_folder_answering_machine', fallback=None)
+        return self.config_path.get('path_send_message_folder_answering_machine',
+                                    'path_send_message_folder_answering_machine', fallback=None)
+
 
 time_activity_user_2 = ConfigReader().time_activity_user_2()
 
@@ -196,6 +198,5 @@ path_creating_folder = ConfigReader().path_creating_folder()  # Путь к па
 path_send_message_folder = ConfigReader().path_send_message_folder()  # Путь к папке для отправки сообщений
 path_bio_folder = ConfigReader().path_bio_folder()  # Путь к папке для работы с био
 path_viewing_folder = ConfigReader().path_viewing_folder()  # Путь к папке для просмотров постов
-
 
 path_send_message_folder_answering_machine = ConfigReader().path_send_message_folder_answering_machine()  # Путь к папке для аккаунтов с автоответчиком

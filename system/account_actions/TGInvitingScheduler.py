@@ -10,6 +10,7 @@ from system.config.configs import ConfigReader
 
 hour, minutes = ConfigReader().get_hour_minutes_every_day()
 
+
 async def run_scheduler():
     """
     Функция для запуска планировщика.
@@ -17,6 +18,7 @@ async def run_scheduler():
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
+
 
 async def schedule_member_invitation(page) -> None:
     """
@@ -29,14 +31,13 @@ async def schedule_member_invitation(page) -> None:
         logger.exception(f"❌ Ошибка: {error}")
 
 
-
 async def launching_invite_every_day_certain_time(page) -> None:
     """
     Запуск inviting каждый день в определенное время выбранное пользователем
     """
     try:
         aioschedule.every().day.at(f"{int(hour):02d}:{int(minutes):02d}").do(schedule_member_invitation, page=page)
-        await run_scheduler() # Здесь мы блокируем выполнение, ожидая задач.
+        await run_scheduler()  # Здесь мы блокируем выполнение, ожидая задач.
     except Exception as error:
         logger.exception(f"❌ Ошибка: {error}")
 
@@ -48,7 +49,7 @@ async def launching_an_invite_once_an_hour(page) -> None:
     try:
         logger.info("Запуск программы в 00 минут")
         aioschedule.every().hour.at(":00").do(schedule_member_invitation, page=page)
-        await run_scheduler() # Здесь мы блокируем выполнение, ожидая задач.
+        await run_scheduler()  # Здесь мы блокируем выполнение, ожидая задач.
     except Exception as error:
         logger.exception(f"❌ Ошибка: {error}")
 
@@ -61,7 +62,7 @@ async def schedule_invite(page) -> None:
         logger.info(f"Скрипт будет запускаться каждый день в {hour}:{minutes}")
         # Запускаем автоматизацию
         aioschedule.every().day.at(f"{hour}:{minutes}").do(schedule_member_invitation, page=page)
-        await run_scheduler() # Здесь мы блокируем выполнение, ожидая задач.
+        await run_scheduler()  # Здесь мы блокируем выполнение, ожидая задач.
     except Exception as error:
         logger.exception(f"❌ Ошибка: {error}")
 
