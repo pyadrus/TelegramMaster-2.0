@@ -723,7 +723,8 @@ async def main(page: ft.Page):
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
             time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_inviting()  # Время между сообщениями
             time_sending_messages = [time_sending_messages_1, time_sending_messages_2]
-            await SettingPage().create_main_window(page, variable="time_sending_messages", time_range=time_sending_messages)
+            await SettingPage().create_main_window(page, variable="time_sending_messages",
+                                                   time_range=time_sending_messages)
         elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
             time_inviting_1, time_inviting_2 = ConfigReader().get_time_inviting()  # Время между инвайтингом, рассылка сообщений
             time_inviting = [time_inviting_1, time_inviting_2]
@@ -731,7 +732,8 @@ async def main(page: ft.Page):
         elif page.route == "/changing_accounts":  # Смена аккаунтов
             time_changing_accounts_1, time_changing_accounts_2 = ConfigReader().get_config_time_changing_accounts()  # Время смены аккаунтов
             time_changing_accounts = [time_changing_accounts_1, time_changing_accounts_2]
-            await SettingPage().create_main_window(page, variable="time_changing_accounts", time_range=time_changing_accounts)
+            await SettingPage().create_main_window(page, variable="time_changing_accounts",
+                                                   time_range=time_changing_accounts)
         elif page.route == "/time_between_subscriptions":
             await SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
         elif page.route == "/time_between_subscriptionss":  # Время между подпиской
