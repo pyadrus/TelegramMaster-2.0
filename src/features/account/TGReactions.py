@@ -78,7 +78,7 @@ class WorkingWithReactions:
     def choosing_random_reaction():
         """Выбираем случайное значение из списка (реакция)"""
         try:
-            reaction_input = read_json_file(filename='user_settings/reactions/reactions.json')
+            reaction_input = read_json_file(filename='user_data/reactions/reactions.json')
             random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
             logger.info(random_value)
             return random_value
@@ -95,11 +95,11 @@ class WorkingWithReactions:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/reactions_list",
+            for session_name in find_filess(directory_path="user_data/accounts/reactions_list",
                                             # TODO переместить путь к файлу в конфиг файл
                                             extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory="user_settings/accounts/reactions_list")
+                                                                   account_directory="user_data/accounts/reactions_list")
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
                 await asyncio.sleep(5)
                 # random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
@@ -123,7 +123,7 @@ class WorkingWithReactions:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_reactions_folder)
                 chat = read_json_file(
-                    filename='user_settings/reactions/link_channel.json')  # TODO переместить путь к файлу в конфиг
+                    filename='user_data/reactions/link_channel.json')  # TODO переместить путь к файлу в конфиг
                 logger.info(chat)
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
 

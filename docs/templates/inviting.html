@@ -142,7 +142,7 @@
             3️⃣ 📊 Пропишите лимиты на аккаунт См. <a href="{{ url_for('settings') }}">Лимиты на аккаунт</a>).<br>
             4️⃣ 🔄 Подключите аккаунты к {{program_name}} <a href="{{ url_for('connect_accounts') }}">(см.
             Подключение
-            аккаунтов Telegram к {{ program_name }})</a> или скопируйте session файл аккаунта в папку <code>{{program_name}}/user_settings/accounts/inviting</code>.<br>
+            аккаунтов Telegram к {{ program_name }})</a> или скопируйте session файл аккаунта в папку <code>{{program_name}}/user_data/accounts/inviting</code>.<br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -198,9 +198,9 @@
 
 
         <p>Во время инвайтинга программа удаляет из базы
-            <code>{{program_name}}/user_settings/software_database.db</code> данные тех пользователей, которых добавил
+            <code>{{program_name}}/user_data/software_database.db</code> данные тех пользователей, которых добавил
             аккаунт или попытался добавить, но не смог. {{program_name}} записывает действия в лог-файл
-            (<code>{{program_name}}/user_settings/log/log.log</code>).
+            (<code>{{program_name}}/user_data/log/log.log</code>).
         </p>
 
         <hr align="center"/>
@@ -237,7 +237,7 @@
                 href="{{ url_for('settings') }}">Запись ссылки</a>).<br>
             3️⃣ Подключить аккаунты к {{program_name}} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
             аккаунтов Telegram к {{program_name}})</a> или скопировать session файл аккаунта в папку
-            <code>{{program_name}}/user_settings/accounts/inviting</code><br>
+            <code>{{program_name}}/user_data/accounts/inviting</code><br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -289,7 +289,7 @@
         <p>
             Во время инвайтинга программа удаляет из базы <code>software_database.db</code> данных тех
             пользователей, которых добавил аккаунт или попытался добавить, но не смог. {{program_name}} записывает
-            действия в лог-файл (в файл <code>{{program_name}}/user_settings/log/log.log</code>).
+            действия в лог-файл (в файл <code>{{program_name}}/user_data/log/log.log</code>).
         </p>
 
         <hr align="center"/>
@@ -327,7 +327,7 @@
             3️⃣ Подключить аккаунты к {{program_name}} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
             аккаунтов Telegram к {{program_name}})</a> или
             скопировать session файл аккаунта в папку
-            <code>{{program_name}}/user_settings/accounts/inviting</code><br>
+            <code>{{program_name}}/user_data/accounts/inviting</code><br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -375,10 +375,10 @@
 
         <p>
             Во время инвайтинга программа удаляет из базы <code>{{ program_name
-            }}/user_settings/software_database.db</code>
+            }}/user_data/software_database.db</code>
             данных
             тех пользователей, которых добавил аккаунт или попытался добавить, но не смог. {{program_name}} записывает
-            действия в лог-файл (в файл <code>{{ program_name }}/user_settings/log/log.log</code>).
+            действия в лог-файл (в файл <code>{{ program_name }}/user_data/log/log.log</code>).
         </p>
 
         <hr align="center"/>
@@ -414,7 +414,7 @@
             3️⃣ Подключить аккаунты к {{program_name}} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
             аккаунтов Telegram к {{program_name}})</a>) или
             скопировать session файл аккаунта в папку
-            <code>{{program_name}}/user_settings/accounts/inviting</code><br>
+            <code>{{program_name}}/user_data/accounts/inviting</code><br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -458,9 +458,9 @@
 
         <p>
             Во время инвайтинга программа удаляет из базы
-            <code>{{program_name}}/user_settings/software_database.db</code> данных
+            <code>{{program_name}}/user_data/software_database.db</code> данных
             тех пользователей, которых добавил аккаунт или попытался добавить, но не смог. {{program_name}} записывает
-            действия в лог-файл (в файл <code>{{program_name}}/user_settings/log/log.log</code>).
+            действия в лог-файл (в файл <code>{{program_name}}/user_data/log/log.log</code>).
         </p>
 
         <hr align="center"/>

@@ -110,7 +110,7 @@ class ParsingGroupMembers:
     async def parse_group(self, client, groups_wr, lv, page) -> None:
         """
         Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
-        @handle_exceptions для отлавливания ошибок и записи их в базу данных user_settings/software_database.db.
+        @handle_exceptions для отлавливания ошибок и записи их в базу данных user_data/software_database.db.
 
         Аргументы:
         :param client: Клиент Telegram
@@ -119,7 +119,7 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            # Записываем parsing данные в файл user_settings/software_database.db
+            # Записываем parsing данные в файл user_data/software_database.db
             entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, lv, page), lv,
                                                              page)
             await log_and_display(f"{entities}", lv, page)
@@ -182,7 +182,7 @@ class ParsingGroupMembers:
             page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
             try:
-                # Открываем базу данных для работы с аккаунтами user_settings/software_database.db 📂
+                # Открываем базу данных для работы с аккаунтами user_data/software_database.db 📂
                 for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
                     # Подключение к Telegram и вывод имя аккаунта в консоль / терминал 📲
                     client = await self.tg_connect.get_telegram_client(page, session_name,

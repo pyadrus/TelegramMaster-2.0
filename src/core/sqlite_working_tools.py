@@ -5,7 +5,7 @@ import sqlite3
 from loguru import logger
 from peewee import fn, SqliteDatabase, Model, IntegerField, CharField, TextField, DateTimeField
 
-db = SqliteDatabase('user_settings/software_database.db')
+db = SqliteDatabase('user_data/software_database.db')
 
 
 class GroupsAndChannels(Model):
@@ -52,7 +52,7 @@ def remove_duplicates():
 
 
 class DatabaseHandler:
-    def __init__(self, db_file="user_settings/software_database.db"):
+    def __init__(self, db_file="user_data/software_database.db"):
         self.db_file = db_file
 
     async def connect(self) -> None:
@@ -141,7 +141,7 @@ class DatabaseHandler:
         :param entities: список результатов parsing
         """
         await self.connect()
-        # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
+        # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
         self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
                             "user_phone, online_at, photos_id, user_premium)")
         self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
@@ -178,7 +178,7 @@ class DatabaseHandler:
         """
         await self.connect()
         for line in entities:
-            # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
+            # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
             self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
                                 "user_phone, online_at, photos_id, user_premium)")
             self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
@@ -246,7 +246,7 @@ class DatabaseHandler:
         :param recorded_data: данные для записи
         """
         await self.connect()
-        # Записываем ссылку на группу для parsing в файл user_settings/software_database.db"""
+        # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
         self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {name_database}({database_columns})")
         for line in recorded_data:
             # strip() - удаляет с конца и начала строки лишние пробелы, в том числе символ окончания строки

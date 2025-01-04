@@ -14,7 +14,7 @@ from src.gui.menu import show_notification
 from src.core.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
-config.read("user_settings/config/config.ini")
+config.read("user_data/config/config.ini")
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
@@ -139,7 +139,7 @@ class SettingPage:
                 await show_notification(page, "Данные успешно записаны!")
 
             except configparser.NoSectionError as error:
-                await show_notification(page, "⚠️ Поврежден файл user_settings/config/config.ini")
+                await show_notification(page, "⚠️ Поврежден файл user_data/config/config.ini")
                 logger.error(f"Ошибка: {error}")
 
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
@@ -201,7 +201,8 @@ class SettingPage:
         page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
 
         for time_range_message in time_range:
-            lv.controls.append(ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
+            lv.controls.append(
+                ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
 
         smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
         larger_timex = ft.TextField(label="Время в секундах (большее)")
@@ -266,6 +267,7 @@ class SettingPage:
         :param lv: ListView для отображения логов 📝
         :return: None
         """
+
         def back_button_clicked(e) -> None:
             """Кнопка возврата в меню настроек"""
             page.go("/settings")
@@ -290,14 +292,14 @@ class SettingPage:
 
 
 def writing_settings_to_a_file(config) -> None:
-    """Запись данных в файл user_settings/config.ini"""
-    with open("user_settings/config/config.ini", "w") as setup:  # Открываем файл в режиме записи
+    """Запись данных в файл user_data/config.ini"""
+    with open("user_data/config/config.ini", "w") as setup:  # Открываем файл в режиме записи
         config.write(setup)  # Записываем данные в файл
 
 
 def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigParser:
     """
-    Запись данных в файл TelegramMaster/user_settings/config.ini
+    Запись данных в файл TelegramMaster/user_data/config.ini
 
     :param time_1: Время в секундах
     :param time_2: Время в секундах
@@ -311,7 +313,7 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
         return config
     except configparser.NoSectionError as error:
         logger.error(
-            f"❌ Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_settings/config/config.ini")
+            f"❌ Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_data/config/config.ini")
 
 
 def write_data_to_json_file(reactions, path_to_the_file):
@@ -364,7 +366,7 @@ async def reaction_gui(page: ft.Page):
         """Выбранная реакция"""
         selected_reactions = [checkbox.label for checkbox in checkboxes if
                               checkbox.value]  # Получаем только выбранные реакции
-        write_data_to_json_file(reactions=selected_reactions, path_to_the_file='user_settings/reactions/reactions.json')
+        write_data_to_json_file(reactions=selected_reactions, path_to_the_file='user_data/reactions/reactions.json')
 
         await show_notification(page, "Данные успешно записаны!")
         page.go("/settings")  # Переход к странице настроек

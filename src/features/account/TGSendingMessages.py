@@ -52,10 +52,10 @@ class SendTelegramMessages:
                 try:
                     for username in await self.limits_class.get_usernames_with_limits(table_name="members",
                                                                                       account_limits=account_limits):
-                        # username - имя аккаунта пользователя в базе данных user_settings/software_database.db
+                        # username - имя аккаунта пользователя в базе данных user_data/software_database.db
                         logger.info(f"[!] Отправляем сообщение: {username[0]}")
                         try:
-                            entities = find_files(directory_path="user_settings/message", extension="json")
+                            entities = find_files(directory_path="user_data/message", extension="json")
                             logger.info(entities)
                             data = await self.select_and_read_random_file(entities, folder="message")
                             await client.send_message(await client.get_input_entity(username[0]),
@@ -102,18 +102,18 @@ class SendTelegramMessages:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 try:
-                    # Открываем parsing список user_settings/software_database.db для inviting в группу
+                    # Открываем parsing список user_data/software_database.db для inviting в группу
                     number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
                                                                                          account_limits=account_limits)
                     # Количество аккаунтов на данный момент в работе
                     logger.info(f"Всего username: {len(number_usernames)}")
                     for rows in number_usernames:
-                        username = rows[0]  # Получаем имя аккаунта из базы данных user_settings/software_database.db
+                        username = rows[0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
                         logger.info(f"[!] Отправляем сообщение: {username}")
                         try:
                             user_to_add = await client.get_input_entity(username)
-                            for files in all_find_files(directory_path="user_settings/files_to_send"):
-                                await client.send_file(user_to_add, f"user_settings/files_to_send/{files}")
+                            for files in all_find_files(directory_path="user_data/files_to_send"):
+                                await client.send_file(user_to_add, f"user_data/files_to_send/{files}")
                                 logger.info(
                                     f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.")
                                 await record_inviting_results(time_inviting[0], time_inviting[1], username)
@@ -152,8 +152,8 @@ class SendTelegramMessages:
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
                     try:
-                        for file in all_find_files(directory_path="user_settings/files_to_send"):
-                            await client.send_file(groups[0], f"user_settings/files_to_send/{file}")
+                        for file in all_find_files(directory_path="user_data/files_to_send"):
+                            await client.send_file(groups[0], f"user_data/files_to_send/{file}")
                             # Работу записываем в лог файл, для удобства слежения, за изменениями
                             logger.error(
                                 f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
@@ -195,12 +195,12 @@ class SendTelegramMessages:
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                    entities = find_files(directory_path="user_settings/message", extension="json")
+                    entities = find_files(directory_path="user_data/message", extension="json")
                     data = await self.select_and_read_random_file(entities, folder="message")
-                    file_entities = all_find_files(directory_path="user_settings/files_to_send")
+                    file_entities = all_find_files(directory_path="user_data/files_to_send")
                     try:
                         for file in file_entities:
-                            await client.send_file(groups[0], f"user_settings/files_to_send/{file}", caption=data)
+                            await client.send_file(groups[0], f"user_data/files_to_send/{file}", caption=data)
                             # Работу записываем в лог файл, для удобства слежения, за изменениями
                             logger.error(
                                 f"Рассылка сообщений в группу: {groups[0]}. Файл {file} отправлен в группу {groups[0]}.")
@@ -244,7 +244,7 @@ class SendTelegramMessages:
                 # Выбираем рандомный файл для чтения
                 random_file = random.choice(entities)  # Выбираем случайный файл для чтения из списка файлов
                 logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
-                data = read_json_file(filename=f"user_settings/{folder}/{random_file[0]}.json")
+                data = read_json_file(filename=f"user_data/{folder}/{random_file[0]}.json")
             return data  # Возвращаем данные из файла
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -262,7 +262,7 @@ class SendTelegramMessages:
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
                     data = await self.select_and_read_random_file(
-                        find_files(directory_path="user_settings/message", extension="json"), folder="message")
+                        find_files(directory_path="user_data/message", extension="json"), folder="message")
                     try:
                         await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
@@ -311,17 +311,17 @@ class SendTelegramMessages:
         Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)
         """
         try:
-            for session_name in find_filess(directory_path="user_settings/accounts/answering_machine",
+            for session_name in find_filess(directory_path="user_data/accounts/answering_machine",
                                             extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory="user_settings/accounts/answering_machine")
+                                                                   account_directory="user_data/accounts/answering_machine")
 
                 @client.on(events.NewMessage(incoming=True))  # Обработчик личных сообщений
                 async def handle_private_messages(event):
                     """Обрабатывает входящие личные сообщения"""
                     if event.is_private:  # Проверяем, является ли сообщение личным
                         logger.info(f'Входящее сообщение: {event.message.message}')
-                        entities = find_files(directory_path="user_settings/answering_machine", extension="json")
+                        entities = find_files(directory_path="user_data/answering_machine", extension="json")
                         logger.info(entities)
                         data = await self.select_and_read_random_file(entities, folder="answering_machine")
                         logger.info(data)
@@ -333,7 +333,7 @@ class SendTelegramMessages:
                 for chat in records:
                     try:
                         await client(JoinChannelRequest(chat[0]))  # Подписываемся на канал / группу
-                        entities = find_files(directory_path="user_settings/message", extension="json")
+                        entities = find_files(directory_path="user_data/message", extension="json")
                         logger.info(entities)
                         data = await self.select_and_read_random_file(entities, folder="message")
                         await client.send_message(chat[0], f'{data}')

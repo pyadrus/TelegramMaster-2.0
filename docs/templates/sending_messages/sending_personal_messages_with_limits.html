@@ -112,7 +112,7 @@
             2️⃣ Подключить аккаунты к {{program_name}} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
             аккаунтов Telegram к {{program_name}})</a> или
             скопировать session файл аккаунта в папку
-            <code>{{program_name}}/user_settings/accounts/send_message</code><br>
+            <code>{{program_name}}/user_data/accounts/send_message</code><br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -138,9 +138,9 @@
 
         <p>
             Запись сообщений для рассылки.<br>
-            Эти сообщения должны храниться по пути <code>{{program_name}}/user_settings/message</code> в формате
+            Эти сообщения должны храниться по пути <code>{{program_name}}/user_data/message</code> в формате
             <code>JSON</code>. При рассылке сообщений в личку (с лимитами) программа будет выбирать случайное
-            сообщение из папки `user_settings/message`. Обратите внимание, что для более стабильной работы программы
+            сообщение из папки `user_data/message`. Обратите внимание, что для более стабильной работы программы
             может потребоваться её перезагрузка.<br>
         </p>
 
@@ -207,7 +207,7 @@
 
         <p>
             {{program_name}} записывает действия в лог-файл (в файл
-            <code>{{program_name}}/user_settings/log/log.log</code>).<br>
+            <code>{{program_name}}/user_data/log/log.log</code>).<br>
         </p>
 
         <p>
@@ -215,13 +215,13 @@
         </p>
 
         <blockquote>
-            1️⃣ Программа сканирует папку <code>{{program_name}}/user_settings/accounts/send_message</code> на наличие
+            1️⃣ Программа сканирует папку <code>{{program_name}}/user_data/accounts/send_message</code> на наличие
             session аккаунтов.<br>
             2️⃣ Открывает базу данных <code>software_database.db</code> и сканирует таблицу <code>members</code> на
             наличие username в базе данных.<br>
             3️⃣ Открывает сообщение в формате <code>json</code> в папке
-            <code>{{program_name}}/user_settings/message</code> для рассылки сообщений по чатам.<br>
-            4️⃣ Сообщение из папки <code>{{program_name}}/user_settings/message</code> выбирается случайным
+            <code>{{program_name}}/user_data/message</code> для рассылки сообщений по чатам.<br>
+            4️⃣ Сообщение из папки <code>{{program_name}}/user_data/message</code> выбирается случайным
             образом.<br>
             5️⃣ Отправка сообщения в личку, по username.<br>
         </blockquote>
@@ -232,7 +232,7 @@
 
         <code>
             {{ program_name }}<br>
-            ├── user_settings<br>
+            ├── user_data<br>
             │ ├── accounts<br>
             │ │ └── send_message<br>
             │ │ ├── account1.session<br>

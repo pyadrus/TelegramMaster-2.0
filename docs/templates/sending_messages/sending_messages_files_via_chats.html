@@ -113,7 +113,7 @@
 
             2️⃣ Подключите аккаунты к {{program_name}} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
             аккаунтов Telegram к {{program_name}})</a>. <br>
-            - Путь: <code>{{program_name}}/user_settings/accounts/send_message</code><br>
+            - Путь: <code>{{program_name}}/user_data/accounts/send_message</code><br>
 
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
@@ -140,10 +140,10 @@
         </p>
 
         <p>
-            Эти сообщения должны храниться по пути <code>{{program_name}}/user_settings/message</code> в формате
+            Эти сообщения должны храниться по пути <code>{{program_name}}/user_data/message</code> в формате
             <code>JSON</code>. При рассылке сообщений по группам (чатам) программа будет выбирать случайное
             сообщение из
-            папки <code>{{program_name}}/user_settings/message</code>. Обратите внимание, что для более стабильной
+            папки <code>{{program_name}}/user_data/message</code>. Обратите внимание, что для более стабильной
             работы программы может потребоваться её перезагрузка.<br>
         </p>
 
@@ -172,15 +172,15 @@
 
         <p>
             Формирование файлов для рассылки.<br>
-            Файлы должны храниться по пути <code>{{program_name}}/user_settings/files_to_send</code>. При рассылке
+            Файлы должны храниться по пути <code>{{program_name}}/user_data/files_to_send</code>. При рассылке
             файлов по группам (чатам) программа будет выбирать файл из папки
-            <code>{{program_name}}/user_settings/files_to_send</code>. Обратите внимание, что для более стабильной
+            <code>{{program_name}}/user_data/files_to_send</code>. Обратите внимание, что для более стабильной
             работы программы может потребоваться её перезагрузка.<br>
         </p>
 
         <blockquote>
-            1️⃣ Перейдите в раздел <code>{{program_name}}/user_settings/files_to_send</code>.<br>
-            2️⃣ Разместитете файл в папке <code>{{program_name}}/user_settings/files_to_send</code>.<br>
+            1️⃣ Перейдите в раздел <code>{{program_name}}/user_data/files_to_send</code>.<br>
+            2️⃣ Разместитете файл в папке <code>{{program_name}}/user_data/files_to_send</code>.<br>
         </blockquote>
 
         <blockquote>
@@ -213,13 +213,13 @@
         </p>
 
         <blockquote>
-            1️⃣ Программа сканирует папку <code>{{program_name}}/user_settings/accounts/send_message</code> на наличие
+            1️⃣ Программа сканирует папку <code>{{program_name}}/user_data/accounts/send_message</code> на наличие
             session аккаунтов.<br>
             2️⃣ Открывает базу данных <code>software_database.db</code> и сканирует таблицу
             <code>writing_group_links</code> на наличие групп в базе данных.<br>
-            3️⃣ Открывает сообщение в формате <code>json</code> в папке <code>user_settings/message</code> для
+            3️⃣ Открывает сообщение в формате <code>json</code> в папке <code>user_data/message</code> для
             рассылки сообщений по чатам.<br>
-            4️⃣ Сообщение из папки <code>{{program_name}}/user_settings/message</code> выбирается случайным
+            4️⃣ Сообщение из папки <code>{{program_name}}/user_data/message</code> выбирается случайным
             образом.<br>
         </blockquote>
 
@@ -229,7 +229,7 @@
 
         <code>
             {{ program_name }}<br>
-            ├── user_settings<br>
+            ├── user_data<br>
             │ ├── accounts<br>
             │ │ └── send_message<br>
             │ │ ├── account1.session<br>

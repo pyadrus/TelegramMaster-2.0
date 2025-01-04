@@ -120,7 +120,7 @@ class TGContact:
     async def inviting_contact(self, page) -> None:
         """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
         try:
-            # Открываем базу данных для работы с аккаунтами user_settings/software_database.db
+            # Открываем базу данных для работы с аккаунтами user_data/software_database.db
             for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,

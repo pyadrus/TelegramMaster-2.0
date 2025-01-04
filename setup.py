@@ -4,19 +4,19 @@ os.system("""pip install -r requirements.txt""")
 
 # Список всех необходимых директорий
 directories = [
-    'user_settings/accounts/answering_machine',
-    'user_settings/accounts/banned',
-    'user_settings/accounts/bio',
-    'user_settings/accounts/contact',
-    'user_settings/accounts/creating',
-    'user_settings/accounts/inviting',
-    'user_settings/accounts/parsing',
-    'user_settings/accounts/reactions',
-    'user_settings/accounts/reactions_list',
-    'user_settings/accounts/send_message',
-    'user_settings/accounts/subscription',
-    'user_settings/accounts/unsubscribe',
-    'user_settings/accounts/viewing'
+    'user_data/accounts/answering_machine',
+    'user_data/accounts/banned',
+    'user_data/accounts/bio',
+    'user_data/accounts/contact',
+    'user_data/accounts/creating',
+    'user_data/accounts/inviting',
+    'user_data/accounts/parsing',
+    'user_data/accounts/reactions',
+    'user_data/accounts/reactions_list',
+    'user_data/accounts/send_message',
+    'user_data/accounts/subscription',
+    'user_data/accounts/unsubscribe',
+    'user_data/accounts/viewing'
 ]
 
 for directory in directories:

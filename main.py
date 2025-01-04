@@ -37,7 +37,7 @@ from src.features.settings.setting import SettingPage, get_unique_filename, reac
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_files, find_filess
 
-logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
+logger.add("user_data/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
 
 
 async def main(page: ft.Page):
@@ -317,7 +317,7 @@ async def main(page: ft.Page):
             await show_notification(page, "Очистка списка окончена")  # Сообщение пользователю
 
         elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
-            await ReceivingAndRecording().write_data_to_excel(file_name="user_settings/parsed_chat_participants.xlsx")
+            await ReceivingAndRecording().write_data_to_excel(file_name="user_data/parsed_chat_participants.xlsx")
         # ______________________________________________________________________________________________________________
         elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
             await working_with_contacts_menu(page)
@@ -480,7 +480,7 @@ async def main(page: ft.Page):
                     await show_notification(page, "Нет аккаунта в папке send_message")
                     return None
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                if not find_filess(directory_path="user_settings/message", extension='json'):
+                if not find_filess(directory_path="user_data/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
@@ -488,7 +488,7 @@ async def main(page: ft.Page):
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Рассылки сообщений по чатам")
-                    entities = find_files(directory_path="user_settings/message", extension="json")
+                    entities = find_files(directory_path="user_data/message", extension="json")
                     logger.info(entities)
                     await SendTelegramMessages().sending_messages_via_chats_times(page=page)
                     logger.info("🔚 Конец Рассылки сообщений по чатам")
@@ -511,12 +511,12 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                if not find_filess(directory_path="user_settings/message", extension='json'):
+                if not find_filess(directory_path="user_data/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
                 logger.info("⛔ Проверка папки с сообщениями для автоответчика")
-                if not find_filess(directory_path="user_settings/answering_machine", extension='json'):
+                if not find_filess(directory_path="user_data/answering_machine", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine')
                     await show_notification(page,
                                             "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
@@ -558,7 +558,7 @@ async def main(page: ft.Page):
                     await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                     return None
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                if not find_filess(directory_path="user_settings/message", extension='json'):
+                if not find_filess(directory_path="user_data/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
@@ -582,7 +582,7 @@ async def main(page: ft.Page):
                     return None
 
                 logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                if not find_filess(directory_path="user_settings/message", extension='json'):
+                if not find_filess(directory_path="user_data/message", extension='json'):
                     logger.error('⛔ Нет заготовленных сообщений в папке message')
                     await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                     return None
@@ -714,10 +714,10 @@ async def main(page: ft.Page):
         elif page.route == "/message_recording":  # Запись сообщений
             await SettingPage().recording_text_for_sending_messages(page, "Введите текст для сообщения",
                                                                     get_unique_filename(
-                                                                        base_filename='user_settings/message/message'))
+                                                                        base_filename='user_data/message/message'))
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
             await SettingPage().recording_text_for_sending_messages(page, "Введите ссылку для реакций",
-                                                                    'user_settings/reactions/link_channel.json')
+                                                                    'user_data/reactions/link_channel.json')
         elif page.route == "/choice_of_reactions":  # Выбор реакций
             await reaction_gui(page)
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
