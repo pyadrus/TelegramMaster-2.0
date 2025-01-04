@@ -21,9 +21,6 @@ from system.utils.utils import record_and_interrupt
 from system.config.configs import ConfigReader, path_send_message_folder
 from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
 
-time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_sending_messages()
-time_subscription_1, time_subscription_2 = ConfigReader().get_time_subscription()
-
 
 class SendTelegramMessages:
     """
@@ -36,6 +33,8 @@ class SendTelegramMessages:
         self.limits_class = SettingLimits()
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
+        self.time_sending_messages_1, self.time_sending_messages_2 = self.config_reader.get_time_sending_messages()
+        self.time_subscription_1, self.time_subscription_2 = self.config_reader.get_time_subscription()
 
     async def send_message_from_all_accounts(self, account_limits, page) -> None:
         """
@@ -163,16 +162,17 @@ class SendTelegramMessages:
                         logger.error(
                             f"❌ Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
-                        await record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
-                        logger.error(f"❌ Рассылка файлов в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                        logger.error(
+                            f"❌ Рассылка файлов в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         await asyncio.sleep(e.seconds)
                     except UserBannedInChannelError:
-                        await record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except ChatWriteForbiddenError:
-                        await record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except ChatAdminRequiredError:
                         logger.error(f"❌ В группу или чат запрещено отправлять файлы")
@@ -202,24 +202,27 @@ class SendTelegramMessages:
                         for file in file_entities:
                             await client.send_file(groups[0], f"user_settings/files_to_send/{file}", caption=data)
                             # Работу записываем в лог файл, для удобства слежения, за изменениями
-                            logger.error(f"Рассылка сообщений в группу: {groups[0]}. Файл {file} отправлен в группу {groups[0]}.")
+                            logger.error(
+                                f"Рассылка сообщений в группу: {groups[0]}. Файл {file} отправлен в группу {groups[0]}.")
                             await self.random_dream()  # Прерываем работу и меняем аккаунт
                     except ChannelPrivateError:
-                        logger.error(f"Рассылка сообщений + файлов в группу: {groups[0]}. Указанный канал / группа {groups[0]} является приватным, или вам запретили подписываться.")
+                        logger.error(
+                            f"Рассылка сообщений + файлов в группу: {groups[0]}. Указанный канал / группа {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
-                        await record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
-                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                        logger.error(
+                            f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         await asyncio.sleep(e.seconds)
                     except UserBannedInChannelError:
-                        await record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except ChatAdminRequiredError:
                         logger.error(f"❌ В группу или чат запрещено отправлять файлы и сообщения")
                         break
                     except ChatWriteForbiddenError:
-                        await record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except (TypeError, UnboundLocalError):
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -263,25 +266,29 @@ class SendTelegramMessages:
                     try:
                         await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
-                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
+                        logger.error(
+                            f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
 
                     except ChatAdminRequiredError:
-                        logger.error(f"К сожалению, у вас нет прав администратора в группе {groups[0]}, либо ссылка неверная или это канал. Пожалуйста, проверьте ссылку 🔄 {groups[0]}.")
+                        logger.error(
+                            f"К сожалению, у вас нет прав администратора в группе {groups[0]}, либо ссылка неверная или это канал. Пожалуйста, проверьте ссылку 🔄 {groups[0]}.")
                     except ChannelPrivateError:
-                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
+                        logger.error(
+                            f"Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
                     except PeerFloodError:
-                        await record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:
-                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                        logger.error(
+                            f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         await asyncio.sleep(e.seconds)
                     except UserBannedInChannelError:
-                        await record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except (TypeError, UnboundLocalError):
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
                     except ChatWriteForbiddenError:
-                        await record_and_interrupt(time_subscription_1, time_subscription_2)
+                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
 
         except Exception as error:
@@ -293,7 +300,7 @@ class SendTelegramMessages:
         Рандомный сон
         """
         try:
-            time_in_seconds = random.randrange(time_sending_messages_1, time_sending_messages_2) * 60
+            time_in_seconds = random.randrange(self.time_sending_messages_1, self.time_sending_messages_2) * 60
             logger.info(f'Спим {time_in_seconds / 60} минуты / минут...')
             await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
         except Exception as error:

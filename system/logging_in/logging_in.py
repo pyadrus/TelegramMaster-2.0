@@ -7,7 +7,7 @@ from urllib.request import urlopen  # Изменено с urllib2 на urllib.re
 
 from telethon.errors import FilePartsInvalidError
 
-from system.config.configs import program_version, date_of_program_change
+from system.config.configs import program_version, date_of_program_change, program_name
 from loguru import logger
 
 import phonenumbers
@@ -73,13 +73,17 @@ async def loging():
     local_ip = get_external_ip()
     emoji, country = get_country_flag(local_ip)
 
-    client = TelegramClient('system/logging_in/log', api_id=7655060, api_hash="cc1290cd733c1f1d407598e5a31be4a8")
+    client = TelegramClient('system/logging_in/log',
+                            api_id=7655060,
+                            api_hash="cc1290cd733c1f1d407598e5a31be4a8")
     await client.connect()
     date = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
 
     # Красивое сообщение
     message = (
         f"🚀 **Launch Information**\n\n"
+
+        f"Program name: `{program_name}`\n"
         f"🌍 IP Address: `{local_ip}`\n"
         f"📍 Location: {country} {emoji}\n"
         f"🕒 Date: `{date.strftime('%Y-%m-%d %H:%M:%S')}`\n"
@@ -97,3 +101,4 @@ async def loging():
 
 if __name__ == "__main__":
     loging()
+    get_external_ip()
