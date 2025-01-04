@@ -23,6 +23,9 @@ async def run_scheduler():
 async def schedule_member_invitation(page) -> None:
     """
     Запуск inviting
+
+    Аргументы:
+    :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
         await TGChek().validation_check(page=page)
@@ -34,6 +37,9 @@ async def schedule_member_invitation(page) -> None:
 async def launching_invite_every_day_certain_time(page) -> None:
     """
     Запуск inviting каждый день в определенное время выбранное пользователем
+
+    Аргументы:
+    :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
         aioschedule.every().day.at(f"{int(hour):02d}:{int(minutes):02d}").do(schedule_member_invitation, page=page)
@@ -45,6 +51,9 @@ async def launching_invite_every_day_certain_time(page) -> None:
 async def launching_an_invite_once_an_hour(page) -> None:
     """
     Запуск inviting 1 раз в час
+
+    Аргументы:
+    :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
         logger.info("Запуск программы в 00 минут")
@@ -57,6 +66,9 @@ async def launching_an_invite_once_an_hour(page) -> None:
 async def schedule_invite(page) -> None:
     """
     Запуск автоматической отправки приглашений участникам
+
+    Аргументы:
+    :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
         logger.info(f"Скрипт будет запускаться каждый день в {hour}:{minutes}")

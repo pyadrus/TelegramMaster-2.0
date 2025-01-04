@@ -21,11 +21,10 @@ from src.features.account.TGSendingMessages import SendTelegramMessages
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.features.account.TGViewingPosts import ViewingPosts
 from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
-                              window_height, window_resizable, path_parsing_folder,
-                              path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
-                              path_reactions_folder, path_contact_folder, path_creating_folder,
-                              path_send_message_folder, path_bio_folder, path_viewing_folder,
-                              path_send_message_folder_answering_machine)
+                              window_height, window_resizable, path_parsing_folder, path_inviting_folder,
+                              path_subscription_folder, path_unsubscribe_folder, path_reactions_folder,
+                              path_contact_folder, path_creating_folder, path_send_message_folder, path_bio_folder,
+                              path_viewing_folder, path_send_message_folder_answering_machine)
 from src.gui.menu import (inviting_menu, message_distribution_menu, bio_editing_menu, settings_menu, menu_parsing,
                           reactions_menu, subscribe_and_unsubscribe_menu, account_verification_menu,
                           account_connection_menu, connecting_accounts_by_number_menu,
@@ -59,6 +58,7 @@ async def main(page: ft.Page):
         # ______________________________________________________________________________________________________________
         await main_menu_program(page)  # Главное меню программы
         # ______________________________________________________________________________________________________________
+
         if page.route == "/inviting":  # Меню "Инвайтинг"
             await inviting_menu(page)
         elif page.route == "/inviting_without_limits":  # Инвайтинг
@@ -73,9 +73,13 @@ async def main(page: ft.Page):
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
+                if len(await SettingLimits().get_usernames_with_limits(table_name="links_inviting",
+                                                                       account_limits=ConfigReader().get_limits())) == 0:
+                    logger.error('⛔ Не записана группа для инвайтинга')
+                    await show_notification(page, "⛔ Не записана группа для инвайтинга")
+                    return None
                 else:
-                    await InvitingToAGroup().inviting_without_limits(page=page,
-                                                                     account_limits=ConfigReader().get_limits())
+                    await InvitingToAGroup().inviting_without_limits(page=page, account_limits=ConfigReader().get_limits())
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
@@ -90,15 +94,13 @@ async def main(page: ft.Page):
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
+                if len(await SettingLimits().get_usernames_with_limits(table_name="links_inviting",
+                                                                       account_limits=ConfigReader().get_limits())) == 0:
+                    logger.error('⛔ Не записана группа для инвайтинга')
+                    await show_notification(page, "⛔ Не записана группа для инвайтинга")
+                    return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Инвайтинга")
                     await launching_an_invite_once_an_hour(page=page)
-                    logger.info("🔚 Конец Инвайтинга")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
@@ -113,15 +115,13 @@ async def main(page: ft.Page):
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
+                if len(await SettingLimits().get_usernames_with_limits(table_name="links_inviting",
+                                                                       account_limits=ConfigReader().get_limits())) == 0:
+                    logger.error('⛔ Не записана группа для инвайтинга')
+                    await show_notification(page, "⛔ Не записана группа для инвайтинга")
+                    return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Инвайтинга")
                     await schedule_invite(page=page)
-                    logger.info("🔚 Конец Инвайтинга")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
@@ -136,17 +136,16 @@ async def main(page: ft.Page):
                     logger.error('⛔ В таблице members нет пользователей для инвайтинга')
                     await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
                     return None
+                if len(await SettingLimits().get_usernames_with_limits(table_name="links_inviting",
+                                                                       account_limits=ConfigReader().get_limits())) == 0:
+                    logger.error('⛔ Не записана группа для инвайтинга')
+                    await show_notification(page, "⛔ Не записана группа для инвайтинга")
+                    return None
                 else:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Инвайтинга")
                     await launching_invite_every_day_certain_time(page=page)
-                    logger.info("🔚 Конец Инвайтинга")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
+
         # ______________________________________________________________________________________________________________
         elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
             await account_verification_menu(page)

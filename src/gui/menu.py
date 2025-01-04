@@ -36,6 +36,12 @@ from src.core.localization import (parse_single_or_multiple_groups, parse_select
 
 
 async def main_menu_program(page):
+    """
+    Главное меню программы
+
+    Аргументы:
+    :param page: Страница интерфейса Flet для отображения элементов управления.
+    """
     page.views.append(
         ft.View("/", [ft.AppBar(title=ft.Text(main_menu),
                                 bgcolor=ft.colors.SURFACE_VARIANT),
