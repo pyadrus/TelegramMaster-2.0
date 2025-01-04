@@ -77,7 +77,7 @@ async def main(page: ft.Page):
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ Не записана группа для инвайтинга')
                     await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None
+                    return None # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
                 else:
                     await InvitingToAGroup().inviting_without_limits(page=page, account_limits=ConfigReader().get_limits())
             except Exception as error:
@@ -98,7 +98,7 @@ async def main(page: ft.Page):
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ Не записана группа для инвайтинга')
                     await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None
+                    return None # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
                 else:
                     await launching_an_invite_once_an_hour(page=page)
             except Exception as error:
@@ -119,7 +119,7 @@ async def main(page: ft.Page):
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ Не записана группа для инвайтинга')
                     await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None
+                    return None # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
                 else:
                     await schedule_invite(page=page)
             except Exception as error:
@@ -140,7 +140,7 @@ async def main(page: ft.Page):
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ Не записана группа для инвайтинга')
                     await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None
+                    return None # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
                 else:
                     await launching_invite_every_day_certain_time(page=page)
             except Exception as error:
