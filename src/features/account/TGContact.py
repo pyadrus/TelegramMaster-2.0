@@ -8,10 +8,10 @@ from telethon import types
 from telethon.tl.types import (UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth,
                                UserStatusOnline, UserStatusEmpty)
 
-from system.account_actions.TGConnect import TGConnect
-from system.utils.utils import find_filess
-from system.config.configs import path_contact_folder
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from src.features.account.TGConnect import TGConnect
+from src.core.utils import find_filess
+from src.core.configs import path_contact_folder
+from src.core.sqlite_working_tools import DatabaseHandler
 
 
 class TGContact:

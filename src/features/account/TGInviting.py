@@ -12,14 +12,14 @@ from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitEr
                              UserDeactivatedBanError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-from system.account_actions.TGConnect import TGConnect
-from system.account_actions.TGLimits import SettingLimits
-from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.utils.utils import record_and_interrupt, record_inviting_results, find_filess
-from system.config.configs import ConfigReader, path_inviting_folder, line_width_button, height_button
-from system.localization.localization import back_button, start_inviting_button
-from system.gui.menu import log_and_display, show_notification
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from src.features.account.TGConnect import TGConnect
+from src.features.account.TGLimits import SettingLimits
+from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
+from src.core.configs import ConfigReader, path_inviting_folder, line_width_button, height_button
+from src.core.localization import back_button, start_inviting_button
+from src.gui.menu import log_and_display, show_notification
+from src.core.sqlite_working_tools import DatabaseHandler
 
 
 class InvitingToAGroup:

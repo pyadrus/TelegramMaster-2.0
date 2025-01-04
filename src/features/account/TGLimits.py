@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from loguru import logger
 
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from src.core.sqlite_working_tools import DatabaseHandler
 
 
 class SettingLimits:

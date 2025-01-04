@@ -8,10 +8,10 @@ import sys
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 
-from system.config.configs import height_button, line_width_button
-from system.localization.localization import back_button, done_button
-from system.gui.menu import show_notification, log_and_display
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from src.core.configs import height_button, line_width_button
+from src.core.localization import back_button, done_button
+from src.gui.menu import show_notification
+from src.core.sqlite_working_tools import DatabaseHandler
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 config.read("user_settings/config/config.ini")

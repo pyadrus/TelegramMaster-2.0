@@ -4,9 +4,9 @@ import asyncio
 import aioschedule
 from loguru import logger
 
-from system.account_actions.TGChek import TGChek
-from system.account_actions.TGInviting import InvitingToAGroup
-from system.config.configs import ConfigReader
+from src.features.account.TGChek import TGChek
+from src.features.account.TGInviting import InvitingToAGroup
+from src.core.configs import ConfigReader
 
 hour, minutes = ConfigReader().get_hour_minutes_every_day()
 

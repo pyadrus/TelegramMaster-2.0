@@ -4,8 +4,8 @@ import random
 import requests
 from loguru import logger
 
-from system.logging_in.logging_in import get_country_flag
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from src.features.auth.logging_in import get_country_flag
+from src.core.sqlite_working_tools import DatabaseHandler
 
 
 async def reading_proxy_data_from_the_database(db_handler):

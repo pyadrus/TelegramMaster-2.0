@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import flet as ft  # Импортируем библиотеку flet
 
-from system.config.configs import line_width_button, height_button
-from system.localization.localization import done_button, back_button
+from src.core.configs import line_width_button, height_button
+from src.core.localization import done_button, back_button
 
 
 def function_button_ready(page: ft.Page, btn_click, back_button_clicked, user_input) -> None:

@@ -9,10 +9,10 @@ from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, Username
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 
-from system.account_actions.TGConnect import TGConnect
-from system.utils.utils import record_and_interrupt, find_filess
-from system.config.configs import ConfigReader, path_subscription_folder, path_unsubscribe_folder
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from src.features.account.TGConnect import TGConnect
+from src.core.utils import record_and_interrupt, find_filess
+from src.core.configs import ConfigReader, path_subscription_folder, path_unsubscribe_folder
+from src.core.sqlite_working_tools import DatabaseHandler
 
 
 class SubscribeUnsubscribeTelegram:

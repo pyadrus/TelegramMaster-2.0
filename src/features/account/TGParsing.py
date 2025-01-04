@@ -13,14 +13,13 @@ from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, UserStatusLastMonth,
                                UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently, InputUser)
 
-from system.account_actions.TGConnect import TGConnect
-from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.utils.utils import find_filess
-from system.config.configs import (path_parsing_folder, line_width_button, height_button,
-                                   time_activity_user_2)
-from system.localization.localization import back_button, start_parsing_button, done_button
-from system.gui.menu import log_and_display
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates
+from src.features.account.TGConnect import TGConnect
+from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.core.utils import find_filess
+from src.core.configs import path_parsing_folder, line_width_button, height_button, time_activity_user_2
+from src.core.localization import back_button, start_parsing_button, done_button
+from src.gui.menu import log_and_display
+from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates
 
 
 class ParsingGroupMembers:

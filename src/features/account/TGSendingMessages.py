@@ -11,15 +11,15 @@ from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError
                              UsernameNotOccupiedError, UsernameInvalidError, ChatAdminRequiredError)
 from telethon.tl.functions.channels import JoinChannelRequest
 
-from system.account_actions.TGConnect import TGConnect
-from system.account_actions.TGLimits import SettingLimits
-from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.utils.utils import (find_files, all_find_files, record_inviting_results,
-                                find_filess)
-from system.utils.utils import read_json_file
-from system.utils.utils import record_and_interrupt
-from system.config.configs import ConfigReader, path_send_message_folder
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from src.features.account.TGConnect import TGConnect
+from src.features.account.TGLimits import SettingLimits
+from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.core.utils import (find_files, all_find_files, record_inviting_results,
+                            find_filess)
+from src.core.utils import read_json_file
+from src.core.utils import record_and_interrupt
+from src.core.configs import ConfigReader, path_send_message_folder
+from src.core.sqlite_working_tools import DatabaseHandler
 
 
 class SendTelegramMessages:

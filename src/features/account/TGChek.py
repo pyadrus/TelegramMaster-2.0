@@ -3,9 +3,9 @@ import datetime
 
 from loguru import logger
 
-from system.account_actions.TGConnect import TGConnect
-from system.utils.utils import find_folders
-from system.gui.menu import show_notification
+from src.features.account.TGConnect import TGConnect
+from src.core.utils import find_folders
+from src.gui.menu import show_notification
 
 
 class TGChek:

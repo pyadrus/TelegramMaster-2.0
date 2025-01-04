@@ -6,36 +6,36 @@ import flet as ft
 from loguru import logger
 
 from docs.app import start_app
-from system.account_actions.TGAccountBIO import AccountBIO
-from system.account_actions.TGChek import TGChek
-from system.account_actions.TGConnect import TGConnect
-from system.account_actions.TGContact import TGContact
-from system.account_actions.TGCreating import CreatingGroupsAndChats
-from system.account_actions.TGInviting import InvitingToAGroup
-from system.account_actions.TGInvitingScheduler import (launching_an_invite_once_an_hour,
-                                                        launching_invite_every_day_certain_time, schedule_invite)
-from system.account_actions.TGLimits import SettingLimits
-from system.account_actions.TGParsing import ParsingGroupMembers
-from system.account_actions.TGReactions import WorkingWithReactions
-from system.account_actions.TGSendingMessages import SendTelegramMessages
-from system.account_actions.TGSubUnsub import SubscribeUnsubscribeTelegram
-from system.account_actions.TGViewingPosts import ViewingPosts
-from system.config.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
-                                   window_height, window_resizable, path_parsing_folder,
-                                   path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
-                                   path_reactions_folder, path_contact_folder, path_creating_folder,
-                                   path_send_message_folder, path_bio_folder, path_viewing_folder,
-                                   path_send_message_folder_answering_machine)
-from system.gui.menu import (inviting_menu, message_distribution_menu, bio_editing_menu, settings_menu, menu_parsing,
-                             reactions_menu, subscribe_and_unsubscribe_menu, account_verification_menu,
-                             account_connection_menu, connecting_accounts_by_number_menu,
-                             connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
-                             creating_groups_and_chats_menu, working_with_contacts_menu, main_menu_program)
-from system.logging_in.logging_in import loging
-from system.receiving_and_recording.receiving_and_recording import ReceivingAndRecording
-from system.setting.setting import SettingPage, get_unique_filename, reaction_gui
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
-from system.utils.utils import find_files, find_filess
+from src.features.account.TGAccountBIO import AccountBIO
+from src.features.account.TGChek import TGChek
+from src.features.account.TGConnect import TGConnect
+from src.features.account.TGContact import TGContact
+from src.features.account.TGCreating import CreatingGroupsAndChats
+from src.features.account.TGInviting import InvitingToAGroup
+from src.features.account.TGInvitingScheduler import (launching_an_invite_once_an_hour,
+                                                      launching_invite_every_day_certain_time, schedule_invite)
+from src.features.account.TGLimits import SettingLimits
+from src.features.account.TGParsing import ParsingGroupMembers
+from src.features.account.TGReactions import WorkingWithReactions
+from src.features.account.TGSendingMessages import SendTelegramMessages
+from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.features.account.TGViewingPosts import ViewingPosts
+from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
+                              window_height, window_resizable, path_parsing_folder,
+                              path_inviting_folder, path_subscription_folder, path_unsubscribe_folder,
+                              path_reactions_folder, path_contact_folder, path_creating_folder,
+                              path_send_message_folder, path_bio_folder, path_viewing_folder,
+                              path_send_message_folder_answering_machine)
+from src.gui.menu import (inviting_menu, message_distribution_menu, bio_editing_menu, settings_menu, menu_parsing,
+                          reactions_menu, subscribe_and_unsubscribe_menu, account_verification_menu,
+                          account_connection_menu, connecting_accounts_by_number_menu,
+                          connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
+                          creating_groups_and_chats_menu, working_with_contacts_menu, main_menu_program)
+from src.features.auth.logging_in import loging
+from src.features.recording.receiving_and_recording import ReceivingAndRecording
+from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
+from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.utils import find_files, find_filess
 
 logger.add("user_settings/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
 

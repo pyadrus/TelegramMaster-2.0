@@ -7,7 +7,7 @@ import random  # Импортируем модуль random, чтобы гене
 
 from loguru import logger
 
-from system.sqlite_working_tools.sqlite_working_tools import DatabaseHandler
+from src.core.sqlite_working_tools import DatabaseHandler
 
 
 def read_json_file(filename):
