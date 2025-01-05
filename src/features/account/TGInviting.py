@@ -290,6 +290,25 @@ class InvitingToAGroup:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
+    @staticmethod
+    async def check_before_inviting(page: ft.Page) -> None:
+        """Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных"""
+        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
+        if not find_filess(directory_path=path_inviting_folder, extension='session'):
+            logger.error('⛔ Нет аккаунта в папке inviting')
+            await show_notification(page, "⛔ Нет аккаунта в папке inviting")
+            return None
+        if len(await SettingLimits().get_usernames_with_limits(table_name="members",
+                                                               account_limits=ConfigReader().get_limits())) == 0:
+            logger.error('⛔ В таблице members нет пользователей для инвайтинга')
+            await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
+            return None
+        if len(await SettingLimits().get_usernames_with_limits(table_name="links_inviting",
+                                                               account_limits=ConfigReader().get_limits())) == 0:
+            logger.error('⛔ Не записана группа для инвайтинга')
+            await show_notification(page, "⛔ Не записана группа для инвайтинга")
+            return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
+
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

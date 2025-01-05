@@ -6,34 +6,32 @@ import flet as ft
 from loguru import logger
 
 from docs.app import start_app
+from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
+                              window_height, window_resizable, path_parsing_folder, path_subscription_folder,
+                              path_unsubscribe_folder, path_reactions_folder,
+                              path_contact_folder, path_creating_folder, path_send_message_folder, path_bio_folder,
+                              path_viewing_folder, path_send_message_folder_answering_machine)
+from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.utils import find_files, find_filess
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGContact import TGContact
 from src.features.account.TGCreating import CreatingGroupsAndChats
 from src.features.account.TGInviting import InvitingToAGroup
-
-from src.features.account.TGLimits import SettingLimits
 from src.features.account.TGParsing import ParsingGroupMembers
 from src.features.account.TGReactions import WorkingWithReactions
 from src.features.account.TGSendingMessages import SendTelegramMessages
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.features.account.TGViewingPosts import ViewingPosts
-from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
-                              window_height, window_resizable, path_parsing_folder, path_inviting_folder,
-                              path_subscription_folder, path_unsubscribe_folder, path_reactions_folder,
-                              path_contact_folder, path_creating_folder, path_send_message_folder, path_bio_folder,
-                              path_viewing_folder, path_send_message_folder_answering_machine)
+from src.features.auth.logging_in import loging
+from src.features.recording.receiving_and_recording import ReceivingAndRecording
+from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
 from src.gui.menu import (inviting_menu, message_distribution_menu, bio_editing_menu, settings_menu, menu_parsing,
                           reactions_menu, subscribe_and_unsubscribe_menu, account_verification_menu,
                           account_connection_menu, connecting_accounts_by_number_menu,
                           connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
                           creating_groups_and_chats_menu, working_with_contacts_menu, main_menu_program)
-from src.features.auth.logging_in import loging
-from src.features.recording.receiving_and_recording import ReceivingAndRecording
-from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
-from src.core.sqlite_working_tools import DatabaseHandler
-from src.core.utils import find_files, find_filess
 
 logger.add("user_data/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
 
@@ -62,87 +60,26 @@ async def main(page: ft.Page):
             await inviting_menu(page)
         elif page.route == "/inviting_without_limits":  # Инвайтинг
             try:
-                logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path=path_inviting_folder, extension='session'):
-                    logger.error('⛔ Нет аккаунта в папке inviting')
-                    await show_notification(page, "⛔ Нет аккаунта в папке inviting")
-                    return None
-                if len(await SettingLimits().get_usernames_with_limits(table_name="members",
-                                                                       account_limits=ConfigReader().get_limits())) == 0:
-                    logger.error('⛔ В таблице members нет пользователей для инвайтинга')
-                    await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
-                    return None
-                if len(await SettingLimits().get_usernames_with_limits(table_name="links_inviting",
-                                                                       account_limits=ConfigReader().get_limits())) == 0:
-                    logger.error('⛔ Не записана группа для инвайтинга')
-                    await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
-                else:
-                    await InvitingToAGroup().inviting_without_limits(page=page,
-                                                                     account_limits=ConfigReader().get_limits())
+                await InvitingToAGroup().check_before_inviting(page=page)
+                await InvitingToAGroup().inviting_without_limits(page=page, account_limits=ConfigReader().get_limits())
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
             try:
-                logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path=path_inviting_folder, extension='session'):
-                    logger.error('⛔ Нет аккаунта в папке inviting')
-                    await show_notification(page, "⛔ Нет аккаунта в папке inviting")
-                    return None
-                if len(await SettingLimits().get_usernames_with_limits(table_name="members",
-                                                                       account_limits=ConfigReader().get_limits())) == 0:
-                    logger.error('⛔ В таблице members нет пользователей для инвайтинга')
-                    await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
-                    return None
-                if len(await SettingLimits().get_usernames_with_limits(table_name="links_inviting",
-                                                                       account_limits=ConfigReader().get_limits())) == 0:
-                    logger.error('⛔ Не записана группа для инвайтинга')
-                    await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
-                else:
-                    await InvitingToAGroup().launching_an_invite_once_an_hour(page=page)
+                await InvitingToAGroup().check_before_inviting(page=page)
+                await InvitingToAGroup().launching_an_invite_once_an_hour(page=page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
             try:
-                logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path=path_inviting_folder, extension='session'):
-                    logger.error('⛔ Нет аккаунта в папке inviting')
-                    await show_notification(page, "⛔ Нет аккаунта в папке inviting")
-                    return None
-                if len(await SettingLimits().get_usernames_with_limits(table_name="members",
-                                                                       account_limits=ConfigReader().get_limits())) == 0:
-                    logger.error('⛔ В таблице members нет пользователей для инвайтинга')
-                    await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
-                    return None
-                if len(await SettingLimits().get_usernames_with_limits(table_name="links_inviting",
-                                                                       account_limits=ConfigReader().get_limits())) == 0:
-                    logger.error('⛔ Не записана группа для инвайтинга')
-                    await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
-                else:
-                    await InvitingToAGroup().schedule_invite(page=page)
+                await InvitingToAGroup().check_before_inviting(page=page)
+                await InvitingToAGroup().schedule_invite(page=page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
             try:
-                logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                if not find_filess(directory_path=path_inviting_folder, extension='session'):
-                    logger.error('⛔ Нет аккаунта в папке inviting')
-                    await show_notification(page, "⛔ Нет аккаунта в папке inviting")
-                    return None
-                if len(await SettingLimits().get_usernames_with_limits(table_name="members",
-                                                                       account_limits=ConfigReader().get_limits())) == 0:
-                    logger.error('⛔ В таблице members нет пользователей для инвайтинга')
-                    await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
-                    return None
-                if len(await SettingLimits().get_usernames_with_limits(table_name="links_inviting",
-                                                                       account_limits=ConfigReader().get_limits())) == 0:
-                    logger.error('⛔ Не записана группа для инвайтинга')
-                    await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
-                else:
-                    await InvitingToAGroup().launching_invite_every_day_certain_time(page=page)
+                await InvitingToAGroup().check_before_inviting(page=page)
+                await InvitingToAGroup().launching_invite_every_day_certain_time(page=page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
