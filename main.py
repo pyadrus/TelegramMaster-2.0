@@ -12,8 +12,7 @@ from src.features.account.TGConnect import TGConnect
 from src.features.account.TGContact import TGContact
 from src.features.account.TGCreating import CreatingGroupsAndChats
 from src.features.account.TGInviting import InvitingToAGroup
-from src.features.account.TGInvitingScheduler import (launching_an_invite_once_an_hour,
-                                                      launching_invite_every_day_certain_time, schedule_invite)
+
 from src.features.account.TGLimits import SettingLimits
 from src.features.account.TGParsing import ParsingGroupMembers
 from src.features.account.TGReactions import WorkingWithReactions
@@ -77,9 +76,10 @@ async def main(page: ft.Page):
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ Не записана группа для инвайтинга')
                     await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
+                    return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
                 else:
-                    await InvitingToAGroup().inviting_without_limits(page=page, account_limits=ConfigReader().get_limits())
+                    await InvitingToAGroup().inviting_without_limits(page=page,
+                                                                     account_limits=ConfigReader().get_limits())
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
         elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
@@ -98,9 +98,9 @@ async def main(page: ft.Page):
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ Не записана группа для инвайтинга')
                     await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
+                    return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
                 else:
-                    await launching_an_invite_once_an_hour(page=page)
+                    await InvitingToAGroup().launching_an_invite_once_an_hour(page=page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
         elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
@@ -119,9 +119,9 @@ async def main(page: ft.Page):
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ Не записана группа для инвайтинга')
                     await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
+                    return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
                 else:
-                    await schedule_invite(page=page)
+                    await InvitingToAGroup().schedule_invite(page=page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
         elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
@@ -140,9 +140,9 @@ async def main(page: ft.Page):
                                                                        account_limits=ConfigReader().get_limits())) == 0:
                     logger.error('⛔ Не записана группа для инвайтинга')
                     await show_notification(page, "⛔ Не записана группа для инвайтинга")
-                    return None # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
+                    return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
                 else:
-                    await launching_invite_every_day_certain_time(page=page)
+                    await InvitingToAGroup().launching_invite_every_day_certain_time(page=page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
