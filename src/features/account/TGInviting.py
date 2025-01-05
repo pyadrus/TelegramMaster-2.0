@@ -48,7 +48,7 @@ class InvitingToAGroup:
             logger.exception(f"Ошибка: {error}")
 
     @staticmethod
-    async def log_and_display(message: str, lv, page):
+    async def log_and_display(message: str, lv, page: ft.Page):
         """
         Выводит сообщение в GUI и записывает лог.
 
@@ -228,8 +228,8 @@ class InvitingToAGroup:
             await aioschedule.run_pending()  # Выполнение всех задач, которые должны запуститься в текущее время
             await asyncio.sleep(1)  # Пауза для предотвращения избыточного использования ресурсов
 
-    @staticmethod
-    async def schedule_member_invitation(page) -> None:
+
+    async def schedule_member_invitation(self, page: ft.Page) -> None:
         """
         Запуск приглашения участников в группу.
 
@@ -240,11 +240,11 @@ class InvitingToAGroup:
             # Проверка валидности учетной записи Telegram
             await TGChek().validation_check(page=page)
             # Запуск приглашения участников без ограничений
-            await InvitingToAGroup().inviting_without_limits(page=page, account_limits=ConfigReader().get_limits())
+            await self.inviting_without_limits(page=page, account_limits=ConfigReader().get_limits())
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def launching_invite_every_day_certain_time(self, page) -> None:
+    async def launching_invite_every_day_certain_time(self, page: ft.Page) -> None:
         """
         Запуск приглашения участников каждый день в определенное время, выбранное пользователем.
 
@@ -260,7 +260,7 @@ class InvitingToAGroup:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def launching_an_invite_once_an_hour(self, page) -> None:
+    async def launching_an_invite_once_an_hour(self, page: ft.Page) -> None:
         """
         Запуск приглашения участников 1 раз в час.
 
@@ -276,7 +276,7 @@ class InvitingToAGroup:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def schedule_invite(self, page) -> None:
+    async def schedule_invite(self, page: ft.Page) -> None:
         """
         Запуск автоматической отправки приглашений участникам каждый день в определенное время.
 
