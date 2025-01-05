@@ -23,8 +23,6 @@ from src.features.account.TGLimits import SettingLimits
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.menu import log_and_display, show_notification
 
-hour, minutes = ConfigReader().get_hour_minutes_every_day()
-
 
 class InvitingToAGroup:
 
@@ -35,6 +33,7 @@ class InvitingToAGroup:
         self.tg_connect = TGConnect()
         self.config_reader = ConfigReader()
         self.time_inviting = self.config_reader.get_time_inviting()
+        self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
 
     async def getting_an_invitation_link_from_the_database(self):
         """"
@@ -228,7 +227,6 @@ class InvitingToAGroup:
             await aioschedule.run_pending()  # Выполнение всех задач, которые должны запуститься в текущее время
             await asyncio.sleep(1)  # Пауза для предотвращения избыточного использования ресурсов
 
-
     async def schedule_member_invitation(self, page: ft.Page) -> None:
         """
         Запуск приглашения участников в группу.
@@ -253,8 +251,9 @@ class InvitingToAGroup:
         """
         try:
             # Настройка ежедневного выполнения задачи в указанное время
-            aioschedule.every().day.at(f"{int(hour):02d}:{int(minutes):02d}").do(self.schedule_member_invitation,
-                                                                                 page=page)
+            aioschedule.every().day.at(f"{int(self.hour):02d}:{int(self.minutes):02d}").do(
+                self.schedule_member_invitation,
+                page=page)
             # Запуск планировщика задач
             await self.run_scheduler()
         except Exception as error:
@@ -284,9 +283,9 @@ class InvitingToAGroup:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            logger.info(f"Скрипт будет запускаться каждый день в {hour}:{minutes}")
+            logger.info(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}")
             # Запускаем автоматизацию
-            aioschedule.every().day.at(f"{hour}:{minutes}").do(self.schedule_member_invitation, page=page)
+            aioschedule.every().day.at(f"{self.hour}:{self.minutes}").do(self.schedule_member_invitation, page=page)
             await self.run_scheduler()  # Здесь мы блокируем выполнение, ожидая задач.
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
