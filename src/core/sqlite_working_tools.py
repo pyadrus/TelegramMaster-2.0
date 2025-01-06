@@ -122,16 +122,19 @@ class DatabaseHandler:
         :param account_limit: Количество аккаунтов
         :return list: полученный список
         """
-        await self.connect()
-        self.cursor.execute(f"SELECT * from {table_name}")  # Считываем таблицу
-        if account_limit is not None:
-            records: list = self.cursor.fetchmany(account_limit)  # fetchmany(size) – возвращает число записей
-        else:
-            records: list = self.cursor.fetchall()  # Если number_of_accounts равно None, возвращаем весь список
+        try:
+            await self.connect()
+            self.cursor.execute(f"SELECT * from {table_name}")  # Считываем таблицу
+            if account_limit is not None:
+                records: list = self.cursor.fetchmany(account_limit)  # fetchmany(size) – возвращает число записей
+            else:
+                records: list = self.cursor.fetchall()  # Если number_of_accounts равно None, возвращаем весь список
 
-        self.cursor.close()
-        self.close()  # Закрываем базу данных
-        return records
+            self.cursor.close()
+            self.close()  # Закрываем базу данных
+            return records
+        except Exception as error:
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def write_parsed_chat_participants_to_db_active(self, entities) -> None:
         """

@@ -20,7 +20,7 @@ from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
 from src.features.account.TGChek import TGChek
 from src.features.account.TGConnect import TGConnect
-from src.features.account.TGLimits import SettingLimits
+
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.menu import log_and_display, show_notification
 
@@ -30,7 +30,6 @@ class InvitingToAGroup:
     def __init__(self):
         self.db_handler = DatabaseHandler()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
-        self.limits_class = SettingLimits()
         self.tg_connect = TGConnect()
         self.config_reader = ConfigReader()
         self.time_inviting = self.config_reader.get_time_inviting()
@@ -70,8 +69,8 @@ class InvitingToAGroup:
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value)
                 # Получение списка usernames
-                number_usernames = await self.limits_class.get_usernames_with_limits(table_name="members",
-                                                                                     account_limits=account_limits)
+                number_usernames: list = await self.db_handler.open_db_func_lim(table_name="members",
+                                                                                account_limit=account_limits)
                 if len(number_usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", lv, page)
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value)
@@ -341,21 +340,18 @@ class InvitingToAGroup:
 
         await self.create_invite_page(page, lv, dropdown, add_items)
 
-    @staticmethod
-    async def check_before_inviting(page: ft.Page) -> None:
+    async def check_before_inviting(self, page: ft.Page) -> None:
         """Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных"""
         logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_inviting_folder, extension='session'):
             logger.error('⛔ Нет аккаунта в папке inviting')
             await show_notification(page, "⛔ Нет аккаунта в папке inviting")
             return None
-        if len(await SettingLimits().get_usernames_with_limits(table_name="members",
-                                                               account_limits=ConfigReader().get_limits())) == 0:
+        if len(await self.db_handler.open_db_func_lim(table_name="members", account_limit=ConfigReader().get_limits())) == 0:
             logger.error('⛔ В таблице members нет пользователей для инвайтинга')
             await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
             return None
-        if len(await SettingLimits().get_usernames_with_limits(table_name="links_inviting",
-                                                               account_limits=ConfigReader().get_limits())) == 0:
+        if len(await self.db_handler.open_db_func_lim(table_name="links_inviting", account_limit=ConfigReader().get_limits())) == 0:
             logger.error('⛔ Не записана группа для инвайтинга')
             await show_notification(page, "⛔ Не записана группа для инвайтинга")
             return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
