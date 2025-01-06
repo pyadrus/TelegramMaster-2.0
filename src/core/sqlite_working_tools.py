@@ -112,7 +112,7 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()
 
-    async def open_db_func_lim(self, table_name, account_limit: int) -> list:
+    async def open_db_func_lim(self, table_name, account_limit) -> list:
         """
         Открытие базы данных для inviting (рассылка сообщений) с лимитами. Если number_of_accounts равно None,
         возвращаем весь список

@@ -18,9 +18,7 @@ from src.core.configs import ConfigReader, path_inviting_folder, line_width_butt
 from src.core.localization import back_button, start_inviting_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
-from src.features.account.TGChek import TGChek
 from src.features.account.TGConnect import TGConnect
-
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.menu import log_and_display, show_notification
 
@@ -47,12 +45,24 @@ class InvitingToAGroup:
         except Exception as error:
             logger.exception(f"Ошибка: {error}")
 
-    async def general_invitation_to_the_group(self, page: ft.Page, account_limits, lv, dropdown):
+    async def data_for_inviting(self, lv, page):
+        """"
+        Получение данных для инвайтинга
+        """
+        number_usernames: list = await self.db_handler.open_db_func_lim(table_name="members",
+                                                                        account_limit=None)
+        account_limit = ConfigReader().get_limits()
+        find_filesss = find_filess(directory_path=path_inviting_folder, extension='session')
+        await log_and_display(f"Лимит на аккаунт: {account_limit}\n"
+                              f"Всего участников: {len(number_usernames)}\n"
+                              f"Подключенные аккаунты {find_filesss}\n"
+                              f"Всего подключенных аккаунтов: {len(find_filesss)}\n", lv, page)
+
+    async def general_invitation_to_the_group(self, page: ft.Page, lv, dropdown):
         """
         Основной метод для инвайтинга
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param account_limits:
         :param lv:
         :param dropdown:
         :return:
@@ -70,7 +80,7 @@ class InvitingToAGroup:
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value)
                 # Получение списка usernames
                 number_usernames: list = await self.db_handler.open_db_func_lim(table_name="members",
-                                                                                account_limit=account_limits)
+                                                                                account_limit=ConfigReader().get_limits())
                 if len(number_usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", lv, page)
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value)
@@ -161,12 +171,11 @@ class InvitingToAGroup:
         await show_notification(page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
         page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
 
-    async def inviting_without_limits(self, page: ft.Page, account_limits) -> None:
+    async def inviting_without_limits(self, page: ft.Page) -> None:
         """
         Инвайтинг без лимитов. Группа для инвайтинга выбирается из выпадающего списка. Информация о работе выводится
         в графический интерфейс и записывается в лог файл.
 
-        :param account_limits: Таблица с лимитами
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
 
@@ -176,11 +185,13 @@ class InvitingToAGroup:
 
         links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
 
+        await self.data_for_inviting(lv, page)  # Отображение информации о настройках инвайтинга
+
         async def add_items(_):
             """
             🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
             """
-            await self.general_invitation_to_the_group(page, account_limits, lv, dropdown)
+            await self.general_invitation_to_the_group(page, lv, dropdown)
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
@@ -189,19 +200,7 @@ class InvitingToAGroup:
 
         await self.create_invite_page(page, lv, dropdown, add_items)
 
-    async def schedule_member_invitation(self, page: ft.Page, account_limits, lv, dropdown) -> None:
-        """
-        Запуск приглашения участников в группу.
-        """
-        try:
-            # Проверка валидности учетной записи Telegram
-            await TGChek().validation_check(page=page)
-            # Запуск приглашения участников без ограничений
-            await self.general_invitation_to_the_group(page, account_limits, lv, dropdown)
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
-
-    async def launching_invite_every_day_certain_time(self, page: ft.Page, account_limits) -> None:
+    async def launching_invite_every_day_certain_time(self, page: ft.Page) -> None:
         """
         Запуск приглашения участников каждый день в определенное время, выбранное пользователем.
         """
@@ -212,13 +211,15 @@ class InvitingToAGroup:
 
         links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
 
+        await self.data_for_inviting(lv, page)  # Отображение информации о настройках инвайтинга
+
         async def add_items(_):
             """
             🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
             """
 
             async def general_invitation_to_the_group_scheduler():
-                await self.general_invitation_to_the_group(page, account_limits, lv, dropdown)
+                await self.general_invitation_to_the_group(page, lv, dropdown)
 
             await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", lv, page)
             self.scheduler.daily(dt.time(hour=int(self.hour), minute=int(self.minutes)),
@@ -233,12 +234,11 @@ class InvitingToAGroup:
 
         await self.create_invite_page(page, lv, dropdown, add_items)
 
-    async def launching_an_invite_once_an_hour(self, page: ft.Page, account_limits) -> None:
+    async def launching_an_invite_once_an_hour(self, page: ft.Page) -> None:
         """
         Запуск приглашения участников 1 раз в час.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param account_limits: Таблица с лимитами
         """
 
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
@@ -247,6 +247,8 @@ class InvitingToAGroup:
 
         links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
 
+        await self.data_for_inviting(lv, page)  # Отображение информации о настройках инвайтинга
+
         async def add_items(_):
             """
             🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
@@ -254,7 +256,7 @@ class InvitingToAGroup:
             try:
 
                 async def general_invitation_to_the_group_scheduler():
-                    await self.general_invitation_to_the_group(page, account_limits, lv, dropdown)
+                    await self.general_invitation_to_the_group(page, lv, dropdown)
 
                 await log_and_display("Запуск программы в 45 минут каждого часа", lv, page)
 
@@ -300,12 +302,11 @@ class InvitingToAGroup:
 
         page.update()  # обновляем страницу после добавления элементов управления 🔄
 
-    async def schedule_invite(self, page: ft.Page, account_limits) -> None:
+    async def schedule_invite(self, page: ft.Page) -> None:
         """
         Запуск автоматической отправки приглашений участникам каждый день в определенное время.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param account_limits: Таблица с лимитами
         """
 
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
@@ -314,14 +315,15 @@ class InvitingToAGroup:
 
         links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
 
+        await self.data_for_inviting(lv, page)  # Отображение информации о настройках инвайтинга
+
         async def add_items(_):
             """
             🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
             """
             try:
-
                 async def general_invitation_to_the_group_scheduler():
-                    await self.general_invitation_to_the_group(page, account_limits, lv, dropdown)
+                    await self.general_invitation_to_the_group(page, lv, dropdown)
 
                 await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", lv, page)
 
@@ -347,11 +349,13 @@ class InvitingToAGroup:
             logger.error('⛔ Нет аккаунта в папке inviting')
             await show_notification(page, "⛔ Нет аккаунта в папке inviting")
             return None
-        if len(await self.db_handler.open_db_func_lim(table_name="members", account_limit=ConfigReader().get_limits())) == 0:
+        if len(await self.db_handler.open_db_func_lim(table_name="members",
+                                                      account_limit=ConfigReader().get_limits())) == 0:
             logger.error('⛔ В таблице members нет пользователей для инвайтинга')
             await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
             return None
-        if len(await self.db_handler.open_db_func_lim(table_name="links_inviting", account_limit=ConfigReader().get_limits())) == 0:
+        if len(await self.db_handler.open_db_func_lim(table_name="links_inviting",
+                                                      account_limit=ConfigReader().get_limits())) == 0:
             logger.error('⛔ Не записана группа для инвайтинга')
             await show_notification(page, "⛔ Не записана группа для инвайтинга")
             return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки

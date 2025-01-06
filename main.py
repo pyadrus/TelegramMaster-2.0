@@ -8,9 +8,9 @@ from loguru import logger
 from docs.app import start_app
 from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
                               window_height, window_resizable, path_parsing_folder, path_subscription_folder,
-                              path_unsubscribe_folder, path_reactions_folder,
-                              path_contact_folder, path_creating_folder, path_send_message_folder, path_bio_folder,
-                              path_viewing_folder, path_send_message_folder_answering_machine)
+                              path_unsubscribe_folder, path_reactions_folder, path_contact_folder, path_creating_folder,
+                              path_send_message_folder, path_bio_folder, path_viewing_folder,
+                              path_send_message_folder_answering_machine)
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_files, find_filess
 from src.features.account.TGAccountBIO import AccountBIO
@@ -60,18 +60,16 @@ async def main(page: ft.Page):
                 await inviting_menu(page)
             elif page.route == "/inviting_without_limits":  # Инвайтинг
                 await InvitingToAGroup().check_before_inviting(page=page)
-                await InvitingToAGroup().inviting_without_limits(page=page, account_limits=ConfigReader().get_limits())
+                await InvitingToAGroup().inviting_without_limits(page=page)
             elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
                 await InvitingToAGroup().check_before_inviting(page=page)
-                await InvitingToAGroup().launching_an_invite_once_an_hour(page=page,
-                                                                          account_limits=ConfigReader().get_limits())
+                await InvitingToAGroup().launching_an_invite_once_an_hour(page=page)
             elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
                 await InvitingToAGroup().check_before_inviting(page=page)
-                await InvitingToAGroup().schedule_invite(page=page, account_limits=ConfigReader().get_limits())
+                await InvitingToAGroup().schedule_invite(page=page)
             elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
                 await InvitingToAGroup().check_before_inviting(page=page)
-                await InvitingToAGroup().launching_invite_every_day_certain_time(page=page,
-                                                                                 account_limits=ConfigReader().get_limits())
+                await InvitingToAGroup().launching_invite_every_day_certain_time(page=page)
             # ______________________________________________________________________________________________________________
             elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
                 await account_verification_menu(page)
