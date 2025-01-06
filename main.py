@@ -644,7 +644,6 @@ async def main(page: ft.Page):
                 SettingPage().output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
                                                      "writing_group_links", "/settings", "writing_group_links")
             elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
-                await DatabaseHandler().cleaning_db("links_inviting")  # Удаление списка с группами
                 SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга", "links_inviting",
                                                      "links_inviting", "/settings", "links_inviting")
             elif page.route == "/proxy_entry":  # Запись proxy
