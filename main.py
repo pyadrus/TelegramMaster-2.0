@@ -63,13 +63,15 @@ async def main(page: ft.Page):
                 await InvitingToAGroup().inviting_without_limits(page=page, account_limits=ConfigReader().get_limits())
             elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
                 await InvitingToAGroup().check_before_inviting(page=page)
-                await InvitingToAGroup().launching_an_invite_once_an_hour(page=page, account_limits=ConfigReader().get_limits())
+                await InvitingToAGroup().launching_an_invite_once_an_hour(page=page,
+                                                                          account_limits=ConfigReader().get_limits())
             elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
                 await InvitingToAGroup().check_before_inviting(page=page)
                 await InvitingToAGroup().schedule_invite(page=page, account_limits=ConfigReader().get_limits())
             elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
                 await InvitingToAGroup().check_before_inviting(page=page)
-                await InvitingToAGroup().launching_invite_every_day_certain_time(page=page, account_limits=ConfigReader().get_limits())
+                await InvitingToAGroup().launching_invite_every_day_certain_time(page=page,
+                                                                                 account_limits=ConfigReader().get_limits())
             # ______________________________________________________________________________________________________________
             elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
                 await account_verification_menu(page)

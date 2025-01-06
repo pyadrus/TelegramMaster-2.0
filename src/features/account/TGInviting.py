@@ -183,18 +183,12 @@ class InvitingToAGroup:
             """
             await self.general_invitation_to_the_group(page, account_limits, lv, dropdown)
 
-        async def back_button_clicked(_):
-            """
-            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню инвайтинга.
-            """
-            page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
-
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
                                options=[ft.dropdown.Option(link[0]) for link in links_inviting],
                                autofocus=True)
 
-        await self.create_invite_page(page, lv, dropdown, add_items, back_button_clicked)
+        await self.create_invite_page(page, lv, dropdown, add_items)
 
     async def schedule_member_invitation(self, page: ft.Page, account_limits, lv, dropdown) -> None:
         """
@@ -233,18 +227,12 @@ class InvitingToAGroup:
             while True:
                 await asyncio.sleep(1)
 
-        async def back_button_clicked(_):
-            """
-            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню инвайтинга.
-            """
-            page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
-
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
                                options=[ft.dropdown.Option(link[0]) for link in links_inviting],
                                autofocus=True)
 
-        await self.create_invite_page(page, lv, dropdown, add_items, back_button_clicked)
+        await self.create_invite_page(page, lv, dropdown, add_items)
 
     async def launching_an_invite_once_an_hour(self, page: ft.Page, account_limits) -> None:
         """
@@ -279,20 +267,20 @@ class InvitingToAGroup:
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
-        async def back_button_clicked(_):
-            """
-            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню инвайтинга.
-            """
-            page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
-
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
                                options=[ft.dropdown.Option(link[0]) for link in links_inviting],
                                autofocus=True)
 
-        await self.create_invite_page(page, lv, dropdown, add_items, back_button_clicked)
+        await self.create_invite_page(page, lv, dropdown, add_items)
 
-    async def create_invite_page(self, page: ft.Page, lv, dropdown, add_items, back_button_clicked) -> None:
+    async def create_invite_page(self, page: ft.Page, lv, dropdown, add_items) -> None:
+
+        async def back_button_clicked(_):
+            """
+            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню инвайтинга.
+            """
+            page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
 
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
@@ -346,18 +334,12 @@ class InvitingToAGroup:
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
-        async def back_button_clicked(_):
-            """
-            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню инвайтинга.
-            """
-            page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
-
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
                                options=[ft.dropdown.Option(link[0]) for link in links_inviting],
                                autofocus=True)
 
-        await self.create_invite_page(page, lv, dropdown, add_items, back_button_clicked)
+        await self.create_invite_page(page, lv, dropdown, add_items)
 
     @staticmethod
     async def check_before_inviting(page: ft.Page) -> None:
