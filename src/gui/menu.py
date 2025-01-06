@@ -741,7 +741,6 @@ async def log_and_display(message: str, lv, page):
     """
     Выводит сообщение в GUI и записывает лог.
 
-    Аргументы:
     :param message: Текст сообщения для отображения и записи в лог.
     :param lv: ListView для отображения сообщений.
     :param page: Страница интерфейса Flet для отображения элементов управления.
@@ -755,14 +754,11 @@ async def show_notification(page: ft.Page, message: str):
     """
     Функция для показа уведомления
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     :param message: Текст уведомления.
     """
-    dlg = ft.AlertDialog(
-        title=ft.Text(message),
-        on_dismiss=lambda e: page.go("/"),  # Переход обратно после закрытия диалога
-    )
+    # Переход обратно после закрытия диалога
+    dlg = ft.AlertDialog(title=ft.Text(message), on_dismiss=lambda e: page.go("/"))
     page.overlay.append(dlg)
     dlg.open = True
     page.update()
