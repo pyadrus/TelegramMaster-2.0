@@ -247,7 +247,8 @@ class InvitingToAGroup:
 
                 await log_and_display("Запуск программы в 45 минут каждого часа", lv, page)
 
-                self.scheduler.hourly(dt.time(minute=45, second=15), general_invitation_to_the_group_scheduler)  # Асинхронная функция для выполнения
+                self.scheduler.hourly(dt.time(minute=45, second=15),
+                                      general_invitation_to_the_group_scheduler)  # Асинхронная функция для выполнения
 
                 while True:
                     await asyncio.sleep(1)
@@ -288,20 +289,51 @@ class InvitingToAGroup:
 
         page.update()  # обновляем страницу после добавления элементов управления 🔄
 
-    async def schedule_invite(self, page: ft.Page) -> None:
+    async def schedule_invite(self, page: ft.Page, account_limits) -> None:
         """
         Запуск автоматической отправки приглашений участникам каждый день в определенное время.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param account_limits: Таблица с лимитами
         """
-        try:
-            # logger.info(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}")
-            # Запускаем автоматизацию
-            # aioschedule.every().day.at(f"{self.hour}:{self.minutes}").do(self.schedule_member_invitation, page=page)
-            # await run_scheduler()  # Здесь мы блокируем выполнение, ожидая задач.
-            pass
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+
+        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
+
+        links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
+
+        async def add_items(_):
+            """
+            🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
+            """
+            try:
+
+                async def general_invitation_to_the_group_scheduler():
+                    await self.general_invitation_to_the_group(page, account_limits, lv, dropdown)
+
+                await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", lv, page)
+
+                self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)),
+                                    general_invitation_to_the_group_scheduler)
+                while True:
+                    await asyncio.sleep(1)
+
+            except Exception as error:
+                logger.exception(f"❌ Ошибка: {error}")
+
+        async def back_button_clicked(_):
+            """
+            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню инвайтинга.
+            """
+            page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
+
+        # Создаем выпадающий список с названиями групп
+        dropdown = ft.Dropdown(width=line_width_button,
+                               options=[ft.dropdown.Option(link[0]) for link in links_inviting],
+                               autofocus=True)
+
+        await self.create_invite_page(page, lv, dropdown, add_items, back_button_clicked)
 
     @staticmethod
     async def check_before_inviting(page: ft.Page) -> None:
