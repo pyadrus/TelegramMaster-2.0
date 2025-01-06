@@ -208,19 +208,43 @@ class InvitingToAGroup:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def launching_invite_every_day_certain_time(self, page: ft.Page) -> None:
+    async def launching_invite_every_day_certain_time(self, page: ft.Page, account_limits) -> None:
         """
         Запуск приглашения участников каждый день в определенное время, выбранное пользователем.
         """
-        try:
-            # Настройка ежедневного выполнения задачи в указанное время
-            # aioschedule.every().day.at(f"{int(self.hour):02d}:{int(self.minutes):02d}").do(
-            #     self.schedule_member_invitation, page=page)
-            # Запуск планировщика задач
-            # await run_scheduler()
-            pass
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+
+        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
+
+        links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
+
+        async def add_items(_):
+            """
+            🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
+            """
+
+            async def general_invitation_to_the_group_scheduler():
+                await self.general_invitation_to_the_group(page, account_limits, lv, dropdown)
+
+            await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", lv, page)
+            self.scheduler.daily(dt.time(hour=int(self.hour), minute=int(self.minutes)),
+                                 general_invitation_to_the_group_scheduler)
+            while True:
+                await asyncio.sleep(1)
+
+        async def back_button_clicked(_):
+            """
+            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню инвайтинга.
+            """
+            page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
+
+        # Создаем выпадающий список с названиями групп
+        dropdown = ft.Dropdown(width=line_width_button,
+                               options=[ft.dropdown.Option(link[0]) for link in links_inviting],
+                               autofocus=True)
+
+        await self.create_invite_page(page, lv, dropdown, add_items, back_button_clicked)
 
     async def launching_an_invite_once_an_hour(self, page: ft.Page, account_limits) -> None:
         """
