@@ -71,6 +71,27 @@ async def inviting_page(request: Request):
                                                         "inviting_every_day": inviting_every_day})
 
 
+@app.get("/inviting/inviting_with_limits_in_telegram_master", response_class=HTMLResponse)
+async def inviting_with_limits_in_telegram_master(request: Request):
+    """🚀 Инвайтинг"""
+    logger.info("Запущена страница 🚀 Инвайтинг")
+    return templates.TemplateResponse("inviting/inviting_with_limits_in_telegram_master.html",
+                                      {"request": request, "program_name": program_name,
+                                       "inviting": inviting,
+                                       "invitation_1_time_per_hour": invitation_1_time_per_hour,
+                                       "invitation_at_a_certain_time": invitation_at_a_certain_time,
+                                       "inviting_every_day": inviting_every_day})
+
+@app.get("/inviting/inviting_1_time_per_hour", response_class=HTMLResponse)
+async def inviting_1_time_per_hour(request: Request):
+    """⏰ Инвайтинг 1 раз в час"""
+    logger.info("Запущена страница 🚀 Инвайтинг")
+    return templates.TemplateResponse("inviting/inviting_1_time_per_hour.html",
+                               {"request": request, "program_name": program_name,
+                                "inviting": inviting,
+                                "invitation_1_time_per_hour": invitation_1_time_per_hour,
+                                })
+
 # Рассылка сообщений по чатам, в личку
 
 @app.get('/sending_messages', response_class=HTMLResponse)
