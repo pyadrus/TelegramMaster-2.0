@@ -91,10 +91,12 @@ async def inviting_1_time_per_hour(request: Request):
     """⏰ Инвайтинг 1 раз в час"""
     logger.info("Запущена страница 🚀 Инвайтинг")
     return templates.TemplateResponse("inviting/inviting_1_time_per_hour.html",
-                                      {"request": request, "program_name": program_name,
-                                       "inviting_ru": inviting_ru,
-                                       "invitation_1_time_per_hour_ru": invitation_1_time_per_hour_ru,
-                                       })
+                                      {
+                                          "request": request, "program_name": program_name,
+                                          "inviting_ru": inviting_ru,
+                                          "invitation_1_time_per_hour_ru": invitation_1_time_per_hour_ru,
+                                          "start_inviting_button": start_inviting_button,
+                                      })
 
 
 @app.get("/inviting/inviting_at_a_certain_time", response_class=HTMLResponse)
