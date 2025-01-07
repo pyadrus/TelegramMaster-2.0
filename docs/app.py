@@ -120,6 +120,7 @@ async def inviting_every_day(request: Request):
                                       {"request": request, "program_name": program_name,
                                        "inviting_ru": inviting_ru,
                                        "inviting_every_day_ru": inviting_every_day_ru,
+                                       "time_between_subscriptions_ru": time_between_subscriptions_ru,
                                        "start_inviting_button": start_inviting_button,
                                        })
 
