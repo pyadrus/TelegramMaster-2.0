@@ -56,18 +56,18 @@ async def main(page: ft.Page):
         await main_menu_program(page)  # Главное меню программы
         # ______________________________________________________________________________________________________________
         try:
-            if page.route == "/inviting":  # Меню "Инвайтинг"
+            if page.route == "/inviting":  # Меню "🚀 Инвайтинг"
                 await inviting_menu(page)
-            elif page.route == "/inviting_without_limits":  # Инвайтинг
+            elif page.route == "/inviting_without_limits":  # 🚀 Инвайтинг
                 await InvitingToAGroup().check_before_inviting(page=page)
                 await InvitingToAGroup().inviting_without_limits(page=page)
-            elif page.route == "/inviting_1_time_per_hour":  # Инвайтинг 1 раз в час
+            elif page.route == "/inviting_1_time_per_hour":  # ⏰ Инвайтинг 1 раз в час
                 await InvitingToAGroup().check_before_inviting(page=page)
                 await InvitingToAGroup().launching_an_invite_once_an_hour(page=page)
-            elif page.route == "/inviting_certain_time":  # Инвайтинг в определенное время
+            elif page.route == "/inviting_certain_time":  # 🕒 Инвайтинг в определенное время
                 await InvitingToAGroup().check_before_inviting(page=page)
                 await InvitingToAGroup().schedule_invite(page=page)
-            elif page.route == "/inviting_every_day":  # Инвайтинг каждый день
+            elif page.route == "/inviting_every_day":  # 📅 Инвайтинг каждый день
                 await InvitingToAGroup().check_before_inviting(page=page)
                 await InvitingToAGroup().launching_invite_every_day_certain_time(page=page)
             # ______________________________________________________________________________________________________________

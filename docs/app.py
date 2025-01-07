@@ -107,6 +107,8 @@ async def inviting_at_a_certain_time(request: Request):
                                       {"request": request, "program_name": program_name,
                                        "inviting": inviting_ru,
                                        "invitation_at_a_certain_time_ru": invitation_at_a_certain_time_ru,
+                                       "time_between_subscriptions_ru": time_between_subscriptions_ru,
+                                       "start_inviting_button": start_inviting_button,
                                        })
 
 
@@ -118,6 +120,7 @@ async def inviting_every_day(request: Request):
                                       {"request": request, "program_name": program_name,
                                        "inviting_ru": inviting_ru,
                                        "inviting_every_day_ru": inviting_every_day_ru,
+                                       "start_inviting_button": start_inviting_button,
                                        })
 
 
@@ -299,6 +302,7 @@ async def time_between_subscriptions(request: Request):
         "request": request,
         "program_name": program_name,
         "time_between_subscriptions_ru": time_between_subscriptions_ru,
+
     })
 
 
