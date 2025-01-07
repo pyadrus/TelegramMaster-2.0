@@ -151,7 +151,7 @@ python3 --version
 
 <h3>instalación de TelegramMaster 2.0</h3>
 
-<hr align="center"/>
+<hr/> <!-- Горизонтальная линия-->
 
 <h2>🔧 Documentación y ejemplos de uso</h2>
 
@@ -162,7 +162,7 @@ lanzamiento de la documentación implementado
 directamente desde el programa.
 Allí encontrará instrucciones para cada módulo y ejemplos de código para automatizar tareas 🔄.
 
-<hr align="center"/>
+<hr/> <!-- Горизонтальная линия-->
 
 <h2>💬 Comentarios</h2>
 Si tiene alguna pregunta o sugerencia📝, póngase en contacto conmigo a través de:<br> <br>

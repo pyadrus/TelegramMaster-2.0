@@ -146,7 +146,7 @@ python3 --version
 
 <h3>Installing TelegramMaster 2.0</h3>
 
-<hr align="center"/>
+<hr/> <!-- Горизонтальная линия-->
 
 <h2>🔧 Documentation and usage examples</h2>
 
@@ -156,7 +156,7 @@ Detailed documentation on working with TelegramMaster can be found in the docs s
 documentation directly from the program.
 There you will find instructions for each module and code examples for automating tasks.
 
-<hr align="center"/>
+<hr/> <!-- Горизонтальная линия-->
 
 <h2>💬 Feedback</h2>
 If you have any questions or suggestions, please contact me via:<br><br>

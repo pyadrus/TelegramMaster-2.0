@@ -49,7 +49,8 @@ class SendTelegramMessages:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 try:
-                    for username in await self.db_handler.open_db_func_lim(table_name="members", account_limit=account_limits):
+                    for username in await self.db_handler.open_db_func_lim(table_name="members",
+                                                                           account_limit=account_limits):
                         # username - имя аккаунта пользователя в базе данных user_data/software_database.db
                         logger.info(f"[!] Отправляем сообщение: {username[0]}")
                         try:
