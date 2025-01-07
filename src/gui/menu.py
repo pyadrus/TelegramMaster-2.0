@@ -5,8 +5,8 @@ from loguru import logger
 from src.core.configs import height_button, small_button_width, line_width, line_width_button, program_name
 from src.core.localization import (parse_single_or_multiple_groups, parse_selected_user_subscribed_group,
                                    parse_active_group_members, parse_account_subscribed_groups_channels,
-                                   clear_previously_parsed_data_list, inviting_every_day,
-                                   invitation_at_a_certain_time, invitation_1_time_per_hour, inviting,
+                                   clear_previously_parsed_data_list, inviting_every_day_ru,
+                                   invitation_at_a_certain_time_ru, invitation_1_time_per_hour_ru, inviting_ru,
                                    importing_a_list_of_parsed_data, setting_reactions,
                                    automatic_setting_of_reactions, sending_messages_via_chats_ru,
                                    sending_messages_via_chats_with_answering_machine_ru,
@@ -66,7 +66,7 @@ async def main_menu_program(page):
                       ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                           ft.Row(
                               # 🚀 Инвайтинг
-                              [ft.ElevatedButton(width=small_button_width, height=height_button, text=inviting,
+                              [ft.ElevatedButton(width=small_button_width, height=height_button, text=inviting_ru,
                                                  on_click=lambda _: page.go("/inviting")),
                                # 📊 Парсинг
                                ft.ElevatedButton(width=small_button_width, height=height_button, text=parsing,
@@ -250,7 +250,7 @@ async def inviting_menu(page):
                 [ft.AppBar(title=ft.Text(main_menu),
                            bgcolor=ft.colors.SURFACE_VARIANT),
                  ft.Text(spans=[ft.TextSpan(
-                     inviting,
+                     inviting_ru,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
@@ -259,16 +259,16 @@ async def inviting_menu(page):
                                                                                   ft.colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 🚀 Инвайтинг
-                     ft.ElevatedButton(width=line_width, height=height_button, text=inviting,
+                     ft.ElevatedButton(width=line_width, height=height_button, text=inviting_ru,
                                        on_click=lambda _: page.go("/inviting_without_limits")),
                      # ⏰ Инвайтинг 1 раз в час
-                     ft.ElevatedButton(width=line_width, height=height_button, text=invitation_1_time_per_hour,
+                     ft.ElevatedButton(width=line_width, height=height_button, text=invitation_1_time_per_hour_ru,
                                        on_click=lambda _: page.go("/inviting_1_time_per_hour")),
                      # 🕒 Инвайтинг в определенное время
-                     ft.ElevatedButton(width=line_width, height=height_button, text=invitation_at_a_certain_time,
+                     ft.ElevatedButton(width=line_width, height=height_button, text=invitation_at_a_certain_time_ru,
                                        on_click=lambda _: page.go("/inviting_certain_time")),
                      # 📅 Инвайтинг каждый день
-                     ft.ElevatedButton(width=line_width, height=height_button, text=inviting_every_day,
+                     ft.ElevatedButton(width=line_width, height=height_button, text=inviting_every_day_ru,
                                        on_click=lambda _: page.go("/inviting_every_day")),
                  ])]))
 

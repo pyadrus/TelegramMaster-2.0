@@ -13,9 +13,9 @@ from fastapi.staticfiles import StaticFiles
 from src.core.configs import program_name, program_version, date_of_program_change
 from src.core.localization import (parse_selected_user_subscribed_group, parse_single_or_multiple_groups,
                                    parse_active_group_members, clear_previously_parsed_data_list,
-                                   parse_account_subscribed_groups_channels, inviting,
-                                   invitation_1_time_per_hour, invitation_at_a_certain_time,
-                                   inviting_every_day, importing_a_list_of_parsed_data, setting_reactions,
+                                   parse_account_subscribed_groups_channels, inviting_ru,
+                                   invitation_1_time_per_hour_ru, invitation_at_a_certain_time_ru,
+                                   inviting_every_day_ru, importing_a_list_of_parsed_data, setting_reactions,
                                    we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
                                    sending_messages_via_chats_ru,
                                    sending_messages_via_chats_with_answering_machine_ru,
@@ -65,10 +65,10 @@ async def inviting_page(request: Request):
     """🚀 Инвайтинг"""
     logger.info("Запущена страница инвайтинга")
     return templates.TemplateResponse("inviting.html", {"request": request, "program_name": program_name,
-                                                        "inviting": inviting,
-                                                        "invitation_1_time_per_hour": invitation_1_time_per_hour,
-                                                        "invitation_at_a_certain_time": invitation_at_a_certain_time,
-                                                        "inviting_every_day": inviting_every_day})
+                                                        "inviting_ru": inviting_ru,
+                                                        "invitation_1_time_per_hour": invitation_1_time_per_hour_ru,
+                                                        "invitation_at_a_certain_time": invitation_at_a_certain_time_ru,
+                                                        "inviting_every_day": inviting_every_day_ru})
 
 
 @app.get("/inviting/inviting_with_limits_in_telegram_master", response_class=HTMLResponse)
@@ -77,40 +77,44 @@ async def inviting_with_limits_in_telegram_master(request: Request):
     logger.info("Запущена страница 🚀 Инвайтинг")
     return templates.TemplateResponse("inviting/inviting_with_limits_in_telegram_master.html",
                                       {"request": request, "program_name": program_name,
-                                       "inviting": inviting,
-                                       "invitation_1_time_per_hour": invitation_1_time_per_hour,
-                                       "invitation_at_a_certain_time": invitation_at_a_certain_time,
-                                       "inviting_every_day": inviting_every_day})
+                                       "inviting_ru": inviting_ru,
+                                       "invitation_1_time_per_hour": invitation_1_time_per_hour_ru,
+                                       "invitation_at_a_certain_time": invitation_at_a_certain_time_ru,
+                                       "inviting_every_day": inviting_every_day_ru})
+
 
 @app.get("/inviting/inviting_1_time_per_hour", response_class=HTMLResponse)
 async def inviting_1_time_per_hour(request: Request):
     """⏰ Инвайтинг 1 раз в час"""
     logger.info("Запущена страница 🚀 Инвайтинг")
     return templates.TemplateResponse("inviting/inviting_1_time_per_hour.html",
-                               {"request": request, "program_name": program_name,
-                                "inviting": inviting,
-                                "invitation_1_time_per_hour": invitation_1_time_per_hour,
-                                })
+                                      {"request": request, "program_name": program_name,
+                                       "inviting_ru": inviting_ru,
+                                       "invitation_1_time_per_hour": invitation_1_time_per_hour_ru,
+                                       })
+
 
 @app.get("/inviting/inviting_at_a_certain_time", response_class=HTMLResponse)
 async def inviting_at_a_certain_time(request: Request):
     """🕒 Инвайтинг в определенное время"""
     logger.info("Запущена страница 🚀 Инвайтинг")
     return templates.TemplateResponse("inviting/inviting_at_a_certain_time.html",
-                               {"request": request, "program_name": program_name,
-                               "inviting": inviting,
-                               "invitation_at_a_certain_time": invitation_at_a_certain_time,
-                               })
+                                      {"request": request, "program_name": program_name,
+                                       "inviting": inviting_ru,
+                                       "invitation_at_a_certain_time": invitation_at_a_certain_time_ru,
+                                       })
+
 
 @app.get("/inviting/inviting_every_day", response_class=HTMLResponse)
 async def inviting_every_day(request: Request):
     """📅 Инвайтинг каждый день"""
     logger.info("Запущена страница 🚀 Инвайтинг")
     return templates.TemplateResponse("inviting/inviting_every_day.html",
-                               {"request": request, "program_name": program_name,
-                               "inviting": inviting,
-                               "inviting_every_day": inviting_every_day,
-                               })
+                                      {"request": request, "program_name": program_name,
+                                       "inviting_ru": inviting_ru,
+                                       "inviting_every_day": inviting_every_day_ru,
+                                       })
+
 
 # Рассылка сообщений по чатам, в личку
 
