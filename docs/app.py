@@ -102,6 +102,16 @@ async def inviting_at_a_certain_time(request: Request):
                                "invitation_at_a_certain_time": invitation_at_a_certain_time,
                                })
 
+@app.get("/inviting/inviting_every_day", response_class=HTMLResponse)
+async def inviting_every_day(request: Request):
+    """📅 Инвайтинг каждый день"""
+    logger.info("Запущена страница 🚀 Инвайтинг")
+    return templates.TemplateResponse("inviting/inviting_every_day.html",
+                               {"request": request, "program_name": program_name,
+                               "inviting": inviting,
+                               "inviting_every_day": inviting_every_day,
+                               })
+
 # Рассылка сообщений по чатам, в личку
 
 @app.get('/sending_messages', response_class=HTMLResponse)
