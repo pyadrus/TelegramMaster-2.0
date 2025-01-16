@@ -39,7 +39,6 @@ async def main_menu_program(page):
     """
     Главное меню программы
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -121,7 +120,6 @@ async def settings_menu(page):
     """
     Меню настройки
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -204,7 +202,6 @@ async def bio_editing_menu(page):
     """
     Меню редактирование БИО
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -242,7 +239,6 @@ async def inviting_menu(page):
     """
     Меню инвайтинг
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -277,7 +273,6 @@ async def message_distribution_menu(page):
     """
     Меню рассылка сообщений
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -329,7 +324,6 @@ async def working_with_contacts_menu(page):
     """
     Меню работа с контактами
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -364,7 +358,6 @@ async def menu_parsing(page):
     """
     Парсинг меню
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -413,7 +406,6 @@ async def reactions_menu(page):
     """
     Меню работа с реакциями
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -443,7 +435,6 @@ async def viewing_posts_menu(page):
     """
     Меню работа с просмотрами
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -470,7 +461,6 @@ async def subscribe_and_unsubscribe_menu(page):
     """
     Меню подписка и отписка
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -499,7 +489,6 @@ async def account_verification_menu(page):
     """
     Меню проверки аккаунтов
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -535,7 +524,6 @@ async def account_connection_menu(page):
     """
     Меню подключения аккаунтов
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -566,7 +554,6 @@ async def connecting_accounts_by_number_menu(page):
     """
     Меню подключения аккаунтов по номеру телефона
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -638,7 +625,6 @@ async def connecting_accounts_by_session_menu(page):
     """
     Меню подключения аккаунтов по номеру телефона
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
@@ -713,7 +699,6 @@ async def creating_groups_and_chats_menu(page):
     """
     Меню создания групп и чатов
 
-    Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
 

@@ -20,21 +20,20 @@ class SubscribeUnsubscribeTelegram:
     def __init__(self):
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
-        self.configs_reader = ConfigReader()
-        self.time_subscription_1, self.time_subscription_2 = self.configs_reader.get_time_subscription()
+        self.time_subscription_1, self.time_subscription_2 = ConfigReader().get_time_subscription()
 
     async def subscribe_telegram(self, page) -> None:
         """
         Подписка на группы / каналы Telegram
+
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             logger.info(f"Запуск подписки на группы / каналы Telegram")
             for session_name in find_filess(directory_path=path_subscription_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_subscription_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_subscription_folder)
                 """Получение ссылки для инвайтинга"""
-                links_inviting: list = await self.db_handler.open_and_read_data(
-                    "writing_group_links")  # Открываем базу данных
+                links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Ссылка для инвайтинга:  {links_inviting}")
                 for link in links_inviting:
                     logger.info(f"{link[0]}")
@@ -48,11 +47,12 @@ class SubscribeUnsubscribeTelegram:
     async def unsubscribe_all(self, page) -> None:
         """
         Отписываемся от групп, каналов, личных сообщений
+
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             for session_name in find_filess(directory_path=path_unsubscribe_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_unsubscribe_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_unsubscribe_folder)
                 dialogs = client.iter_dialogs()
                 logger.info(f"Диалоги: {dialogs}")
                 async for dialog in dialogs:
@@ -67,7 +67,6 @@ class SubscribeUnsubscribeTelegram:
         """
         Отписываемся от группы.
 
-        Аргументы:
         :param group_link: Группа или канал
         :param client: Телеграм клиент
         """
@@ -87,7 +86,6 @@ class SubscribeUnsubscribeTelegram:
         """
         Подписываемся на группу или канал
 
-        Аргументы:
         :param groups_wr: str - группа или канал
         :param client:    TelegramClient - объект клиента
         """
@@ -98,8 +96,7 @@ class SubscribeUnsubscribeTelegram:
             await client(JoinChannelRequest(groups_wr))
             logger.info(f"Аккаунт подписался на группу / канал: {groups_wr}")
         except SessionRevokedError:
-            logger.error(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Авторизация была признана недействительной из-за того, что пользователь завершил все сеансы.")
+            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Авторизация была признана недействительной из-за того, что пользователь завершил все сеансы.")
         except UserDeactivatedBanError:
             logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.")
         except ChannelsTooMuchError:
