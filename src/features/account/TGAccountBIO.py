@@ -19,7 +19,6 @@ class GUIManager:
         """
         Создание графического интерфейса для изменения профиля Telegram.
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param action: Функция, которая выполняет специфическое действие с переданным значением.
         :param label: Подпись для текстового поля.
@@ -65,7 +64,6 @@ class AccountBIO:
         """
         Изменение био профиля Telegram в графическое окно Flet
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await self.gui_manager.create_profile_gui(page, self.account_actions.change_username_profile,
@@ -75,7 +73,6 @@ class AccountBIO:
         """
         Изменение био профиля Telegram в графическое окно Flet.
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await self.gui_manager.create_profile_gui(page, self.account_actions.change_bio_profile,
@@ -85,7 +82,6 @@ class AccountBIO:
         """
         Изменение био профиля Telegram в графическое окно Flet
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await self.gui_manager.create_profile_gui(page, self.account_actions.change_name_profile,
@@ -95,7 +91,6 @@ class AccountBIO:
         """
         Изменение био профиля Telegram в графическое окно Flet
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await self.gui_manager.create_profile_gui(page, self.account_actions.change_last_name_profile,
@@ -116,7 +111,6 @@ class AccountActions:
         """
         Изменение описания профиля Telegram аккаунта.
 
-        Аргументы:
         :param user_input - новое описание профиля Telegram
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :return: None
@@ -151,7 +145,6 @@ class AccountActions:
         """
         Изменение username профиля Telegram
 
-        Аргументы:
         :param user_input  - новое имя пользователя
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
@@ -181,7 +174,6 @@ class AccountActions:
         """
         Изменение имени профиля
 
-        Аргументы:
         :param user_input - новое имя пользователя
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
@@ -208,7 +200,6 @@ class AccountActions:
         """
         Изменение фамилии профиля
 
-        Аргументы:
         :param user_input - новое имя пользователя Telegram
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
@@ -233,7 +224,6 @@ class AccountActions:
     async def change_photo_profile(self, page):
         """Изменение фото профиля.
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:

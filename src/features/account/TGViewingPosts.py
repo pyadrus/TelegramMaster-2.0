@@ -29,7 +29,6 @@ class ViewingPosts:
         """
         Ставим реакции на сообщения
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :return: None
         """
@@ -66,7 +65,6 @@ class ViewingPosts:
         """
         Накрутка просмотров постов
 
-        Аргументы:
         :param client: Клиент для работы с Telegram
         :param link_post: Ссылка на пост
         :param number: Количество просмотров

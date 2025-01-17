@@ -5,10 +5,11 @@ import random
 
 from loguru import logger
 from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
-                             FloodWaitError, InviteRequestSentError, UserDeactivatedBanError, SessionRevokedError)
+                             FloodWaitError, InviteRequestSentError, UserDeactivatedBanError, SessionRevokedError,
+                             InviteHashExpiredError)
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
-
+from telethon.tl.functions.messages import ImportChatInviteRequest
 from src.features.account.TGConnect import TGConnect
 from src.core.utils import record_and_interrupt, find_filess
 from src.core.configs import ConfigReader, path_subscription_folder, path_unsubscribe_folder
@@ -28,19 +29,26 @@ class SubscribeUnsubscribeTelegram:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
+        # TODO реализовать проверку ссылок перед подпиской, что бы пользователи не подсовывали программе не рабочие
+        #  ссылки или ссылки которые не являются группой или каналом
+
         try:
             logger.info(f"Запуск подписки на группы / каналы Telegram")
             for session_name in find_filess(directory_path=path_subscription_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_subscription_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=path_subscription_folder)
                 """Получение ссылки для инвайтинга"""
-                links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
-                logger.info(f"Ссылка для инвайтинга:  {links_inviting}")
+                links_inviting: list = await self.db_handler.open_and_read_data(
+                    "writing_group_links")  # Открываем базу данных
+                logger.info(f"Ссылка для подписки:  {links_inviting}")
                 for link in links_inviting:
                     logger.info(f"{link[0]}")
-                    """Подписка на группу для инвайтинга"""
-                    await self.subscribe_to_group_or_channel(client, link[0])
-
+                    """Подписка на группу"""
+                    # await self.subscribe_to_group_or_channel(client, link[0])
+                    await client(ImportChatInviteRequest("sMonmC066cA3MDcy"))
             logger.info(f"Окончание подписки на группы / каналы Telegram")
+        except ImportChatInviteRequest:
+            logger.exception(f"❌ Ошибка ImportChatInviteRequest")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -52,7 +60,8 @@ class SubscribeUnsubscribeTelegram:
         """
         try:
             for session_name in find_filess(directory_path=path_unsubscribe_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_unsubscribe_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=path_unsubscribe_folder)
                 dialogs = client.iter_dialogs()
                 logger.info(f"Диалоги: {dialogs}")
                 async for dialog in dialogs:
@@ -82,6 +91,20 @@ class SubscribeUnsubscribeTelegram:
         finally:
             await client.disconnect()  # Разрываем соединение с Telegram
 
+    async def extract_channel_id(self, link):
+        """Сокращает ссылку с https://t.me/+yjqd0uZQETc4NGEy до yjqd0uZQETc4NGEy"""
+        # Проверяем, начинается ли ссылка с 'https://t.me/'
+        if link.startswith('https://t.me/'):
+            return link[len('https://t.me/'):]
+
+        # Если ссылка начинается просто с 't.me/', удалим 't.me/'
+        elif link.startswith('t.me/'):
+            return link[len('t.me/'):]
+
+        # В остальных случаях возвращаем None
+        else:
+            return None
+
     async def subscribe_to_group_or_channel(self, client, groups_wr) -> None:
         """
         Подписываемся на группу или канал
@@ -96,7 +119,8 @@ class SubscribeUnsubscribeTelegram:
             await client(JoinChannelRequest(groups_wr))
             logger.info(f"Аккаунт подписался на группу / канал: {groups_wr}")
         except SessionRevokedError:
-            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Авторизация была признана недействительной из-за того, что пользователь завершил все сеансы.")
+            logger.error(
+                f"❌ Попытка подписки на группу / канал {groups_wr}. Авторизация была признана недействительной из-за того, что пользователь завершил все сеансы.")
         except UserDeactivatedBanError:
             logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.")
         except ChannelsTooMuchError:
@@ -116,6 +140,18 @@ class SubscribeUnsubscribeTelegram:
             logger.error(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не "
                 f"является группой / каналом: {groups_wr}")
+
+            # Пример использования
+            # link = 'https://t.me/+yjqd0uZQETc4NGEy'
+            channel_id = await self.extract_channel_id(groups_wr)
+            print(channel_id)  # Выведет: yjqd0uZQETc4NGEy
+
+            try:
+                await client(ImportChatInviteRequest("yjqd0uZQETc4NGEy"))
+            except InviteHashExpiredError:
+                await client(ImportChatInviteRequest(f"+{channel_id}"))
+
+            # TODO Incorrect number of bindings supplied. The current statement uses 1, and there are 30 supplied. (17.01.2025)
             await self.db_handler.write_data_to_db("""SELECT * from writing_group_links""",
                                                    """DELETE from writing_group_links where writing_group_links = ?""",
                                                    groups_wr)

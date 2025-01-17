@@ -34,10 +34,10 @@ def getting_phone_number_data_by_phone_number(phone_numbers):
 
 
 def get_country_flag(ip_address):
-    """Определение страны по ip адресу на основе сервиса https://ipwhois.io/ru/documentation.
+    """
+    Определение страны по ip адресу на основе сервиса https://ipwhois.io/ru/documentation.
     Возвращает флаг и название страны.
 
-    Аргументы:
     :param ip_address: ip адрес
     :return: флаг и название страны
     """

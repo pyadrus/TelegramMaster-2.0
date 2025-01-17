@@ -36,7 +36,6 @@ class TGConnect:
         """
         Проверяет и сортирует аккаунты.
 
-        Аргументы:
         :param session_name: Имя аккаунта для проверки аккаунта
         :param folder_name: Папка с аккаунтами
         :param page: Страница интерфейса Flet для отображения элементов управления.
@@ -77,7 +76,6 @@ class TGConnect:
         working_with_accounts() - Перемещение файла. Исходный путь к файлу - account_folder. Путь к новой папке,
         куда нужно переместить файл - new_account_folder
 
-        Аргументы:
         :param telegram_client: TelegramClient
         :param folder_name: Папка с аккаунтами
         :param session_name: Имя аккаунта
@@ -92,7 +90,6 @@ class TGConnect:
         """
         Проверка аккаунта на спам через @SpamBot
 
-        Аргументы:
         :param folder_name: папка с аккаунтами
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
@@ -161,7 +158,6 @@ class TGConnect:
         """
         Проверяет все аккаунты Telegram в указанной директории.
 
-        Аргументы:
         :param folder_name: Имя каталога с аккаунтами
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
@@ -182,7 +178,6 @@ class TGConnect:
         """
         Получает информацию о Telegram аккаунте.
 
-        Аргументы:
         :param folder_name: Имя каталога
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
@@ -228,7 +223,6 @@ class TGConnect:
         """
         Переименовывает session файлы.
 
-        Аргументы:
         :param telegram_client: Клиент для работы с Telegram
         :param phone_old: Номер телефона для переименования
         :param phone: Номер телефона для переименования (новое название для session файла)
@@ -252,7 +246,6 @@ class TGConnect:
         Подключение к Telegram, используя файл session.
         Имя файла сессии file[0] - session файл
 
-        Аргументы:
         :param account_directory: Путь к директории
         :param session_name: Файл сессии (file[0] - session файл)
         :param page: Страница интерфейса Flet для отображения элементов управления.
@@ -306,7 +299,6 @@ class TGConnect:
         Подключение номера Telegram аккаунта с проверкой на валидность. Если ранее не было соединения, то запрашивается
         код.
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param account_directory: Папка с аккаунтами
         :param appointment: Назначение аккаунта
@@ -408,7 +400,6 @@ class TGConnect:
         """
         Подключение сессии Telegram
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param account_directory: Директория аккаунтов
         :param appointment: назначение

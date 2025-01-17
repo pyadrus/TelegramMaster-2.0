@@ -32,7 +32,6 @@ class WorkingWithReactions:
         """
         Ставим реакции на сообщения
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
@@ -89,7 +88,6 @@ class WorkingWithReactions:
         """
         Вводим ссылку на группу и ссылку на сообщение
 
-        Аргументы:
         :param number: Ссылка на сообщение
         :param chat: Ссылка на группу
         :param page: Страница интерфейса Flet для отображения элементов управления.
@@ -117,7 +115,9 @@ class WorkingWithReactions:
             logger.exception(f"❌ Ошибка: {error}")
 
     async def setting_reactions(self, page):
-        """Выставление реакций на новые посты"""
+        """
+        Выставление реакций на новые посты
+        """
         try:
             for session_name in find_filess(directory_path=path_reactions_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,

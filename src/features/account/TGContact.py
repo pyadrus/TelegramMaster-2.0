@@ -41,7 +41,6 @@ class TGContact:
         """
         Парсинг и запись контактов в базу данных
 
-        Аргументы:
         :param client: Телеграм клиент
         """
         try:
@@ -56,7 +55,6 @@ class TGContact:
         """
         Получаем id аккаунта
 
-        Аргументы:
         :param client: Телеграм клиент
         """
         try:
@@ -73,7 +71,6 @@ class TGContact:
         """
         Получаем контакты
 
-        Аргументы:
         :param client: Телеграм клиент
         """
         try:
@@ -90,7 +87,6 @@ class TGContact:
         """
         Показываем и удаляем контакт телефонной книги
 
-        Аргументы:
         :param client: Телеграм клиент
         :param user: Телеграм пользователя
         """
@@ -102,9 +98,9 @@ class TGContact:
             logger.exception(f"❌ Ошибка: {error}")
 
     async def delete_contact(self, page) -> None:
-        """Удаляем контакты с аккаунтов
+        """
+        Удаляем контакты с аккаунтов
 
-        Аргументы:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
@@ -118,7 +114,9 @@ class TGContact:
             logger.exception(f"❌ Ошибка: {error}")
 
     async def inviting_contact(self, page) -> None:
-        """Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting"""
+        """
+        Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting
+        """
         try:
             # Открываем базу данных для работы с аккаунтами user_data/software_database.db
             for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
@@ -133,7 +131,6 @@ class TGContact:
         """
         Добавляем контакт в телефонную книгу
 
-        Аргументы:
         :param client: Телеграм клиент
         """
         try:
@@ -173,7 +170,6 @@ class TGContact:
         """
         Получаем данные пользователя
 
-        Аргументы:
         :param user: Телеграм пользователя
         :param entities: Список сущностей
         """

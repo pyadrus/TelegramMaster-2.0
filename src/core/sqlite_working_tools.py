@@ -52,6 +52,7 @@ def remove_duplicates():
 
 
 class DatabaseHandler:
+
     def __init__(self, db_file="user_data/software_database.db"):
         self.db_file = db_file
 
@@ -68,13 +69,9 @@ class DatabaseHandler:
         """
         Открываем базу и считываем данные из указанной таблицы
 
-        Аргументы:
         :param table_name: Название таблицы, данные из которой требуется извлечь.
+        :return: Список записей из таблицы
 
-        Возвращаемое значение:
-        :return: список записей из таблицы
-
-        Исключения:
         В случае ошибок базы данных (например, поврежденный файл базы данных или некорректный запрос)
         метод ловит исключения типа `sqlite3.Error` и записывает ошибку в лог, но не выбрасывает её дальше.
         Это предотвращает аварийное завершение работы программы и позволяет продолжить выполнение.
@@ -102,7 +99,6 @@ class DatabaseHandler:
         каждой записи в поле id. Затем он удаляет все записи, у которых rowid не равен минимальному значению.
         Это позволяет оставить только уникальные значения в поле id.
 
-        Аргументы:
         :param table_name: Название таблицы, данные из которой требуется извлечь.
         :param column_name: Имя столбца
         """
@@ -117,7 +113,6 @@ class DatabaseHandler:
         Открытие базы данных для inviting (рассылка сообщений) с лимитами. Если number_of_accounts равно None,
         возвращаем весь список
 
-        Аргументы:
         :param table_name: Название таблицы, данные из которой требуется извлечь.
         :param account_limit: Количество аккаунтов
         :return list: полученный список
@@ -140,7 +135,6 @@ class DatabaseHandler:
         """
         Запись результатов parsing участников чата
 
-        Аргументы:
         :param entities: список результатов parsing
         """
         await self.connect()
@@ -157,7 +151,6 @@ class DatabaseHandler:
         """
         Запись действий аккаунта в базу данных
 
-        Аргументы:
         :param creating_a_table: создание таблицы
         :param writing_data_to_a_table: запись данных в таблицу
         :param entities: список записей в таблице
@@ -176,7 +169,6 @@ class DatabaseHandler:
         """
         Запись результатов parsing участников чата
 
-        Аргументы:
         :param entities: список результатов parsing
         """
         await self.connect()
@@ -193,7 +185,6 @@ class DatabaseHandler:
         """
         Удаляем не рабочий proxy с software_database.db, таблица proxy
 
-        Аргументы:
         :param proxy_type: тип proxy
         :param addr: адрес
         :param port: порт
@@ -214,7 +205,6 @@ class DatabaseHandler:
         """
         Удаляет строку из таблицы
 
-        Аргументы:
         :param table: имя таблицы
         :param column: имя колонки
         :param value: значение
@@ -242,7 +232,6 @@ class DatabaseHandler:
         """
         Запись данных в таблицу с одной колонкой в базу данных
 
-        Аргументы:
         :param name_database: название таблицы
         :param database_columns: название колон
         :param into_columns: название колонки в таблице
@@ -265,7 +254,6 @@ class DatabaseHandler:
         Этот метод устанавливает соединение с базой данных, удаляет все записи из указанной таблицы (name_database_table),
         затем фиксирует изменения. После этого закрывает соединение с базой данных.
 
-        Аргументы:
         :param name_database_table: Название таблицы в базе данных
         """
         await self.connect()
