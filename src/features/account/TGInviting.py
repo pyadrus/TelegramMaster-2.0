@@ -343,7 +343,11 @@ class InvitingToAGroup:
         await self.create_invite_page(page, lv, dropdown, add_items)
 
     async def check_before_inviting(self, page: ft.Page) -> None:
-        """Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных"""
+        """
+        Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        :return:
+        """
         logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_inviting_folder, extension='session'):
             logger.error('⛔ Нет аккаунта в папке inviting')

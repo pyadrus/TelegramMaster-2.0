@@ -2,7 +2,7 @@
 import asyncio
 import datetime
 import random
-
+import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
 from telethon import types
@@ -13,10 +13,13 @@ from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-from src.core.configs import ConfigReader, path_subscription_folder, path_unsubscribe_folder
+from src.core.configs import ConfigReader, path_subscription_folder, path_unsubscribe_folder, line_width_button, \
+    height_button
+from src.core.localization import back_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, find_filess
 from src.features.account.TGConnect import TGConnect
+from src.gui.menu import log_and_display
 
 
 class SubscribeUnsubscribeTelegram:
@@ -38,55 +41,65 @@ class SubscribeUnsubscribeTelegram:
         else:
             return None
 
-    async def checking_links(self, page, client) -> None:
+    async def checking_links(self, page, client, link) -> None:
         """
         Проверка ссылок на подписку
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param client: Клиент Telegram
+        :param link: Ссылка на подписку
         """
-        links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
-        logger.info(f"Ссылки для подписки: {links_inviting}")
+        # links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
+        # logger.info(f"Ссылки для подписки: {links_inviting}")
 
-        for link_tuple in links_inviting:
-            link = link_tuple[0]
+        # for link_tuple in links_inviting:
+        #     link = link_tuple[0]
+
+        if link.startswith("https://t.me/+"):
+            # Извлекаем хэш из ссылки на приглашение
+            link_hash = link.split("+")[-1]
+            result = await client(functions.messages.CheckChatInviteRequest(hash=link_hash))
+            if isinstance(result, types.ChatInvite):
+                logger.info(f"Ссылка валидна: {link}, Название группы: {result.title}, "
+                            f"Количество участников: {result.participants_count}, "
+                            f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}")
+            elif isinstance(result, types.ChatInviteAlready):
+                logger.info(f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}")
+
+        elif link.startswith("https://t.me/"):
+            # Извлекаем имя пользователя или группы
+            username = link.split("/")[-1]
+            result = await client(functions.contacts.ResolveUsernameRequest(username=username))
+            chat = result.chats[0] if result.chats else None
+            if chat:
+                logger.info(f"Публичная группа/канал: {link}, Название: {chat.title}, "
+                            f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
+                            f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}")
+            else:
+                logger.warning(f"Не удалось найти публичный чат: {link}")
+
+        else:
+            # Считаем, что это просто хэш
             try:
-                if link.startswith("https://t.me/+"):
-                    # Извлекаем хэш из ссылки на приглашение
-                    link_hash = link.split("+")[-1]
-                    result = await client(functions.messages.CheckChatInviteRequest(hash=link_hash))
-                    if isinstance(result, types.ChatInvite):
-                        logger.info(f"Ссылка валидна: {link}, Название группы: {result.title}, "
-                                    f"Количество участников: {result.participants_count}, "
-                                    f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}")
-                    elif isinstance(result, types.ChatInviteAlready):
-                        logger.info(f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}")
-
-                elif link.startswith("https://t.me/"):
-                    # Извлекаем имя пользователя или группы
-                    username = link.split("/")[-1]
-                    result = await client(functions.contacts.ResolveUsernameRequest(username=username))
-                    chat = result.chats[0] if result.chats else None
-                    if chat:
-                        logger.info(f"Публичная группа/канал: {link}, Название: {chat.title}, "
-                                    f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
-                                    f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}")
-                    else:
-                        logger.warning(f"Не удалось найти публичный чат: {link}")
-
+                result = await client(functions.messages.CheckChatInviteRequest(hash=link))
+                if isinstance(result, types.ChatInvite):
+                    logger.info(f"Ссылка валидна: {link}, Название группы: {result.title}, "
+                                f"Количество участников: {result.participants_count}, "
+                                f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}")
+                elif isinstance(result, types.ChatInviteAlready):
+                    logger.info(f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}")
+            except InviteHashExpiredError:
+                logger.warning(f"Повторная проверка ссылки: {link}")
+                result = await client(functions.contacts.ResolveUsernameRequest(username=link))
+                chat = result.chats[0] if result.chats else None
+                if chat:
+                    logger.info(f"Публичная группа/канал: {link}, Название: {chat.title}, "
+                                f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
+                                f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}")
                 else:
-                    # Считаем, что это просто хэш
-                    result = await client(functions.messages.CheckChatInviteRequest(hash=link))
-                    if isinstance(result, types.ChatInvite):
-                        logger.info(f"Ссылка валидна: {link}, Название группы: {result.title}, "
-                                    f"Количество участников: {result.participants_count}, "
-                                    f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}")
-                    elif isinstance(result, types.ChatInviteAlready):
-                        logger.info(f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}")
-            except Exception as e:
-                logger.error(f"Ошибка при проверке ссылки: {link}. Ошибка: {e}")
+                    logger.warning(f"Не удалось найти публичный чат: {link}")
 
-    async def subscribe_telegram(self, page) -> None:
+    async def subscribe_telegram(self, page: ft.Page) -> None:
         """
         Подписка на группы / каналы Telegram
 
@@ -95,29 +108,57 @@ class SubscribeUnsubscribeTelegram:
         # TODO реализовать проверку ссылок перед подпиской, что бы пользователи не подсовывали программе не рабочие
         #  ссылки или ссылки которые не являются группой или каналом
 
-        try:
-            logger.info(f"Запуск подписки на группы / каналы Telegram")
+        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
+
+        async def add_items(_):
+            # try:
+            # logger.info(f"Запуск подписки на группы / каналы Telegram")
             for session_name in find_filess(directory_path=path_subscription_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_subscription_folder)
-                """Получение ссылки для инвайтинга"""
-                links_inviting: list = await self.db_handler.open_and_read_data(
-                    "writing_group_links")  # Открываем базу данных
-                logger.info(f"Ссылка для подписки:  {links_inviting}")
-                for link in links_inviting:
-                    logger.info(f"{link[0]}")
-                    """Подписка на группу"""
+                # Получение ссылки
+                links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
+                logger.info(f"Ссылка для подписки и проверки:  {links_inviting}")
+                for link_tuple in links_inviting:
+                    link = link_tuple[0]
+                    await log_and_display(f"Ссылка для подписки и проверки:  {link}", lv, page)
+                    # Подписка на группу или канал
                     # await self.subscribe_to_group_or_channel(client, link[0])
 
                     # Проверка ссылок для подписки
-                    await self.checking_links(page, client)
+                    await self.checking_links(page, client, link)
 
-                    await client(ImportChatInviteRequest("sMonmC066cA3MDcy"))
-            logger.info(f"Окончание подписки на группы / каналы Telegram")
-        except ImportChatInviteRequest:
-            logger.exception(f"❌ Ошибка ImportChatInviteRequest")
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+                    # await client(ImportChatInviteRequest("sMonmC066cA3MDcy"))
+                # logger.info(f"Окончание подписки на группы / каналы Telegram")
+            # except ImportChatInviteRequest:
+            #     logger.exception(f"❌ Ошибка ImportChatInviteRequest")
+            # except Exception as error:
+            #     logger.exception(f"❌ Ошибка: {error}")
+        async def back_button_clicked(_):
+            """
+            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню подписки на группы / каналы Telegram.
+            """
+            page.go("/subscribe_unsubscribe")  # переходим к основному меню меню подписки на группы / каналы Telegram. 🏠
+
+        # Добавляем кнопки и другие элементы управления на страницу
+        page.views.append(
+            ft.View(
+                "/subscription_all",
+                [
+                    lv,  # Отображение логов 📝
+                    ft.Text(value="Подписка на группы / каналы Telegram"),  # Выбор группы для инвайтинга
+                    ft.Column(),  # Резерв для приветствия или других элементов интерфейса
+                    ft.ElevatedButton(width=line_width_button, height=height_button, text="🚀 Начать подписку",
+                                      on_click=add_items),  # Кнопка "🚀 Начать подписку"
+                    ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+                                      on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
+                ],
+            )
+        )
+
+        page.update()  # обновляем страницу после добавления элементов управления 🔄
 
     async def unsubscribe_all(self, page) -> None:
         """
@@ -157,8 +198,6 @@ class SubscribeUnsubscribeTelegram:
             logger.exception(f"❌ Ошибка: {error}")
         finally:
             await client.disconnect()  # Разрываем соединение с Telegram
-
-
 
     async def subscribe_to_group_or_channel(self, client, groups_wr) -> None:
         """
