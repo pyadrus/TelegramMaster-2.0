@@ -18,7 +18,7 @@ from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.core.utils import find_filess
 from src.core.configs import path_parsing_folder, line_width_button, height_button, time_activity_user_2
 from src.core.localization import back_button, start_parsing_button, done_button
-from src.gui.menu import log_and_display_info
+from src.gui.menu import log_and_display_info, log_and_display_error
 from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates
 
 
@@ -382,12 +382,12 @@ class ParsingGroupMembers:
                 except TypeError:
                     logger.info(
                         f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
-                    await log_and_display_info(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page)
+                    await log_and_display_error(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page)
                     await asyncio.sleep(2)
                     break
                 except ChatAdminRequiredError:
                     logger.info(f'❌ Ошибка parsing: не хватает прав администратора {target_group}')
-                    await log_and_display_info(f"❌ Ошибка: не хватает прав администратора {target_group}", lv, page)
+                    await log_and_display_error(f"❌ Ошибка: не хватает прав администратора {target_group}", lv, page)
                     await asyncio.sleep(2)
                     break
             return all_participants

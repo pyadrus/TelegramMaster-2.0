@@ -20,7 +20,7 @@ from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.menu import log_and_display_info, show_notification
+from src.gui.menu import log_and_display_info, show_notification, log_and_display_error
 
 
 class InvitingToAGroup:
@@ -97,17 +97,17 @@ class InvitingToAGroup:
                         await asyncio.sleep(5)
                     # Ошибка инвайтинга продолжаем работу
                     except UserChannelsTooMuchError:
-                        await log_and_display_info(
+                        await log_and_display_error(
                             f"❌ Попытка приглашения {username} в группу {dropdown.value}. Превышен лимит у user каналов / супергрупп.",
                             lv, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                     except UserNotMutualContactError:
-                        await log_and_display_info(
+                        await log_and_display_error(
                             f"❌ Попытка приглашения {username} в группу {dropdown.value}. User не является взаимным контактом.",
                             lv, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                     except (UserKickedError, UserDeactivatedBanError):
-                        await log_and_display_info(
+                        await log_and_display_error(
                             f"❌ Попытка приглашения {username} в группу {dropdown.value}. Пользователь был удален ранее из супергруппы или забанен.",
                             lv, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
@@ -155,7 +155,7 @@ class InvitingToAGroup:
                         break  # Прерываем работу и меняем аккаунт
                     except KeyboardInterrupt:  # Закрытие окна программы
                         client.disconnect()  # Разрываем соединение telegram
-                        await log_and_display_info(f"[!] Скрипт остановлен!", lv, page)
+                        await log_and_display_error(f"[!] Скрипт остановлен!", lv, page)
                     except Exception as error:
                         logger.exception(f"❌ Ошибка: {error}")
                     else:
