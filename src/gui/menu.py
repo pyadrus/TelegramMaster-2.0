@@ -722,7 +722,7 @@ async def creating_groups_and_chats_menu(page):
                  ])]))
 
 
-async def log_and_display(message: str, lv, page):
+async def log_and_display_info(message: str, lv, page):
     """
     Выводит сообщение в GUI и записывает лог.
 
@@ -734,6 +734,17 @@ async def log_and_display(message: str, lv, page):
     lv.controls.append(ft.Text(message))  # отображаем сообщение в ListView
     page.update()  # обновляем страницу для отображения нового сообщения
 
+async def log_and_display_error(message: str, lv, page):
+    """
+    Выводит сообщение в GUI и записывает лог.
+
+    :param message: Текст сообщения для отображения и записи в лог.
+    :param lv: ListView для отображения сообщений.
+    :param page: Страница интерфейса Flet для отображения элементов управления.
+    """
+    logger.error(message)  # записываем сообщение в лог
+    lv.controls.append(ft.Text(message))  # отображаем сообщение в ListView
+    page.update()  # обновляем страницу для отображения нового сообщения
 
 async def show_notification(page: ft.Page, message: str):
     """

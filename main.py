@@ -33,8 +33,8 @@ from src.gui.menu import (inviting_menu, message_distribution_menu, bio_editing_
                           connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
                           creating_groups_and_chats_menu, working_with_contacts_menu, main_menu_program)
 
-logger.add("user_data/log/log.log", rotation="2 MB", compression="zip")  # Логирование программы
-
+logger.add("user_data/log/log.log", rotation="2 MB", compression="zip", level="INFO")  # Логирование программы
+logger.add("user_data/log/log_ERROR.log", rotation="2 MB", compression="zip", level="ERROR")  # Логирование программы
 
 async def main(page: ft.Page):
     """
@@ -92,15 +92,9 @@ async def main(page: ft.Page):
                         await show_notification(page, "⛔ Нет аккаунта в папке subscription")
                         return None
                     else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Подписки")
+
                         await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
-                        logger.info("🔚 Конец Подписки")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
                 except Exception as error:
                     logger.exception(f"❌ Ошибка: {error}")
             elif page.route == "/unsubscribe_all":  # Отписываемся

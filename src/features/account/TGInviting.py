@@ -20,7 +20,7 @@ from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.menu import log_and_display, show_notification
+from src.gui.menu import log_and_display_info, show_notification
 
 
 class InvitingToAGroup:
@@ -53,7 +53,7 @@ class InvitingToAGroup:
                                                                         account_limit=None)
         account_limit = ConfigReader().get_limits()
         find_filesss = find_filess(directory_path=path_inviting_folder, extension='session')
-        await log_and_display(f"Лимит на аккаунт: {account_limit}\n"
+        await log_and_display_info(f"Лимит на аккаунт: {account_limit}\n"
                               f"Всего участников: {len(number_usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"
                               f"Всего подключенных аккаунтов: {len(find_filesss)}\n", lv, page)
@@ -69,7 +69,7 @@ class InvitingToAGroup:
         """
         start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
         # Индикация начала инвайтинга
-        await log_and_display(f"▶️ Начало инвайтинга.\n🕒 Время старта: {str(start)}", lv, page)
+        await log_and_display_info(f"▶️ Начало инвайтинга.\n🕒 Время старта: {str(start)}", lv, page)
         page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
         try:
             for session_name in find_filess(directory_path=path_inviting_folder, extension='session'):
@@ -82,32 +82,32 @@ class InvitingToAGroup:
                 number_usernames: list = await self.db_handler.open_db_func_lim(table_name="members",
                                                                                 account_limit=ConfigReader().get_limits())
                 if len(number_usernames) == 0:
-                    await log_and_display(f"В таблице members нет пользователей для инвайтинга", lv, page)
+                    await log_and_display_info(f"В таблице members нет пользователей для инвайтинга", lv, page)
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value)
                     break  # Прерываем работу и меняем аккаунт
                 for username in number_usernames:
-                    await log_and_display(f"Пользователь username:{username[0]}", lv, page)
+                    await log_and_display_info(f"Пользователь username:{username[0]}", lv, page)
                     # Инвайтинг в группу по полученному списку
 
                     try:
-                        await log_and_display(f"Попытка приглашения {username[0]} в группу {dropdown.value}.", lv,
-                                              page)
+                        await log_and_display_info(f"Попытка приглашения {username[0]} в группу {dropdown.value}.", lv,
+                                                   page)
                         await client(InviteToChannelRequest(dropdown.value, [username[0]]))
-                        await log_and_display(f"Удачно! Спим 5 секунд", lv, page)
+                        await log_and_display_info(f"Удачно! Спим 5 секунд", lv, page)
                         await asyncio.sleep(5)
                     # Ошибка инвайтинга продолжаем работу
                     except UserChannelsTooMuchError:
-                        await log_and_display(
+                        await log_and_display_info(
                             f"❌ Попытка приглашения {username} в группу {dropdown.value}. Превышен лимит у user каналов / супергрупп.",
                             lv, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                     except UserNotMutualContactError:
-                        await log_and_display(
+                        await log_and_display_info(
                             f"❌ Попытка приглашения {username} в группу {dropdown.value}. User не является взаимным контактом.",
                             lv, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                     except (UserKickedError, UserDeactivatedBanError):
-                        await log_and_display(
+                        await log_and_display_info(
                             f"❌ Попытка приглашения {username} в группу {dropdown.value}. Пользователь был удален ранее из супергруппы или забанен.",
                             lv, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
@@ -155,7 +155,7 @@ class InvitingToAGroup:
                         break  # Прерываем работу и меняем аккаунт
                     except KeyboardInterrupt:  # Закрытие окна программы
                         client.disconnect()  # Разрываем соединение telegram
-                        await log_and_display(f"[!] Скрипт остановлен!", lv, page)
+                        await log_and_display_info(f"[!] Скрипт остановлен!", lv, page)
                     except Exception as error:
                         logger.exception(f"❌ Ошибка: {error}")
                     else:
@@ -166,7 +166,7 @@ class InvitingToAGroup:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
         finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-        await log_and_display(
+        await log_and_display_info(
             f"🔚 Конец инвайтинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
         await show_notification(page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
         page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
@@ -221,7 +221,7 @@ class InvitingToAGroup:
             async def general_invitation_to_the_group_scheduler():
                 await self.general_invitation_to_the_group(page, lv, dropdown)
 
-            await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", lv, page)
+            await log_and_display_info(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", lv, page)
             self.scheduler.daily(dt.time(hour=int(self.hour), minute=int(self.minutes)),
                                  general_invitation_to_the_group_scheduler)
             while True:
@@ -258,7 +258,7 @@ class InvitingToAGroup:
                 async def general_invitation_to_the_group_scheduler():
                     await self.general_invitation_to_the_group(page, lv, dropdown)
 
-                await log_and_display("Запуск программы в 00 минут каждого часа", lv, page)
+                await log_and_display_info("Запуск программы в 00 минут каждого часа", lv, page)
 
                 self.scheduler.hourly(dt.time(minute=00, second=00),
                                       general_invitation_to_the_group_scheduler)  # Асинхронная функция для выполнения
@@ -325,7 +325,7 @@ class InvitingToAGroup:
                 async def general_invitation_to_the_group_scheduler():
                     await self.general_invitation_to_the_group(page, lv, dropdown)
 
-                await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", lv, page)
+                await log_and_display_info(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", lv, page)
 
                 self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)),
                                     general_invitation_to_the_group_scheduler)
