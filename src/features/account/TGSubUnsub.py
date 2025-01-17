@@ -4,16 +4,19 @@ import datetime
 import random
 
 from loguru import logger
+from telethon import functions
+from telethon import types
 from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
                              FloodWaitError, InviteRequestSentError, UserDeactivatedBanError, SessionRevokedError,
                              InviteHashExpiredError)
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
-from src.features.account.TGConnect import TGConnect
-from src.core.utils import record_and_interrupt, find_filess
+
 from src.core.configs import ConfigReader, path_subscription_folder, path_unsubscribe_folder
 from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.utils import record_and_interrupt, find_filess
+from src.features.account.TGConnect import TGConnect
 
 
 class SubscribeUnsubscribeTelegram:
@@ -22,6 +25,66 @@ class SubscribeUnsubscribeTelegram:
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
         self.time_subscription_1, self.time_subscription_2 = ConfigReader().get_time_subscription()
+
+    async def extract_channel_id(self, link):
+        """Сокращает ссылку с https://t.me/+yjqd0uZQETc4NGEy до yjqd0uZQETc4NGEy"""
+        # Проверяем, начинается ли ссылка с 'https://t.me/'
+        if link.startswith('https://t.me/'):
+            return link[len('https://t.me/'):]
+        # Если ссылка начинается просто с 't.me/', удалим 't.me/'
+        elif link.startswith('t.me/'):
+            return link[len('t.me/'):]
+        # В остальных случаях возвращаем None
+        else:
+            return None
+
+    async def checking_links(self, page, client) -> None:
+        """
+        Проверка ссылок на подписку
+
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param client: Клиент Telegram
+        """
+        links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
+        logger.info(f"Ссылки для подписки: {links_inviting}")
+
+        for link_tuple in links_inviting:
+            link = link_tuple[0]
+            try:
+                if link.startswith("https://t.me/+"):
+                    # Извлекаем хэш из ссылки на приглашение
+                    link_hash = link.split("+")[-1]
+                    result = await client(functions.messages.CheckChatInviteRequest(hash=link_hash))
+                    if isinstance(result, types.ChatInvite):
+                        logger.info(f"Ссылка валидна: {link}, Название группы: {result.title}, "
+                                    f"Количество участников: {result.participants_count}, "
+                                    f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}")
+                    elif isinstance(result, types.ChatInviteAlready):
+                        logger.info(f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}")
+
+                elif link.startswith("https://t.me/"):
+                    # Извлекаем имя пользователя или группы
+                    username = link.split("/")[-1]
+                    result = await client(functions.contacts.ResolveUsernameRequest(username=username))
+                    chat = result.chats[0] if result.chats else None
+                    if chat:
+                        logger.info(f"Публичная группа/канал: {link}, Название: {chat.title}, "
+                                    f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
+                                    f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}")
+                    else:
+                        logger.warning(f"Не удалось найти публичный чат: {link}")
+
+                else:
+                    # Считаем, что это просто хэш
+                    result = await client(functions.messages.CheckChatInviteRequest(hash=link))
+                    if isinstance(result, types.ChatInvite):
+                        logger.info(f"Ссылка валидна: {link}, Название группы: {result.title}, "
+                                    f"Количество участников: {result.participants_count}, "
+                                    f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}")
+                    elif isinstance(result, types.ChatInviteAlready):
+                        logger.info(f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}")
+            except Exception as e:
+                logger.error(f"Ошибка при проверке ссылки: {link}. Ошибка: {e}")
 
     async def subscribe_telegram(self, page) -> None:
         """
@@ -45,6 +108,10 @@ class SubscribeUnsubscribeTelegram:
                     logger.info(f"{link[0]}")
                     """Подписка на группу"""
                     # await self.subscribe_to_group_or_channel(client, link[0])
+
+                    # Проверка ссылок для подписки
+                    await self.checking_links(page, client)
+
                     await client(ImportChatInviteRequest("sMonmC066cA3MDcy"))
             logger.info(f"Окончание подписки на группы / каналы Telegram")
         except ImportChatInviteRequest:
@@ -91,19 +158,7 @@ class SubscribeUnsubscribeTelegram:
         finally:
             await client.disconnect()  # Разрываем соединение с Telegram
 
-    async def extract_channel_id(self, link):
-        """Сокращает ссылку с https://t.me/+yjqd0uZQETc4NGEy до yjqd0uZQETc4NGEy"""
-        # Проверяем, начинается ли ссылка с 'https://t.me/'
-        if link.startswith('https://t.me/'):
-            return link[len('https://t.me/'):]
 
-        # Если ссылка начинается просто с 't.me/', удалим 't.me/'
-        elif link.startswith('t.me/'):
-            return link[len('t.me/'):]
-
-        # В остальных случаях возвращаем None
-        else:
-            return None
 
     async def subscribe_to_group_or_channel(self, client, groups_wr) -> None:
         """
