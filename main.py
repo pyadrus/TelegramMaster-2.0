@@ -36,6 +36,7 @@ from src.gui.menu import (inviting_menu, message_distribution_menu, bio_editing_
 logger.add("user_data/log/log.log", rotation="2 MB", compression="zip", level="INFO")  # Логирование программы
 logger.add("user_data/log/log_ERROR.log", rotation="2 MB", compression="zip", level="ERROR")  # Логирование программы
 
+
 async def main(page: ft.Page):
     """
     Главное меню программы

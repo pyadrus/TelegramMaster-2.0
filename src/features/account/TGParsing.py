@@ -80,8 +80,9 @@ class ParsingGroupMembers:
                 logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            await log_and_display_info(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
-                                       lv, page)
+            await log_and_display_info(
+                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
+                lv, page)
 
         async def back_button_clicked(_):
             """
@@ -192,8 +193,9 @@ class ParsingGroupMembers:
                 logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            await log_and_display_info(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
-                                       lv, page)
+            await log_and_display_info(
+                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
+                lv, page)
 
         async def back_button_clicked(_):
             """
@@ -522,7 +524,7 @@ class ParsingGroupMembers:
                     # Время синтаксического анализа
                     parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                     await log_and_display_info(f"{dialog.id}, {channel_details.title}, "
-                                          f"https://t.me/{channel_details.username}, {participants_count}",
+                                               f"https://t.me/{channel_details.username}, {participants_count}",
                                                lv, page)
 
                     with db.atomic():  # Атомарная транзакция для записи данных

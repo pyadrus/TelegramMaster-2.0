@@ -35,7 +35,7 @@ from src.core.localization import (parse_single_or_multiple_groups, parse_select
                                    documentation)
 
 
-async def main_menu_program(page):
+async def main_menu_program(page: ft.Page):
     """
     Главное меню программы
 
@@ -116,7 +116,7 @@ async def main_menu_program(page):
                       ]), ]))
 
 
-async def settings_menu(page):
+async def settings_menu(page: ft.Page):
     """
     Меню настройки
 
@@ -198,7 +198,7 @@ async def settings_menu(page):
                  ])]))
 
 
-async def bio_editing_menu(page):
+async def bio_editing_menu(page: ft.Page):
     """
     Меню редактирование БИО
 
@@ -235,7 +235,7 @@ async def bio_editing_menu(page):
                  ])]))
 
 
-async def inviting_menu(page):
+async def inviting_menu(page: ft.Page):
     """
     Меню инвайтинг
 
@@ -269,7 +269,7 @@ async def inviting_menu(page):
                  ])]))
 
 
-async def message_distribution_menu(page):
+async def message_distribution_menu(page: ft.Page):
     """
     Меню рассылка сообщений
 
@@ -320,7 +320,7 @@ async def message_distribution_menu(page):
                  ])]))
 
 
-async def working_with_contacts_menu(page):
+async def working_with_contacts_menu(page: ft.Page):
     """
     Меню работа с контактами
 
@@ -354,7 +354,7 @@ async def working_with_contacts_menu(page):
                  ])]))
 
 
-async def menu_parsing(page):
+async def menu_parsing(page: ft.Page):
     """
     Парсинг меню
 
@@ -402,7 +402,7 @@ async def menu_parsing(page):
                  ])]))
 
 
-async def reactions_menu(page):
+async def reactions_menu(page: ft.Page):
     """
     Меню работа с реакциями
 
@@ -431,7 +431,7 @@ async def reactions_menu(page):
                  ])]))
 
 
-async def viewing_posts_menu(page):
+async def viewing_posts_menu(page: ft.Page):
     """
     Меню работа с просмотрами
 
@@ -457,7 +457,7 @@ async def viewing_posts_menu(page):
                  ])]))
 
 
-async def subscribe_and_unsubscribe_menu(page):
+async def subscribe_and_unsubscribe_menu(page: ft.Page):
     """
     Меню подписка и отписка
 
@@ -485,7 +485,7 @@ async def subscribe_and_unsubscribe_menu(page):
                  ])]))
 
 
-async def account_verification_menu(page):
+async def account_verification_menu(page: ft.Page):
     """
     Меню проверки аккаунтов
 
@@ -520,7 +520,7 @@ async def account_verification_menu(page):
                  ])]))
 
 
-async def account_connection_menu(page):
+async def account_connection_menu(page: ft.Page):
     """
     Меню подключения аккаунтов
 
@@ -550,7 +550,7 @@ async def account_connection_menu(page):
                  ])]))
 
 
-async def connecting_accounts_by_number_menu(page):
+async def connecting_accounts_by_number_menu(page: ft.Page):
     """
     Меню подключения аккаунтов по номеру телефона
 
@@ -621,7 +621,7 @@ async def connecting_accounts_by_number_menu(page):
                  ])]))
 
 
-async def connecting_accounts_by_session_menu(page):
+async def connecting_accounts_by_session_menu(page: ft.Page):
     """
     Меню подключения аккаунтов по номеру телефона
 
@@ -695,7 +695,7 @@ async def connecting_accounts_by_session_menu(page):
                  ])]))
 
 
-async def creating_groups_and_chats_menu(page):
+async def creating_groups_and_chats_menu(page: ft.Page):
     """
     Меню создания групп и чатов
 
@@ -722,7 +722,7 @@ async def creating_groups_and_chats_menu(page):
                  ])]))
 
 
-async def log_and_display_info(message: str, lv, page):
+async def log_and_display_info(message: str, lv, page: ft.Page):
     """
     Выводит сообщение в GUI и записывает лог.
 
@@ -734,7 +734,8 @@ async def log_and_display_info(message: str, lv, page):
     lv.controls.append(ft.Text(message))  # отображаем сообщение в ListView
     page.update()  # обновляем страницу для отображения нового сообщения
 
-async def log_and_display_error(message: str, lv, page):
+
+async def log_and_display_error(message: str, lv, page: ft.Page):
     """
     Выводит сообщение в GUI и записывает лог.
 
@@ -745,6 +746,7 @@ async def log_and_display_error(message: str, lv, page):
     logger.error(message)  # записываем сообщение в лог
     lv.controls.append(ft.Text(message))  # отображаем сообщение в ListView
     page.update()  # обновляем страницу для отображения нового сообщения
+
 
 async def show_notification(page: ft.Page, message: str):
     """

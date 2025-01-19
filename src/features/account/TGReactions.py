@@ -84,7 +84,7 @@ class WorkingWithReactions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def reactions_for_groups_and_messages_test(self, number, chat, page) -> None:
+    async def reactions_for_groups_and_messages_test(self, number, chat, page: ft.Page) -> None:
         """
         Вводим ссылку на группу и ссылку на сообщение
 
@@ -114,7 +114,7 @@ class WorkingWithReactions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def setting_reactions(self, page):
+    async def setting_reactions(self, page: ft.Page):
         """
         Выставление реакций на новые посты
         """

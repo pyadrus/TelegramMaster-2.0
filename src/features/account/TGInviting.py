@@ -54,9 +54,9 @@ class InvitingToAGroup:
         account_limit = ConfigReader().get_limits()
         find_filesss = find_filess(directory_path=path_inviting_folder, extension='session')
         await log_and_display_info(f"Лимит на аккаунт: {account_limit}\n"
-                              f"Всего участников: {len(number_usernames)}\n"
-                              f"Подключенные аккаунты {find_filesss}\n"
-                              f"Всего подключенных аккаунтов: {len(find_filesss)}\n", lv, page)
+                                   f"Всего участников: {len(number_usernames)}\n"
+                                   f"Подключенные аккаунты {find_filesss}\n"
+                                   f"Всего подключенных аккаунтов: {len(find_filesss)}\n", lv, page)
 
     async def general_invitation_to_the_group(self, page: ft.Page, lv, dropdown):
         """
@@ -325,7 +325,8 @@ class InvitingToAGroup:
                 async def general_invitation_to_the_group_scheduler():
                     await self.general_invitation_to_the_group(page, lv, dropdown)
 
-                await log_and_display_info(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", lv, page)
+                await log_and_display_info(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", lv,
+                                           page)
 
                 self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)),
                                     general_invitation_to_the_group_scheduler)
