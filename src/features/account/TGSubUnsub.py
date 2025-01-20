@@ -2,13 +2,14 @@
 import asyncio
 import datetime
 import random
+
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
 from telethon import types
 from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
                              FloodWaitError, InviteRequestSentError, UserDeactivatedBanError, SessionRevokedError,
-                             InviteHashExpiredError)
+                             InviteHashExpiredError, InviteHashInvalidError)
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
@@ -57,11 +58,27 @@ class SubscribeUnsubscribeTelegram:
                 try:
                     result = await client(functions.messages.CheckChatInviteRequest(hash=link_hash))
                     if isinstance(result, types.ChatInvite):
-                        # await log_and_display(f"Ссылка для подписки и проверки:  {link}", lv, page)
                         await log_and_display_info(f"Ссылка валидна: {link}, Название группы: {result.title}, "
                                                    f"Количество участников: {result.participants_count}, "
                                                    f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}",
                                                    lv, page)
+                        try:
+                            logger.info(f"Подписка на группу / канал по ссылке приглашению {link}")
+                            try:
+                                await client(ImportChatInviteRequest(link_hash))  # Подписка на группу / канал по ссылке приглашению
+                            except InviteHashInvalidError:
+                                await log_and_display_info(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
+                                                           lv, page)
+                                logger.error(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}")
+                        except InviteHashExpiredError as error:
+                            logger.error(f"Ошибка при подписке на группу / канал по ссылке приглашению {error}")
+                            try:
+                                await client(ImportChatInviteRequest(link_hash))  # Подписка на группу / канал по ссылке приглашению
+                                logger.info(f"Подписка на группу / канал по ссылке приглашению {link_hash}")
+                            except InviteHashInvalidError:
+                                await log_and_display_info(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
+                                                           lv, page)
+                                logger.error(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}")
                     elif isinstance(result, types.ChatInviteAlready):
                         await log_and_display_info(
                             f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}", lv, page)
@@ -79,6 +96,8 @@ class SubscribeUnsubscribeTelegram:
                                                f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
                                                f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}",
                                                lv, page)
+                    logger.info(f"Публичная группа/канал: {link}, Название: {chat.title}")
+                    await client(JoinChannelRequest(link))
                 else:
                     await log_and_display_info(f"Не удалось найти публичный чат: {link}", lv, page)
 
@@ -89,8 +108,10 @@ class SubscribeUnsubscribeTelegram:
                     if isinstance(result, types.ChatInvite):
                         await log_and_display_info(f"Ссылка валидна: {link}, Название группы: {result.title}, "
                                                    f"Количество участников: {result.participants_count}, "
-                                                   f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}",
+                                                   f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, "
+                                                   f"Описание: {result.about or 'Нет описания'}",
                                                    lv, page)
+                        await client(JoinChannelRequest(link))
                     elif isinstance(result, types.ChatInviteAlready):
                         await log_and_display_info(
                             f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}", lv, page)
@@ -112,6 +133,12 @@ class SubscribeUnsubscribeTelegram:
         except FloodWaitError as e:
             await log_and_display_error(f"❌ Попытка подписки на группу / канал {link}. Flood! wait for "
                                         f"{str(datetime.timedelta(seconds=e.seconds))}", lv, page)
+        except InviteRequestSentError:
+            await log_and_display_info(
+                f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
+                lv, page
+            )
+            logger.info(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}")
 
     async def subscribe_telegram(self, page: ft.Page) -> None:
         """
@@ -127,8 +154,6 @@ class SubscribeUnsubscribeTelegram:
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
         async def add_items(_):
-            # try:
-            # logger.info(f"Запуск подписки на группы / каналы Telegram")
             start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
             # Индикация начала инвайтинга
             await log_and_display_info(f"\n▶️ Начало Подписки.\n🕒 Время старта: {str(start)}", lv, page)
@@ -142,28 +167,18 @@ class SubscribeUnsubscribeTelegram:
                 for link_tuple in links_inviting:
                     link = link_tuple[0]
                     await log_and_display_info(f"Ссылка для подписки и проверки:  {link}", lv, page)
-                    # Подписка на группу или канал
-                    # await self.subscribe_to_group_or_channel(client, link[0])
-
-                    # Проверка ссылок для подписки
+                    # Проверка ссылок для подписки и подписка на группу или канал
                     await self.checking_links(page, client, link, lv)
                 await client.disconnect()
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-            await log_and_display_info(
-                f"🔚 Конец Подписки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}\n", lv, page)
-            # await client(ImportChatInviteRequest("sMonmC066cA3MDcy"))
-            # logger.info(f"Окончание подписки на группы / каналы Telegram")
-            # except ImportChatInviteRequest:
-            #     logger.exception(f"❌ Ошибка ImportChatInviteRequest")
-            # except Exception as error:
-            #     logger.exception(f"❌ Ошибка: {error}")
+            await log_and_display_info(f"🔚 Конец Подписки.\n🕒 Время окончания: {finish}.\n"
+                                       f"⏳ Время работы: {finish - start}\n", lv, page)
 
         async def back_button_clicked(_):
             """
             ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню подписки на группы / каналы Telegram.
             """
-            page.go(
-                "/subscribe_unsubscribe")  # переходим к основному меню меню подписки на группы / каналы Telegram. 🏠
+            page.go("/subscribe_unsubscribe")  # Переходим к основному меню подписки на группы / каналы Telegram. 🏠
 
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
@@ -257,18 +272,6 @@ class SubscribeUnsubscribeTelegram:
             logger.error(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не "
                 f"является группой / каналом: {groups_wr}")
-
-            # Пример использования
-            # link = 'https://t.me/+yjqd0uZQETc4NGEy'
-            channel_id = await self.extract_channel_id(groups_wr)
-            print(channel_id)  # Выведет: yjqd0uZQETc4NGEy
-
-            try:
-                await client(ImportChatInviteRequest("yjqd0uZQETc4NGEy"))
-            except InviteHashExpiredError:
-                await client(ImportChatInviteRequest(f"+{channel_id}"))
-
-            # TODO Incorrect number of bindings supplied. The current statement uses 1, and there are 30 supplied. (17.01.2025)
             await self.db_handler.write_data_to_db("""SELECT * from writing_group_links""",
                                                    """DELETE from writing_group_links where writing_group_links = ?""",
                                                    groups_wr)

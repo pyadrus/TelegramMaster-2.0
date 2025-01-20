@@ -85,6 +85,7 @@ async def main(page: ft.Page):
             # ______________________________________________________________________________________________________________
             elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
                 await subscribe_and_unsubscribe_menu(page)
+
             elif page.route == "/subscription_all":  # Подписка
                 try:
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -93,11 +94,10 @@ async def main(page: ft.Page):
                         await show_notification(page, "⛔ Нет аккаунта в папке subscription")
                         return None
                     else:
-
                         await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
-
                 except Exception as error:
                     logger.exception(f"❌ Ошибка: {error}")
+
             elif page.route == "/unsubscribe_all":  # Отписываемся
                 try:
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
