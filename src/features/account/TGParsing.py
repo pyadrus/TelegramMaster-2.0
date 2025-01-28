@@ -7,7 +7,7 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
 from telethon import types
-from telethon.errors import ChatAdminRequiredError, ChannelPrivateError
+from telethon.errors import ChatAdminRequiredError, ChannelPrivateError, AuthKeyUnregisteredError
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, UserStatusLastMonth,
@@ -382,8 +382,7 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    logger.info(
-                        f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
+                    logger.info(f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
                     await log_and_display_error(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page)
                     await asyncio.sleep(2)
                     break
@@ -395,6 +394,11 @@ class ParsingGroupMembers:
                 except ChannelPrivateError:
                     logger.info(f'❌ Ошибка parsing: канал / чат закрыт {target_group} или аккаунт забанен на канале. Требуется замена аккаунта')
                     await log_and_display_error(f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт", lv, page)
+                    await asyncio.sleep(2)
+                    break
+                except AuthKeyUnregisteredError:
+                    logger.info(f'❌ Ошибка parsing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов')
+                    await log_and_display_error(f"❌ Ошибка: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
                     await asyncio.sleep(2)
                     break
 
