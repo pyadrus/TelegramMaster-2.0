@@ -8,7 +8,7 @@ from loguru import logger
 from telethon import events
 from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError, UserBannedInChannelError,
                              ChatWriteForbiddenError, UserNotMutualContactError, UserIdInvalidError,
-                             UsernameNotOccupiedError, UsernameInvalidError, ChatAdminRequiredError)
+                             UsernameNotOccupiedError, UsernameInvalidError, ChatAdminRequiredError, SlowModeWaitError)
 from telethon.tl.functions.channels import JoinChannelRequest
 
 from src.features.account.TGConnect import TGConnect
@@ -278,6 +278,10 @@ class SendTelegramMessages:
                     except FloodWaitError as e:
                         logger.error(
                             f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                        await asyncio.sleep(e.seconds)
+                    except SlowModeWaitError as e:
+                        logger.error(
+                            f"Рассылка сообщений в группу: {groups[0]}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         await asyncio.sleep(e.seconds)
                     except UserBannedInChannelError:
                         await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
