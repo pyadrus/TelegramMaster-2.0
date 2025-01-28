@@ -257,14 +257,15 @@ class SendTelegramMessages:
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                    data = await self.select_and_read_random_file(
-                        find_files(directory_path="user_data/message", extension="json"), folder="message")
+                    data = await self.select_and_read_random_file(find_files(directory_path="user_data/message",
+                                                                             extension="json"), folder="message")
                     try:
                         await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
-                        logger.error(
-                            f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
-
+                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
+                    except ValueError:
+                        logger.error(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {groups[0]}")
+                        break
                     except ChatAdminRequiredError:
                         logger.error(
                             f"К сожалению, у вас нет прав администратора в группе {groups[0]}, либо ссылка неверная или это канал. Пожалуйста, проверьте ссылку 🔄 {groups[0]}.")
@@ -336,6 +337,10 @@ class SendTelegramMessages:
                     except UserBannedInChannelError:
                         logger.error(
                             'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
+                    except ValueError:
+                        logger.error(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {chat[0]}")
+                        break
+
                     await self.random_dream()  # Прерываем работу и меняем аккаунт
 
                 await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
