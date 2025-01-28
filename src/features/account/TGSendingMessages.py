@@ -35,7 +35,7 @@ class SendTelegramMessages:
         self.time_sending_messages_1, self.time_sending_messages_2 = self.config_reader.get_time_sending_messages()
         self.time_subscription_1, self.time_subscription_2 = self.config_reader.get_time_subscription()
 
-    async def send_message_from_all_accounts(self, account_limits, page) -> None:
+    async def send_message_from_all_accounts(self, account_limits, page: ft.Page) -> None:
         """
         Отправка (текстовых) сообщений в личку Telegram пользователям из базы данных.
 
@@ -85,7 +85,7 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def send_files_to_personal_chats(self, account_limits, page) -> None:
+    async def send_files_to_personal_chats(self, account_limits, page: ft.Page) -> None:
         """
         Отправка файлов в личку
 

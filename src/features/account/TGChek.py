@@ -13,7 +13,7 @@ class TGChek:
     def __init__(self):
         self.TGConnect = TGConnect()
 
-    async def validation_check(self, page):
+    async def validation_check(self, page: ft.Page):
         """
         Проверка валидности аккаунтов
 
@@ -41,7 +41,7 @@ class TGChek:
         logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
         await show_notification(page, "🔚 Проверка аккаунтов завершена")
 
-    async def checking_for_spam_bots(self, page):
+    async def checking_for_spam_bots(self, page: ft.Page):
         """
         Проверка на спам ботов
 

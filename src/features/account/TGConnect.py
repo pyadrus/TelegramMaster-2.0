@@ -32,7 +32,7 @@ class TGConnect:
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
 
-    async def verify_account(self, page, folder_name, session_name) -> None:
+    async def verify_account(self, page: ft.Page, folder_name, session_name) -> None:
         """
         Проверяет и сортирует аккаунты.
 
@@ -86,7 +86,7 @@ class TGConnect:
         working_with_accounts(f"user_data/accounts/{folder_name}/{session_name}.session",
                               f"user_data/accounts/banned/{session_name}.session")
 
-    async def check_for_spam(self, page, folder_name) -> None:
+    async def check_for_spam(self, page: ft.Page, folder_name) -> None:
         """
         Проверка аккаунта на спам через @SpamBot
 
@@ -154,7 +154,7 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def verify_all_accounts(self, page, folder_name) -> None:
+    async def verify_all_accounts(self, page: ft.Page, folder_name) -> None:
         """
         Проверяет все аккаунты Telegram в указанной директории.
 

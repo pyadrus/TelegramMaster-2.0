@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import random
-
+import flet as ft
 from loguru import logger
 from telethon import functions
 from telethon import types
@@ -23,15 +23,14 @@ class TGContact:
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
 
-    async def show_account_contact_list(self, page) -> None:
+    async def show_account_contact_list(self, page: ft.Page) -> None:
         """
         Показать список контактов аккаунтов и запись результатов в файл
         """
         try:
             for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_contact_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name, account_directory = path_contact_folder)
                 await self.parsing_and_recording_contacts_in_the_database(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:

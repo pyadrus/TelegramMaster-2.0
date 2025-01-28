@@ -7,7 +7,7 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
 from telethon import types
-from telethon.errors import ChatAdminRequiredError
+from telethon.errors import ChatAdminRequiredError, ChannelPrivateError
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, UserStatusLastMonth,
@@ -353,7 +353,7 @@ class ParsingGroupMembers:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def parse_users(client, target_group, lv, page) -> list:
+    async def parse_users(client, target_group, lv, page: ft.Page) -> list:
         """
         🧑‍🤝‍🧑 Парсинг и сбор данных пользователей группы или канала.
         Метод осуществляет поиск участников в указанной группе или канале, собирает их данные и сохраняет в файле.
@@ -392,11 +392,17 @@ class ParsingGroupMembers:
                     await log_and_display_error(f"❌ Ошибка: не хватает прав администратора {target_group}", lv, page)
                     await asyncio.sleep(2)
                     break
+                except ChannelPrivateError:
+                    logger.info(f'❌ Ошибка parsing: канал / чат закрыт {target_group} или аккаунт забанен на канале. Требуется замена аккаунта')
+                    await log_and_display_error(f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт", lv, page)
+                    await asyncio.sleep(2)
+                    break
+
             return all_participants
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def get_all_participants(self, all_participants, lv, page) -> list:
+    async def get_all_participants(self, all_participants, lv, page: ft.Page) -> list:
         """
         Сбор данных всех участников.
         Метод проходит по списку участников, получает их данные и сохраняет их в список сущностей.
@@ -418,7 +424,7 @@ class ParsingGroupMembers:
             logger.exception(f"❌ Ошибка: {error}")
             return []  # Возвращаем пустой список в случае ошибки
 
-    async def get_user_data(self, user, entities, lv, page) -> None:
+    async def get_user_data(self, user, entities, lv, page: ft.Page) -> None:
         """
         Получение и сохранение данных пользователя.
         Метод получает данные пользователя, добавляет их в список сущностей и отображает на странице.
@@ -499,7 +505,7 @@ class ParsingGroupMembers:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def forming_a_list_of_groups(client, lv, page) -> None:
+    async def forming_a_list_of_groups(client, lv, page: ft.Page) -> None:
         """
         Формирует список групп и каналов.
 
