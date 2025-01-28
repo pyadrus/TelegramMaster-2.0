@@ -10,7 +10,7 @@ from telethon import types
 from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
                              FloodWaitError, InviteRequestSentError, UserDeactivatedBanError, SessionRevokedError,
                              InviteHashExpiredError, InviteHashInvalidError, AuthKeyUnregisteredError,
-                             SessionPasswordNeededError)
+                             SessionPasswordNeededError, UserNotParticipantError)
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
@@ -257,8 +257,9 @@ class SubscribeUnsubscribeTelegram:
             if entity:
                 await client(LeaveChannelRequest(entity))
         except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
-            logger.error(
-                f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
+            logger.error(f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
+        except UserNotParticipantError:
+            logger.error(f"❌ Попытка отписки от группы / канала {group_link}. Аккаунт не является участником.")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
         finally:
