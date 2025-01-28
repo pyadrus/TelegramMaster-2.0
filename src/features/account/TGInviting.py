@@ -11,7 +11,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitEr
                              UserBannedInChannelError, UserNotMutualContactError, ChatAdminRequiredError,
                              UserKickedError, ChannelPrivateError, UserIdInvalidError, UsernameNotOccupiedError,
                              UsernameInvalidError, InviteRequestSentError, TypeNotFoundError, SessionRevokedError,
-                             UserDeactivatedBanError)
+                             UserDeactivatedBanError, AuthKeyUnregisteredError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
 from src.core.configs import ConfigReader, path_inviting_folder, line_width_button, height_button
@@ -148,6 +148,10 @@ class InvitingToAGroup:
                         logger.error(f'{error}')
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
                         break  # Прерываем работу и меняем аккаунт
+                    except AuthKeyUnregisteredError:
+                        logger.error(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Ошибка авторизации аккаунта")
+                        await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
+                        break
                     except PeerFloodError:
                         logger.error(
                             f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки конфиденциальности {username} не позволяют вам inviting")
