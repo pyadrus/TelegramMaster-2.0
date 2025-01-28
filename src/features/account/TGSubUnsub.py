@@ -9,13 +9,13 @@ from telethon import functions
 from telethon import types
 from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
                              FloodWaitError, InviteRequestSentError, UserDeactivatedBanError, SessionRevokedError,
-                             InviteHashExpiredError, InviteHashInvalidError)
+                             InviteHashExpiredError, InviteHashInvalidError, AuthKeyUnregisteredError)
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-from src.core.configs import ConfigReader, path_subscription_folder, path_unsubscribe_folder, line_width_button, \
-    height_button
+from src.core.configs import (ConfigReader, path_subscription_folder, path_unsubscribe_folder, line_width_button,
+                              height_button)
 from src.core.localization import back_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, find_filess
@@ -65,20 +65,26 @@ class SubscribeUnsubscribeTelegram:
                         try:
                             logger.info(f"Подписка на группу / канал по ссылке приглашению {link}")
                             try:
-                                await client(ImportChatInviteRequest(link_hash))  # Подписка на группу / канал по ссылке приглашению
+                                await client(ImportChatInviteRequest(
+                                    link_hash))  # Подписка на группу / канал по ссылке приглашению
                             except InviteHashInvalidError:
-                                await log_and_display_info(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
-                                                           lv, page)
-                                logger.error(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}")
+                                await log_and_display_info(
+                                    f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
+                                    lv, page)
+                                logger.error(
+                                    f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}")
                         except InviteHashExpiredError as error:
                             logger.error(f"Ошибка при подписке на группу / канал по ссылке приглашению {error}")
                             try:
-                                await client(ImportChatInviteRequest(link_hash))  # Подписка на группу / канал по ссылке приглашению
+                                await client(ImportChatInviteRequest(
+                                    link_hash))  # Подписка на группу / канал по ссылке приглашению
                                 logger.info(f"Подписка на группу / канал по ссылке приглашению {link_hash}")
                             except InviteHashInvalidError:
-                                await log_and_display_info(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
-                                                           lv, page)
-                                logger.error(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}")
+                                await log_and_display_info(
+                                    f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
+                                    lv, page)
+                                logger.error(
+                                    f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}")
                     elif isinstance(result, types.ChatInviteAlready):
                         await log_and_display_info(
                             f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}", lv, page)
@@ -130,6 +136,11 @@ class SubscribeUnsubscribeTelegram:
                     else:
                         await log_and_display_info(f"Не удалось найти публичный чат: {link}", lv, page)
 
+                except AuthKeyUnregisteredError:
+                    logger.info(f'❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов')
+                    await log_and_display_error(f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
+                    await asyncio.sleep(2)
+
         except FloodWaitError as e:
             await log_and_display_error(f"❌ Попытка подписки на группу / канал {link}. Flood! wait for "
                                         f"{str(datetime.timedelta(seconds=e.seconds))}", lv, page)
@@ -139,6 +150,11 @@ class SubscribeUnsubscribeTelegram:
                 lv, page
             )
             logger.info(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}")
+
+        except AuthKeyUnregisteredError:
+            logger.info(f'❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов')
+            await log_and_display_error(f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
+            await asyncio.sleep(2)
 
     async def subscribe_telegram(self, page: ft.Page) -> None:
         """
