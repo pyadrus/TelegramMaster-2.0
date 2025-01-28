@@ -9,7 +9,8 @@ from telethon import functions
 from telethon import types
 from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
                              FloodWaitError, InviteRequestSentError, UserDeactivatedBanError, SessionRevokedError,
-                             InviteHashExpiredError, InviteHashInvalidError, AuthKeyUnregisteredError)
+                             InviteHashExpiredError, InviteHashInvalidError, AuthKeyUnregisteredError,
+                             SessionPasswordNeededError)
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
@@ -141,6 +142,11 @@ class SubscribeUnsubscribeTelegram:
                     await log_and_display_error(f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
                     await asyncio.sleep(2)
 
+                except SessionPasswordNeededError:
+                    logger.info(f'❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов')
+                    await log_and_display_error(f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", lv, page)
+                    await asyncio.sleep(2)
+
         except FloodWaitError as e:
             await log_and_display_error(f"❌ Попытка подписки на группу / канал {link}. Flood! wait for "
                                         f"{str(datetime.timedelta(seconds=e.seconds))}", lv, page)
@@ -154,6 +160,11 @@ class SubscribeUnsubscribeTelegram:
         except AuthKeyUnregisteredError:
             logger.info(f'❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов')
             await log_and_display_error(f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
+            await asyncio.sleep(2)
+
+        except SessionPasswordNeededError:
+            logger.info(f'❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов')
+            await log_and_display_error(f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", lv, page)
             await asyncio.sleep(2)
 
     async def subscribe_telegram(self, page: ft.Page) -> None:
