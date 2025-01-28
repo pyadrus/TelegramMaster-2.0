@@ -10,7 +10,7 @@ from loguru import logger
 from telethon import TelegramClient
 from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, UserDeactivatedBanError, TimedOutError,
                              AuthKeyNotFound, TypeNotFoundError, AuthKeyUnregisteredError, SessionPasswordNeededError,
-                             ApiIdInvalidError, YouBlockedUserError)
+                             ApiIdInvalidError, YouBlockedUserError, PasswordHashInvalidError)
 from thefuzz import fuzz
 
 from src.core.utils import working_with_accounts, find_filess
@@ -348,9 +348,12 @@ class TGConnect:
                                     await telegram_client.sign_in(password=pass_2fa.value)
                                     logger.info("Успешная авторизация.")
                                     telegram_client.disconnect()
-                                    page.go(
-                                        "/connecting_accounts_by_number")  # Изменение маршрута в представлении существующих настроек
+                                    page.go("/connecting_accounts_by_number")  # Изменение маршрута в представлении существующих настроек
                                     page.update()
+                                except PasswordHashInvalidError:
+                                    logger.error(f"❌ Неверный пароль.")
+                                    await show_notification(page,f"⚠️ Неверный пароль. Попробуйте еще раз.")
+                                    page.go("/connecting_accounts_by_number")  # Изменение маршрута в представлении существующих настроек
                                 except Exception as ex:
                                     logger.exception(f"❌ Ошибка при вводе пароля: {ex}")
 
