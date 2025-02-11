@@ -4,7 +4,7 @@ import flet as ft
 from loguru import logger
 
 from src.core.configs import ConfigReader, path_send_message_folder, path_inviting_folder, path_subscription_folder, \
-    path_unsubscribe_folder, path_reactions_folder
+    path_unsubscribe_folder, path_reactions_folder, path_viewing_folder, path_parsing_folder, path_bio_folder
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import (find_filess)
 from src.gui.menu import show_notification
@@ -92,4 +92,59 @@ class CheckingProgram:
         if not find_filess(directory_path=path_reactions_folder, extension=self.account_extension):
             logger.error('⛔ Нет аккаунта в папке reactions')
             await show_notification(page, "⛔ Нет аккаунта в папке reactions")
+            return None
+
+    async def checking_for_automatic_setting_of_reactions(self, page: ft.Page):
+        """
+        ⛔ Проверка наличия аккаунта в папке с аккаунтами (Автоматическое выставление реакций)
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
+        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
+        if not find_filess(directory_path=path_reactions_folder, extension=self.account_extension):
+            logger.error('⛔ Нет аккаунта в папке reactions')
+            await show_notification(page, "⛔ Нет аккаунта в папке reactions")
+            return None
+
+    async def checking_for_viewing_posts_menu(self, page: ft.Page):
+        """
+        ⛔ Проверка наличия аккаунта в папке с аккаунтами (Автоматическое выставление просмотров меню)
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
+        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
+        if not find_filess(directory_path=path_viewing_folder, extension=self.account_extension):
+            logger.error('⛔ Нет аккаунта в папке viewing')
+            await show_notification(page, "⛔ Нет аккаунта в папке viewing")
+            return None
+
+    async def checking_for_parsing_single_groups(self, page: ft.Page):
+        """
+        ⛔ Проверка наличия аккаунта в папке с аккаунтами (🔍 Парсинг одной группы / групп)
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
+        logger.info(f"⛔ Проверка наличия аккаунта в папке {path_parsing_folder} с аккаунтами")
+        if not find_filess(directory_path=path_parsing_folder, extension=self.account_extension):
+            logger.error('⛔ Нет аккаунта в папке parsing')
+            await show_notification(page, "⛔ Нет аккаунта в папке parsing")
+            return None
+
+    async def checking_for_parsing_selected_group_user_subscribed(self, page: ft.Page):
+        """
+        ⛔ Проверка наличия аккаунта в папке с аккаунтами (🔍 Парсинг выбранной группы)
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
+        logger.info(f"⛔ Проверка наличия аккаунта в папке {path_parsing_folder} с аккаунтами")
+        if not find_filess(directory_path=path_parsing_folder, extension=self.account_extension):
+            logger.error('⛔ Нет аккаунта в папке parsing')
+            await show_notification(page, "⛔ Нет аккаунта в папке parsing")
+            return None
+
+    async def checking_for_changing_username(self, page: ft.Page):
+        """
+        ⛔ Проверка наличия аккаунта в папке с аккаунтами (Изменение username)
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
+        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
+        if not find_filess(directory_path=path_bio_folder, extension=self.account_extension):
+            logger.error(f'⛔ Нет аккаунта в папке {path_bio_folder}')
+            await show_notification(page, "⛔ Нет аккаунта в папке bio")
             return None

@@ -8,9 +8,8 @@ from loguru import logger
 from docs.app import start_app
 from src.core.checking_program import CheckingProgram
 from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
-                              window_height, window_resizable, path_parsing_folder, path_reactions_folder,
-                              path_contact_folder, path_creating_folder,
-                              path_send_message_folder, path_bio_folder, path_viewing_folder,
+                              window_height, window_resizable, path_parsing_folder, path_contact_folder,
+                              path_creating_folder, path_send_message_folder, path_bio_folder,
                               path_send_message_folder_answering_machine)
 from src.core.sqlite_working_tools import DatabaseHandler, db_handler
 from src.core.utils import find_files, find_filess
@@ -114,74 +113,37 @@ async def main(page: ft.Page):
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_reactions_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке reactions')
-                        await show_notification(page, "⛔ Нет аккаунта в папке reactions")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Автоматического выставления реакций")
-                        await WorkingWithReactions().setting_reactions(page=page)
-                        logger.info("🔚 Конец Автоматического выставления реакций")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().checking_for_automatic_setting_of_reactions(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Автоматического выставления реакций")
+                await WorkingWithReactions().setting_reactions(page=page)
+                logger.info("🔚 Конец Автоматического выставления реакций")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             # ______________________________________________________________________________________________________________
             elif page.route == "/viewing_posts_menu":  # Автоматическое выставление просмотров меню
                 await viewing_posts_menu(page)
             elif page.route == "/we_are_winding_up_post_views":  # ️‍🗨️ Накручиваем просмотры постов
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_viewing_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке viewing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке viewing")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Накрутки просмотров постов")
-                        await ViewingPosts().viewing_posts_request(page)
-                        logger.info("🔚 Конец Накрутки просмотров постов")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().checking_for_viewing_posts_menu(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Накрутки просмотров постов")
+                await ViewingPosts().viewing_posts_request(page)
+                logger.info("🔚 Конец Накрутки просмотров постов")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             # ______________________________________________________________________________________________________________
             elif page.route == "/parsing":  # Меню "Парсинг"
                 await menu_parsing(page)
-
             elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
-                try:
-                    logger.info(f"⛔ Проверка наличия аккаунта в папке {path_parsing_folder} с аккаунтами")
-                    if not find_filess(directory_path=path_parsing_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке parsing")
-                        return None
-                    else:
-                        await ParsingGroupMembers().parse_groups(page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_for_parsing_single_groups(page=page)
+                await ParsingGroupMembers().parse_groups(page)
             elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_parsing_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке parsing")
-                        return None
-                    else:
-                        await ParsingGroupMembers().choose_and_parse_group(page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_for_parsing_selected_group_user_subscribed(page=page)
+                await ParsingGroupMembers().choose_and_parse_group(page)
             elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
                 try:
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
@@ -558,17 +520,8 @@ async def main(page: ft.Page):
                     logger.exception(f"❌ Ошибка: {error}")
 
             elif page.route == "/changing_username":  # Изменение username
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_bio_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке bio")
-                        return None
-                    else:
-                        await AccountBIO().change_username_profile_gui(page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_for_changing_username(page=page)
+                await AccountBIO().change_username_profile_gui(page)
             # ______________________________________________________________________________________________________________
             elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
                 await settings_menu(page)
