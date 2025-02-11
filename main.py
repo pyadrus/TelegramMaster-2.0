@@ -6,9 +6,10 @@ import flet as ft
 from loguru import logger
 
 from docs.app import start_app
+from src.core.checking_program import CheckingProgram
 from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
-                              window_height, window_resizable, path_parsing_folder, path_subscription_folder,
-                              path_unsubscribe_folder, path_reactions_folder, path_contact_folder, path_creating_folder,
+                              window_height, window_resizable, path_parsing_folder, path_unsubscribe_folder,
+                              path_reactions_folder, path_contact_folder, path_creating_folder,
                               path_send_message_folder, path_bio_folder, path_viewing_folder,
                               path_send_message_folder_answering_machine)
 from src.core.sqlite_working_tools import DatabaseHandler, db_handler
@@ -61,16 +62,16 @@ async def main(page: ft.Page):
             if page.route == "/inviting":  # Меню "🚀 Инвайтинг"
                 await inviting_menu(page)
             elif page.route == "/inviting_without_limits":  # 🚀 Инвайтинг
-                await InvitingToAGroup().check_before_inviting(page=page)
+                await CheckingProgram().check_before_inviting(page=page)
                 await InvitingToAGroup().inviting_without_limits(page=page)
             elif page.route == "/inviting_1_time_per_hour":  # ⏰ Инвайтинг 1 раз в час
-                await InvitingToAGroup().check_before_inviting(page=page)
+                await CheckingProgram().check_before_inviting(page=page)
                 await InvitingToAGroup().launching_an_invite_once_an_hour(page=page)
             elif page.route == "/inviting_certain_time":  # 🕒 Инвайтинг в определенное время
-                await InvitingToAGroup().check_before_inviting(page=page)
+                await CheckingProgram().check_before_inviting(page=page)
                 await InvitingToAGroup().schedule_invite(page=page)
             elif page.route == "/inviting_every_day":  # 📅 Инвайтинг каждый день
-                await InvitingToAGroup().check_before_inviting(page=page)
+                await CheckingProgram().check_before_inviting(page=page)
                 await InvitingToAGroup().launching_invite_every_day_certain_time(page=page)
             # ______________________________________________________________________________________________________________
             elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
@@ -89,13 +90,8 @@ async def main(page: ft.Page):
 
             elif page.route == "/subscription_all":  # Подписка
                 try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_subscription_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке subscription')
-                        await show_notification(page, "⛔ Нет аккаунта в папке subscription")
-                        return None
-                    else:
-                        await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
+                    await CheckingProgram().checking_for_subscription_account(page=page)
+                    await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
                 except Exception as error:
                     logger.exception(f"❌ Ошибка: {error}")
 
@@ -402,7 +398,7 @@ async def main(page: ft.Page):
                 await display_message_distribution_menu(page)
             elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
                 try:
-                    await SendTelegramMessages().check_before_sending_messages_via_chats(page=page)
+                    await CheckingProgram().check_before_sending_messages_via_chats(page=page)
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Рассылки сообщений по чатам")
@@ -458,7 +454,7 @@ async def main(page: ft.Page):
                     logger.exception(f"❌ Ошибка: {error}")
             elif page.route == "/sending_files_via_chats":  # Рассылка файлов по чатам
                 try:
-                    await SendTelegramMessages().check_before_sending_messages_via_chats(page=page)
+                    await CheckingProgram().check_before_sending_messages_via_chats(page=page)
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало Рассылки файлов по чатам")
@@ -471,7 +467,7 @@ async def main(page: ft.Page):
                     logger.exception(f"❌ Ошибка: {error}")
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
                 try:
-                    await SendTelegramMessages().check_before_sending_messages_via_chats(page=page)
+                    await CheckingProgram().check_before_sending_messages_via_chats(page=page)
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало отправки сообщений + файлов по чатам")

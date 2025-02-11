@@ -347,25 +347,3 @@ class InvitingToAGroup:
                                autofocus=True)
 
         await self.create_invite_page(page, lv, dropdown, add_items)
-
-    async def check_before_inviting(self, page: ft.Page) -> None:
-        """
-        Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :return:
-        """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-        if not find_filess(directory_path=path_inviting_folder, extension='session'):
-            logger.error('⛔ Нет аккаунта в папке inviting')
-            await show_notification(page, "⛔ Нет аккаунта в папке inviting")
-            return None
-        if len(await self.db_handler.open_db_func_lim(table_name="members",
-                                                      account_limit=ConfigReader().get_limits())) == 0:
-            logger.error('⛔ В таблице members нет пользователей для инвайтинга')
-            await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
-            return None
-        if len(await self.db_handler.open_db_func_lim(table_name="links_inviting",
-                                                      account_limit=ConfigReader().get_limits())) == 0:
-            logger.error('⛔ Не записана группа для инвайтинга')
-            await show_notification(page, "⛔ Не записана группа для инвайтинга")
-            return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки

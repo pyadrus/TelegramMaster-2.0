@@ -20,7 +20,6 @@ from src.core.utils import read_json_file
 from src.core.utils import record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.menu import show_notification
 
 
 class SendTelegramMessages:
@@ -244,31 +243,6 @@ class SendTelegramMessages:
             return data  # Возвращаем данные из файла
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
-
-    async def check_before_sending_messages_via_chats(self, page: ft.Page) -> None:
-        """
-        Проверка наличия сформированного списка с чатами для рассылки по чатам.
-        Проверка наличия аккаунта в папке с аккаунтами.
-        Проверка папки с сообщениями на наличие заготовленных сообщений.
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :return:
-        """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-        if not find_filess(directory_path=path_send_message_folder, extension='session'):
-            logger.error('⛔ Нет аккаунта в папке send_message')
-            await show_notification(page, "Нет аккаунта в папке send_message")
-            return None
-        logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-        if not find_filess(directory_path="user_data/message", extension='json'):
-            logger.error('⛔ Нет заготовленных сообщений в папке message')
-            await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
-            return None
-        logger.info("⛔ Проверка сформированного списка с чатами для рассылки")
-        if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
-                                                 account_limit=ConfigReader().get_limits())) == 0:
-            logger.error('⛔ Не сформирован список для рассылки по чатам')
-            await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
-            return None
 
     async def sending_messages_via_chats_times(self, page) -> None:
         """
