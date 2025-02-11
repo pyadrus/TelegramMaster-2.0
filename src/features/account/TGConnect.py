@@ -13,14 +13,14 @@ from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, Use
                              ApiIdInvalidError, YouBlockedUserError, PasswordHashInvalidError)
 from thefuzz import fuzz
 
-from src.core.utils import working_with_accounts, find_filess
 from src.core.configs import ConfigReader, BUTTON_HEIGHT, line_width_button
 from src.core.localization import back_button, done_button
+from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.utils import working_with_accounts, find_filess
 from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
-from src.gui.menu import show_notification
 from src.features.proxy.checking_proxy import checking_the_proxy_for_work
 from src.features.proxy.checking_proxy import reading_proxy_data_from_the_database
-from src.core.sqlite_working_tools import DatabaseHandler
+from src.gui.menu import show_notification
 
 
 class TGConnect:

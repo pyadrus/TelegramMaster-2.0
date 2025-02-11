@@ -5,11 +5,11 @@ from telethon import functions  # Импортируем библиотеку te
 from telethon.errors import (AuthKeyUnregisteredError, UsernamePurchaseAvailableError, UsernameOccupiedError,
                              UsernameInvalidError)
 
-from src.features.account.TGConnect import TGConnect
 from src.core.configs import path_bio_folder
+from src.core.utils import find_files, find_filess
+from src.features.account.TGConnect import TGConnect
 from src.gui.buttons import function_button_ready
 from src.gui.menu import show_notification
-from src.core.utils import find_files, find_filess
 
 
 class GUIManager:

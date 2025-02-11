@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import random
+
 import flet as ft
 from loguru import logger
 from telethon import functions
@@ -8,10 +9,10 @@ from telethon import types
 from telethon.tl.types import (UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth,
                                UserStatusOnline, UserStatusEmpty)
 
-from src.features.account.TGConnect import TGConnect
-from src.core.utils import find_filess
 from src.core.configs import path_contact_folder
 from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.utils import find_filess
+from src.features.account.TGConnect import TGConnect
 
 
 class TGContact:

@@ -289,4 +289,5 @@ class DatabaseHandler:
         self.close()
         return data
 
+
 db_handler = DatabaseHandler()

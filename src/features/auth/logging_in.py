@@ -1,17 +1,15 @@
 import datetime
 import json
-
-import requests
-from telethon import TelegramClient
 from urllib.request import urlopen  # Изменено с urllib2 на urllib.request
 
+import phonenumbers
+import requests
+from loguru import logger
+from phonenumbers import carrier, geocoder
+from telethon import TelegramClient
 from telethon.errors import FilePartsInvalidError
 
 from src.core.configs import program_version, date_of_program_change, program_name
-from loguru import logger
-
-import phonenumbers
-from phonenumbers import carrier, geocoder
 
 
 def getting_phone_number_data_by_phone_number(phone_numbers):

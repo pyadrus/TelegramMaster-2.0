@@ -10,8 +10,8 @@ from loguru import logger
 
 from src.core.configs import BUTTON_HEIGHT, line_width_button
 from src.core.localization import back_button, done_button
-from src.gui.menu import show_notification
 from src.core.sqlite_working_tools import DatabaseHandler
+from src.gui.menu import show_notification
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 config.read("user_data/config/config.ini")

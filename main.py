@@ -27,7 +27,8 @@ from src.features.account.TGViewingPosts import ViewingPosts
 from src.features.auth.logging_in import loging
 from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
-from src.gui.menu import (inviting_menu, display_message_distribution_menu, bio_editing_menu, settings_menu, menu_parsing,
+from src.gui.menu import (inviting_menu, display_message_distribution_menu, bio_editing_menu, settings_menu,
+                          menu_parsing,
                           reactions_menu, subscribe_and_unsubscribe_menu, account_verification_menu,
                           account_connection_menu, connecting_accounts_by_number_menu,
                           connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
@@ -401,7 +402,6 @@ async def main(page: ft.Page):
                 await display_message_distribution_menu(page)
             elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
                 try:
-
 
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
                     if not find_filess(directory_path=path_send_message_folder, extension='session'):

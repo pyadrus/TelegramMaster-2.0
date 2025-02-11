@@ -7,12 +7,12 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger  # Импортируем библиотеку loguru для логирования
 from telethon.tl.functions.messages import GetMessagesViewsRequest
 
-from src.features.account.TGConnect import TGConnect
-from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.core.configs import path_viewing_folder
-from src.gui.buttons import function_button_ready_viewing
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess
+from src.features.account.TGConnect import TGConnect
+from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.gui.buttons import function_button_ready_viewing
 
 
 class ViewingPosts:

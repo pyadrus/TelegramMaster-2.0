@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
+
 import flet as ft
 from loguru import logger
 
-from src.features.account.TGConnect import TGConnect
 from src.core.utils import find_folders
+from src.features.account.TGConnect import TGConnect
 from src.gui.menu import show_notification
 
 

@@ -6,9 +6,10 @@ from multiprocessing import Process
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from loguru import logger
-from fastapi.staticfiles import StaticFiles
+
 # Импорт необходимых переменных и функций
 from src.core.configs import program_name, program_version, date_of_program_change
 from src.core.localization import (parse_selected_user_subscribed_group, parse_single_or_multiple_groups,

@@ -5,10 +5,10 @@ import flet as ft
 from loguru import logger
 from telethon import functions
 
-from src.features.account.TGConnect import TGConnect
-from src.core.utils import find_filess
 from src.core.configs import path_creating_folder, line_width_button, BUTTON_HEIGHT
 from src.core.localization import back_button, creating_groups_button
+from src.core.utils import find_filess
+from src.features.account.TGConnect import TGConnect
 from src.gui.menu import log_and_display_info
 
 
