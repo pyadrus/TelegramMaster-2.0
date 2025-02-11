@@ -402,36 +402,17 @@ async def main(page: ft.Page):
                 await display_message_distribution_menu(page)
             elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
                 try:
-
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке send_message')
-                        await show_notification(page, "Нет аккаунта в папке send_message")
-                        return None
-                    logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                    if not find_filess(directory_path="user_data/message", extension='json'):
-                        logger.error('⛔ Нет заготовленных сообщений в папке message')
-                        await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
-                        return None
-                    logger.info("⛔ Проверка сформированного списка с чатами для рассылки")
-                    if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
-                                                             account_limit=ConfigReader().get_limits())) == 0:
-                        logger.error('⛔ Не сформирован список для рассылки по чатам')
-                        await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
-                        return None
-
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Рассылки сообщений по чатам")
-                        entities = find_files(directory_path="user_data/message", extension="json")
-                        logger.info(entities)
-                        await SendTelegramMessages().sending_messages_via_chats_times(page=page)
-                        logger.info("🔚 Конец Рассылки сообщений по чатам")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                    await SendTelegramMessages().check_before_sending_messages_via_chats(page=page)
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Рассылки сообщений по чатам")
+                    entities = find_files(directory_path="user_data/message", extension="json")
+                    logger.info(entities)
+                    await SendTelegramMessages().sending_messages_via_chats_times(page=page)
+                    logger.info("🔚 Конец Рассылки сообщений по чатам")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
                 except Exception as error:
                     logger.exception(f"❌ Ошибка: {error}")
             elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
@@ -477,56 +458,28 @@ async def main(page: ft.Page):
                     logger.exception(f"❌ Ошибка: {error}")
             elif page.route == "/sending_files_via_chats":  # Рассылка файлов по чатам
                 try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке send_message')
-                        await show_notification(page, "⛔ Нет аккаунта в папке send_message")
-                        return None
-                    if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
-                                                             account_limit=ConfigReader().get_limits())) == 0:
-                        logger.error('⛔ Не сформирован список для рассылки по чатам')
-                        await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Рассылки файлов по чатам")
-                        await SendTelegramMessages().sending_files_via_chats(page=page)
-                        logger.info("🔚 Конец Рассылки файлов по чатам")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                    await SendTelegramMessages().check_before_sending_messages_via_chats(page=page)
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало Рассылки файлов по чатам")
+                    await SendTelegramMessages().sending_files_via_chats(page=page)
+                    logger.info("🔚 Конец Рассылки файлов по чатам")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
                 except Exception as error:
                     logger.exception(f"❌ Ошибка: {error}")
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
                 try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке send_message')
-                        await show_notification(page, "⛔ Нет аккаунта в папке send_message")
-                        return None
-                    logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                    if not find_filess(directory_path="user_data/message", extension='json'):
-                        logger.error('⛔ Нет заготовленных сообщений в папке message')
-                        await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
-                        return None
-                    if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
-                                                             account_limit=ConfigReader().get_limits())) == 0:
-                        logger.error('⛔ Не сформирован список для рассылки по чатам')
-                        await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
-                        return None
-
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало отправки сообщений + файлов по чатам")
-                        await SendTelegramMessages().sending_messages_files_via_chats(page=page)
-                        logger.info("🔚 Конец отправки сообщений + файлов по чатам")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                    await SendTelegramMessages().check_before_sending_messages_via_chats(page=page)
+                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                    logger.info('Время старта: ' + str(start))
+                    logger.info("▶️ Начало отправки сообщений + файлов по чатам")
+                    await SendTelegramMessages().sending_messages_files_via_chats(page=page)
+                    logger.info("🔚 Конец отправки сообщений + файлов по чатам")
+                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                    logger.info('Время окончания: ' + str(finish))
+                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
                 except Exception as error:
                     logger.exception(f"❌ Ошибка: {error}")
             elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)

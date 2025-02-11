@@ -13,13 +13,14 @@ from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError
 from telethon.tl.functions.channels import JoinChannelRequest
 
 from src.core.configs import ConfigReader, path_send_message_folder
-from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.sqlite_working_tools import db_handler
 from src.core.utils import (find_files, all_find_files, record_inviting_results,
                             find_filess)
 from src.core.utils import read_json_file
 from src.core.utils import record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.gui.menu import show_notification
 
 
 class SendTelegramMessages:
@@ -28,7 +29,6 @@ class SendTelegramMessages:
     """
 
     def __init__(self):
-        self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
@@ -48,8 +48,8 @@ class SendTelegramMessages:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 try:
-                    for username in await self.db_handler.open_db_func_lim(table_name="members",
-                                                                           account_limit=account_limits):
+                    for username in await db_handler.open_db_func_lim(table_name="members",
+                                                                      account_limit=account_limits):
                         # username - имя аккаунта пользователя в базе данных user_data/software_database.db
                         logger.info(f"[!] Отправляем сообщение: {username[0]}")
                         try:
@@ -100,8 +100,8 @@ class SendTelegramMessages:
                                                                    account_directory=path_send_message_folder)
                 try:
                     # Открываем parsing список user_data/software_database.db для inviting в группу
-                    number_usernames: list = await self.db_handler.open_db_func_lim(table_name="members",
-                                                                                    account_limit=account_limits)
+                    number_usernames: list = await db_handler.open_db_func_lim(table_name="members",
+                                                                               account_limit=account_limits)
                     # Количество аккаунтов на данный момент в работе
                     logger.info(f"Всего username: {len(number_usernames)}")
                     for rows in number_usernames:
@@ -144,7 +144,7 @@ class SendTelegramMessages:
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
-                records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
+                records: list = await db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
@@ -188,7 +188,7 @@ class SendTelegramMessages:
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
-                records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
+                records: list = await db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
@@ -245,6 +245,31 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
+    async def check_before_sending_messages_via_chats(self, page: ft.Page) -> None:
+        """
+        Проверка наличия сформированного списка с чатами для рассылки по чатам.
+        Проверка наличия аккаунта в папке с аккаунтами.
+        Проверка папки с сообщениями на наличие заготовленных сообщений.
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        :return:
+        """
+        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
+        if not find_filess(directory_path=path_send_message_folder, extension='session'):
+            logger.error('⛔ Нет аккаунта в папке send_message')
+            await show_notification(page, "Нет аккаунта в папке send_message")
+            return None
+        logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
+        if not find_filess(directory_path="user_data/message", extension='json'):
+            logger.error('⛔ Нет заготовленных сообщений в папке message')
+            await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
+            return None
+        logger.info("⛔ Проверка сформированного списка с чатами для рассылки")
+        if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
+                                                 account_limit=ConfigReader().get_limits())) == 0:
+            logger.error('⛔ Не сформирован список для рассылки по чатам')
+            await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
+            return None
+
     async def sending_messages_via_chats_times(self, page) -> None:
         """
         Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)
@@ -253,7 +278,7 @@ class SendTelegramMessages:
             for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
-                records: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
+                records: list = await db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
@@ -292,7 +317,6 @@ class SendTelegramMessages:
                     except ChatWriteForbiddenError:
                         await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
-
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -329,7 +353,7 @@ class SendTelegramMessages:
                         await event.respond(f'{data}')  # Отвечаем на входящее сообщение
 
                 # Получаем список чатов, которым нужно отправить сообщение
-                records: list = await self.db_handler.open_and_read_data("writing_group_links")
+                records: list = await db_handler.open_and_read_data("writing_group_links")
                 logger.info(records)
                 for chat in records:
                     try:
