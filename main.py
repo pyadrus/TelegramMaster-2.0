@@ -11,7 +11,7 @@ from src.core.configs import (ConfigReader, program_name, program_version, date_
                               path_unsubscribe_folder, path_reactions_folder, path_contact_folder, path_creating_folder,
                               path_send_message_folder, path_bio_folder, path_viewing_folder,
                               path_send_message_folder_answering_machine)
-from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.sqlite_working_tools import DatabaseHandler, db_handler
 from src.core.utils import find_files, find_filess
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
@@ -401,9 +401,11 @@ async def main(page: ft.Page):
                 await display_message_distribution_menu(page)
             elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
                 try:
+
+
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
                     if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
+                        logger.error('⛔ Нет аккаунта в папке send_message')
                         await show_notification(page, "Нет аккаунта в папке send_message")
                         return None
                     logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
@@ -411,6 +413,13 @@ async def main(page: ft.Page):
                         logger.error('⛔ Нет заготовленных сообщений в папке message')
                         await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
                         return None
+                    logger.info("⛔ Проверка сформированного списка с чатами для рассылки")
+                    if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
+                                                             account_limit=ConfigReader().get_limits())) == 0:
+                        logger.error('⛔ Не сформирован список для рассылки по чатам')
+                        await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
+                        return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
+
                     else:
                         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                         logger.info('Время старта: ' + str(start))

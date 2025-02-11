@@ -288,3 +288,5 @@ class DatabaseHandler:
         data = self.cursor.fetchall()
         self.close()
         return data
+
+db_handler = DatabaseHandler()
