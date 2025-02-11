@@ -418,7 +418,7 @@ async def main(page: ft.Page):
                                                              account_limit=ConfigReader().get_limits())) == 0:
                         logger.error('⛔ Не сформирован список для рассылки по чатам')
                         await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
-                        return None  # TODO продумать механизм, что бы перекидывало на страницу с записью ссылки
+                        return None
 
                     else:
                         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
@@ -444,7 +444,7 @@ async def main(page: ft.Page):
                         return None
 
                     if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
+                        logger.error('⛔ Нет аккаунта в папке send_message')
                         await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                         return None
                     logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
@@ -457,6 +457,11 @@ async def main(page: ft.Page):
                         logger.error('⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine')
                         await show_notification(page,
                                                 "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
+                        return None
+                    if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
+                                                             account_limit=ConfigReader().get_limits())) == 0:
+                        logger.error('⛔ Не сформирован список для рассылки по чатам')
+                        await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
                         return None
                     else:
                         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
@@ -474,7 +479,7 @@ async def main(page: ft.Page):
                 try:
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
                     if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
+                        logger.error('⛔ Нет аккаунта в папке send_message')
                         await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                         return None
                     else:
@@ -493,7 +498,7 @@ async def main(page: ft.Page):
                 try:
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
                     if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
+                        logger.error('⛔ Нет аккаунта в папке send_message')
                         await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                         return None
                     logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
@@ -517,7 +522,7 @@ async def main(page: ft.Page):
                 try:
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
                     if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
+                        logger.error('⛔ Нет аккаунта в папке send_message')
                         await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                         return None
 
@@ -543,7 +548,7 @@ async def main(page: ft.Page):
                 try:
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
                     if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
+                        logger.error('⛔ Нет аккаунта в папке send_message')
                         await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                         return None
                     else:
