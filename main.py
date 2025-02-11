@@ -8,8 +8,8 @@ from loguru import logger
 from docs.app import start_app
 from src.core.checking_program import CheckingProgram
 from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
-                              window_height, window_resizable, path_parsing_folder, path_unsubscribe_folder,
-                              path_reactions_folder, path_contact_folder, path_creating_folder,
+                              window_height, window_resizable, path_parsing_folder, path_reactions_folder,
+                              path_contact_folder, path_creating_folder,
                               path_send_message_folder, path_bio_folder, path_viewing_folder,
                               path_send_message_folder_answering_machine)
 from src.core.sqlite_working_tools import DatabaseHandler, db_handler
@@ -87,58 +87,32 @@ async def main(page: ft.Page):
             # ______________________________________________________________________________________________________________
             elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
                 await subscribe_and_unsubscribe_menu(page)
-
             elif page.route == "/subscription_all":  # Подписка
-                try:
-                    await CheckingProgram().checking_for_subscription_account(page=page)
-                    await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_for_subscription_account(page=page)
+                await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
             elif page.route == "/unsubscribe_all":  # Отписываемся
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_unsubscribe_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке unsubscribe')
-                        await show_notification(page, "⛔ Нет аккаунта в папке unsubscribe")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Отписка")
-                        await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page)
-                        logger.info("🔚 Конец Отписки")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().checking_for_unsubscribe_all(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Отписка")
+                await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page)
+                logger.info("🔚 Конец Отписки")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             # ______________________________________________________________________________________________________________
             elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
                 await reactions_menu(page)
-
             elif page.route == "/setting_reactions":  # Ставим реакции
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_reactions_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке reactions')
-                        await show_notification(page, "⛔ Нет аккаунта в папке reactions")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Проставления реакций")
-                        await WorkingWithReactions().send_reaction_request(page)
-                        logger.info("🔚 Конец Проставления реакций")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
-
+                await CheckingProgram().checking_for_setting_reactions(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Проставления реакций")
+                await WorkingWithReactions().send_reaction_request(page)
+                logger.info("🔚 Конец Проставления реакций")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
                 try:
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")

@@ -3,7 +3,8 @@
 import flet as ft
 from loguru import logger
 
-from src.core.configs import ConfigReader, path_send_message_folder, path_inviting_folder, path_subscription_folder
+from src.core.configs import ConfigReader, path_send_message_folder, path_inviting_folder, path_subscription_folder, \
+    path_unsubscribe_folder, path_reactions_folder
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import (find_filess)
 from src.gui.menu import show_notification
@@ -62,11 +63,33 @@ class CheckingProgram:
 
     async def checking_for_subscription_account(self, page: ft.Page):
         """
-        ⛔ Проверка наличия аккаунта в папке с аккаунтами
+        ⛔ Проверка наличия аккаунта в папке с аккаунтами (подписка)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_subscription_folder, extension=self.account_extension):
             logger.error('⛔ Нет аккаунта в папке subscription')
             await show_notification(page, "⛔ Нет аккаунта в папке subscription")
+            return None
+
+    async def checking_for_unsubscribe_all(self, page: ft.Page):
+        """
+        ⛔ Проверка наличия аккаунта в папке с аккаунтами (отписка)
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
+        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
+        if not find_filess(directory_path=path_unsubscribe_folder, extension=self.account_extension):
+            logger.error('⛔ Нет аккаунта в папке unsubscribe')
+            await show_notification(page, "⛔ Нет аккаунта в папке unsubscribe")
+            return None
+
+    async def checking_for_setting_reactions(self, page: ft.Page):
+        """
+        ⛔ Проверка наличия аккаунта в папке с аккаунтами (Ставим реакции)
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
+        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
+        if not find_filess(directory_path=path_reactions_folder, extension=self.account_extension):
+            logger.error('⛔ Нет аккаунта в папке reactions')
+            await show_notification(page, "⛔ Нет аккаунта в папке reactions")
             return None
