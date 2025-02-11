@@ -262,7 +262,8 @@ class SendTelegramMessages:
                     try:
                         await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
-                        logger.error(f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
+                        logger.error(
+                            f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
                     except ValueError:
                         logger.error(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {groups[0]}")
                         break

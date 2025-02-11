@@ -27,7 +27,7 @@ from src.features.account.TGViewingPosts import ViewingPosts
 from src.features.auth.logging_in import loging
 from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
-from src.gui.menu import (inviting_menu, message_distribution_menu, bio_editing_menu, settings_menu, menu_parsing,
+from src.gui.menu import (inviting_menu, display_message_distribution_menu, bio_editing_menu, settings_menu, menu_parsing,
                           reactions_menu, subscribe_and_unsubscribe_menu, account_verification_menu,
                           account_connection_menu, connecting_accounts_by_number_menu,
                           connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
@@ -318,7 +318,8 @@ async def main(page: ft.Page):
                         logger.info("🔚 Конец Добавления контактов")
                         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                         logger.info('Время окончания: ' + str(finish))
-                        logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                        logger.info(
+                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
                 except Exception as error:
                     logger.exception(f"❌ Ошибка: {error}")
             # ______________________________________________________________________________________________________________
@@ -397,7 +398,7 @@ async def main(page: ft.Page):
 
             # _______________________________________________________________________________________________________________
             elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
-                await message_distribution_menu(page)
+                await display_message_distribution_menu(page)
             elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
                 try:
                     logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")

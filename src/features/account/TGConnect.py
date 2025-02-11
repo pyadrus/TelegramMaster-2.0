@@ -14,7 +14,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, Use
 from thefuzz import fuzz
 
 from src.core.utils import working_with_accounts, find_filess
-from src.core.configs import ConfigReader, height_button, line_width_button
+from src.core.configs import ConfigReader, BUTTON_HEIGHT, line_width_button
 from src.core.localization import back_button, done_button
 from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
 from src.gui.menu import show_notification
@@ -348,16 +348,18 @@ class TGConnect:
                                     await telegram_client.sign_in(password=pass_2fa.value)
                                     logger.info("Успешная авторизация.")
                                     telegram_client.disconnect()
-                                    page.go("/connecting_accounts_by_number")  # Изменение маршрута в представлении существующих настроек
+                                    page.go(
+                                        "/connecting_accounts_by_number")  # Изменение маршрута в представлении существующих настроек
                                     page.update()
                                 except PasswordHashInvalidError:
                                     logger.error(f"❌ Неверный пароль.")
-                                    await show_notification(page,f"⚠️ Неверный пароль. Попробуйте еще раз.")
-                                    page.go("/connecting_accounts_by_number")  # Изменение маршрута в представлении существующих настроек
+                                    await show_notification(page, f"⚠️ Неверный пароль. Попробуйте еще раз.")
+                                    page.go(
+                                        "/connecting_accounts_by_number")  # Изменение маршрута в представлении существующих настроек
                                 except Exception as ex:
                                     logger.exception(f"❌ Ошибка при вводе пароля: {ex}")
 
-                            button_password = ft.ElevatedButton(width=line_width_button, height=height_button,
+                            button_password = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                                 text=done_button,
                                                                 on_click=btn_click_password)  # Кнопка "Готово"
                             page.views.append(ft.View(controls=[pass_2fa, button_password]))
@@ -370,7 +372,7 @@ class TGConnect:
                             logger.exception(f"❌ Ошибка при авторизации: {error}")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
 
-                    button_code = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
+                    button_code = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                                     on_click=btn_click_code)  # Кнопка "Готово"
                     page.views.append(ft.View(controls=[passww, button_code]))
                     page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
@@ -383,9 +385,9 @@ class TGConnect:
                 """
                 page.go("/connecting_accounts_by_number")
 
-            button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
+            button = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                        on_click=btn_click)  # Кнопка "Готово"
-            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+            button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                             on_click=back_button_clicked)  # Кнопка "Назад"
 
             input_view = ft.View(
@@ -456,13 +458,13 @@ class TGConnect:
             page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
 
             # Кнопка для открытия диалога выбора файлов
-            button_select_file = ft.ElevatedButton(width=line_width_button, height=height_button,
+            button_select_file = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                    text="Выбрать session файл",
                                                    on_click=lambda _: pick_files_dialog.pick_files()
                                                    )
 
             # Кнопка возврата
-            button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+            button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                             on_click=back_button_clicked)
 
             # Добавляем все элементы на страницу

@@ -16,7 +16,7 @@ from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
 from src.core.configs import (ConfigReader, path_subscription_folder, path_unsubscribe_folder, line_width_button,
-                              height_button)
+                              BUTTON_HEIGHT)
 from src.core.localization import back_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, find_filess
@@ -138,13 +138,17 @@ class SubscribeUnsubscribeTelegram:
                         await log_and_display_info(f"Не удалось найти публичный чат: {link}", lv, page)
 
                 except AuthKeyUnregisteredError:
-                    logger.info(f'❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов')
-                    await log_and_display_error(f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
+                    logger.info(
+                        f'❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов')
+                    await log_and_display_error(
+                        f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv,
+                        page)
                     await asyncio.sleep(2)
 
                 except SessionPasswordNeededError:
                     logger.info(f'❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов')
-                    await log_and_display_error(f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", lv, page)
+                    await log_and_display_error(
+                        f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", lv, page)
                     await asyncio.sleep(2)
 
         except FloodWaitError as e:
@@ -159,12 +163,14 @@ class SubscribeUnsubscribeTelegram:
 
         except AuthKeyUnregisteredError:
             logger.info(f'❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов')
-            await log_and_display_error(f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
+            await log_and_display_error(
+                f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
             await asyncio.sleep(2)
 
         except SessionPasswordNeededError:
             logger.info(f'❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов')
-            await log_and_display_error(f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", lv, page)
+            await log_and_display_error(
+                f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", lv, page)
             await asyncio.sleep(2)
 
     async def subscribe_telegram(self, page: ft.Page) -> None:
@@ -215,9 +221,9 @@ class SubscribeUnsubscribeTelegram:
                     ft.Text(value="Подписка на группы / каналы Telegram"),  # Выбор группы для инвайтинга
                     lv,  # Отображение логов 📝
                     ft.Column(),  # Резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text="🚀 Начать подписку",
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text="🚀 Начать подписку",
                                       on_click=add_items),  # Кнопка "🚀 Начать подписку"
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                       on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
                 ],
             )
@@ -257,7 +263,8 @@ class SubscribeUnsubscribeTelegram:
             if entity:
                 await client(LeaveChannelRequest(entity))
         except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
-            logger.error(f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
+            logger.error(
+                f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
         except UserNotParticipantError:
             logger.error(f"❌ Попытка отписки от группы / канала {group_link}. Аккаунт не является участником.")
         except Exception as error:

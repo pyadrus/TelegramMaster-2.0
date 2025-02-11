@@ -30,7 +30,8 @@ class TGContact:
         try:
             for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
-                client = await self.tg_connect.get_telegram_client(page, session_name, account_directory = path_contact_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=path_contact_folder)
                 await self.parsing_and_recording_contacts_in_the_database(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:

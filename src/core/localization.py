@@ -114,3 +114,5 @@ text_link_1: str = "https://t.me/PyAdminRU"
 text_link_2: str = "https://t.me/master_tg_d"
 
 clearing_generated_chat_list: str = '🧹 Очистка сформированного списка чатов'
+
+message_distribution_settings_ru = "⚙️ Настройки рассылки сообщений"

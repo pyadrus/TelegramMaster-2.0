@@ -181,9 +181,9 @@ class ConfigReader:
 time_activity_user_2 = ConfigReader().time_activity_user_2()
 
 line_width_button = ConfigReader().get_line_width_button()  # Получение ширины кнопки
-height_button = ConfigReader().get_line_height_button()  # Получение ширины кнопки
+BUTTON_HEIGHT = ConfigReader().get_line_height_button()  # Получение ширины кнопки
 small_button_width = ConfigReader().get_small_button_width()  # Ширина малой кнопки
-line_width = ConfigReader().line_width()  # Ширина окна и ширина строки
+BUTTON_WIDTH = ConfigReader().line_width()  # Ширина окна и ширина строки
 
 program_name = ConfigReader().program_name()  # Имя программы
 program_version = ConfigReader().program_version()  # Версия программы

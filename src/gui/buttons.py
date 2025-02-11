@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flet as ft  # Импортируем библиотеку flet
 
-from src.core.configs import line_width_button, height_button
+from src.core.configs import line_width_button, BUTTON_HEIGHT
 from src.core.localization import done_button, back_button
 
 
@@ -15,9 +15,9 @@ def function_button_ready(page: ft.Page, btn_click, back_button_clicked, user_in
     :param back_button_clicked:Кнопка "Назад"
     :return:
     """
-    button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
+    button = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                on_click=btn_click)  # Кнопка "Готово"
-    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+    button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                     on_click=back_button_clicked)
     page.views.append(
         ft.View(
@@ -43,9 +43,9 @@ def function_button_ready_reactions(page: ft.Page, btn_click, back_button_clicke
     :param back_button_clicked:Кнопка "Назад"
     :return:
     """
-    button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
+    button = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                on_click=btn_click)  # Кнопка "Готово"
-    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+    button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                     on_click=back_button_clicked)
     page.views.append(
         ft.View(
@@ -72,9 +72,9 @@ def function_button_ready_viewing(page: ft.Page, btn_click, back_button_clicked,
     :param back_button_clicked:Кнопка "Назад"
     :return:
     """
-    button = ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
+    button = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                on_click=btn_click)  # Кнопка "Готово"
-    button_back = ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+    button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                     on_click=back_button_clicked)
 
     # Добавление представления на страницу

@@ -16,7 +16,7 @@ from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserSt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.core.utils import find_filess
-from src.core.configs import path_parsing_folder, line_width_button, height_button, time_activity_user_2
+from src.core.configs import path_parsing_folder, line_width_button, BUTTON_HEIGHT, time_activity_user_2
 from src.core.localization import back_button, start_parsing_button, done_button
 from src.gui.menu import log_and_display_info, log_and_display_error
 from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates
@@ -97,9 +97,9 @@ class ParsingGroupMembers:
                 [
                     lv,  # отображение логов 📝
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text=start_parsing_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_parsing_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать парсинг"
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                       on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
                 ],
             )
@@ -210,9 +210,9 @@ class ParsingGroupMembers:
                 [
                     lv,  # отображение логов 📝
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать парсинг"
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text=start_parsing_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_parsing_button,
                                       on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
                 ],
             )
@@ -337,10 +337,10 @@ class ParsingGroupMembers:
                         [
                             ft.Column(controls=[
                                 dropdown,
-                                ft.ElevatedButton(width=line_width_button, height=height_button,
+                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                   text="📂 Выбрать группу",
                                                   on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
-                                ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                                   on_click=back_button_clicked),  # Кнопка "⬅️ Назад"
                                 result_text, lv,
                             ])
@@ -382,7 +382,8 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    logger.info(f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
+                    logger.info(
+                        f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
                     await log_and_display_error(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page)
                     await asyncio.sleep(2)
                     break
@@ -392,13 +393,17 @@ class ParsingGroupMembers:
                     await asyncio.sleep(2)
                     break
                 except ChannelPrivateError:
-                    logger.info(f'❌ Ошибка parsing: канал / чат закрыт {target_group} или аккаунт забанен на канале. Требуется замена аккаунта')
-                    await log_and_display_error(f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт", lv, page)
+                    logger.info(
+                        f'❌ Ошибка parsing: канал / чат закрыт {target_group} или аккаунт забанен на канале. Требуется замена аккаунта')
+                    await log_and_display_error(
+                        f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт",
+                        lv, page)
                     await asyncio.sleep(2)
                     break
                 except AuthKeyUnregisteredError:
                     logger.info(f'❌ Ошибка parsing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов')
-                    await log_and_display_error(f"❌ Ошибка: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
+                    await log_and_display_error(
+                        f"❌ Ошибка: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
                     await asyncio.sleep(2)
                     break
 
@@ -610,9 +615,9 @@ class ParsingGroupMembers:
                         chat_input,  # Поле ввода ссылки на чат 🔗
                         limit_active_user,  # Поле ввода количества сообщений 💬
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
-                        ft.ElevatedButton(width=line_width_button, height=height_button, text=done_button,
+                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                           on_click=btn_click),  # Кнопка "✅ Готово"
-                        ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                           on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
                     ]
                 )

@@ -14,7 +14,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitEr
                              UserDeactivatedBanError, AuthKeyUnregisteredError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-from src.core.configs import ConfigReader, path_inviting_folder, line_width_button, height_button
+from src.core.configs import ConfigReader, path_inviting_folder, line_width_button, BUTTON_HEIGHT
 from src.core.localization import back_button, start_inviting_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
@@ -149,7 +149,8 @@ class InvitingToAGroup:
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
                         break  # Прерываем работу и меняем аккаунт
                     except AuthKeyUnregisteredError:
-                        logger.error(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Ошибка авторизации аккаунта")
+                        logger.error(
+                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Ошибка авторизации аккаунта")
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
                         break
                     except PeerFloodError:
@@ -296,9 +297,9 @@ class InvitingToAGroup:
                     ft.Text(value="📂 Выберите группу для инвайтинга"),  # Выбор группы для инвайтинга
                     dropdown,  # Выпадающий список с названиями групп
                     ft.Column(),  # Резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text=start_inviting_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_inviting_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать инвайтинг"
-                    ft.ElevatedButton(width=line_width_button, height=height_button, text=back_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                       on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
                 ],
             )
