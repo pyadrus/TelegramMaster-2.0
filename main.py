@@ -9,7 +9,7 @@ from docs.app import start_app
 from src.core.checking_program import CheckingProgram
 from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
                               window_height, window_resizable, path_parsing_folder, path_contact_folder,
-                              path_creating_folder, path_send_message_folder, path_bio_folder,
+                              path_creating_folder, path_send_message_folder,
                               path_send_message_folder_answering_machine)
 from src.core.sqlite_working_tools import DatabaseHandler, db_handler
 from src.core.utils import find_files, find_filess
@@ -466,61 +466,21 @@ async def main(page: ft.Page):
             # ______________________________________________________________________________________________________________
             elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
                 await bio_editing_menu(page)
-
             elif page.route == "/edit_description":  # Изменение описания
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_bio_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке bio")
-                        return None
-                    else:
-                        await AccountBIO().change_bio_profile_gui(page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_for_bio(page=page)
+                await AccountBIO().change_bio_profile_gui(page)
             elif page.route == "/name_change":  # Изменение имени профиля Telegram
-
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_bio_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке bio")
-                        return None
-                    else:
-                        await AccountBIO().change_name_profile_gui(page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_for_bio(page=page)
+                await AccountBIO().change_name_profile_gui(page)
             elif page.route == "/change_surname":  # Изменение фамилии
-
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_bio_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке bio")
-                        return None
-                    else:
-                        await AccountBIO().change_last_name_profile_gui(page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_for_bio(page=page)
+                await AccountBIO().change_last_name_profile_gui(page)
             elif page.route == "/edit_photo":  # Изменение фото
-
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_bio_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке bio")
-                        return None
-                    else:
-                        await AccountBIO().change_photo_profile_gui(page)
-                        await show_notification(page, "🔚 Фото изменено")  # Выводим уведомление пользователю
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_for_bio(page=page)
+                await AccountBIO().change_photo_profile_gui(page)
+                await show_notification(page, "🔚 Фото изменено")  # Выводим уведомление пользователю
             elif page.route == "/changing_username":  # Изменение username
-                await CheckingProgram().checking_for_changing_username(page=page)
+                await CheckingProgram().checking_for_bio(page=page)
                 await AccountBIO().change_username_profile_gui(page)
             # ______________________________________________________________________________________________________________
             elif page.route == "/settings":  # Меню "Настройки TelegramMaster"

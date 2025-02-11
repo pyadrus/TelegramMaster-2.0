@@ -138,9 +138,9 @@ class CheckingProgram:
             await show_notification(page, "⛔ Нет аккаунта в папке parsing")
             return None
 
-    async def checking_for_changing_username(self, page: ft.Page):
+    async def checking_for_bio(self, page: ft.Page):
         """
-        ⛔ Проверка наличия аккаунта в папке с аккаунтами (Изменение username)
+        ⛔ Проверка наличия аккаунта в папке с аккаунтами (Изменение BIO)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
