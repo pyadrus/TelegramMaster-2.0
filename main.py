@@ -482,6 +482,11 @@ async def main(page: ft.Page):
                         logger.error('⛔ Нет аккаунта в папке send_message')
                         await show_notification(page, "⛔ Нет аккаунта в папке send_message")
                         return None
+                    if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
+                                                             account_limit=ConfigReader().get_limits())) == 0:
+                        logger.error('⛔ Не сформирован список для рассылки по чатам')
+                        await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
+                        return None
                     else:
                         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                         logger.info('Время старта: ' + str(start))
