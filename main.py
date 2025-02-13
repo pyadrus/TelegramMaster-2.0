@@ -110,7 +110,7 @@ async def main(page: ft.Page):
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-                await CheckingProgram().checking_for_automatic_setting_of_reactions(page=page)
+                await CheckingProgram().checking_for_setting_reactions(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Автоматического выставления реакций")

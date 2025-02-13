@@ -16,6 +16,7 @@ class CheckingProgram:
 
     def __init__(self):
         self.account_extension = "session"  # Расширение файла аккаунта
+        self.file_extension = "json"
 
     async def check_before_sending_messages_via_chats(self, page: ft.Page):
         """
@@ -24,13 +25,11 @@ class CheckingProgram:
         ⛔ Проверка папки с сообщениями на наличие заготовленных сообщений.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
-            logger.error('⛔ Нет аккаунта в папке send_message')
-            await show_notification(page, "Нет аккаунта в папке send_message")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_send_message_folder}")
             return None
         logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-        if not find_filess(directory_path="user_data/message", extension='json'):
+        if not find_filess(directory_path="user_data/message", extension=self.file_extension):
             logger.error('⛔ Нет заготовленных сообщений в папке message')
             await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
             return None
@@ -46,13 +45,11 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (Отправка в личку)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
-            logger.error(f'⛔ Нет аккаунта в папке {path_send_message_folder}')
-            await show_notification(page, "⛔ Нет аккаунта в папке bio")
+            await show_notification(page, f'⛔ Нет аккаунта в папке {path_send_message_folder}')
             return None
         logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-        if not find_filess(directory_path="user_data/message", extension='json'):
+        if not find_filess(directory_path="user_data/message", extension=self.file_extension):
             logger.error('⛔ Нет заготовленных сообщений в папке message')
             await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
             return None
@@ -62,10 +59,8 @@ class CheckingProgram:
         ⛔ Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_inviting_folder, extension=self.account_extension):
-            logger.error('⛔ Нет аккаунта в папке inviting')
-            await show_notification(page, "⛔ Нет аккаунта в папке inviting")
+            await show_notification(page, f'⛔ Нет аккаунта в папке {path_inviting_folder}')
             return None
         if len(await db_handler.open_db_func_lim(table_name="members",
                                                  account_limit=ConfigReader().get_limits())) == 0:
@@ -83,10 +78,8 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (подписка)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_subscription_folder, extension=self.account_extension):
-            logger.error('⛔ Нет аккаунта в папке subscription')
-            await show_notification(page, "⛔ Нет аккаунта в папке subscription")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_subscription_folder}")
             return None
 
     async def checking_for_unsubscribe_all(self, page: ft.Page):
@@ -94,10 +87,8 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (отписка)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_unsubscribe_folder, extension=self.account_extension):
-            logger.error('⛔ Нет аккаунта в папке unsubscribe')
-            await show_notification(page, "⛔ Нет аккаунта в папке unsubscribe")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_unsubscribe_folder}")
             return None
 
     async def checking_for_setting_reactions(self, page: ft.Page):
@@ -105,21 +96,8 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (Ставим реакции)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_reactions_folder, extension=self.account_extension):
-            logger.error('⛔ Нет аккаунта в папке reactions')
-            await show_notification(page, "⛔ Нет аккаунта в папке reactions")
-            return None
-
-    async def checking_for_automatic_setting_of_reactions(self, page: ft.Page):
-        """
-        ⛔ Проверка наличия аккаунта в папке с аккаунтами (Автоматическое выставление реакций)
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-        if not find_filess(directory_path=path_reactions_folder, extension=self.account_extension):
-            logger.error('⛔ Нет аккаунта в папке reactions')
-            await show_notification(page, "⛔ Нет аккаунта в папке reactions")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_reactions_folder}")
             return None
 
     async def checking_for_viewing_posts_menu(self, page: ft.Page):
@@ -127,10 +105,8 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (Автоматическое выставление просмотров меню)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_viewing_folder, extension=self.account_extension):
-            logger.error('⛔ Нет аккаунта в папке viewing')
-            await show_notification(page, "⛔ Нет аккаунта в папке viewing")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_viewing_folder}")
             return None
 
     async def checking_for_parsing_single_groups(self, page: ft.Page):
@@ -138,10 +114,8 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (🔍 Парсинг одной группы / групп)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info(f"⛔ Проверка наличия аккаунта в папке {path_parsing_folder} с аккаунтами")
         if not find_filess(directory_path=path_parsing_folder, extension=self.account_extension):
-            logger.error('⛔ Нет аккаунта в папке parsing')
-            await show_notification(page, "⛔ Нет аккаунта в папке parsing")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_parsing_folder}")
             return None
 
     async def checking_for_bio(self, page: ft.Page):
@@ -149,10 +123,8 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (Изменение BIO)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_bio_folder, extension=self.account_extension):
-            logger.error(f'⛔ Нет аккаунта в папке {path_bio_folder}')
-            await show_notification(page, "⛔ Нет аккаунта в папке bio")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_bio_folder}")
             return None
 
     async def checking_creating_contact_list(self, page: ft.Page):
@@ -160,10 +132,8 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (Формирование списка контактов)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_contact_folder, extension=self.account_extension):
-            logger.error(f'⛔ Нет аккаунта в папке {path_contact_folder}')
-            await show_notification(page, "⛔ Нет аккаунта в папке bio")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_contact_folder}")
             return None
 
     async def checking_creating_groups(self, page: ft.Page):
@@ -171,10 +141,8 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (Создание групп (чатов))
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_creating_folder, extension=self.account_extension):
-            logger.error(f'⛔ Нет аккаунта в папке {path_creating_folder}')
-            await show_notification(page, "⛔ Нет аккаунта в папке bio")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_creating_folder}")
             return None
 
     async def checking_sending_messages_via_chats_with_answering_machine(self, page: ft.Page):
@@ -182,22 +150,20 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (Рассылка сообщений по чатам с автоответчиком)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
         if not find_filess(directory_path=path_send_message_folder_answering_machine, extension=self.account_extension):
-            logger.error('⛔ Нет аккаунта в папке parsing')
-            await show_notification(page, "⛔ Нет аккаунта в папке answering_machine")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_send_message_folder_answering_machine}")
             return None
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
             logger.error('⛔ Нет аккаунта в папке send_message')
             await show_notification(page, "⛔ Нет аккаунта в папке send_message")
             return None
         logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-        if not find_filess(directory_path="user_data/message", extension='json'):
+        if not find_filess(directory_path="user_data/message", extension=self.file_extension):
             logger.error('⛔ Нет заготовленных сообщений в папке message')
             await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
             return None
         logger.info("⛔ Проверка папки с сообщениями для автоответчика")
-        if not find_filess(directory_path="user_data/answering_machine", extension='json'):
+        if not find_filess(directory_path="user_data/answering_machine", extension=self.file_extension):
             logger.error('⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine')
             await show_notification(page,
                                     "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
