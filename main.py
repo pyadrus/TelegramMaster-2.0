@@ -8,11 +8,9 @@ from loguru import logger
 from docs.app import start_app
 from src.core.checking_program import CheckingProgram
 from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
-                              window_height, window_resizable, path_parsing_folder, path_contact_folder,
-                              path_creating_folder, path_send_message_folder,
-                              path_send_message_folder_answering_machine)
-from src.core.sqlite_working_tools import DatabaseHandler, db_handler
-from src.core.utils import find_files, find_filess
+                              window_height, window_resizable)
+from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.utils import find_files
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
 from src.features.account.TGConnect import TGConnect
@@ -28,8 +26,7 @@ from src.features.auth.logging_in import loging
 from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
 from src.gui.menu import (inviting_menu, display_message_distribution_menu, bio_editing_menu, settings_menu,
-                          menu_parsing,
-                          reactions_menu, subscribe_and_unsubscribe_menu, account_verification_menu,
+                          menu_parsing, reactions_menu, subscribe_and_unsubscribe_menu, account_verification_menu,
                           account_connection_menu, connecting_accounts_by_number_menu,
                           connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
                           creating_groups_and_chats_menu, working_with_contacts_menu, main_menu_program)
@@ -142,119 +139,64 @@ async def main(page: ft.Page):
                 await CheckingProgram().checking_for_parsing_single_groups(page=page)
                 await ParsingGroupMembers().parse_groups(page)
             elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
-                await CheckingProgram().checking_for_parsing_selected_group_user_subscribed(page=page)
+                await CheckingProgram().checking_for_parsing_single_groups(page=page)
                 await ParsingGroupMembers().choose_and_parse_group(page)
             elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_parsing_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке parsing")
-                        return None
-                    else:
-                        await ParsingGroupMembers().entering_data_for_parsing_active(page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_for_parsing_single_groups(page=page)
+                await ParsingGroupMembers().entering_data_for_parsing_active(page)
             elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов аккаунта
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_parsing_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке parsing")
-                        return None
-                    else:
-                        await ParsingGroupMembers().parse_subscribed_groups(page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_for_parsing_single_groups(page=page)
+                await ParsingGroupMembers().parse_subscribed_groups(page)
             elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
                 await DatabaseHandler().cleaning_db("members")
                 await show_notification(page, "Очистка списка окончена")  # Сообщение пользователю
-
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
                 await ReceivingAndRecording().write_data_to_excel(file_name="user_data/parsed_chat_participants.xlsx")
             # ______________________________________________________________________________________________________________
             elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
                 await working_with_contacts_menu(page)
             elif page.route == "/creating_contact_list":  # Формирование списка контактов
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_contact_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке contact')
-                        await show_notification(page, "⛔ Нет аккаунта в папке contact")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Формирования списка контактов")
-                        await DatabaseHandler().open_and_read_data("contact")  # Удаление списка с контактами
-                        SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
-                                                             "contact", "/working_with_contacts", "contact")
-                        logger.info("🔚 Конец Формирования списка контактов")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().checking_creating_contact_list(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Формирования списка контактов")
+                await DatabaseHandler().open_and_read_data("contact")  # Удаление списка с контактами
+                SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
+                                                     "contact", "/working_with_contacts", "contact")
+                logger.info("🔚 Конец Формирования списка контактов")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/show_list_contacts":  # Показать список контактов
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_contact_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке contact')
-                        await show_notification(page, "⛔ Нет аккаунта в папке contact")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Показа списка контактов")
-                        await TGContact().show_account_contact_list(page=page)
-                        logger.info("🔚 Конец Показа списка контактов")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().checking_creating_contact_list(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Показа списка контактов")
+                await TGContact().show_account_contact_list(page=page)
+                logger.info("🔚 Конец Показа списка контактов")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/deleting_contacts":  # Удаление контактов
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_contact_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке contact')
-                        await show_notification(page, "⛔ Нет аккаунта в папке contact")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Удаления контактов")
-                        await TGContact().delete_contact(page=page)
-                        logger.info("🔚 Конец Удаления контактов")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().checking_creating_contact_list(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Удаления контактов")
+                await TGContact().delete_contact(page=page)
+                logger.info("🔚 Конец Удаления контактов")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/adding_contacts":  # Добавление контактов
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_contact_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке contact')
-                        await show_notification(page, "⛔ Нет аккаунта в папке contact")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Добавления контактов")
-                        await TGContact().inviting_contact(page=page)
-                        logger.info("🔚 Конец Добавления контактов")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().checking_creating_contact_list(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Добавления контактов")
+                await TGContact().inviting_contact(page=page)
+                logger.info("🔚 Конец Добавления контактов")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             # ______________________________________________________________________________________________________________
             elif page.route == "/account_connection_menu":  # Подключение аккаунтов 'меню'.
                 await account_connection_menu(page)
@@ -313,153 +255,78 @@ async def main(page: ft.Page):
             elif page.route == "/account_connection_session_viewing":  # Для накрутки просмотров (session)
                 await TGConnect().connecting_session_accounts(page, 'viewing', 'накрутки просмотров')
             # _______________________________________________________________________________________________________________
-
             elif page.route == "/creating_groups_and_chats_menu":  # Меню "Создание групп и чатов"
                 await creating_groups_and_chats_menu(page)
-
             elif page.route == "/creating_groups":  # Создание групп (чатов)
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_creating_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке creating')
-                        await show_notification(page, "⛔ Нет аккаунта в папке creating")
-                        return None
-                    else:
-                        await CreatingGroupsAndChats().creating_groups_and_chats(page=page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
-
+                await CheckingProgram().checking_creating_groups(page=page)
+                await CreatingGroupsAndChats().creating_groups_and_chats(page=page)
             # _______________________________________________________________________________________________________________
             elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
                 await display_message_distribution_menu(page)
             elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
-                try:
-                    await CheckingProgram().check_before_sending_messages_via_chats(page=page)
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Рассылки сообщений по чатам")
-                    entities = find_files(directory_path="user_data/message", extension="json")
-                    logger.info(entities)
-                    await SendTelegramMessages().sending_messages_via_chats_times(page=page)
-                    logger.info("🔚 Конец Рассылки сообщений по чатам")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().check_before_sending_messages_via_chats(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Рассылки сообщений по чатам")
+                entities = find_files(directory_path="user_data/message", extension="json")
+                logger.info(entities)
+                await SendTelegramMessages().sending_messages_via_chats_times(page=page)
+                logger.info("🔚 Конец Рассылки сообщений по чатам")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-
-                    if not find_filess(directory_path=path_send_message_folder_answering_machine, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке parsing')
-                        await show_notification(page, "⛔ Нет аккаунта в папке answering_machine")
-                        return None
-
-                    if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке send_message')
-                        await show_notification(page, "⛔ Нет аккаунта в папке send_message")
-                        return None
-                    logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                    if not find_filess(directory_path="user_data/message", extension='json'):
-                        logger.error('⛔ Нет заготовленных сообщений в папке message')
-                        await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
-                        return None
-                    logger.info("⛔ Проверка папки с сообщениями для автоответчика")
-                    if not find_filess(directory_path="user_data/answering_machine", extension='json'):
-                        logger.error('⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine')
-                        await show_notification(page,
-                                                "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
-                        return None
-                    if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
-                                                             account_limit=ConfigReader().get_limits())) == 0:
-                        logger.error('⛔ Не сформирован список для рассылки по чатам')
-                        await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало Рассылки сообщений по чатам с автоответчиком")
-                        await SendTelegramMessages().answering_machine(page=page)
-                        logger.info("🔚 Конец Рассылки сообщений по чатам с автоответчиком")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().checking_sending_messages_via_chats_with_answering_machine(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Рассылки сообщений по чатам с автоответчиком")
+                await SendTelegramMessages().answering_machine(page=page)
+                logger.info("🔚 Конец Рассылки сообщений по чатам с автоответчиком")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/sending_files_via_chats":  # Рассылка файлов по чатам
-                try:
-                    await CheckingProgram().check_before_sending_messages_via_chats(page=page)
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало Рассылки файлов по чатам")
-                    await SendTelegramMessages().sending_files_via_chats(page=page)
-                    logger.info("🔚 Конец Рассылки файлов по чатам")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().check_before_sending_messages_via_chats(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало Рассылки файлов по чатам")
+                await SendTelegramMessages().sending_files_via_chats(page=page)
+                logger.info("🔚 Конец Рассылки файлов по чатам")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
-                try:
-                    await CheckingProgram().check_before_sending_messages_via_chats(page=page)
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало отправки сообщений + файлов по чатам")
-                    await SendTelegramMessages().sending_messages_files_via_chats(page=page)
-                    logger.info("🔚 Конец отправки сообщений + файлов по чатам")
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().check_before_sending_messages_via_chats(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало отправки сообщений + файлов по чатам")
+                await SendTelegramMessages().sending_messages_files_via_chats(page=page)
+                logger.info("🔚 Конец отправки сообщений + файлов по чатам")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке send_message')
-                        await show_notification(page, "⛔ Нет аккаунта в папке send_message")
-                        return None
-
-                    logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-                    if not find_filess(directory_path="user_data/message", extension='json'):
-                        logger.error('⛔ Нет заготовленных сообщений в папке message')
-                        await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало отправки сообщений в личку")
-                        await SendTelegramMessages().send_message_from_all_accounts(
-                            account_limits=ConfigReader().get_limits(), page=page)
-                        logger.info("🔚 Конец отправки сообщений в личку")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().checking_sending_to_personal(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало отправки сообщений в личку")
+                await SendTelegramMessages().send_message_from_all_accounts(account_limits=ConfigReader().get_limits(),
+                                                                            page=page)
+                logger.info("🔚 Конец отправки сообщений в личку")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
-                try:
-                    logger.info("⛔ Проверка наличия аккаунта в папке с аккаунтами")
-                    if not find_filess(directory_path=path_send_message_folder, extension='session'):
-                        logger.error('⛔ Нет аккаунта в папке send_message')
-                        await show_notification(page, "⛔ Нет аккаунта в папке send_message")
-                        return None
-                    else:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        logger.info('Время старта: ' + str(start))
-                        logger.info("▶️ Начало отправки файлов в личку")
-                        await SendTelegramMessages().send_files_to_personal_chats(
-                            account_limits=ConfigReader().get_limits(), page=page)
-                        logger.info("🔚 Конец отправки файлов в личку")
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        logger.info('Время окончания: ' + str(finish))
-                        logger.info(
-                            'Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                await CheckingProgram().checking_sending_to_personal(page=page)
+                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                logger.info('Время старта: ' + str(start))
+                logger.info("▶️ Начало отправки файлов в личку")
+                await SendTelegramMessages().send_files_to_personal_chats(account_limits=ConfigReader().get_limits(),
+                                                                          page=page)
+                logger.info("🔚 Конец отправки файлов в личку")
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                logger.info('Время окончания: ' + str(finish))
+                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/clearing_generated_chat_list":  # 🧹 Очистка сформированного списка чатов
                 await DatabaseHandler().cleaning_db("writing_group_links")
                 await show_notification(page, "Очистка списка окончена")  # Сообщение пользователю
