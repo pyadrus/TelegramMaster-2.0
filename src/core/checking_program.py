@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import flet as ft
-from loguru import logger
 
 from src.core.configs import (ConfigReader, path_send_message_folder, path_inviting_folder, path_subscription_folder,
                               path_unsubscribe_folder, path_reactions_folder, path_viewing_folder, path_parsing_folder,
@@ -17,6 +16,7 @@ class CheckingProgram:
     def __init__(self):
         self.account_extension = "session"  # Расширение файла аккаунта
         self.file_extension = "json"
+        self.folder_with_messages = "user_data/message"
 
     async def check_before_sending_messages_via_chats(self, page: ft.Page):
         """
@@ -28,15 +28,11 @@ class CheckingProgram:
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
             await show_notification(page, f"⛔ Нет аккаунта в папке {path_send_message_folder}")
             return None
-        logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-        if not find_filess(directory_path="user_data/message", extension=self.file_extension):
-            logger.error('⛔ Нет заготовленных сообщений в папке message')
-            await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
+        if not find_filess(directory_path=self.folder_with_messages, extension=self.file_extension):
+            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {self.folder_with_messages}")
             return None
-        logger.info("⛔ Проверка сформированного списка с чатами для рассылки")
         if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
                                                  account_limit=ConfigReader().get_limits())) == 0:
-            logger.error('⛔ Не сформирован список для рассылки по чатам')
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
             return None
 
@@ -48,10 +44,8 @@ class CheckingProgram:
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
             await show_notification(page, f'⛔ Нет аккаунта в папке {path_send_message_folder}')
             return None
-        logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-        if not find_filess(directory_path="user_data/message", extension=self.file_extension):
-            logger.error('⛔ Нет заготовленных сообщений в папке message')
-            await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
+        if not find_filess(directory_path=self.folder_with_messages, extension=self.file_extension):
+            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {self.folder_with_messages}")
             return None
 
     async def check_before_inviting(self, page: ft.Page):
@@ -64,12 +58,10 @@ class CheckingProgram:
             return None
         if len(await db_handler.open_db_func_lim(table_name="members",
                                                  account_limit=ConfigReader().get_limits())) == 0:
-            logger.error('⛔ В таблице members нет пользователей для инвайтинга')
             await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
             return None
         if len(await db_handler.open_db_func_lim(table_name="links_inviting",
                                                  account_limit=ConfigReader().get_limits())) == 0:
-            logger.error('⛔ Не записана группа для инвайтинга')
             await show_notification(page, "⛔ Не записана группа для инвайтинга")
             return None
 
@@ -154,22 +146,16 @@ class CheckingProgram:
             await show_notification(page, f"⛔ Нет аккаунта в папке {path_send_message_folder_answering_machine}")
             return None
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
-            logger.error('⛔ Нет аккаунта в папке send_message')
-            await show_notification(page, "⛔ Нет аккаунта в папке send_message")
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_send_message_folder}")
             return None
-        logger.info("⛔ Проверка папки с сообщениями на наличие заготовленных сообщений")
-        if not find_filess(directory_path="user_data/message", extension=self.file_extension):
-            logger.error('⛔ Нет заготовленных сообщений в папке message')
-            await show_notification(page, "⛔ Нет заготовленных сообщений в папке message")
+        if not find_filess(directory_path=self.folder_with_messages, extension=self.file_extension):
+            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {self.folder_with_messages}")
             return None
-        logger.info("⛔ Проверка папки с сообщениями для автоответчика")
         if not find_filess(directory_path="user_data/answering_machine", extension=self.file_extension):
-            logger.error('⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine')
             await show_notification(page,
                                     "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
             return None
         if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
                                                  account_limit=ConfigReader().get_limits())) == 0:
-            logger.error('⛔ Не сформирован список для рассылки по чатам')
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
             return None
