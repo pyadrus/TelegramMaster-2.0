@@ -4,7 +4,8 @@ import flet as ft
 from src.core.configs import (ConfigReader, path_send_message_folder, path_inviting_folder, path_subscription_folder,
                               path_unsubscribe_folder, path_reactions_folder, path_viewing_folder, path_parsing_folder,
                               path_bio_folder, path_contact_folder, path_creating_folder,
-                              path_send_message_folder_answering_machine)
+                              path_send_message_folder_answering_machine,
+                              path_send_message_folder_answering_machine_message, path_folder_with_messages)
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_filess
 from src.gui.menu import show_notification
@@ -16,7 +17,6 @@ class CheckingProgram:
     def __init__(self):
         self.account_extension = "session"  # Расширение файла аккаунта
         self.file_extension = "json"
-        self.folder_with_messages = "user_data/message"
 
     async def check_before_sending_messages_via_chats(self, page: ft.Page):
         """
@@ -28,8 +28,8 @@ class CheckingProgram:
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
             await show_notification(page, f"⛔ Нет аккаунта в папке {path_send_message_folder}")
             return None
-        if not find_filess(directory_path=self.folder_with_messages, extension=self.file_extension):
-            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {self.folder_with_messages}")
+        if not find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
+            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")
             return None
         if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
                                                  account_limit=ConfigReader().get_limits())) == 0:
@@ -44,8 +44,8 @@ class CheckingProgram:
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
             await show_notification(page, f'⛔ Нет аккаунта в папке {path_send_message_folder}')
             return None
-        if not find_filess(directory_path=self.folder_with_messages, extension=self.file_extension):
-            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {self.folder_with_messages}")
+        if not find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
+            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")
             return None
 
     async def check_before_inviting(self, page: ft.Page):
@@ -148,12 +148,13 @@ class CheckingProgram:
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
             await show_notification(page, f"⛔ Нет аккаунта в папке {path_send_message_folder}")
             return None
-        if not find_filess(directory_path=self.folder_with_messages, extension=self.file_extension):
-            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {self.folder_with_messages}")
+        if not find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
+            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")
             return None
-        if not find_filess(directory_path="user_data/answering_machine", extension=self.file_extension):
+        if not find_filess(directory_path=path_send_message_folder_answering_machine_message,
+                           extension=self.file_extension):
             await show_notification(page,
-                                    "⛔ Нет заготовленных сообщений для автоответчика в папке answering_machine")
+                                    f"⛔ Нет заготовленных сообщений для автоответчика в папке {path_send_message_folder_answering_machine_message}")
             return None
         if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
                                                  account_limit=ConfigReader().get_limits())) == 0:

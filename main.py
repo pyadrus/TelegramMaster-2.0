@@ -8,7 +8,7 @@ from loguru import logger
 from docs.app import start_app
 from src.core.checking_program import CheckingProgram
 from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
-                              window_height, window_resizable)
+                              window_height, window_resizable, path_folder_with_messages)
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_files
 from src.features.account.TGAccountBIO import AccountBIO
@@ -268,7 +268,7 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Рассылки сообщений по чатам")
-                entities = find_files(directory_path="user_data/message", extension="json")
+                entities = find_files(directory_path=path_folder_with_messages, extension="json")
                 logger.info(entities)
                 await SendTelegramMessages().sending_messages_via_chats_times(page=page)
                 logger.info("🔚 Конец Рассылки сообщений по чатам")

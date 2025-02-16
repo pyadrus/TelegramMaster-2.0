@@ -12,7 +12,7 @@ from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError
                              UsernameNotOccupiedError, UsernameInvalidError, ChatAdminRequiredError, SlowModeWaitError)
 from telethon.tl.functions.channels import JoinChannelRequest
 
-from src.core.configs import ConfigReader, path_send_message_folder
+from src.core.configs import ConfigReader, path_send_message_folder, path_folder_with_messages
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import (find_files, all_find_files, record_inviting_results,
                             find_filess)
@@ -52,7 +52,7 @@ class SendTelegramMessages:
                         # username - имя аккаунта пользователя в базе данных user_data/software_database.db
                         logger.info(f"[!] Отправляем сообщение: {username[0]}")
                         try:
-                            entities = find_files(directory_path="user_data/message", extension="json")
+                            entities = find_files(directory_path=path_folder_with_messages, extension="json")
                             logger.info(entities)
                             data = await self.select_and_read_random_file(entities, folder="message")
                             await client.send_message(await client.get_input_entity(username[0]),
@@ -191,7 +191,7 @@ class SendTelegramMessages:
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                    entities = find_files(directory_path="user_data/message", extension="json")
+                    entities = find_files(directory_path=path_folder_with_messages, extension="json")
                     data = await self.select_and_read_random_file(entities, folder="message")
                     file_entities = all_find_files(directory_path="user_data/files_to_send")
                     try:
@@ -256,7 +256,7 @@ class SendTelegramMessages:
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                    data = await self.select_and_read_random_file(find_files(directory_path="user_data/message",
+                    data = await self.select_and_read_random_file(find_files(directory_path=path_folder_with_messages,
                                                                              extension="json"), folder="message")
                     try:
                         await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
@@ -332,7 +332,7 @@ class SendTelegramMessages:
                 for chat in records:
                     try:
                         await client(JoinChannelRequest(chat[0]))  # Подписываемся на канал / группу
-                        entities = find_files(directory_path="user_data/message", extension="json")
+                        entities = find_files(directory_path=path_folder_with_messages, extension="json")
                         logger.info(entities)
                         data = await self.select_and_read_random_file(entities, folder="message")
                         await client.send_message(chat[0], f'{data}')
