@@ -5,7 +5,9 @@ import sqlite3
 from loguru import logger
 from peewee import fn, SqliteDatabase, Model, IntegerField, CharField, TextField, DateTimeField
 
-db = SqliteDatabase('user_data/software_database.db')
+from src.core.configs import path_folder_database
+
+db = SqliteDatabase(path_folder_database)
 
 
 class GroupsAndChannels(Model):
@@ -53,7 +55,7 @@ def remove_duplicates():
 
 class DatabaseHandler:
 
-    def __init__(self, db_file="user_data/software_database.db"):
+    def __init__(self, db_file=path_folder_database):
         self.db_file = db_file
 
     async def connect(self) -> None:

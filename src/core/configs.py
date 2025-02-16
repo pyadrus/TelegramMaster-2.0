@@ -191,6 +191,13 @@ class ConfigReader:
         return self.config_path.get('path_folder_with_messages',
                                     'path_folder_with_messages', fallback=None)
 
+    def path_folder_database(self) -> str | None:
+        """
+        Путь к папке с базой данных (путь к config файлу user_data/config/config_path.ini)
+        """
+        return self.config_path.get('path_folder_database',
+                                    'path_folder_database', fallback=None)
+
 
 time_activity_user_2 = ConfigReader().time_activity_user_2()
 
@@ -221,3 +228,4 @@ path_viewing_folder = ConfigReader().path_viewing_folder()  # Путь к пап
 path_send_message_folder_answering_machine = ConfigReader().path_send_message_folder_answering_machine()  # Путь к папке для аккаунтов с автоответчиком
 path_send_message_folder_answering_machine_message = ConfigReader().path_send_message_folder_answering_machine_message()  # Путь к папке c сообщениями для автоответчика
 path_folder_with_messages = ConfigReader().path_folder_with_messages()  # Путь к папке с сообщениями
+path_folder_database = ConfigReader().path_folder_database()  # Путь к папке с базой данных
