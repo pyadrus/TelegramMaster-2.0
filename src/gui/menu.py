@@ -8,11 +8,7 @@ from src.core.localization import (parse_single_or_multiple_groups, parse_select
                                    clear_previously_parsed_data_list, inviting_every_day_ru,
                                    invitation_at_a_certain_time_ru, invitation_1_time_per_hour_ru, inviting_ru,
                                    importing_a_list_of_parsed_data, setting_reactions,
-                                   automatic_setting_of_reactions, sending_messages_via_chats_ru,
-                                   sending_messages_via_chats_with_answering_machine_ru,
-                                   sending_files_via_chats_ru, sending_messages_files_via_chats_ru,
-                                   sending_personal_messages_with_limits_ru,
-                                   sending_files_to_personal_account_with_limits_ru, choice_of_reactions_ru,
+                                   automatic_setting_of_reactions, choice_of_reactions_ru,
                                    proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
                                    time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
                                    account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
@@ -31,8 +27,8 @@ from src.core.localization import (parse_single_or_multiple_groups, parse_select
                                    for_parsing, for_inviting, to_create_groups, to_work_with_numbers,
                                    to_edit_bio, for_the_answering_machine, working_with_reactions, parsing,
                                    sending_messages, settings, main_menu, creating_groups_chats,
-                                   clearing_generated_chat_list, text_1, text_link_1, text_2, text_link_2,
-                                   documentation, message_distribution_settings_ru)
+                                   text_1, text_link_1, text_2, text_link_2,
+                                   documentation)
 
 
 async def main_menu_program(page: ft.Page):
@@ -266,63 +262,6 @@ async def inviting_menu(page: ft.Page):
                      # 📅 Инвайтинг каждый день
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=inviting_every_day_ru,
                                        on_click=lambda _: page.go("/inviting_every_day")),
-                 ])]))
-
-
-async def display_message_distribution_menu(page: ft.Page):
-    """
-    Отображает меню для выбора опций рассылки сообщений по чатам и в личные сообщения.
-
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    """
-    page.views.append(
-        ft.View("/sending_messages",
-                [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
-                 ft.Text(spans=[ft.TextSpan(
-                     sending_messages,
-                     ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
-                         foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
-                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     # 💬 Рассылка сообщений по чатам
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=sending_messages_via_chats_ru,
-                                       on_click=lambda _: page.go("/sending_messages_via_chats")),
-                     # 🤖 Рассылка сообщений по чатам с автоответчиком
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=sending_messages_via_chats_with_answering_machine_ru,
-                                       on_click=lambda _: page.go(
-                                           "/sending_messages_via_chats_with_answering_machine")),
-                     # 📂 Рассылка файлов по чатам
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=sending_files_via_chats_ru,
-                                       on_click=lambda _: page.go("/sending_files_via_chats")),
-                     # 💬📂 Рассылка сообщений + файлов по чатам
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=sending_messages_files_via_chats_ru,
-                                       on_click=lambda _: page.go("/sending_messages_files_via_chats")),
-
-                     # 📨 Отправка сообщений в личку
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=sending_personal_messages_with_limits_ru,
-                                       on_click=lambda _: page.go("/sending_personal_messages_with_limits")),
-                     # 📁 Отправка файлов в личку
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=sending_files_to_personal_account_with_limits_ru,
-                                       on_click=lambda _: page.go("/sending_files_to_personal_account_with_limits")),
-
-                     # 🧹 Очистка сформированного списка чатов
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=clearing_generated_chat_list,
-                                       on_click=lambda _: page.go("/clearing_generated_chat_list")),
-                     # ⚙️ Настройки рассылки сообщений
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=message_distribution_settings_ru,
-                                       on_click=lambda _: page.go("/message_distribution_settings")),
                  ])]))
 
 

@@ -12,7 +12,9 @@ from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError
                              UsernameNotOccupiedError, UsernameInvalidError, ChatAdminRequiredError, SlowModeWaitError)
 from telethon.tl.functions.channels import JoinChannelRequest
 
-from src.core.configs import ConfigReader, path_send_message_folder, path_folder_with_messages
+from src.core.configs import (ConfigReader, path_send_message_folder, path_folder_with_messages,
+                              path_send_message_folder_answering_machine_message,
+                              path_send_message_folder_answering_machine)
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import (find_files, all_find_files, record_inviting_results,
                             find_filess)
@@ -33,6 +35,37 @@ class SendTelegramMessages:
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
         self.time_sending_messages_1, self.time_sending_messages_2 = self.config_reader.get_time_sending_messages()
         self.time_subscription_1, self.time_subscription_2 = self.config_reader.get_time_subscription()
+        self.account_extension = "session"  # Расширение файла аккаунта
+        self.file_extension = "json"
+
+    async def random_dream(self):
+        """
+        Рандомный сон
+        """
+        try:
+            time_in_seconds = random.randrange(self.time_sending_messages_1, self.time_sending_messages_2)
+            logger.info(f'Спим {time_in_seconds} секунд...')
+            await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
+        except Exception as error:
+            logger.exception(f"❌ Ошибка: {error}")
+
+    @staticmethod
+    async def select_and_read_random_file(entities, folder):
+        """
+        Выбираем рандомный файл для чтения
+
+        :param entities: список файлов для чтения
+        :param folder: папка для сохранения файлов
+        """
+        try:
+            if entities:  # Проверяем, что список не пустой, если он не пустой
+                # Выбираем рандомный файл для чтения
+                random_file = random.choice(entities)  # Выбираем случайный файл для чтения из списка файлов
+                logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
+                data = read_json_file(filename=f"user_data/{folder}/{random_file[0]}.json")
+            return data  # Возвращаем данные из файла
+        except Exception as error:
+            logger.exception(f"❌ Ошибка: {error}")
 
     async def send_message_from_all_accounts(self, account_limits, page: ft.Page) -> None:
         """
@@ -43,7 +76,7 @@ class SendTelegramMessages:
         """
         try:
             time_inviting = self.config_reader.get_time_inviting()
-            for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 try:
@@ -52,7 +85,8 @@ class SendTelegramMessages:
                         # username - имя аккаунта пользователя в базе данных user_data/software_database.db
                         logger.info(f"[!] Отправляем сообщение: {username[0]}")
                         try:
-                            entities = find_files(directory_path=path_folder_with_messages, extension="json")
+                            entities = find_files(directory_path=path_folder_with_messages,
+                                                  extension=self.file_extension)
                             logger.info(entities)
                             data = await self.select_and_read_random_file(entities, folder="message")
                             await client.send_message(await client.get_input_entity(username[0]),
@@ -94,7 +128,7 @@ class SendTelegramMessages:
         try:
             # Просим пользователя ввести расширение сообщения
             time_inviting = self.config_reader.get_time_inviting()
-            for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 try:
@@ -134,13 +168,15 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
+    # Рассылка сообщений по чатам
+
     async def sending_files_via_chats(self, page) -> None:
         """
         Рассылка файлов по чатам (docs/Рассылка_сообщений/⛔️ Рассылка_файлов_по_чатам.html)
         """
         try:
             # Спрашиваем у пользователя, через какое время будем отправлять сообщения
-            for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 records: list = await db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
@@ -184,14 +220,14 @@ class SendTelegramMessages:
         Рассылка сообщений + файлов по чатам
         """
         try:
-            for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 records: list = await db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
                 logger.info(f"Всего групп: {len(records)}")
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                    entities = find_files(directory_path=path_folder_with_messages, extension="json")
+                    entities = find_files(directory_path=path_folder_with_messages, extension=self.file_extension)
                     data = await self.select_and_read_random_file(entities, folder="message")
                     file_entities = all_find_files(directory_path="user_data/files_to_send")
                     try:
@@ -226,30 +262,12 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    @staticmethod
-    async def select_and_read_random_file(entities, folder):
-        """
-        Выбираем рандомный файл для чтения
-
-        :param entities: список файлов для чтения
-        :param folder: папка для сохранения файлов
-        """
-        try:
-            if entities:  # Проверяем, что список не пустой, если он не пустой
-                # Выбираем рандомный файл для чтения
-                random_file = random.choice(entities)  # Выбираем случайный файл для чтения из списка файлов
-                logger.info(f"Выбран файл для чтения: {random_file[0]}.json")
-                data = read_json_file(filename=f"user_data/{folder}/{random_file[0]}.json")
-            return data  # Возвращаем данные из файла
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
-
     async def sending_messages_via_chats_times(self, page) -> None:
         """
         Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)
         """
         try:
-            for session_name in find_filess(directory_path=path_send_message_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_send_message_folder)
                 records: list = await db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
@@ -257,7 +275,8 @@ class SendTelegramMessages:
                 for groups in records:  # Поочередно выводим записанные группы
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
                     data = await self.select_and_read_random_file(find_files(directory_path=path_folder_with_messages,
-                                                                             extension="json"), folder="message")
+                                                                             extension=self.file_extension),
+                                                                  folder="message")
                     try:
                         await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
                         await self.random_dream()  # Прерываем работу и меняем аккаунт
@@ -294,33 +313,23 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def random_dream(self):
-        """
-        Рандомный сон
-        """
-        try:
-            time_in_seconds = random.randrange(self.time_sending_messages_1, self.time_sending_messages_2) * 60
-            logger.info(f'Спим {time_in_seconds / 60} минуты / минут...')
-            await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
-
     async def answering_machine(self, page):
         """
         Рассылка сообщений по чатам (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)
         """
         try:
-            for session_name in find_filess(directory_path="user_data/accounts/answering_machine",
-                                            extension='session'):
+            for session_name in find_filess(directory_path=path_send_message_folder_answering_machine,
+                                            extension=self.account_extension):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory="user_data/accounts/answering_machine")
+                                                                   account_directory=path_send_message_folder_answering_machine)
 
                 @client.on(events.NewMessage(incoming=True))  # Обработчик личных сообщений
                 async def handle_private_messages(event):
                     """Обрабатывает входящие личные сообщения"""
                     if event.is_private:  # Проверяем, является ли сообщение личным
                         logger.info(f'Входящее сообщение: {event.message.message}')
-                        entities = find_files(directory_path="user_data/answering_machine", extension="json")
+                        entities = find_files(directory_path=path_send_message_folder_answering_machine_message,
+                                              extension=self.file_extension)
                         logger.info(entities)
                         data = await self.select_and_read_random_file(entities, folder="answering_machine")
                         logger.info(data)
@@ -332,7 +341,7 @@ class SendTelegramMessages:
                 for chat in records:
                     try:
                         await client(JoinChannelRequest(chat[0]))  # Подписываемся на канал / группу
-                        entities = find_files(directory_path=path_folder_with_messages, extension="json")
+                        entities = find_files(directory_path=path_folder_with_messages, extension=self.file_extension)
                         logger.info(entities)
                         data = await self.select_and_read_random_file(entities, folder="message")
                         await client.send_message(chat[0], f'{data}')
