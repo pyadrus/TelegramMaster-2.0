@@ -294,16 +294,6 @@ async def main(page: ft.Page):
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-            elif page.route == "/sending_files_via_chats":  # Рассылка файлов по чатам
-                await CheckingProgram().check_before_sending_messages_via_chats(page=page)
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
-                logger.info("▶️ Начало Рассылки файлов по чатам")
-                await SendTelegramMessages().sending_files_via_chats(page=page)
-                logger.info("🔚 Конец Рассылки файлов по чатам")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
                 await CheckingProgram().check_before_sending_messages_via_chats(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода

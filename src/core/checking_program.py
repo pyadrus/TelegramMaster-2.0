@@ -28,9 +28,9 @@ class CheckingProgram:
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
             await show_notification(page, f"⛔ Нет аккаунта в папке {path_send_message_folder}")
             return None
-        if not find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
-            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")
-            return None
+        # if not find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
+        #     await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")
+        #     return None
         if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
                                                  account_limit=ConfigReader().get_limits())) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
