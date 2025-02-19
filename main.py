@@ -267,10 +267,6 @@ async def main(page: ft.Page):
 
             elif page.route == "/sending_messages_via_chats_menu":  # Меню "💬 Рассылка сообщений по чатам"
                 await sending_messages_via_chats_menu(page)
-
-            elif page.route == "/sending_personal_messages_with_limits_menu":  # Меню "📨 Отправка сообщений в личку"
-                await sending_personal_messages_with_limits_menu(page)
-
             elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
                 await CheckingProgram().checking_sending_messages_via_chats_with_answering_machine(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
@@ -291,6 +287,8 @@ async def main(page: ft.Page):
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+            elif page.route == "/sending_personal_messages_with_limits_menu":  # Меню "📨 Отправка сообщений в личку"
+                await sending_personal_messages_with_limits_menu(page)
             elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
                 await CheckingProgram().checking_sending_to_personal(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода

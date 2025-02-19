@@ -221,7 +221,8 @@ class SendTelegramMessages:
                         await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
                     except SlowModeWaitError as e:
-                        logger.warning(f"Рассылка сообщений в группу: {groups[0]}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                        logger.warning(
+                            f"Рассылка сообщений в группу: {groups[0]}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                         await asyncio.sleep(e.seconds)
                     except ValueError:
                         logger.warning(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {groups[0]}")
@@ -234,7 +235,6 @@ class SendTelegramMessages:
                 await client.disconnect()  # Разрываем соединение Telegram
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
-
 
     async def answering_machine(self, page):
         """
