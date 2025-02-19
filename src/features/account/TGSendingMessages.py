@@ -220,6 +220,12 @@ class SendTelegramMessages:
                     except ChatWriteForbiddenError:
                         await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                         break  # Прерываем работу и меняем аккаунт
+                    except SlowModeWaitError as e:
+                        logger.warning(f"Рассылка сообщений в группу: {groups[0]}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                        await asyncio.sleep(e.seconds)
+                    except ValueError:
+                        logger.warning(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {groups[0]}")
+                        break
                     except (TypeError, UnboundLocalError):
                         continue  # Записываем ошибку в software_database.db и продолжаем работу
                     except Exception as error:
@@ -229,56 +235,6 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def sending_messages_via_chats_times(self, page) -> None:
-        """
-        Массовая рассылка в чаты (docs/Рассылка_сообщений/⛔️ Рассылка_сообщений_по_чатам.html)
-        """
-        try:
-            for session_name in find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_send_message_folder)
-                records: list = await db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
-                logger.info(f"Всего групп: {len(records)}")
-                for groups in records:  # Поочередно выводим записанные группы
-                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                    data = await self.select_and_read_random_file(find_files(directory_path=path_folder_with_messages,
-                                                                             extension=self.file_extension),
-                                                                  folder="message")
-                    try:
-                        await client.send_message(entity=groups[0], message=data)  # Рассылаем сообщение по чатам
-                        await self.random_dream()  # Прерываем работу и меняем аккаунт
-                        logger.error(
-                            f"Рассылка сообщений в группу: {groups[0]}. Сообщение в группу {groups[0]} написано!")
-                    except ValueError:
-                        logger.error(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {groups[0]}")
-                        break
-                    except ChatAdminRequiredError:
-                        logger.error(
-                            f"К сожалению, у вас нет прав администратора в группе {groups[0]}, либо ссылка неверная или это канал. Пожалуйста, проверьте ссылку 🔄 {groups[0]}.")
-                    except ChannelPrivateError:
-                        logger.error(
-                            f"Рассылка сообщений в группу: {groups[0]}. Указанный канал / группа  {groups[0]} является приватным, или вам запретили подписываться.")
-                    except PeerFloodError:
-                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
-                        break  # Прерываем работу и меняем аккаунт
-                    except FloodWaitError as e:
-                        logger.error(
-                            f"Рассылка сообщений в группу: {groups[0]}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}")
-                        await asyncio.sleep(e.seconds)
-                    except SlowModeWaitError as e:
-                        logger.error(
-                            f"Рассылка сообщений в группу: {groups[0]}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}")
-                        await asyncio.sleep(e.seconds)
-                    except UserBannedInChannelError:
-                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
-                        break  # Прерываем работу и меняем аккаунт
-                    except (TypeError, UnboundLocalError):
-                        continue  # Записываем ошибку в software_database.db и продолжаем работу
-                    except ChatWriteForbiddenError:
-                        await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
-                        break  # Прерываем работу и меняем аккаунт
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
 
     async def answering_machine(self, page):
         """

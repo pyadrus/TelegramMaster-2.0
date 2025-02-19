@@ -8,9 +8,8 @@ from loguru import logger
 from docs.app import start_app
 from src.core.checking_program import CheckingProgram
 from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
-                              window_height, window_resizable, path_folder_with_messages)
+                              window_height, window_resizable)
 from src.core.sqlite_working_tools import DatabaseHandler
-from src.core.utils import find_files
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
 from src.features.account.TGConnect import TGConnect
@@ -272,18 +271,6 @@ async def main(page: ft.Page):
             elif page.route == "/sending_personal_messages_with_limits_menu":  # Меню "📨 Отправка сообщений в личку"
                 await sending_personal_messages_with_limits_menu(page)
 
-            elif page.route == "/sending_messages_via_chats":  # Рассылка сообщений по чатам
-                await CheckingProgram().check_before_sending_messages_via_chats(page=page)
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
-                logger.info("▶️ Начало Рассылки сообщений по чатам")
-                entities = find_files(directory_path=path_folder_with_messages, extension="json")
-                logger.info(entities)
-                await SendTelegramMessages().sending_messages_via_chats_times(page=page)
-                logger.info("🔚 Конец Рассылки сообщений по чатам")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/sending_messages_via_chats_with_answering_machine":  # Рассылка сообщений по чатам с автоответчиком
                 await CheckingProgram().checking_sending_messages_via_chats_with_answering_machine(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
