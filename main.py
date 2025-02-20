@@ -29,8 +29,8 @@ from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu,
                           account_connection_menu, connecting_accounts_by_number_menu,
                           connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
                           creating_groups_and_chats_menu, working_with_contacts_menu, main_menu_program)
-from src.gui.sending_messages_menu import display_message_distribution_menu, sending_messages_via_chats_menu, \
-    sending_personal_messages_with_limits_menu
+from src.gui.sending_messages_menu import (display_message_distribution_menu, sending_messages_via_chats_menu,
+                                           sending_personal_messages_with_limits_menu)
 
 logger.add("user_data/log/log.log", rotation="1 MB", compression="zip", level="INFO")  # Логирование программы
 logger.add("user_data/log/log_ERROR.log", rotation="1 MB", compression="zip", level="ERROR")  # Логирование программы
@@ -279,14 +279,9 @@ async def main(page: ft.Page):
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
                 await CheckingProgram().check_before_sending_messages_via_chats(page=page)
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
-                logger.info("▶️ Начало отправки сообщений + файлов по чатам")
+
                 await SendTelegramMessages().sending_messages_files_via_chats(page=page)
-                logger.info("🔚 Конец отправки сообщений + файлов по чатам")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
             elif page.route == "/sending_personal_messages_with_limits_menu":  # Меню "📨 Отправка сообщений в личку"
                 await sending_personal_messages_with_limits_menu(page)
             elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
