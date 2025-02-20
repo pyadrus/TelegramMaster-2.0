@@ -23,6 +23,7 @@ from src.core.utils import read_json_file
 from src.core.utils import record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.gui.menu import log_and_display_info
 
 
 class SendTelegramMessages:
@@ -175,15 +176,14 @@ class SendTelegramMessages:
         """
         Рассылка сообщений + файлов по чатам
         """
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
-        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-
+        # Создаем ListView для отображения логов
+        lv = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
         # Текст для вывода
         output = ft.Text("Рассылка сообщений по чатам", size=18, weight=ft.FontWeight.BOLD)
 
         # Обработчик кнопки "Готово"
         async def button_clicked(e):
+
             time_from = tb_time_from.value or self.time_sending_messages_1  # Получаем значение первого поля
             time_to = tb_time_to.value or self.time_sending_messages_2  # Получаем значение второго поля
             # Получаем значение третьего поля и разделяем его на список по пробелам
@@ -202,16 +202,16 @@ class SendTelegramMessages:
                 print(result_text)
                 try:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    logger.info('Время старта: ' + str(start))
-                    logger.info("▶️ Начало отправки сообщений + файлов по чатам")
+                    await log_and_display_info('Время старта: ' + str(start), lv, page)
+                    await log_and_display_info("▶️ Начало отправки сообщений + файлов по чатам", lv, page)
                     for session_name in find_filess(directory_path=path_send_message_folder,
                                                     extension=self.account_extension):
                         client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                            account_directory=path_send_message_folder)
                         # Открываем базу данных с группами, в которые будут рассылаться сообщения
-                        logger.info(f"Всего групп: {len(chat_list_fields)}")
+                        await log_and_display_info(f"Всего групп: {len(chat_list_fields)}", lv, page)
                         for group_link in chat_list_fields:  # Поочередно выводим записанные группы
-                            logger.info(f"Отправляем сообщение в группу: {group_link}")
+                            await log_and_display_info(f"Отправляем сообщение в группу: {group_link}", lv, page)
                             try:
                                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link)
                                 messages = find_files(directory_path=path_folder_with_messages,
@@ -220,7 +220,7 @@ class SendTelegramMessages:
                                 if not messages:
                                     for file in files:
                                         await client.send_file(group_link, f"user_data/files_to_send/{file}")
-                                        logger.info(f"Файл {file} отправлен в {group_link}.")
+                                        await log_and_display_info(f"Файл {file} отправлен в {group_link}.", lv, page)
                                         await self.random_dream()
                                 else:
                                     message = await self.select_and_read_random_file(messages, folder="message")
@@ -230,7 +230,8 @@ class SendTelegramMessages:
                                         for file in files:
                                             await client.send_file(group_link, f"user_data/files_to_send/{file}",
                                                                    caption=message)
-                                            logger.info(f"Сообщение и файл отправлены в {group_link}")
+                                            await log_and_display_info(f"Сообщение и файл отправлены в {group_link}",
+                                                                       lv, page)
                                             await self.random_dream()
                             except ChannelPrivateError:
                                 logger.warning(f"Группа {group_link} приватная или подписка запрещена.")
@@ -262,10 +263,13 @@ class SendTelegramMessages:
                                 logger.exception(f"❌ Ошибка: {error}")
 
                         await client.disconnect()  # Разрываем соединение Telegram
-                    logger.info("🔚 Конец отправки сообщений + файлов по чатам")
+                    await log_and_display_info("🔚 Конец отправки сообщений + файлов по чатам",
+                                               lv, page)
                     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    logger.info('Время окончания: ' + str(finish))
-                    logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                    await log_and_display_info('Время окончания: ' + str(finish),
+                                               lv, page)
+                    await log_and_display_info('Время работы: ' + str(finish - start),
+                                               lv, page)
                 except Exception as error:
                     logger.exception(f"❌ Ошибка: {error}")
             else:
@@ -278,15 +282,9 @@ class SendTelegramMessages:
         # Группа полей ввода для времени сна
         tb_time_from = ft.TextField(label="Время сна от", width=222, hint_text="Введите время", border_radius=5, )
         tb_time_to = ft.TextField(label="Время сна до", width=222, hint_text="Введите время", border_radius=5, )
-        sleep_time_group = ft.Row(
-            controls=[
-                tb_time_from,  # Первое поле ввода
-                tb_time_to  # Второе поле ввода
-            ],
-            spacing=20,
-        )
+        sleep_time_group = ft.Row(controls=[tb_time_from, tb_time_to], spacing=20, )
         # Поле для формирования списка чатов
-        chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=True, border_radius=5, )
+        chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=False, border_radius=5, )
         # Кнопка "Готово"
         button_done = ft.ElevatedButton(text=done_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
@@ -300,23 +298,29 @@ class SendTelegramMessages:
         # Кнопка "Назад"
         button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=back_button_clicked, )
+        # Разделение интерфейса на верхнюю и нижнюю части
         page.views.append(
             ft.View(
                 "/sending_messages_via_chats_menu",
                 [
                     ft.Column(
                         controls=[
-                            output,  # Текст для вывода
-                            c,  # Чекбокс для работы с автоответчиком
-                            sleep_time_group,  # Группа полей ввода для времени сна
-                            chat_list_field,  # Поле для формирования списка чатов
-                            button_done,  # Кнопка "Готово"
-                            button_back,  # Кнопка "Назад"
+                            ft.Column(  # Верхняя часть: контрольные элементы
+                                controls=[
+                                    output,
+                                    c,
+                                    sleep_time_group,
+                                    chat_list_field,
+                                    button_done,
+                                    button_back,
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                spacing=15,
+                            ),
+                            lv,  # Нижняя часть: отображение логов
                         ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        spacing=15,
-                    )
-                ]))
+                        spacing=10,
+                    )]))
 
     async def answering_machine(self, page):
         """
