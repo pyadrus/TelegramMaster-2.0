@@ -185,23 +185,21 @@ class SendTelegramMessages:
         # Обработчик кнопки "Готово"
         async def button_clicked(e):
             time_from = tb_time_from.value or self.time_sending_messages_1  # Получаем значение первого поля
-            print(time_from)
-
             time_to = tb_time_to.value or self.time_sending_messages_2  # Получаем значение второго поля
-            print(time_to)
-
-            chat_list_fieldss = chat_list_field.value.split() or await db_handler.open_and_read_data("writing_group_links")  # Получаем значение третьего поля
-            chat_list_fields = []
-            for line in chat_list_fieldss:
-                chat_list_fields.append(line)
-            print(chat_list_fields)
-
+            # Получаем значение третьего поля и разделяем его на список по пробелам
+            chat_list_input = chat_list_field.value.strip()  # Удаляем лишние пробелы
+            if chat_list_input:  # Если поле не пустое
+                chat_list_fields = chat_list_input.split()  # Разделяем строку по пробелам
+            else:
+                # Если поле пустое, используем данные из базы данных
+                db_chat_list = await db_handler.open_and_read_data("writing_group_links")
+                chat_list_fields = [group[0] for group in db_chat_list]  # Извлекаем только ссылки из кортежей
+            print(chat_list_fields)  # Выводим полученный список чатов
             checs = c.value  # Получаем значение чекбокса
             print(checs)
             if time_from < time_to:
-                result_text = f"Время сна: От '{time_from}' до '{time_to}'. Чат для рассылки: '{chat_list_fields}'. 'Работа с автоответчиком': '{checs}"
+                result_text = f"Время сна: От '{time_from}' до '{time_to}'. Чаты для рассылки: '{chat_list_fields}'. 'Работа с автоответчиком': '{checs}"
                 print(result_text)
-
                 try:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
@@ -211,33 +209,31 @@ class SendTelegramMessages:
                         client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                            account_directory=path_send_message_folder)
                         # Открываем базу данных с группами, в которые будут рассылаться сообщения
-                        # records: list = await db_handler.open_and_read_data("writing_group_links")
                         logger.info(f"Всего групп: {len(chat_list_fields)}")
-                        for groups in chat_list_fields:  # Поочередно выводим записанные группы
+                        for group_link in chat_list_fields:  # Поочередно выводим записанные группы
+                            logger.info(f"Отправляем сообщение в группу: {group_link}")
                             try:
-                                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
+                                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link)
                                 messages = find_files(directory_path=path_folder_with_messages,
                                                       extension=self.file_extension)
                                 files = all_find_files(directory_path="user_data/files_to_send")
-
                                 if not messages:
                                     for file in files:
-                                        await client.send_file(groups[0], f"user_data/files_to_send/{file}")
-                                        logger.info(f"Файл {file} отправлен в {groups[0]}.")
+                                        await client.send_file(group_link, f"user_data/files_to_send/{file}")
+                                        logger.info(f"Файл {file} отправлен в {group_link}.")
                                         await self.random_dream()
                                 else:
                                     message = await self.select_and_read_random_file(messages, folder="message")
-
                                     if not files:
-                                        await client.send_message(entity=groups[0], message=message)
+                                        await client.send_message(entity=group_link, message=message)
                                     else:
                                         for file in files:
-                                            await client.send_file(groups[0], f"user_data/files_to_send/{file}",
+                                            await client.send_file(group_link, f"user_data/files_to_send/{file}",
                                                                    caption=message)
-                                            logger.info(f"Сообщение и файл отправлены в {groups[0]}")
+                                            logger.info(f"Сообщение и файл отправлены в {group_link}")
                                             await self.random_dream()
                             except ChannelPrivateError:
-                                logger.warning(f"Группа {groups[0]} приватная или подписка запрещена.")
+                                logger.warning(f"Группа {group_link} приватная или подписка запрещена.")
                             except PeerFloodError:
                                 await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                                 break  # Прерываем работу и меняем аккаунт
@@ -248,17 +244,17 @@ class SendTelegramMessages:
                                 await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                                 break  # Прерываем работу и меняем аккаунт
                             except ChatAdminRequiredError:
-                                logger.warning(f"Нужны права администратора для отправки сообщений в {groups[0]}")
+                                logger.warning(f"Нужны права администратора для отправки сообщений в {group_link}")
                                 break
                             except ChatWriteForbiddenError:
                                 await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
                                 break  # Прерываем работу и меняем аккаунт
                             except SlowModeWaitError as e:
                                 logger.warning(
-                                    f"Рассылка сообщений в группу: {groups[0]}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                                    f"Рассылка сообщений в группу: {group_link}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}")
                                 await asyncio.sleep(e.seconds)
                             except ValueError:
-                                logger.warning(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {groups[0]}")
+                                logger.warning(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {group_link}")
                                 break
                             except (TypeError, UnboundLocalError):
                                 continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -272,7 +268,6 @@ class SendTelegramMessages:
                     logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
                 except Exception as error:
                     logger.exception(f"❌ Ошибка: {error}")
-
             else:
                 result_text = "Время сна: Некорректный диапазон, введите корректные значения"
                 print(result_text)
@@ -280,11 +275,9 @@ class SendTelegramMessages:
 
         # Чекбокс для работы с автоответчиком
         c = ft.Checkbox(label="Работа с автоответчиком")
-
         # Группа полей ввода для времени сна
         tb_time_from = ft.TextField(label="Время сна от", width=222, hint_text="Введите время", border_radius=5, )
         tb_time_to = ft.TextField(label="Время сна до", width=222, hint_text="Введите время", border_radius=5, )
-
         sleep_time_group = ft.Row(
             controls=[
                 tb_time_from,  # Первое поле ввода
@@ -292,10 +285,8 @@ class SendTelegramMessages:
             ],
             spacing=20,
         )
-
         # Поле для формирования списка чатов
         chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=True, border_radius=5, )
-
         # Кнопка "Готово"
         button_done = ft.ElevatedButton(text=done_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
@@ -309,7 +300,6 @@ class SendTelegramMessages:
         # Кнопка "Назад"
         button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=back_button_clicked, )
-
         page.views.append(
             ft.View(
                 "/sending_messages_via_chats_menu",
