@@ -186,10 +186,16 @@ class SendTelegramMessages:
         async def button_clicked(e):
             time_from = tb_time_from.value or self.time_sending_messages_1  # Получаем значение первого поля
             print(time_from)
+
             time_to = tb_time_to.value or self.time_sending_messages_2  # Получаем значение второго поля
             print(time_to)
-            chat_list_fields = chat_list_field.value  # Получаем значение третьего поля
+
+            chat_list_fieldss = chat_list_field.value.split() or await db_handler.open_and_read_data("writing_group_links")  # Получаем значение третьего поля
+            chat_list_fields = []
+            for line in chat_list_fieldss:
+                chat_list_fields.append(line)
             print(chat_list_fields)
+
             checs = c.value  # Получаем значение чекбокса
             print(checs)
             if time_from < time_to:
@@ -200,16 +206,18 @@ class SendTelegramMessages:
                     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                     logger.info('Время старта: ' + str(start))
                     logger.info("▶️ Начало отправки сообщений + файлов по чатам")
-                    for session_name in find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
+                    for session_name in find_filess(directory_path=path_send_message_folder,
+                                                    extension=self.account_extension):
                         client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                            account_directory=path_send_message_folder)
                         # Открываем базу данных с группами, в которые будут рассылаться сообщения
-                        records: list = await db_handler.open_and_read_data("writing_group_links")
-                        logger.info(f"Всего групп: {len(records)}")
-                        for groups in records:  # Поочередно выводим записанные группы
+                        # records: list = await db_handler.open_and_read_data("writing_group_links")
+                        logger.info(f"Всего групп: {len(chat_list_fields)}")
+                        for groups in chat_list_fields:  # Поочередно выводим записанные группы
                             try:
                                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, groups[0])
-                                messages = find_files(directory_path=path_folder_with_messages, extension=self.file_extension)
+                                messages = find_files(directory_path=path_folder_with_messages,
+                                                      extension=self.file_extension)
                                 files = all_find_files(directory_path="user_data/files_to_send")
 
                                 if not messages:
@@ -274,8 +282,8 @@ class SendTelegramMessages:
         c = ft.Checkbox(label="Работа с автоответчиком")
 
         # Группа полей ввода для времени сна
-        tb_time_from = ft.TextField( label="Время сна от", width=222,   hint_text="Введите время", border_radius=5,    )
-        tb_time_to = ft.TextField(label="Время сна до",width=222,  hint_text="Введите время",border_radius=5,)
+        tb_time_from = ft.TextField(label="Время сна от", width=222, hint_text="Введите время", border_radius=5, )
+        tb_time_to = ft.TextField(label="Время сна до", width=222, hint_text="Введите время", border_radius=5, )
 
         sleep_time_group = ft.Row(
             controls=[
@@ -286,10 +294,11 @@ class SendTelegramMessages:
         )
 
         # Поле для формирования списка чатов
-        chat_list_field = ft.TextField(   label="Формирование списка чатов",   width=500,   multiline=True, border_radius=5,    )
+        chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=True, border_radius=5, )
 
         # Кнопка "Готово"
-        button_done = ft.ElevatedButton(text=done_button,width=line_width_button,  height=BUTTON_HEIGHT,  on_click=button_clicked,  )
+        button_done = ft.ElevatedButton(text=done_button, width=line_width_button, height=BUTTON_HEIGHT,
+                                        on_click=button_clicked, )
 
         async def back_button_clicked(_):
             """
@@ -298,7 +307,8 @@ class SendTelegramMessages:
             page.go("/sending_messages_via_chats_menu")  # переходим к основному меню рассылки сообщений 🏠
 
         # Кнопка "Назад"
-        button_back = ft.ElevatedButton(text=back_button,width=line_width_button,height=BUTTON_HEIGHT,on_click=back_button_clicked,)
+        button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
+                                        on_click=back_button_clicked, )
 
         page.views.append(
             ft.View(
