@@ -227,27 +227,14 @@ class SendTelegramMessages:
                                     await log_and_display_info(f"Отправляем сообщение в группу: {group_link}", lv, page)
 
                                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link)
+
                                     messages = find_files(directory_path=path_folder_with_messages,
                                                           extension=self.file_extension)
                                     files = all_find_files(directory_path="user_data/files_to_send")
-                                    if not messages:
-                                        for file in files:
-                                            await client.send_file(group_link, f"user_data/files_to_send/{file}")
-                                            await log_and_display_info(f"Файл {file} отправлен в {group_link}.", lv,
-                                                                       page)
-                                            await self.random_dream()
-                                    else:
-                                        message = await self.select_and_read_random_file(messages, folder="message")
-                                        if not files:
-                                            await client.send_message(entity=group_link, message=message)
-                                        else:
-                                            for file in files:
-                                                await client.send_file(group_link, f"user_data/files_to_send/{file}",
-                                                                       caption=message)
-                                                await log_and_display_info(
-                                                    f"Сообщение и файл отправлены в {group_link}",
-                                                    lv, page)
-                                                await self.random_dream()
+
+                                    # Отправляем сообщения и файлы в группу
+                                    await self.send_content_to_group(client, group_link, messages, files, lv, page)
+
                                 except UserBannedInChannelError:
                                     logger.error(
                                         'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
@@ -279,24 +266,10 @@ class SendTelegramMessages:
                                     messages = find_files(directory_path=path_folder_with_messages,
                                                           extension=self.file_extension)
                                     files = all_find_files(directory_path="user_data/files_to_send")
-                                    if not messages:
-                                        for file in files:
-                                            await client.send_file(group_link, f"user_data/files_to_send/{file}")
-                                            await log_and_display_info(f"Файл {file} отправлен в {group_link}.", lv,
-                                                                       page)
-                                            await self.random_dream()
-                                    else:
-                                        message = await self.select_and_read_random_file(messages, folder="message")
-                                        if not files:
-                                            await client.send_message(entity=group_link, message=message)
-                                        else:
-                                            for file in files:
-                                                await client.send_file(group_link, f"user_data/files_to_send/{file}",
-                                                                       caption=message)
-                                                await log_and_display_info(
-                                                    f"Сообщение и файл отправлены в {group_link}",
-                                                    lv, page)
-                                                await self.random_dream()
+
+                                    # Отправляем сообщения и файлы в группу
+                                    await self.send_content_to_group(client, group_link, messages, files, lv, page)
+
                                 except ChannelPrivateError:
                                     logger.warning(f"Группа {group_link} приватная или подписка запрещена.")
                                 except PeerFloodError:
@@ -380,3 +353,22 @@ class SendTelegramMessages:
                         ],
                         spacing=10,
                     )]))
+
+    async def send_content_to_group(self, client, group_link, messages, files, lv, page):
+        """
+        Отправляет сообщения и файлы в группу.
+        """
+        if not messages:
+            for file in files:
+                await client.send_file(group_link, f"user_data/files_to_send/{file}")
+                await log_and_display_info(f"Файл {file} отправлен в {group_link}.", lv, page)
+                await self.random_dream()
+        else:
+            message = await self.select_and_read_random_file(messages, folder="message")
+            if not files:
+                await client.send_message(entity=group_link, message=message)
+            else:
+                for file in files:
+                    await client.send_file(group_link, f"user_data/files_to_send/{file}", caption=message)
+                    await log_and_display_info(f"Сообщение и файл отправлены в {group_link}", lv, page)
+                    await self.random_dream()
