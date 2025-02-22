@@ -280,8 +280,8 @@ class SendTelegramMessages:
         # Чекбокс для работы с автоответчиком
         c = ft.Checkbox(label="Работа с автоответчиком")
         # Группа полей ввода для времени сна
-        tb_time_from = ft.TextField(label="Время сна от", width=222, hint_text="Введите время", border_radius=5, )
-        tb_time_to = ft.TextField(label="Время сна до", width=222, hint_text="Введите время", border_radius=5, )
+        tb_time_from = ft.TextField(label="Время сна от", width=297, hint_text="Введите время", border_radius=5, )
+        tb_time_to = ft.TextField(label="Время сна до", width=297, hint_text="Введите время", border_radius=5, )
         sleep_time_group = ft.Row(controls=[tb_time_from, tb_time_to], spacing=20, )
         # Поле для формирования списка чатов
         chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=False, border_radius=5, )
