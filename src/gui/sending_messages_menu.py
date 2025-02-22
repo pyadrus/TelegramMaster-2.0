@@ -2,8 +2,7 @@
 import flet as ft
 
 from src.core.configs import BUTTON_HEIGHT, BUTTON_WIDTH
-from src.core.localization import (sending_messages_via_chats_ru, sending_messages_via_chats_with_answering_machine_ru,
-                                   sending_messages_files_via_chats_ru,
+from src.core.localization import (sending_messages_via_chats_ru, sending_messages_files_via_chats_ru,
                                    sending_personal_messages_with_limits_ru,
                                    sending_files_to_personal_account_with_limits_ru,
                                    sending_messages, main_menu, clearing_generated_chat_list,
@@ -61,9 +60,6 @@ async def sending_messages_via_chats_menu(page: ft.Page):
         create_menu_view(
             "💬 Рассылка сообщений по чатам",
             [
-                # 🤖 Рассылка сообщений по чатам с автоответчиком
-                (sending_messages_via_chats_with_answering_machine_ru,
-                 "/sending_messages_via_chats_with_answering_machine"),
                 # 💬📂 Рассылка сообщений + файлов по чатам
                 (sending_messages_files_via_chats_ru, "/sending_messages_files_via_chats"),
                 # 🧹 Очистка сформированного списка чатов

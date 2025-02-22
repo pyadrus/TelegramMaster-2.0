@@ -10,7 +10,6 @@ from telethon import events
 from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError, UserBannedInChannelError,
                              ChatWriteForbiddenError, UserNotMutualContactError, UserIdInvalidError,
                              UsernameNotOccupiedError, UsernameInvalidError, ChatAdminRequiredError, SlowModeWaitError)
-from telethon.tl.functions.channels import JoinChannelRequest
 
 from src.core.configs import (ConfigReader, path_send_message_folder, path_folder_with_messages,
                               path_send_message_folder_answering_machine_message,
@@ -194,87 +193,152 @@ class SendTelegramMessages:
                 # Если поле пустое, используем данные из базы данных
                 db_chat_list = await db_handler.open_and_read_data("writing_group_links")
                 chat_list_fields = [group[0] for group in db_chat_list]  # Извлекаем только ссылки из кортежей
-            print(chat_list_fields)  # Выводим полученный список чатов
+            logger.info(chat_list_fields)  # Выводим полученный список чатов
             checs = c.value  # Получаем значение чекбокса
-            print(checs)
+            logger.info(checs)
             if time_from < time_to:
                 result_text = f"Время сна: От '{time_from}' до '{time_to}'. Чаты для рассылки: '{chat_list_fields}'. 'Работа с автоответчиком': '{checs}"
-                print(result_text)
-                try:
-                    start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                    await log_and_display_info('Время старта: ' + str(start), lv, page)
-                    await log_and_display_info("▶️ Начало отправки сообщений + файлов по чатам", lv, page)
-                    for session_name in find_filess(directory_path=path_send_message_folder,
-                                                    extension=self.account_extension):
-                        client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_send_message_folder)
-                        # Открываем базу данных с группами, в которые будут рассылаться сообщения
-                        await log_and_display_info(f"Всего групп: {len(chat_list_fields)}", lv, page)
-                        for group_link in chat_list_fields:  # Поочередно выводим записанные группы
-                            await log_and_display_info(f"Отправляем сообщение в группу: {group_link}", lv, page)
-                            try:
-                                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link)
-                                messages = find_files(directory_path=path_folder_with_messages,
-                                                      extension=self.file_extension)
-                                files = all_find_files(directory_path="user_data/files_to_send")
-                                if not messages:
-                                    for file in files:
-                                        await client.send_file(group_link, f"user_data/files_to_send/{file}")
-                                        await log_and_display_info(f"Файл {file} отправлен в {group_link}.", lv, page)
-                                        await self.random_dream()
-                                else:
-                                    message = await self.select_and_read_random_file(messages, folder="message")
-                                    if not files:
-                                        await client.send_message(entity=group_link, message=message)
-                                    else:
-                                        for file in files:
-                                            await client.send_file(group_link, f"user_data/files_to_send/{file}",
-                                                                   caption=message)
-                                            await log_and_display_info(f"Сообщение и файл отправлены в {group_link}",
-                                                                       lv, page)
-                                            await self.random_dream()
-                            except ChannelPrivateError:
-                                logger.warning(f"Группа {group_link} приватная или подписка запрещена.")
-                            except PeerFloodError:
-                                await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
-                                break  # Прерываем работу и меняем аккаунт
-                            except FloodWaitError as e:
-                                logger.warning(f"FloodWait! Ожидание {str(datetime.timedelta(seconds=e.seconds))}")
-                                await asyncio.sleep(e.seconds)
-                            except UserBannedInChannelError:
-                                await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
-                                break  # Прерываем работу и меняем аккаунт
-                            except ChatAdminRequiredError:
-                                logger.warning(f"Нужны права администратора для отправки сообщений в {group_link}")
-                                break
-                            except ChatWriteForbiddenError:
-                                await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
-                                break  # Прерываем работу и меняем аккаунт
-                            except SlowModeWaitError as e:
-                                logger.warning(
-                                    f"Рассылка сообщений в группу: {group_link}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}")
-                                await asyncio.sleep(e.seconds)
-                            except ValueError:
-                                logger.warning(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {group_link}")
-                                break
-                            except (TypeError, UnboundLocalError):
-                                continue  # Записываем ошибку в software_database.db и продолжаем работу
-                            except Exception as error:
-                                logger.exception(f"❌ Ошибка: {error}")
+                logger.info(result_text)
 
-                        await client.disconnect()  # Разрываем соединение Telegram
-                    await log_and_display_info("🔚 Конец отправки сообщений + файлов по чатам",
-                                               lv, page)
-                    finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                    await log_and_display_info('Время окончания: ' + str(finish),
-                                               lv, page)
-                    await log_and_display_info('Время работы: ' + str(finish - start),
-                                               lv, page)
-                except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                if checs == True:
+                    try:
+                        for session_name in find_filess(directory_path=path_send_message_folder_answering_machine,
+                                                        extension=self.account_extension):
+                            client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                               account_directory=path_send_message_folder_answering_machine)
+
+                            @client.on(events.NewMessage(incoming=True))  # Обработчик личных сообщений
+                            async def handle_private_messages(event):
+                                """Обрабатывает входящие личные сообщения"""
+                                if event.is_private:  # Проверяем, является ли сообщение личным
+                                    logger.info(f'Входящее сообщение: {event.message.message}')
+                                    entities = find_files(
+                                        directory_path=path_send_message_folder_answering_machine_message,
+                                        extension=self.file_extension)
+                                    logger.info(entities)
+                                    data = await self.select_and_read_random_file(entities, folder="answering_machine")
+                                    logger.info(data)
+                                    await event.respond(f'{data}')  # Отвечаем на входящее сообщение
+
+                            # Получаем список чатов, которым нужно отправить сообщение
+                            await log_and_display_info(f"Всего групп: {len(chat_list_fields)}", lv, page)
+                            for group_link in chat_list_fields:
+                                try:
+                                    await log_and_display_info(f"Отправляем сообщение в группу: {group_link}", lv, page)
+
+                                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link)
+                                    messages = find_files(directory_path=path_folder_with_messages,
+                                                          extension=self.file_extension)
+                                    files = all_find_files(directory_path="user_data/files_to_send")
+                                    if not messages:
+                                        for file in files:
+                                            await client.send_file(group_link, f"user_data/files_to_send/{file}")
+                                            await log_and_display_info(f"Файл {file} отправлен в {group_link}.", lv,
+                                                                       page)
+                                            await self.random_dream()
+                                    else:
+                                        message = await self.select_and_read_random_file(messages, folder="message")
+                                        if not files:
+                                            await client.send_message(entity=group_link, message=message)
+                                        else:
+                                            for file in files:
+                                                await client.send_file(group_link, f"user_data/files_to_send/{file}",
+                                                                       caption=message)
+                                                await log_and_display_info(
+                                                    f"Сообщение и файл отправлены в {group_link}",
+                                                    lv, page)
+                                                await self.random_dream()
+                                except UserBannedInChannelError:
+                                    logger.error(
+                                        'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
+                                except ValueError:
+                                    logger.error(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {group_link}")
+                                    break
+
+                                await self.random_dream()  # Прерываем работу и меняем аккаунт
+
+                            await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
+
+                    except Exception as error:
+                        logger.exception(f"❌ Ошибка: {error}")
+                else:
+                    try:
+                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                        await log_and_display_info('Время старта: ' + str(start), lv, page)
+                        await log_and_display_info("▶️ Начало отправки сообщений + файлов по чатам", lv, page)
+                        for session_name in find_filess(directory_path=path_send_message_folder,
+                                                        extension=self.account_extension):
+                            client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                               account_directory=path_send_message_folder)
+                            # Открываем базу данных с группами, в которые будут рассылаться сообщения
+                            await log_and_display_info(f"Всего групп: {len(chat_list_fields)}", lv, page)
+                            for group_link in chat_list_fields:  # Поочередно выводим записанные группы
+                                await log_and_display_info(f"Отправляем сообщение в группу: {group_link}", lv, page)
+                                try:
+                                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link)
+                                    messages = find_files(directory_path=path_folder_with_messages,
+                                                          extension=self.file_extension)
+                                    files = all_find_files(directory_path="user_data/files_to_send")
+                                    if not messages:
+                                        for file in files:
+                                            await client.send_file(group_link, f"user_data/files_to_send/{file}")
+                                            await log_and_display_info(f"Файл {file} отправлен в {group_link}.", lv,
+                                                                       page)
+                                            await self.random_dream()
+                                    else:
+                                        message = await self.select_and_read_random_file(messages, folder="message")
+                                        if not files:
+                                            await client.send_message(entity=group_link, message=message)
+                                        else:
+                                            for file in files:
+                                                await client.send_file(group_link, f"user_data/files_to_send/{file}",
+                                                                       caption=message)
+                                                await log_and_display_info(
+                                                    f"Сообщение и файл отправлены в {group_link}",
+                                                    lv, page)
+                                                await self.random_dream()
+                                except ChannelPrivateError:
+                                    logger.warning(f"Группа {group_link} приватная или подписка запрещена.")
+                                except PeerFloodError:
+                                    await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
+                                    break  # Прерываем работу и меняем аккаунт
+                                except FloodWaitError as e:
+                                    logger.warning(f"FloodWait! Ожидание {str(datetime.timedelta(seconds=e.seconds))}")
+                                    await asyncio.sleep(e.seconds)
+                                except UserBannedInChannelError:
+                                    await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
+                                    break  # Прерываем работу и меняем аккаунт
+                                except ChatAdminRequiredError:
+                                    logger.warning(f"Нужны права администратора для отправки сообщений в {group_link}")
+                                    break
+                                except ChatWriteForbiddenError:
+                                    await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
+                                    break  # Прерываем работу и меняем аккаунт
+                                except SlowModeWaitError as e:
+                                    logger.warning(
+                                        f"Рассылка сообщений в группу: {group_link}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}")
+                                    await asyncio.sleep(e.seconds)
+                                except ValueError:
+                                    logger.warning(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {group_link}")
+                                    break
+                                except (TypeError, UnboundLocalError):
+                                    continue  # Записываем ошибку в software_database.db и продолжаем работу
+                                except Exception as error:
+                                    logger.exception(f"❌ Ошибка: {error}")
+
+                            await client.disconnect()  # Разрываем соединение Telegram
+                        await log_and_display_info("🔚 Конец отправки сообщений + файлов по чатам",
+                                                   lv, page)
+                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                        await log_and_display_info('Время окончания: ' + str(finish),
+                                                   lv, page)
+                        await log_and_display_info('Время работы: ' + str(finish - start),
+                                                   lv, page)
+                    except Exception as error:
+                        logger.exception(f"❌ Ошибка: {error}")
             else:
                 result_text = "Время сна: Некорректный диапазон, введите корректные значения"
-                print(result_text)
+                logger.info(result_text)
             page.update()
 
         # Чекбокс для работы с автоответчиком
@@ -307,12 +371,7 @@ class SendTelegramMessages:
                         controls=[
                             ft.Column(  # Верхняя часть: контрольные элементы
                                 controls=[
-                                    output,
-                                    c,
-                                    sleep_time_group,
-                                    chat_list_field,
-                                    button_done,
-                                    button_back,
+                                    output, c, sleep_time_group, chat_list_field, button_done, button_back,
                                 ],
                                 alignment=ft.MainAxisAlignment.CENTER,
                                 spacing=15,
@@ -321,50 +380,3 @@ class SendTelegramMessages:
                         ],
                         spacing=10,
                     )]))
-
-    async def answering_machine(self, page):
-        """
-        Рассылка сообщений по чатам с автоответчиком (docs/Рассылка_сообщений/Рассылка_сообщений_по_чатам_с_автоответчиком.md)
-        """
-        try:
-            for session_name in find_filess(directory_path=path_send_message_folder_answering_machine,
-                                            extension=self.account_extension):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_send_message_folder_answering_machine)
-
-                @client.on(events.NewMessage(incoming=True))  # Обработчик личных сообщений
-                async def handle_private_messages(event):
-                    """Обрабатывает входящие личные сообщения"""
-                    if event.is_private:  # Проверяем, является ли сообщение личным
-                        logger.info(f'Входящее сообщение: {event.message.message}')
-                        entities = find_files(directory_path=path_send_message_folder_answering_machine_message,
-                                              extension=self.file_extension)
-                        logger.info(entities)
-                        data = await self.select_and_read_random_file(entities, folder="answering_machine")
-                        logger.info(data)
-                        await event.respond(f'{data}')  # Отвечаем на входящее сообщение
-
-                # Получаем список чатов, которым нужно отправить сообщение
-                records: list = await db_handler.open_and_read_data("writing_group_links")
-                logger.info(records)
-                for chat in records:
-                    try:
-                        await client(JoinChannelRequest(chat[0]))  # Подписываемся на канал / группу
-                        entities = find_files(directory_path=path_folder_with_messages, extension=self.file_extension)
-                        logger.info(entities)
-                        data = await self.select_and_read_random_file(entities, folder="message")
-                        await client.send_message(chat[0], f'{data}')
-                        logger.info(f'Сообщение {data} отправлено в чат {chat[0]}')
-                    except UserBannedInChannelError:
-                        logger.error(
-                            'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
-                    except ValueError:
-                        logger.error(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {chat[0]}")
-                        break
-
-                    await self.random_dream()  # Прерываем работу и меняем аккаунт
-
-                await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
-
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
