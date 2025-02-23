@@ -14,7 +14,7 @@ from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError
 from src.core.configs import (ConfigReader, path_send_message_folder, path_folder_with_messages,
                               path_send_message_folder_answering_machine_message,
                               path_send_message_folder_answering_machine, line_width_button, BUTTON_HEIGHT)
-from src.core.localization import done_button, back_button
+from src.core.localization import done_button, back_button, sending_messages_files_via_chats_ru
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import (find_files, all_find_files, record_inviting_results,
                             find_filess)
@@ -178,11 +178,10 @@ class SendTelegramMessages:
         # Создаем ListView для отображения логов
         lv = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
         # Текст для вывода
-        output = ft.Text("Рассылка сообщений по чатам", size=18, weight=ft.FontWeight.BOLD)
+        output = ft.Text(sending_messages_files_via_chats_ru, size=18, weight=ft.FontWeight.BOLD)
 
         # Обработчик кнопки "Готово"
         async def button_clicked(e):
-
             time_from = tb_time_from.value or self.time_sending_messages_1  # Получаем значение первого поля
             time_to = tb_time_to.value or self.time_sending_messages_2  # Получаем значение второго поля
             # Получаем значение третьего поля и разделяем его на список по пробелам
@@ -193,13 +192,8 @@ class SendTelegramMessages:
                 # Если поле пустое, используем данные из базы данных
                 db_chat_list = await db_handler.open_and_read_data("writing_group_links")
                 chat_list_fields = [group[0] for group in db_chat_list]  # Извлекаем только ссылки из кортежей
-            logger.info(chat_list_fields)  # Выводим полученный список чатов
             checs = c.value  # Получаем значение чекбокса
-            logger.info(checs)
             if time_from < time_to:
-                result_text = f"Время сна: От '{time_from}' до '{time_to}'. Чаты для рассылки: '{chat_list_fields}'. 'Работа с автоответчиком': '{checs}"
-                logger.info(result_text)
-
                 if checs == True:
                     try:
                         for session_name in find_filess(directory_path=path_send_message_folder_answering_machine,
@@ -224,28 +218,19 @@ class SendTelegramMessages:
                             await log_and_display_info(f"Всего групп: {len(chat_list_fields)}", lv, page)
                             for group_link in chat_list_fields:
                                 try:
-                                    await log_and_display_info(f"Отправляем сообщение в группу: {group_link}", lv, page)
-
                                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link)
-
-                                    messages = find_files(directory_path=path_folder_with_messages,
-                                                          extension=self.file_extension)
-                                    files = all_find_files(directory_path="user_data/files_to_send")
-
+                                    # Находит все файлы в папке с сообщениями и папке с файлами для отправки.
+                                    messages, files = await self.all_find_and_all_files()
                                     # Отправляем сообщения и файлы в группу
                                     await self.send_content_to_group(client, group_link, messages, files, lv, page)
-
                                 except UserBannedInChannelError:
                                     logger.error(
                                         'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
                                 except ValueError:
                                     logger.error(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {group_link}")
                                     break
-
                                 await self.random_dream()  # Прерываем работу и меняем аккаунт
-
                             await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
-
                     except Exception as error:
                         logger.exception(f"❌ Ошибка: {error}")
                 else:
@@ -260,16 +245,12 @@ class SendTelegramMessages:
                             # Открываем базу данных с группами, в которые будут рассылаться сообщения
                             await log_and_display_info(f"Всего групп: {len(chat_list_fields)}", lv, page)
                             for group_link in chat_list_fields:  # Поочередно выводим записанные группы
-                                await log_and_display_info(f"Отправляем сообщение в группу: {group_link}", lv, page)
                                 try:
                                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link)
-                                    messages = find_files(directory_path=path_folder_with_messages,
-                                                          extension=self.file_extension)
-                                    files = all_find_files(directory_path="user_data/files_to_send")
-
+                                    # Находит все файлы в папке с сообщениями и папке с файлами для отправки.
+                                    messages, files = await self.all_find_and_all_files()
                                     # Отправляем сообщения и файлы в группу
                                     await self.send_content_to_group(client, group_link, messages, files, lv, page)
-
                                 except ChannelPrivateError:
                                     logger.warning(f"Группа {group_link} приватная или подписка запрещена.")
                                 except PeerFloodError:
@@ -298,22 +279,24 @@ class SendTelegramMessages:
                                     continue  # Записываем ошибку в software_database.db и продолжаем работу
                                 except Exception as error:
                                     logger.exception(f"❌ Ошибка: {error}")
-
                             await client.disconnect()  # Разрываем соединение Telegram
-                        await log_and_display_info("🔚 Конец отправки сообщений + файлов по чатам",
-                                                   lv, page)
+                        await log_and_display_info("🔚 Конец отправки сообщений + файлов по чатам", lv, page)
                         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        await log_and_display_info('Время окончания: ' + str(finish),
-                                                   lv, page)
-                        await log_and_display_info('Время работы: ' + str(finish - start),
-                                                   lv, page)
+                        await log_and_display_info('Время окончания: ' + str(finish), lv, page)
+                        await log_and_display_info('Время работы: ' + str(finish - start), lv, page)
                     except Exception as error:
                         logger.exception(f"❌ Ошибка: {error}")
             else:
-                result_text = "Время сна: Некорректный диапазон, введите корректные значения"
-                logger.info(result_text)
+                await log_and_display_info("Время сна: Некорректный диапазон, введите корректные значения", lv, page)
             page.update()
 
+        async def back_button_clicked(_):
+            """
+            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню рассылки сообщений.
+            """
+            page.go("/sending_messages_via_chats_menu")  # переходим к основному меню рассылки сообщений 🏠
+        
+        # GUI элементы
         # Чекбокс для работы с автоответчиком
         c = ft.Checkbox(label="Работа с автоответчиком")
         # Группа полей ввода для времени сна
@@ -325,16 +308,10 @@ class SendTelegramMessages:
         # Кнопка "Готово"
         button_done = ft.ElevatedButton(text=done_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
-
-        async def back_button_clicked(_):
-            """
-            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню рассылки сообщений.
-            """
-            page.go("/sending_messages_via_chats_menu")  # переходим к основному меню рассылки сообщений 🏠
-
         # Кнопка "Назад"
         button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=back_button_clicked, )
+
         # Разделение интерфейса на верхнюю и нижнюю части
         page.views.append(
             ft.View(
@@ -358,6 +335,7 @@ class SendTelegramMessages:
         """
         Отправляет сообщения и файлы в группу.
         """
+        await log_and_display_info(f"Отправляем сообщение в группу: {group_link}", lv, page)
         if not messages:
             for file in files:
                 await client.send_file(group_link, f"user_data/files_to_send/{file}")
@@ -372,3 +350,11 @@ class SendTelegramMessages:
                     await client.send_file(group_link, f"user_data/files_to_send/{file}", caption=message)
                     await log_and_display_info(f"Сообщение и файл отправлены в {group_link}", lv, page)
                     await self.random_dream()
+
+    async def all_find_and_all_files(self):
+        """
+        Находит все файлы в папке с сообщениями и папке с файлами для отправки.
+        """
+        messages = find_files(directory_path=path_folder_with_messages, extension=self.file_extension)
+        files = all_find_files(directory_path="user_data/files_to_send")
+        return messages, files
