@@ -32,8 +32,8 @@ from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu,
 from src.gui.sending_messages_menu import (display_message_distribution_menu, sending_messages_via_chats_menu,
                                            sending_personal_messages_with_limits_menu)
 
-logger.add("user_data/log/log.log", rotation="1 MB", compression="zip", level="INFO")  # Логирование программы
-logger.add("user_data/log/log_ERROR.log", rotation="1 MB", compression="zip", level="ERROR")  # Логирование программы
+logger.add("user_data/log/log.log", rotation="500 KB", compression="zip", level="INFO")  # Логирование программы
+logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
 
 
 async def main(page: ft.Page):

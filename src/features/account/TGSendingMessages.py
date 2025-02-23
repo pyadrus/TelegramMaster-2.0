@@ -290,12 +290,6 @@ class SendTelegramMessages:
                 await log_and_display_info("Время сна: Некорректный диапазон, введите корректные значения", lv, page)
             page.update()
 
-        async def back_button_clicked(_):
-            """
-            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню рассылки сообщений.
-            """
-            page.go("/sending_messages_via_chats_menu")  # переходим к основному меню рассылки сообщений 🏠
-        
         # GUI элементы
         # Чекбокс для работы с автоответчиком
         c = ft.Checkbox(label="Работа с автоответчиком")
@@ -310,7 +304,7 @@ class SendTelegramMessages:
                                         on_click=button_clicked, )
         # Кнопка "Назад"
         button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
-                                        on_click=back_button_clicked, )
+                                        on_click=lambda e: self.back_button_clicked(page))
 
         # Разделение интерфейса на верхнюю и нижнюю части
         page.views.append(
@@ -331,9 +325,21 @@ class SendTelegramMessages:
                         spacing=10,
                     )]))
 
+    def back_button_clicked(self, page):
+        """
+        ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню рассылки сообщений.
+        """
+        page.go("/sending_messages_via_chats_menu")  # переходим к основному меню рассылки сообщений 🏠
+
     async def send_content_to_group(self, client, group_link, messages, files, lv, page):
         """
         Отправляет сообщения и файлы в группу.
+        :param client: Телеграм клиент
+        :param group_link: Ссылка на группу
+        :param messages: Список сообщений
+        :param files: Список файлов
+        :param lv: Лог-вью
+        :param page: Страница
         """
         await log_and_display_info(f"Отправляем сообщение в группу: {group_link}", lv, page)
         if not messages:
