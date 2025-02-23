@@ -235,9 +235,7 @@ class SendTelegramMessages:
                         logger.exception(f"❌ Ошибка: {error}")
                 else:
                     try:
-                        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                        await log_and_display_info('Время старта: ' + str(start), lv, page)
-                        await log_and_display_info("▶️ Начало отправки сообщений + файлов по чатам", lv, page)
+                        start = await self.start_time(lv, page)
                         for session_name in find_filess(directory_path=path_send_message_folder,
                                                         extension=self.account_extension):
                             client = await self.tg_connect.get_telegram_client(page, session_name,
@@ -281,9 +279,7 @@ class SendTelegramMessages:
                                     logger.exception(f"❌ Ошибка: {error}")
                             await client.disconnect()  # Разрываем соединение Telegram
                         await log_and_display_info("🔚 Конец отправки сообщений + файлов по чатам", lv, page)
-                        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                        await log_and_display_info('Время окончания: ' + str(finish), lv, page)
-                        await log_and_display_info('Время работы: ' + str(finish - start), lv, page)
+                        await self.end_time(start, lv, page)
                     except Exception as error:
                         logger.exception(f"❌ Ошибка: {error}")
             else:
@@ -304,7 +300,7 @@ class SendTelegramMessages:
                                         on_click=button_clicked, )
         # Кнопка "Назад"
         button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
-                                        on_click=lambda e: self.back_button_clicked(page))
+                                        on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
 
         # Разделение интерфейса на верхнюю и нижнюю части
         page.views.append(
@@ -325,11 +321,16 @@ class SendTelegramMessages:
                         spacing=10,
                     )]))
 
-    def back_button_clicked(self, page):
-        """
-        ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню рассылки сообщений.
-        """
-        page.go("/sending_messages_via_chats_menu")  # переходим к основному меню рассылки сообщений 🏠
+    async def start_time(self, lv, page):
+        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+        await log_and_display_info('Время старта: ' + str(start), lv, page)
+        await log_and_display_info("▶️ Начало отправки сообщений + файлов по чатам", lv, page)
+        return start
+
+    async def end_time(self, start, lv, page):
+        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+        await log_and_display_info('Время окончания: ' + str(finish), lv, page)
+        await log_and_display_info('Время работы: ' + str(finish - start), lv, page)
 
     async def send_content_to_group(self, client, group_link, messages, files, lv, page):
         """
