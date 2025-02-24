@@ -171,7 +171,7 @@ class SendTelegramMessages:
 
     # Рассылка сообщений по чатам
 
-    async def performing_the_operation(self, page: ft.Page, checs, chat_list_fields)-> None:
+    async def performing_the_operation(self, page: ft.Page, checs, chat_list_fields) -> None:
         """Пишет в группы"""
         # Создаем ListView для отображения логов
         page.views.clear()
@@ -285,15 +285,10 @@ class SendTelegramMessages:
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
-
-
     async def sending_messages_files_via_chats(self, page: ft.Page) -> None:
         """
         Рассылка сообщений + файлов по чатам
         """
-        # Создаем ListView для отображения логов
-        lv = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
-        # Текст для вывода
         output = ft.Text(sending_messages_files_via_chats_ru, size=18, weight=ft.FontWeight.BOLD)
 
         # Обработчик кнопки "Готово"
@@ -310,16 +305,11 @@ class SendTelegramMessages:
                 chat_list_fields = [group[0] for group in db_chat_list]  # Извлекаем только ссылки из кортежей
             checs = c.value  # Получаем значение чекбокса
             if time_from < time_to:
-
-
                 await self.performing_the_operation(page, checs, chat_list_fields)
-
-
             else:
-                await log_and_display_info("Время сна: Некорректный диапазон, введите корректные значения", lv, page)
-
+                t.value = f"Время сна: Некорректный диапазон, введите корректные значения"
+                t.update()
             page.update()
-
 
         # GUI элементы
         # Чекбокс для работы с автоответчиком
@@ -329,32 +319,33 @@ class SendTelegramMessages:
         tb_time_to = ft.TextField(label="Время сна до", width=297, hint_text="Введите время", border_radius=5, )
         sleep_time_group = ft.Row(controls=[tb_time_from, tb_time_to], spacing=20, )
         # Поле для формирования списка чатов
-        chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=True, max_lines=19)
+        chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=True, max_lines=12)
         # Кнопка "Готово"
         button_done = ft.ElevatedButton(text=done_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
         # Кнопка "Назад"
         button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
-
+        t = ft.Text()
         # Разделение интерфейса на верхнюю и нижнюю части
         page.views.append(
             ft.View(
                 "/sending_messages_via_chats_menu",
-                [
-                    ft.Column(
+                controls=[
+                    output,
+                    c,
+                    sleep_time_group,
+                    t,
+                    chat_list_field,
+                    ft.Column(  # Верхняя часть: контрольные элементы
                         controls=[
-                            ft.Column(  # Верхняя часть: контрольные элементы
-                                controls=[
-                                    output, c, sleep_time_group, chat_list_field, button_done, button_back,
-                                ],
-                                alignment=ft.MainAxisAlignment.CENTER,
-                                spacing=15,
-                            ),
-                            lv,  # Нижняя часть: отображение логов
+                            button_done,
+                            button_back,
                         ],
-                        spacing=10,
-                    )]))
+                    ),
+
+                ],
+            ))
 
     async def start_time(self, lv, page):
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
