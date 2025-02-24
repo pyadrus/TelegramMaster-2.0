@@ -295,6 +295,11 @@ async def main(page: ft.Page):
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+
+
+            elif page.route == "/performing_the_operation": # Отображение информации с кнопкой назад
+                await SendTelegramMessages().performing_the_operation(page)
+
             elif page.route == "/clearing_generated_chat_list":  # 🧹 Очистка сформированного списка чатов
                 await DatabaseHandler().cleaning_db("writing_group_links")
                 await show_notification(page, "Очистка списка окончена")  # Сообщение пользователю

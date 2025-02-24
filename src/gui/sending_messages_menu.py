@@ -6,8 +6,7 @@ from src.core.localization import (sending_messages_via_chats_ru, sending_messag
                                    sending_personal_messages_with_limits_ru,
                                    sending_files_to_personal_account_with_limits_ru,
                                    sending_messages, main_menu, clearing_generated_chat_list,
-                                   forming_list_of_chats_channels_ru
-                                   )
+                                   forming_list_of_chats_channels_ru)
 
 
 def create_menu_view(title: str, buttons: list[tuple[str, str]]) -> ft.View:
