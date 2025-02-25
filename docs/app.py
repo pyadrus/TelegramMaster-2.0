@@ -141,26 +141,7 @@ async def sending_messages(request: Request):
                                                                 "sending_files_to_personal_account_with_limits_ru": sending_files_to_personal_account_with_limits_ru
                                                                 })
 
-
-@app.get('/sending_messages/sending_messages_via_chats', response_class=HTMLResponse)
-async def sending_messages_via_chats(request: Request):
-    """💬 Рассылка сообщений по чатам"""
-    logger.info("Запущена страница 💬 Рассылка сообщений по чатам")
-    return templates.TemplateResponse('sending_messages/sending_messages_via_chats.html',
-                                      {"request": request, "program_name": program_name,
-                                       "sending_messages_via_chats_ru": sending_messages_via_chats_ru,
-                                       })
-
-
-@app.get('/sending_messages/sending_messages_files_via_chats', response_class=HTMLResponse)
-async def sending_messages_files_via_chats(request: Request):
-    """💬📂 Рассылка сообщений + файлов по чатам"""
-    logger.info("Запущена страница 💬📂 Рассылка сообщений + файлов по чатам")
-    return templates.TemplateResponse('sending_messages/sending_messages_files_via_chats.html',
-                                      {"request": request, "program_name": program_name,
-                                       "sending_messages_files_via_chats_ru": sending_messages_files_via_chats_ru,
-                                       })
-
+# Рассылка сообщений в личку
 
 @app.get('/sending_messages/sending_personal_messages_with_limits', response_class=HTMLResponse)
 async def sending_personal_messages_with_limits(request: Request):
@@ -181,25 +162,50 @@ async def sending_files_to_personal_account_with_limits(request: Request):
                                        "sending_files_to_personal_account_with_limits_ru": sending_files_to_personal_account_with_limits_ru,
                                        })
 
+# Рассылка сообщений по чатам
 
-@app.get('/sending_messages/sending_messages_via_chats_with_answering_machine', response_class=HTMLResponse)
-async def sending_messages_via_chats_with_answering_machine(request: Request):
-    """🤖 Рассылка сообщений по чатам с автоответчиком"""
-    logger.info("Запущена страница 🤖 Рассылка сообщений по чатам с автоответчиком")
-    return templates.TemplateResponse('sending_messages/sending_messages_via_chats_with_answering_machine.html',
+
+@app.get('/sending_messages/sending_messages_via_chats', response_class=HTMLResponse)
+async def sending_messages_via_chats(request: Request):
+    """💬 Рассылка сообщений по чатам"""
+    logger.info("Запущена страница 💬 Рассылка сообщений по чатам")
+    return templates.TemplateResponse('sending_messages/sending_messages_via_chats.html',
                                       {"request": request, "program_name": program_name,
-                                       "sending_messages_via_chats_with_answering_machine_ru": sending_messages_via_chats_with_answering_machine_ru,
+                                       "sending_messages_via_chats_ru": sending_messages_via_chats_ru,
                                        })
 
 
-@app.get('/sending_messages/sending_files_via_chats', response_class=HTMLResponse)
-async def sending_files_via_chats(request: Request):
-    """📁 Рассылка файлов по чатам"""
-    logger.info("Запущена страница 📁 Рассылка файлов по чатам")
-    return templates.TemplateResponse('sending_messages/sending_files_via_chats.html',
-                                      {"request": request, "program_name": program_name,
-                                       "sending_files_via_chats_ru": sending_files_via_chats_ru,
-                                       })
+# @app.get('/sending_messages/sending_messages_files_via_chats', response_class=HTMLResponse)
+# async def sending_messages_files_via_chats(request: Request):
+#     """💬📂 Рассылка сообщений + файлов по чатам"""
+#     logger.info("Запущена страница 💬📂 Рассылка сообщений + файлов по чатам")
+#     return templates.TemplateResponse('sending_messages/sending_messages_files_via_chats.html',
+#                                       {"request": request, "program_name": program_name,
+#                                        "sending_messages_files_via_chats_ru": sending_messages_files_via_chats_ru,
+#                                        })
+
+
+
+
+
+# @app.get('/sending_messages/sending_messages_via_chats_with_answering_machine', response_class=HTMLResponse)
+# async def sending_messages_via_chats_with_answering_machine(request: Request):
+#     """🤖 Рассылка сообщений по чатам с автоответчиком"""
+#     logger.info("Запущена страница 🤖 Рассылка сообщений по чатам с автоответчиком")
+#     return templates.TemplateResponse('sending_messages/sending_messages_via_chats_with_answering_machine.html',
+#                                       {"request": request, "program_name": program_name,
+#                                        "sending_messages_via_chats_with_answering_machine_ru": sending_messages_via_chats_with_answering_machine_ru,
+#                                        })
+
+
+# @app.get('/sending_messages/sending_files_via_chats', response_class=HTMLResponse)
+# async def sending_files_via_chats(request: Request):
+#     """📁 Рассылка файлов по чатам"""
+#     logger.info("Запущена страница 📁 Рассылка файлов по чатам")
+#     return templates.TemplateResponse('sending_messages/sending_files_via_chats.html',
+#                                       {"request": request, "program_name": program_name,
+#                                        "sending_files_via_chats_ru": sending_files_via_chats_ru,
+#                                        })
 
 
 @app.get('/editing_bio', response_class=HTMLResponse)
