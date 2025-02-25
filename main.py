@@ -273,6 +273,7 @@ async def main(page: ft.Page):
 
             elif page.route == "/sending_personal_messages_with_limits_menu":  # Меню "📨 Отправка сообщений в личку"
                 await sending_personal_messages_with_limits_menu(page)
+
             elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
                 await CheckingProgram().checking_sending_to_personal(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
@@ -289,16 +290,12 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало отправки файлов в личку")
-                await SendTelegramMessages().send_files_to_personal_chats(account_limits=ConfigReader().get_limits(),
-                                                                          page=page)
+                await SendTelegramMessages().send_files_to_personal_chats(page=page)
                 logger.info("🔚 Конец отправки файлов в личку")
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
-
-            elif page.route == "/performing_the_operation": # Отображение информации с кнопкой назад
-                await SendTelegramMessages().performing_the_operation(page)
 
             elif page.route == "/clearing_generated_chat_list":  # 🧹 Очистка сформированного списка чатов
                 await DatabaseHandler().cleaning_db("writing_group_links")

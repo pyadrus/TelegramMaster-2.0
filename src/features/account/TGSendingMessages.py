@@ -119,55 +119,100 @@ class SendTelegramMessages:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def send_files_to_personal_chats(self, account_limits, page: ft.Page) -> None:
+    async def send_files_to_personal_chats(self, page: ft.Page) -> None:
         """
         Отправка файлов в личку
 
-        :param account_limits: Лимит на аккаунты
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        try:
-            # Просим пользователя ввести расширение сообщения
-            time_inviting = self.config_reader.get_time_inviting()
-            for session_name in find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_send_message_folder)
+
+        output = ft.Text("Отправка сообщений в личку", size=18, weight=ft.FontWeight.BOLD)
+
+        # Обработчик кнопки "Готово"
+        async def button_clicked(_):
+            time_from = tb_time_from.value or self.time_sending_messages_1  # Получаем значение первого поля
+            time_to = tb_time_to.value or self.time_sending_messages_2  # Получаем значение второго поля
+
+            # Получаем значение третьего поля и разделяем его на список по пробелам
+            account_limits_input = account_limits_inputs.value  # Удаляем лишние пробелы
+            if account_limits_input:  # Если поле не пустое
+                account_limits = account_limits_input  # Разделяем строку по пробелам
+                logger.info(account_limits)
+            else:
+                account_limits=ConfigReader().get_limits()
+            if time_from < time_to:
                 try:
-                    # Открываем parsing список user_data/software_database.db для inviting в группу
-                    number_usernames: list = await db_handler.open_db_func_lim(table_name="members",
-                                                                               account_limit=account_limits)
-                    # Количество аккаунтов на данный момент в работе
-                    logger.info(f"Всего username: {len(number_usernames)}")
-                    for rows in number_usernames:
-                        username = rows[0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
-                        logger.info(f"[!] Отправляем сообщение: {username}")
+                    # Просим пользователя ввести расширение сообщения
+                    for session_name in find_filess(directory_path=path_send_message_folder,
+                                                    extension=self.account_extension):
+                        client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                           account_directory=path_send_message_folder)
                         try:
-                            user_to_add = await client.get_input_entity(username)
-                            for files in all_find_files(directory_path="user_data/files_to_send"):
-                                await client.send_file(user_to_add, f"user_data/files_to_send/{files}")
-                                logger.info(
-                                    f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.")
-                                await record_inviting_results(time_inviting[0], time_inviting[1], username)
-                        except FloodWaitError as e:
-                            await record_and_interrupt(time_inviting[0], time_inviting[1])
-                            break  # Прерываем работу и меняем аккаунт
-                        except PeerFloodError:
-                            await record_and_interrupt(time_inviting[0], time_inviting[1])
-                            break  # Прерываем работу и меняем аккаунт
-                        except UserNotMutualContactError:
-                            logger.error(
-                                f"❌ Отправляем сообщение в личку {username}. {username} не является взаимным контактом.")
-                        except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                            logger.error(f"❌ Отправляем сообщение в личку {username}. Не корректное имя {username}.")
-                        except ChatWriteForbiddenError:
-                            await record_and_interrupt(time_inviting[0], time_inviting[1])
-                            break  # Прерываем работу и меняем аккаунт
-                        except (TypeError, UnboundLocalError):
-                            continue  # Записываем ошибку в software_database.db и продолжаем работу
-                except KeyError:
-                    sys.exit(1)
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+                            # Открываем parsing список user_data/software_database.db для inviting в группу
+                            number_usernames: list = await db_handler.open_db_func_lim(table_name="members",
+                                                                                       account_limit=int(account_limits))
+                            # Количество аккаунтов на данный момент в работе
+                            logger.info(f"Всего username: {len(number_usernames)}")
+                            for rows in number_usernames:
+                                username = rows[0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
+                                logger.info(f"[!] Отправляем сообщение: {username}")
+                                try:
+                                    user_to_add = await client.get_input_entity(username)
+                                    text = "Тест сообщение"
+                                    for files in all_find_files(directory_path="user_data/files_to_send"):
+                                        await client.send_file(entity=user_to_add, caption=text,
+                                                               file=f"user_data/files_to_send/{files}")
+                                        logger.info(f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.")
+                                        await record_inviting_results(time_from, time_to, username)
+                                except FloodWaitError as e:
+                                    await record_and_interrupt(time_from, time_to)
+                                    break  # Прерываем работу и меняем аккаунт
+                                except PeerFloodError:
+                                    await record_and_interrupt(time_from, time_to)
+                                    break  # Прерываем работу и меняем аккаунт
+                                except UserNotMutualContactError:
+                                    logger.error(
+                                        f"❌ Отправляем сообщение в личку {username}. {username} не является взаимным контактом.")
+                                except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
+                                    logger.error(
+                                        f"❌ Отправляем сообщение в личку {username}. Не корректное имя {username}.")
+                                except ChatWriteForbiddenError:
+                                    await record_and_interrupt(time_from, time_to)
+                                    break  # Прерываем работу и меняем аккаунт
+                                except (TypeError, UnboundLocalError):
+                                    continue  # Записываем ошибку в software_database.db и продолжаем работу
+                        except KeyError:
+                            sys.exit(1)
+                except Exception as error:
+                    logger.exception(f"❌ Ошибка: {error}")
+            else:
+                t.value = f"Время сна: Некорректный диапазон, введите корректные значения"
+                t.update()
+            page.update()
+
+
+        # GUI элементы
+        # Группа полей ввода для времени сна
+        tb_time_from = ft.TextField(label="Время сна от", width=297, hint_text="Введите время", border_radius=5, )
+        tb_time_to = ft.TextField(label="Время сна до", width=297, hint_text="Введите время", border_radius=5, )
+        sleep_time_group = ft.Row(controls=[tb_time_from, tb_time_to], spacing=20, )
+        # Поле для формирования списка чатов
+        account_limits_inputs = ft.TextField(label="Введите лимит на сообщения", multiline=True, max_lines=12)
+        # Кнопка "Готово"
+        button_done = ft.ElevatedButton(text=done_button, width=line_width_button, height=BUTTON_HEIGHT,
+                                        on_click=button_clicked, )
+        # Кнопка "Назад"
+        button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
+                                        on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
+        t = ft.Text()
+        # Разделение интерфейса на верхнюю и нижнюю части
+        page.views.append(
+            ft.View(
+                "/sending_messages_via_chats_menu",
+                controls=[output, sleep_time_group, t, account_limits_inputs,
+                          ft.Column(  # Верхняя часть: контрольные элементы
+                              controls=[button_done, button_back, ],
+                          ), ], ))
 
     # Рассылка сообщений по чатам
 
@@ -331,21 +376,10 @@ class SendTelegramMessages:
         page.views.append(
             ft.View(
                 "/sending_messages_via_chats_menu",
-                controls=[
-                    output,
-                    c,
-                    sleep_time_group,
-                    t,
-                    chat_list_field,
-                    ft.Column(  # Верхняя часть: контрольные элементы
-                        controls=[
-                            button_done,
-                            button_back,
-                        ],
-                    ),
-
-                ],
-            ))
+                controls=[output, c, sleep_time_group, t, chat_list_field,
+                          ft.Column(  # Верхняя часть: контрольные элементы
+                              controls=[button_done, button_back, ],
+                          ), ], ))
 
     async def start_time(self, lv, page):
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
@@ -391,3 +425,5 @@ class SendTelegramMessages:
         messages = find_files(directory_path=path_folder_with_messages, extension=self.file_extension)
         files = all_find_files(directory_path="user_data/files_to_send")
         return messages, files
+
+# 392

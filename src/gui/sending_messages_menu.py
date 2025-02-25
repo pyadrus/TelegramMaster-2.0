@@ -59,7 +59,7 @@ async def sending_messages_via_chats_menu(page: ft.Page):
         create_menu_view(
             "💬 Рассылка сообщений по чатам",
             [
-                # 💬📂 Рассылка сообщений + файлов по чатам
+                # 💬 Рассылка сообщений по чатам
                 (sending_messages_files_via_chats_ru, "/sending_messages_files_via_chats"),
                 # 🧹 Очистка сформированного списка чатов
                 (clearing_generated_chat_list, "/clearing_generated_chat_list"),
