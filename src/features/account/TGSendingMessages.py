@@ -93,8 +93,7 @@ class SendTelegramMessages:
                             await client.send_message(await client.get_input_entity(username[0]),
                                                       data.format(username[0]))
                             # Записываем данные в log файл, чистим список кого добавляли или писали сообщение
-                            logger.info(
-                                f"Отправляем сообщение в личку {username[0]}. Сообщение отправлено пользователю {username[0]}.")
+                            logger.info(f"Отправляем сообщение в личку {username[0]}. Сообщение отправлено пользователю {username[0]}.")
                             await record_inviting_results(time_inviting[0], time_inviting[1], username)
                         except FloodWaitError as e:
                             await record_and_interrupt(time_inviting[0], time_inviting[1])
@@ -163,7 +162,8 @@ class SendTelegramMessages:
                                         await client.send_file(entity=user_to_add, caption=text,
                                                                file=f"user_data/files_to_send/{files}")
                                         logger.info(f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.")
-                                        await record_inviting_results(time_from, time_to, username)
+                                    await record_inviting_results(time_from, time_to, rows)
+
                                 except FloodWaitError as e:
                                     await record_and_interrupt(time_from, time_to)
                                     break  # Прерываем работу и меняем аккаунт
@@ -171,11 +171,9 @@ class SendTelegramMessages:
                                     await record_and_interrupt(time_from, time_to)
                                     break  # Прерываем работу и меняем аккаунт
                                 except UserNotMutualContactError:
-                                    logger.error(
-                                        f"❌ Отправляем сообщение в личку {username}. {username} не является взаимным контактом.")
+                                    logger.error(f"❌ Отправляем сообщение в личку {username}. {username} не является взаимным контактом.")
                                 except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                                    logger.error(
-                                        f"❌ Отправляем сообщение в личку {username}. Не корректное имя {username}.")
+                                    logger.error(f"❌ Отправляем сообщение в личку {username}. Не корректное имя {username}.")
                                 except ChatWriteForbiddenError:
                                     await record_and_interrupt(time_from, time_to)
                                     break  # Прерываем работу и меняем аккаунт

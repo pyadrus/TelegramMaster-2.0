@@ -94,7 +94,8 @@ class InvitingToAGroup:
                                                    page)
                         await client(InviteToChannelRequest(dropdown.value, [username[0]]))
                         await log_and_display_info(f"Удачно! Спим 5 секунд", lv, page)
-                        await asyncio.sleep(5)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+
                     # Ошибка инвайтинга продолжаем работу
                     except UserChannelsTooMuchError:
                         await log_and_display_error(
