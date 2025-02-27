@@ -44,9 +44,9 @@ class CheckingProgram:
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
             await show_notification(page, f'⛔ Нет аккаунта в папке {path_send_message_folder}')
             return None
-        if not find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
-            await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")
-            return None
+        # if not find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
+        #     await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")
+        #     return None
 
     async def check_before_inviting(self, page: ft.Page):
         """

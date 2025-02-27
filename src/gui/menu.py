@@ -28,7 +28,7 @@ from src.core.localization import (parse_single_or_multiple_groups, parse_select
                                    to_edit_bio, for_the_answering_machine, working_with_reactions, parsing,
                                    sending_messages, settings, main_menu, creating_groups_chats,
                                    text_1, text_link_1, text_2, text_link_2,
-                                   documentation)
+                                   documentation, clearing_generated_chat_list)
 
 
 async def main_menu_program(page: ft.Page):
@@ -191,6 +191,10 @@ async def settings_menu(page: ft.Page):
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                        text=forming_list_of_chats_channels_ru,
                                        on_click=lambda _: page.go("/forming_list_of_chats_channels")),
+                     # 🧹 Очистка сформированного списка чатов
+                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                                       text=clearing_generated_chat_list,
+                                       on_click=lambda _: page.go("/clearing_generated_chat_list")),
                  ])]))
 
 
