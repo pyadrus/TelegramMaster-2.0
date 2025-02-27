@@ -138,6 +138,7 @@ async def sending_messages(request: Request):
                                                                 "sending_files_to_personal_account_with_limits_ru": sending_files_to_personal_account_with_limits_ru
                                                                 })
 
+
 # Рассылка сообщений в личку
 
 @app.get('/sending_messages/sending_personal_messages_with_limits', response_class=HTMLResponse)
@@ -158,6 +159,7 @@ async def sending_files_to_personal_account_with_limits(request: Request):
                                       {"request": request, "program_name": program_name,
                                        "sending_files_to_personal_account_with_limits_ru": sending_files_to_personal_account_with_limits_ru,
                                        })
+
 
 # Рассылка сообщений по чатам
 

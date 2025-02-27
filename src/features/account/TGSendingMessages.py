@@ -75,7 +75,8 @@ class SendTelegramMessages:
                             # Количество аккаунтов на данный момент в работе
                             logger.info(f"Всего username: {len(number_usernames)}")
                             for rows in number_usernames:
-                                username = rows[0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
+                                username = rows[
+                                    0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
                                 logger.info(f"[!] Отправляем сообщение: {username}")
                                 try:
                                     user_to_add = await client.get_input_entity(username)
@@ -111,9 +112,8 @@ class SendTelegramMessages:
             page.update()
 
         # GUI элементы
-        # Группа полей ввода для времени сна
-        tb_time_from = ft.TextField(label="Время сна от", width=297, hint_text="Введите время", border_radius=5, )
-        tb_time_to = ft.TextField(label="Время сна до", width=297, hint_text="Введите время", border_radius=5, )
+
+        tb_time_from, tb_time_to = await self.sleep_selection_input()
         sleep_time_group = ft.Row(controls=[tb_time_from, tb_time_to], spacing=20, )
         # Поле для формирования списка чатов
         account_limits_inputs = ft.TextField(label="Введите лимит на сообщения", multiline=True, max_lines=12)
@@ -132,6 +132,12 @@ class SendTelegramMessages:
                           ft.Column(  # Верхняя часть: контрольные элементы
                               controls=[button_done, button_back, ],
                           ), ], ))
+
+    async def sleep_selection_input(self):
+        # Группа полей ввода для времени сна
+        tb_time_from = ft.TextField(label="Время сна от", width=297, hint_text="Введите время", border_radius=5, )
+        tb_time_to = ft.TextField(label="Время сна до", width=297, hint_text="Введите время", border_radius=5, )
+        return tb_time_from, tb_time_to
 
     async def performing_the_operation(self, page: ft.Page, checs, chat_list_fields) -> None:
         """Рассылка сообщений по чатам"""
@@ -275,9 +281,7 @@ class SendTelegramMessages:
         # GUI элементы
         # Чекбокс для работы с автоответчиком
         c = ft.Checkbox(label="Работа с автоответчиком")
-        # Группа полей ввода для времени сна
-        tb_time_from = ft.TextField(label="Время сна от", width=297, hint_text="Введите время", border_radius=5, )
-        tb_time_to = ft.TextField(label="Время сна до", width=297, hint_text="Введите время", border_radius=5, )
+        tb_time_from, tb_time_to = await self.sleep_selection_input()
         sleep_time_group = ft.Row(controls=[tb_time_from, tb_time_to], spacing=20, )
         # Поле для формирования списка чатов
         chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=True, max_lines=12)
@@ -299,8 +303,7 @@ class SendTelegramMessages:
 
     async def start_time(self, lv, page):
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-        await log_and_display_info('Время старта: ' + str(start), lv, page)
-        await log_and_display_info("▶️ Начало отправки сообщений + файлов по чатам", lv, page)
+        await log_and_display_info('▶️ Время старта: ' + str(start), lv, page)
         return start
 
     async def end_time(self, start, lv, page):

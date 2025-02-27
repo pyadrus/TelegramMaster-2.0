@@ -264,20 +264,13 @@ async def main(page: ft.Page):
             elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
                 await display_message_distribution_menu(page)
 
-            elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
+            elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений по чатам
                 await CheckingProgram().check_before_sending_messages_via_chats(page=page)
                 await SendTelegramMessages().sending_messages_files_via_chats(page=page)
 
             elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка сообщений в личку
                 await CheckingProgram().checking_sending_to_personal(page=page)
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
-                logger.info("▶️ Начало отправки файлов в личку")
                 await SendTelegramMessages().send_files_to_personal_chats(page=page)
-                logger.info("🔚 Конец отправки файлов в личку")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
             # ______________________________________________________________________________________________________________
             elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
