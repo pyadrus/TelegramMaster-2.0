@@ -29,8 +29,7 @@ from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu,
                           account_connection_menu, connecting_accounts_by_number_menu,
                           connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
                           creating_groups_and_chats_menu, working_with_contacts_menu, main_menu_program)
-from src.gui.sending_messages_menu import (display_message_distribution_menu, sending_messages_via_chats_menu,
-                                           sending_personal_messages_with_limits_menu)
+from src.gui.sending_messages_menu import display_message_distribution_menu
 
 logger.add("user_data/log/log.log", rotation="500 KB", compression="zip", level="INFO")  # Логирование программы
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
@@ -265,27 +264,11 @@ async def main(page: ft.Page):
             elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
                 await display_message_distribution_menu(page)
 
-            elif page.route == "/sending_messages_via_chats_menu":  # Меню "💬 Рассылка сообщений по чатам"
-                await sending_messages_via_chats_menu(page)
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений + файлов по чатам
                 await CheckingProgram().check_before_sending_messages_via_chats(page=page)
                 await SendTelegramMessages().sending_messages_files_via_chats(page=page)
 
-            elif page.route == "/sending_personal_messages_with_limits_menu":  # Меню "📨 Отправка сообщений в личку"
-                await sending_personal_messages_with_limits_menu(page)
-
-            elif page.route == "/sending_personal_messages_with_limits":  # Отправка сообщений в личку (с лимитами)
-                await CheckingProgram().checking_sending_to_personal(page=page)
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
-                logger.info("▶️ Начало отправки сообщений в личку")
-                await SendTelegramMessages().send_message_from_all_accounts(account_limits=ConfigReader().get_limits(),
-                                                                            page=page)
-                logger.info("🔚 Конец отправки сообщений в личку")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-            elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка файлов в личку (с лимитами)
+            elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка сообщений в личку
                 await CheckingProgram().checking_sending_to_personal(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
@@ -296,10 +279,6 @@ async def main(page: ft.Page):
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
 
-
-            elif page.route == "/clearing_generated_chat_list":  # 🧹 Очистка сформированного списка чатов
-                await DatabaseHandler().cleaning_db("writing_group_links")
-                await show_notification(page, "Очистка списка окончена")  # Сообщение пользователю
             # ______________________________________________________________________________________________________________
             elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
                 await bio_editing_menu(page)
@@ -370,6 +349,9 @@ async def main(page: ft.Page):
                 time_subscription_1, time_subscription_2 = ConfigReader().get_time_subscription()
                 time_subscription = [time_subscription_1, time_subscription_2]
                 await SettingPage().create_main_window(page, variable="time_subscription", time_range=time_subscription)
+            elif page.route == "/clearing_generated_chat_list":  # 🧹 Очистка сформированного списка чатов
+                await DatabaseHandler().cleaning_db("writing_group_links")
+                await show_notification(page, "Очистка списка окончена")  # Сообщение пользователю
             elif page.route == "/documentation":  # Открытие документации
                 start_app()
             elif page.route == "/errors":

@@ -2,11 +2,8 @@
 import flet as ft
 
 from src.core.configs import BUTTON_HEIGHT, BUTTON_WIDTH
-from src.core.localization import (sending_messages_via_chats_ru, sending_messages_files_via_chats_ru,
-                                   sending_personal_messages_with_limits_ru,
-                                   sending_files_to_personal_account_with_limits_ru,
-                                   sending_messages, main_menu, clearing_generated_chat_list,
-                                   forming_list_of_chats_channels_ru)
+from src.core.localization import (sending_messages_via_chats_ru, sending_personal_messages_with_limits_ru,
+                                   sending_messages, main_menu)
 
 
 def create_menu_view(title: str, buttons: list[tuple[str, str]]) -> ft.View:
@@ -40,34 +37,6 @@ def create_menu_view(title: str, buttons: list[tuple[str, str]]) -> ft.View:
             ])])
 
 
-async def sending_personal_messages_with_limits_menu(page: ft.Page):
-    """Меню 📨 Отправка сообщений в личку"""
-    page.views.append(
-        create_menu_view(
-            "📨 Отправка сообщений в личку",
-            [
-                # 📨 Отправка сообщений в личку
-                (sending_personal_messages_with_limits_ru, "/sending_personal_messages_with_limits"),
-                # 📁 Отправка файлов в личку
-                (sending_files_to_personal_account_with_limits_ru, "/sending_files_to_personal_account_with_limits"),
-            ]))
-
-
-async def sending_messages_via_chats_menu(page: ft.Page):
-    """Меню 💬 Рассылка сообщений по чатам"""
-    page.views.append(
-        create_menu_view(
-            "💬 Рассылка сообщений по чатам",
-            [
-                # 💬 Рассылка сообщений по чатам
-                (sending_messages_files_via_chats_ru, "/sending_messages_files_via_chats"),
-                # 🧹 Очистка сформированного списка чатов
-                (clearing_generated_chat_list, "/clearing_generated_chat_list"),
-                # 📑 Формирование списка чатов / каналов
-                (forming_list_of_chats_channels_ru, "/forming_list_of_chats_channels"),
-            ]))
-
-
 async def display_message_distribution_menu(page: ft.Page):
     """Отображает главное меню рассылки сообщений."""
     page.views.append(
@@ -75,7 +44,7 @@ async def display_message_distribution_menu(page: ft.Page):
             sending_messages,
             [
                 # 💬 Рассылка сообщений по чатам
-                (sending_messages_via_chats_ru, "/sending_messages_via_chats_menu"),
+                (sending_messages_via_chats_ru, "/sending_messages_files_via_chats"),
                 # 📨 Отправка сообщений в личку
-                (sending_personal_messages_with_limits_ru, "/sending_personal_messages_with_limits_menu"),
+                (sending_personal_messages_with_limits_ru, "/sending_files_to_personal_account_with_limits"),
             ]))

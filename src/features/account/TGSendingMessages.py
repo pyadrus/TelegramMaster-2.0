@@ -38,32 +38,6 @@ class SendTelegramMessages:
         self.account_extension = "session"  # Расширение файла аккаунта
         self.file_extension = "json"
 
-    async def send_content_to_personal(self, client, user_to_add, messages, files, lv, page):
-        """
-        Отправляет сообщения и файлы в личку.
-        :param client: Телеграм клиент
-        :param user_to_add: Ссылка на группу
-        :param messages: Список сообщений
-        :param files: Список файлов
-        :param lv: Лог-вью
-        :param page: Страница
-        """
-        await log_and_display_info(f"Отправляем сообщение в личку: {user_to_add}", lv, page)
-        if not messages:
-            for file in files:
-                await client.send_file(user_to_add, f"user_data/files_to_send/{file}")
-                await log_and_display_info(f"Файл {file} отправлен в {user_to_add}.", lv, page)
-                await self.random_dream()
-        else:
-            message = await self.select_and_read_random_file(messages, folder="message")
-            if not files:
-                await client.send_message(entity=user_to_add, message=message)
-            else:
-                for file in files:
-                    await client.send_file(user_to_add, f"user_data/files_to_send/{file}", caption=message)
-                    await log_and_display_info(f"Сообщение и файл отправлены в {user_to_add}", lv, page)
-                    await self.random_dream()
-
     async def send_files_to_personal_chats(self, page: ft.Page) -> None:
         """
         Отправка файлов в личку
@@ -72,7 +46,6 @@ class SendTelegramMessages:
         """
 
         output = ft.Text("Отправка сообщений в личку", size=18, weight=ft.FontWeight.BOLD)
-
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
 
         # Обработчик кнопки "Готово"
@@ -102,17 +75,15 @@ class SendTelegramMessages:
                             # Количество аккаунтов на данный момент в работе
                             logger.info(f"Всего username: {len(number_usernames)}")
                             for rows in number_usernames:
-                                username = rows[
-                                    0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
+                                username = rows[0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
                                 logger.info(f"[!] Отправляем сообщение: {username}")
                                 try:
                                     user_to_add = await client.get_input_entity(username)
                                     messages, files = await self.all_find_and_all_files()
-                                    await self.send_content_to_personal(client, user_to_add, messages, files, lv, page)
+                                    await self.send_content(client, user_to_add, messages, files, lv, page)
                                     logger.info(
                                         f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.")
                                     await record_inviting_results(time_from, time_to, rows)
-
                                 except FloodWaitError as e:
                                     await record_and_interrupt(time_from, time_to)
                                     break  # Прерываем работу и меняем аккаунт
@@ -162,10 +133,8 @@ class SendTelegramMessages:
                               controls=[button_done, button_back, ],
                           ), ], ))
 
-    # Рассылка сообщений по чатам
-
     async def performing_the_operation(self, page: ft.Page, checs, chat_list_fields) -> None:
-        """Пишет в группы"""
+        """Рассылка сообщений по чатам"""
         # Создаем ListView для отображения логов
         page.views.clear()
         page.update()
@@ -216,7 +185,7 @@ class SendTelegramMessages:
                             # Находит все файлы в папке с сообщениями и папке с файлами для отправки.
                             messages, files = await self.all_find_and_all_files()
                             # Отправляем сообщения и файлы в группу
-                            await self.send_content_to_group(client, group_link, messages, files, lv, page)
+                            await self.send_content(client, group_link, messages, files, lv, page)
                         except UserBannedInChannelError:
                             logger.error(
                                 'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
@@ -242,7 +211,7 @@ class SendTelegramMessages:
                             # Находит все файлы в папке с сообщениями и папке с файлами для отправки.
                             messages, files = await self.all_find_and_all_files()
                             # Отправляем сообщения и файлы в группу
-                            await self.send_content_to_group(client, group_link, messages, files, lv, page)
+                            await self.send_content(client, group_link, messages, files, lv, page)
                         except ChannelPrivateError:
                             logger.warning(f"Группа {group_link} приватная или подписка запрещена.")
                         except PeerFloodError:
@@ -339,31 +308,30 @@ class SendTelegramMessages:
         await log_and_display_info('Время окончания: ' + str(finish), lv, page)
         await log_and_display_info('Время работы: ' + str(finish - start), lv, page)
 
-    async def send_content_to_group(self, client, group_link, messages, files, lv, page):
+    async def send_content(self, client, target, messages, files, lv, page):
         """
-        Отправляет сообщения и файлы в группу.
+        Отправляет сообщения и файлы в личку.
         :param client: Телеграм клиент
-        :param group_link: Ссылка на группу
+        :param target: Ссылка на группу (или личку)
         :param messages: Список сообщений
         :param files: Список файлов
         :param lv: Лог-вью
         :param page: Страница
         """
-        await log_and_display_info(f"Отправляем сообщение в группу: {group_link}", lv, page)
+        await log_and_display_info(f"Отправляем сообщение: {target}", lv, page)
         if not messages:
             for file in files:
-                await client.send_file(group_link, f"user_data/files_to_send/{file}")
-                await log_and_display_info(f"Файл {file} отправлен в {group_link}.", lv, page)
-                await self.random_dream()
+                await client.send_file(target, f"user_data/files_to_send/{file}")
+                await log_and_display_info(f"Файл {file} отправлен в {target}.", lv, page)
         else:
             message = await self.select_and_read_random_file(messages, folder="message")
             if not files:
-                await client.send_message(entity=group_link, message=message)
+                await client.send_message(entity=target, message=message)
             else:
                 for file in files:
-                    await client.send_file(group_link, f"user_data/files_to_send/{file}", caption=message)
-                    await log_and_display_info(f"Сообщение и файл отправлены в {group_link}", lv, page)
-                    await self.random_dream()
+                    await client.send_file(target, f"user_data/files_to_send/{file}", caption=message)
+                    await log_and_display_info(f"Сообщение и файл отправлены: {target}", lv, page)
+        await self.random_dream()
 
     async def all_find_and_all_files(self):
         """
