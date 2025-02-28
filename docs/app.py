@@ -19,7 +19,8 @@ from src.core.localization import (parse_selected_user_subscribed_group, parse_s
                                    inviting_every_day_ru, importing_a_list_of_parsed_data, setting_reactions,
                                    we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
                                    sending_messages_via_chats_ru, sending_personal_messages_with_limits_ru,
-                                   choice_of_reactions_ru, proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
+                                   choice_of_reactions_ru, proxy_entry_ru, changing_accounts_ru,
+                                   recording_api_id_api_hash_ru,
                                    time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
                                    account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
                                    creating_username_list_ru, recording_the_time_between_messages_ru,
@@ -134,27 +135,6 @@ async def sending_messages(request: Request):
                                                                     })
     except Exception as e:
         logger.exception(e)
-
-# # Рассылка сообщений в личку
-# @app.get('/sending_messages/sending_personal_messages_with_limits', response_class=HTMLResponse)
-# async def sending_personal_messages_with_limits(request: Request):
-#     """📨 Отправка сообщений в личку"""
-#     logger.info("Запущена страница 📨 Отправка сообщений в личку")
-#     return templates.TemplateResponse('sending_messages/sending_personal_messages_with_limits.html',
-#                                       {"request": request, "program_name": program_name,
-#                                        "sending_personal_messages_with_limits_ru": sending_personal_messages_with_limits_ru,
-#                                        })
-#
-#
-# # Рассылка сообщений по чатам
-# @app.get('/sending_messages/sending_messages_via_chats', response_class=HTMLResponse)
-# async def sending_messages_via_chats(request: Request):
-#     """💬 Рассылка сообщений по чатам"""
-#     logger.info("Запущена страница 💬 Рассылка сообщений по чатам")
-#     return templates.TemplateResponse('sending_messages/sending_messages_via_chats.html',
-#                                       {"request": request, "program_name": program_name,
-#                                        "sending_messages_via_chats_ru": sending_messages_via_chats_ru,
-#                                        })
 
 
 @app.get('/editing_bio', response_class=HTMLResponse)
