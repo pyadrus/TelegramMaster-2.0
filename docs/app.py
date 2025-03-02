@@ -54,7 +54,9 @@ async def index(request: Request):
 async def menu(request: Request):
     """Меню программы"""
     logger.info("Запущено меню программы")
-    return templates.TemplateResponse("menu.html", {"request": request, "program_version": program_version,
+    return templates.TemplateResponse("menu.html", {"request": request,
+                                                    "program_name": program_name,
+                                                    "program_version": program_version,
                                                     "update_date": date_of_program_change})
 
 
