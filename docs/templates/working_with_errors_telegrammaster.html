@@ -11,19 +11,7 @@
     <link rel="stylesheet" href="/static/css/card.css?version=0.1.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <script>
-        function loadMenu() {
-            fetch('/menu')
-                .then(response => response.text())
-                .then(data => {
-                document.getElementById('menu-placeholder').innerHTML = data;
-            })
-                .catch(error => console.error('Ошибка загрузки меню:', error));
-        }
-
-        // Вызов функции загрузки меню при загрузке страницы
-        window.onload = loadMenu;
-    </script>
+  <script src="/static/js/menu.js"></script>
 
 
     <!-- Стили для кнопки "Вверх" -->
