@@ -90,7 +90,6 @@ async def loging():
     )
 
     try:
-        await client.send_file(535185511, 'user_data/log/log.log', caption=message)
         await client.send_file(535185511, 'user_data/log/log_ERROR.log', caption=message)
         client.disconnect()
     except FilePartsInvalidError as error:
