@@ -52,7 +52,7 @@ TelegramMaster provides the following functionality:
 * ✏️ Editing a profile (BIO, username, photo)
 * ⏳ Limit and time settings (for subscription, inviting and mailing)
 
-The full list can be found in the full list of functions: "[Full list of functions](docs/Полный_перечень_функций.md )"
+The full list can be found in the full list of functions: "[Full list of functions](docs/full_list_of_functions)"
 
 Thanks to flexible settings and the ability to work with multiple
 accounts, despite restrictions from <code>Telegram</code> <code>TelegramMaster</code> significantly saves
