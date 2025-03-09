@@ -6,13 +6,13 @@ class ConfigReader:
 
     def __init__(self):
         self.config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
-        self.config.read('user_data/config/config.ini')
+        self.config.read('user_data/config/config.ini', encoding='utf-8')
 
         self.config_gui = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
-        self.config_gui.read('user_data/config/config_gui.ini')
+        self.config_gui.read('user_data/config/config_gui.ini', encoding='utf-8')
 
         self.config_path = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
-        self.config_path.read('user_data/config/config_path.ini')
+        self.config_path.read('user_data/config/config_path.ini', encoding='utf-8')
 
     def get_config_time_changing_accounts(self):
         """Получение времени смены аккаунтов"""
