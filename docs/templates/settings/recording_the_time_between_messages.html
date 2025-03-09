@@ -16,77 +16,48 @@
 <div class="container">
     <!-- Подключение бокового меню -->
     <div id="menu-placeholder"></div>
-
-
     <!-- Основной контент -->
     <div class="content">
-
-
         <!-- ⏱️ Запись времени между сообщениями -->
         <h1 style="text-align: center;">{{recording_the_time_between_messages_ru}}</h1>
-
         <hr/> <!-- Горизонтальная линия-->
-
-        <p>
-            Чтобы записать время для рассылки сообщений в личку, вам нужно выполнить следующие действия:
-        </p>
-
+        <p>Чтобы записать время для рассылки сообщений в личку, вам нужно выполнить следующие действия:</p>
         <blockquote>
             1️⃣ Запустить {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
             {{program_name}}</a>).<br>
-
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
                 <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master"
-                     width="40%">
+                <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master" width="40%">
             </p>
-
             2️⃣ Перейти в раздел "<a href="{{ url_for('settings') }}">⚙️ Настройки</a>".<br>
-
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
                 <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/settings.png" alt="Telegram Master"
-                     width="40%">
+                <img src="/static/images/settings/settings.png" alt="Telegram Master" width="40%">
             </p>
-
             3️⃣ Запустить функцию "⏱️ Запись времени между сообщениями".<br>
-
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
                 <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/settings/recording_the_time_between_messages.png"
-                     alt="Telegram Master"
-                     width="40%">
+                <img src="/static/images/settings/recording_the_time_between_messages.png" alt="Telegram Master" width="40%">
             </p>
-
             4️⃣ Ввести имя аккаунта.<br>
             5️⃣ Нажать "Готово".<br>
-
             <!-- Изображение с центровкой -->
             <p style="text-align: center;">
                 <!-- Пример правильного пути к изображению -->
-                <img src="/static/images/done_button.png" alt="Telegram Master"
-                     width="40%">
+                <img src="/static/images/done_button.png" alt="Telegram Master" width="40%">
             </p>
-
         </blockquote>
-
         <p>
             После выполнения указанных действий программа автоматически запишет введенные данные в файл
             <code>{{program_name}}/user_data/config/config.ini</code>.
         </p>
-
         <hr/> <!-- Горизонтальная линия-->
-
         <!-- Кнопка "Вверх" -->
         <a href="#" id="to-top" title="Вверх"><i class="fas fa-chevron-up" aria-hidden="true"></i></a>
-
-
     </div>
 </div>
-
 </body>
-
 </html>

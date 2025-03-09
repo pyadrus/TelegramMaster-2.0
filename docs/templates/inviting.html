@@ -17,13 +17,9 @@
     <div id="menu-placeholder"></div>
     <!-- Основной контент -->
     <div class="content">
-
-
         <h1 style="text-align: center;">🚀 Инвайтинг ({{program_name}})</h1>
-
         <!-- Меню навигации -->
         <div class="card-container">
-
             <div class="card">
                 <!-- 🚀 Инвайтинг -->
                 <p class="heading">{{inviting_ru}}</p>
@@ -31,15 +27,12 @@
                 <button class="card-button"><a
                         href="{{ url_for('inviting_with_limits_in_telegram_master') }}">Перейти</a></button>
             </div>
-
             <div class="card">
                 <!-- ⏰ Инвайтинг 1 раз в час -->
                 <p class="heading">{{invitation_1_time_per_hour_ru}}</p>
                 <p>{{invitation_1_time_per_hour_ru}}</p>
                 <button class="card-button"><a href="{{ url_for('inviting_1_time_per_hour') }}">Перейти</a></button>
             </div>
-
-
             <div class="card">
                 <!-- 🕒 Инвайтинг в определенное время -->
                 <p class="heading">{{invitation_at_a_certain_time_ru}}</p>
@@ -53,9 +46,7 @@
                 <p>{{inviting_every_day_ru}}</p>
                 <button class="card-button"><a href="{{ url_for('inviting_every_day') }}">Перейти</a></button>
             </div>
-
         </div>
-
         <div
                 style="border: 2px solid #f5c6cbf5; background-color: #f8d7da; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif;">
             <h3 style="color: #721c24; margin: 0 0 10px;">ПРИМЕЧАНИЕ:</h3>
@@ -66,15 +57,10 @@
                 выполнять инвайтинг в <strong>Telegram-каналы</strong>.
             </p>
         </div>
-
         <hr/> <!-- Горизонтальная линия-->
-
         <!-- Кнопка "Вверх" -->
         <a href="#" id="to-top" title="Вверх"><i class="fas fa-chevron-up" aria-hidden="true"></i></a>
-
     </div>
 </div>
-
 </body>
-
 </html>
