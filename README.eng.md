@@ -8,7 +8,7 @@
 
 - Project name: TelegramMaster 2.0 🚀<br>
 - Current version: 2.6.0 🆕<br>
-- Date of last update: 07.02.2025 📅<br><br>
+- Date of last update: 07.03.2025 📅<br><br>
 
 [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
 [![made-with-PyAdminRU](https://img.shields.io/badge/Made%20with-PyAdminRU-1f425f.svg)](https://t.me/PyAdminRU)
