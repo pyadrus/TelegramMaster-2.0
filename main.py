@@ -24,11 +24,11 @@ from src.features.account.TGViewingPosts import ViewingPosts
 from src.features.auth.logging_in import loging
 from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
-from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu,
-                          menu_parsing, reactions_menu, subscribe_and_unsubscribe_menu, account_verification_menu,
-                          account_connection_menu, connecting_accounts_by_number_menu,
-                          connecting_accounts_by_session_menu, viewing_posts_menu, show_notification,
-                          creating_groups_and_chats_menu, working_with_contacts_menu, main_menu_program)
+from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
+                          subscribe_and_unsubscribe_menu, account_verification_menu, account_connection_menu,
+                          connecting_accounts_by_number_menu, connecting_accounts_by_session_menu, viewing_posts_menu,
+                          show_notification, creating_groups_and_chats_menu, working_with_contacts_menu,
+                          main_menu_program)
 from src.gui.sending_messages_menu import display_message_distribution_menu
 
 logger.add("user_data/log/log.log", rotation="500 KB", compression="zip", level="INFO")  # Логирование программы

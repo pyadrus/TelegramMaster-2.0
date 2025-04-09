@@ -33,7 +33,6 @@ def all_find_files(directory_path) -> list:
     for x in os.listdir(directory_path):
         if os.path.isfile(os.path.join(directory_path, x)):  # Проверяем, является ли x файлом
             entities.append(x)  # Добавляем имя файла в список
-
     return entities  # Возвращаем список файлов
 
 

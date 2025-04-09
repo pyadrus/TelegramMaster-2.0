@@ -39,9 +39,7 @@ class InvitingToAGroup:
         Получение ссылки для инвайтинга
         """
         try:
-            links_inviting: list = await self.db_handler.open_and_read_data("links_inviting")  # Открываем базу данных
-            logger.info(f"Ссылка для инвайтинга:  {links_inviting}")
-            return links_inviting
+            return await self.db_handler.open_and_read_data("links_inviting")  # Открываем базу данных
         except Exception as error:
             logger.exception(f"Ошибка: {error}")
 

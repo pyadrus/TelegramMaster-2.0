@@ -5,14 +5,6 @@ import time
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
-from telethon import functions
-from telethon import types
-from telethon.errors import ChatAdminRequiredError, ChannelPrivateError, AuthKeyUnregisteredError
-from telethon.tl.functions.channels import GetParticipantsRequest
-from telethon.tl.functions.messages import GetDialogsRequest
-from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, UserStatusLastMonth,
-                               UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently, InputUser)
-
 from src.core.configs import path_parsing_folder, line_width_button, BUTTON_HEIGHT, time_activity_user_2
 from src.core.localization import back_button, start_parsing_button, done_button
 from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates
@@ -20,6 +12,13 @@ from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.menu import log_and_display_info, log_and_display_error
+from telethon import functions
+from telethon import types
+from telethon.errors import ChatAdminRequiredError, ChannelPrivateError, AuthKeyUnregisteredError
+from telethon.tl.functions.channels import GetParticipantsRequest
+from telethon.tl.functions.messages import GetDialogsRequest
+from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, UserStatusLastMonth,
+                               UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently, InputUser)
 
 
 class ParsingGroupMembers:

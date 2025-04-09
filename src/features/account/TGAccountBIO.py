@@ -231,7 +231,6 @@ class AccountActions:
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
-
                 for photo_file in find_files(directory_path="user_data/bio", extension='jpg'):
                     try:
                         await client.connect()
@@ -247,5 +246,3 @@ class AccountActions:
 
         await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
         page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
-
-# 286
