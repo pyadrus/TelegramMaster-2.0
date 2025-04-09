@@ -24,12 +24,12 @@ from src.features.account.TGViewingPosts import ViewingPosts
 from src.features.auth.logging_in import loging
 from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
+from src.gui.main_menu import main_menu_program
 from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                           subscribe_and_unsubscribe_menu, account_verification_menu, account_connection_menu,
                           connecting_accounts_by_number_menu, connecting_accounts_by_session_menu, viewing_posts_menu,
                           show_notification, creating_groups_and_chats_menu, working_with_contacts_menu,
-                          main_menu_program)
-from src.gui.sending_messages_menu import display_message_distribution_menu
+                          )
 
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
 
@@ -260,9 +260,6 @@ async def main(page: ft.Page):
                 await CheckingProgram().checking_creating_groups(page=page)
                 await CreatingGroupsAndChats().creating_groups_and_chats(page=page)
             # _______________________________________________________________________________________________________________
-            elif page.route == "/sending_messages":  # Меню "Рассылка сообщений"
-                await display_message_distribution_menu(page)
-
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений по чатам
                 await CheckingProgram().check_before_sending_messages_via_chats(page=page)
                 await SendTelegramMessages().sending_messages_files_via_chats(page=page)
@@ -270,7 +267,6 @@ async def main(page: ft.Page):
             elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка сообщений в личку
                 await CheckingProgram().checking_sending_to_personal(page=page)
                 await SendTelegramMessages().send_files_to_personal_chats(page=page)
-
             # ______________________________________________________________________________________________________________
             elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
                 await bio_editing_menu(page)
