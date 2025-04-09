@@ -21,7 +21,7 @@ from src.core.utils import read_json_file
 from src.core.utils import record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.menu import log_and_display_info
+from src.gui.menu import log_and_display
 
 
 class SendTelegramMessages:
@@ -183,7 +183,7 @@ class SendTelegramMessages:
                             await event.respond(f'{data}')  # Отвечаем на входящее сообщение
 
                     # Получаем список чатов, которым нужно отправить сообщение
-                    await log_and_display_info(f"Всего групп: {len(chat_list_fields)}", lv, page)
+                    await log_and_display(f"Всего групп: {len(chat_list_fields)}", lv, page)
                     page.update()
                     for group_link in chat_list_fields:
                         try:
@@ -210,7 +210,7 @@ class SendTelegramMessages:
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_send_message_folder)
                     # Открываем базу данных с группами, в которые будут рассылаться сообщения
-                    await log_and_display_info(f"Всего групп: {len(chat_list_fields)}", lv, page)
+                    await log_and_display(f"Всего групп: {len(chat_list_fields)}", lv, page)
                     for group_link in chat_list_fields:  # Поочередно выводим записанные группы
                         try:
                             await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link)
@@ -247,7 +247,7 @@ class SendTelegramMessages:
                         except Exception as error:
                             logger.exception(f"❌ Ошибка: {error}")
                     await client.disconnect()  # Разрываем соединение Telegram
-                await log_and_display_info("🔚 Конец отправки сообщений + файлов по чатам", lv, page)
+                await log_and_display("🔚 Конец отправки сообщений + файлов по чатам", lv, page)
                 await self.end_time(start, lv, page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
@@ -303,13 +303,13 @@ class SendTelegramMessages:
 
     async def start_time(self, lv, page):
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-        await log_and_display_info('▶️ Время старта: ' + str(start), lv, page)
+        await log_and_display('▶️ Время старта: ' + str(start), lv, page)
         return start
 
     async def end_time(self, start, lv, page):
         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-        await log_and_display_info('Время окончания: ' + str(finish), lv, page)
-        await log_and_display_info('Время работы: ' + str(finish - start), lv, page)
+        await log_and_display('Время окончания: ' + str(finish), lv, page)
+        await log_and_display('Время работы: ' + str(finish - start), lv, page)
 
     async def send_content(self, client, target, messages, files, lv, page):
         """
@@ -321,11 +321,11 @@ class SendTelegramMessages:
         :param lv: Лог-вью
         :param page: Страница
         """
-        await log_and_display_info(f"Отправляем сообщение: {target}", lv, page)
+        await log_and_display(f"Отправляем сообщение: {target}", lv, page)
         if not messages:
             for file in files:
                 await client.send_file(target, f"user_data/files_to_send/{file}")
-                await log_and_display_info(f"Файл {file} отправлен в {target}.", lv, page)
+                await log_and_display(f"Файл {file} отправлен в {target}.", lv, page)
         else:
             message = await self.select_and_read_random_file(messages, folder="message")
             if not files:
@@ -333,7 +333,7 @@ class SendTelegramMessages:
             else:
                 for file in files:
                     await client.send_file(target, f"user_data/files_to_send/{file}", caption=message)
-                    await log_and_display_info(f"Сообщение и файл отправлены: {target}", lv, page)
+                    await log_and_display(f"Сообщение и файл отправлены: {target}", lv, page)
         await self.random_dream()
 
     async def all_find_and_all_files(self):

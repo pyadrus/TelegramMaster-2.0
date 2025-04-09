@@ -5,13 +5,6 @@ import time
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
-from src.core.configs import path_parsing_folder, line_width_button, BUTTON_HEIGHT, time_activity_user_2
-from src.core.localization import back_button, start_parsing_button, done_button
-from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates
-from src.core.utils import find_filess
-from src.features.account.TGConnect import TGConnect
-from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.menu import log_and_display_info, log_and_display_error
 from telethon import functions
 from telethon import types
 from telethon.errors import ChatAdminRequiredError, ChannelPrivateError, AuthKeyUnregisteredError
@@ -19,6 +12,14 @@ from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, UserStatusLastMonth,
                                UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently, InputUser)
+
+from src.core.configs import path_parsing_folder, line_width_button, BUTTON_HEIGHT, time_activity_user_2
+from src.core.localization import back_button, start_parsing_button, done_button
+from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates
+from src.core.utils import find_filess
+from src.features.account.TGConnect import TGConnect
+from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.gui.menu import log_and_display, log_and_display
 
 
 class ParsingGroupMembers:
@@ -53,7 +54,7 @@ class ParsingGroupMembers:
             🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе.
             """
             # Индикация начала парсинга
-            await log_and_display_info(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
+            await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
 
             try:
@@ -63,7 +64,7 @@ class ParsingGroupMembers:
                                                                        account_directory=path_parsing_folder)
                     # Получаем список групп для парсинга из базы данных 📋
                     for groups in await self.db_handler.open_and_read_data("writing_group_links"):
-                        await log_and_display_info(f"🔍 Парсинг группы: {groups[0]}", lv, page)
+                        await log_and_display(f"🔍 Парсинг группы: {groups[0]}", lv, page)
                         await self.tg_subscription_manager.subscribe_to_group_or_channel(client,
                                                                                          groups[
                                                                                              0])  # подписываемся на группу
@@ -79,7 +80,7 @@ class ParsingGroupMembers:
                 logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            await log_and_display_info(
+            await log_and_display(
                 f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                 lv, page)
 
@@ -120,7 +121,7 @@ class ParsingGroupMembers:
             # Записываем parsing данные в файл user_data/software_database.db
             entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, lv, page), lv,
                                                              page)
-            await log_and_display_info(f"{entities}", lv, page)
+            await log_and_display(f"{entities}", lv, page)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -173,7 +174,7 @@ class ParsingGroupMembers:
             """
             start = datetime.datetime.now()  # фиксируем время начала выполнения кода
             # Индикация начала парсинга
-            await log_and_display_info(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
+            await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение
 
             try:
@@ -182,8 +183,8 @@ class ParsingGroupMembers:
                     # Подключение к Telegram и вывод имя аккаунта в консоль / терминал 📲
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_parsing_folder)
-                    await log_and_display_info(f"🔗 Подключение к аккаунту: {session_name}", lv, page)
-                    await log_and_display_info(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", lv, page)
+                    await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", lv, page)
+                    await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", lv, page)
                     await self.forming_a_list_of_groups(client, lv, page)
                     await client.disconnect()  # Разрываем соединение telegram
 
@@ -192,7 +193,7 @@ class ParsingGroupMembers:
                 logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            await log_and_display_info(
+            await log_and_display(
                 f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                 lv, page)
 
@@ -242,7 +243,7 @@ class ParsingGroupMembers:
 
                         # Получаем данные о пользователе
                         entities = await self.get_active_user_data(user)
-                        await log_and_display_info(f"{entities}", lv, page)
+                        await log_and_display(f"{entities}", lv, page)
                         await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
                     except ValueError as e:
                         logger.warning(f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}")
@@ -310,15 +311,15 @@ class ParsingGroupMembers:
                 async def handle_button_click(_) -> None:
                     start = datetime.datetime.now()  # фиксируем время начала выполнения кода
 
-                    await log_and_display_info(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
-                    await log_and_display_info(f"📂 Выбрана группа: {dropdown.value}", lv, page)
+                    await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
+                    await log_and_display(f"📂 Выбрана группа: {dropdown.value}", lv, page)
 
                     await self.parse_group(client, dropdown.value, lv, page)  # Запускаем парсинг выбранной группы
                     await self.clean_parsing_list_and_remove_duplicates()
                     await client.disconnect()
                     # Переходим на экран парсинга только после завершения всех действий
                     finish = datetime.datetime.now()  # фиксируем время окончания парсинга
-                    await log_and_display_info(
+                    await log_and_display(
                         f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
                     page.go("/parsing")
 
@@ -352,7 +353,7 @@ class ParsingGroupMembers:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def parse_users(client, target_group, lv, page: ft.Page) -> list:
+    async def parse_users(client, target_group, lv, page: ft.Page):
         """
         🧑‍🤝‍🧑 Парсинг и сбор данных пользователей группы или канала.
         Метод осуществляет поиск участников в указанной группе или канале, собирает их данные и сохраняет в файле.
@@ -364,7 +365,7 @@ class ParsingGroupMembers:
         :return: Список участников.
         """
         try:
-            await log_and_display_info("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", lv, page)
+            await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", lv, page)
 
             all_participants: list = []
             while_condition = True
@@ -381,28 +382,19 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    logger.info(
-                        f'❌ Ошибка parsing: не верное имя или 🔗 ссылка {target_group} не является группой / каналом.')
-                    await log_and_display_error(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page)
+                    await log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page, level="error")
                     await asyncio.sleep(2)
                     break
                 except ChatAdminRequiredError:
-                    logger.info(f'❌ Ошибка parsing: не хватает прав администратора {target_group}')
-                    await log_and_display_error(f"❌ Ошибка: не хватает прав администратора {target_group}", lv, page)
+                    await log_and_display(f"❌ Ошибка: не хватает прав администратора {target_group}", lv, page, level="error")
                     await asyncio.sleep(2)
                     break
                 except ChannelPrivateError:
-                    logger.info(
-                        f'❌ Ошибка parsing: канал / чат закрыт {target_group} или аккаунт забанен на канале. Требуется замена аккаунта')
-                    await log_and_display_error(
-                        f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт",
-                        lv, page)
+                    await log_and_display(f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт", lv, page, level="error")
                     await asyncio.sleep(2)
                     break
                 except AuthKeyUnregisteredError:
-                    logger.info(f'❌ Ошибка parsing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов')
-                    await log_and_display_error(
-                        f"❌ Ошибка: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page)
+                    await log_and_display(f"❌ Ошибка: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page, level="error")
                     await asyncio.sleep(2)
                     break
 
@@ -537,9 +529,9 @@ class ParsingGroupMembers:
 
                     # Время синтаксического анализа
                     parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-                    await log_and_display_info(f"{dialog.id}, {channel_details.title}, "
+                    await log_and_display(f"{dialog.id}, {channel_details.title}, "
                                                f"https://t.me/{channel_details.username}, {participants_count}",
-                                               lv, page)
+                                          lv, page)
 
                     with db.atomic():  # Атомарная транзакция для записи данных
                         GroupsAndChannels.create(
@@ -581,9 +573,9 @@ class ParsingGroupMembers:
             async def btn_click(_) -> None:
                 """✅ Функция-обработчик для кнопки "Готово"""
                 start = datetime.datetime.now()  # фиксируем время начала выполнения кода
-                await log_and_display_info(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
+                await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
 
-                await log_and_display_info(
+                await log_and_display(
                     f"🔗 Ссылка на чат: {chat_input.value}. 💬 Количество сообщений: {limit_active_user.value}", lv, page
                 )
                 # Вызов функции для парсинга активных пользователей (функция должна быть реализована)
@@ -591,7 +583,7 @@ class ParsingGroupMembers:
                 # Изменение маршрута на новый (если необходимо)
 
                 finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-                await log_and_display_info(
+                await log_and_display(
                     f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                     lv, page
                 )

@@ -50,8 +50,7 @@ def get_external_ip():
     try:
         response = requests.get('https://httpbin.org/ip')
         response.raise_for_status()
-        external_ip = response.json().get("origin")
-        return external_ip
+        return response.json().get("origin")
     except requests.RequestException as error:
         return None
 

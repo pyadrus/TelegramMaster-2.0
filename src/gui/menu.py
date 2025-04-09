@@ -671,30 +671,21 @@ async def creating_groups_and_chats_menu(page: ft.Page):
                  ])]))
 
 
-async def log_and_display_info(message: str, lv, page: ft.Page):
+async def log_and_display(message: str, lv: ft.ListView, page: ft.Page, level: str = "info"):
     """
-    Выводит сообщение в GUI и записывает лог.
+    Выводит сообщение в GUI и записывает лог с указанным уровнем с помощью loguru.
 
-    :param message: Текст сообщения для отображения и записи в лог.
-    :param lv: ListView для отображения сообщений.
-    :param page: Страница интерфейса Flet для отображения элементов управления.
+    :param message: Текст сообщения для отображения и записи в лог
+    :param lv: ListView для отображения сообщений
+    :param page: Страница интерфейса Flet для отображения элементов управления
+    :param level: Уровень логирования ("info" или "error"), по умолчанию "info"
     """
-    logger.info(message)  # записываем сообщение в лог
-    lv.controls.append(ft.Text(message))  # отображаем сообщение в ListView
-    page.update()  # обновляем страницу для отображения нового сообщения
-
-
-async def log_and_display_error(message: str, lv, page: ft.Page):
-    """
-    Выводит сообщение в GUI и записывает лог.
-
-    :param message: Текст сообщения для отображения и записи в лог.
-    :param lv: ListView для отображения сообщений.
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    """
-    logger.error(message)  # записываем сообщение в лог
-    lv.controls.append(ft.Text(message))  # отображаем сообщение в ListView
-    page.update()  # обновляем страницу для отображения нового сообщения
+    if level.lower() == "error":
+        logger.error(message)
+    else:
+        logger.info(message)
+    lv.controls.append(ft.Text(message))
+    page.update()
 
 
 async def show_notification(page: ft.Page, message: str):

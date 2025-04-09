@@ -9,7 +9,7 @@ from src.core.configs import path_creating_folder, line_width_button, BUTTON_HEI
 from src.core.localization import back_button, creating_groups_button
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
-from src.gui.menu import log_and_display_info
+from src.gui.menu import log_and_display
 
 
 class CreatingGroupsAndChats:
@@ -36,7 +36,7 @@ class CreatingGroupsAndChats:
             🚀 Запускает процесс создания групп и отображает статус в интерфейсе.
             """
             # Индикация начала создания групп
-            await log_and_display_info(f"▶️ Начало создания групп.\n🕒 Время старта: {str(start)}", lv, page)
+            await log_and_display(f"▶️ Начало создания групп.\n🕒 Время старта: {str(start)}", lv, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
 
             try:
@@ -55,7 +55,7 @@ class CreatingGroupsAndChats:
                 logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания создания групп ⏰
-            await log_and_display_info(
+            await log_and_display(
                 f"🔚 Конец создания групп.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                 lv, page)
 

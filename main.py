@@ -31,7 +31,6 @@ from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_p
                           main_menu_program)
 from src.gui.sending_messages_menu import display_message_distribution_menu
 
-logger.add("user_data/log/log.log", rotation="500 KB", compression="zip", level="INFO")  # Логирование программы
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
 
 
