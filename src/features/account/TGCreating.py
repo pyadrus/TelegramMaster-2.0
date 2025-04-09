@@ -6,7 +6,7 @@ from loguru import logger
 from telethon import functions
 
 from src.core.configs import path_creating_folder, line_width_button, BUTTON_HEIGHT
-from src.core.localization import back_button, creating_groups_button
+from src.core.localization import back_button, start_button
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.gui.menu import log_and_display
@@ -72,7 +72,7 @@ class CreatingGroupsAndChats:
                 [
                     lv,  # отображение логов 📝
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=creating_groups_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать создание групп"
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                       on_click=back_button_clicked)  # Кнопка "⬅️ Назад"

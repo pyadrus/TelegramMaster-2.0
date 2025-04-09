@@ -21,10 +21,8 @@ automatic_setting_of_reactions: str = "🤖 Автоматическое выс�
 
 # Наименование кнопок
 back_button: str = "⬅️ Назад"
-start_parsing_button: str = "🚀 Начать парсинг"
+start_button: str = "🚀 Начать"
 done_button: str = "✅ Готово"
-start_inviting_button: str = "🚀 Начать инвайтинг"
-creating_groups_button: str = "🚀 Начать создание групп"
 
 # Рассылка сообщений меню
 sending_messages_via_chats_ru: str = "💬 Рассылка сообщений по чатам"
@@ -53,7 +51,6 @@ parsing: str = "📊 Парсинг"
 working_with_contacts_menu_ru: str = "📇 Работа с контактами"
 subscribe_unsubscribe: str = "🔄 Подписка, отписка"
 connecting_accounts: str = "🔐 Подключение аккаунтов"
-sending_messages: str = "📤 Рассылка сообщений"
 working_with_reactions: str = "❤️ Работа с реакциями"
 checking_accounts: str = "🔍 Проверка аккаунтов"
 creating_groups_chats: str = "👥 Создание групп (чатов)"

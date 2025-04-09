@@ -30,7 +30,7 @@ from src.core.localization import (parse_selected_user_subscribed_group, parse_s
                                    name_change_f, creating_a_contact_list, show_a_list_of_contacts,
                                    deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
                                    subscription, unsubscribe, connecting_accounts_by_phone_number,
-                                   connecting_session_accounts, start_inviting_button)
+                                   connecting_session_accounts, start_button)
 
 app = FastAPI()
 
@@ -82,7 +82,7 @@ async def inviting_with_limits_in_telegram_master(request: Request):
                                           "invitation_1_time_per_hour_ru": invitation_1_time_per_hour_ru,
                                           "invitation_at_a_certain_time": invitation_at_a_certain_time_ru,
                                           "inviting_every_day_ru": inviting_every_day_ru,
-                                          "start_inviting_button": start_inviting_button,
+                                          "start_inviting_button": start_button,
                                       })
 
 
@@ -95,7 +95,7 @@ async def inviting_1_time_per_hour(request: Request):
                                           "request": request, "program_name": program_name,
                                           "inviting_ru": inviting_ru,
                                           "invitation_1_time_per_hour_ru": invitation_1_time_per_hour_ru,
-                                          "start_inviting_button": start_inviting_button,
+                                          "start_inviting_button": start_button,
                                       })
 
 
@@ -108,7 +108,7 @@ async def inviting_at_a_certain_time(request: Request):
                                        "inviting": inviting_ru,
                                        "invitation_at_a_certain_time_ru": invitation_at_a_certain_time_ru,
                                        "time_between_subscriptions_ru": time_between_subscriptions_ru,
-                                       "start_inviting_button": start_inviting_button,
+                                       "start_inviting_button": start_button,
                                        })
 
 
@@ -121,7 +121,7 @@ async def inviting_every_day(request: Request):
                                        "inviting_ru": inviting_ru,
                                        "inviting_every_day_ru": inviting_every_day_ru,
                                        "time_between_subscriptions_ru": time_between_subscriptions_ru,
-                                       "start_inviting_button": start_inviting_button,
+                                       "start_inviting_button": start_button,
                                        })
 
 

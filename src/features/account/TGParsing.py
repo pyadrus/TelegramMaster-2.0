@@ -14,7 +14,7 @@ from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserSt
                                UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently, InputUser)
 
 from src.core.configs import path_parsing_folder, line_width_button, BUTTON_HEIGHT, time_activity_user_2
-from src.core.localization import back_button, start_parsing_button, done_button
+from src.core.localization import back_button, start_button, done_button
 from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
@@ -97,7 +97,7 @@ class ParsingGroupMembers:
                 [
                     lv,  # отображение логов 📝
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_parsing_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать парсинг"
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                       on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
@@ -212,7 +212,7 @@ class ParsingGroupMembers:
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать парсинг"
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_parsing_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_button,
                                       on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
                 ],
             )
