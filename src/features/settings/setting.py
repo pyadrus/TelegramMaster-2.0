@@ -104,49 +104,46 @@ class SettingPage:
 
         lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
 
-        async def btn_click(_) -> None:
+        async def write_data(clear_before: bool = False) -> None:
+            """Запись данных в БД с опцией предварительной очистки"""
+            if clear_before:
+                await self.db_handler.cleaning_db(name_database_table=table_name)
+
+            data = text_to_send.value.split()
             await self.db_handler.write_to_single_column_table(
                 name_database=table_name,
                 database_columns=column_name,
                 into_columns=into_columns,
-                recorded_data=text_to_send.value.split()
+                recorded_data=data
             )
             await show_notification(page, "Данные успешно записаны!")
-            page.go(route)  # Изменение маршрута в представлении существующих настроек
+            page.go(route)
             page.update()
 
-        async def btn_click_1(_) -> None:
-            await DatabaseHandler().cleaning_db(name_database_table=table_name)
-            await self.db_handler.write_to_single_column_table(
-                name_database=table_name,
-                database_columns=column_name,
-                into_columns=into_columns,
-                recorded_data=text_to_send.value.split()
-            )
-            await show_notification(page, "Данные успешно записаны!")
-            page.go(route)  # Изменение маршрута в представлении существующих настроек
-            page.update()
+        async def on_append_click(_: ft.ControlEvent) -> None:
+            """Запись данных в базу данных"""
+            await write_data(clear_before=False)
 
-        async def back_button_clicked(_) -> None:
-            """Кнопка возврата в меню настроек"""
+        async def on_clear_and_write_click(_: ft.ControlEvent) -> None:
+            """Очистка данных и запись данных в базу данных"""
+            await write_data(clear_before=True)
+
+        async def on_back_click(_: ft.ControlEvent) -> None:
+            """Возврат на предыдущий экран"""
             page.go(route)
 
-        # Создание View с элементами
-        page.views.append(
-            ft.View(
-                route,
-                controls=[
-                    lv,  # отображение логов 📝
-                    ft.Column(
-                        controls=[text_to_send] + [
-                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                              text="Дозаписать данные в базу данных", on_click=btn_click),
-                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                              text="Очистить данные и записать по новой", on_click=btn_click_1),
-                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
-                                              on_click=back_button_clicked),
-                        ]
-                    )]))
+        # Формирование представления
+        controls = [
+            text_to_send,
+            ft.ElevatedButton(text="Дозаписать данные в базу данных", width=line_width_button, height=BUTTON_HEIGHT,
+                              on_click=on_append_click),
+            ft.ElevatedButton(text="Очистить данные и записать по новой", width=line_width_button, height=BUTTON_HEIGHT,
+                              on_click=on_clear_and_write_click),
+            ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
+                              on_click=on_back_click)
+        ]
+
+        page.views.append(ft.View(route, controls=[lv, ft.Column(controls=controls)]))
 
     async def record_setting(self, page: ft.Page, limit_type: str, label: str):
         """

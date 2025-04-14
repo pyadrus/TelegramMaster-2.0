@@ -5,10 +5,9 @@ from loguru import logger
 from src.core.configs import BUTTON_HEIGHT, small_button_width, BUTTON_WIDTH, line_width_button
 from src.core.localization import (parse_single_or_multiple_groups, parse_selected_user_subscribed_group,
                                    parse_active_group_members, parse_account_subscribed_groups_channels,
-                                   clear_previously_parsed_data_list, inviting_every_day_ru,
-                                   invitation_at_a_certain_time_ru, invitation_1_time_per_hour_ru, inviting_ru,
-                                   importing_a_list_of_parsed_data, setting_reactions,
-                                   automatic_setting_of_reactions, choice_of_reactions_ru,
+                                   inviting_every_day_ru, invitation_at_a_certain_time_ru,
+                                   invitation_1_time_per_hour_ru, inviting_ru, importing_a_list_of_parsed_data,
+                                   setting_reactions, automatic_setting_of_reactions, choice_of_reactions_ru,
                                    proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
                                    time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
                                    account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
@@ -25,7 +24,7 @@ from src.core.localization import (parse_single_or_multiple_groups, parse_select
                                    to_send_messages, for_marking_reactions, to_work_with_reactions, for_parsing,
                                    for_inviting, to_create_groups, to_work_with_numbers, to_edit_bio,
                                    for_the_answering_machine, working_with_reactions, parsing, settings, main_menu,
-                                   creating_groups_chats, clearing_generated_chat_list)
+                                   creating_groups_chats)
 
 
 async def settings_menu(page: ft.Page):
@@ -107,10 +106,6 @@ async def settings_menu(page: ft.Page):
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                        text=forming_list_of_chats_channels_ru,
                                        on_click=lambda _: page.go("/forming_list_of_chats_channels")),
-                     # 🧹 Очистка сформированного списка чатов
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=clearing_generated_chat_list,
-                                       on_click=lambda _: page.go("/clearing_generated_chat_list")),
                  ])]))
 
 
@@ -254,11 +249,6 @@ async def menu_parsing(page: ft.Page):
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                        text=parse_account_subscribed_groups_channels,
                                        on_click=lambda _: page.go("/parsing_groups_channels_account_subscribed")),
-                     # 🗑️ Очистка списка от ранее спарсенных данных
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=clear_previously_parsed_data_list,
-                                       on_click=lambda _: page.go("/clearing_list_previously_saved_data")),
-
                      # 📋 Импорт списка от ранее спарсенных данных
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                        text=importing_a_list_of_parsed_data,

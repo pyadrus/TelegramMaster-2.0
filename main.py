@@ -145,9 +145,6 @@ async def main(page: ft.Page):
             elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов аккаунта
                 await CheckingProgram().checking_for_parsing_single_groups(page=page)
                 await ParsingGroupMembers().parse_subscribed_groups(page)
-            elif page.route == "/clearing_list_previously_saved_data":  # Очистка списка от ранее спарсенных данных
-                await DatabaseHandler().cleaning_db("members")
-                await show_notification(page, "Очистка списка окончена")  # Сообщение пользователю
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
                 await ReceivingAndRecording().write_data_to_excel(file_name="user_data/parsed_chat_participants.xlsx")
             # ______________________________________________________________________________________________________________
@@ -338,9 +335,6 @@ async def main(page: ft.Page):
                 time_subscription_1, time_subscription_2 = ConfigReader().get_time_subscription()
                 time_subscription = [time_subscription_1, time_subscription_2]
                 await SettingPage().create_main_window(page, variable="time_subscription", time_range=time_subscription)
-            elif page.route == "/clearing_generated_chat_list":  # 🧹 Очистка сформированного списка чатов
-                await DatabaseHandler().cleaning_db("writing_group_links")
-                await show_notification(page, "Очистка списка окончена")  # Сообщение пользователю
             elif page.route == "/documentation":  # Открытие документации
                 start_app()
             elif page.route == "/errors":
