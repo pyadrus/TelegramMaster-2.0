@@ -69,8 +69,8 @@ class SendTelegramMessages:
                                                                            account_directory=path_send_message_folder)
                         try:
                             # Открываем parsing список user_data/software_database.db для inviting в группу
-                            number_usernames: list = await db_handler.open_db_func_lim(table_name="members",
-                                                                                       account_limit=int(
+                            number_usernames: list = await db_handler.select_records_with_limit(table_name="members",
+                                                                                                limit=int(
                                                                                            account_limits))
                             # Количество аккаунтов на данный момент в работе
                             logger.info(f"Всего username: {len(number_usernames)}")

@@ -20,7 +20,7 @@ from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.menu import log_and_display, show_notification, log_and_display
+from src.gui.menu import show_notification, log_and_display
 
 
 class InvitingToAGroup:
@@ -47,8 +47,7 @@ class InvitingToAGroup:
         """"
         Получение данных для инвайтинга
         """
-        number_usernames: list = await self.db_handler.open_db_func_lim(table_name="members",
-                                                                        account_limit=None)
+        number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members", limit=None)
         account_limit = ConfigReader().get_limits()
         find_filesss = find_filess(directory_path=path_inviting_folder, extension='session')
         await log_and_display(f"Лимит на аккаунт: {account_limit}\n"
@@ -77,8 +76,8 @@ class InvitingToAGroup:
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value)
                 # Получение списка usernames
-                number_usernames: list = await self.db_handler.open_db_func_lim(table_name="members",
-                                                                                account_limit=ConfigReader().get_limits())
+                number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members",
+                                                                                         limit=ConfigReader().get_limits())
                 if len(number_usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", lv, page)
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value)

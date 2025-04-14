@@ -28,8 +28,8 @@ class CheckingProgram:
         if not find_filess(directory_path=path_send_message_folder, extension=self.account_extension):
             await show_notification(page, f"⛔ Нет аккаунта в папке {path_send_message_folder}")
             return None
-        if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
-                                                 account_limit=ConfigReader().get_limits())) == 0:
+        if len(await db_handler.select_records_with_limit(table_name="writing_group_links",
+                                                          limit=ConfigReader().get_limits())) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
             return None
 
@@ -50,12 +50,12 @@ class CheckingProgram:
         if not find_filess(directory_path=path_inviting_folder, extension=self.account_extension):
             await show_notification(page, f'⛔ Нет аккаунта в папке {path_inviting_folder}')
             return None
-        if len(await db_handler.open_db_func_lim(table_name="members",
-                                                 account_limit=ConfigReader().get_limits())) == 0:
+        if len(await db_handler.select_records_with_limit(table_name="members",
+                                                          limit=ConfigReader().get_limits())) == 0:
             await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
             return None
-        if len(await db_handler.open_db_func_lim(table_name="links_inviting",
-                                                 account_limit=ConfigReader().get_limits())) == 0:
+        if len(await db_handler.select_records_with_limit(table_name="links_inviting",
+                                                          limit=ConfigReader().get_limits())) == 0:
             await show_notification(page, "⛔ Не записана группа для инвайтинга")
             return None
 
@@ -150,7 +150,7 @@ class CheckingProgram:
             await show_notification(page,
                                     f"⛔ Нет заготовленных сообщений для автоответчика в папке {path_send_message_folder_answering_machine_message}")
             return None
-        if len(await db_handler.open_db_func_lim(table_name="writing_group_links",
-                                                 account_limit=ConfigReader().get_limits())) == 0:
+        if len(await db_handler.select_records_with_limit(table_name="writing_group_links",
+                                                          limit=ConfigReader().get_limits())) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
             return None

@@ -159,8 +159,8 @@ async def main(page: ft.Page):
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Формирования списка контактов")
                 await DatabaseHandler().open_and_read_data("contact")  # Удаление списка с контактами
-                SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
-                                                     "contact", "/working_with_contacts", "contact")
+                await SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
+                                                           "contact", "/working_with_contacts", "contact")
                 logger.info("🔚 Конец Формирования списка контактов")
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
@@ -295,16 +295,18 @@ async def main(page: ft.Page):
             elif page.route == "/account_limits":  # Лимиты на аккаунт
                 await SettingPage().record_setting(page, "account_limits", "Введите лимит на аккаунт")
             elif page.route == "/creating_username_list":  # Формирование списка username
-                SettingPage().output_the_input_field(page, "Введите список username", "members",
-                                                     "username, id, access_hash, first_name, last_name, "
-                                                     "user_phone, online_at, photos_id, user_premium",
-                                                     "/settings", "members (username)")
+                await SettingPage().output_the_input_field(page, "Введите список username", "members",
+                                                           "username, id, access_hash, first_name, last_name, "
+                                                           "user_phone, online_at, photos_id, user_premium",
+                                                           "/settings", "members (username)")
             elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
-                SettingPage().output_the_input_field(page, "Введите список ссылок на группы", "writing_group_links",
-                                                     "writing_group_links", "/settings", "writing_group_links")
+                await SettingPage().output_the_input_field(page, "Введите список ссылок на группы",
+                                                           "writing_group_links",
+                                                           "writing_group_links", "/settings", "writing_group_links")
             elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
-                SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга", "links_inviting",
-                                                     "links_inviting", "/settings", "links_inviting")
+                await SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга",
+                                                           "links_inviting",
+                                                           "links_inviting", "/settings", "links_inviting")
             elif page.route == "/proxy_entry":  # Запись proxy
                 await SettingPage().creating_the_main_window_for_proxy_data_entry(page)
             elif page.route == "/message_recording":  # Запись сообщений

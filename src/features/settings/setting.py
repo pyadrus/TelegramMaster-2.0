@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 import configparser
 import io
-import json  # TODO Использовать работу с json только в одной файле.
+import json
 import os
 import sys
 
 import flet as ft  # Импортируем библиотеку flet
+from flet_core import ListView
 from loguru import logger
 
 from src.core.configs import BUTTON_HEIGHT, line_width_button
 from src.core.localization import back_button, done_button
 from src.core.sqlite_working_tools import DatabaseHandler
-from src.gui.menu import show_notification
+from src.gui.menu import show_notification, log_and_display
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 config.read("user_data/config/config.ini")
@@ -41,7 +42,7 @@ class SettingPage:
         username_type = ft.TextField(label="Введите username, например NnbjvX: ", multiline=True, max_lines=19)
         password_type = ft.TextField(label="Введите пароль, например ySfCfk: ", multiline=True, max_lines=19)
 
-        async def btn_click(e) -> None:
+        async def btn_click(_) -> None:
             rdns_types = "True"
             proxy = [proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
                      rdns_types]
@@ -71,7 +72,7 @@ class SettingPage:
 
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
 
-        async def btn_click(e) -> None:
+        async def btn_click(_) -> None:
             write_data_to_json_file(reactions=text_to_send.value,
                                     path_to_the_file=unique_filename)  # Сохраняем данные в файл
 
@@ -82,7 +83,7 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [text_to_send], btn_click, lv)
 
-    def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str,
+    async def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str,
                                into_columns: str) -> None:
         """
         Окно ввода для записи списка контактов telegram
@@ -95,21 +96,22 @@ class SettingPage:
         :param into_columns: Имя столбца в таблице, в который будут записаны данные.
         """
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        lv: ListView = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+
+        records: list = await self.db_handler.select_records_with_limit(table_name=table_name, limit=None)
+        await log_and_display(message=f"Групп / каналов в бозе данных: {len(records)}", page=page, lv=lv)
 
         lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
 
-        async def btn_click(e) -> None:
+        async def btn_click(_) -> None:
             await self.db_handler.write_to_single_column_table(
                 name_database=table_name,
                 database_columns=column_name,
                 into_columns=into_columns,
                 recorded_data=text_to_send.value.split()
             )
-
             await show_notification(page, "Данные успешно записаны!")
-
             page.go(route)  # Изменение маршрута в представлении существующих настроек
             page.update()
 
@@ -130,18 +132,15 @@ class SettingPage:
 
         limits = ft.TextField(label=label, multiline=True, max_lines=19)
 
-        async def btn_click(e) -> None:
+        async def btn_click(_) -> None:
             try:
                 config.get(limit_type, limit_type)
                 config.set(limit_type, limit_type, limits.value)
                 writing_settings_to_a_file(config)
-
                 await show_notification(page, "Данные успешно записаны!")
-
             except configparser.NoSectionError as error:
                 await show_notification(page, "⚠️ Поврежден файл user_data/config/config.ini")
                 logger.error(f"Ошибка: {error}")
-
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
@@ -155,31 +154,26 @@ class SettingPage:
         """
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
-
         lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
-
         hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
         minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
 
-        async def btn_click(e) -> None:
+        async def btn_click(_) -> None:
             try:
                 hour = int(hour_textfield.value)
                 minutes = int(minutes_textfield.value)
-
                 if not 0 <= hour < 24:
                     logger.info('Введите часы в пределах от 0 до 23!')
                     return
                 if not 0 <= minutes < 60:
                     logger.info('Введите минуты в пределах от 0 до 59!')
                     return
-
                 # Предполагая, что config является объектом, похожим на словарь
                 config.get("hour_minutes_every_day", "hour")
                 config.set("hour_minutes_every_day", "hour", str(hour))
                 config.get("hour_minutes_every_day", "minutes")
                 config.set("hour_minutes_every_day", "minutes", str(minutes))
                 writing_settings_to_a_file(config)
-
                 await show_notification(page, "Данные успешно записаны!")
 
                 page.go("/settings")  # Изменение маршрута в представлении существующих настроек
@@ -199,26 +193,21 @@ class SettingPage:
 
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
-
         for time_range_message in time_range:
             lv.controls.append(
                 ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
-
         smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
         larger_timex = ft.TextField(label="Время в секундах (большее)")
 
-        async def btn_click(e) -> None:
+        async def btn_click(_) -> None:
             """Обработчик клика по кнопке"""
-
             try:
                 smaller_times = int(smaller_timex.value)
                 larger_times = int(larger_timex.value)
-
                 if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
                     # Если условие прошло проверку, то возвращаем первое и второе время
-                    config = recording_limits_file(str(smaller_times), str(larger_times), variable=variable)
-                    writing_settings_to_a_file(config)
-
+                    writing_settings_to_a_file(
+                        recording_limits_file(str(smaller_times), str(larger_times), variable=variable))
                     lv.controls.append(ft.Text("Данные успешно записаны!"))  # отображаем сообщение в ListView
                     await show_notification(page, "Данные успешно записаны!")
                     page.go("/settings")  # Изменение маршрута в представлении существующих настроек
@@ -226,7 +215,6 @@ class SettingPage:
                     lv.controls.append(ft.Text("Ошибка: первое время должно быть меньше второго!"))
             except ValueError:
                 lv.controls.append(ft.Text("Ошибка: введите числовые значения!"))
-
             page.update()  # обновляем страницу
 
         self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click, lv)
@@ -239,13 +227,11 @@ class SettingPage:
         """
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
-
         lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
-
         api_id_data = ft.TextField(label="Введите api_id", multiline=True, max_lines=19)
         api_hash_data = ft.TextField(label="Введите api_hash", multiline=True, max_lines=19)
 
-        def btn_click(e) -> None:
+        def btn_click(_) -> None:
             config.get("telegram_settings", "id")
             config.set("telegram_settings", "id", api_id_data.value)
             config.get("telegram_settings", "hash")
@@ -268,14 +254,9 @@ class SettingPage:
         :return: None
         """
 
-        def back_button_clicked(e) -> None:
+        def back_button_clicked(_) -> None:
             """Кнопка возврата в меню настроек"""
             page.go("/settings")
-
-        # Кнопка "Готово" (button) и связывает ее с функцией button_clicked.
-        button = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button, on_click=btn_click)
-        button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
-                                        on_click=back_button_clicked)
 
         # Создание View с элементами
         page.views.append(
@@ -284,11 +265,13 @@ class SettingPage:
                 controls=[
                     lv,  # отображение логов 📝
                     ft.Column(
-                        controls=fields + [button, button_back]
-                    )
-                ]
-            )
-        )
+                        controls=fields + [
+                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
+                                              on_click=btn_click),
+                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                                              on_click=back_button_clicked)
+                        ]
+                    )]))
 
 
 def writing_settings_to_a_file(config) -> None:
@@ -310,10 +293,10 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
         config.set(f"{variable}", f"{variable}_1", time_1)
         config.get(f"{variable}", f"{variable}_2")
         config.set(f"{variable}", f"{variable}_2", time_2)
-        return config
     except configparser.NoSectionError as error:
         logger.error(
             f"❌ Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_data/config/config.ini")
+    return config
 
 
 def write_data_to_json_file(reactions, path_to_the_file):
@@ -362,7 +345,7 @@ async def reaction_gui(page: ft.Page):
         ft.Checkbox(label="🕊"), ft.Checkbox(label="😭")
     ]
 
-    async def button_clicked(e) -> None:
+    async def button_clicked(_) -> None:
         """Выбранная реакция"""
         selected_reactions = [checkbox.label for checkbox in checkboxes if
                               checkbox.value]  # Получаем только выбранные реакции
@@ -371,15 +354,9 @@ async def reaction_gui(page: ft.Page):
         await show_notification(page, "Данные успешно записаны!")
         page.go("/settings")  # Переход к странице настроек
 
-    async def back_button_clicked(e) -> None:
+    async def back_button_clicked(_) -> None:
         """Кнопка возврата в меню настроек"""
         page.go("/settings")
-
-    # Кнопка "Готово" и "Назад"
-    button = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
-                               on_click=button_clicked)  # Кнопка "Готово"
-    button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
-                                    on_click=back_button_clicked)  # Кнопка "Назад"
 
     # Добавляем элементы на страницу
     page.views.append(
@@ -388,8 +365,10 @@ async def reaction_gui(page: ft.Page):
             controls=[
                 t,
                 ft.Column([ft.Row(checkboxes[i:i + 9]) for i in range(0, len(checkboxes), 9)]),  # Чекбоксы в колонках
-                button,
-                button_back
+                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
+                                  on_click=button_clicked),  # Кнопка "Готово",
+                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                                  on_click=back_button_clicked),  # Кнопка "Назад"
             ]
         )
     )

@@ -110,28 +110,31 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()
 
-    async def open_db_func_lim(self, table_name, account_limit) -> list:
+    async def select_records_with_limit(self, table_name, limit) -> list:
         """
-        Открытие базы данных для inviting (рассылка сообщений) с лимитами. Если number_of_accounts равно None,
-        возвращаем весь список
+        Выбирает записи из указанной таблицы БД с возможностью ограничения количества результатов.
 
-        :param table_name: Название таблицы, данные из которой требуется извлечь.
-        :param account_limit: Количество аккаунтов
-        :return list: полученный список
+        Функция позволяет извлекать записи из заданной таблицы базы данных с учётом лимита на количество элементов.
+        Лимит определяется параметром `limit`. Если этот аргумент равен `None`, возвращаются все записи таблицы.
+
+        :param table_name: Имя таблицы, из которой будут извлечены данные.
+        :param limit: Максимальное количество записей, которое нужно вернуть. Если `None` — вернёт все записи.
+        :return list: Список кортежей с записями из таблицы.
         """
         try:
-            await self.connect()
-            self.cursor.execute(f"SELECT * from {table_name}")  # Считываем таблицу
-            if account_limit is not None:
-                records: list = self.cursor.fetchmany(account_limit)  # fetchmany(size) – возвращает число записей
+            await self.connect()  # Подключаемся к базе данных
+            self.cursor.execute(f"SELECT * from {table_name}")  # Выполняем SQL-запрос на чтение всех записей из таблицы
+            # Если указан лимит, используем метод fetchmany(), иначе fetchall()
+            if limit is not None:
+                records: list = self.cursor.fetchmany(limit)
             else:
-                records: list = self.cursor.fetchall()  # Если number_of_accounts равно None, возвращаем весь список
-
+                records: list = self.cursor.fetchall()
             self.cursor.close()
             self.close()  # Закрываем базу данных
             return records
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
+            raise
 
     async def write_parsed_chat_participants_to_db_active(self, entities) -> None:
         """
@@ -212,21 +215,29 @@ class DatabaseHandler:
         :param value: значение
         """
         await self.connect()
-        self.cursor.execute(f"SELECT * from {table}")  # Считываем таблицу
+        self.cursor.execute(f'''SELECT * from {table}''')  # Считываем таблицу
         try:
-            self.cursor.execute(f"DELETE from {table} where {column} = ?", (value,))  # Удаляем строку
+            self.cursor.execute(f'''DELETE from {table} where {column} = ?''', (value,))  # Удаляем строку
             self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
         except sqlite3.ProgrammingError:
-            self.cursor.execute(f"DELETE from {table} where {column} = ?", value)
+            self.cursor.execute(f'''DELETE from {table} where {column} = ?''', value)
             self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     async def save_proxy_data_to_db(self, proxy) -> None:
         """Запись данных proxy в базу данных"""
         await self.connect()
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS proxy(proxy_type, addr, port, username, password, rdns)")
-        self.cursor.executemany("INSERT INTO proxy(proxy_type, addr, port, username, password, rdns) "
-                                "VALUES (?, ?, ?, ?, ?, ?)", (proxy,), )
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS proxy
+                               (
+                                   proxy_type,
+                                   addr,
+                                   port,
+                                   username,
+                                   password,
+                                   rdns
+                               )''')
+        self.cursor.executemany('''INSERT INTO proxy(proxy_type, addr, port, username, password, rdns)
+                                   VALUES (?, ?, ?, ?, ?, ?)''', (proxy,), )
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
@@ -241,11 +252,11 @@ class DatabaseHandler:
         """
         await self.connect()
         # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
-        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {name_database}({database_columns})")
+        self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {name_database}({database_columns})''')
         for line in recorded_data:
             # strip() - удаляет с конца и начала строки лишние пробелы, в том числе символ окончания строки
             lines = line.strip()
-            self.cursor.execute(f"INSERT INTO {into_columns} VALUES (?)", (lines,))
+            self.cursor.execute(f'''INSERT INTO {into_columns} VALUES (?)''', (lines,))
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
@@ -261,7 +272,7 @@ class DatabaseHandler:
         await self.connect()
         # Удаляем таблицу members, функция execute отвечает за SQL-запрос DELETE FROM - команда удаления базы данных
         # name_database_table - название таблицы в базе данных
-        self.cursor.execute(f"DELETE FROM {name_database_table};")
+        self.cursor.execute(f'''DELETE FROM {name_database_table};''')
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
@@ -269,8 +280,8 @@ class DatabaseHandler:
         """Чистка списка от участников у которых нет username"""
         logger.info("Чищу список software_database.db от участников у которых нет username")
         await self.connect()
-        self.cursor.execute("""SELECT *
-                               from members""")
+        self.cursor.execute('''SELECT *
+                               from members''')
         records: list = self.cursor.fetchall()
         logger.info(f"Всего username: {len(records)}")
         for rows in records:
@@ -279,9 +290,9 @@ class DatabaseHandler:
             username_name = "NONE"
             if username == username_name:
                 # Удаляем пользователя без username
-                self.cursor.execute("""DELETE
+                self.cursor.execute('''DELETE
                                        from members
-                                       where username = ?""", (username_name,))
+                                       where username = ?''', (username_name,))
                 self.sqlite_connection.commit()
 
     async def read_parsed_chat_participants_from_db(self):
@@ -289,7 +300,8 @@ class DatabaseHandler:
         Чтение данных из базы данных.
         """
         await self.connect()
-        self.cursor.execute("SELECT * FROM members")
+        self.cursor.execute('''SELECT *
+                               FROM members''')
         data = self.cursor.fetchall()
         self.close()
         return data
