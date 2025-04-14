@@ -71,13 +71,10 @@ class ParsingGroupMembers:
                     # Получаем список групп для парсинга из базы данных 📋
                     for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", lv, page)
-                        await self.tg_subscription_manager.subscribe_to_group_or_channel(client,
-                                                                                         groups[
-                                                                                             0])  # подписываемся на группу
+                        await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0])  # подписываемся на группу
                         await self.parse_group(client, groups[0], lv, page)  # выполняем парсинг группы
                         # Удаляем группу из списка после завершения парсинга 🗑️
-                        await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
-                                                            value=groups)
+                        await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups)
                     # Очищаем список и удаляем дубликаты после завершения обработки всех групп
                     await self.clean_parsing_list_and_remove_duplicates()
                     # Завершаем работу клиента после завершения парсинга 🔌
@@ -86,9 +83,7 @@ class ParsingGroupMembers:
                 logger.exception(f"❌ Ошибка: {error}")
 
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            await log_and_display(
-                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
-                lv, page)
+            await log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
 
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
