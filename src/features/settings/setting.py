@@ -84,7 +84,7 @@ class SettingPage:
         self.add_view_with_fields_and_button(page, [text_to_send], btn_click, lv)
 
     async def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str,
-                               into_columns: str) -> None:
+                                     into_columns: str) -> None:
         """
         Окно ввода для записи списка контактов telegram
 
@@ -100,7 +100,7 @@ class SettingPage:
         page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
 
         records: list = await self.db_handler.select_records_with_limit(table_name=table_name, limit=None)
-        await log_and_display(message=f"Групп / каналов в бозе данных: {len(records)}", page=page, lv=lv)
+        await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page, lv=lv)
 
         lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
 
@@ -115,7 +115,38 @@ class SettingPage:
             page.go(route)  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        self.add_view_with_fields_and_button(page, [text_to_send], btn_click, lv)
+        async def btn_click_1(_) -> None:
+            await DatabaseHandler().cleaning_db(name_database_table=table_name)
+            await self.db_handler.write_to_single_column_table(
+                name_database=table_name,
+                database_columns=column_name,
+                into_columns=into_columns,
+                recorded_data=text_to_send.value.split()
+            )
+            await show_notification(page, "Данные успешно записаны!")
+            page.go(route)  # Изменение маршрута в представлении существующих настроек
+            page.update()
+
+        async def back_button_clicked(_) -> None:
+            """Кнопка возврата в меню настроек"""
+            page.go(route)
+
+        # Создание View с элементами
+        page.views.append(
+            ft.View(
+                route,
+                controls=[
+                    lv,  # отображение логов 📝
+                    ft.Column(
+                        controls=[text_to_send] + [
+                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                              text="Дозаписать данные в базу данных", on_click=btn_click),
+                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                              text="Очистить данные и записать по новой", on_click=btn_click_1),
+                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                                              on_click=back_button_clicked),
+                        ]
+                    )]))
 
     async def record_setting(self, page: ft.Page, limit_type: str, label: str):
         """

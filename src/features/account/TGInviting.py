@@ -42,6 +42,7 @@ class InvitingToAGroup:
             return await self.db_handler.open_and_read_data("links_inviting")  # Открываем базу данных
         except Exception as error:
             logger.exception(f"Ошибка: {error}")
+            raise
 
     async def data_for_inviting(self, lv, page):
         """"
