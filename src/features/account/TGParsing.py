@@ -382,19 +382,24 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    await log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page, level="error")
+                    await log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page,
+                                          level="error")
                     await asyncio.sleep(2)
                     break
                 except ChatAdminRequiredError:
-                    await log_and_display(f"❌ Ошибка: не хватает прав администратора {target_group}", lv, page, level="error")
+                    await log_and_display(f"❌ Ошибка: не хватает прав администратора {target_group}", lv, page,
+                                          level="error")
                     await asyncio.sleep(2)
                     break
                 except ChannelPrivateError:
-                    await log_and_display(f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт", lv, page, level="error")
+                    await log_and_display(
+                        f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт",
+                        lv, page, level="error")
                     await asyncio.sleep(2)
                     break
                 except AuthKeyUnregisteredError:
-                    await log_and_display(f"❌ Ошибка: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page, level="error")
+                    await log_and_display(f"❌ Ошибка: неверный ключ авторизации аккаунта, выполните проверку аккаунтов",
+                                          lv, page, level="error")
                     await asyncio.sleep(2)
                     break
 
@@ -530,7 +535,7 @@ class ParsingGroupMembers:
                     # Время синтаксического анализа
                     parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                     await log_and_display(f"{dialog.id}, {channel_details.title}, "
-                                               f"https://t.me/{channel_details.username}, {participants_count}",
+                                          f"https://t.me/{channel_details.username}, {participants_count}",
                                           lv, page)
 
                     with db.atomic():  # Атомарная транзакция для записи данных

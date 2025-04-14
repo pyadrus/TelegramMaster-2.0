@@ -269,7 +269,8 @@ class DatabaseHandler:
         """Чистка списка от участников у которых нет username"""
         logger.info("Чищу список software_database.db от участников у которых нет username")
         await self.connect()
-        self.cursor.execute("""SELECT * from members""")
+        self.cursor.execute("""SELECT *
+                               from members""")
         records: list = self.cursor.fetchall()
         logger.info(f"Всего username: {len(records)}")
         for rows in records:
@@ -278,7 +279,9 @@ class DatabaseHandler:
             username_name = "NONE"
             if username == username_name:
                 # Удаляем пользователя без username
-                self.cursor.execute("""DELETE from members where username = ?""", (username_name,))
+                self.cursor.execute("""DELETE
+                                       from members
+                                       where username = ?""", (username_name,))
                 self.sqlite_connection.commit()
 
     async def read_parsed_chat_participants_from_db(self):

@@ -60,8 +60,8 @@ class SubscribeUnsubscribeTelegram:
                     result = await client(functions.messages.CheckChatInviteRequest(hash=link_hash))
                     if isinstance(result, types.ChatInvite):
                         await log_and_display(f"Ссылка валидна: {link}, Название группы: {result.title}, "
-                                                   f"Количество участников: {result.participants_count}, "
-                                                   f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}",
+                                              f"Количество участников: {result.participants_count}, "
+                                              f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}",
                                               lv, page)
                         try:
                             logger.info(f"Подписка на группу / канал по ссылке приглашению {link}")
@@ -100,8 +100,8 @@ class SubscribeUnsubscribeTelegram:
                 chat = result.chats[0] if result.chats else None
                 if chat:
                     await log_and_display(f"Публичная группа/канал: {link}, Название: {chat.title}, "
-                                               f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
-                                               f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}",
+                                          f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
+                                          f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}",
                                           lv, page)
                     logger.info(f"Публичная группа/канал: {link}, Название: {chat.title}")
                     await client(JoinChannelRequest(link))
@@ -114,47 +114,59 @@ class SubscribeUnsubscribeTelegram:
                     result = await client(functions.messages.CheckChatInviteRequest(hash=link))
                     if isinstance(result, types.ChatInvite):
                         await log_and_display(f"Ссылка валидна: {link}, Название группы: {result.title}, "
-                                                   f"Количество участников: {result.participants_count}, "
-                                                   f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, "
-                                                   f"Описание: {result.about or 'Нет описания'}",
+                                              f"Количество участников: {result.participants_count}, "
+                                              f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, "
+                                              f"Описание: {result.about or 'Нет описания'}",
                                               lv, page)
                         await client(JoinChannelRequest(link))
                     elif isinstance(result, types.ChatInviteAlready):
                         await log_and_display(
                             f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}", lv, page)
                 except FloodWaitError as e:
-                    await log_and_display(f"❌ Попытка подписки на группу / канал {link}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}", lv, page, level="error")
+                    await log_and_display(
+                        f"❌ Попытка подписки на группу / канал {link}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}",
+                        lv, page, level="error")
                 except InviteHashExpiredError:
                     await log_and_display(f"Повторная проверка ссылки: {link}", lv, page)
                     result = await client(functions.contacts.ResolveUsernameRequest(username=link))
                     chat = result.chats[0] if result.chats else None
                     if chat:
                         await log_and_display(f"Публичная группа/канал: {link}, Название: {chat.title}, "
-                                                   f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
-                                                   f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}",
+                                              f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
+                                              f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}",
                                               lv, page)
                     else:
                         await log_and_display(f"Не удалось найти публичный чат: {link}", lv, page)
 
                 except AuthKeyUnregisteredError:
-                    await log_and_display(f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page, level="error")
+                    await log_and_display(
+                        f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv,
+                        page, level="error")
                     await asyncio.sleep(2)
 
                 except SessionPasswordNeededError:
-                    await log_and_display(f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", lv, page, level="error")
+                    await log_and_display(
+                        f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", lv, page,
+                        level="error")
                     await asyncio.sleep(2)
 
         except FloodWaitError as e:
-            await log_and_display(f"❌ Попытка подписки на группу / канал {link}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}", lv, page, level="error")
+            await log_and_display(
+                f"❌ Попытка подписки на группу / канал {link}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}",
+                lv, page, level="error")
         except InviteRequestSentError:
-            await log_and_display(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}", lv, page, level="error")
+            await log_and_display(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}", lv,
+                                  page, level="error")
 
         except AuthKeyUnregisteredError:
-            await log_and_display(f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page, level="error")
+            await log_and_display(
+                f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", lv, page,
+                level="error")
             await asyncio.sleep(2)
 
         except SessionPasswordNeededError:
-            await log_and_display(f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", lv, page, level="error")
+            await log_and_display(f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов",
+                                  lv, page, level="error")
             await asyncio.sleep(2)
 
     async def subscribe_telegram(self, page: ft.Page) -> None:
@@ -189,7 +201,7 @@ class SubscribeUnsubscribeTelegram:
                 await client.disconnect()
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             await log_and_display(f"🔚 Конец Подписки.\n🕒 Время окончания: {finish}.\n"
-                                       f"⏳ Время работы: {finish - start}\n", lv, page)
+                                  f"⏳ Время работы: {finish - start}\n", lv, page)
 
         async def back_button_clicked(_):
             """
@@ -291,8 +303,11 @@ class SubscribeUnsubscribeTelegram:
             logger.error(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не "
                 f"является группой / каналом: {groups_wr}")
-            await self.db_handler.write_data_to_db("""SELECT * from writing_group_links""",
-                                                   """DELETE from writing_group_links where writing_group_links = ?""",
+            await self.db_handler.write_data_to_db("""SELECT *
+                                                      from writing_group_links""",
+                                                   """DELETE
+                                                      from writing_group_links
+                                                      where writing_group_links = ?""",
                                                    groups_wr)
         except PeerFloodError:
             logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.")
