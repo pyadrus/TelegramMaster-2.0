@@ -263,7 +263,10 @@ async def menu_parsing(page: ft.Page):
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                        text=importing_a_list_of_parsed_data,
                                        on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
-
+                     # 📑 Формирование списка чатов / каналов
+                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                                       text=forming_list_of_chats_channels_ru,
+                                       on_click=lambda _: page.go("/forming_list_of_chats_channels")),
                  ])]))
 
 

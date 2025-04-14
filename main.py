@@ -28,8 +28,7 @@ from src.gui.main_menu import main_menu_program
 from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                           subscribe_and_unsubscribe_menu, account_verification_menu, account_connection_menu,
                           connecting_accounts_by_number_menu, connecting_accounts_by_session_menu, viewing_posts_menu,
-                          show_notification, creating_groups_and_chats_menu, working_with_contacts_menu,
-                          )
+                          show_notification, creating_groups_and_chats_menu, working_with_contacts_menu)
 
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
 
