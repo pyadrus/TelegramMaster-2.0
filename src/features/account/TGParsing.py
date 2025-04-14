@@ -19,7 +19,7 @@ from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.menu import log_and_display, log_and_display
+from src.gui.menu import log_and_display
 
 
 class ParsingGroupMembers:
@@ -37,6 +37,12 @@ class ParsingGroupMembers:
         await self.db_handler.remove_records_without_username()
         # Удаление дублирующихся записей по идентификатору
         await self.db_handler.remove_duplicate_ids(table_name="members", column_name="id")
+
+    def back_button_clicked(self, page):
+        """
+        ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню парсинга.
+        """
+        page.go("/parsing")  # переходим к основному меню парсинга 🏠
 
     async def parse_groups(self, page: ft.Page) -> None:
         """
@@ -84,12 +90,6 @@ class ParsingGroupMembers:
                 f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                 lv, page)
 
-        async def back_button_clicked(_):
-            """
-            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню парсинга.
-            """
-            page.go("/parsing")  # переходим к основному меню парсинга 🏠
-
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
             ft.View(
@@ -100,7 +100,7 @@ class ParsingGroupMembers:
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать парсинг"
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
-                                      on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
+                                      on_click=lambda _: self.back_button_clicked(page))  # Кнопка "⬅️ Назад"
                 ],
             )
         )
@@ -197,12 +197,6 @@ class ParsingGroupMembers:
                 f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                 lv, page)
 
-        async def back_button_clicked(_):
-            """
-            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню парсинга.
-            """
-            page.go("/parsing")  # переходим к основному меню парсинга 🏠
-
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
             ft.View(
@@ -210,10 +204,10 @@ class ParsingGroupMembers:
                 [
                     lv,  # отображение логов 📝
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
-                                      on_click=add_items),  # Кнопка "🚀 Начать парсинг"
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_button,
-                                      on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
+                                      on_click=add_items),  # Кнопка "🚀 Начать парсинг"
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                                      on_click=lambda _: self.back_button_clicked(page))  # Кнопка "⬅️ Назад"
                 ],
             )
         )
@@ -323,10 +317,6 @@ class ParsingGroupMembers:
                         f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
                     page.go("/parsing")
 
-                async def back_button_clicked(_):
-                    """⬅️ Кнопка возврата в меню настроек"""
-                    page.go("/parsing")
-
                 # Создаем выпадающий список с названиями групп
                 dropdown = ft.Dropdown(width=line_width_button,
                                        options=[ft.dropdown.Option(title) for title in group_titles],
@@ -341,7 +331,8 @@ class ParsingGroupMembers:
                                                   text="📂 Выбрать группу",
                                                   on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
                                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
-                                                  on_click=back_button_clicked),  # Кнопка "⬅️ Назад"
+                                                  on_click=lambda _: self.back_button_clicked(page)),
+                                # Кнопка "⬅️ Назад"
                                 result_text, lv,
                             ])
                         ],
@@ -406,6 +397,7 @@ class ParsingGroupMembers:
             return all_participants
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
+            raise
 
     async def get_all_participants(self, all_participants, lv, page: ft.Page) -> list:
         """
@@ -508,6 +500,7 @@ class ParsingGroupMembers:
             return entity
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
+            raise
 
     @staticmethod
     async def forming_a_list_of_groups(client, lv, page: ft.Page) -> None:
@@ -596,12 +589,6 @@ class ParsingGroupMembers:
                 page.go("/parsing")  # Возвращаемся к основному меню парсинга 🏠
                 page.update()  # Обновление страницы для отображения изменений 🔄
 
-            async def back_button_clicked(_):
-                """
-                ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню парсинга.
-                """
-                page.go("/parsing")  # переходим к основному меню парсинга 🏠
-
             # Добавление представления на страницу
             page.views.append(
                 ft.View(
@@ -614,7 +601,7 @@ class ParsingGroupMembers:
                         ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                           on_click=btn_click),  # Кнопка "✅ Готово"
                         ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
-                                          on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
+                                          on_click=lambda _: self.back_button_clicked(page))  # Кнопка "⬅️ Назад"
                     ]
                 )
             )

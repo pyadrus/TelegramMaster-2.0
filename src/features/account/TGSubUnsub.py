@@ -21,7 +21,7 @@ from src.core.localization import back_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, find_filess
 from src.features.account.TGConnect import TGConnect
-from src.gui.menu import log_and_display, log_and_display
+from src.gui.menu import log_and_display
 
 
 class SubscribeUnsubscribeTelegram:
