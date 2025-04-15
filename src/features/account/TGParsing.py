@@ -19,7 +19,7 @@ from telethon.tl.types import (UserStatusLastMonth, UserStatusLastWeek, UserStat
 
 from src.core.configs import path_parsing_folder, line_width_button, BUTTON_HEIGHT, time_activity_user_2
 from src.core.localization import back_button, start_button, done_button
-from src.core.sqlite_working_tools import DatabaseHandler, db, Groups_And_Channels, remove_duplicates, MembersAdmin
+from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates, MembersAdmin
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -574,7 +574,7 @@ class ParsingGroupMembers:
                         f"{dialog.id}, {channel_details.title}, https://t.me/{channel_details.username}, {participants_count}",
                         lv, page)
                     with db.atomic():  # Атомарная транзакция для записи данных
-                        Groups_And_Channels.create(
+                        GroupsAndChannels.create(
                             id=dialog.id,
                             title=channel_details.title,
                             about=full_channel_info.full_chat.about,
