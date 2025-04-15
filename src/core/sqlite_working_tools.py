@@ -152,6 +152,21 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
+
+    async def write_parsed_chat_participants_to_db_admin(self, entities) -> None:
+        """
+        Запись результатов parsing участников чата
+
+        :param entities: список результатов parsing
+        """
+        await self.connect()
+        # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS members_admin(username, user_id, access_hash, first_name, last_name, phone, online_at, photo_status, premium_status, user_status, bio, group_name)''')
+        self.cursor.executemany('''INSERT INTO members_admin(username, user_id, access_hash, first_name, last_name, phone, online_at, photo_status, premium_status, user_status, bio, group_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                                [entities])
+        self.sqlite_connection.commit()
+        self.close()  # cursor_members.close() – закрытие соединения с БД.
+
     async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities) -> None:
         """
         Запись действий аккаунта в базу данных
