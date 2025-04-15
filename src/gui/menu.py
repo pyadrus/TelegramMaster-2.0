@@ -4,8 +4,7 @@ from loguru import logger
 
 from src.core.configs import BUTTON_HEIGHT, small_button_width, BUTTON_WIDTH, line_width_button
 from src.core.localization import (parse_single_or_multiple_groups, parse_selected_user_subscribed_group,
-                                   parse_active_group_members, parse_account_subscribed_groups_channels,
-                                   inviting_every_day_ru, invitation_at_a_certain_time_ru,
+                                   parse_active_group_members, inviting_every_day_ru, invitation_at_a_certain_time_ru,
                                    invitation_1_time_per_hour_ru, inviting_ru, importing_a_list_of_parsed_data,
                                    setting_reactions, automatic_setting_of_reactions, choice_of_reactions_ru,
                                    proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
@@ -245,10 +244,6 @@ async def menu_parsing(page: ft.Page):
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                        text=parse_active_group_members,
                                        on_click=lambda _: page.go("/parsing_active_group_members")),
-                     # 📜 Парсинг групп / каналов на которые подписан аккаунт
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=parse_account_subscribed_groups_channels,
-                                       on_click=lambda _: page.go("/parsing_groups_channels_account_subscribed")),
                      # 📋 Импорт списка от ранее спарсенных данных
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                        text=importing_a_list_of_parsed_data,

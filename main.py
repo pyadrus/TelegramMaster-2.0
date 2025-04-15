@@ -142,9 +142,6 @@ async def main(page: ft.Page):
             elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
                 await CheckingProgram().checking_for_parsing_single_groups(page=page)
                 await ParsingGroupMembers().entering_data_for_parsing_active(page)
-            elif page.route == "/parsing_groups_channels_account_subscribed":  # Парсинг групп / каналов аккаунта
-                await CheckingProgram().checking_for_parsing_single_groups(page=page)
-                await ParsingGroupMembers().parse_subscribed_groups(page)
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
                 await ReceivingAndRecording().write_data_to_excel(file_name="user_data/parsed_chat_participants.xlsx")
             # ______________________________________________________________________________________________________________

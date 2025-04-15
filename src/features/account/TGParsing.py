@@ -5,17 +5,14 @@ import time
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
-from telethon import functions
-from telethon import types
-from telethon.errors import (AuthKeyUnregisteredError)
-from telethon.errors import ChatAdminRequiredError, ChannelPrivateError
+from telethon import functions, types
+from telethon.errors import AuthKeyUnregisteredError, ChatAdminRequiredError, ChannelPrivateError
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import ChannelParticipantsAdmins, UserProfilePhoto
-from telethon.tl.types import (ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, InputUser)
-from telethon.tl.types import (UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline,
-                               UserStatusRecently)
+from telethon.tl.types import (ChannelParticipantsAdmins, UserProfilePhoto, ChannelParticipantsSearch, InputPeerEmpty,
+                               UserStatusEmpty, InputUser, UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline,
+                               UserStatusOnline, UserStatusRecently)
 
 from src.core.configs import path_parsing_folder, line_width_button, BUTTON_HEIGHT, time_activity_user_2
 from src.core.localization import back_button, start_button, done_button
@@ -48,6 +45,29 @@ class ParsingGroupMembers:
         """
         page.go("/parsing")  # переходим к основному меню парсинга 🏠
 
+    async def get_user_online_status(self, user):
+        """
+        Определяет статус онлайна пользователя на основе его статуса.
+        https://core.telegram.org/type/UserStatus
+        :param user: Объект пользователя из Telethon
+        :return: Строка или datetime, описывающая статус онлайна
+        """
+        online_at = "Был(а) недавно"  # Значение по умолчанию
+        if user.status:
+            if isinstance(user.status, UserStatusOffline):
+                online_at = user.status.was_online
+            elif isinstance(user.status, UserStatusRecently):
+                online_at = "Был(а) недавно"
+            elif isinstance(user.status, UserStatusLastWeek):
+                online_at = "Был(а) на этой неделе"
+            elif isinstance(user.status, UserStatusLastMonth):
+                online_at = "Был(а) в этом месяце"
+            elif isinstance(user.status, UserStatusOnline):
+                online_at = user.status.expires
+            elif isinstance(user.status, UserStatusEmpty):
+                online_at = "Статус пользователя не определен"
+        return online_at
+
     async def obtaining_administrators(self, client, groups):
         """
         Получает информацию об администраторах группы, включая их биографию, статус, фото и премиум-статус.
@@ -67,46 +87,22 @@ class ParsingGroupMembers:
                         # Получаем полную информацию о пользователе
                         full_user = await client(GetFullUserRequest(id=user.id))
                         bio = full_user.full_user.about or ""
-                        # Определяем наличие фото
                         photos_id = "C фото" if isinstance(user.photo, UserProfilePhoto) else "Без фото"
-                        # Форматируем статус онлайна
-                        online_at = "Был(а) недавно"
-                        if user.status:
-                            if isinstance(user.status, UserStatusOffline):
-                                online_at = user.status.was_online
-                            elif isinstance(user.status, UserStatusRecently):
-                                online_at = "Был(а) недавно"
-                            elif isinstance(user.status, UserStatusLastWeek):
-                                online_at = "Был(а) на этой неделе"
-                            elif isinstance(user.status, UserStatusLastMonth):
-                                online_at = "Был(а) в этом месяце"
-                            elif isinstance(user.status, UserStatusOnline):
-                                online_at = user.status.expires
-                            elif isinstance(user.status, UserStatusEmpty):
-                                online_at = "Статус пользователя не определен"
-                        # Проверяем премиум-статус
+                        online_at = await self.get_user_online_status(user)
                         user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
-                        # Устанавливаем статус администратора
                         user_status = "Admin"
-                        # Логируем все данные в одном сообщении
+
                         log_data = {
-                            "username": user.username or "",
-                            "user_id": user.id,
-                            "access_hash": user.access_hash,
-                            "first_name": user.first_name or "",
-                            "last_name": user.last_name or "",
-                            "phone": user.phone or "",
-                            "online_at": online_at,
-                            "photo_status": photos_id,
-                            "premium_status": user_premium,
-                            "user_status": user_status,
-                            "bio": bio or "",
-                            "group": groups[0]
+                            "username": user.username or "", "user_id": user.id,
+                            "access_hash": user.access_hash, "first_name": user.first_name or "",
+                            "last_name": user.last_name or "", "phone": user.phone or "",
+                            "online_at": online_at, "photo_status": photos_id,
+                            "premium_status": user_premium, "user_status": user_status,
+                            "bio": bio or "", "group": groups[0]
                         }
                         # Задержка для избежания ограничений Telegram API
                         await asyncio.sleep(0.5)
                         logger.info(log_data)
-                        # await self.db_handler.write_parsed_chat_participants_to_db_admin(entity)
 
                         with db.atomic():  # Атомарная транзакция для записи данных
                             MembersAdmin.create(
@@ -135,62 +131,81 @@ class ParsingGroupMembers:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
-        c1 = ft.CupertinoSwitch(
+        start_time = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
+        admin_switch = ft.CupertinoSwitch(
             label="Парсить только администраторов",
             value=False,
             tooltip="Если включено, парсятся только администраторы групп. Если выключено, парсятся все участники групп."
         )
-        c2 = ft.CupertinoSwitch(
+        account_groups_switch = ft.CupertinoSwitch(
             label="Парсить группы и каналы, в которых состоит аккаунт",
             value=False,
             tooltip="Если включено, парсятся группы и каналы, в которых состоит аккаунт."
         )
+        members_switch = ft.CupertinoSwitch(
+            label="Парсить только участников",
+            value=False,
+            tooltip="Если включено, парсятся только участники групп. Если выключено, парсятся все участники групп."
+        )
 
         # Обработчики для взаимоисключающего поведения
-        def toggle_c1(e):
-            if c1.value:
-                c2.value = False
+        def toggle_admin_switch(e):
+            if admin_switch.value:
+                account_groups_switch.value = False
+                members_switch.value = False
             page.update()
 
-        def toggle_c2(e):
-            if c2.value:
-                c1.value = False
+        def toggle_account_groups_switch(e):
+            if account_groups_switch.value:
+                admin_switch.value = False
+                members_switch.value = False
             page.update()
 
-        c1.on_change = toggle_c1
-        c2.on_change = toggle_c2
+        def toggle_members_switch(e):
+            if members_switch.value:
+                admin_switch.value = False
+                account_groups_switch.value = False
+            page.update()
 
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        # Присоединяем обработчики к элементам интерфейса
+        admin_switch.on_change = toggle_admin_switch
+        account_groups_switch.on_change = toggle_account_groups_switch
+        members_switch.on_change = toggle_members_switch
+
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
             # Индикация начала парсинга
-            await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
+            await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start_time)}", list_view, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
             try:
                 # Обрабатываем все файлы сессий по очереди 📂
                 for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_parsing_folder)
-                    # Получаем список групп для парсинга из базы данных 📋
-                    for groups in await self.db_handler.open_and_read_data("writing_group_links"):
-                        await log_and_display(f"🔍 Парсинг группы: {groups[0]}", lv, page)
-                        # Если выбрано парсить администраторов, выполняем парсинг администраторов 👤
-                        if c1.value:
+                    if account_groups_switch.value:
+                        await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", list_view, page)
+                        await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", list_view,
+                                              page)
+                        await self.forming_a_list_of_groups(client, list_view, page)
+                        # await client.disconnect()  # Разрываем соединение telegram
+                        remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
+
+                    if admin_switch.value:
+                        for groups in await self.db_handler.open_and_read_data("writing_group_links"):
+                            await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
+                            # Если выбрано парсить администраторов, выполняем парсинг администраторов 👤
                             await self.obtaining_administrators(client, groups)
-                        elif c2.value:
-                            await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", lv, page)
-                            await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", lv, page)
-                            await self.forming_a_list_of_groups(client, lv, page)
-                            await client.disconnect()  # Разрываем соединение telegram
-                            remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
-                        else:
+
+                    if members_switch.value:
+                        for groups in await self.db_handler.open_and_read_data("writing_group_links"):
+                            await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                             # подписываемся на группу
                             await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0])
-                            await self.parse_group(client, groups[0], lv, page)  # выполняем парсинг группы
+                            await self.parse_group(client, groups[0], list_view, page)  # выполняем парсинг группы
                             # Удаляем группу из списка после завершения парсинга 🗑️
                             await self.db_handler.delete_row_db(table="writing_group_links",
                                                                 column="writing_group_links", value=groups)
@@ -201,16 +216,18 @@ class ParsingGroupMembers:
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            await log_and_display(f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
-                                  lv, page)
+            await log_and_display(
+                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                list_view, page)
 
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
             ft.View(
                 "/parsing",
                 [
-                    lv,  # отображение логов 📝
-                    ft.Column([c1, c2]),  # переключатели в столбце для корректного отображения
+                    list_view,  # отображение логов 📝
+                    ft.Column([admin_switch, account_groups_switch, members_switch]),
+                    # переключатели в столбце для корректного отображения
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать парсинг"
@@ -495,8 +512,7 @@ class ParsingGroupMembers:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    @staticmethod
-    async def receiving_data(user):
+    async def receiving_data(self, user):
         """
         Получение и обработка данных пользователя.
         Метод извлекает и форматирует различные данные профиля пользователя, такие как имя, номер телефона, статус онлайн,
@@ -510,23 +526,7 @@ class ParsingGroupMembers:
         first_name = user.first_name if user.first_name else ""
         last_name = user.last_name if user.last_name else ""
         photos_id = ("C фото" if isinstance(user.photo, types.UserProfilePhoto) else "Без фото")
-        online_at = "Был(а) недавно"
-        # Статусы пользователя https://core.telegram.org/type/UserStatus
-        if isinstance(user.status, (
-                UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, UserStatusOnline,
-                UserStatusEmpty)):
-            if isinstance(user.status, UserStatusOffline):
-                online_at = user.status.was_online
-            if isinstance(user.status, UserStatusRecently):
-                online_at = "Был(а) недавно"
-            if isinstance(user.status, UserStatusLastWeek):
-                online_at = "Был(а) на этой неделе"
-            if isinstance(user.status, UserStatusLastMonth):
-                online_at = "Был(а) в этом месяце"
-            if isinstance(user.status, UserStatusOnline):
-                online_at = user.status.expires
-            if isinstance(user.status, UserStatusEmpty):
-                online_at = "статус пользователя еще не определен"
+        online_at = await self.get_user_online_status(user)
         user_premium = "Пользователь с premium" if user.premium else ""
         return usernames, user_phone, first_name, last_name, photos_id, online_at, user_premium
 
@@ -552,9 +552,8 @@ class ParsingGroupMembers:
         """
         Формирует список групп и каналов.
 
-        Метод собирает информацию о группах и каналах, включая их ID,
-        название, описание, ссылку, количество участников и время последнего
-        парсинга. Данные сохраняются в базу данных.
+        Метод собирает информацию о группах и каналах, включая их ID, название, описание, ссылку, количество участников
+        и время последнего парсинга. Данные сохраняются в базу данных.
 
         :param client: Экземпляр клиента Telegram.
         :param lv: ListView для отображения сообщений.
@@ -575,11 +574,8 @@ class ParsingGroupMembers:
                         lv, page)
                     with db.atomic():  # Атомарная транзакция для записи данных
                         GroupsAndChannels.create(
-                            id=dialog.id,
-                            title=channel_details.title,
-                            about=full_channel_info.full_chat.about,
-                            link=f"https://t.me/{channel_details.username}",
-                            members_count=participants_count,
+                            id=dialog.id, title=channel_details.title, about=full_channel_info.full_chat.about,
+                            link=f"https://t.me/{channel_details.username}", members_count=participants_count,
                             parsing_time=parsing_time
                         )
                 except TypeError:
