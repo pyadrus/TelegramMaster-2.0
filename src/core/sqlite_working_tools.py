@@ -3,18 +3,18 @@ import datetime
 import sqlite3
 
 from loguru import logger
-from peewee import fn, SqliteDatabase, Model, IntegerField, CharField, TextField, DateTimeField
+from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField
+from peewee import fn, IntegerField
 
 from src.core.configs import path_folder_database
 
 db = SqliteDatabase(path_folder_database)
 
 
-class GroupsAndChannels(Model):
+class Groups_And_Channels(Model):
     """
     Список групп и каналов в таблице groups_and_channels
     """
-
     id = IntegerField(primary_key=True)
     title = CharField(max_length=255)
     about = TextField(null=True)
@@ -26,6 +26,28 @@ class GroupsAndChannels(Model):
         database = db
 
 
+class MembersAdmin(Model):
+    """
+    Таблица для хранения данных участников чата
+    """
+    username = CharField(max_length=255, null=True)
+    user_id = BigIntegerField(unique=True)
+    access_hash = BigIntegerField(null=True)
+    first_name = CharField(max_length=255, null=True)
+    last_name = CharField(max_length=255, null=True)
+    phone = CharField(max_length=255, null=True)
+    online_at = DateTimeField(null=True)
+    photo_status = CharField(max_length=255, null=True)
+    premium_status = BooleanField(default=False)
+    user_status = CharField(max_length=255, null=True)
+    bio = TextField(null=True)
+    group_name = CharField(max_length=255, null=True)
+
+    class Meta:
+        database = db
+        table_name = 'members_admin'
+
+
 def remove_duplicates():
     """
     Удаление дублирующихся id в таблице groups_and_channels
@@ -33,20 +55,20 @@ def remove_duplicates():
 
     # Находим все записи с дублирующимися id
     duplicate_ids = (
-        GroupsAndChannels
-        .select(GroupsAndChannels.id)
-        .group_by(GroupsAndChannels.id)
-        .having(fn.COUNT(GroupsAndChannels.id) > 1)
+        Groups_And_Channels
+        .select(Groups_And_Channels.id)
+        .group_by(Groups_And_Channels.id)
+        .having(fn.COUNT(Groups_And_Channels.id) > 1)
     )
 
     # Для каждого дублирующегося id оставляем только первую запись, остальные удаляем
     for duplicate in duplicate_ids:
         # Находим все записи с этим id, сортируем по времени парсинга
         duplicates = (
-            GroupsAndChannels
+            Groups_And_Channels
             .select()
-            .where(GroupsAndChannels.id == duplicate.id)
-            .order_by(GroupsAndChannels.parsing_time)
+            .where(Groups_And_Channels.id == duplicate.id)
+            .order_by(Groups_And_Channels.parsing_time)
         )
 
         for record in duplicates[1:]:  # Оставляем только первую запись, остальные удаляем
@@ -152,20 +174,21 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-
-    async def write_parsed_chat_participants_to_db_admin(self, entities) -> None:
-        """
-        Запись результатов parsing участников чата
-
-        :param entities: список результатов parsing
-        """
-        await self.connect()
-        # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS members_admin(username, user_id, access_hash, first_name, last_name, phone, online_at, photo_status, premium_status, user_status, bio, group_name)''')
-        self.cursor.executemany('''INSERT INTO members_admin(username, user_id, access_hash, first_name, last_name, phone, online_at, photo_status, premium_status, user_status, bio, group_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                                [entities])
-        self.sqlite_connection.commit()
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
+    # async def write_parsed_chat_participants_to_db_admin(self, entities) -> None:
+    #     """
+    #     Запись результатов parsing участников чата
+    #
+    #     :param entities: список результатов parsing
+    #     """
+    #     await self.connect()
+    #     # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
+    #     self.cursor.execute(
+    #         '''CREATE TABLE IF NOT EXISTS members_admin(username, user_id, access_hash, first_name, last_name, phone, online_at, photo_status, premium_status, user_status, bio, group_name)''')
+    #     self.cursor.executemany(
+    #         '''INSERT INTO members_admin(username, user_id, access_hash, first_name, last_name, phone, online_at, photo_status, premium_status, user_status, bio, group_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+    #         [entities])
+    #     self.sqlite_connection.commit()
+    #     self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities) -> None:
         """
