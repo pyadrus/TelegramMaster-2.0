@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import datetime
+import os
+import os.path
+import shutil
 import time
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions, types
-from telethon.errors import AuthKeyUnregisteredError, ChatAdminRequiredError, ChannelPrivateError, FloodWaitError, \
-    UsernameInvalidError
+from telethon.errors import (AuthKeyUnregisteredError, ChatAdminRequiredError, ChannelPrivateError, FloodWaitError,
+                             UsernameInvalidError)
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.functions.users import GetFullUserRequest
@@ -15,7 +18,8 @@ from telethon.tl.types import (ChannelParticipantsAdmins, UserProfilePhoto, Chan
                                UserStatusEmpty, InputUser, UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline,
                                UserStatusOnline, UserStatusRecently)
 
-from src.core.configs import path_parsing_folder, line_width_button, BUTTON_HEIGHT, time_activity_user_2
+from src.core.configs import (line_width_button, BUTTON_HEIGHT, time_activity_user_2,
+                              path_accounts_folder)
 from src.core.localization import back_button, start_button, done_button
 from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates, MembersAdmin
 from src.core.utils import find_filess
@@ -69,15 +73,16 @@ class ParsingGroupMembers:
                 online_at = "Статус пользователя не определен"
         return online_at
 
-    async def obtaining_administrators(self, list_view, page):
+    async def obtaining_administrators(self,session_files, list_view, page):
         """
         Получает информацию об администраторах группы, включая их биографию, статус, фото и премиум-статус.
         """
         try:
-            for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
+            for session_path in session_files:
+                session_name = os.path.basename(session_path)
                 try:
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_parsing_folder)
+                                                                       account_directory=path_accounts_folder)
                     for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                         try:
@@ -161,6 +166,9 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         start_time = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
+        path_accounts_folder = "user_data/accounts"  # Папка для аккаунтов
+        selected_sessions = []  # Список для хранения выбранных session файлов
+
         admin_switch = ft.CupertinoSwitch(
             label="Парсить только администраторов",
             value=False,
@@ -205,34 +213,53 @@ class ParsingGroupMembers:
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
+        # Поле для отображения выбранного файла
+        selected_files = ft.Text(value="Session файл не выбран", size=12)
+
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
+
+            if not selected_sessions:
+                await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", list_view, page)
+                session_files = find_filess(directory_path=path_accounts_folder, extension='session')
+                if not session_files:
+                    await log_and_display("❌ В папке нет session файлов для парсинга.", list_view, page)
+                    page.update()
+                    return
+            else:
+                session_files = selected_sessions
+                await log_and_display(
+                    f"🚀 Начало парсинга с выбранных файлов: {', '.join([os.path.basename(s) for s in selected_sessions])}",
+                    list_view, page)
+
+
             # Индикация начала парсинга
             await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start_time)}", list_view, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
             try:
                 if account_groups_switch.value:
                     # Обрабатываем все файлы сессий по очереди 📂
-                    for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
+                    for session_path in session_files:
+                        session_name = os.path.basename(session_path)
                         client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_parsing_folder)
+                                                                           account_directory=path_accounts_folder)
 
                         await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", list_view, page)
                         await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", list_view,
                                               page)
                         await self.forming_a_list_of_groups(client, list_view, page)
-                        # await client.disconnect()  # Разрываем соединение telegram
                         remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
 
                 if admin_switch.value:
                     # Если выбрано парсить администраторов, выполняем парсинг администраторов 👤
-                    await self.obtaining_administrators(list_view, page)
+                    await self.obtaining_administrators(session_files, list_view, page)
 
                 if members_switch.value:
                     # Обрабатываем все файлы сессий по очереди 📂
-                    for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
+                    for session_path in session_files:
+                        session_name = os.path.basename(session_path)
                         client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_parsing_folder)
+                                                                           account_directory=path_accounts_folder)
                         for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                             await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                             # подписываемся на группу
@@ -245,12 +272,55 @@ class ParsingGroupMembers:
                             await self.clean_parsing_list_and_remove_duplicates()
                             # Завершаем работу клиента после завершения парсинга 🔌
                         await client.disconnect()
+                        await log_and_display(f"🔌 Отключение от аккаунта: {session_name}", list_view, page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
             await log_and_display(
                 f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
                 list_view, page)
+
+        async def btn_click(e: ft.FilePickerResultEvent) -> None:
+            """Обработка выбора файлов"""
+            if e.files:
+                selected_sessions.clear()  # Очищаем список перед добавлением новых файлов
+                for file in e.files:
+                    file_name = file.name  # Имя файла
+                    file_path = file.path  # Путь к файлу
+
+                    # Проверка расширения файла на ".session"
+                    if file_name.endswith(".session"):
+                        target_folder = path_accounts_folder
+                        target_path = os.path.join(target_folder, file_name)
+
+                        # Проверяем, существует ли файл уже в целевой папке
+                        if not os.path.exists(target_path) or file_path != os.path.abspath(target_path):
+                            # Создаем директорию, если она не существует
+                            os.makedirs(target_folder, exist_ok=True)
+                            # Копируем файл только если он отличается
+                            shutil.copy(file_path, target_path)
+                        selected_sessions.append(target_path)  # Добавляем целевой путь
+                    else:
+                        selected_files.value = f"Файл {file_name} не является session файлом. Выберите только .session файлы."
+                        selected_files.update()
+                        return
+
+                selected_files.value = f"Выбраны session файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}"
+                selected_files.update()
+            else:
+                selected_files.value = "Выбор файлов отменен"
+                selected_files.update()
+
+            page.update()
+
+
+        pick_files_dialog = ft.FilePicker(on_result=btn_click)  # Инициализация выбора файлов
+        page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
+        # Кнопка для открытия диалога выбора файлов
+        button_select_file = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                               text="Выбрать session файл(ы)",
+                                               on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True)  # Разрешаем выбор нескольких файлов
+                                               )
 
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
@@ -261,6 +331,8 @@ class ParsingGroupMembers:
                     ft.Column([admin_switch, account_groups_switch, members_switch]),
                     # переключатели в столбце для корректного отображения
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
+                    selected_files,  # Отображение выбранных файлов
+                    button_select_file,  # Кнопка для выбора файлов
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать парсинг"
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
@@ -299,9 +371,9 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_parsing_folder)
+                                                                   account_directory=path_accounts_folder)
                 await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
 
                 try:
@@ -389,9 +461,9 @@ class ParsingGroupMembers:
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(lv)
         try:
-            for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_parsing_folder)
+                                                                   account_directory=path_accounts_folder)
                 chats = []
                 last_date = None
                 result = await client(

@@ -2,10 +2,11 @@
 import flet as ft
 
 from src.core.configs import (ConfigReader, path_send_message_folder, path_inviting_folder, path_subscription_folder,
-                              path_unsubscribe_folder, path_reactions_folder, path_viewing_folder, path_parsing_folder,
+                              path_unsubscribe_folder, path_reactions_folder, path_viewing_folder,
                               path_bio_folder, path_contact_folder, path_creating_folder,
                               path_send_message_folder_answering_machine,
-                              path_send_message_folder_answering_machine_message, path_folder_with_messages)
+                              path_send_message_folder_answering_machine_message, path_folder_with_messages,
+                              path_accounts_folder)
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_filess
 from src.gui.menu import show_notification
@@ -100,8 +101,8 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (🔍 Парсинг одной группы / групп)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        if not find_filess(directory_path=path_parsing_folder, extension=self.account_extension):
-            await show_notification(page, f"⛔ Нет аккаунта в папке {path_parsing_folder}")
+        if not find_filess(directory_path=path_accounts_folder, extension=self.account_extension):
+            await show_notification(page, f"⛔ Нет аккаунта в папке {path_accounts_folder}")
             return None
 
     async def checking_for_bio(self, page: ft.Page):
