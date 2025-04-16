@@ -6,7 +6,8 @@ import time
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions, types
-from telethon.errors import AuthKeyUnregisteredError, ChatAdminRequiredError, ChannelPrivateError
+from telethon.errors import AuthKeyUnregisteredError, ChatAdminRequiredError, ChannelPrivateError, FloodWaitError, \
+    UsernameInvalidError
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.functions.users import GetFullUserRequest
@@ -68,60 +69,88 @@ class ParsingGroupMembers:
                 online_at = "Статус пользователя не определен"
         return online_at
 
-    async def obtaining_administrators(self, client, groups):
+    async def obtaining_administrators(self, list_view, page):
         """
         Получает информацию об администраторах группы, включая их биографию, статус, фото и премиум-статус.
         """
         try:
-            # Получаем сущность группы/канала
-            entity = await client.get_entity(groups[0])
-            # Проверяем, является ли сущность супергруппой
-            if hasattr(entity, 'megagroup') and entity.megagroup:
-                # Получаем итератор администраторов
-                async for user in client.iter_participants(entity, filter=ChannelParticipantsAdmins):
-                    try:
-                        # Формируем отображаемое имя администратора
-                        admin_name = (user.first_name or "").strip()
-                        if user.last_name:
-                            admin_name += f" {user.last_name}"
-                        # Получаем полную информацию о пользователе
-                        full_user = await client(GetFullUserRequest(id=user.id))
-                        bio = full_user.full_user.about or ""
-                        photos_id = "C фото" if isinstance(user.photo, UserProfilePhoto) else "Без фото"
-                        online_at = await self.get_user_online_status(user)
-                        user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
-                        user_status = "Admin"
-
-                        log_data = {
-                            "username": user.username or "", "user_id": user.id,
-                            "access_hash": user.access_hash, "first_name": user.first_name or "",
-                            "last_name": user.last_name or "", "phone": user.phone or "",
-                            "online_at": online_at, "photo_status": photos_id,
-                            "premium_status": user_premium, "user_status": user_status,
-                            "bio": bio or "", "group": groups[0]
-                        }
-                        # Задержка для избежания ограничений Telegram API
-                        await asyncio.sleep(0.5)
-                        logger.info(log_data)
-
-                        with db.atomic():  # Атомарная транзакция для записи данных
-                            MembersAdmin.create(
-                                username=log_data['username'], user_id=log_data['user_id'],
-                                access_hash=log_data['access_hash'], first_name=log_data['first_name'],
-                                last_name=log_data['last_name'], phone=log_data['phone'],
-                                online_at=log_data['online_at'], photo_status=log_data['photo_status'],
-                                premium_status=log_data['premium_status'], user_status=log_data['user_status'],
-                                bio=log_data['bio'], group_name=log_data['group'],
-                            )
-                    except Exception as e:
-                        logger.exception(e)
-                # Удаляем группу из списка после завершения парсинга 🗑️
-                await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links",
-                                                    value=groups)
-            else:
-                logger.info(f"Это не группа, а канал: {entity.title}")
-        except ChatAdminRequiredError:
-            logger.info(f"У бота нет прав администратора в группе/канале: {groups[0]}")
+            for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
+                try:
+                    client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                       account_directory=path_parsing_folder)
+                    for groups in await self.db_handler.open_and_read_data("writing_group_links"):
+                        await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
+                        try:
+                            entity = await client.get_entity(groups[0])  # Получаем сущность группы/канала
+                            # Проверяем, является ли сущность супергруппой
+                            if hasattr(entity, 'megagroup') and entity.megagroup:
+                                # Получаем итератор администраторов
+                                async for user in client.iter_participants(entity, filter=ChannelParticipantsAdmins):
+                                    # Формируем отображаемое имя администратора
+                                    admin_name = (user.first_name or "").strip()
+                                    if user.last_name:
+                                        admin_name += f" {user.last_name}"
+                                    # Получаем полную информацию о пользователе
+                                    full_user = await client(GetFullUserRequest(id=user.id))
+                                    bio = full_user.full_user.about or ""
+                                    photos_id = "C фото" if isinstance(user.photo, UserProfilePhoto) else "Без фото"
+                                    online_at = await self.get_user_online_status(user)
+                                    user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
+                                    user_status = "Admin"
+                                    log_data = {
+                                        "username": user.username or "", "user_id": user.id,
+                                        "access_hash": user.access_hash, "first_name": user.first_name or "",
+                                        "last_name": user.last_name or "", "phone": user.phone or "",
+                                        "online_at": online_at, "photo_status": photos_id,
+                                        "premium_status": user_premium, "user_status": user_status,
+                                        "bio": bio or "", "group": groups[0]
+                                    }
+                                    # Задержка для избежания ограничений Telegram API
+                                    await asyncio.sleep(0.5)
+                                    await log_and_display(f"Полученные данные: {log_data}", list_view, page)
+                                    with db.atomic():  # Атомарная транзакция для записи данных
+                                        MembersAdmin.create(
+                                            username=log_data['username'], user_id=log_data['user_id'],
+                                            access_hash=log_data['access_hash'], first_name=log_data['first_name'],
+                                            last_name=log_data['last_name'], phone=log_data['phone'],
+                                            online_at=log_data['online_at'], photo_status=log_data['photo_status'],
+                                            premium_status=log_data['premium_status'],
+                                            user_status=log_data['user_status'],
+                                            bio=log_data['bio'], group_name=log_data['group'],
+                                        )
+                                # Удаляем группу из списка после завершения парсинга 🗑️
+                                await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                    column="writing_group_links", value=groups)
+                            else:
+                                try:
+                                    logger.info(f"Это не группа, а канал: {entity.title}")
+                                    # Удаляем группу из списка после завершения парсинга 🗑️
+                                    await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                        column="writing_group_links", value=groups)
+                                except AttributeError:
+                                    await log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}",
+                                                          list_view, page)
+                                    # Удаляем группу из списка после завершения парсинга 🗑️
+                                    await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                        column="writing_group_links", value=groups)
+                        except UsernameInvalidError:
+                            await log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}", list_view,
+                                                  page)
+                            # Удаляем группу из списка после завершения парсинга 🗑️
+                            await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                column="writing_group_links", value=groups)
+                        except ValueError:
+                            await log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}", list_view,
+                                                  page)
+                            # Удаляем группу из списка после завершения парсинга 🗑️
+                            await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                column="writing_group_links", value=groups)
+                    await client.disconnect()
+                except FloodWaitError as e:
+                    await log_and_display(
+                        f"⚠️ Ошибка флуда аккаунта {session_name}, ожидание: {e.seconds} секунд. Переключение на другой аккаунт.",
+                        list_view, page)
+                    await client.disconnect()
         except Exception as e:
             logger.exception(e)
 
@@ -182,11 +211,12 @@ class ParsingGroupMembers:
             await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start_time)}", list_view, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
             try:
-                # Обрабатываем все файлы сессий по очереди 📂
-                for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
-                    client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_parsing_folder)
-                    if account_groups_switch.value:
+                if account_groups_switch.value:
+                    # Обрабатываем все файлы сессий по очереди 📂
+                    for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
+                        client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                           account_directory=path_parsing_folder)
+
                         await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", list_view, page)
                         await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", list_view,
                                               page)
@@ -194,13 +224,15 @@ class ParsingGroupMembers:
                         # await client.disconnect()  # Разрываем соединение telegram
                         remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
 
-                    if admin_switch.value:
-                        for groups in await self.db_handler.open_and_read_data("writing_group_links"):
-                            await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
-                            # Если выбрано парсить администраторов, выполняем парсинг администраторов 👤
-                            await self.obtaining_administrators(client, groups)
+                if admin_switch.value:
+                    # Если выбрано парсить администраторов, выполняем парсинг администраторов 👤
+                    await self.obtaining_administrators(list_view, page)
 
-                    if members_switch.value:
+                if members_switch.value:
+                    # Обрабатываем все файлы сессий по очереди 📂
+                    for session_name in find_filess(directory_path=path_parsing_folder, extension='session'):
+                        client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                           account_directory=path_parsing_folder)
                         for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                             await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                             # подписываемся на группу
@@ -212,7 +244,7 @@ class ParsingGroupMembers:
                             # Очищаем список и удаляем дубликаты после завершения обработки всех групп
                             await self.clean_parsing_list_and_remove_duplicates()
                             # Завершаем работу клиента после завершения парсинга 🔌
-                    await client.disconnect()
+                        await client.disconnect()
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
             finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
