@@ -73,7 +73,7 @@ class ParsingGroupMembers:
                 online_at = "Статус пользователя не определен"
         return online_at
 
-    async def obtaining_administrators(self,session_files, list_view, page):
+    async def obtaining_administrators(self, session_files, list_view, page):
         """
         Получает информацию об администраторах группы, включая их биографию, статус, фото и премиум-статус.
         """
@@ -241,12 +241,9 @@ class ParsingGroupMembers:
                     # Обрабатываем все файлы сессий по очереди 📂
                     for session_path in session_files:
                         session_name = os.path.basename(session_path)
-                        client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_accounts_folder)
-
+                        client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
                         await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", list_view, page)
-                        await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", list_view,
-                                              page)
+                        await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", list_view, page)
                         await self.forming_a_list_of_groups(client, list_view, page)
                         remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
 
@@ -258,16 +255,14 @@ class ParsingGroupMembers:
                     # Обрабатываем все файлы сессий по очереди 📂
                     for session_path in session_files:
                         session_name = os.path.basename(session_path)
-                        client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_accounts_folder)
+                        client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
                         for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                             await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                             # подписываемся на группу
                             await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0])
                             await self.parse_group(client, groups[0], list_view, page)  # выполняем парсинг группы
                             # Удаляем группу из списка после завершения парсинга 🗑️
-                            await self.db_handler.delete_row_db(table="writing_group_links",
-                                                                column="writing_group_links", value=groups)
+                            await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups)
                             # Очищаем список и удаляем дубликаты после завершения обработки всех групп
                             await self.clean_parsing_list_and_remove_duplicates()
                             # Завершаем работу клиента после завершения парсинга 🔌

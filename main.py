@@ -27,7 +27,7 @@ from src.features.settings.setting import SettingPage, get_unique_filename, reac
 from src.gui.main_menu import main_menu_program
 from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                           subscribe_and_unsubscribe_menu, account_verification_menu, account_connection_menu,
-                          connecting_accounts_by_number_menu, connecting_accounts_by_session_menu, viewing_posts_menu,
+                          connecting_accounts_by_number_menu, viewing_posts_menu,
                           show_notification, creating_groups_and_chats_menu, working_with_contacts_menu)
 
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
@@ -194,58 +194,10 @@ async def main(page: ft.Page):
                 await account_connection_menu(page)
             # _______________________________________________________________________________________________________________
             elif page.route == "/connecting_accounts_by_number":  # Подключение аккаунтов по номеру телефона 'Меню'
-                await connecting_accounts_by_number_menu(page)
-            elif page.route == "/account_connection_number_answering_machine":  # Для автоответчика
-                await TGConnect().connecting_number_accounts(page, 'answering_machine', 'автоответчика')
-            elif page.route == "/account_connection_number_bio":  # Для редактирования BIO
-                await TGConnect().connecting_number_accounts(page, 'bio', 'редактирования BIO')
-            elif page.route == "/account_connection_number_contact":  # Для работы с номерами
-                await TGConnect().connecting_number_accounts(page, 'contact', 'работы с номерами')
-            elif page.route == "/account_connection_number_creating":  # Для создания групп
-                await TGConnect().connecting_number_accounts(page, 'creating', 'создания групп')
-            elif page.route == "/account_connection_number_inviting":  # Для инвайтинга
-                await TGConnect().connecting_number_accounts(page, 'inviting', 'инвайтинга')
-            elif page.route == "/account_connection_number_parsing":  # Для парсинга
-                await TGConnect().connecting_number_accounts(page, 'parsing', 'парсинга')
-            elif page.route == "/account_connection_number_reactions":  # Для работы с реакциями
-                await TGConnect().connecting_number_accounts(page, 'reactions', 'работы с реакциями')
-            elif page.route == "/account_connection_number_reactions_list":  # Для проставления реакций
-                await TGConnect().connecting_number_accounts(page, 'reactions_list', 'проставления реакций')
-            elif page.route == "/account_connection_number_send_message":  # Для рассылки сообщений
-                await TGConnect().connecting_number_accounts(page, 'send_message', 'рассылки сообщений')
-            elif page.route == "/account_connection_number_subscription":  # Для подписки
-                await TGConnect().connecting_number_accounts(page, 'subscription', 'подписки')
-            elif page.route == "/account_connection_number_unsubscribe":  # Для отписки
-                await TGConnect().connecting_number_accounts(page, 'unsubscribe', 'отписки')
-            elif page.route == "/account_connection_number_viewing":  # Для накрутки просмотров
-                await TGConnect().connecting_number_accounts(page, 'viewing', 'накрутки просмотров')
+                await TGConnect().connecting_number_accounts(page)
             # _______________________________________________________________________________________________________________
             elif page.route == "/connecting_accounts_by_session":  # Подключение session аккаунтов 'Меню'
-                await connecting_accounts_by_session_menu(page)
-            elif page.route == "/account_connection_session_answering_machine":  # Для автоответчика (session)
-                await TGConnect().connecting_session_accounts(page, 'answering_machine', 'автоответчика')
-            elif page.route == "/account_connection_session_bio":  # Для редактирования BIO (session)
-                await TGConnect().connecting_session_accounts(page, 'bio', 'редактирования BIO')
-            elif page.route == "/account_connection_session_contact":  # Для работы с номерами (session)
-                await TGConnect().connecting_session_accounts(page, 'contact', 'работы с номерами')
-            elif page.route == "/account_connection_session_creating":  # Для создания групп (session)
-                await TGConnect().connecting_session_accounts(page, 'creating', 'создания групп')
-            elif page.route == "/account_connection_session_inviting":  # Для инвайтинга (session)
-                await TGConnect().connecting_session_accounts(page, 'inviting', 'инвайтинга')
-            elif page.route == "/account_connection_session_parsing":  # Для парсинга (session)
-                await TGConnect().connecting_session_accounts(page, 'parsing', 'парсинга')
-            elif page.route == "/account_connection_session_reactions":  # Для работы с реакциями (session)
-                await TGConnect().connecting_session_accounts(page, 'reactions', 'работы с реакциями')
-            elif page.route == "/account_connection_session_reactions_list":  # Для проставления реакций (session)
-                await TGConnect().connecting_session_accounts(page, 'reactions_list', 'проставления реакций')
-            elif page.route == "/account_connection_session_send_message":  # Для рассылки сообщений (session)
-                await TGConnect().connecting_session_accounts(page, 'send_message', 'рассылки сообщений')
-            elif page.route == "/account_connection_session_subscription":  # Для подписки (session)
-                await TGConnect().connecting_session_accounts(page, 'subscription', 'подписки')
-            elif page.route == "/account_connection_session_unsubscribe":  # Для отписки (session)
-                await TGConnect().connecting_session_accounts(page, 'unsubscribe', 'отписки')
-            elif page.route == "/account_connection_session_viewing":  # Для накрутки просмотров (session)
-                await TGConnect().connecting_session_accounts(page, 'viewing', 'накрутки просмотров')
+                await TGConnect().connecting_session_accounts(page)
             # _______________________________________________________________________________________________________________
             elif page.route == "/creating_groups_and_chats_menu":  # Меню "Создание групп и чатов"
                 await creating_groups_and_chats_menu(page)
@@ -256,7 +208,6 @@ async def main(page: ft.Page):
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений по чатам
                 await CheckingProgram().check_before_sending_messages_via_chats(page=page)
                 await SendTelegramMessages().sending_messages_files_via_chats(page=page)
-
             elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка сообщений в личку
                 await CheckingProgram().checking_sending_to_personal(page=page)
                 await SendTelegramMessages().send_files_to_personal_chats(page=page)

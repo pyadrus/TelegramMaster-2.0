@@ -34,7 +34,7 @@ class TGChek:
                 continue  # Пропускаем эту папку
             else:
                 logger.info(f"Папка с которой работаем: {folder}")
-                await self.TGConnect.verify_all_accounts(page=page, folder_name=folder)
+                await self.TGConnect.verify_all_accounts(page=page)
 
         logger.info("🔚 Проверка аккаунтов завершена")
         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
