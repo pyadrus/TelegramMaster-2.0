@@ -5,7 +5,7 @@ import sqlite3
 from loguru import logger
 from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField
 from peewee import fn, IntegerField
-
+import flet as ft
 from src.core.configs import path_folder_database
 from src.gui.menu import log_and_display
 
@@ -178,7 +178,7 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities, list_view, page) -> None:
+    async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities, list_view, page: ft.Page) -> None:
         """
         Запись действий аккаунта в базу данных
 
@@ -214,7 +214,7 @@ class DatabaseHandler:
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns, list_view, page) -> None:
+    async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns, list_view, page: ft.Page) -> None:
         """
         Удаляем не рабочий proxy с software_database.db, таблица proxy
 
@@ -297,7 +297,7 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def remove_records_without_username(self, list_view, page) -> None:
+    async def remove_records_without_username(self, list_view, page: ft.Page) -> None:
         """Чистка списка от участников у которых нет username"""
         await log_and_display(f"Чищу список software_database.db от участников у которых нет username", list_view, page)
         await self.connect()

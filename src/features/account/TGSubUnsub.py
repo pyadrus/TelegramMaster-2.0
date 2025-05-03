@@ -188,7 +188,7 @@ class SubscribeUnsubscribeTelegram:
                                                                    account_directory=path_subscription_folder,
                                                                    list_view=list_view)
                 # Получение ссылки
-                links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
+                links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links", list_view, page)  # Открываем базу данных
                 await log_and_display(f"Ссылка для подписки и проверки:  {links_inviting}", list_view, page)
                 for link_tuple in links_inviting:
                     link = link_tuple[0]
@@ -253,6 +253,8 @@ class SubscribeUnsubscribeTelegram:
 
         :param group_link: Группа или канал
         :param client: Телеграм клиент
+        :param list_view: ListView для отображения логов.
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             entity = await client.get_entity(group_link)
@@ -273,6 +275,8 @@ class SubscribeUnsubscribeTelegram:
 
         :param groups_wr: str - группа или канал
         :param client:    TelegramClient - объект клиента
+        :param list_view: ListView для отображения логов.
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         # цикл for нужен для того, что бы сработала команда brake команда break в Python используется только для выхода из
         # цикла, а не выхода из программы в целом.
@@ -303,13 +307,13 @@ class SubscribeUnsubscribeTelegram:
                                                    """DELETE
                                                       from writing_group_links
                                                       where writing_group_links = ?""",
-                                                   groups_wr)
+                                                   groups_wr, list_view, page)
         except PeerFloodError:
             await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.", list_view, page)
             await asyncio.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
             await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}", list_view, page)
-            await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
+            await record_and_interrupt(self.time_subscription_1, self.time_subscription_2, list_view, page)
             # Прерываем работу и меняем аккаунт
             raise
         except InviteRequestSentError:

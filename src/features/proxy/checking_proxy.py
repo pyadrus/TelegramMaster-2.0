@@ -16,6 +16,8 @@ async def reading_proxy_data_from_the_database(db_handler, list_view, page):
     username - логин (например: username), password - пароль (например: password)
 
     :param db_handler - объект класса DatabaseHandler
+    :param list_view - список для отображения
+    :param page - страница
     """
     try:
         proxy_random_list = random.choice(await db_handler.open_and_read_data("proxy"))
@@ -38,7 +40,7 @@ async def checking_the_proxy_for_work(list_view, page) -> None:
     используется для различных тестов.
     """
     try:
-        for proxy_dic in await DatabaseHandler().open_and_read_data("proxy"):
+        for proxy_dic in await DatabaseHandler().open_and_read_data("proxy", list_view, page):
             await log_and_display(f"{proxy_dic}", list_view, page)
             # Подключение к proxy с проверкой на работоспособность
             await connecting_to_proxy_with_verification(proxy_type=proxy_dic[0],  # Тип proxy (например: SOCKS5)
@@ -47,7 +49,7 @@ async def checking_the_proxy_for_work(list_view, page) -> None:
                                                         username=proxy_dic[3],  # Логин (например: username)
                                                         password=proxy_dic[4],  # Пароль (например: password)
                                                         rdns=proxy_dic[5],
-                                                        db_handler=DatabaseHandler())
+                                                        db_handler=DatabaseHandler(), list_view=list_view, page=page)
     except Exception as error:
         logger.exception(f"❌ Ошибка: {error}")
 
@@ -64,6 +66,8 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
     :param password: пароль (например: password)
     :param rdns: rdns (например: rdns)
     :param db_handler: объект класса DatabaseHandler
+    :param list_view: список для отображения
+    :param page: страница
     """
     # Пробуем подключиться по прокси
     try:

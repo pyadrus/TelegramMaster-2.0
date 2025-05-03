@@ -4,7 +4,6 @@ from urllib.request import urlopen  # Изменено с urllib2 на urllib.re
 
 import phonenumbers
 import requests
-from loguru import logger
 from phonenumbers import carrier, geocoder
 from telethon import TelegramClient
 from telethon.errors import FilePartsInvalidError
@@ -18,6 +17,8 @@ async def getting_phone_number_data_by_phone_number(phone_numbers, list_view, pa
     Определение страны и оператора по номеру телефона
 
     :param phone_numbers: Номер телефона
+    :param list_view: Вид списка
+    :param page: Страница
     :return: None
     """
 

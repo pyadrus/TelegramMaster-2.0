@@ -47,9 +47,9 @@ class ViewingPosts:
                                                                        account_directory=path_viewing_folder,
                                                                        list_view=list_view)
                     await log_and_display(f"[+] Работаем с каналом: {link_channel.value}", list_view, page)
-                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel.value)
+                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel.value, list_view, page)
                     msg_id = int(re.search(r'/(\d+)$', link_post.value).group(1))  # Получаем id сообщения из ссылки
-                    await self.viewing_posts(client, link_post.value, msg_id, link_channel.value)
+                    await self.viewing_posts(client, link_post.value, msg_id, link_channel.value, list_view, page)
                     await asyncio.sleep(1)
                     await client.disconnect()
                     # Изменение маршрута на новый (если необходимо)
@@ -73,11 +73,13 @@ class ViewingPosts:
         :param link_post: Ссылка на пост
         :param number: Количество просмотров
         :param link_channel: Ссылка на канал
+        :param list_view: ListView для отображения списка сессий.
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         :return: None
         """
         try:
             try:
-                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel)
+                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel, list_view, page)
                 channel = await client.get_entity(link_channel)  # Получение информации о канале
                 await asyncio.sleep(5)
                 await log_and_display(f"Ссылка на пост: {link_post}\n", list_view, page)

@@ -232,8 +232,7 @@ class SettingPage:
                 larger_times = int(larger_timex.value)
                 if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
                     # Если условие прошло проверку, то возвращаем первое и второе время
-                    writing_settings_to_a_file(
-                        recording_limits_file(str(smaller_times), str(larger_times), variable=variable))
+                    writing_settings_to_a_file(await recording_limits_file(str(smaller_times), str(larger_times), variable=variable, list_view=list_view, page=page))
                     list_view.controls.append(ft.Text("Данные успешно записаны!"))  # отображаем сообщение в ListView
                     await show_notification(page, "Данные успешно записаны!")
                     page.go("/settings")  # Изменение маршрута в представлении существующих настроек
@@ -313,6 +312,8 @@ async def recording_limits_file(time_1, time_2, variable: str, list_view, page) 
     :param time_1: Время в секундах
     :param time_2: Время в секундах
     :param variable: Название переменной в файле config.ini
+    :param list_view: ListView для отображения логов
+    :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
         config.get(f"{variable}", f"{variable}_1")

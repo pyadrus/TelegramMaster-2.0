@@ -133,7 +133,7 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Формирования списка контактов")
-                await DatabaseHandler().open_and_read_data("contact")  # Удаление списка с контактами
+                await DatabaseHandler().open_and_read_data("contact", list_view, page)  # Удаление списка с контактами
                 await SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
                                                            "contact", "/working_with_contacts", "contact")
                 logger.info("🔚 Конец Формирования списка контактов")
@@ -172,7 +172,7 @@ async def main(page: ft.Page):
                 await account_connection_menu(page)
             # __________________________________________________________________________________________________________
             elif page.route == "/connecting_accounts_by_number":  # Подключение аккаунтов по номеру телефона 'Меню'
-                await TGConnect().connecting_number_accounts(page)
+                await TGConnect().connecting_number_accounts(page, list_view)
             # __________________________________________________________________________________________________________
             elif page.route == "/connecting_accounts_by_session":  # Подключение session аккаунтов 'Меню'
                 await TGConnect().connecting_session_accounts(page)
@@ -274,16 +274,16 @@ async def main(page: ft.Page):
     page.go(page.route)
 
 
-async def main_run():
+async def main_run(list_view, page):
     """Запуск программы"""
-    await loging()
+    await loging(list_view, page)
 
 
 if __name__ == '__main__':
-
-    try:
-        asyncio.run(main_run())
-    except Exception as error:
-        logger.exception(f"❌ Ошибка: {error}")
+    def app(page: ft.Page):
+        try:
+            asyncio.run(main_run(list_view=ft.ListView(), page=page))
+        except Exception as error:
+            logger.exception(f"❌ Ошибка: {error}")
 
     ft.app(target=main)
