@@ -3,27 +3,22 @@ import flet as ft
 from loguru import logger
 
 from src.core.configs import BUTTON_HEIGHT, small_button_width, BUTTON_WIDTH, line_width_button
-from src.core.localization import (parse_single_or_multiple_groups, parse_selected_user_subscribed_group,
-                                   parse_active_group_members, inviting_every_day_ru, invitation_at_a_certain_time_ru,
-                                   invitation_1_time_per_hour_ru, inviting_ru, importing_a_list_of_parsed_data,
-                                   setting_reactions, automatic_setting_of_reactions, choice_of_reactions_ru,
-                                   proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru,
-                                   time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
-                                   account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
-                                   creating_username_list_ru, recording_the_time_between_messages_ru,
-                                   time_between_invites_sending_messages_ru, recording_reaction_link_ru,
-                                   forming_list_of_chats_channels_ru, we_are_winding_up_post_views_ru,
-                                   editing_bio, changing_the_username, changing_the_photo, changing_the_description,
-                                   name_change_n, name_change_f, creating_a_contact_list, show_a_list_of_contacts,
-                                   deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
-                                   subscribe_unsubscribe, subscription, unsubscribe, checking_accounts,
-                                   checking_through_a_spam_bot, validation_check, renaming_accounts, full_verification,
-                                   connecting_accounts, connecting_accounts_by_phone_number,
-                                   connecting_session_accounts, to_boost_views, to_unsubscribe, to_subscribe,
-                                   to_send_messages, for_marking_reactions, to_work_with_reactions, for_parsing,
-                                   for_inviting, to_create_groups, to_work_with_numbers, to_edit_bio,
-                                   for_the_answering_machine, working_with_reactions, parsing, settings, main_menu,
-                                   creating_groups_chats)
+from src.core.localization import (
+    parse_single_or_multiple_groups, parse_selected_user_subscribed_group, parse_active_group_members,
+    inviting_every_day_ru, invitation_at_a_certain_time_ru, invitation_1_time_per_hour_ru, inviting_ru,
+    importing_a_list_of_parsed_data, setting_reactions, automatic_setting_of_reactions, choice_of_reactions_ru,
+    proxy_entry_ru, changing_accounts_ru, recording_api_id_api_hash_ru, time_between_subscriptions_ru,
+    message_recording_ru, link_entry_ru, account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
+    creating_username_list_ru, recording_the_time_between_messages_ru, time_between_invites_sending_messages_ru,
+    recording_reaction_link_ru, forming_list_of_chats_channels_ru, we_are_winding_up_post_views_ru, editing_bio,
+    changing_the_username, changing_the_photo, changing_the_description, name_change_n, name_change_f,
+    creating_a_contact_list, show_a_list_of_contacts, deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
+    subscribe_unsubscribe, subscription, unsubscribe, checking_accounts, checking_through_a_spam_bot_ru, validation_check_ru,
+    renaming_accounts_ru, full_verification_ru, connecting_accounts, connecting_accounts_by_phone_number,
+    connecting_session_accounts, to_boost_views, to_unsubscribe, to_subscribe, to_send_messages, for_marking_reactions,
+    to_work_with_reactions, for_parsing, for_inviting, to_create_groups, to_work_with_numbers, to_edit_bio,
+    for_the_answering_machine, working_with_reactions, parsing, settings, main_menu, creating_groups_chats
+)
 
 
 async def settings_menu(page: ft.Page):
@@ -335,41 +330,6 @@ async def subscribe_and_unsubscribe_menu(page: ft.Page):
                      # 🚫 Отписываемся
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=unsubscribe,
                                        on_click=lambda _: page.go("/unsubscribe_all")),
-                 ])]))
-
-
-async def account_verification_menu(page: ft.Page):
-    """
-    Меню проверки аккаунтов
-
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    """
-    page.views.append(
-        ft.View("/account_verification_menu",
-                [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
-                 ft.Text(spans=[ft.TextSpan(
-                     checking_accounts,
-                     ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
-                         foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
-                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     # 🤖 Проверка через спам бот
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=checking_through_a_spam_bot,
-                                       on_click=lambda _: page.go("/checking_for_spam_bots")),
-                     # ✅ Проверка на валидность
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=validation_check,
-                                       on_click=lambda _: page.go("/validation_check")),
-                     # ✏️ Переименование аккаунтов
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=renaming_accounts,
-                                       on_click=lambda _: page.go("/renaming_accounts")),
-                     # 🔍 Полная проверка
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=full_verification,
-                                       on_click=lambda _: page.go("/full_verification")),
-
                  ])]))
 
 

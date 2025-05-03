@@ -26,7 +26,7 @@ from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
 from src.gui.main_menu import main_menu_program
 from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
-                          subscribe_and_unsubscribe_menu, account_verification_menu, account_connection_menu,
+                          subscribe_and_unsubscribe_menu, account_connection_menu,
                           viewing_posts_menu, show_notification, creating_groups_and_chats_menu,
                           working_with_contacts_menu)
 
@@ -68,16 +68,8 @@ async def main(page: ft.Page):
                 await CheckingProgram().check_before_inviting(page=page)
                 await InvitingToAGroup().launching_invite_every_day_certain_time(page=page)
             # __________________________________________________________________________________________________________
-            elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
-                await account_verification_menu(page)
-            elif page.route == "/validation_check":  # Проверка на валидность
-                await TGChek().validation_check(page=page)
-            elif page.route == "/checking_for_spam_bots":  # Проверка через спам бот
-                await TGChek().checking_for_spam_bots(page=page)
-            elif page.route == "/renaming_accounts":  # Переименование аккаунтов
-                await TGChek().renaming_accounts(page=page)
-            elif page.route == "/full_verification":  # Полная проверка
-                await TGChek().full_verification(page=page)
+            elif page.route == "/account_verification_menu":  # "Проверка аккаунтов"
+                await TGChek().account_verification_menu(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
                 await subscribe_and_unsubscribe_menu(page)

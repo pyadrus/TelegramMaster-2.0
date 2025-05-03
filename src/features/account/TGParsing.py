@@ -14,9 +14,10 @@ from telethon.errors import (AuthKeyUnregisteredError, ChatAdminRequiredError, C
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import (ChannelParticipantsAdmins, UserProfilePhoto, ChannelParticipantsSearch, InputPeerEmpty,
-                               UserStatusEmpty, InputUser, UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline,
-                               UserStatusOnline, UserStatusRecently)
+from telethon.tl.types import (
+    ChannelParticipantsAdmins, UserProfilePhoto, ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, InputUser,
+    UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently
+)
 
 from src.core.configs import (line_width_button, BUTTON_HEIGHT, time_activity_user_2,
                               path_accounts_folder)
@@ -166,7 +167,6 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         start_time = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
-        path_accounts_folder = "user_data/accounts"  # Папка для аккаунтов
         selected_sessions = []  # Список для хранения выбранных session файлов
 
         admin_switch = ft.CupertinoSwitch(
@@ -232,7 +232,6 @@ class ParsingGroupMembers:
                     f"🚀 Начало парсинга с выбранных файлов: {', '.join([os.path.basename(s) for s in selected_sessions])}",
                     list_view, page)
 
-
             # Индикация начала парсинга
             await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start_time)}", list_view, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
@@ -241,7 +240,8 @@ class ParsingGroupMembers:
                     # Обрабатываем все файлы сессий по очереди 📂
                     for session_path in session_files:
                         session_name = os.path.basename(session_path)
-                        client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
+                        client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                           account_directory=path_accounts_folder)
                         await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", list_view, page)
                         await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", list_view, page)
                         await self.forming_a_list_of_groups(client, list_view, page)
@@ -255,14 +255,16 @@ class ParsingGroupMembers:
                     # Обрабатываем все файлы сессий по очереди 📂
                     for session_path in session_files:
                         session_name = os.path.basename(session_path)
-                        client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
+                        client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                           account_directory=path_accounts_folder)
                         for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                             await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                             # подписываемся на группу
                             await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0])
                             await self.parse_group(client, groups[0], list_view, page)  # выполняем парсинг группы
                             # Удаляем группу из списка после завершения парсинга 🗑️
-                            await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups)
+                            await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                column="writing_group_links", value=groups)
                             # Очищаем список и удаляем дубликаты после завершения обработки всех групп
                             await self.clean_parsing_list_and_remove_duplicates()
                             # Завершаем работу клиента после завершения парсинга 🔌
@@ -308,13 +310,13 @@ class ParsingGroupMembers:
 
             page.update()
 
-
         pick_files_dialog = ft.FilePicker(on_result=btn_click)  # Инициализация выбора файлов
         page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
         # Кнопка для открытия диалога выбора файлов
         button_select_file = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                text="Выбрать session файл(ы)",
-                                               on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True)  # Разрешаем выбор нескольких файлов
+                                               on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True)
+                                               # Разрешаем выбор нескольких файлов
                                                )
 
         # Добавляем кнопки и другие элементы управления на страницу

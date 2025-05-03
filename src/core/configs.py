@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import configparser
 
+path_accounts_folder = "user_data/accounts"  # Папка для аккаунтов
+
 
 class ConfigReader:
 
@@ -116,12 +118,6 @@ class ConfigReader:
         """
         return self.config_path.get('path_parsing_folder', 'path_parsing_folder', fallback=None)
 
-    def path_accounts_folder(self) -> str | None:
-        """
-        Путь к папке с аккаунтами (путь к config файлу user_data/config/config_path.ini)
-        """
-        return self.config_path.get('path_accounts_folder', 'path_accounts_folder', fallback=None)
-
     def path_inviting_folder(self) -> str | None:
         """
         Путь к папке для инвайтинга (путь к config файлу user_data/config/config_path.ini)
@@ -230,8 +226,6 @@ path_creating_folder = ConfigReader().path_creating_folder()  # Путь к па
 path_send_message_folder = ConfigReader().path_send_message_folder()  # Путь к папке для отправки сообщений
 path_bio_folder = ConfigReader().path_bio_folder()  # Путь к папке для работы с био
 path_viewing_folder = ConfigReader().path_viewing_folder()  # Путь к папке для просмотров постов
-
-path_accounts_folder = ConfigReader().path_accounts_folder()  # Путь к папке с аккаунтами
 
 path_send_message_folder_answering_machine = ConfigReader().path_send_message_folder_answering_machine()  # Путь к папке для аккаунтов с автоответчиком
 path_send_message_folder_answering_machine_message = ConfigReader().path_send_message_folder_answering_machine_message()  # Путь к папке c сообщениями для автоответчика
