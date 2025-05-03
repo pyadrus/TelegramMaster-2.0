@@ -44,7 +44,6 @@ async def main(page: ft.Page):
     page.window.width = window_width  # Ширина окна
     page.window.height = window_height  # Высота окна
     page.window.resizable = window_resizable  # Разрешение изменения размера окна
-    logger.info(f"Program version: {program_version}. Date of change: {date_of_program_change}")
 
     async def route_change(route):
 
