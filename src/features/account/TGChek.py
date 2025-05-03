@@ -11,6 +11,7 @@ from src.features.account.TGConnect import TGConnect
 from src.gui.menu import show_notification, log_and_display
 from loguru import logger
 
+
 class TGChek:
 
     def __init__(self):
@@ -37,7 +38,8 @@ class TGChek:
                                       page)
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 await log_and_display(
-                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}", list_view,
+                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                    list_view,
                     page)
                 await show_notification(page, "🔚 Проверка аккаунтов завершена")
             except Exception as error:
@@ -45,21 +47,24 @@ class TGChek:
 
         async def renaming_accounts(_):
             """Переименование аккаунтов"""
-            start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-            await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
-                                  page)
-
-            for folder in find_folders(directory_path=path_accounts_folder):
-                await log_and_display(f"Переименование аккаунтов из папки 📁 {folder}", list_view, page)
-                if folder == "invalid_account":
-                    continue  # Продолжаем цикл, пропуская эту итерацию
-                else:
-                    await self.TGConnect.get_account_details(page=page, folder_name=folder)
-            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-            await log_and_display(
-                f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}", list_view,
-                page)
-            await show_notification(page, "🔚 Проверка аккаунтов завершена")
+            try:
+                start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
+                                      page)
+                for folder in await find_folders(directory_path=path_accounts_folder, list_view=list_view, page=page):
+                    await log_and_display(f"Переименование аккаунтов из папки 📁 {folder}", list_view, page)
+                    if folder == "invalid_account":
+                        continue  # Продолжаем цикл, пропуская эту итерацию
+                    else:
+                        await self.TGConnect.get_account_details(page=page, folder_name=folder, list_view=list_view)
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                await log_and_display(
+                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                    list_view,
+                    page)
+                await show_notification(page, "🔚 Проверка аккаунтов завершена")
+            except Exception as error:
+                logger.exception(f"❌ Ошибка: {error}")
 
         async def checking_for_spam_bots(_):
             """Проверка на спам ботов"""

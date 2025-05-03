@@ -171,26 +171,25 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def get_account_details(self, page, folder_name):
+    async def get_account_details(self, page, folder_name, list_view):
         """
         Получает информацию о Telegram аккаунте.
 
         :param folder_name: Имя каталога
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список для отображения информации.
         """
         try:
-            logger.info(f"Запуск переименования аккаунтов Telegram из папки 📁: {folder_name}")
+            await log_and_display(f"Запуск переименования аккаунтов Telegram из папки 📁: {folder_name}", list_view, page)
             await checking_the_proxy_for_work()  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_name in await find_filess(directory_path=f"user_data/accounts/{folder_name}",
-                                                  extension='session'):
-                logger.info(f"⚠️ Переименовываемый аккаунт: user_data/accounts/{session_name}")
+                                                  extension='session', list_view=list_view, page=page):
+                await log_and_display(f"⚠️ Переименовываемый аккаунт: user_data/accounts/{session_name}", list_view, page)
                 # Переименовывание аккаунтов
-                logger.info(
-                    f"Переименовывание аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
-
-                telegram_client = await self.get_telegram_client(page, session_name,
-                                                                 account_directory=f"user_data/accounts/{folder_name}")
+                await log_and_display(f"Переименовывание аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}", list_view, page)
+                telegram_client = await self.get_telegram_client(page=page, session_name=session_name,
+                                                                 account_directory=f"user_data/accounts/{folder_name}", list_view=list_view)
 
                 try:
                     me = await telegram_client.get_me()
@@ -202,14 +201,12 @@ class TGConnect:
 
                 except TypeNotFoundError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    logger.error(
-                        f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP")
+                    logger.error(f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP")
                     working_with_accounts(f"user_data/accounts/{folder_name}/{session_name}.session",
                                           f"user_data/accounts/banned/{session_name}.session")
                 except AuthKeyUnregisteredError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    logger.error(
-                        f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP")
+                    logger.error(f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP")
                     working_with_accounts(f"user_data/accounts/{folder_name}/{session_name}.session",
                                           f"user_data/accounts/banned/{session_name}.session")
         except Exception as error:
