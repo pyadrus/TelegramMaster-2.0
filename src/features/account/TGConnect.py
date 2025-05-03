@@ -41,9 +41,7 @@ class TGConnect:
         :param list_view: Список для отображения аккаунтов.
         """
         try:
-            await log_and_display(
-                f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}",
-                list_view, page)
+            await log_and_display(f"Проверка аккаунта {session_name}", list_view, page)
             telegram_client = await self.get_telegram_client(page, session_name, f"user_data/accounts", list_view)
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
@@ -117,7 +115,8 @@ class TGConnect:
                         if similarity_ratio_ru >= 97:
                             await log_and_display(f"⛔ Аккаунт заблокирован", list_view, page)
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
-                            await log_and_display(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}", list_view, page)
+                            await log_and_display(
+                                f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}", list_view, page)
                             # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                             working_with_accounts(f"user_data/accounts/{session_name}.session",
                                                   f"user_data/accounts/banned/{session_name}.session")
@@ -133,7 +132,8 @@ class TGConnect:
                         if similarity_ratio_en >= 97:
                             await log_and_display(f"⛔ Аккаунт заблокирован", list_view, page)
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
-                            await log_and_display(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}", list_view, page)
+                            await log_and_display(
+                                f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}", list_view, page)
                             # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                             await log_and_display(f"{session_name}", list_view, page)
                             working_with_accounts(f"user_data/accounts/{session_name}.session",
@@ -185,11 +185,14 @@ class TGConnect:
         try:
             await checking_the_proxy_for_work(list_view=list_view, page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session', list_view=list_view, page=page):
-                await log_and_display(message=f"⚠️ Переименовываемый аккаунт: user_data/accounts/{session_name}", list_view=list_view, page=page)
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session',
+                                                  list_view=list_view, page=page):
+                await log_and_display(message=f"⚠️ Переименовываемый аккаунт: user_data/accounts/{session_name}",
+                                      list_view=list_view, page=page)
                 # Переименовывание аккаунтов
                 telegram_client = await self.get_telegram_client(page=page, session_name=session_name,
-                                                                 account_directory=path_accounts_folder, list_view=list_view)
+                                                                 account_directory=path_accounts_folder,
+                                                                 list_view=list_view)
                 try:
                     me = await telegram_client.get_me()
                     await self.rename_session_file(telegram_client=telegram_client, phone_old=session_name,
@@ -198,12 +201,16 @@ class TGConnect:
                     pass
                 except TypeNotFoundError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    await log_and_display(message=f"⛔ Битый файл или аккаунт banned: {session_name}.session. Возможно, запущен под другим IP", list_view=list_view, page=page)
+                    await log_and_display(
+                        message=f"⛔ Битый файл или аккаунт banned: {session_name}.session. Возможно, запущен под другим IP",
+                        list_view=list_view, page=page)
                     working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
                                           new_account_folder=f"user_data/accounts/banned/{session_name}.session")
                 except AuthKeyUnregisteredError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    await log_and_display(message=f"⛔ Битый файл или аккаунт banned: {session_name}.session. Возможно, запущен под другим IP", list_view=list_view, page=page)
+                    await log_and_display(
+                        message=f"⛔ Битый файл или аккаунт banned: {session_name}.session. Возможно, запущен под другим IP",
+                        list_view=list_view, page=page)
                     working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
                                           new_account_folder=f"user_data/accounts/banned/{session_name}.session")
         except Exception as error:
@@ -252,7 +259,8 @@ class TGConnect:
             telegram_client = TelegramClient(f"{account_directory}/{session_name}", api_id=self.api_id,
                                              api_hash=self.api_hash,
                                              system_version="4.16.30-vxCUSTOM",
-                                             proxy=await reading_proxy_data_from_the_database(db_handler=self.db_handler, list_view=list_view, page=page))
+                                             proxy=await reading_proxy_data_from_the_database(
+                                                 db_handler=self.db_handler, list_view=list_view, page=page))
             await telegram_client.connect()
             return telegram_client
         except sqlite3.OperationalError:
@@ -298,7 +306,9 @@ class TGConnect:
                 telegram_client = TelegramClient(f"user_data/accounts/{phone_number_value}",
                                                  api_id=self.api_id,
                                                  api_hash=self.api_hash,
-                                                 system_version="4.16.30-vxCUSTOM", proxy=await reading_proxy_data_from_the_database(db_handler=self.db_handler, list_view=list_view, page=page))
+                                                 system_version="4.16.30-vxCUSTOM",
+                                                 proxy=await reading_proxy_data_from_the_database(
+                                                     db_handler=self.db_handler, list_view=list_view, page=page))
                 await telegram_client.connect()  # Подключаемся к Telegram
                 if not await telegram_client.is_user_authorized():
                     await log_and_display(f"Пользователь не авторизован", list_view, page)
@@ -314,7 +324,8 @@ class TGConnect:
                             page.go("/")  # Перенаправление в настройки, если 2FA не требуется
                             page.update()
                         except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
-                            await log_and_display(f"❌ Требуется двухфакторная аутентификация. Введите пароль.", list_view, page)
+                            await log_and_display(f"❌ Требуется двухфакторная аутентификация. Введите пароль.",
+                                                  list_view, page)
                             pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
 
                             async def btn_click_password(_) -> None:
@@ -356,13 +367,13 @@ class TGConnect:
                 """
                 page.go("/")
 
-            button = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
-                                       on_click=btn_click)  # Кнопка "Готово"
-            button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
-                                            on_click=back_button_clicked)  # Кнопка "Назад"
             input_view = ft.View(
-                controls=[header_text, phone_number, button,
-                          button_back])  # Создаем вид, который будет содержать поле ввода и кнопку
+                controls=[header_text, phone_number,
+                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
+                                            on_click=btn_click),  # Кнопка "Готово",
+                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                                            on_click=back_button_clicked)  # Кнопка "Назад"
+                          ])  # Создаем вид, который будет содержать поле ввода и кнопку
             page.views.append(input_view)  # Добавляем созданный вид на страницу
             page.update()
         except Exception as error:
@@ -376,8 +387,6 @@ class TGConnect:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            # Создаем текстовый элемент и добавляем его на страницу
-            header_text = ft.Text(f"Подключение аккаунтов Telegram.\n\n Выберите session файл\n", size=15)
             # Поле для отображения выбранного файла
             selected_files = ft.Text(value="Session файл не выбран", size=12)
 
@@ -411,21 +420,16 @@ class TGConnect:
 
             pick_files_dialog = ft.FilePicker(on_result=btn_click)  # Инициализация выбора файлов
             page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
-            # Кнопка для открытия диалога выбора файлов
-            button_select_file = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                                   text="Выбрать session файл",
-                                                   on_click=lambda _: pick_files_dialog.pick_files()
-                                                   )
-            # Кнопка возврата
-            button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
-                                            on_click=back_button_clicked)
             # Добавляем все элементы на страницу
             input_view = ft.View(
                 controls=[
-                    header_text,
+                    ft.Text(f"Подключение аккаунтов Telegram.\n\n Выберите session файл\n", size=15),
+                    # Создаем текстовый элемент и добавляем его на страницу
                     selected_files,  # Поле для отображения выбранного файла
-                    button_select_file,  # Кнопка выбора файла
-                    button_back  # Кнопка возврата
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text="Выбрать session файл",
+                                      on_click=lambda _: pick_files_dialog.pick_files()),  # Кнопка выбора файла
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                                      on_click=back_button_clicked)  # Кнопка возврата
                 ]
             )
             page.views.append(input_view)  # Добавляем созданный вид на страницу
