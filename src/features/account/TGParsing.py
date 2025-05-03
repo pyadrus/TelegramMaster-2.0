@@ -87,7 +87,7 @@ class ParsingGroupMembers:
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_accounts_folder,
                                                                        list_view=list_view)
-                    for groups in await self.db_handler.open_and_read_data("writing_group_links", list_view, page):
+                    for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links", list_view=list_view, page=page):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                         try:
                             entity = await client.get_entity(groups[0])  # Получаем сущность группы/канала
@@ -263,7 +263,7 @@ class ParsingGroupMembers:
                         client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                            account_directory=path_accounts_folder,
                                                                            list_view=list_view)
-                        for groups in await self.db_handler.open_and_read_data("writing_group_links", list_view, page):
+                        for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links", list_view=list_view, page=page):
                             await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                             # подписываемся на группу
                             await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0],

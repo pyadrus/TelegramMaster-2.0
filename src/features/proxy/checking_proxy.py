@@ -9,16 +9,18 @@ from src.features.auth.logging_in import get_country_flag
 from src.gui.menu import log_and_display
 
 
-async def reading_proxy_data_from_the_database(db_handler):
+async def reading_proxy_data_from_the_database(db_handler, list_view: ft.ListView, page: ft.Page):
     """
     Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
     username - логин (например: username), password - пароль (например: password)
 
     :param db_handler - объект класса DatabaseHandler
+    :param list_view - объект класса ListView
+    :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
-        proxy_random_list = random.choice(await db_handler.open_and_read_data("proxy"))
+        proxy_random_list = random.choice(await db_handler.open_and_read_data(table_name="proxy", list_view=list_view, page=page))
         proxy = {'proxy_type': (proxy_random_list[0]), 'addr': proxy_random_list[1], 'port': int(proxy_random_list[2]),
                  'username': proxy_random_list[3], 'password': proxy_random_list[4], 'rdns': proxy_random_list[5]}
         return proxy
@@ -37,7 +39,7 @@ async def checking_the_proxy_for_work(list_view, page: ft.Page) -> None:
     используется для различных тестов.
     """
     try:
-        for proxy_dic in await DatabaseHandler().open_and_read_data("proxy", list_view, page):
+        for proxy_dic in await DatabaseHandler().open_and_read_data(table_name="proxy", list_view=list_view, page=page):
             await log_and_display(f"{proxy_dic}", list_view, page)
             # Подключение к proxy с проверкой на работоспособность
             await connecting_to_proxy_with_verification(proxy_type=proxy_dic[0],  # Тип proxy (например: SOCKS5)

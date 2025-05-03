@@ -154,7 +154,7 @@ class TGContact:
         :param page: Страница интерфейса
         """
         try:
-            records: list = await self.db_handler.open_and_read_data("contact", list_view, page)
+            records: list = await self.db_handler.open_and_read_data(table_name="contact", list_view=list_view, page=page)
             await log_and_display(f"Всего номеров: {len(records)}", list_view, page)
             entities: list = []  # Создаем список сущностей
             for rows in records:

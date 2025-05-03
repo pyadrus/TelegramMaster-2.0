@@ -188,7 +188,7 @@ class SubscribeUnsubscribeTelegram:
                                                                    account_directory=path_subscription_folder,
                                                                    list_view=list_view)
                 # Получение ссылки
-                links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links", list_view, page)  # Открываем базу данных
+                links_inviting: list = await self.db_handler.open_and_read_data(table_name="writing_group_links", list_view=list_view, page=page)  # Открываем базу данных
                 await log_and_display(f"Ссылка для подписки и проверки:  {links_inviting}", list_view, page)
                 for link_tuple in links_inviting:
                     link = link_tuple[0]

@@ -133,7 +133,7 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Формирования списка контактов")
-                await DatabaseHandler().open_and_read_data("contact", list_view, page)  # Удаление списка с контактами
+                await DatabaseHandler().open_and_read_data(table_name="contact", list_view=list_view, page=page)  # Удаление списка с контактами
                 await SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
                                                            "contact", "/working_with_contacts", "contact")
                 logger.info("🔚 Конец Формирования списка контактов")
@@ -184,7 +184,7 @@ async def main(page: ft.Page):
             # __________________________________________________________________________________________________________
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений по чатам
                 await CheckingProgram().check_before_sending_messages_via_chats(page=page)
-                await SendTelegramMessages().sending_messages_files_via_chats(page=page)
+                await SendTelegramMessages().sending_messages_files_via_chats(page=page, list_view=list_view)
             elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка сообщений в личку
                 await SendTelegramMessages().send_files_to_personal_chats(page=page)
             # __________________________________________________________________________________________________________

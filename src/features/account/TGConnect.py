@@ -264,7 +264,7 @@ class TGConnect:
             telegram_client = TelegramClient(f"{account_directory}/{session_name}", api_id=self.api_id,
                                              api_hash=self.api_hash,
                                              system_version="4.16.30-vxCUSTOM",
-                                             proxy=await reading_proxy_data_from_the_database(db_handler=self.db_handler))
+                                             proxy=await reading_proxy_data_from_the_database(db_handler=self.db_handler, list_view=list_view, page=page))
             await telegram_client.connect()
             return telegram_client
         except sqlite3.OperationalError:
@@ -307,11 +307,10 @@ class TGConnect:
                 phone_number_value = phone_number.value
                 await log_and_display(f"Номер телефона: {phone_number_value}", list_view, page)
                 # Дальнейшая обработка после записи номера телефона
-                proxy_settings = await reading_proxy_data_from_the_database(db_handler=self.db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
                 telegram_client = TelegramClient(f"user_data/accounts/{phone_number_value}",
                                                  api_id=self.api_id,
                                                  api_hash=self.api_hash,
-                                                 system_version="4.16.30-vxCUSTOM", proxy=proxy_settings)
+                                                 system_version="4.16.30-vxCUSTOM", proxy=await reading_proxy_data_from_the_database(db_handler=self.db_handler, list_view=list_view, page=page))
                 await telegram_client.connect()  # Подключаемся к Telegram
                 if not await telegram_client.is_user_authorized():
                     await log_and_display(f"Пользователь не авторизован", list_view, page)

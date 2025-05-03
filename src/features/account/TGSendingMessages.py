@@ -247,7 +247,7 @@ class SendTelegramMessages:
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
-    async def sending_messages_files_via_chats(self, page: ft.Page) -> None:
+    async def sending_messages_files_via_chats(self, page: ft.Page, list_view: ft.ListView) -> None:
         """
         Рассылка сообщений + файлов по чатам
         """
@@ -263,7 +263,7 @@ class SendTelegramMessages:
                 chat_list_fields = chat_list_input.split()  # Разделяем строку по пробелам
             else:
                 # Если поле пустое, используем данные из базы данных
-                db_chat_list = await db_handler.open_and_read_data("writing_group_links")
+                db_chat_list = await db_handler.open_and_read_data(table_name="writing_group_links", list_view=list_view, page=page)
                 chat_list_fields = [group[0] for group in db_chat_list]  # Извлекаем только ссылки из кортежей
             checs = c.value  # Получаем значение чекбокса
             if time_from < time_to:
