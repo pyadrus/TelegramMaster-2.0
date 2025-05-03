@@ -32,17 +32,17 @@ class TGConnect:
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
 
-    async def verify_account(self, page: ft.Page, session_name) -> None:
+    async def verify_account(self, page: ft.Page, session_name, list_view) -> None:
         """
         Проверяет и сортирует аккаунты.
 
         :param session_name: Имя аккаунта для проверки аккаунта
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список для отображения аккаунтов.
         """
         try:
-            logger.info(
-                f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
-            telegram_client = await self.get_telegram_client(page, session_name, f"user_data/accounts")
+            await log_and_display(f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}", list_view, page)
+            telegram_client = await self.get_telegram_client(page, session_name, f"user_data/accounts", list_view)
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
                 if not await telegram_client.is_user_authorized():  # Если аккаунт не авторизирован
@@ -51,7 +51,7 @@ class TGConnect:
                     working_with_accounts(f"user_data/accounts/{session_name}.session",
                                           f"user_data/accounts/banned/{session_name}.session")
                 else:
-                    logger.info(f'Аккаунт {session_name} авторизован')
+                    await log_and_display(f"Аккаунт {session_name} авторизован", list_view, page)
                     await telegram_client.disconnect()  # Отключаемся после проверки
             except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound,
                     AuthKeyUnregisteredError, AuthKeyDuplicatedError) as e:
@@ -166,7 +166,7 @@ class TGConnect:
                                                   list_view=list_view, page=page):
                 await log_and_display(f"⚠️ Проверяемый аккаунт: user_data/accounts/{session_file}", list_view, page)
                 # Проверка аккаунтов
-                await self.verify_account(page=page, session_name=session_file)
+                await self.verify_account(page=page, session_name=session_file, list_view=list_view)
             await log_and_display(f"Окончание проверки аккаунтов Telegram из папки 📁: accounts", list_view, page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -238,7 +238,7 @@ class TGConnect:
 
         getting_phone_number_data_by_phone_number(phone)  # Выводим информацию о номере телефона
 
-    async def get_telegram_client(self, page, session_name, account_directory):
+    async def get_telegram_client(self, page, session_name, account_directory, list_view):
         """
         Подключение к Telegram, используя файл session.
         Имя файла сессии file[0] - session файл
@@ -246,38 +246,22 @@ class TGConnect:
         :param account_directory: Путь к директории
         :param session_name: Файл сессии (file[0] - session файл)
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список для отображения информации.
         :return TelegramClient: TelegramClient
         """
-        logger.info(
-            f"Подключение к аккаунту: {account_directory}/{session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")  # Имя файла сессии file[0] - session файл
+        await log_and_display(f"Подключение к аккаунту: {account_directory}/{session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}", list_view, page)
         telegram_client = None  # Инициализируем переменную
         try:
             telegram_client = TelegramClient(f"{account_directory}/{session_name}", api_id=self.api_id,
                                              api_hash=self.api_hash,
                                              system_version="4.16.30-vxCUSTOM",
                                              proxy=await reading_proxy_data_from_the_database(self.db_handler))
-
             await telegram_client.connect()
             return telegram_client
-
         except sqlite3.OperationalError:
-
             logger.info(f"❌ Аккаунт {account_directory}/{session_name} поврежден.")
-            # await show_notification(
-            #     page,
-            #     f"⚠️ У нас возникла проблема с аккаунтом {account_directory}/{session_name}.\n\n"
-            #     f"Чтобы избежать дальнейших ошибок, пожалуйста, удалите этот аккаунт вручную и попробуйте снова. 🔄"
-            # )
-
         except sqlite3.DatabaseError:
-
             logger.info(f"❌ Аккаунт {session_name} поврежден.")
-            # await show_notification(
-            #     page,
-            #     f"⚠️ У нас возникла проблема с аккаунтом {account_directory}/{session_name}.\n\n"
-            #     f"Чтобы избежать дальнейших ошибок, пожалуйста, удалите этот аккаунт вручную и попробуйте снова. 🔄"
-            # )
-
         except AuthKeyDuplicatedError:
             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
             logger.info(f"❌ На данный момент аккаунт {session_name} запущен под другим ip")
@@ -301,13 +285,10 @@ class TGConnect:
         try:
             # Создаем текстовый элемент и добавляем его на страницу
             header_text = ft.Text(f"Подключение аккаунтов Telegram", size=15, color="pink600")
-
             phone_number = ft.TextField(label="Введите номер телефона:", multiline=False, max_lines=1)
-
             async def btn_click(e) -> None:
                 phone_number_value = phone_number.value
                 logger.info(f"Номер телефона: {phone_number_value}")
-
                 # Дальнейшая обработка после записи номера телефона
                 proxy_settings = await reading_proxy_data_from_the_database(self.db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
                 telegram_client = TelegramClient(f"user_data/accounts/{phone_number_value}",
@@ -315,14 +296,11 @@ class TGConnect:
                                                  api_hash=self.api_hash,
                                                  system_version="4.16.30-vxCUSTOM", proxy=proxy_settings)
                 await telegram_client.connect()  # Подключаемся к Telegram
-
                 if not await telegram_client.is_user_authorized():
                     logger.info("Пользователь не авторизован")
                     await telegram_client.send_code_request(phone_number_value)  # Отправка кода на телефон
                     await asyncio.sleep(2)
-
                     passww = ft.TextField(label="Введите код telegram:", multiline=True, max_lines=1)
-
                     async def btn_click_code(e) -> None:
                         try:
                             logger.info(f"Код telegram: {passww.value}")
@@ -333,7 +311,6 @@ class TGConnect:
                         except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
                             logger.info("❌ Требуется двухфакторная аутентификация. Введите пароль.")
                             pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
-
                             async def btn_click_password(e) -> None:
                                 logger.info(f"Пароль telegram: {pass_2fa.value}")
                                 try:
@@ -348,25 +325,21 @@ class TGConnect:
                                     page.go("/")  # Изменение маршрута в представлении существующих настроек
                                 except Exception as ex:
                                     logger.exception(f"❌ Ошибка при вводе пароля: {ex}")
-
                             button_password = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                                 text=done_button,
                                                                 on_click=btn_click_password)  # Кнопка "Готово"
                             page.views.append(ft.View(controls=[pass_2fa, button_password]))
                             page.update()  # Обновляем страницу, чтобы интерфейс отобразился
-
                         except ApiIdInvalidError:
                             logger.error("[!] Неверные API ID или API Hash.")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
                         except Exception as error:
                             logger.exception(f"❌ Ошибка при авторизации: {error}")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
-
                     button_code = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                                     on_click=btn_click_code)  # Кнопка "Готово"
                     page.views.append(ft.View(controls=[passww, button_code]))
                     page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
-
                 page.update()
 
             async def back_button_clicked(e):
@@ -374,19 +347,15 @@ class TGConnect:
                 Кнопка возврата в меню настроек
                 """
                 page.go("/")
-
             button = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                        on_click=btn_click)  # Кнопка "Готово"
             button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                             on_click=back_button_clicked)  # Кнопка "Назад"
-
             input_view = ft.View(
                 controls=[header_text, phone_number, button,
                           button_back])  # Создаем вид, который будет содержать поле ввода и кнопку
-
             page.views.append(input_view)  # Добавляем созданный вид на страницу
             page.update()
-
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -400,28 +369,22 @@ class TGConnect:
         try:
             # Создаем текстовый элемент и добавляем его на страницу
             header_text = ft.Text(f"Подключение аккаунтов Telegram.\n\n Выберите session файл\n", size=15)
-
             # Поле для отображения выбранного файла
             selected_files = ft.Text(value="Session файл не выбран", size=12)
-
             async def btn_click(e: ft.FilePickerResultEvent) -> None:
                 """Обработка выбора файла"""
                 if e.files:
                     file_name = e.files[0].name  # Имя файла
                     file_path = e.files[0].path  # Путь к файлу
-
                     # Проверка расширения файла на ".session"
                     if file_name.endswith(".session"):
                         selected_files.value = f"Выбран session файл: {file_name}"
                         selected_files.update()
-
                         # Определяем целевой путь для копирования файла
                         target_folder = f"user_data/accounts"
                         target_path = os.path.join(target_folder, file_name)
-
                         # Создаем директорию, если она не существует
                         os.makedirs(target_folder, exist_ok=True)
-
                         # Копируем файл
                         shutil.copy(file_path, target_path)
                         selected_files.value = f"Файл скопирован в: {target_path}"
@@ -429,7 +392,6 @@ class TGConnect:
                         selected_files.value = "Выбранный файл не является session файлом"
                 else:
                     selected_files.value = "Выбор файла отменен"
-
                 selected_files.update()
                 page.update()
 
@@ -438,19 +400,15 @@ class TGConnect:
                 page.go("/")
 
             pick_files_dialog = ft.FilePicker(on_result=btn_click)  # Инициализация выбора файлов
-
             page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
-
             # Кнопка для открытия диалога выбора файлов
             button_select_file = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                    text="Выбрать session файл",
                                                    on_click=lambda _: pick_files_dialog.pick_files()
                                                    )
-
             # Кнопка возврата
             button_back = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                             on_click=back_button_clicked)
-
             # Добавляем все элементы на страницу
             input_view = ft.View(
                 controls=[
@@ -460,7 +418,6 @@ class TGConnect:
                     button_back  # Кнопка возврата
                 ]
             )
-
             page.views.append(input_view)  # Добавляем созданный вид на страницу
             page.update()
 
