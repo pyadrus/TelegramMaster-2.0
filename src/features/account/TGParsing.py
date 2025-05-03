@@ -221,7 +221,7 @@ class ParsingGroupMembers:
 
             if not selected_sessions:
                 await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", list_view, page)
-                session_files = find_filess(directory_path=path_accounts_folder, extension='session')
+                session_files = await find_filess(directory_path=path_accounts_folder, extension='session')
                 if not session_files:
                     await log_and_display("❌ В папке нет session файлов для парсинга.", list_view, page)
                     page.update()
@@ -368,7 +368,7 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder)
                 await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
@@ -458,7 +458,7 @@ class ParsingGroupMembers:
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(lv)
         try:
-            for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder)
                 chats = []

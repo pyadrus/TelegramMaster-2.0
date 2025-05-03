@@ -9,7 +9,7 @@ from src.core.localization import (main_menu, checking_accounts, checking_throug
 from src.core.utils import find_folders
 from src.features.account.TGConnect import TGConnect
 from src.gui.menu import show_notification, log_and_display
-
+from loguru import logger
 
 class TGChek:
 
@@ -26,19 +26,22 @@ class TGChek:
 
         async def validation_check(_) -> None:
             """Проверка валидности аккаунтов"""
-            start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-            await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
-                                  page)
-            for folder in find_folders(directory_path=path_accounts_folder):
-                await log_and_display(f"Проверка аккаунтов из папки 📁 {folder} на валидность", list_view, page)
-                await self.TGConnect.verify_all_accounts(page=page)
-            await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
-                                  page)
-            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-            await log_and_display(
-                f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}", list_view,
-                page)
-            await show_notification(page, "🔚 Проверка аккаунтов завершена")
+            try:
+                start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
+                                      page)
+                for folder in await find_folders(directory_path=path_accounts_folder):
+                    await log_and_display(f"Проверка аккаунтов из папки 📁 {folder} на валидность", list_view, page)
+                    await self.TGConnect.verify_all_accounts(page=page, list_view=list_view)
+                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
+                                      page)
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                await log_and_display(
+                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}", list_view,
+                    page)
+                await show_notification(page, "🔚 Проверка аккаунтов завершена")
+            except Exception as error:
+                logger.exception(f"❌ Ошибка: {error}")
 
         async def renaming_accounts(_):
             """Переименование аккаунтов"""

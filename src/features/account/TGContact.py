@@ -29,7 +29,7 @@ class TGContact:
         Показать список контактов аккаунтов и запись результатов в файл
         """
         try:
-            for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_contact_folder)
@@ -105,7 +105,7 @@ class TGContact:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_contact_folder)
@@ -120,7 +120,7 @@ class TGContact:
         """
         try:
             # Открываем базу данных для работы с аккаунтами user_data/software_database.db
-            for session_name in find_filess(directory_path=path_contact_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_contact_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_contact_folder)

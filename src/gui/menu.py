@@ -13,8 +13,7 @@ from src.core.localization import (
     recording_reaction_link_ru, forming_list_of_chats_channels_ru, we_are_winding_up_post_views_ru, editing_bio,
     changing_the_username, changing_the_photo, changing_the_description, name_change_n, name_change_f,
     creating_a_contact_list, show_a_list_of_contacts, deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
-    subscribe_unsubscribe, subscription, unsubscribe, checking_accounts, checking_through_a_spam_bot_ru, validation_check_ru,
-    renaming_accounts_ru, full_verification_ru, connecting_accounts, connecting_accounts_by_phone_number,
+    subscribe_unsubscribe, subscription, unsubscribe, connecting_accounts, connecting_accounts_by_phone_number,
     connecting_session_accounts, to_boost_views, to_unsubscribe, to_subscribe, to_send_messages, for_marking_reactions,
     to_work_with_reactions, for_parsing, for_inviting, to_create_groups, to_work_with_numbers, to_edit_bio,
     for_the_answering_machine, working_with_reactions, parsing, settings, main_menu, creating_groups_chats
@@ -473,8 +472,7 @@ async def log_and_display(message: str, lv: ft.ListView, page: ft.Page, level: s
     if level.lower() == "error":
         logger.error(message)
     else:
-        logger.info(message)
-    lv.controls.append(ft.Text(message))
+        lv.controls.append(ft.Text(message))
     page.update()
 
 

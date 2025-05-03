@@ -63,7 +63,7 @@ class SendTelegramMessages:
             if time_from < time_to:
                 try:
                     # Просим пользователя ввести расширение сообщения
-                    for session_name in find_filess(directory_path=path_send_message_folder,
+                    for session_name in await find_filess(directory_path=path_send_message_folder,
                                                     extension=self.account_extension):
                         client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                            account_directory=path_send_message_folder)
@@ -164,7 +164,7 @@ class SendTelegramMessages:
 
         if checs == True:
             try:
-                for session_name in find_filess(directory_path=path_send_message_folder_answering_machine,
+                for session_name in await find_filess(directory_path=path_send_message_folder_answering_machine,
                                                 extension=self.account_extension):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_send_message_folder_answering_machine)
@@ -205,7 +205,7 @@ class SendTelegramMessages:
         else:
             try:
                 start = await self.start_time(lv, page)
-                for session_name in find_filess(directory_path=path_send_message_folder,
+                for session_name in await find_filess(directory_path=path_send_message_folder,
                                                 extension=self.account_extension):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_send_message_folder)

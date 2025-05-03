@@ -44,7 +44,7 @@ async def main(page: ft.Page):
     page.window.height = window_height  # Высота окна
     page.window.resizable = window_resizable  # Разрешение изменения размера окна
 
-    async def route_change(route):
+    async def route_change(_):
 
         page.views.clear()
         # ______________________________________________________________________________________________________________
@@ -72,10 +72,8 @@ async def main(page: ft.Page):
             elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
                 await subscribe_and_unsubscribe_menu(page)
             elif page.route == "/subscription_all":  # Подписка
-                await CheckingProgram().checking_for_subscription_account(page=page)
                 await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
             elif page.route == "/unsubscribe_all":  # Отписываемся
-                await CheckingProgram().checking_for_unsubscribe_all(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Отписка")
@@ -88,7 +86,6 @@ async def main(page: ft.Page):
             elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
                 await reactions_menu(page)
             elif page.route == "/setting_reactions":  # Ставим реакции
-                await CheckingProgram().checking_for_setting_reactions(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Проставления реакций")
@@ -98,7 +95,6 @@ async def main(page: ft.Page):
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-                await CheckingProgram().checking_for_setting_reactions(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Автоматического выставления реакций")
@@ -111,7 +107,6 @@ async def main(page: ft.Page):
             elif page.route == "/viewing_posts_menu":  # Автоматическое выставление просмотров меню
                 await viewing_posts_menu(page)
             elif page.route == "/we_are_winding_up_post_views":  # ️‍🗨️ Накручиваем просмотры постов
-                await CheckingProgram().checking_for_viewing_posts_menu(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Накрутки просмотров постов")
@@ -124,13 +119,10 @@ async def main(page: ft.Page):
             elif page.route == "/parsing":  # Меню "Парсинг"
                 await menu_parsing(page)
             elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
-                await CheckingProgram().checking_for_parsing_single_groups(page=page)
                 await ParsingGroupMembers().parse_groups(page)
             elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
-                await CheckingProgram().checking_for_parsing_single_groups(page=page)
                 await ParsingGroupMembers().choose_and_parse_group(page)
             elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
-                await CheckingProgram().checking_for_parsing_single_groups(page=page)
                 await ParsingGroupMembers().entering_data_for_parsing_active(page)
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
                 await ReceivingAndRecording().write_data_to_excel(file_name="user_data/parsed_chat_participants.xlsx")
@@ -138,7 +130,6 @@ async def main(page: ft.Page):
             elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
                 await working_with_contacts_menu(page)
             elif page.route == "/creating_contact_list":  # Формирование списка контактов
-                await CheckingProgram().checking_creating_contact_list(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Формирования списка контактов")
@@ -150,7 +141,6 @@ async def main(page: ft.Page):
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/show_list_contacts":  # Показать список контактов
-                await CheckingProgram().checking_creating_contact_list(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Показа списка контактов")
@@ -160,7 +150,6 @@ async def main(page: ft.Page):
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/deleting_contacts":  # Удаление контактов
-                await CheckingProgram().checking_creating_contact_list(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Удаления контактов")
@@ -170,7 +159,6 @@ async def main(page: ft.Page):
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             elif page.route == "/adding_contacts":  # Добавление контактов
-                await CheckingProgram().checking_creating_contact_list(page=page)
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Добавления контактов")
@@ -192,33 +180,26 @@ async def main(page: ft.Page):
             elif page.route == "/creating_groups_and_chats_menu":  # Меню "Создание групп и чатов"
                 await creating_groups_and_chats_menu(page)
             elif page.route == "/creating_groups":  # Создание групп (чатов)
-                await CheckingProgram().checking_creating_groups(page=page)
                 await CreatingGroupsAndChats().creating_groups_and_chats(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений по чатам
                 await CheckingProgram().check_before_sending_messages_via_chats(page=page)
                 await SendTelegramMessages().sending_messages_files_via_chats(page=page)
             elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка сообщений в личку
-                await CheckingProgram().checking_sending_to_personal(page=page)
                 await SendTelegramMessages().send_files_to_personal_chats(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
                 await bio_editing_menu(page)
             elif page.route == "/edit_description":  # Изменение описания
-                await CheckingProgram().checking_for_bio(page=page)
                 await AccountBIO().change_bio_profile_gui(page)
             elif page.route == "/name_change":  # Изменение имени профиля Telegram
-                await CheckingProgram().checking_for_bio(page=page)
                 await AccountBIO().change_name_profile_gui(page)
             elif page.route == "/change_surname":  # Изменение фамилии
-                await CheckingProgram().checking_for_bio(page=page)
                 await AccountBIO().change_last_name_profile_gui(page)
             elif page.route == "/edit_photo":  # Изменение фото
-                await CheckingProgram().checking_for_bio(page=page)
                 await AccountBIO().change_photo_profile_gui(page)
                 await show_notification(page, "🔚 Фото изменено")  # Выводим уведомление пользователю
             elif page.route == "/changing_username":  # Изменение username
-                await CheckingProgram().checking_for_bio(page=page)
                 await AccountBIO().change_username_profile_gui(page)
             # __________________________________________________________________________________________________________
             elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
@@ -280,10 +261,10 @@ async def main(page: ft.Page):
                 page.views.append(ft.View("/errors", []))
 
             page.update()
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+        except Exception as e:
+            logger.exception(f"❌ Ошибка: {e}")
 
-    def view_pop(view):
+    def view_pop(_):
         page.views.pop()
         top_view = page.views[-1]
         page.go(top_view.route)

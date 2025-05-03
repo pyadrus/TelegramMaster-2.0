@@ -41,7 +41,7 @@ class WorkingWithReactions:
 
             async def btn_click(e) -> None:
                 # random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
-                for session_name in find_filess(directory_path=path_reactions_folder, extension='session'):
+                for session_name in await find_filess(directory_path=path_reactions_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_reactions_folder)
 
@@ -93,7 +93,7 @@ class WorkingWithReactions:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in find_filess(directory_path="user_data/accounts/reactions_list",
+            for session_name in await find_filess(directory_path="user_data/accounts/reactions_list",
                                             # TODO переместить путь к файлу в конфиг файл
                                             extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
@@ -119,7 +119,7 @@ class WorkingWithReactions:
         Выставление реакций на новые посты
         """
         try:
-            for session_name in find_filess(directory_path=path_reactions_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_reactions_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_reactions_folder)
                 chat = read_json_file(

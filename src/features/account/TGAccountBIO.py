@@ -118,7 +118,7 @@ class AccountActions:
 
         try:
             logger.info(f"Запуск смены  описания профиля")
-            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
@@ -149,7 +149,7 @@ class AccountActions:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page,
                                                                    session_name=session_name,
@@ -179,7 +179,7 @@ class AccountActions:
         """
 
         try:
-            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
                                                                    account_directory=self.directory_path)
@@ -204,7 +204,7 @@ class AccountActions:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
@@ -227,7 +227,7 @@ class AccountActions:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)

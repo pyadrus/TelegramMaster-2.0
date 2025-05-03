@@ -50,7 +50,7 @@ class InvitingToAGroup:
         """
         number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members", limit=None)
         account_limit = ConfigReader().get_limits()
-        find_filesss = find_filess(directory_path=path_inviting_folder, extension='session')
+        find_filesss = await find_filess(directory_path=path_inviting_folder, extension='session')
         await log_and_display(f"Лимит на аккаунт: {account_limit}\n"
                               f"Всего участников: {len(number_usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"
@@ -70,7 +70,7 @@ class InvitingToAGroup:
         await log_and_display(f"▶️ Начало инвайтинга.\n🕒 Время старта: {str(start)}", lv, page)
         page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
         try:
-            for session_name in find_filess(directory_path=path_inviting_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_inviting_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_inviting_folder)
                 logger.info(f"{dropdown.value}")

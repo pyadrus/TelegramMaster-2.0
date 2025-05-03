@@ -13,14 +13,14 @@ from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, Use
                              ApiIdInvalidError, YouBlockedUserError, PasswordHashInvalidError)
 from thefuzz import fuzz
 
-from src.core.configs import ConfigReader, BUTTON_HEIGHT, line_width_button
+from src.core.configs import ConfigReader, BUTTON_HEIGHT, line_width_button, path_accounts_folder
 from src.core.localization import back_button, done_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import working_with_accounts, find_filess
 from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
 from src.features.proxy.checking_proxy import checking_the_proxy_for_work
 from src.features.proxy.checking_proxy import reading_proxy_data_from_the_database
-from src.gui.menu import show_notification
+from src.gui.menu import show_notification, log_and_display
 
 
 class TGConnect:
@@ -40,8 +40,9 @@ class TGConnect:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            logger.info(f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
-            telegram_client = await self.get_telegram_client(page, session_name,f"user_data/accounts")
+            logger.info(
+                f"Проверка аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}")
+            telegram_client = await self.get_telegram_client(page, session_name, f"user_data/accounts")
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
                 if not await telegram_client.is_user_authorized():  # Если аккаунт не авторизирован
@@ -90,8 +91,8 @@ class TGConnect:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in find_filess(directory_path=f"user_data/accounts",
-                                            extension='session'):
+            for session_name in await find_filess(directory_path=f"user_data/accounts",
+                                                  extension='session'):
                 telegram_client = await self.get_telegram_client(page, session_name,
                                                                  account_directory=f"user_data/accounts")
                 try:
@@ -150,21 +151,23 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def verify_all_accounts(self, page: ft.Page) -> None:
+    async def verify_all_accounts(self, page: ft.Page, list_view: ft.ListView) -> None:
         """
         Проверяет все аккаунты Telegram в указанной директории.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список для отображения информации.
         """
         try:
-            logger.info(f"Запуск проверки аккаунтов Telegram из папки 📁: accounts")
+            await log_and_display(f"Запуск проверки аккаунтов Telegram из папки 📁: accounts", list_view, page)
             await checking_the_proxy_for_work()  # Проверка proxy
             # Сканирование каталога с аккаунтами
-            for session_file in find_filess(directory_path=f"user_data/accounts", extension='session'):
-                logger.info(f"⚠️ Проверяемый аккаунт: user_data/accounts/{session_file}")
+            for session_file in await find_filess(directory_path=path_accounts_folder, extension='session',
+                                                  list_view=list_view, page=page):
+                await log_and_display(f"⚠️ Проверяемый аккаунт: user_data/accounts/{session_file}", list_view, page)
                 # Проверка аккаунтов
                 await self.verify_account(page=page, session_name=session_file)
-            logger.info(f"Окончание проверки аккаунтов Telegram из папки 📁: accounts")
+            await log_and_display(f"Окончание проверки аккаунтов Telegram из папки 📁: accounts", list_view, page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -179,8 +182,8 @@ class TGConnect:
             logger.info(f"Запуск переименования аккаунтов Telegram из папки 📁: {folder_name}")
             await checking_the_proxy_for_work()  # Проверка proxy
             # Сканирование каталога с аккаунтами
-            for session_name in find_filess(directory_path=f"user_data/accounts/{folder_name}",
-                                            extension='session'):
+            for session_name in await find_filess(directory_path=f"user_data/accounts/{folder_name}",
+                                                  extension='session'):
                 logger.info(f"⚠️ Переименовываемый аккаунт: user_data/accounts/{session_name}")
                 # Переименовывание аккаунтов
                 logger.info(

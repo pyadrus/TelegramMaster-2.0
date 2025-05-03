@@ -186,7 +186,7 @@ class SubscribeUnsubscribeTelegram:
             start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
             # Индикация начала инвайтинга
             await log_and_display(f"\n▶️ Начало Подписки.\n🕒 Время старта: {str(start)}", lv, page)
-            for session_name in find_filess(directory_path=path_subscription_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_subscription_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_subscription_folder)
                 # Получение ссылки
@@ -234,7 +234,7 @@ class SubscribeUnsubscribeTelegram:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in find_filess(directory_path=path_unsubscribe_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_unsubscribe_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_unsubscribe_folder)
                 dialogs = client.iter_dialogs()
