@@ -142,13 +142,15 @@ class SubscribeUnsubscribeTelegram:
 
                 except AuthKeyUnregisteredError:
                     await log_and_display(
-                        f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", list_view,
+                        f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов",
+                        list_view,
                         page, level="error")
                     await asyncio.sleep(2)
 
                 except SessionPasswordNeededError:
                     await log_and_display(
-                        f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", list_view, page,
+                        f"❌ Ошибка subscribing: ошибка авторизации аккаунта, выполните проверку аккаунтов", list_view,
+                        page,
                         level="error")
                     await asyncio.sleep(2)
 
@@ -157,12 +159,14 @@ class SubscribeUnsubscribeTelegram:
                 f"❌ Попытка подписки на группу / канал {link}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}",
                 list_view, page, level="error")
         except InviteRequestSentError:
-            await log_and_display(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}", list_view,
+            await log_and_display(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
+                                  list_view,
                                   page, level="error")
 
         except AuthKeyUnregisteredError:
             await log_and_display(
-                f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", list_view, page,
+                f"❌ Ошибка subscribing: неверный ключ авторизации аккаунта, выполните проверку аккаунтов", list_view,
+                page,
                 level="error")
             await asyncio.sleep(2)
 
@@ -188,9 +192,11 @@ class SubscribeUnsubscribeTelegram:
             start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
             # Индикация начала инвайтинга
             await log_and_display(f"\n▶️ Начало Подписки.\n🕒 Время старта: {str(start)}", list_view, page)
-            for session_name in await find_filess(directory_path=path_subscription_folder, extension='session', list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_subscription_folder, extension='session',
+                                                  list_view=list_view, page=page):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_subscription_folder, list_view=list_view)
+                                                                   account_directory=path_subscription_folder,
+                                                                   list_view=list_view)
                 # Получение ссылки
                 links_inviting: list = await self.db_handler.open_and_read_data(
                     "writing_group_links")  # Открываем базу данных
@@ -237,9 +243,11 @@ class SubscribeUnsubscribeTelegram:
         :param list_view: ListView для отображения логов.
         """
         try:
-            for session_name in await find_filess(directory_path=path_unsubscribe_folder, extension='session', list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_unsubscribe_folder, extension='session',
+                                                  list_view=list_view, page=page):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_unsubscribe_folder, list_view=list_view)
+                                                                   account_directory=path_unsubscribe_folder,
+                                                                   list_view=list_view)
                 dialogs = client.iter_dialogs()
                 logger.info(f"Диалоги: {dialogs}")
                 async for dialog in dialogs:

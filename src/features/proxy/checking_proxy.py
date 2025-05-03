@@ -25,8 +25,9 @@ async def reading_proxy_data_from_the_database(db_handler):
     except IndexError:
         proxy = None
         return proxy
-    except Exception as error:
-        logger.exception(f"❌ Ошибка: {error}")
+    except Exception as e:
+        logger.exception(f"❌ Ошибка: {e}")
+        return None
 
 
 async def checking_the_proxy_for_work() -> None:

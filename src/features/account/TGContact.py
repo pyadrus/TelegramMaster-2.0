@@ -29,10 +29,12 @@ class TGContact:
         Показать список контактов аккаунтов и запись результатов в файл
         """
         try:
-            for session_name in await find_filess(directory_path=path_contact_folder, extension='session', list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_contact_folder, extension='session',
+                                                  list_view=list_view, page=page):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_contact_folder, list_view=list_view)
+                                                                   account_directory=path_contact_folder,
+                                                                   list_view=list_view)
                 await self.parsing_and_recording_contacts_in_the_database(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
@@ -107,10 +109,12 @@ class TGContact:
         :param list_view: Список для отображения элементов управления.
         """
         try:
-            for session_name in await find_filess(directory_path=path_contact_folder, extension='session', list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_contact_folder, extension='session',
+                                                  list_view=list_view, page=page):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_contact_folder, list_view=list_view)
+                                                                   account_directory=path_contact_folder,
+                                                                   list_view=list_view)
                 await self.we_get_the_account_id(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
@@ -122,10 +126,12 @@ class TGContact:
         """
         try:
             # Открываем базу данных для работы с аккаунтами user_data/software_database.db
-            for session_name in await find_filess(directory_path=path_contact_folder, extension='session', list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_contact_folder, extension='session',
+                                                  list_view=list_view, page=page):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_contact_folder, list_view=list_view)
+                                                                   account_directory=path_contact_folder,
+                                                                   list_view=list_view)
                 await self.add_contact_to_phone_book(client)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")

@@ -369,7 +369,7 @@ class ParsingGroupMembers:
         """
         Parsing участников, которые пишут в чат (активных участников)
 
-        :param chat_input: ссылка на чат
+        :param chat_input: Ссылка на чат
         :param limit_active_user: лимит активных участников
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param list_view: ListView

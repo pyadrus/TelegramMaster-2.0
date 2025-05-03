@@ -50,7 +50,8 @@ class InvitingToAGroup:
         """
         number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members", limit=None)
         account_limit = ConfigReader().get_limits()
-        find_filesss = await find_filess(directory_path=path_inviting_folder, extension='session', list_view=list_view, page=page)
+        find_filesss = await find_filess(directory_path=path_inviting_folder, extension='session', list_view=list_view,
+                                         page=page)
         await log_and_display(f"Лимит на аккаунт: {account_limit}\n"
                               f"Всего участников: {len(number_usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"
@@ -70,9 +71,11 @@ class InvitingToAGroup:
         await log_and_display(f"▶️ Начало инвайтинга.\n🕒 Время старта: {str(start)}", list_view, page)
         page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
         try:
-            for session_name in await find_filess(directory_path=path_inviting_folder, extension='session', list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_inviting_folder, extension='session',
+                                                  list_view=list_view, page=page):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_inviting_folder, list_view=list_view)
+                                                                   account_directory=path_inviting_folder,
+                                                                   list_view=list_view)
                 logger.info(f"{dropdown.value}")
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value)
@@ -88,7 +91,8 @@ class InvitingToAGroup:
                     # Инвайтинг в группу по полученному списку
 
                     try:
-                        await log_and_display(f"Попытка приглашения {username[0]} в группу {dropdown.value}.", list_view, page)
+                        await log_and_display(f"Попытка приглашения {username[0]} в группу {dropdown.value}.",
+                                              list_view, page)
                         await client(InviteToChannelRequest(dropdown.value, [username[0]]))
                         await log_and_display(f"Удачно! Спим 5 секунд", list_view, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)

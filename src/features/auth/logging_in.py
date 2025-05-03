@@ -35,7 +35,7 @@ def get_country_flag(ip_address):
     """
     Определение страны по ip адресу на основе сервиса https://ipwhois.io/ru/documentation.
     Возвращает флаг и название страны.
-    :param ip_address: ip адрес
+    :param ip_address: IP адрес
     :return: флаг и название страны
     """
     try:
@@ -51,7 +51,7 @@ def get_external_ip():
         response = requests.get('https://httpbin.org/ip')
         response.raise_for_status()
         return response.json().get("origin")
-    except requests.RequestException as error:
+    except requests.RequestException as _:
         return None
 
 

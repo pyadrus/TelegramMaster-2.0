@@ -45,7 +45,7 @@ async def main(page: ft.Page):
     page.window.resizable = window_resizable  # Разрешение изменения размера окна
 
     async def route_change(_):
-
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.views.clear()
         # ______________________________________________________________________________________________________________
         await main_menu_program(page)  # Главное меню программы
@@ -77,7 +77,7 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Отписка")
-                await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page)
+                await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page, list_view=list_view)
                 logger.info("🔚 Конец Отписки")
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
@@ -89,7 +89,7 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Проставления реакций")
-                await WorkingWithReactions().send_reaction_request(page)
+                await WorkingWithReactions().send_reaction_request(page, list_view=list_view)
                 logger.info("🔚 Конец Проставления реакций")
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
@@ -98,7 +98,7 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Автоматического выставления реакций")
-                await WorkingWithReactions().setting_reactions(page=page)
+                await WorkingWithReactions().setting_reactions(page=page, list_view=list_view)
                 logger.info("🔚 Конец Автоматического выставления реакций")
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
@@ -110,7 +110,7 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Накрутки просмотров постов")
-                await ViewingPosts().viewing_posts_request(page)
+                await ViewingPosts().viewing_posts_request(page, list_view=list_view)
                 logger.info("🔚 Конец Накрутки просмотров постов")
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
@@ -121,7 +121,7 @@ async def main(page: ft.Page):
             elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
                 await ParsingGroupMembers().parse_groups(page)
             elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
-                await ParsingGroupMembers().choose_and_parse_group(page)
+                await ParsingGroupMembers().choose_and_parse_group(page, list_view=list_view)
             elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
                 await ParsingGroupMembers().entering_data_for_parsing_active(page)
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
@@ -144,7 +144,7 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Показа списка контактов")
-                await TGContact().show_account_contact_list(page=page)
+                await TGContact().show_account_contact_list(page=page, list_view=list_view)
                 logger.info("🔚 Конец Показа списка контактов")
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
@@ -153,7 +153,7 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Удаления контактов")
-                await TGContact().delete_contact(page=page)
+                await TGContact().delete_contact(page=page, list_view=list_view)
                 logger.info("🔚 Конец Удаления контактов")
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
@@ -162,7 +162,7 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Добавления контактов")
-                await TGContact().inviting_contact(page=page)
+                await TGContact().inviting_contact(page=page, list_view=list_view)
                 logger.info("🔚 Конец Добавления контактов")
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
@@ -197,7 +197,7 @@ async def main(page: ft.Page):
             elif page.route == "/change_surname":  # Изменение фамилии
                 await AccountBIO().change_last_name_profile_gui(page)
             elif page.route == "/edit_photo":  # Изменение фото
-                await AccountBIO().change_photo_profile_gui(page)
+                await AccountBIO().change_photo_profile_gui(page, list_view=list_view)
                 await show_notification(page, "🔚 Фото изменено")  # Выводим уведомление пользователю
             elif page.route == "/changing_username":  # Изменение username
                 await AccountBIO().change_username_profile_gui(page)
