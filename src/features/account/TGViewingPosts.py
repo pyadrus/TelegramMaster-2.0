@@ -26,7 +26,7 @@ class ViewingPosts:
         self.tg_connect = TGConnect()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def viewing_posts_request(self, page: ft.Page, list_view) -> None:
+    async def viewing_posts_request(self, page: ft.Page, list_view: ft.ListView) -> None:
         """
         Ставим реакции на сообщения
 
@@ -65,7 +65,7 @@ class ViewingPosts:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def viewing_posts(self, client, link_post, number, link_channel, list_view, page: ft.Page) -> None:
+    async def viewing_posts(self, client, link_post, number, link_channel, list_view: ft.ListView, page: ft.Page) -> None:
         """
         Накрутка просмотров постов
 

@@ -41,7 +41,7 @@ class TGContact:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def parsing_and_recording_contacts_in_the_database(self, client, list_view, page: ft.Page) -> None:
+    async def parsing_and_recording_contacts_in_the_database(self, client, list_view: ft.ListView, page: ft.Page) -> None:
         """
         Парсинг и запись контактов в базу данных
 
@@ -57,7 +57,7 @@ class TGContact:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def we_get_the_account_id(self, client, list_view, page: ft.Page) -> None:
+    async def we_get_the_account_id(self, client, list_view: ft.ListView, page: ft.Page) -> None:
         """
         Получаем id аккаунта
 
@@ -75,7 +75,7 @@ class TGContact:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def get_and_parse_contacts(client, list_view, page: ft.Page):
+    async def get_and_parse_contacts(client, list_view: ft.ListView, page: ft.Page):
         """
         Получаем контакты
 
@@ -94,7 +94,7 @@ class TGContact:
             return None
 
     @staticmethod
-    async def we_show_and_delete_the_contact_of_the_phone_book(client, user, list_view, page: ft.Page) -> None:
+    async def we_show_and_delete_the_contact_of_the_phone_book(client, user, list_view: ft.ListView, page: ft.Page) -> None:
         """
         Показываем и удаляем контакт телефонной книги
 
@@ -129,7 +129,7 @@ class TGContact:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def inviting_contact(self, page: ft.Page, list_view) -> None:
+    async def inviting_contact(self, page: ft.Page, list_view: ft.ListView) -> None:
         """
         Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting
         """
@@ -145,7 +145,7 @@ class TGContact:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def add_contact_to_phone_book(self, client, list_view, page: ft.Page) -> None:
+    async def add_contact_to_phone_book(self, client, list_view: ft.ListView, page: ft.Page) -> None:
         """
         Добавляем контакт в телефонную книгу
 

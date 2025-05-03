@@ -9,19 +9,16 @@ from src.features.auth.logging_in import get_country_flag
 from src.gui.menu import log_and_display
 
 
-async def reading_proxy_data_from_the_database(db_handler, list_view, page: ft.Page):
+async def reading_proxy_data_from_the_database(db_handler):
     """
     Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
     username - логин (например: username), password - пароль (например: password)
 
     :param db_handler - объект класса DatabaseHandler
-    :param list_view - список для отображения
-    :param page - страница
     """
     try:
         proxy_random_list = random.choice(await db_handler.open_and_read_data("proxy"))
-        await log_and_display(f"{proxy_random_list}", list_view, page)
         proxy = {'proxy_type': (proxy_random_list[0]), 'addr': proxy_random_list[1], 'port': int(proxy_random_list[2]),
                  'username': proxy_random_list[3], 'password': proxy_random_list[4], 'rdns': proxy_random_list[5]}
         return proxy

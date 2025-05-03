@@ -268,7 +268,7 @@ class SettingPage:
         self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], btn_click, list_view)
 
     @staticmethod
-    def add_view_with_fields_and_button(page: ft.Page, fields: list, btn_click, list_view) -> None:
+    def add_view_with_fields_and_button(page: ft.Page, fields: list, btn_click, list_view: ft.ListView) -> None:
         """
         Добавляет представление с заданными текстовыми полями и кнопкой.
 
@@ -305,7 +305,7 @@ def writing_settings_to_a_file(config) -> None:
         config.write(setup)  # Записываем данные в файл
 
 
-async def recording_limits_file(time_1, time_2, variable: str, list_view, page: ft.Page) -> configparser.ConfigParser:
+async def recording_limits_file(time_1, time_2, variable: str, list_view: ft.ListView, page: ft.Page) -> configparser.ConfigParser:
     """
     Запись данных в файл TelegramMaster/user_data/config.ini
 

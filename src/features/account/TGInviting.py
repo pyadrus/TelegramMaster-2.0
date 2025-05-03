@@ -34,7 +34,7 @@ class InvitingToAGroup:
         self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
         self.scheduler = Scheduler()  # Создаем экземпляр планировщика
 
-    async def getting_an_invitation_link_from_the_database(self, list_view, page: ft.Page):
+    async def getting_an_invitation_link_from_the_database(self, list_view: ft.ListView, page: ft.Page):
         """"
         Получение ссылки для инвайтинга
         """
@@ -44,7 +44,7 @@ class InvitingToAGroup:
             logger.exception(f"Ошибка: {error}")
             raise
 
-    async def data_for_inviting(self, page: ft.Page, list_view):
+    async def data_for_inviting(self, page: ft.Page, list_view: ft.ListView):
         """"
         Получение данных для инвайтинга
         """
@@ -275,7 +275,7 @@ class InvitingToAGroup:
         await self.create_invite_page(page, list_view, dropdown, add_items)
 
     @staticmethod
-    async def create_invite_page(page: ft.Page, list_view, dropdown, add_items) -> None:
+    async def create_invite_page(page: ft.Page, list_view: ft.ListView, dropdown, add_items) -> None:
 
         async def back_button_clicked(_):
             """

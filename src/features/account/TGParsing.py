@@ -266,7 +266,8 @@ class ParsingGroupMembers:
                         for groups in await self.db_handler.open_and_read_data("writing_group_links", list_view, page):
                             await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                             # подписываемся на группу
-                            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0], list_view, page)
+                            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0],
+                                                                                             list_view, page)
                             await self.parse_group(client, groups[0], list_view, page)  # выполняем парсинг группы
                             # Удаляем группу из списка после завершения парсинга 🗑️
                             await self.db_handler.delete_row_db(table="writing_group_links",
@@ -421,7 +422,9 @@ class ParsingGroupMembers:
                         await log_and_display(f"{entities}", list_view, page)
                         await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
                     except ValueError as e:
-                        await log_and_display(f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}", list_view, page)
+                        await log_and_display(
+                            f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}", list_view,
+                            page)
                 else:
                     await log_and_display(f"Сообщение {message.id} не имеет действительного from_id.", list_view, page)
         except Exception as error:
@@ -490,7 +493,8 @@ class ParsingGroupMembers:
                     start = datetime.datetime.now()  # фиксируем время начала выполнения кода
                     await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", list_view, page)
                     await log_and_display(f"📂 Выбрана группа: {dropdown.value}", list_view, page)
-                    await self.parse_group(client, dropdown.value, list_view, page)  # Запускаем парсинг выбранной группы
+                    await self.parse_group(client, dropdown.value, list_view,
+                                           page)  # Запускаем парсинг выбранной группы
                     await self.clean_parsing_list_and_remove_duplicates(list_view, page)
                     await client.disconnect()
                     # Переходим на экран парсинга только после завершения всех действий
@@ -601,7 +605,7 @@ class ParsingGroupMembers:
             logger.exception(f"❌ Ошибка: {error}")
             return []  # Возвращаем пустой список в случае ошибки
 
-    async def get_user_data(self, user, entities, list_view, page: ft.Page) -> None:
+    async def get_user_data(self, user, entities, list_view: ft.ListView, page: ft.Page) -> None:
         """
         Получение и сохранение данных пользователя.
         Метод получает данные пользователя, добавляет их в список сущностей и отображает на странице.
@@ -662,7 +666,7 @@ class ParsingGroupMembers:
             raise
 
     @staticmethod
-    async def forming_a_list_of_groups(client, list_view, page: ft.Page) -> None:
+    async def forming_a_list_of_groups(client, list_view: ft.ListView, page: ft.Page) -> None:
         """
         Формирует список групп и каналов.
 
