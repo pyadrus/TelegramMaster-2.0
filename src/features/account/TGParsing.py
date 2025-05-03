@@ -37,11 +37,11 @@ class ParsingGroupMembers:
         self.tg_connect = TGConnect()
         self.tg_subscription_manager = SubscribeUnsubscribeTelegram()
 
-    async def clean_parsing_list_and_remove_duplicates(self):
+    async def clean_parsing_list_and_remove_duplicates(self, list_view, page):
         """Очищает список парсинга от записей без имени пользователя и удаляет дубликаты по идентификатору."""
 
         # Очистка списка парсинга от записей без имени пользователя
-        await self.db_handler.remove_records_without_username()
+        await self.db_handler.remove_records_without_username(list_view, page)
         # Удаление дублирующихся записей по идентификатору
         await self.db_handler.remove_duplicate_ids(table_name="members", column_name="id")
 
@@ -87,7 +87,7 @@ class ParsingGroupMembers:
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_accounts_folder,
                                                                        list_view=list_view)
-                    for groups in await self.db_handler.open_and_read_data("writing_group_links"):
+                    for groups in await self.db_handler.open_and_read_data("writing_group_links", list_view, page):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                         try:
                             entity = await client.get_entity(groups[0])  # Получаем сущность группы/канала
@@ -263,16 +263,16 @@ class ParsingGroupMembers:
                         client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                            account_directory=path_accounts_folder,
                                                                            list_view=list_view)
-                        for groups in await self.db_handler.open_and_read_data("writing_group_links"):
+                        for groups in await self.db_handler.open_and_read_data("writing_group_links", list_view, page):
                             await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                             # подписываемся на группу
-                            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0])
+                            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0], list_view, page)
                             await self.parse_group(client, groups[0], list_view, page)  # выполняем парсинг группы
                             # Удаляем группу из списка после завершения парсинга 🗑️
                             await self.db_handler.delete_row_db(table="writing_group_links",
                                                                 column="writing_group_links", value=groups)
                             # Очищаем список и удаляем дубликаты после завершения обработки всех групп
-                            await self.clean_parsing_list_and_remove_duplicates()
+                            await self.clean_parsing_list_and_remove_duplicates(list_view, page)
                             # Завершаем работу клиента после завершения парсинга 🔌
                         await client.disconnect()
                         await log_and_display(f"🔌 Отключение от аккаунта: {session_name}", list_view, page)
@@ -380,7 +380,7 @@ class ParsingGroupMembers:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder,
                                                                    list_view=list_view)
-                await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
+                await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input, list_view, page)
 
                 try:
                     # Преобразуем значение time_activity_user_2 в целое число (если оно None, используем 5 по умолчанию).
@@ -393,7 +393,7 @@ class ParsingGroupMembers:
 
                 await self.get_active_users(client, chat_input, limit_active_user, list_view, page)
                 await client.disconnect()  # Разрываем соединение telegram
-            await self.clean_parsing_list_and_remove_duplicates()
+            await self.clean_parsing_list_and_remove_duplicates(list_view, page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -490,9 +490,8 @@ class ParsingGroupMembers:
                     start = datetime.datetime.now()  # фиксируем время начала выполнения кода
                     await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", list_view, page)
                     await log_and_display(f"📂 Выбрана группа: {dropdown.value}", list_view, page)
-                    await self.parse_group(client, dropdown.value, list_view,
-                                           page)  # Запускаем парсинг выбранной группы
-                    await self.clean_parsing_list_and_remove_duplicates()
+                    await self.parse_group(client, dropdown.value, list_view, page)  # Запускаем парсинг выбранной группы
+                    await self.clean_parsing_list_and_remove_duplicates(list_view, page)
                     await client.disconnect()
                     # Переходим на экран парсинга только после завершения всех действий
                     finish = datetime.datetime.now()  # фиксируем время окончания парсинга

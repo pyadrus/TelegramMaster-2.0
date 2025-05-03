@@ -49,13 +49,13 @@ class WorkingWithReactions:
                                                                        account_directory=path_reactions_folder,
                                                                        list_view=list_view)
                     await log_and_display(f"[+] Работаем с группой: {chat.value}", list_view, page)
-                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat.value)
+                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat.value, list_view, page)
                     msg_id = int(re.search(r'/(\d+)$', message.value).group(1))  # Получаем id сообщения из ссылки
                     await asyncio.sleep(5)
                     try:
                         await client(SendReactionRequest(peer=chat.value, msg_id=msg_id,
                                                          reaction=[types.ReactionEmoji(
-                                                             emoticon=f'{self.choosing_random_reaction()}')]))
+                                                             emoticon=f'{self.choosing_random_reaction(list_view, page)}')]))
                         await asyncio.sleep(1)
                         await client.disconnect()
                     except ReactionInvalidError:
@@ -110,7 +110,7 @@ class WorkingWithReactions:
                 try:
                     await client(SendReactionRequest(peer=chat, msg_id=int(number),
                                                      reaction=[types.ReactionEmoji(
-                                                         emoticon=f'{self.choosing_random_reaction()}')]))
+                                                         emoticon=f'{self.choosing_random_reaction(list_view, page)}')]))
                     await asyncio.sleep(1)
                     await client.disconnect()
                 except ReactionInvalidError:

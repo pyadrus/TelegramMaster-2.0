@@ -57,7 +57,7 @@ class TGConnect:
                     await telegram_client.disconnect()  # Отключаемся после проверки
             except (PhoneNumberBannedError, UserDeactivatedBanError, AuthKeyNotFound,
                     AuthKeyUnregisteredError, AuthKeyDuplicatedError) as e:
-                await self.handle_banned_account(telegram_client, session_name, e)
+                await self.handle_banned_account(telegram_client, session_name, e, list_view, page)
             except TimedOutError as error:
                 await log_and_display(f"❌ Ошибка таймаута: {error}", list_view, page)
                 await asyncio.sleep(2)
@@ -79,6 +79,8 @@ class TGConnect:
         :param telegram_client: TelegramClient
         :param session_name: Имя аккаунта
         :param exception: Расширение файла
+        :param list_view: Список для отображения аккаунтов.
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await log_and_display(f"⛔ Аккаунт забанен: {session_name}. {str(exception)}", list_view, page)
         await telegram_client.disconnect()
@@ -142,7 +144,7 @@ class TGConnect:
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                         except sqlite3.OperationalError as e:
                             await log_and_display(f"Ошибка при отключении аккаунта: {session_name}", list_view, page)
-                            await self.handle_banned_account(telegram_client, session_name, e)
+                            await self.handle_banned_account(telegram_client, session_name, e, list_view, page)
 
                 except YouBlockedUserError:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -162,7 +164,7 @@ class TGConnect:
         """
         try:
             await log_and_display(f"Запуск проверки аккаунтов Telegram из папки 📁: accounts", list_view, page)
-            await checking_the_proxy_for_work()  # Проверка proxy
+            await checking_the_proxy_for_work(list_view, page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_file in await find_filess(directory_path=path_accounts_folder, extension='session',
                                                   list_view=list_view, page=page):
@@ -184,7 +186,7 @@ class TGConnect:
         try:
             await log_and_display(f"Запуск переименования аккаунтов Telegram из папки 📁: {folder_name}", list_view,
                                   page)
-            await checking_the_proxy_for_work()  # Проверка proxy
+            await checking_the_proxy_for_work(list_view, page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_name in await find_filess(directory_path=f"user_data/accounts/{folder_name}",
                                                   extension='session', list_view=list_view, page=page):
@@ -200,7 +202,7 @@ class TGConnect:
                 try:
                     me = await telegram_client.get_me()
                     phone = me.phone
-                    await self.rename_session_file(telegram_client, session_name, phone, folder_name)
+                    await self.rename_session_file(telegram_client, session_name, phone, folder_name, list_view, page)
 
                 except AttributeError:  # Если в get_me приходит NoneType (None)
                     pass
@@ -219,7 +221,7 @@ class TGConnect:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def rename_session_file(telegram_client, phone_old, phone, folder_name) -> None:
+    async def rename_session_file(telegram_client, phone_old, phone, folder_name, list_view, page) -> None:
         """
         Переименовывает session файлы.
 
@@ -227,6 +229,8 @@ class TGConnect:
         :param phone_old: Номер телефона для переименования
         :param phone: Номер телефона для переименования (новое название для session файла)
         :param folder_name: Папка с аккаунтами
+        :param list_view: Список для отображения информации.
+        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await telegram_client.disconnect()  # Отключаемся от аккаунта для освобождения session файла
         try:
@@ -239,7 +243,7 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-        getting_phone_number_data_by_phone_number(phone)  # Выводим информацию о номере телефона
+        await getting_phone_number_data_by_phone_number(phone, list_view, page)  # Выводим информацию о номере телефона
 
     async def get_telegram_client(self, page, session_name, account_directory, list_view):
         """
@@ -260,7 +264,7 @@ class TGConnect:
             telegram_client = TelegramClient(f"{account_directory}/{session_name}", api_id=self.api_id,
                                              api_hash=self.api_hash,
                                              system_version="4.16.30-vxCUSTOM",
-                                             proxy=await reading_proxy_data_from_the_database(self.db_handler))
+                                             proxy=await reading_proxy_data_from_the_database(self.db_handler, list_view, page))
             await telegram_client.connect()
             return telegram_client
         except sqlite3.OperationalError:
@@ -292,6 +296,7 @@ class TGConnect:
         код.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список для отображения информации.
         """
         try:
             # Создаем текстовый элемент и добавляем его на страницу
@@ -302,7 +307,7 @@ class TGConnect:
                 phone_number_value = phone_number.value
                 await log_and_display(f"Номер телефона: {phone_number_value}", list_view, page)
                 # Дальнейшая обработка после записи номера телефона
-                proxy_settings = await reading_proxy_data_from_the_database(self.db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
+                proxy_settings = await reading_proxy_data_from_the_database(self.db_handler, list_view, page)  # Proxy IPV6 - НЕ РАБОТАЮТ
                 telegram_client = TelegramClient(f"user_data/accounts/{phone_number_value}",
                                                  api_id=self.api_id,
                                                  api_hash=self.api_hash,

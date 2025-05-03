@@ -34,12 +34,12 @@ class InvitingToAGroup:
         self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
         self.scheduler = Scheduler()  # Создаем экземпляр планировщика
 
-    async def getting_an_invitation_link_from_the_database(self):
+    async def getting_an_invitation_link_from_the_database(self, list_view, page):
         """"
         Получение ссылки для инвайтинга
         """
         try:
-            return await self.db_handler.open_and_read_data("links_inviting")  # Открываем базу данных
+            return await self.db_handler.open_and_read_data("links_inviting", list_view, page)  # Открываем базу данных
         except Exception as error:
             logger.exception(f"Ошибка: {error}")
             raise
@@ -78,13 +78,13 @@ class InvitingToAGroup:
                                                                    list_view=list_view)
                 await log_and_display(f"{dropdown.value}", list_view, page)
                 # Подписка на группу для инвайтинга
-                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value)
+                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, list_view, page)
                 # Получение списка usernames
                 number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members",
                                                                                          limit=ConfigReader().get_limits())
                 if len(number_usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", list_view, page)
-                    await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value)
+                    await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, list_view, page)
                     break  # Прерываем работу и меняем аккаунт
                 for username in number_usernames:
                     await log_and_display(f"Пользователь username:{username[0]}", list_view, page)
@@ -95,62 +95,62 @@ class InvitingToAGroup:
                                               list_view, page)
                         await client(InviteToChannelRequest(dropdown.value, [username[0]]))
                         await log_and_display(f"Удачно! Спим 5 секунд", list_view, page)
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
 
                     # Ошибка инвайтинга продолжаем работу
                     except UserChannelsTooMuchError:
                         await log_and_display(
                             f"❌ Попытка приглашения {username} в группу {dropdown.value}. Превышен лимит у user каналов / супергрупп.",
                             list_view, page, level="error")
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
                     except UserNotMutualContactError:
                         await log_and_display(
                             f"❌ Попытка приглашения {username} в группу {dropdown.value}. User не является взаимным контактом.",
                             list_view, page, level="error")
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
                     except (UserKickedError, UserDeactivatedBanError):
                         await log_and_display(
                             f"❌ Попытка приглашения {username} в группу {dropdown.value}. Пользователь был удален ранее из супергруппы или забанен.",
                             list_view, page, level="error")
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
                     except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                         await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Не корректное имя {username}", list_view, page)
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
                     except ChatAdminRequiredError:
                         await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Требуются права администратора.", list_view, page)
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
                     except UserPrivacyRestrictedError:
                         await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки конфиденциальности {username} не позволяют вам inviting", list_view, page)
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
                     except BotGroupsBlockedError:
                         await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Вы не можете добавить бота в группу.", list_view, page)
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
                     except (TypeError, UnboundLocalError):
                         await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}", list_view, page)
                     # Ошибка инвайтинга прерываем работу
                     except ChatWriteForbiddenError:
                         await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки в чате не дают добавлять людей в чат, возможно стоит бот админ и нужно подписаться на другие проекты", list_view, page)
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
                         break  # Прерываем работу и меняем аккаунт
                     except InviteRequestSentError:
                         await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Доступ к функциям группы станет возможен после утверждения заявки администратором на {dropdown.value}", list_view, page)
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
                         break  # Прерываем работу и меняем аккаунт
                     except (ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError,
                             UserBannedInChannelError, SessionRevokedError):
-                        await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
+                        await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], list_view, page)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as error:
                         await log_and_display(f"{error}", list_view, page)
-                        await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
+                        await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], list_view, page)
                         break  # Прерываем работу и меняем аккаунт
                     except AuthKeyUnregisteredError:
                         await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Ошибка авторизации аккаунта", list_view, page)
-                        await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
+                        await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], list_view, page)
                         break
                     except PeerFloodError:
                         await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки конфиденциальности {username} не позволяют вам inviting", list_view, page)
-                        await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
+                        await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], list_view, page)
                         break  # Прерываем работу и меняем аккаунт
                     except KeyboardInterrupt:  # Закрытие окна программы
                         client.disconnect()  # Разрываем соединение telegram
@@ -159,8 +159,8 @@ class InvitingToAGroup:
                         logger.exception(f"❌ Ошибка: {error}")
                     else:
                         await log_and_display(f"[+] Участник {username} добавлен, если не состоит в чате {dropdown.value}", list_view, page)
-                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
-                await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value)
+                        await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, list_view, page)
+                await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, list_view, page)
             await log_and_display(f"[!] Инвайтинг окончен!", list_view, page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -182,7 +182,7 @@ class InvitingToAGroup:
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
-        links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_the_database(list_view, page)  # Получение ссылки для инвайтинга
 
         await self.data_for_inviting(page, list_view)  # Отображение информации о настройках инвайтинга
 
@@ -208,7 +208,7 @@ class InvitingToAGroup:
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
-        links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_the_database(list_view, page)  # Получение ссылки для инвайтинга
 
         await self.data_for_inviting(page, list_view)  # Отображение информации о настройках инвайтинга
 
@@ -244,7 +244,7 @@ class InvitingToAGroup:
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
-        links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_the_database(list_view, page)  # Получение ссылки для инвайтинга
 
         await self.data_for_inviting(page, list_view)  # Отображение информации о настройках инвайтинга
 
@@ -313,7 +313,7 @@ class InvitingToAGroup:
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
-        links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_the_database(list_view, page)  # Получение ссылки для инвайтинга
 
         await self.data_for_inviting(page, list_view)  # Отображение информации о настройках инвайтинга
 

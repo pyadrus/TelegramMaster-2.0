@@ -135,7 +135,7 @@ async def record_inviting_results(time_range_1: int, time_range_2: int, username
     # Открываем базу с аккаунтами и с выставленными лимитами
     await DatabaseHandler().delete_row_db(table="members", column="username", value=username[0])
     # Смена username через случайное количество секунд
-    await record_and_interrupt(time_range_1, time_range_2)
+    await record_and_interrupt(time_range_1, time_range_2, list_view, page)
 
 
 async def record_and_interrupt(time_range_1, time_range_2, list_view, page) -> None:
