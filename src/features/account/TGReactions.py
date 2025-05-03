@@ -28,22 +28,25 @@ class WorkingWithReactions:
         self.tg_connect = TGConnect()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def send_reaction_request(self, page: ft.Page) -> None:
+    async def send_reaction_request(self, page: ft.Page, list_view: ft.ListView) -> None:
         """
         Ставим реакции на сообщения
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: ListView для отображения списка сессий.
         """
         try:
             # Поле для ввода ссылки на чат
             chat = ft.TextField(label="Введите ссылку на группу / чат:", multiline=False, max_lines=1)
             message = ft.TextField(label="Введите ссылку на сообщение или пост:", multiline=False, max_lines=1)
 
-            async def btn_click(e) -> None:
+            async def btn_click(_) -> None:
                 # random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
-                for session_name in await find_filess(directory_path=path_reactions_folder, extension='session'):
+                for session_name in await find_filess(directory_path=path_reactions_folder, extension='session',
+                                                      list_view=list_view, page=page):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_reactions_folder)
+                                                                       account_directory=path_reactions_folder,
+                                                                       list_view=list_view)
 
                     logger.info(f'[+] Работаем с группой: {chat.value}')
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat.value)
@@ -64,7 +67,7 @@ class WorkingWithReactions:
                     page.go("/working_with_reactions")
                     page.update()  # Обновление страницы для отображения изменений
 
-            def back_button_clicked(e) -> None:
+            def back_button_clicked(_) -> None:
                 """Кнопка возврата в меню проставления реакций"""
                 page.go("/working_with_reactions")
 
@@ -83,21 +86,24 @@ class WorkingWithReactions:
             return random_value
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
+            return None
 
-    async def reactions_for_groups_and_messages_test(self, number, chat, page: ft.Page) -> None:
+    async def reactions_for_groups_and_messages_test(self, number, chat, page: ft.Page, list_view: ft.ListView) -> None:
         """
         Вводим ссылку на группу и ссылку на сообщение
 
         :param number: Ссылка на сообщение
         :param chat: Ссылка на группу
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список для отображения сообщений.
         """
         try:
             for session_name in await find_filess(directory_path="user_data/accounts/reactions_list",
-                                            # TODO переместить путь к файлу в конфиг файл
-                                            extension='session'):
+                                                  # TODO переместить путь к файлу в конфиг файл
+                                                  extension='session', list_view=list_view, page=page):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory="user_data/accounts/reactions_list")
+                                                                   account_directory="user_data/accounts/reactions_list",
+                                                                   list_view=list_view)
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
                 await asyncio.sleep(5)
                 # random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (редакция)
@@ -114,14 +120,16 @@ class WorkingWithReactions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def setting_reactions(self, page: ft.Page):
+    async def setting_reactions(self, page: ft.Page, list_view: ft.ListView) -> None:
         """
         Выставление реакций на новые посты
         """
         try:
-            for session_name in await find_filess(directory_path=path_reactions_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_reactions_folder, extension='session',
+                                                  list_view=list_view, page=page):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_reactions_folder)
+                                                                   account_directory=path_reactions_folder,
+                                                                   list_view=list_view)
                 chat = read_json_file(
                     filename='user_data/reactions/link_channel.json')  # TODO переместить путь к файлу в конфиг
                 logger.info(chat)
@@ -134,7 +142,7 @@ class WorkingWithReactions:
                     logger.info(f"Идентификатор сообщения: {message_id}, {message}")
                     # Проверяем, является ли сообщение постом и не является ли оно нашим
                     if message.post and not message.out:
-                        await self.reactions_for_groups_and_messages_test(message_id, chat, page)
+                        await self.reactions_for_groups_and_messages_test(message_id, chat, page, list_view)
 
                 await client.run_until_disconnected()  # Запуск клиента в режиме ожидания событий
         except Exception as error:

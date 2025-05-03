@@ -198,7 +198,7 @@ class ParsingGroupMembers:
                 members_switch.value = False
             page.update()
 
-        def toggle_members_switch(e):
+        def toggle_members_switch(_):
             if members_switch.value:
                 admin_switch.value = False
                 account_groups_switch.value = False
@@ -453,6 +453,7 @@ class ParsingGroupMembers:
         📌 Выбираем группу из подписанных и запускаем парсинг
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: ListView
         :return: None
         """
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
