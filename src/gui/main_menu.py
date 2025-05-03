@@ -18,15 +18,15 @@ async def main_menu_program(page: ft.Page):
     """
     page.views.append(
         ft.View("/", [ft.AppBar(title=ft.Text(main_menu),
-                                bgcolor=ft.colors.SURFACE_VARIANT),
+                                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                       ft.Text(spans=[ft.TextSpan(
                           f"{program_name}",
                           ft.TextStyle(
                               size=40,
                               weight=ft.FontWeight.BOLD,
                               foreground=ft.Paint(
-                                  gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                       ft.colors.PURPLE])), ), ), ], ),
+                                  gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                       ft.Colors.PURPLE])), ), ), ], ),
                       ft.Text(disabled=False,
                               spans=[ft.TextSpan(text_1),
                                      ft.TextSpan(text_link_1,

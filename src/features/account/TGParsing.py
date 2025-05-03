@@ -503,7 +503,7 @@ class ParsingGroupMembers:
 
                 # Создаем выпадающий список с названиями групп
                 dropdown = ft.Dropdown(width=line_width_button,
-                                       options=[ft.dropdown.Option(title) for title in group_titles], autofocus=True)
+                                       options=[ft.DropdownOption(title) for title in group_titles], autofocus=True)
                 page.views.append(
                     ft.View(
                         "/parsing",

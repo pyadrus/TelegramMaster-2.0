@@ -101,7 +101,7 @@ class TGConnect:
                 try:
                     await telegram_client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
                     for message in await telegram_client.get_messages('SpamBot'):
-                        logger.info(f"{session_name} {message.message}")
+                        await log_and_display(f"{session_name} {message.message}", list_view, page)
                         similarity_ratio_ru: int = fuzz.ratio(f"{message.message}",
                                                               "Очень жаль, что Вы с этим столкнулись. К сожалению, "
                                                               "иногда наша антиспам-система излишне сурово реагирует на "
@@ -133,11 +133,11 @@ class TGConnect:
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                             logger.error(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}")
                             # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
-                            logger.info(session_name)
+                            await log_and_display(f"{session_name}", list_view, page)
                             working_with_accounts(f"user_data/accounts/{session_name}.session",
                                                   f"user_data/accounts/banned/{session_name}.session")
-                        logger.error(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}")
-
+                        await log_and_display(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}",
+                                              list_view, page)
                         try:
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                         except sqlite3.OperationalError as e:

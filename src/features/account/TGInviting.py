@@ -202,7 +202,7 @@ class InvitingToAGroup:
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
-                               options=[ft.dropdown.Option(link[0]) for link in links_inviting],
+                               options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
 
         await self.create_invite_page(page, list_view, dropdown, add_items)
@@ -236,7 +236,7 @@ class InvitingToAGroup:
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
-                               options=[ft.dropdown.Option(link[0]) for link in links_inviting],
+                               options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
 
         await self.create_invite_page(page, list_view, dropdown, add_items)
@@ -277,7 +277,7 @@ class InvitingToAGroup:
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
-                               options=[ft.dropdown.Option(link[0]) for link in links_inviting],
+                               options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
 
         await self.create_invite_page(page, list_view, dropdown, add_items)
@@ -346,7 +346,7 @@ class InvitingToAGroup:
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
-                               options=[ft.dropdown.Option(link[0]) for link in links_inviting],
+                               options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
 
         await self.create_invite_page(page, list_view, dropdown, add_items)

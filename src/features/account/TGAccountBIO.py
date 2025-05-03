@@ -182,7 +182,6 @@ class AccountActions:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param list_view: Список аккаунтов Telegram
         """
-
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
                                                   list_view=list_view, page=page):

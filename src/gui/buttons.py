@@ -27,9 +27,7 @@ def function_button_ready(page: ft.Page, btn_click, back_button_clicked, user_in
                 ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
                 button,  # Кнопка "Готово"
                 button_back,  # Кнопка "Назад"
-            ],
-        )
-    )
+            ],))
 
 
 def function_button_ready_reactions(page: ft.Page, btn_click, back_button_clicked, chat, message) -> None:

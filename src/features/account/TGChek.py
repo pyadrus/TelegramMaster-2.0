@@ -68,49 +68,57 @@ class TGChek:
 
         async def checking_for_spam_bots(_):
             """Проверка на спам ботов"""
-            start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-            await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
-                                  page)
-            for folder in await find_folders(directory_path=path_accounts_folder, list_view=list_view, page=page):
-                await log_and_display(f"Проверка аккаунтов из папки 📁 {folder} через спам бот", list_view, page)
-                if folder == "invalid_account":
-                    continue  # Продолжаем цикл, пропуская эту итерацию
-                else:
-                    await self.TGConnect.check_for_spam(page=page, list_view=list_view)
-            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-            await log_and_display(
-                f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}", list_view,
-                page)
-            await show_notification(page, "🔚 Проверка аккаунтов завершена")
+            try:
+                start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
+                                      page)
+                for folder in await find_folders(directory_path=path_accounts_folder, list_view=list_view, page=page):
+                    await log_and_display(f"Проверка аккаунтов из папки 📁 {folder} через спам бот", list_view, page)
+                    if folder == "invalid_account":
+                        continue  # Продолжаем цикл, пропуская эту итерацию
+                    else:
+                        await self.TGConnect.check_for_spam(page=page, list_view=list_view)
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                await log_and_display(
+                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                    list_view,
+                    page)
+                await show_notification(page, "🔚 Проверка аккаунтов завершена")
+            except Exception as error:
+                logger.exception(f"❌ Ошибка: {error}")
 
         async def full_verification(_):
             """
             Полная проверка аккаунтов
             """
-            start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-            await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
-                                  page)
-            await validation_check(_)  # Проверка валидности аккаунтов
-            await renaming_accounts(_)  # Переименование аккаунтов
-            await checking_for_spam_bots(_)  # Проверка на спам ботов
-            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-            await log_and_display(
-                f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}", list_view,
-                page)
-            await show_notification(page, "🔚 Проверка аккаунтов завершена")
+            try:
+                start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
+                                      page)
+                await validation_check(_)  # Проверка валидности аккаунтов
+                await renaming_accounts(_)  # Переименование аккаунтов
+                await checking_for_spam_bots(_)  # Проверка на спам ботов
+                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+                await log_and_display(
+                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                    list_view,
+                    page)
+                await show_notification(page, "🔚 Проверка аккаунтов завершена")
+            except Exception as error:
+                logger.exception(f"❌ Ошибка: {error}")
 
         page.views.append(
             ft.View("/account_verification_menu",
                     [ft.AppBar(title=ft.Text(main_menu),
-                               bgcolor=ft.colors.SURFACE_VARIANT),
+                               bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                      ft.Text(spans=[ft.TextSpan(
                          checking_accounts,
                          ft.TextStyle(
                              size=20,
                              weight=ft.FontWeight.BOLD,
                              foreground=ft.Paint(
-                                 gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                      ft.colors.PURPLE])), ), ), ], ),
+                                 gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                      ft.Colors.PURPLE])), ), ), ], ),
                      list_view,
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🤖 Проверка через спам бот

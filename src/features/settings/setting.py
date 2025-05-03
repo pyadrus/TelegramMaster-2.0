@@ -97,12 +97,9 @@ class SettingPage:
         """
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
         list_view: ListView = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-
         records: list = await self.db_handler.select_records_with_limit(table_name=table_name, limit=None)
-        await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page, list_view=list_view)
-
-        list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
+        await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page,
+                              list_view=list_view)
 
         async def write_data(clear_before: bool = False) -> None:
             """Запись данных в БД с опцией предварительной очистки"""

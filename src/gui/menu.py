@@ -29,15 +29,15 @@ async def settings_menu(page: ft.Page):
     page.views.append(
         ft.View("/settings",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      settings,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.Row([
                          # 👍 Выбор реакций
@@ -111,15 +111,15 @@ async def bio_editing_menu(page: ft.Page):
     page.views.append(
         ft.View("/bio_editing",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      editing_bio,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 🔄 Изменение username
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=changing_the_username,
@@ -148,15 +148,15 @@ async def inviting_menu(page: ft.Page):
     page.views.append(
         ft.View("/inviting",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      inviting_ru,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 🚀 Инвайтинг
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=inviting_ru,
@@ -182,15 +182,15 @@ async def working_with_contacts_menu(page: ft.Page):
     page.views.append(
         ft.View("/working_with_contacts",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      working_with_contacts_menu_ru,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 📋 Формирование списка контактов
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=creating_a_contact_list,
@@ -216,15 +216,15 @@ async def menu_parsing(page: ft.Page):
     page.views.append(
         ft.View("/parsing",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      parsing,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 🔍 Парсинг одной группы / групп
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
@@ -258,15 +258,15 @@ async def reactions_menu(page: ft.Page):
     page.views.append(
         ft.View("/working_with_reactions",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      working_with_reactions,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 👍 Ставим реакции
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=setting_reactions,
@@ -287,15 +287,15 @@ async def viewing_posts_menu(page: ft.Page):
     page.views.append(
         ft.View("/viewing_posts_menu",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      we_are_winding_up_post_views_ru,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 👁️‍🗨️ Накручиваем просмотры постов
                      ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
@@ -313,15 +313,15 @@ async def subscribe_and_unsubscribe_menu(page: ft.Page):
     page.views.append(
         ft.View("/subscribe_unsubscribe",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      subscribe_unsubscribe,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 🔔 Подписка
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=subscription,
@@ -341,15 +341,15 @@ async def account_connection_menu(page: ft.Page):
     page.views.append(
         ft.View("/account_connection_menu",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      connecting_accounts,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
 
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 📞 Подключение аккаунтов по номеру телефона
@@ -371,15 +371,15 @@ async def connecting_accounts_by_number_menu(page: ft.Page):
     page.views.append(
         ft.View("/connecting_accounts_by_number",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      connecting_accounts_by_phone_number,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
 
                      ft.Row(
@@ -443,15 +443,15 @@ async def creating_groups_and_chats_menu(page: ft.Page):
     page.views.append(
         ft.View("/creating_groups_and_chats_menu",
                 [ft.AppBar(title=ft.Text(main_menu),
-                           bgcolor=ft.colors.SURFACE_VARIANT),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      creating_groups_chats,
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.colors.PINK,
-                                                                                  ft.colors.PURPLE])), ), ), ], ),
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 👥 Создание групп (чатов)
                      ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
