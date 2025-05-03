@@ -60,13 +60,11 @@ async def find_filess(directory_path, extension, list_view, page: ft.Page):
         return None
 
 
-async def find_folders(directory_path, list_view, page: ft.Page) -> list:
+async def find_folders(directory_path) -> list:
     """
     Поиск всех папок в указанной директории.
 
     :param directory_path: Путь к директории
-    :param list_view: Список для отображения информации.
-    :param page: Страница для отображения информации.
     :return list: Список имен 🔍 найденных папок
     """
     folders = []  # Создаем список для хранения имен найденных папок
@@ -74,11 +72,10 @@ async def find_folders(directory_path, list_view, page: ft.Page) -> list:
         full_path = os.path.join(directory_path, x)  # Получаем полный путь к объекту в директории
         if os.path.isdir(full_path):  # Проверяем, является ли объект папкой
             folders.append(x)  # Добавляем имя папки в список
-    await log_and_display(f"🔍 Найденные папки: {folders}", list_view, page)
     return folders  # Возвращаем список папок
 
 
-async def find_files(directory_path, extension, list_view, page: ft.Page) -> list:
+async def find_files(directory_path, extension, list_view: ft.ListView, page: ft.Page) -> list:
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
 

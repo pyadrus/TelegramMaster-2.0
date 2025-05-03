@@ -71,7 +71,7 @@ class TGConnect:
     @staticmethod
     async def handle_banned_account(telegram_client, session_name, exception, list_view: ft.ListView, page: ft.Page):
         """
-        Обработка забаненных аккаунтов.
+        Обработка banned аккаунтов.
         telegram_client.disconnect() - Отключение от Telegram.
         working_with_accounts() - Перемещение файла. Исходный путь к файлу - account_folder. Путь к новой папке,
         куда нужно переместить файл - new_account_folder
@@ -82,7 +82,7 @@ class TGConnect:
         :param list_view: Список для отображения аккаунтов.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        await log_and_display(f"⛔ Аккаунт забанен: {session_name}. {str(exception)}", list_view, page)
+        await log_and_display(f"⛔ Аккаунт banned: {session_name}. {str(exception)}", list_view, page)
         await telegram_client.disconnect()
         working_with_accounts(f"user_data/accounts/{session_name}.session",
                               f"user_data/accounts/banned/{session_name}.session")
@@ -175,71 +175,59 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def get_account_details(self, page, folder_name, list_view):
+    async def get_account_details(self, page: ft.Page, list_view: ft.ListView):
         """
         Получает информацию о Telegram аккаунте.
 
-        :param folder_name: Имя каталога
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param list_view: Список для отображения информации.
         """
         try:
-            await log_and_display(f"Запуск переименования аккаунтов Telegram из папки 📁: {folder_name}", list_view,
-                                  page)
-            await checking_the_proxy_for_work(list_view, page)  # Проверка proxy
+            await checking_the_proxy_for_work(list_view=list_view, page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
-            for session_name in await find_filess(directory_path=f"user_data/accounts/{folder_name}",
-                                                  extension='session', list_view=list_view, page=page):
-                await log_and_display(f"⚠️ Переименовываемый аккаунт: user_data/accounts/{session_name}", list_view,
-                                      page)
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session', list_view=list_view, page=page):
+                await log_and_display(message=f"⚠️ Переименовываемый аккаунт: user_data/accounts/{session_name}", list_view=list_view, page=page)
                 # Переименовывание аккаунтов
-                await log_and_display(
-                    f"Переименовывание аккаунта {session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}",
-                    list_view, page)
                 telegram_client = await self.get_telegram_client(page=page, session_name=session_name,
-                                                                 account_directory=f"user_data/accounts/{folder_name}",
-                                                                 list_view=list_view)
+                                                                 account_directory=path_accounts_folder, list_view=list_view)
                 try:
                     me = await telegram_client.get_me()
-                    phone = me.phone
-                    await self.rename_session_file(telegram_client, session_name, phone, folder_name, list_view, page)
-
+                    await self.rename_session_file(telegram_client=telegram_client, phone_old=session_name,
+                                                   phone=me.phone, list_view=list_view, page=page)
                 except AttributeError:  # Если в get_me приходит NoneType (None)
                     pass
-
                 except TypeNotFoundError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    await log_and_display(f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP", list_view, page)
-                    working_with_accounts(f"user_data/accounts/{folder_name}/{session_name}.session",
-                                          f"user_data/accounts/banned/{session_name}.session")
+                    await log_and_display(message=f"⛔ Битый файл или аккаунт banned: {session_name}.session. Возможно, запущен под другим IP", list_view=list_view, page=page)
+                    working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
+                                          new_account_folder=f"user_data/accounts/banned/{session_name}.session")
                 except AuthKeyUnregisteredError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    await log_and_display(f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP", list_view, page)
-                    working_with_accounts(f"user_data/accounts/{folder_name}/{session_name}.session",
-                                          f"user_data/accounts/banned/{session_name}.session")
+                    await log_and_display(message=f"⛔ Битый файл или аккаунт banned: {session_name}.session. Возможно, запущен под другим IP", list_view=list_view, page=page)
+                    working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
+                                          new_account_folder=f"user_data/accounts/banned/{session_name}.session")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def rename_session_file(telegram_client, phone_old, phone, folder_name, list_view, page: ft.Page) -> None:
+    async def rename_session_file(telegram_client, phone_old, phone, list_view, page: ft.Page) -> None:
         """
         Переименовывает session файлы.
 
         :param telegram_client: Клиент для работы с Telegram
         :param phone_old: Номер телефона для переименования
         :param phone: Номер телефона для переименования (новое название для session файла)
-        :param folder_name: Папка с аккаунтами
         :param list_view: Список для отображения информации.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await telegram_client.disconnect()  # Отключаемся от аккаунта для освобождения session файла
         try:
             # Переименование session файла
-            os.rename(f"user_data/accounts/{folder_name}/{phone_old}.session",
-                      f"user_data/accounts/{folder_name}/{phone}.session", )
+            os.rename(f"user_data/accounts/{phone_old}.session",
+                      f"user_data/accounts/{phone}.session", )
         except FileExistsError:
             # Если файл существует, то удаляем дубликат
-            os.remove(f"user_data/accounts/{folder_name}/{phone_old}.session")
+            os.remove(f"user_data/accounts/{phone_old}.session")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
