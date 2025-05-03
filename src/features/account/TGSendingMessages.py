@@ -308,7 +308,7 @@ class SendTelegramMessages:
         await log_and_display('Время окончания: ' + str(finish), list_view, page)
         await log_and_display('Время работы: ' + str(finish - start), list_view, page)
 
-    async def send_content(self, client, target, messages, files, list_view, page):
+    async def send_content(self, client, target, messages, files, list_view, page: ft.Page):
         """
         Отправляет сообщения и файлы в личку.
         :param client: Телеграм клиент
@@ -333,7 +333,7 @@ class SendTelegramMessages:
                     await log_and_display(f"Сообщение и файл отправлены: {target}", list_view, page)
         await self.random_dream(list_view, page)
 
-    async def all_find_and_all_files(self, list_view, page):
+    async def all_find_and_all_files(self, list_view, page: ft.Page):
         """
         Находит все файлы в папке с сообщениями и папке с файлами для отправки.
         """
@@ -353,7 +353,7 @@ class SendTelegramMessages:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def select_and_read_random_file(entities, folder, list_view, page):
+    async def select_and_read_random_file(entities, folder, list_view, page: ft.Page):
         """
         Выбираем рандомный файл для чтения
 

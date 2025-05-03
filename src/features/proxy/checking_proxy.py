@@ -3,13 +3,13 @@ import random
 
 import requests
 from loguru import logger
-
+import flet as ft
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.features.auth.logging_in import get_country_flag
 from src.gui.menu import log_and_display
 
 
-async def reading_proxy_data_from_the_database(db_handler, list_view, page):
+async def reading_proxy_data_from_the_database(db_handler, list_view, page: ft.Page):
     """
     Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
@@ -33,7 +33,7 @@ async def reading_proxy_data_from_the_database(db_handler, list_view, page):
         return None
 
 
-async def checking_the_proxy_for_work(list_view, page) -> None:
+async def checking_the_proxy_for_work(list_view, page: ft.Page) -> None:
     """
     Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
     уровня, который используется для демонстрации работы сетевых протоколов. На этом сайте нет никакого контента, но он
@@ -54,7 +54,7 @@ async def checking_the_proxy_for_work(list_view, page) -> None:
         logger.exception(f"❌ Ошибка: {error}")
 
 
-async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler, list_view, page) -> None:
+async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler, list_view, page: ft.Page) -> None:
     """Подключение к proxy с проверкой на работоспособность где: proxy_type - тип proxy (например: SOCKS5),
     addr - адрес (например: 194.67.248.9), port - порт (например: 9795), username - логин (например: username),
     password - пароль (например: password)

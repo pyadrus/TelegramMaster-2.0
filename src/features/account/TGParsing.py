@@ -37,7 +37,7 @@ class ParsingGroupMembers:
         self.tg_connect = TGConnect()
         self.tg_subscription_manager = SubscribeUnsubscribeTelegram()
 
-    async def clean_parsing_list_and_remove_duplicates(self, list_view, page):
+    async def clean_parsing_list_and_remove_duplicates(self, list_view, page: ft.Page):
         """Очищает список парсинга от записей без имени пользователя и удаляет дубликаты по идентификатору."""
 
         # Очистка списка парсинга от записей без имени пользователя
@@ -76,7 +76,7 @@ class ParsingGroupMembers:
                 online_at = "Статус пользователя не определен"
         return online_at
 
-    async def obtaining_administrators(self, session_files, list_view, page):
+    async def obtaining_administrators(self, session_files, list_view, page: ft.Page):
         """
         Получает информацию об администраторах группы, включая их биографию, статус, фото и премиум-статус.
         """

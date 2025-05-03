@@ -305,7 +305,7 @@ def writing_settings_to_a_file(config) -> None:
         config.write(setup)  # Записываем данные в файл
 
 
-async def recording_limits_file(time_1, time_2, variable: str, list_view, page) -> configparser.ConfigParser:
+async def recording_limits_file(time_1, time_2, variable: str, list_view, page: ft.Page) -> configparser.ConfigParser:
     """
     Запись данных в файл TelegramMaster/user_data/config.ini
 

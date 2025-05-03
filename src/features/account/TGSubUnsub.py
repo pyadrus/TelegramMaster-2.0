@@ -45,7 +45,7 @@ class SubscribeUnsubscribeTelegram:
             return None
 
     @staticmethod
-    async def checking_links(page, client, link, list_view) -> None:
+    async def checking_links(page: ft.Page, client, link, list_view) -> None:
         """
         Проверка ссылок на подписку
 
@@ -224,7 +224,7 @@ class SubscribeUnsubscribeTelegram:
 
         page.update()  # обновляем страницу после добавления элементов управления 🔄
 
-    async def unsubscribe_all(self, page, list_view) -> None:
+    async def unsubscribe_all(self, page: ft.Page, list_view) -> None:
         """
         Отписываемся от групп, каналов, личных сообщений
 
@@ -247,7 +247,7 @@ class SubscribeUnsubscribeTelegram:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def unsubscribe_from_the_group(client, group_link, list_view, page) -> None:
+    async def unsubscribe_from_the_group(client, group_link, list_view, page: ft.Page) -> None:
         """
         Отписываемся от группы.
 
@@ -269,7 +269,7 @@ class SubscribeUnsubscribeTelegram:
         finally:
             await client.disconnect()  # Разрываем соединение с Telegram
 
-    async def subscribe_to_group_or_channel(self, client, groups_wr, list_view, page) -> None:
+    async def subscribe_to_group_or_channel(self, client, groups_wr, list_view, page: ft.Page) -> None:
         """
         Подписываемся на группу или канал
 

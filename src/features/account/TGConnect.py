@@ -69,7 +69,7 @@ class TGConnect:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def handle_banned_account(telegram_client, session_name, exception, list_view, page):
+    async def handle_banned_account(telegram_client, session_name, exception, list_view, page: ft.Page):
         """
         Обработка забаненных аккаунтов.
         telegram_client.disconnect() - Отключение от Telegram.
@@ -221,7 +221,7 @@ class TGConnect:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def rename_session_file(telegram_client, phone_old, phone, folder_name, list_view, page) -> None:
+    async def rename_session_file(telegram_client, phone_old, phone, folder_name, list_view, page: ft.Page) -> None:
         """
         Переименовывает session файлы.
 
@@ -245,7 +245,7 @@ class TGConnect:
 
         await getting_phone_number_data_by_phone_number(phone, list_view, page)  # Выводим информацию о номере телефона
 
-    async def get_telegram_client(self, page, session_name, account_directory, list_view):
+    async def get_telegram_client(self, page: ft.Page, session_name, account_directory, list_view):
         """
         Подключение к Telegram, используя файл session.
         Имя файла сессии file[0] - session файл

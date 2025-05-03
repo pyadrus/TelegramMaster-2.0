@@ -6,7 +6,7 @@ import os.path
 import random  # Импортируем модуль random, чтобы генерировать случайное число
 
 from loguru import logger
-
+import flet as ft
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.gui.menu import log_and_display
 
@@ -37,7 +37,7 @@ def all_find_files(directory_path) -> list:
     return entities  # Возвращаем список файлов
 
 
-async def find_filess(directory_path, extension, list_view, page):
+async def find_filess(directory_path, extension, list_view, page: ft.Page):
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
 
@@ -60,7 +60,7 @@ async def find_filess(directory_path, extension, list_view, page):
         return None
 
 
-async def find_folders(directory_path, list_view, page) -> list:
+async def find_folders(directory_path, list_view, page: ft.Page) -> list:
     """
     Поиск всех папок в указанной директории.
 
@@ -78,7 +78,7 @@ async def find_folders(directory_path, list_view, page) -> list:
     return folders  # Возвращаем список папок
 
 
-async def find_files(directory_path, extension, list_view, page) -> list:
+async def find_files(directory_path, extension, list_view, page: ft.Page) -> list:
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
 
@@ -121,7 +121,7 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
         logger.exception(f"❌ Ошибка: {error}")
 
 
-async def record_inviting_results(time_range_1: int, time_range_2: int, username: str, list_view, page) -> None:
+async def record_inviting_results(time_range_1: int, time_range_2: int, username: str, list_view, page: ft.Page) -> None:
     """
     Запись результатов inviting, отправка сообщений в базу данных.
 
@@ -138,7 +138,7 @@ async def record_inviting_results(time_range_1: int, time_range_2: int, username
     await record_and_interrupt(time_range_1, time_range_2, list_view, page)
 
 
-async def record_and_interrupt(time_range_1, time_range_2, list_view, page) -> None:
+async def record_and_interrupt(time_range_1, time_range_2, list_view, page: ft.Page) -> None:
     """
     Запись данных в базу данных и прерывание выполнения кода.
 

@@ -108,7 +108,7 @@ class AccountActions:
         self.extension = extension  # расширение файла с аккаунтом Telegram (session)
         self.tg_connect = tg_connect  # объект класса TelegramConnect (подключение к Telegram аккаунту)
 
-    async def change_bio_profile(self, page, user_input, list_view):
+    async def change_bio_profile(self, page: ft.Page, user_input, list_view):
         """
         Изменение описания профиля Telegram аккаунта.
 
@@ -143,7 +143,7 @@ class AccountActions:
         await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
         page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
 
-    async def change_username_profile(self, page, user_input, list_view) -> None:
+    async def change_username_profile(self, page: ft.Page, user_input, list_view) -> None:
         """
         Изменение username профиля Telegram
 
@@ -173,7 +173,7 @@ class AccountActions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_name_profile(self, page, user_input, list_view):
+    async def change_name_profile(self, page: ft.Page, user_input, list_view):
         """
         Изменение имени профиля
 
@@ -200,7 +200,7 @@ class AccountActions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_last_name_profile(self, page, user_input, list_view):
+    async def change_last_name_profile(self, page: ft.Page, user_input, list_view):
         """
         Изменение фамилии профиля
 
@@ -226,7 +226,7 @@ class AccountActions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_photo_profile(self, page, list_view):
+    async def change_photo_profile(self, page: ft.Page, list_view):
         """Изменение фото профиля.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
