@@ -37,7 +37,7 @@ def all_find_files(directory_path) -> list:
     return entities  # Возвращаем список файлов
 
 
-async def find_filess(directory_path, extension, list_view, page) -> list:
+async def find_filess(directory_path, extension, list_view, page):
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
 
@@ -57,6 +57,7 @@ async def find_filess(directory_path, extension, list_view, page) -> list:
         return entities  # Возвращаем список json файлов
     except FileNotFoundError:
         logger.error(f"❌ Ошибка! Директория {directory_path} не найдена!")
+        return None
 
 
 async def find_folders(directory_path, list_view, page) -> list:

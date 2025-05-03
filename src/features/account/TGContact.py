@@ -24,15 +24,15 @@ class TGContact:
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
 
-    async def show_account_contact_list(self, page: ft.Page) -> None:
+    async def show_account_contact_list(self, page: ft.Page, list_view: ft.ListView) -> None:
         """
         Показать список контактов аккаунтов и запись результатов в файл
         """
         try:
-            for session_name in await find_filess(directory_path=path_contact_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_contact_folder, extension='session', list_view=list_view, page=page):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_contact_folder)
+                                                                   account_directory=path_contact_folder, list_view=list_view)
                 await self.parsing_and_recording_contacts_in_the_database(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
@@ -68,7 +68,7 @@ class TGContact:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def get_and_parse_contacts(client) -> list:
+    async def get_and_parse_contacts(client):
         """
         Получаем контакты
 
@@ -80,8 +80,9 @@ class TGContact:
             logger.info(result)  # Печатаем результат
             all_participants.extend(result.users)
             return all_participants
-        except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+        except Exception as e:
+            logger.exception(f"❌ Ошибка: {e}")
+            return None
 
     @staticmethod
     async def we_show_and_delete_the_contact_of_the_phone_book(client, user) -> None:
@@ -98,32 +99,33 @@ class TGContact:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def delete_contact(self, page) -> None:
+    async def delete_contact(self, page, list_view) -> None:
         """
         Удаляем контакты с аккаунтов
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список для отображения элементов управления.
         """
         try:
-            for session_name in await find_filess(directory_path=path_contact_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_contact_folder, extension='session', list_view=list_view, page=page):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_contact_folder)
+                                                                   account_directory=path_contact_folder, list_view=list_view)
                 await self.we_get_the_account_id(client)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def inviting_contact(self, page) -> None:
+    async def inviting_contact(self, page, list_view) -> None:
         """
         Добавление данных в телефонную книгу с последующим формированием списка software_database.db, для inviting
         """
         try:
             # Открываем базу данных для работы с аккаунтами user_data/software_database.db
-            for session_name in await find_filess(directory_path=path_contact_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_contact_folder, extension='session', list_view=list_view, page=page):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_contact_folder)
+                                                                   account_directory=path_contact_folder, list_view=list_view)
                 await self.add_contact_to_phone_book(client)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")

@@ -112,12 +112,6 @@ class ConfigReader:
         """
         return self.config_gui.get('window_resizable', 'window_resizable', fallback=None)
 
-    def path_parsing_folder(self) -> str | None:
-        """
-        Путь к папке для парсинга (путь к config файлу user_data/config/config_path.ini)
-        """
-        return self.config_path.get('path_parsing_folder', 'path_parsing_folder', fallback=None)
-
     def path_inviting_folder(self) -> str | None:
         """
         Путь к папке для инвайтинга (путь к config файлу user_data/config/config_path.ini)
@@ -216,7 +210,6 @@ window_width = ConfigReader().window_width()  # Ширина программы
 window_height = ConfigReader().window_height()  # Ширина программы
 window_resizable = ConfigReader().window_resizable()  # Ширина программы
 
-path_parsing_folder = ConfigReader().path_parsing_folder()  # Путь к папке для парсинга
 path_inviting_folder = ConfigReader().path_inviting_folder()  # Путь к папке для инвайтинга
 path_subscription_folder = ConfigReader().path_subscription_folder()  # Путь к папке для подписки
 path_unsubscribe_folder = ConfigReader().path_unsubscribe_folder()  # Путь к папке для отписки

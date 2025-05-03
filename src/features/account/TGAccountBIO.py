@@ -26,12 +26,12 @@ class GUIManager:
         try:
             user_input = ft.TextField(label=label, multiline=True, max_lines=19)
 
-            async def btn_click(e) -> None:
+            async def btn_click(_) -> None:
                 await action(page, user_input.value)
                 page.go("/bio_editing")  # Изменение маршрута
                 page.update()
 
-            def back_button_clicked(e) -> None:
+            def back_button_clicked(_) -> None:
                 """Кнопка возврата в меню изменения профиля."""
                 page.go("/bio_editing")
 
@@ -52,13 +52,14 @@ class AccountBIO:
         self.account_actions = AccountActions(self.directory_path, self.extension, self.tg_connect)
         self.gui_manager = GUIManager()
 
-    async def change_photo_profile_gui(self, page: ft.Page) -> None:
+    async def change_photo_profile_gui(self, page: ft.Page, list_view: ft.ListView) -> None:
         """
         Изменение фото профиля Telegram через интерфейс Flet.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Отображение информации в виде списка.
         """
-        await self.account_actions.change_photo_profile(page)
+        await self.account_actions.change_photo_profile(page, list_view)
 
     async def change_username_profile_gui(self, page: ft.Page) -> None:
         """
@@ -107,18 +108,19 @@ class AccountActions:
         self.extension = extension  # расширение файла с аккаунтом Telegram (session)
         self.tg_connect = tg_connect  # объект класса TelegramConnect (подключение к Telegram аккаунту)
 
-    async def change_bio_profile(self, page, user_input):
+    async def change_bio_profile(self, page, user_input, list_view):
         """
         Изменение описания профиля Telegram аккаунта.
 
         :param user_input - новое описание профиля Telegram
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список аккаунтов Telegram
         :return: None
         """
-
         try:
             logger.info(f"Запуск смены  описания профиля")
-            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
+                                                  list_view=list_view, page=page):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
@@ -141,15 +143,17 @@ class AccountActions:
         await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
         page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
 
-    async def change_username_profile(self, page, user_input) -> None:
+    async def change_username_profile(self, page, user_input, list_view) -> None:
         """
         Изменение username профиля Telegram
 
         :param user_input  - новое имя пользователя
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список аккаунтов Telegram
         """
         try:
-            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
+                                                  list_view=list_view, page=page):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page,
                                                                    session_name=session_name,
@@ -170,16 +174,18 @@ class AccountActions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_name_profile(self, page, user_input):
+    async def change_name_profile(self, page, user_input, list_view):
         """
         Изменение имени профиля
 
         :param user_input - новое имя пользователя
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список аккаунтов Telegram
         """
 
         try:
-            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
+                                                  list_view=list_view, page=page):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
                                                                    account_directory=self.directory_path)
@@ -196,15 +202,17 @@ class AccountActions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_last_name_profile(self, page, user_input):
+    async def change_last_name_profile(self, page, user_input, list_view):
         """
         Изменение фамилии профиля
 
         :param user_input - новое имя пользователя Telegram
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список аккаунтов Telegram
         """
         try:
-            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
+                                                  list_view=list_view, page=page):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
@@ -221,13 +229,15 @@ class AccountActions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_photo_profile(self, page):
+    async def change_photo_profile(self, page, list_view):
         """Изменение фото профиля.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Список аккаунтов Telegram
         """
         try:
-            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
+            for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
+                                                  list_view=list_view, page=page):
                 logger.info(f"{session_name}")
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)

@@ -15,7 +15,8 @@ class CheckingProgram:
         self.account_extension = "session"  # Расширение файла аккаунта
         self.file_extension = "json"
 
-    async def check_before_sending_messages_via_chats(self, page: ft.Page):
+    @staticmethod
+    async def check_before_sending_messages_via_chats(page: ft.Page):
         """
         ⛔ Проверка наличия сформированного списка с чатами для рассылки по чатам.
         ⛔ Проверка папки с сообщениями на наличие заготовленных сообщений.
@@ -23,9 +24,9 @@ class CheckingProgram:
         if len(await db_handler.select_records_with_limit(table_name="writing_group_links",
                                                           limit=ConfigReader().get_limits())) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
-            return None
 
-    async def check_before_inviting(self, page: ft.Page):
+    @staticmethod
+    async def check_before_inviting(page: ft.Page):
         """
         ⛔ Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных
         :param page: Страница интерфейса Flet для отображения элементов управления.
@@ -33,26 +34,23 @@ class CheckingProgram:
         if len(await db_handler.select_records_with_limit(table_name="members",
                                                           limit=ConfigReader().get_limits())) == 0:
             await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
-            return None
         if len(await db_handler.select_records_with_limit(table_name="links_inviting",
                                                           limit=ConfigReader().get_limits())) == 0:
             await show_notification(page, "⛔ Не записана группа для инвайтинга")
-            return None
 
-    async def checking_sending_messages_via_chats_with_answering_machine(self, page: ft.Page):
+    async def checking_sending_messages_via_chats_with_answering_machine(self, page: ft.Page, list_view):
         """
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (Рассылка сообщений по чатам с автоответчиком)
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: Отображение списка
         """
-        if not await find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
+        if not await find_filess(directory_path=path_folder_with_messages, extension=self.file_extension,
+                                 list_view=list_view, page=page):
             await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")
-            return None
         if not await find_filess(directory_path=path_send_message_folder_answering_machine_message,
-                                 extension=self.file_extension):
+                                 extension=self.file_extension, list_view=list_view, page=page):
             await show_notification(page,
                                     f"⛔ Нет заготовленных сообщений для автоответчика в папке {path_send_message_folder_answering_machine_message}")
-            return None
         if len(await db_handler.select_records_with_limit(table_name="writing_group_links",
                                                           limit=ConfigReader().get_limits())) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
-            return None

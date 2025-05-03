@@ -83,7 +83,7 @@ class ParsingGroupMembers:
                 session_name = os.path.basename(session_path)
                 try:
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_accounts_folder)
+                                                                       account_directory=path_accounts_folder, list_view=list_view)
                     for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                         try:
@@ -186,13 +186,13 @@ class ParsingGroupMembers:
         )
 
         # Обработчики для взаимоисключающего поведения
-        def toggle_admin_switch(e):
+        def toggle_admin_switch(_):
             if admin_switch.value:
                 account_groups_switch.value = False
                 members_switch.value = False
             page.update()
 
-        def toggle_account_groups_switch(e):
+        def toggle_account_groups_switch(_):
             if account_groups_switch.value:
                 admin_switch.value = False
                 members_switch.value = False
@@ -221,7 +221,7 @@ class ParsingGroupMembers:
 
             if not selected_sessions:
                 await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", list_view, page)
-                session_files = await find_filess(directory_path=path_accounts_folder, extension='session')
+                session_files = await find_filess(directory_path=path_accounts_folder, extension='session', list_view=list_view, page=page)
                 if not session_files:
                     await log_and_display("❌ В папке нет session файлов для парсинга.", list_view, page)
                     page.update()
@@ -241,7 +241,7 @@ class ParsingGroupMembers:
                     for session_path in session_files:
                         session_name = os.path.basename(session_path)
                         client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_accounts_folder)
+                                                                           account_directory=path_accounts_folder, list_view=list_view)
                         await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", list_view, page)
                         await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", list_view, page)
                         await self.forming_a_list_of_groups(client, list_view, page)
@@ -256,7 +256,7 @@ class ParsingGroupMembers:
                     for session_path in session_files:
                         session_name = os.path.basename(session_path)
                         client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_accounts_folder)
+                                                                           account_directory=path_accounts_folder, list_view=list_view)
                         for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                             await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                             # подписываемся на группу
@@ -358,7 +358,7 @@ class ParsingGroupMembers:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def parse_active_users(self, chat_input, limit_active_user, lv, page) -> None:
+    async def parse_active_users(self, chat_input, limit_active_user, lv, page, list_view) -> None:
         """
         Parsing участников, которые пишут в чат (активных участников)
 
@@ -368,9 +368,9 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session', list_view=list_view, page=page):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_accounts_folder)
+                                                                   account_directory=path_accounts_folder, list_view=list_view)
                 await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
 
                 try:
@@ -448,7 +448,7 @@ class ParsingGroupMembers:
             group_names.append(group.title)  # Добавляем название группы в список
         return group_names
 
-    async def choose_and_parse_group(self, page: ft.Page) -> None:
+    async def choose_and_parse_group(self, page: ft.Page, list_view) -> None:
         """
         📌 Выбираем группу из подписанных и запускаем парсинг
 
@@ -458,9 +458,9 @@ class ParsingGroupMembers:
         lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(lv)
         try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session', list_view=list_view, page=page):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_accounts_folder)
+                                                                   account_directory=path_accounts_folder, list_view=list_view)
                 chats = []
                 last_date = None
                 result = await client(
