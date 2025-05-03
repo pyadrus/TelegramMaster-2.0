@@ -27,7 +27,8 @@ from src.features.settings.setting import SettingPage, get_unique_filename, reac
 from src.gui.main_menu import main_menu_program
 from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                           subscribe_and_unsubscribe_menu, account_verification_menu, account_connection_menu,
-                          viewing_posts_menu, show_notification, creating_groups_and_chats_menu, working_with_contacts_menu)
+                          viewing_posts_menu, show_notification, creating_groups_and_chats_menu,
+                          working_with_contacts_menu)
 
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
 
@@ -66,7 +67,7 @@ async def main(page: ft.Page):
             elif page.route == "/inviting_every_day":  # 📅 Инвайтинг каждый день
                 await CheckingProgram().check_before_inviting(page=page)
                 await InvitingToAGroup().launching_invite_every_day_certain_time(page=page)
-            # ______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/account_verification_menu":  # Меню "Проверка аккаунтов"
                 await account_verification_menu(page)
             elif page.route == "/validation_check":  # Проверка на валидность
@@ -77,7 +78,7 @@ async def main(page: ft.Page):
                 await TGChek().renaming_accounts(page=page)
             elif page.route == "/full_verification":  # Полная проверка
                 await TGChek().full_verification(page=page)
-            # ______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
                 await subscribe_and_unsubscribe_menu(page)
             elif page.route == "/subscription_all":  # Подписка
@@ -93,7 +94,7 @@ async def main(page: ft.Page):
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-            # ______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
                 await reactions_menu(page)
             elif page.route == "/setting_reactions":  # Ставим реакции
@@ -116,7 +117,7 @@ async def main(page: ft.Page):
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-            # ______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/viewing_posts_menu":  # Автоматическое выставление просмотров меню
                 await viewing_posts_menu(page)
             elif page.route == "/we_are_winding_up_post_views":  # ️‍🗨️ Накручиваем просмотры постов
@@ -129,7 +130,7 @@ async def main(page: ft.Page):
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-            # ______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/parsing":  # Меню "Парсинг"
                 await menu_parsing(page)
             elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
@@ -143,7 +144,7 @@ async def main(page: ft.Page):
                 await ParsingGroupMembers().entering_data_for_parsing_active(page)
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
                 await ReceivingAndRecording().write_data_to_excel(file_name="user_data/parsed_chat_participants.xlsx")
-            # ______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
                 await working_with_contacts_menu(page)
             elif page.route == "/creating_contact_list":  # Формирование списка контактов
@@ -188,29 +189,29 @@ async def main(page: ft.Page):
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
                 logger.info('Время окончания: ' + str(finish))
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
-            # ______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/account_connection_menu":  # Подключение аккаунтов 'меню'.
                 await account_connection_menu(page)
-            # _______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/connecting_accounts_by_number":  # Подключение аккаунтов по номеру телефона 'Меню'
                 await TGConnect().connecting_number_accounts(page)
-            # _______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/connecting_accounts_by_session":  # Подключение session аккаунтов 'Меню'
                 await TGConnect().connecting_session_accounts(page)
-            # _______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/creating_groups_and_chats_menu":  # Меню "Создание групп и чатов"
                 await creating_groups_and_chats_menu(page)
             elif page.route == "/creating_groups":  # Создание групп (чатов)
                 await CheckingProgram().checking_creating_groups(page=page)
                 await CreatingGroupsAndChats().creating_groups_and_chats(page=page)
-            # _______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений по чатам
                 await CheckingProgram().check_before_sending_messages_via_chats(page=page)
                 await SendTelegramMessages().sending_messages_files_via_chats(page=page)
             elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка сообщений в личку
                 await CheckingProgram().checking_sending_to_personal(page=page)
                 await SendTelegramMessages().send_files_to_personal_chats(page=page)
-            # ______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
                 await bio_editing_menu(page)
             elif page.route == "/edit_description":  # Изменение описания
@@ -229,7 +230,7 @@ async def main(page: ft.Page):
             elif page.route == "/changing_username":  # Изменение username
                 await CheckingProgram().checking_for_bio(page=page)
                 await AccountBIO().change_username_profile_gui(page)
-            # ______________________________________________________________________________________________________________
+            # __________________________________________________________________________________________________________
             elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
                 await settings_menu(page)
             elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash
