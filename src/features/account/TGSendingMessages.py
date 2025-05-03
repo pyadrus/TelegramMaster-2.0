@@ -46,7 +46,7 @@ class SendTelegramMessages:
         """
 
         output = ft.Text("Отправка сообщений в личку", size=18, weight=ft.FontWeight.BOLD)
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
 
         # Обработчик кнопки "Готово"
         async def button_clicked(_):
@@ -64,14 +64,16 @@ class SendTelegramMessages:
                 try:
                     # Просим пользователя ввести расширение сообщения
                     for session_name in await find_filess(directory_path=path_send_message_folder,
-                                                    extension=self.account_extension):
+                                                          extension=self.account_extension, list_view=list_view,
+                                                          page=page):
                         client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_send_message_folder)
+                                                                           account_directory=path_send_message_folder,
+                                                                           list_view=list_view)
                         try:
                             # Открываем parsing список user_data/software_database.db для inviting в группу
                             number_usernames: list = await db_handler.select_records_with_limit(table_name="members",
                                                                                                 limit=int(
-                                                                                           account_limits))
+                                                                                                    account_limits))
                             # Количество аккаунтов на данный момент в работе
                             logger.info(f"Всего username: {len(number_usernames)}")
                             for rows in number_usernames:
@@ -81,11 +83,11 @@ class SendTelegramMessages:
                                 try:
                                     user_to_add = await client.get_input_entity(username)
                                     messages, files = await self.all_find_and_all_files()
-                                    await self.send_content(client, user_to_add, messages, files, lv, page)
+                                    await self.send_content(client, user_to_add, messages, files, list_view, page)
                                     logger.info(
                                         f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.")
                                     await record_inviting_results(time_from, time_to, rows)
-                                except FloodWaitError as e:
+                                except FloodWaitError as _:
                                     await record_and_interrupt(time_from, time_to)
                                     break  # Прерываем работу и меняем аккаунт
                                 except PeerFloodError:
@@ -133,7 +135,8 @@ class SendTelegramMessages:
                               controls=[button_done, button_back, ],
                           ), ], ))
 
-    async def sleep_selection_input(self):
+    @staticmethod
+    async def sleep_selection_input():
         # Группа полей ввода для времени сна
         tb_time_from = ft.TextField(label="Время сна от", width=297, hint_text="Введите время", border_radius=5, )
         tb_time_to = ft.TextField(label="Время сна до", width=297, hint_text="Введите время", border_radius=5, )
@@ -144,8 +147,8 @@ class SendTelegramMessages:
         # Создаем ListView для отображения логов
         page.views.clear()
         page.update()
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         # Кнопка "Назад"
         button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
@@ -154,20 +157,18 @@ class SendTelegramMessages:
             ft.View(
                 "/sending_messages_via_chats_menu",
                 controls=[
-                    lv,  # отображение логов 📝
+                    list_view,  # отображение логов 📝
                     ft.Column(
                         controls=[button_back]
-                    )
-                ]
-            )
-        )
+                    )]))
 
         if checs == True:
             try:
                 for session_name in await find_filess(directory_path=path_send_message_folder_answering_machine,
-                                                extension=self.account_extension):
+                                                      extension=self.account_extension, list_view=list_view, page=page):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_send_message_folder_answering_machine)
+                                                                       account_directory=path_send_message_folder_answering_machine,
+                                                                       list_view=list_view)
 
                     @client.on(events.NewMessage(incoming=True))  # Обработчик личных сообщений
                     async def handle_private_messages(event):
@@ -183,7 +184,7 @@ class SendTelegramMessages:
                             await event.respond(f'{data}')  # Отвечаем на входящее сообщение
 
                     # Получаем список чатов, которым нужно отправить сообщение
-                    await log_and_display(f"Всего групп: {len(chat_list_fields)}", lv, page)
+                    await log_and_display(f"Всего групп: {len(chat_list_fields)}", list_view, page)
                     page.update()
                     for group_link in chat_list_fields:
                         try:
@@ -191,7 +192,7 @@ class SendTelegramMessages:
                             # Находит все файлы в папке с сообщениями и папке с файлами для отправки.
                             messages, files = await self.all_find_and_all_files()
                             # Отправляем сообщения и файлы в группу
-                            await self.send_content(client, group_link, messages, files, lv, page)
+                            await self.send_content(client, group_link, messages, files, list_view, page)
                         except UserBannedInChannelError:
                             logger.error(
                                 'Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)')
@@ -204,20 +205,21 @@ class SendTelegramMessages:
                 logger.exception(f"❌ Ошибка: {error}")
         else:
             try:
-                start = await self.start_time(lv, page)
+                start = await self.start_time(list_view, page)
                 for session_name in await find_filess(directory_path=path_send_message_folder,
-                                                extension=self.account_extension):
+                                                      extension=self.account_extension, list_view=list_view, page=page):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_send_message_folder)
+                                                                       account_directory=path_send_message_folder,
+                                                                       list_view=list_view)
                     # Открываем базу данных с группами, в которые будут рассылаться сообщения
-                    await log_and_display(f"Всего групп: {len(chat_list_fields)}", lv, page)
+                    await log_and_display(f"Всего групп: {len(chat_list_fields)}", list_view, page)
                     for group_link in chat_list_fields:  # Поочередно выводим записанные группы
                         try:
                             await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link)
                             # Находит все файлы в папке с сообщениями и папке с файлами для отправки.
                             messages, files = await self.all_find_and_all_files()
                             # Отправляем сообщения и файлы в группу
-                            await self.send_content(client, group_link, messages, files, lv, page)
+                            await self.send_content(client, group_link, messages, files, list_view, page)
                         except ChannelPrivateError:
                             logger.warning(f"Группа {group_link} приватная или подписка запрещена.")
                         except PeerFloodError:
@@ -247,8 +249,8 @@ class SendTelegramMessages:
                         except Exception as error:
                             logger.exception(f"❌ Ошибка: {error}")
                     await client.disconnect()  # Разрываем соединение Telegram
-                await log_and_display("🔚 Конец отправки сообщений + файлов по чатам", lv, page)
-                await self.end_time(start, lv, page)
+                await log_and_display("🔚 Конец отправки сообщений + файлов по чатам", list_view, page)
+                await self.end_time(start, list_view, page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
@@ -259,7 +261,7 @@ class SendTelegramMessages:
         output = ft.Text(sending_messages_files_via_chats_ru, size=18, weight=ft.FontWeight.BOLD)
 
         # Обработчик кнопки "Готово"
-        async def button_clicked(e):
+        async def button_clicked(_):
             time_from = tb_time_from.value or self.time_sending_messages_1  # Получаем значение первого поля
             time_to = tb_time_to.value or self.time_sending_messages_2  # Получаем значение второго поля
             # Получаем значение третьего поля и разделяем его на список по пробелам
@@ -301,31 +303,33 @@ class SendTelegramMessages:
                               controls=[button_done, button_back, ],
                           ), ], ))
 
-    async def start_time(self, lv, page):
+    @staticmethod
+    async def start_time(list_view, page):
         start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-        await log_and_display('▶️ Время старта: ' + str(start), lv, page)
+        await log_and_display('▶️ Время старта: ' + str(start), list_view, page)
         return start
 
-    async def end_time(self, start, lv, page):
+    @staticmethod
+    async def end_time(start, list_view, page):
         finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-        await log_and_display('Время окончания: ' + str(finish), lv, page)
-        await log_and_display('Время работы: ' + str(finish - start), lv, page)
+        await log_and_display('Время окончания: ' + str(finish), list_view, page)
+        await log_and_display('Время работы: ' + str(finish - start), list_view, page)
 
-    async def send_content(self, client, target, messages, files, lv, page):
+    async def send_content(self, client, target, messages, files, list_view, page):
         """
         Отправляет сообщения и файлы в личку.
         :param client: Телеграм клиент
         :param target: Ссылка на группу (или личку)
         :param messages: Список сообщений
         :param files: Список файлов
-        :param lv: Лог-вью
+        :param list_view: Лог-вью
         :param page: Страница
         """
-        await log_and_display(f"Отправляем сообщение: {target}", lv, page)
+        await log_and_display(f"Отправляем сообщение: {target}", list_view, page)
         if not messages:
             for file in files:
                 await client.send_file(target, f"user_data/files_to_send/{file}")
-                await log_and_display(f"Файл {file} отправлен в {target}.", lv, page)
+                await log_and_display(f"Файл {file} отправлен в {target}.", list_view, page)
         else:
             message = await self.select_and_read_random_file(messages, folder="message")
             if not files:
@@ -333,7 +337,7 @@ class SendTelegramMessages:
             else:
                 for file in files:
                     await client.send_file(target, f"user_data/files_to_send/{file}", caption=message)
-                    await log_and_display(f"Сообщение и файл отправлены: {target}", lv, page)
+                    await log_and_display(f"Сообщение и файл отправлены: {target}", list_view, page)
         await self.random_dream()
 
     async def all_find_and_all_files(self):
@@ -372,5 +376,4 @@ class SendTelegramMessages:
             return data  # Возвращаем данные из файла
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
-
-# 392
+            return None

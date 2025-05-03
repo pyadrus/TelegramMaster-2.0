@@ -25,11 +25,12 @@ class ViewingPosts:
         self.tg_connect = TGConnect()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def viewing_posts_request(self, page: ft.Page) -> None:
+    async def viewing_posts_request(self, page: ft.Page, list_view) -> None:
         """
         Ставим реакции на сообщения
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: ListView для отображения списка сессий.
         :return: None
         """
         try:
@@ -37,11 +38,11 @@ class ViewingPosts:
             link_channel = ft.TextField(label="Введите ссылку на канал:", multiline=False, max_lines=1)
             link_post = ft.TextField(label="Введите ссылку на пост:", multiline=False, max_lines=1)
 
-            async def btn_click(e) -> None:
+            async def btn_click(_) -> None:
 
-                for session_name in await find_filess(directory_path=path_viewing_folder, extension='session'):
+                for session_name in await find_filess(directory_path=path_viewing_folder, extension='session', list_view=list_view, page=page):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_viewing_folder)
+                                                                       account_directory=path_viewing_folder, list_view=list_view)
                     logger.info(f'[+] Работаем с каналом: {link_channel.value}')
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel.value)
                     msg_id = int(re.search(r'/(\d+)$', link_post.value).group(1))  # Получаем id сообщения из ссылки
@@ -52,7 +53,7 @@ class ViewingPosts:
                     page.go("/viewing_posts_menu")
                     page.update()  # Обновление страницы для отображения изменений
 
-            def back_button_clicked(e) -> None:
+            def back_button_clicked(_) -> None:
                 """Кнопка возврата в меню накрутки просмотров"""
                 page.go("/viewing_posts_menu")
 

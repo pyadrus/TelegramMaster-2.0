@@ -45,13 +45,15 @@ class ParsingGroupMembers:
         # Удаление дублирующихся записей по идентификатору
         await self.db_handler.remove_duplicate_ids(table_name="members", column_name="id")
 
-    def back_button_clicked(self, page):
+    @staticmethod
+    def back_button_clicked(page):
         """
         ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню парсинга.
         """
         page.go("/parsing")  # переходим к основному меню парсинга 🏠
 
-    async def get_user_online_status(self, user):
+    @staticmethod
+    async def get_user_online_status(user):
         """
         Определяет статус онлайна пользователя на основе его статуса.
         https://core.telegram.org/type/UserStatus
@@ -83,7 +85,8 @@ class ParsingGroupMembers:
                 session_name = os.path.basename(session_path)
                 try:
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_accounts_folder, list_view=list_view)
+                                                                       account_directory=path_accounts_folder,
+                                                                       list_view=list_view)
                     for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                         try:
@@ -221,7 +224,8 @@ class ParsingGroupMembers:
 
             if not selected_sessions:
                 await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", list_view, page)
-                session_files = await find_filess(directory_path=path_accounts_folder, extension='session', list_view=list_view, page=page)
+                session_files = await find_filess(directory_path=path_accounts_folder, extension='session',
+                                                  list_view=list_view, page=page)
                 if not session_files:
                     await log_and_display("❌ В папке нет session файлов для парсинга.", list_view, page)
                     page.update()
@@ -241,7 +245,8 @@ class ParsingGroupMembers:
                     for session_path in session_files:
                         session_name = os.path.basename(session_path)
                         client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_accounts_folder, list_view=list_view)
+                                                                           account_directory=path_accounts_folder,
+                                                                           list_view=list_view)
                         await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", list_view, page)
                         await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", list_view, page)
                         await self.forming_a_list_of_groups(client, list_view, page)
@@ -256,7 +261,8 @@ class ParsingGroupMembers:
                     for session_path in session_files:
                         session_name = os.path.basename(session_path)
                         client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_accounts_folder, list_view=list_view)
+                                                                           account_directory=path_accounts_folder,
+                                                                           list_view=list_view)
                         for groups in await self.db_handler.open_and_read_data("writing_group_links"):
                             await log_and_display(f"🔍 Парсинг группы: {groups[0]}", list_view, page)
                             # подписываемся на группу
@@ -339,38 +345,41 @@ class ParsingGroupMembers:
         )
         page.update()  # обновляем страницу после добавления элементов управления 🔄
 
-    async def parse_group(self, client, groups_wr, lv, page) -> None:
+    async def parse_group(self, client, groups_wr, list_view, page) -> None:
         """
         Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
         @handle_exceptions для отлавливания ошибок и записи их в базу данных user_data/software_database.db.
 
         :param client: Клиент Telegram
         :param groups_wr: ссылка на группу
-        :param lv: ListView
+        :param list_view: ListView
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             # Записываем parsing данные в файл user_data/software_database.db
-            entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, lv, page), lv,
+            entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, list_view, page),
+                                                             list_view,
                                                              page)
-            await log_and_display(f"{entities}", lv, page)
+            await log_and_display(f"{entities}", list_view, page)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def parse_active_users(self, chat_input, limit_active_user, lv, page, list_view) -> None:
+    async def parse_active_users(self, chat_input, limit_active_user, page, list_view) -> None:
         """
         Parsing участников, которые пишут в чат (активных участников)
 
         :param chat_input: ссылка на чат
         :param limit_active_user: лимит активных участников
-        :param lv: ListView
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param list_view: ListView
         """
         try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session', list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session',
+                                                  list_view=list_view, page=page):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_accounts_folder, list_view=list_view)
+                                                                   account_directory=path_accounts_folder,
+                                                                   list_view=list_view)
                 await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
 
                 try:
@@ -382,20 +391,20 @@ class ParsingGroupMembers:
                     # то делаем паузу по умолчанию в 5 секунд.
                     await asyncio.sleep(5)  # По умолчанию 5, если None или неправильный тип
 
-                await self.get_active_users(client, chat_input, limit_active_user, lv, page)
+                await self.get_active_users(client, chat_input, limit_active_user, list_view, page)
                 await client.disconnect()  # Разрываем соединение telegram
             await self.clean_parsing_list_and_remove_duplicates()
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def get_active_users(self, client, chat, limit_active_user, lv, page) -> None:
+    async def get_active_users(self, client, chat, limit_active_user, list_view, page) -> None:
         """
         Получаем данные участников группы которые писали сообщения.
 
-        :param client: клиент Telegram
+        :param client: Клиент Telegram
         :param chat: ссылка на чат
         :param limit_active_user: лимит активных участников
-        :param lv: ListView
+        :param list_view: ListView
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
@@ -409,7 +418,7 @@ class ParsingGroupMembers:
                         logger.info(f"{from_user}")
                         # Получаем данные о пользователе
                         entities = await self.get_active_user_data(user)
-                        await log_and_display(f"{entities}", lv, page)
+                        await log_and_display(f"{entities}", list_view, page)
                         await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
                     except ValueError as e:
                         logger.warning(f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}")
@@ -456,12 +465,14 @@ class ParsingGroupMembers:
         :param list_view: ListView
         :return: None
         """
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)
         try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session', list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session',
+                                                  list_view=list_view, page=page):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_accounts_folder, list_view=list_view)
+                                                                   account_directory=path_accounts_folder,
+                                                                   list_view=list_view)
                 chats = []
                 last_date = None
                 result = await client(
@@ -477,15 +488,17 @@ class ParsingGroupMembers:
                 # Обработчик нажатия кнопки выбора группы
                 async def handle_button_click(_) -> None:
                     start = datetime.datetime.now()  # фиксируем время начала выполнения кода
-                    await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
-                    await log_and_display(f"📂 Выбрана группа: {dropdown.value}", lv, page)
-                    await self.parse_group(client, dropdown.value, lv, page)  # Запускаем парсинг выбранной группы
+                    await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", list_view, page)
+                    await log_and_display(f"📂 Выбрана группа: {dropdown.value}", list_view, page)
+                    await self.parse_group(client, dropdown.value, list_view,
+                                           page)  # Запускаем парсинг выбранной группы
                     await self.clean_parsing_list_and_remove_duplicates()
                     await client.disconnect()
                     # Переходим на экран парсинга только после завершения всех действий
                     finish = datetime.datetime.now()  # фиксируем время окончания парсинга
                     await log_and_display(
-                        f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
+                        f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", list_view,
+                        page)
                     page.go("/parsing")
 
                 # Создаем выпадающий список с названиями групп
@@ -503,7 +516,7 @@ class ParsingGroupMembers:
                                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
                                                   on_click=lambda _: self.back_button_clicked(page)),
                                 # Кнопка "⬅️ Назад"
-                                result_text, lv,
+                                result_text, list_view,
                             ])
                         ],
                     )  # Добавляем созданный вид на страницу
@@ -513,19 +526,19 @@ class ParsingGroupMembers:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def parse_users(client, target_group, lv, page: ft.Page):
+    async def parse_users(client, target_group, list_view, page: ft.Page):
         """
         🧑‍🤝‍🧑 Парсинг и сбор данных пользователей группы или канала.
         Метод осуществляет поиск участников в указанной группе или канале, собирает их данные и сохраняет в файле.
 
         :param client: Клиент Telegram.
         :param target_group: Группа или канал, участники которого будут собраны.
-        :param lv: Элемент управления ListView для отображения данных.
+        :param list_view: Элемент управления ListView для отображения данных.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :return: Список участников.
         """
         try:
-            await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", lv, page)
+            await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", list_view, page)
 
             all_participants: list = []
             while_condition = True
@@ -541,24 +554,24 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    await log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", lv, page,
+                    await log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", list_view, page,
                                           level="error")
                     await asyncio.sleep(2)
                     break
                 except ChatAdminRequiredError:
-                    await log_and_display(f"❌ Ошибка: не хватает прав администратора {target_group}", lv, page,
+                    await log_and_display(f"❌ Ошибка: не хватает прав администратора {target_group}", list_view, page,
                                           level="error")
                     await asyncio.sleep(2)
                     break
                 except ChannelPrivateError:
                     await log_and_display(
                         f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт",
-                        lv, page, level="error")
+                        list_view, page, level="error")
                     await asyncio.sleep(2)
                     break
                 except AuthKeyUnregisteredError:
                     await log_and_display(f"❌ Ошибка: неверный ключ авторизации аккаунта, выполните проверку аккаунтов",
-                                          lv, page, level="error")
+                                          list_view, page, level="error")
                     await asyncio.sleep(2)
                     break
 
@@ -567,20 +580,20 @@ class ParsingGroupMembers:
             logger.exception(f"❌ Ошибка: {error}")
             raise
 
-    async def get_all_participants(self, all_participants, lv, page: ft.Page) -> list:
+    async def get_all_participants(self, all_participants, list_view, page: ft.Page) -> list:
         """
         Сбор данных всех участников.
         Метод проходит по списку участников, получает их данные и сохраняет их в список сущностей.
 
         :param all_participants: Список объектов участников.
-        :param lv: Элемент управления ListView для отображения данных.
+        :param list_view: Элемент управления ListView для отображения данных.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :return: Список собранных данных участников.
         """
         try:
             entities: list = []  # Создаем пустой список для хранения данных участников
             for user in all_participants:
-                await self.get_user_data(user, entities, lv, page)
+                await self.get_user_data(user, entities, list_view, page)
             return entities  # Возвращаем словарь пользователей
         except TypeError as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -589,14 +602,14 @@ class ParsingGroupMembers:
             logger.exception(f"❌ Ошибка: {error}")
             return []  # Возвращаем пустой список в случае ошибки
 
-    async def get_user_data(self, user, entities, lv, page: ft.Page) -> None:
+    async def get_user_data(self, user, entities, list_view, page: ft.Page) -> None:
         """
         Получение и сохранение данных пользователя.
         Метод получает данные пользователя, добавляет их в список сущностей и отображает на странице.
 
         :param user: Объект пользователя.
         :param entities: Список сущностей для хранения данных пользователя.
-        :param lv: Элемент управления ListView для отображения данных.
+        :param list_view: Элемент управления ListView для отображения данных.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
@@ -608,7 +621,7 @@ class ParsingGroupMembers:
                 [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
                  user_premium])
             # Отображение данных на странице
-            lv.controls.append(ft.Text(
+            list_view.controls.append(ft.Text(
                 f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
             page.update()  # Обновление страницы для каждого элемента данных
         except Exception as error:
@@ -650,7 +663,7 @@ class ParsingGroupMembers:
             raise
 
     @staticmethod
-    async def forming_a_list_of_groups(client, lv, page: ft.Page) -> None:
+    async def forming_a_list_of_groups(client, list_view, page: ft.Page) -> None:
         """
         Формирует список групп и каналов.
 
@@ -658,7 +671,7 @@ class ParsingGroupMembers:
         и время последнего парсинга. Данные сохраняются в базу данных.
 
         :param client: Экземпляр клиента Telegram.
-        :param lv: ListView для отображения сообщений.
+        :param list_view: ListView для отображения сообщений.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
@@ -673,7 +686,7 @@ class ParsingGroupMembers:
                     parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                     await log_and_display(
                         f"{dialog.id}, {channel_details.title}, https://t.me/{channel_details.username}, {participants_count}",
-                        lv, page)
+                        list_view, page)
                     with db.atomic():  # Атомарная транзакция для записи данных
                         GroupsAndChannels.create(
                             id=dialog.id, title=channel_details.title, about=full_channel_info.full_chat.about,
@@ -694,8 +707,8 @@ class ParsingGroupMembers:
         """
         try:
 
-            lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-            page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+            list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+            page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
             page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
             # Поле для ввода ссылки на чат
@@ -708,15 +721,17 @@ class ParsingGroupMembers:
             async def btn_click(_) -> None:
                 """✅ Функция-обработчик для кнопки "Готово"""
                 start = datetime.datetime.now()  # фиксируем время начала выполнения кода
-                await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", lv, page)
+                await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", list_view, page)
                 await log_and_display(
-                    f"🔗 Ссылка на чат: {chat_input.value}. 💬 Количество сообщений: {limit_active_user.value}", lv, page)
+                    f"🔗 Ссылка на чат: {chat_input.value}. 💬 Количество сообщений: {limit_active_user.value}",
+                    list_view, page)
                 # Вызов функции для парсинга активных пользователей (функция должна быть реализована)
-                await self.parse_active_users(chat_input.value, int(limit_active_user.value), lv, page)
+                await self.parse_active_users(chat_input.value, int(limit_active_user.value), page, list_view)
                 # Изменение маршрута на новый (если необходимо)
                 finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
                 await log_and_display(
-                    f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", lv, page)
+                    f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", list_view,
+                    page)
                 page.go("/parsing")  # Возвращаемся к основному меню парсинга 🏠
                 page.update()  # Обновление страницы для отображения изменений 🔄
 
@@ -725,7 +740,7 @@ class ParsingGroupMembers:
                 ft.View(
                     "/parsing",  # Маршрут для этого представления
                     [
-                        lv,  # отображение логов 📝
+                        list_view,  # отображение логов 📝
                         chat_input,  # Поле ввода ссылки на чат 🔗
                         limit_active_user,  # Поле ввода количества сообщений 💬
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)

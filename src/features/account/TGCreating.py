@@ -27,8 +27,8 @@ class CreatingGroupsAndChats:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
         async def add_items(_):
@@ -36,7 +36,7 @@ class CreatingGroupsAndChats:
             🚀 Запускает процесс создания групп и отображает статус в интерфейсе.
             """
             # Индикация начала создания групп
-            await log_and_display(f"▶️ Начало создания групп.\n🕒 Время старта: {str(start)}", lv, page)
+            await log_and_display(f"▶️ Начало создания групп.\n🕒 Время старта: {str(start)}", list_view, page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
 
             try:
@@ -57,7 +57,7 @@ class CreatingGroupsAndChats:
             finish = datetime.datetime.now()  # фиксируем время окончания создания групп ⏰
             await log_and_display(
                 f"🔚 Конец создания групп.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
-                lv, page)
+                list_view, page)
 
         async def back_button_clicked(_):
             """
@@ -70,7 +70,7 @@ class CreatingGroupsAndChats:
             ft.View(
                 "/creating_groups_and_chats_menu",
                 [
-                    lv,  # отображение логов 📝
+                    list_view,  # отображение логов 📝
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать создание групп"

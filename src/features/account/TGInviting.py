@@ -44,7 +44,7 @@ class InvitingToAGroup:
             logger.exception(f"Ошибка: {error}")
             raise
 
-    async def data_for_inviting(self, lv, page, list_view):
+    async def data_for_inviting(self, page, list_view):
         """"
         Получение данных для инвайтинга
         """
@@ -54,7 +54,7 @@ class InvitingToAGroup:
         await log_and_display(f"Лимит на аккаунт: {account_limit}\n"
                               f"Всего участников: {len(number_usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"
-                              f"Всего подключенных аккаунтов: {len(find_filesss)}\n", lv, page)
+                              f"Всего подключенных аккаунтов: {len(find_filesss)}\n", list_view, page)
 
     async def general_invitation_to_the_group(self, page: ft.Page, list_view, dropdown):
         """
@@ -188,7 +188,7 @@ class InvitingToAGroup:
 
         links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
 
-        await self.data_for_inviting(list_view, page, list_view)  # Отображение информации о настройках инвайтинга
+        await self.data_for_inviting(page, list_view)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
             """
@@ -214,7 +214,7 @@ class InvitingToAGroup:
 
         links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
 
-        await self.data_for_inviting(list_view, page, list_view)  # Отображение информации о настройках инвайтинга
+        await self.data_for_inviting(page, list_view)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
             """
@@ -250,7 +250,7 @@ class InvitingToAGroup:
 
         links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
 
-        await self.data_for_inviting(list_view, page, list_view)  # Отображение информации о настройках инвайтинга
+        await self.data_for_inviting(page, list_view)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
             """
@@ -279,7 +279,7 @@ class InvitingToAGroup:
         await self.create_invite_page(page, list_view, dropdown, add_items)
 
     @staticmethod
-    async def create_invite_page(page: ft.Page, lv, dropdown, add_items) -> None:
+    async def create_invite_page(page: ft.Page, list_view, dropdown, add_items) -> None:
 
         async def back_button_clicked(_):
             """
@@ -292,7 +292,7 @@ class InvitingToAGroup:
             ft.View(
                 "/inviting",
                 [
-                    lv,  # Отображение логов 📝
+                    list_view,  # Отображение логов 📝
                     ft.Text(value="📂 Выберите группу для инвайтинга"),  # Выбор группы для инвайтинга
                     dropdown,  # Выпадающий список с названиями групп
                     ft.Column(),  # Резерв для приветствия или других элементов интерфейса
@@ -319,7 +319,7 @@ class InvitingToAGroup:
 
         links_inviting = await self.getting_an_invitation_link_from_the_database()  # Получение ссылки для инвайтинга
 
-        await self.data_for_inviting(list_view, page, list_view)  # Отображение информации о настройках инвайтинга
+        await self.data_for_inviting(page, list_view)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
             """

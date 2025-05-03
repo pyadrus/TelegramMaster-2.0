@@ -31,10 +31,10 @@ class SettingPage:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
 
-        lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
+        list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
 
         proxy_type = ft.TextField(label="Введите тип прокси, например SOCKS5: ", multiline=True, max_lines=19)
         addr_type = ft.TextField(label="Введите ip адрес, например 194.67.248.9: ", multiline=True, max_lines=19)
@@ -54,7 +54,7 @@ class SettingPage:
             page.update()
 
         self.add_view_with_fields_and_button(page, [proxy_type, addr_type, port_type, username_type, password_type],
-                                             btn_click, lv)
+                                             btn_click, list_view)
 
     async def recording_text_for_sending_messages(self, page: ft.Page, label, unique_filename) -> None:
         """
@@ -65,10 +65,10 @@ class SettingPage:
         :param label: Текст для отображения в поле ввода.
         :param unique_filename: Имя файла для записи данных.
         """
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
 
-        lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
+        list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
 
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
 
@@ -81,7 +81,7 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        self.add_view_with_fields_and_button(page, [text_to_send], btn_click, lv)
+        self.add_view_with_fields_and_button(page, [text_to_send], btn_click, list_view)
 
     async def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str,
                                      into_columns: str) -> None:
@@ -96,13 +96,13 @@ class SettingPage:
         :param into_columns: Имя столбца в таблице, в который будут записаны данные.
         """
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
-        lv: ListView = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        list_view: ListView = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
 
         records: list = await self.db_handler.select_records_with_limit(table_name=table_name, limit=None)
-        await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page, lv=lv)
+        await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page, list_view=list_view)
 
-        lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
+        list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
 
         async def write_data(clear_before: bool = False) -> None:
             """Запись данных в БД с опцией предварительной очистки"""
@@ -145,7 +145,7 @@ class SettingPage:
                               on_click=on_back_click)
         ]
 
-        page.views.append(ft.View(route, controls=[lv, ft.Column(controls=controls)]))
+        page.views.append(ft.View(route, controls=[list_view, ft.Column(controls=controls)]))
 
     async def record_setting(self, page: ft.Page, limit_type: str, label: str):
         """
@@ -155,10 +155,10 @@ class SettingPage:
         :param limit_type: Тип лимита.
         :param label: Текст для отображения в поле ввода.
         """
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
 
-        lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
+        list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
 
         limits = ft.TextField(label=label, multiline=True, max_lines=19)
 
@@ -174,7 +174,7 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        self.add_view_with_fields_and_button(page, [limits], btn_click, lv)
+        self.add_view_with_fields_and_button(page, [limits], btn_click, list_view)
 
     async def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
         """
@@ -182,9 +182,9 @@ class SettingPage:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
-        lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
+        list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
         hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
         minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
 
@@ -211,7 +211,7 @@ class SettingPage:
                 logger.info('Введите числовые значения для часов и минут!')
             page.update()  # Обновляем страницу
 
-        self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click, lv)
+        self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click, list_view)
 
     async def create_main_window(self, page: ft.Page, variable, time_range) -> None:
         """
@@ -221,10 +221,10 @@ class SettingPage:
         :return: None
         """
 
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         for time_range_message in time_range:
-            lv.controls.append(
+            list_view.controls.append(
                 ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
         smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
         larger_timex = ft.TextField(label="Время в секундах (большее)")
@@ -238,16 +238,16 @@ class SettingPage:
                     # Если условие прошло проверку, то возвращаем первое и второе время
                     writing_settings_to_a_file(
                         recording_limits_file(str(smaller_times), str(larger_times), variable=variable))
-                    lv.controls.append(ft.Text("Данные успешно записаны!"))  # отображаем сообщение в ListView
+                    list_view.controls.append(ft.Text("Данные успешно записаны!"))  # отображаем сообщение в ListView
                     await show_notification(page, "Данные успешно записаны!")
                     page.go("/settings")  # Изменение маршрута в представлении существующих настроек
                 else:
-                    lv.controls.append(ft.Text("Ошибка: первое время должно быть меньше второго!"))
+                    list_view.controls.append(ft.Text("Ошибка: первое время должно быть меньше второго!"))
             except ValueError:
-                lv.controls.append(ft.Text("Ошибка: введите числовые значения!"))
+                list_view.controls.append(ft.Text("Ошибка: введите числовые значения!"))
             page.update()  # обновляем страницу
 
-        self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click, lv)
+        self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click, list_view)
 
     async def writing_api_id_api_hash(self, page: ft.Page):
         """
@@ -255,9 +255,9 @@ class SettingPage:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        lv = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(lv)  # добавляем ListView на страницу для отображения логов 📝
-        lv.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
+        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
+        list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
         api_id_data = ft.TextField(label="Введите api_id", multiline=True, max_lines=19)
         api_hash_data = ft.TextField(label="Введите api_hash", multiline=True, max_lines=19)
 
@@ -270,17 +270,17 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], btn_click, lv)
+        self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], btn_click, list_view)
 
     @staticmethod
-    def add_view_with_fields_and_button(page: ft.Page, fields: list, btn_click, lv) -> None:
+    def add_view_with_fields_and_button(page: ft.Page, fields: list, btn_click, list_view) -> None:
         """
         Добавляет представление с заданными текстовыми полями и кнопкой.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param fields: Список текстовых полей для добавления
         :param btn_click: Кнопка для добавления
-        :param lv: ListView для отображения логов 📝
+        :param list_view: ListView для отображения логов 📝
         :return: None
         """
 
@@ -293,7 +293,7 @@ class SettingPage:
             ft.View(
                 "/settings",
                 controls=[
-                    lv,  # отображение логов 📝
+                    list_view,  # отображение логов 📝
                     ft.Column(
                         controls=fields + [
                             ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
