@@ -42,7 +42,7 @@ class TGConnect:
         """
         try:
             await log_and_display(f"Проверка аккаунта {session_name}", list_view, page)
-            telegram_client = await self.get_telegram_client(page, session_name, f"user_data/accounts", list_view)
+            telegram_client = await self.get_telegram_client(page, session_name, path_accounts_folder, list_view)
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
                 if not await telegram_client.is_user_authorized():  # Если аккаунт не авторизирован
@@ -93,10 +93,9 @@ class TGConnect:
         :param list_view: Список для отображения аккаунтов.
         """
         try:
-            for session_name in await find_filess(directory_path=f"user_data/accounts",
-                                                  extension='session', list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 telegram_client = await self.get_telegram_client(page, session_name,
-                                                                 account_directory=f"user_data/accounts",
+                                                                 account_directory=path_accounts_folder,
                                                                  list_view=list_view)
                 try:
                     await telegram_client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
@@ -166,8 +165,7 @@ class TGConnect:
             await log_and_display(f"Запуск проверки аккаунтов Telegram из папки 📁: accounts", list_view, page)
             await checking_the_proxy_for_work(list_view, page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
-            for session_file in await find_filess(directory_path=path_accounts_folder, extension='session',
-                                                  list_view=list_view, page=page):
+            for session_file in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 await log_and_display(f"⚠️ Проверяемый аккаунт: user_data/accounts/{session_file}", list_view, page)
                 # Проверка аккаунтов
                 await self.verify_account(page=page, session_name=session_file, list_view=list_view)
@@ -185,8 +183,7 @@ class TGConnect:
         try:
             await checking_the_proxy_for_work(list_view=list_view, page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session',
-                                                  list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 await log_and_display(message=f"⚠️ Переименовываемый аккаунт: user_data/accounts/{session_name}",
                                       list_view=list_view, page=page)
                 # Переименовывание аккаунтов
@@ -296,7 +293,6 @@ class TGConnect:
         """
         try:
             # Создаем текстовый элемент и добавляем его на страницу
-            header_text = ft.Text(f"Подключение аккаунтов Telegram", size=15, color="pink600")
             phone_number = ft.TextField(label="Введите номер телефона:", multiline=False, max_lines=1)
 
             async def btn_click(_) -> None:
@@ -368,7 +364,8 @@ class TGConnect:
                 page.go("/")
 
             input_view = ft.View(
-                controls=[header_text, phone_number,
+                controls=[ft.Text(f"Подключение аккаунтов Telegram", size=15, color="pink600"),
+                          phone_number,
                           ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                             on_click=btn_click),  # Кнопка "Готово",
                           ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
@@ -400,10 +397,9 @@ class TGConnect:
                         selected_files.value = f"Выбран session файл: {file_name}"
                         selected_files.update()
                         # Определяем целевой путь для копирования файла
-                        target_folder = f"user_data/accounts"
-                        target_path = os.path.join(target_folder, file_name)
+                        target_path = os.path.join(path_accounts_folder, file_name)
                         # Создаем директорию, если она не существует
-                        os.makedirs(target_folder, exist_ok=True)
+                        os.makedirs(path_accounts_folder, exist_ok=True)
                         # Копируем файл
                         shutil.copy(file_path, target_path)
                         selected_files.value = f"Файл скопирован в: {target_path}"

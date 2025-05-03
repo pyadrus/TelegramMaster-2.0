@@ -224,8 +224,7 @@ class ParsingGroupMembers:
 
             if not selected_sessions:
                 await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", list_view, page)
-                session_files = await find_filess(directory_path=path_accounts_folder, extension='session',
-                                                  list_view=list_view, page=page)
+                session_files = await find_filess(directory_path=path_accounts_folder, extension='session')
                 if not session_files:
                     await log_and_display("❌ В папке нет session файлов для парсинга.", list_view, page)
                     page.update()
@@ -376,8 +375,7 @@ class ParsingGroupMembers:
         :param list_view: ListView
         """
         try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session',
-                                                  list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder,
                                                                    list_view=list_view)
@@ -471,8 +469,7 @@ class ParsingGroupMembers:
         list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(list_view)
         try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session',
-                                                  list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder,
                                                                    list_view=list_view)

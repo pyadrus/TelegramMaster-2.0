@@ -44,11 +44,10 @@ class CheckingProgram:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param list_view: Отображение списка
         """
-        if not await find_filess(directory_path=path_folder_with_messages, extension=self.file_extension,
-                                 list_view=list_view, page=page):
+        if not await find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
             await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")
         if not await find_filess(directory_path=path_send_message_folder_answering_machine_message,
-                                 extension=self.file_extension, list_view=list_view, page=page):
+                                 extension=self.file_extension):
             await show_notification(page,
                                     f"⛔ Нет заготовленных сообщений для автоответчика в папке {path_send_message_folder_answering_machine_message}")
         if len(await db_handler.select_records_with_limit(table_name="writing_group_links",

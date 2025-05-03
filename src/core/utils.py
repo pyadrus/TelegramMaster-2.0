@@ -37,27 +37,20 @@ def all_find_files(directory_path) -> list:
     return entities  # Возвращаем список файлов
 
 
-async def find_filess(directory_path, extension, list_view, page: ft.Page):
+async def find_filess(directory_path, extension):
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
 
     :param directory_path: Путь к директории
     :param extension: Расширение файла (указанное без точки)
-    :param list_view: Список для отображения информации.
-    :param page: Страница для отображения информации.
     :return list: Список имен найденных файлов
     """
     entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_data/accounts
-    try:
-        for x in os.listdir(directory_path):
-            if x.endswith(f".{extension}"):  # Проверяем, заканчивается ли имя файла на заданное расширение
-                file = os.path.splitext(x)[0]  # Разделяем имя файла на имя без расширения и расширение
-                entities.append(file)  # Добавляем информацию о файле в список
-        await log_and_display(f"🔍 Найденные файлы: {entities}", list_view, page)
-        return entities  # Возвращаем список json файлов
-    except FileNotFoundError:
-        logger.error(f"❌ Ошибка! Директория {directory_path} не найдена!")
-        return None
+    for x in os.listdir(directory_path):
+        if x.endswith(f".{extension}"):  # Проверяем, заканчивается ли имя файла на заданное расширение
+            file = os.path.splitext(x)[0]  # Разделяем имя файла на имя без расширения и расширение
+            entities.append(file)  # Добавляем информацию о файле в список
+    return entities  # Возвращаем список json файлов
 
 
 async def find_folders(directory_path) -> list:
@@ -118,7 +111,8 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
         logger.exception(f"❌ Ошибка: {error}")
 
 
-async def record_inviting_results(time_range_1: int, time_range_2: int, username: str, list_view, page: ft.Page) -> None:
+async def record_inviting_results(time_range_1: int, time_range_2: int, username: str, list_view,
+                                  page: ft.Page) -> None:
     """
     Запись результатов inviting, отправка сообщений в базу данных.
 

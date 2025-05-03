@@ -64,8 +64,7 @@ class SendTelegramMessages:
                 try:
                     # Просим пользователя ввести расширение сообщения
                     for session_name in await find_filess(directory_path=path_send_message_folder,
-                                                          extension=self.account_extension, list_view=list_view,
-                                                          page=page):
+                                                          extension=self.account_extension):
                         client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                            account_directory=path_send_message_folder,
                                                                            list_view=list_view)
@@ -161,7 +160,7 @@ class SendTelegramMessages:
         if checs == True:
             try:
                 for session_name in await find_filess(directory_path=path_send_message_folder_answering_machine,
-                                                      extension=self.account_extension, list_view=list_view, page=page):
+                                                      extension=self.account_extension):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_send_message_folder_answering_machine,
                                                                        list_view=list_view)
@@ -201,7 +200,7 @@ class SendTelegramMessages:
             try:
                 start = await self.start_time(list_view, page)
                 for session_name in await find_filess(directory_path=path_send_message_folder,
-                                                      extension=self.account_extension, list_view=list_view, page=page):
+                                                      extension=self.account_extension):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_send_message_folder,
                                                                        list_view=list_view)

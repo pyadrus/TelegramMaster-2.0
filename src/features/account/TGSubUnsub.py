@@ -182,8 +182,7 @@ class SubscribeUnsubscribeTelegram:
             start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
             # Индикация начала инвайтинга
             await log_and_display(f"\n▶️ Начало Подписки.\n🕒 Время старта: {str(start)}", list_view, page)
-            for session_name in await find_filess(directory_path=path_subscription_folder, extension='session',
-                                                  list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_subscription_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_subscription_folder,
                                                                    list_view=list_view)
@@ -232,8 +231,7 @@ class SubscribeUnsubscribeTelegram:
         :param list_view: ListView для отображения логов.
         """
         try:
-            for session_name in await find_filess(directory_path=path_unsubscribe_folder, extension='session',
-                                                  list_view=list_view, page=page):
+            for session_name in await find_filess(directory_path=path_unsubscribe_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_unsubscribe_folder,
                                                                    list_view=list_view)
