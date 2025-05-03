@@ -10,9 +10,10 @@ from telethon import TelegramClient
 from telethon.errors import FilePartsInvalidError
 
 from src.core.configs import program_version, date_of_program_change, program_name
+from src.gui.menu import log_and_display
 
 
-def getting_phone_number_data_by_phone_number(phone_numbers):
+async def getting_phone_number_data_by_phone_number(phone_numbers, list_view, page):
     """
     Определение страны и оператора по номеру телефона
 
@@ -28,7 +29,7 @@ def getting_phone_number_data_by_phone_number(phone_numbers):
     operator_name = carrier.name_for_number(number, "ru")
 
     # Вывод информации
-    logger.info(f"Номер: {phone_numbers}, Оператор: {operator_name}, Страна: {country_name}")
+    await log_and_display(f"Номер: {phone_numbers}, Оператор: {operator_name}, Страна: {country_name}", list_view, page)
 
 
 def get_country_flag(ip_address):
@@ -55,7 +56,7 @@ def get_external_ip():
         return None
 
 
-async def loging():
+async def loging(list_view, page):
     """
     Логирование TelegramMaster 2.0
     """
@@ -82,10 +83,9 @@ async def loging():
         await client.send_file(535185511, 'user_data/log/log_ERROR.log', caption=message)
         client.disconnect()
     except FilePartsInvalidError as error:
-        logger.error(error)
+        await log_and_display(f"{error}", list_view, page)
         client.disconnect()
 
 
 if __name__ == "__main__":
-    loging()
     get_external_ip()

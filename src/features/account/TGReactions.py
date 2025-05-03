@@ -16,6 +16,7 @@ from src.core.utils import read_json_file, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.buttons import function_button_ready_reactions
+from src.gui.menu import log_and_display
 
 
 class WorkingWithReactions:
@@ -47,8 +48,7 @@ class WorkingWithReactions:
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_reactions_folder,
                                                                        list_view=list_view)
-
-                    logger.info(f'[+] Работаем с группой: {chat.value}')
+                    await log_and_display(f"[+] Работаем с группой: {chat.value}", list_view, page)
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat.value)
                     msg_id = int(re.search(r'/(\d+)$', message.value).group(1))  # Получаем id сообщения из ссылки
                     await asyncio.sleep(5)
@@ -59,7 +59,7 @@ class WorkingWithReactions:
                         await asyncio.sleep(1)
                         await client.disconnect()
                     except ReactionInvalidError:
-                        logger.info(f"Ошибка : Предоставлена неверная реакция")
+                        await log_and_display(f"Ошибка : Предоставлена неверная реакция", list_view, page)
                         await asyncio.sleep(1)
                         await client.disconnect()
 
@@ -77,12 +77,12 @@ class WorkingWithReactions:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    def choosing_random_reaction():
+    async def choosing_random_reaction(list_view, page):
         """Выбираем случайное значение из списка (реакция)"""
         try:
             reaction_input = read_json_file(filename='user_data/reactions/reactions.json')
             random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
-            logger.info(random_value)
+            await log_and_display(f"{random_value}", list_view, page)
             return random_value
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -114,7 +114,7 @@ class WorkingWithReactions:
                     await asyncio.sleep(1)
                     await client.disconnect()
                 except ReactionInvalidError:
-                    logger.info(f"❌ Ошибка : Предоставлена неверная реакция")
+                    await log_and_display(f"❌ Ошибка : Предоставлена неверная реакция", list_view, page)
                     await asyncio.sleep(1)
                     await client.disconnect()
         except Exception as error:
@@ -130,16 +130,15 @@ class WorkingWithReactions:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_reactions_folder,
                                                                    list_view=list_view)
-                chat = read_json_file(
-                    filename='user_data/reactions/link_channel.json')  # TODO переместить путь к файлу в конфиг
-                logger.info(chat)
+                chat = read_json_file(filename='user_data/reactions/link_channel.json')  # TODO переместить путь к файлу в конфиг
+                await log_and_display(f"{chat}", list_view, page)
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
 
                 @client.on(events.NewMessage(chats=chat))
                 async def handler(event):
                     message = event.message  # Получаем сообщение из события
                     message_id = message.id  # Получаем id сообщение
-                    logger.info(f"Идентификатор сообщения: {message_id}, {message}")
+                    await log_and_display(f"Идентификатор сообщения: {message_id}, {message}", list_view, page)
                     # Проверяем, является ли сообщение постом и не является ли оно нашим
                     if message.post and not message.out:
                         await self.reactions_for_groups_and_messages_test(message_id, chat, page, list_view)

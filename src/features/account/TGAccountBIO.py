@@ -9,7 +9,7 @@ from src.core.configs import path_bio_folder
 from src.core.utils import find_files, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.gui.buttons import function_button_ready
-from src.gui.menu import show_notification
+from src.gui.menu import show_notification, log_and_display
 
 
 class GUIManager:
@@ -118,10 +118,10 @@ class AccountActions:
         :return: None
         """
         try:
-            logger.info(f"Запуск смены  описания профиля")
+            await log_and_display(f"Запуск смены  описания профиля", list_view, page)
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
                                                   list_view=list_view, page=page):
-                logger.info(f"{session_name}")
+                await log_and_display(f"{session_name}", list_view, page)
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
@@ -131,9 +131,9 @@ class AccountActions:
                     return
                 try:
                     result = await client(functions.account.UpdateProfileRequest(about=user_input))
-                    logger.info(f'{result}\nПрофиль успешно обновлен!')
+                    await log_and_display(f"{result}\nПрофиль успешно обновлен!", list_view, page)
                 except AuthKeyUnregisteredError:
-                    logger.error("❌ Ошибка соединения с профилем")
+                    await log_and_display(f"❌ Ошибка соединения с профилем", list_view, page)
                 finally:
                     await client.disconnect()
 
@@ -154,15 +154,14 @@ class AccountActions:
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
                                                   list_view=list_view, page=page):
-                logger.info(f"{session_name}")
+                await log_and_display(f"{session_name}", list_view, page)
                 client = await self.tg_connect.get_telegram_client(page,
                                                                    session_name=session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 try:
                     await client(functions.account.UpdateUsernameRequest(username=user_input))
-                    await show_notification(page,
-                                            f'Работа окончена')  # Выводим уведомление пользователю
+                    await show_notification(page, f'Работа окончена')  # Выводим уведомление пользователю
                 except AuthKeyUnregisteredError:
                     await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                 except (UsernamePurchaseAvailableError, UsernameOccupiedError):
@@ -185,13 +184,13 @@ class AccountActions:
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
                                                   list_view=list_view, page=page):
-                logger.info(f"{session_name}")
+                await log_and_display(f"{session_name}", list_view, page)
                 client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 try:
                     result = await client(functions.account.UpdateProfileRequest(first_name=user_input))
-                    logger.info(f'{result}\nИмя успешно обновлено!')
+                    await log_and_display(f"{result}\nИмя успешно обновлено!", list_view, page)
                 except AuthKeyUnregisteredError:
                     await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                 finally:
@@ -212,14 +211,13 @@ class AccountActions:
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
                                                   list_view=list_view, page=page):
-                logger.info(f"{session_name}")
+                await log_and_display(f"{session_name}", list_view, page)
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 try:
                     result = await client(functions.account.UpdateProfileRequest(last_name=user_input))
-                    logger.info(f'{result}\nФамилия успешно обновлена!')
-
+                    await log_and_display(f"{result}\nФамилия успешно обновлена!", list_view, page)
                 except AuthKeyUnregisteredError:
                     await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                 finally:
@@ -237,17 +235,16 @@ class AccountActions:
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension,
                                                   list_view=list_view, page=page):
-                logger.info(f"{session_name}")
+                await log_and_display(f"{session_name}", list_view, page)
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
-                for photo_file in find_files(directory_path="user_data/bio", extension='jpg'):
+                for photo_file in await find_files(directory_path="user_data/bio", extension='jpg', list_view=list_view, page=page):
                     try:
                         await client.connect()
                         await client(functions.photos.UploadProfilePhotoRequest(
                             file=await client.upload_file(f"user_data/bio/{photo_file[0]}.jpg")))
                     except AuthKeyUnregisteredError:
-                        await show_notification(page,
-                                                "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
+                        await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                     finally:
                         await client.disconnect()
         except Exception as error:

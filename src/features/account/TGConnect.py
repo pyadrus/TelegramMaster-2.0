@@ -59,7 +59,7 @@ class TGConnect:
                     AuthKeyUnregisteredError, AuthKeyDuplicatedError) as e:
                 await self.handle_banned_account(telegram_client, session_name, e)
             except TimedOutError as error:
-                logger.exception(f"❌ Ошибка таймаута: {error}")
+                await log_and_display(f"❌ Ошибка таймаута: {error}", list_view, page)
                 await asyncio.sleep(2)
             except sqlite3.OperationalError:
                 await telegram_client.disconnect()
@@ -69,7 +69,7 @@ class TGConnect:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def handle_banned_account(telegram_client, session_name, exception):
+    async def handle_banned_account(telegram_client, session_name, exception, list_view, page):
         """
         Обработка забаненных аккаунтов.
         telegram_client.disconnect() - Отключение от Telegram.
@@ -80,7 +80,7 @@ class TGConnect:
         :param session_name: Имя аккаунта
         :param exception: Расширение файла
         """
-        logger.error(f"⛔ Аккаунт забанен: {session_name}. {str(exception)}")
+        await log_and_display(f"⛔ Аккаунт забанен: {session_name}. {str(exception)}", list_view, page)
         await telegram_client.disconnect()
         working_with_accounts(f"user_data/accounts/{session_name}.session",
                               f"user_data/accounts/banned/{session_name}.session")
@@ -113,9 +113,9 @@ class TGConnect:
                                                               "Если пользователь написал Вам первым, Вы сможете ответить, "
                                                               "несмотря на ограничения.")
                         if similarity_ratio_ru >= 97:
-                            logger.info('⛔ Аккаунт заблокирован')
+                            await log_and_display(f"⛔ Аккаунт заблокирован", list_view, page)
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
-                            logger.info(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}")
+                            await log_and_display(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}", list_view, page)
                             # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                             working_with_accounts(f"user_data/accounts/{session_name}.session",
                                                   f"user_data/accounts/banned/{session_name}.session")
@@ -129,9 +129,9 @@ class TGConnect:
                                                               "or add them to groups and channels. Of course, when people "
                                                               "contact you first, you can always reply to them.")
                         if similarity_ratio_en >= 97:
-                            logger.info('⛔ Аккаунт заблокирован')
+                            await log_and_display(f"⛔ Аккаунт заблокирован", list_view, page)
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
-                            logger.error(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}")
+                            await log_and_display(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}", list_view, page)
                             # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                             await log_and_display(f"{session_name}", list_view, page)
                             working_with_accounts(f"user_data/accounts/{session_name}.session",
@@ -141,14 +141,13 @@ class TGConnect:
                         try:
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                         except sqlite3.OperationalError as e:
-                            logger.info(f"Ошибка при отключении аккаунта: {session_name}")
-
+                            await log_and_display(f"Ошибка при отключении аккаунта: {session_name}", list_view, page)
                             await self.handle_banned_account(telegram_client, session_name, e)
 
                 except YouBlockedUserError:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
                 except (AttributeError, AuthKeyUnregisteredError) as e:
-                    logger.error(e)
+                    await log_and_display(f"❌ Ошибка: {e}", list_view, page)
                     continue
 
         except Exception as error:
@@ -208,14 +207,12 @@ class TGConnect:
 
                 except TypeNotFoundError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    logger.error(
-                        f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP")
+                    await log_and_display(f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP", list_view, page)
                     working_with_accounts(f"user_data/accounts/{folder_name}/{session_name}.session",
                                           f"user_data/accounts/banned/{session_name}.session")
                 except AuthKeyUnregisteredError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    logger.error(
-                        f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP")
+                    await log_and_display(f"⛔ Битый файл или аккаунт забанен: {session_name}.session. Возможно, запущен под другим IP", list_view, page)
                     working_with_accounts(f"user_data/accounts/{folder_name}/{session_name}.session",
                                           f"user_data/accounts/banned/{session_name}.session")
         except Exception as error:
@@ -267,29 +264,29 @@ class TGConnect:
             await telegram_client.connect()
             return telegram_client
         except sqlite3.OperationalError:
-            logger.info(f"❌ Аккаунт {account_directory}/{session_name} поврежден.")
+            await log_and_display(f"❌ Аккаунт {account_directory}/{session_name} поврежден.", list_view, page)
             return None
         except sqlite3.DatabaseError:
-            logger.info(f"❌ Аккаунт {session_name} поврежден.")
+            await log_and_display(f"❌ Аккаунт {session_name} поврежден.", list_view, page)
             return None
         except AuthKeyDuplicatedError:
             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
-            logger.info(f"❌ На данный момент аккаунт {session_name} запущен под другим ip")
+            await log_and_display(f"❌ На данный момент аккаунт {session_name} запущен под другим ip", list_view, page)
             working_with_accounts(f"{account_directory}/{session_name}.session",
                                   f"user_data/accounts/banned/{session_name}.session")
             return None
         except AttributeError as error:
-            logger.error(f"❌ Ошибка: {error}")
+            await log_and_display(f"❌ Ошибка: {error}", list_view, page)
             return None
         except ValueError:
-            logger.info(f"❌ Ошибка подключения прокси к аккаунту {session_name}.")
+            await log_and_display(f"❌ Ошибка подключения прокси к аккаунту {session_name}.", list_view, page)
             return None
         except Exception as error:
             await telegram_client.disconnect()
-            logger.exception(f"❌ Ошибка: {error}")
+            await log_and_display(f"❌ Ошибка: {error}", list_view, page)
             return None
 
-    async def connecting_number_accounts(self, page: ft.Page):
+    async def connecting_number_accounts(self, page: ft.Page, list_view):
         """
         Подключение номера Telegram аккаунта с проверкой на валидность. Если ранее не было соединения, то запрашивается
         код.
@@ -303,7 +300,7 @@ class TGConnect:
 
             async def btn_click(_) -> None:
                 phone_number_value = phone_number.value
-                logger.info(f"Номер телефона: {phone_number_value}")
+                await log_and_display(f"Номер телефона: {phone_number_value}", list_view, page)
                 # Дальнейшая обработка после записи номера телефона
                 proxy_settings = await reading_proxy_data_from_the_database(self.db_handler)  # Proxy IPV6 - НЕ РАБОТАЮТ
                 telegram_client = TelegramClient(f"user_data/accounts/{phone_number_value}",
@@ -312,32 +309,32 @@ class TGConnect:
                                                  system_version="4.16.30-vxCUSTOM", proxy=proxy_settings)
                 await telegram_client.connect()  # Подключаемся к Telegram
                 if not await telegram_client.is_user_authorized():
-                    logger.info("Пользователь не авторизован")
+                    await log_and_display(f"Пользователь не авторизован", list_view, page)
                     await telegram_client.send_code_request(phone_number_value)  # Отправка кода на телефон
                     await asyncio.sleep(2)
                     passww = ft.TextField(label="Введите код telegram:", multiline=True, max_lines=1)
 
                     async def btn_click_code(_) -> None:
                         try:
-                            logger.info(f"Код telegram: {passww.value}")
+                            await log_and_display(f"Код telegram: {passww.value}", list_view, page)
                             await telegram_client.sign_in(phone_number_value, passww.value)  # Авторизация с кодом
                             telegram_client.disconnect()
                             page.go("/")  # Перенаправление в настройки, если 2FA не требуется
                             page.update()
                         except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
-                            logger.info("❌ Требуется двухфакторная аутентификация. Введите пароль.")
+                            await log_and_display(f"❌ Требуется двухфакторная аутентификация. Введите пароль.", list_view, page)
                             pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
 
                             async def btn_click_password(_) -> None:
-                                logger.info(f"Пароль telegram: {pass_2fa.value}")
+                                await log_and_display(f"Пароль telegram: {pass_2fa.value}", list_view, page)
                                 try:
                                     await telegram_client.sign_in(password=pass_2fa.value)
-                                    logger.info("Успешная авторизация.")
+                                    await log_and_display(f"Успешная авторизация.", list_view, page)
                                     telegram_client.disconnect()
                                     page.go("/")  # Изменение маршрута в представлении существующих настроек
                                     page.update()
                                 except PasswordHashInvalidError:
-                                    logger.error(f"❌ Неверный пароль.")
+                                    await log_and_display(f"❌ Неверный пароль.", list_view, page)
                                     await show_notification(page, f"⚠️ Неверный пароль. Попробуйте еще раз.")
                                     page.go("/")  # Изменение маршрута в представлении существующих настроек
                                 except Exception as ex:
@@ -349,7 +346,7 @@ class TGConnect:
                             page.views.append(ft.View(controls=[pass_2fa, button_password]))
                             page.update()  # Обновляем страницу, чтобы интерфейс отобразился
                         except ApiIdInvalidError:
-                            logger.error("[!] Неверные API ID или API Hash.")
+                            await log_and_display(f"[!] Неверные API ID или API Hash.", list_view, page)
                             await telegram_client.disconnect()  # Отключаемся от Telegram
                         except Exception as e:
                             logger.exception(f"❌ Ошибка при авторизации: {e}")

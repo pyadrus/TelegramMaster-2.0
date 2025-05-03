@@ -49,7 +49,7 @@ class CreatingGroupsAndChats:
                     response = await client(functions.channels.CreateChannelRequest(title='My awesome title',
                                                                                     about='Description for your group',
                                                                                     megagroup=True))
-                    logger.info(response.stringify())
+                    await log_and_display(f"{response.stringify()}", list_view, page)
 
             except TypeError:  # Обработка ошибки при создании групп, если аккаунт не рабочий
                 pass

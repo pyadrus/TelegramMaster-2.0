@@ -132,7 +132,7 @@ class ParsingGroupMembers:
                                                                     column="writing_group_links", value=groups)
                             else:
                                 try:
-                                    logger.info(f"Это не группа, а канал: {entity.title}")
+                                    await log_and_display(f"Это не группа, а канал: {entity.title}", list_view, page)
                                     # Удаляем группу из списка после завершения парсинга 🗑️
                                     await self.db_handler.delete_row_db(table="writing_group_links",
                                                                         column="writing_group_links", value=groups)
@@ -411,19 +411,19 @@ class ParsingGroupMembers:
             async for message in client.iter_messages(chat, limit=int(limit_active_user)):
                 if message.from_id is not None:
                     try:
-                        logger.info(f"{message.from_id}")
+                        await log_and_display(f"{message.from_id}", list_view, page)
                         # Получаем входную сущность пользователя
                         user = await client.get_entity(message.from_id.user_id)  # Получаем полную сущность
                         from_user = InputUser(user_id=user.id, access_hash=user.access_hash)  # Создаем InputUser
-                        logger.info(f"{from_user}")
+                        await log_and_display(f"{from_user}", list_view, page)
                         # Получаем данные о пользователе
                         entities = await self.get_active_user_data(user)
                         await log_and_display(f"{entities}", list_view, page)
                         await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
                     except ValueError as e:
-                        logger.warning(f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}")
+                        await log_and_display(f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}", list_view, page)
                 else:
-                    logger.warning(f"Сообщение {message.id} не имеет действительного from_id.")
+                    await log_and_display(f"Сообщение {message.id} не имеет действительного from_id.", list_view, page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -481,7 +481,7 @@ class ParsingGroupMembers:
                 chats.extend(result.chats)
                 groups = await self.filtering_groups(chats)  # Получаем отфильтрованные группы
                 group_titles = await self.name_of_the_groups(groups)  # Получаем названия групп
-                logger.info(group_titles)
+                await log_and_display(f"{group_titles}", list_view, page)
                 # Создаем текст для отображения результата
                 result_text = ft.Text(value="📂 Выберите группу для парсинга")
 

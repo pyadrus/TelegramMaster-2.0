@@ -13,6 +13,7 @@ from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.buttons import function_button_ready_viewing
+from src.gui.menu import log_and_display
 
 
 class ViewingPosts:
@@ -45,7 +46,7 @@ class ViewingPosts:
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_viewing_folder,
                                                                        list_view=list_view)
-                    logger.info(f'[+] Работаем с каналом: {link_channel.value}')
+                    await log_and_display(f"[+] Работаем с каналом: {link_channel.value}", list_view, page)
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel.value)
                     msg_id = int(re.search(r'/(\d+)$', link_post.value).group(1))  # Получаем id сообщения из ссылки
                     await self.viewing_posts(client, link_post.value, msg_id, link_channel.value)
@@ -64,7 +65,7 @@ class ViewingPosts:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def viewing_posts(self, client, link_post, number, link_channel) -> None:
+    async def viewing_posts(self, client, link_post, number, link_channel, list_view, page) -> None:
         """
         Накрутка просмотров постов
 
@@ -79,7 +80,7 @@ class ViewingPosts:
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel)
                 channel = await client.get_entity(link_channel)  # Получение информации о канале
                 await asyncio.sleep(5)
-                logger.info(f"Ссылка на пост: {link_post}\n")
+                await log_and_display(f"Ссылка на пост: {link_post}\n", list_view, page)
                 await asyncio.sleep(5)
                 await client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))
             except KeyError:

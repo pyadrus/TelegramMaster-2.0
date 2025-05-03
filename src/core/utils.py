@@ -78,12 +78,14 @@ async def find_folders(directory_path, list_view, page) -> list:
     return folders  # Возвращаем список папок
 
 
-def find_files(directory_path, extension) -> list:
+async def find_files(directory_path, extension, list_view, page) -> list:
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
 
     :param directory_path: Путь к директории
     :param extension: Расширение файла (указанное без точки)
+    :param list_view: Список для отображения информации.
+    :param page: Страница для отображения информации.
     :return list: Список имен найденных файлов
     """
     entities = []  # Создаем словарь с именами найденных аккаунтов в папке user_data/accounts
@@ -92,7 +94,7 @@ def find_files(directory_path, extension) -> list:
             file = os.path.splitext(x)[0]  # Разделяем имя файла на имя без расширения и расширение
             entities.append([file])  # Добавляем информацию о файле в список
 
-    logger.info(f"🔍 Найденные файлы: {entities}")  # Выводим имена найденных аккаунтов
+    await log_and_display(f"🔍 Найденные файлы: {entities}", list_view, page)
 
     return entities  # Возвращаем список json файлов
 
@@ -119,29 +121,33 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
         logger.exception(f"❌ Ошибка: {error}")
 
 
-async def record_inviting_results(time_range_1: int, time_range_2: int, username: str) -> None:
+async def record_inviting_results(time_range_1: int, time_range_2: int, username: str, list_view, page) -> None:
     """
     Запись результатов inviting, отправка сообщений в базу данных.
 
     :param time_range_1:  - диапазон времени смены аккаунта
     :param time_range_2:  - диапазон времени смены аккаунта
     :param username: - username аккаунта
+    :param list_view: Список для отображения информации.
+    :param page: Страница для отображения информации.
     """
-    logger.info(f'Удаляем с базы данных username {username[0]}')
+    await log_and_display(f"Удаляем с базы данных username {username[0]}", list_view, page)
     # Открываем базу с аккаунтами и с выставленными лимитами
     await DatabaseHandler().delete_row_db(table="members", column="username", value=username[0])
     # Смена username через случайное количество секунд
     await record_and_interrupt(time_range_1, time_range_2)
 
 
-async def record_and_interrupt(time_range_1, time_range_2) -> None:
+async def record_and_interrupt(time_range_1, time_range_2, list_view, page) -> None:
     """
     Запись данных в базу данных и прерывание выполнения кода.
 
     :param time_range_1:  - диапазон времени смены аккаунта
     :param time_range_2:  - диапазон времени смены аккаунта
+    :param list_view: Список для отображения информации.
+    :param page: Страница для отображения информации.
     """
     # Смена аккаунта через случайное количество секунд
     selected_shift_time = random.randrange(int(time_range_1), int(time_range_2))
-    logger.info(f"Переход к новому username через {selected_shift_time} секунд")
+    await log_and_display(f"Переход к новому username через {selected_shift_time} секунд", list_view, page)
     await asyncio.sleep(selected_shift_time)

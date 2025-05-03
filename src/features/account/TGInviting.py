@@ -76,7 +76,7 @@ class InvitingToAGroup:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_inviting_folder,
                                                                    list_view=list_view)
-                logger.info(f"{dropdown.value}")
+                await log_and_display(f"{dropdown.value}", list_view, page)
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value)
                 # Получение списка usernames
@@ -114,32 +114,26 @@ class InvitingToAGroup:
                             list_view, page, level="error")
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                     except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                        logger.error(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Не корректное имя {username}")
+                        await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Не корректное имя {username}", list_view, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                     except ChatAdminRequiredError:
-                        logger.error(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Требуются права администратора.")
+                        await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Требуются права администратора.", list_view, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                     except UserPrivacyRestrictedError:
-                        logger.error(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки конфиденциальности {username} не позволяют вам inviting")
+                        await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки конфиденциальности {username} не позволяют вам inviting", list_view, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                     except BotGroupsBlockedError:
-                        logger.error(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Вы не можете добавить бота в группу.")
+                        await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Вы не можете добавить бота в группу.", list_view, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                     except (TypeError, UnboundLocalError):
-                        logger.error(f"❌ Попытка приглашения {username} в группу {dropdown.value}")
+                        await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}", list_view, page)
                     # Ошибка инвайтинга прерываем работу
                     except ChatWriteForbiddenError:
-                        logger.error(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки в чате не дают добавлять людей в чат, возможно стоит бот админ и нужно подписаться на другие проекты")
+                        await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки в чате не дают добавлять людей в чат, возможно стоит бот админ и нужно подписаться на другие проекты", list_view, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                         break  # Прерываем работу и меняем аккаунт
                     except InviteRequestSentError:
-                        logger.error(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Доступ к функциям группы станет возможен после утверждения заявки администратором на {dropdown.value}")
+                        await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Доступ к функциям группы станет возможен после утверждения заявки администратором на {dropdown.value}", list_view, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                         break  # Прерываем работу и меняем аккаунт
                     except (ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError,
@@ -147,17 +141,15 @@ class InvitingToAGroup:
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as error:
-                        logger.error(f'{error}')
+                        await log_and_display(f"{error}", list_view, page)
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
                         break  # Прерываем работу и меняем аккаунт
                     except AuthKeyUnregisteredError:
-                        logger.error(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Ошибка авторизации аккаунта")
+                        await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Ошибка авторизации аккаунта", list_view, page)
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
                         break
                     except PeerFloodError:
-                        logger.error(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки конфиденциальности {username} не позволяют вам inviting")
+                        await log_and_display(f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки конфиденциальности {username} не позволяют вам inviting", list_view, page)
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1])
                         break  # Прерываем работу и меняем аккаунт
                     except KeyboardInterrupt:  # Закрытие окна программы
@@ -166,10 +158,10 @@ class InvitingToAGroup:
                     except Exception as error:
                         logger.exception(f"❌ Ошибка: {error}")
                     else:
-                        logger.info(f"[+] Участник {username} добавлен, если не состоит в чате {dropdown.value}")
+                        await log_and_display(f"[+] Участник {username} добавлен, если не состоит в чате {dropdown.value}", list_view, page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username)
                 await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value)
-            logger.info("[!] Инвайтинг окончен!")
+            await log_and_display(f"[!] Инвайтинг окончен!", list_view, page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
         finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰

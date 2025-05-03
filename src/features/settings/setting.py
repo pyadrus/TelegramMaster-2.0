@@ -7,7 +7,6 @@ import sys
 
 import flet as ft  # Импортируем библиотеку flet
 from flet_core import ListView
-from loguru import logger
 
 from src.core.configs import BUTTON_HEIGHT, line_width_button
 from src.core.localization import back_button, done_button
@@ -167,7 +166,7 @@ class SettingPage:
                 await show_notification(page, "Данные успешно записаны!")
             except configparser.NoSectionError as error:
                 await show_notification(page, "⚠️ Поврежден файл user_data/config/config.ini")
-                logger.error(f"Ошибка: {error}")
+                await log_and_display(f"Ошибка: {error}", list_view, page)
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
@@ -190,10 +189,10 @@ class SettingPage:
                 hour = int(hour_textfield.value)
                 minutes = int(minutes_textfield.value)
                 if not 0 <= hour < 24:
-                    logger.info('Введите часы в пределах от 0 до 23!')
+                    await log_and_display(f"Введите часы в пределах от 0 до 23!", list_view, page)
                     return
                 if not 0 <= minutes < 60:
-                    logger.info('Введите минуты в пределах от 0 до 59!')
+                    await log_and_display(f"Введите минуты в пределах от 0 до 59!", list_view, page)
                     return
                 # Предполагая, что config является объектом, похожим на словарь
                 config.get("hour_minutes_every_day", "hour")
@@ -205,7 +204,7 @@ class SettingPage:
 
                 page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             except ValueError:
-                logger.info('Введите числовые значения для часов и минут!')
+                await log_and_display(f"Введите числовые значения для часов и минут!", list_view, page)
             page.update()  # Обновляем страницу
 
         self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click, list_view)
@@ -307,7 +306,7 @@ def writing_settings_to_a_file(config) -> None:
         config.write(setup)  # Записываем данные в файл
 
 
-def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigParser:
+async def recording_limits_file(time_1, time_2, variable: str, list_view, page) -> configparser.ConfigParser:
     """
     Запись данных в файл TelegramMaster/user_data/config.ini
 
@@ -321,8 +320,9 @@ def recording_limits_file(time_1, time_2, variable: str) -> configparser.ConfigP
         config.get(f"{variable}", f"{variable}_2")
         config.set(f"{variable}", f"{variable}_2", time_2)
     except configparser.NoSectionError as error:
-        logger.error(
-            f"❌ Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_data/config/config.ini")
+        await log_and_display(
+            f"❌ Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_data/config/config.ini",
+            list_view, page)
     return config
 
 

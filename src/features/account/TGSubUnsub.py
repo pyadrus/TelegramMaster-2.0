@@ -66,28 +66,19 @@ class SubscribeUnsubscribeTelegram:
                                               f"Мега-группа: {'Да' if result.megagroup else 'Нет'}, Описание: {result.about or 'Нет описания'}",
                                               list_view, page)
                         try:
-                            logger.info(f"Подписка на группу / канал по ссылке приглашению {link}")
+                            await log_and_display(f"Подписка на группу / канал по ссылке приглашению {link}", list_view, page)
                             try:
                                 await client(ImportChatInviteRequest(
                                     link_hash))  # Подписка на группу / канал по ссылке приглашению
                             except InviteHashInvalidError:
-                                await log_and_display(
-                                    f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
-                                    list_view, page)
-                                logger.error(
-                                    f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}")
+                                await log_and_display(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}", list_view, page)
                         except InviteHashExpiredError as error:
-                            logger.error(f"Ошибка при подписке на группу / канал по ссылке приглашению {error}")
+                            await log_and_display(f"Ошибка при подписке на группу / канал по ссылке приглашению {error}", list_view, page)
                             try:
-                                await client(ImportChatInviteRequest(
-                                    link_hash))  # Подписка на группу / канал по ссылке приглашению
-                                logger.info(f"Подписка на группу / канал по ссылке приглашению {link_hash}")
+                                await client(ImportChatInviteRequest(link_hash))  # Подписка на группу / канал по ссылке приглашению
+                                await log_and_display(f"Подписка на группу / канал по ссылке приглашению {link_hash}", list_view, page)
                             except InviteHashInvalidError:
-                                await log_and_display(
-                                    f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
-                                    list_view, page)
-                                logger.error(
-                                    f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}")
+                                await log_and_display(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}", list_view, page)
                     elif isinstance(result, types.ChatInviteAlready):
                         await log_and_display(
                             f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}", list_view, page)
@@ -105,7 +96,6 @@ class SubscribeUnsubscribeTelegram:
                                           f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
                                           f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}",
                                           list_view, page)
-                    logger.info(f"Публичная группа/канал: {link}, Название: {chat.title}")
                     await client(JoinChannelRequest(link))
                 else:
                     await log_and_display(f"Не удалось найти публичный чат: {link}", list_view, page)
@@ -198,9 +188,8 @@ class SubscribeUnsubscribeTelegram:
                                                                    account_directory=path_subscription_folder,
                                                                    list_view=list_view)
                 # Получение ссылки
-                links_inviting: list = await self.db_handler.open_and_read_data(
-                    "writing_group_links")  # Открываем базу данных
-                logger.info(f"Ссылка для подписки и проверки:  {links_inviting}")
+                links_inviting: list = await self.db_handler.open_and_read_data("writing_group_links")  # Открываем базу данных
+                await log_and_display(f"Ссылка для подписки и проверки:  {links_inviting}", list_view, page)
                 for link_tuple in links_inviting:
                     link = link_tuple[0]
                     await log_and_display(f"Ссылка для подписки и проверки:  {link}", list_view, page)
@@ -249,16 +238,16 @@ class SubscribeUnsubscribeTelegram:
                                                                    account_directory=path_unsubscribe_folder,
                                                                    list_view=list_view)
                 dialogs = client.iter_dialogs()
-                logger.info(f"Диалоги: {dialogs}")
+                await log_and_display(f"Диалоги: {dialogs}", list_view, page)
                 async for dialog in dialogs:
-                    logger.info(f"{dialog.name}, {dialog.id}")
+                    await log_and_display(f"{dialog.name}, {dialog.id}", list_view, page)
                     await client.delete_dialog(dialog)
                 await client.disconnect()
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def unsubscribe_from_the_group(client, group_link) -> None:
+    async def unsubscribe_from_the_group(client, group_link, list_view, page) -> None:
         """
         Отписываемся от группы.
 
@@ -270,16 +259,15 @@ class SubscribeUnsubscribeTelegram:
             if entity:
                 await client(LeaveChannelRequest(entity))
         except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
-            logger.error(
-                f'Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}')
+            await log_and_display(f"Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}", list_view, page)
         except UserNotParticipantError:
-            logger.error(f"❌ Попытка отписки от группы / канала {group_link}. Аккаунт не является участником.")
+            await log_and_display(f"❌ Попытка отписки от группы / канала {group_link}. Аккаунт не является участником.", list_view, page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
         finally:
             await client.disconnect()  # Разрываем соединение с Telegram
 
-    async def subscribe_to_group_or_channel(self, client, groups_wr) -> None:
+    async def subscribe_to_group_or_channel(self, client, groups_wr, list_view, page) -> None:
         """
         Подписываемся на группу или канал
 
@@ -288,32 +276,28 @@ class SubscribeUnsubscribeTelegram:
         """
         # цикл for нужен для того, что бы сработала команда brake команда break в Python используется только для выхода из
         # цикла, а не выхода из программы в целом.
-        logger.info(f"Группа для подписки {groups_wr}")
+        await log_and_display(f"Группа для подписки {groups_wr}", list_view, page)
         try:
             await client(JoinChannelRequest(groups_wr))
-            logger.info(f"Аккаунт подписался на группу / канал: {groups_wr}")
+            await log_and_display(f"Аккаунт подписался на группу / канал: {groups_wr}", list_view, page)
         except SessionRevokedError:
-            logger.error(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Авторизация была признана недействительной из-за того, что пользователь завершил все сеансы.")
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Авторизация была признана недействительной из-за того, что пользователь завершил все сеансы.", list_view, page)
         except UserDeactivatedBanError:
-            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.")
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.", list_view, page)
         except ChannelsTooMuchError:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             async for dialog in client.iter_dialogs():
-                logger.info(f"{dialog.name}, {dialog.id}")
+                await log_and_display(f"{dialog.name}, {dialog.id}", list_view, page)
                 try:
                     await client.delete_dialog(dialog)
                     await client.disconnect()
                 except ConnectionError:
                     break
-            logger.info("❌  Список почистили, и в файл записали.")
+            await log_and_display(f"❌  Список почистили, и в файл записали.", list_view, page)
         except ChannelPrivateError:
-            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Указанный канал / группа {groups_wr} "
-                         f"является приватным, или вам запретили подписываться.")
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Указанный канал / группа {groups_wr} является приватным, или вам запретили подписываться.", list_view, page)
         except (UsernameInvalidError, ValueError, TypeError):
-            logger.error(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не "
-                f"является группой / каналом: {groups_wr}")
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}", list_view, page)
             await self.db_handler.write_data_to_db("""SELECT *
                                                       from writing_group_links""",
                                                    """DELETE
@@ -321,16 +305,14 @@ class SubscribeUnsubscribeTelegram:
                                                       where writing_group_links = ?""",
                                                    groups_wr)
         except PeerFloodError:
-            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.")
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.", list_view, page)
             await asyncio.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
-            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Flood! wait for "
-                         f"{str(datetime.timedelta(seconds=e.seconds))}")
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}", list_view, page)
             await record_and_interrupt(self.time_subscription_1, self.time_subscription_2)
             # Прерываем работу и меняем аккаунт
             raise
         except InviteRequestSentError:
-            logger.error(f"❌ Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения "
-                         f"администратором на вступление в группу")
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения администратором на вступление в группу", list_view, page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")

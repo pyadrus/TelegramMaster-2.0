@@ -13,6 +13,7 @@ from src.core.configs import path_contact_folder
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
+from src.gui.menu import log_and_display
 
 
 class TGContact:
@@ -70,7 +71,7 @@ class TGContact:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def get_and_parse_contacts(client):
+    async def get_and_parse_contacts(client, list_view, page):
         """
         Получаем контакты
 
@@ -79,7 +80,7 @@ class TGContact:
         try:
             all_participants: list = []
             result = await client(functions.contacts.GetContactsRequest(hash=0))
-            logger.info(result)  # Печатаем результат
+            await log_and_display(f"{result}", list_view, page)
             all_participants.extend(result.users)
             return all_participants
         except Exception as e:
@@ -87,7 +88,7 @@ class TGContact:
             return None
 
     @staticmethod
-    async def we_show_and_delete_the_contact_of_the_phone_book(client, user) -> None:
+    async def we_show_and_delete_the_contact_of_the_phone_book(client, user, list_view, page) -> None:
         """
         Показываем и удаляем контакт телефонной книги
 
@@ -96,7 +97,7 @@ class TGContact:
         """
         try:
             await client(functions.contacts.DeleteContactsRequest(id=[user.id]))
-            logger.info("Подождите 2 - 4 секунды")
+            await log_and_display(f"Подождите 2 - 4 секунды", list_view, page)
             await asyncio.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -136,7 +137,7 @@ class TGContact:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def add_contact_to_phone_book(self, client) -> None:
+    async def add_contact_to_phone_book(self, client, list_view, page) -> None:
         """
         Добавляем контакт в телефонную книгу
 
@@ -144,7 +145,7 @@ class TGContact:
         """
         try:
             records: list = await self.db_handler.open_and_read_data("contact")
-            logger.info(f"Всего номеров: {len(records)}")
+            await log_and_display(f"Всего номеров: {len(records)}", list_view, page)
             entities: list = []  # Создаем список сущностей
             for rows in records:
                 user = {"phone": rows[0]}
@@ -158,14 +159,13 @@ class TGContact:
                     # Получаем данные номера телефона https://docs.telethon.dev/en/stable/concepts/entities.html
                     contact = await client.get_entity(phone)
                     await self.get_user_data(contact, entities)
-                    logger.info(f"[+] Контакт с добавлен в телефонную книгу!")
+                    await log_and_display(f"[+] Контакт с добавлен в телефонную книгу!", list_view, page)
                     await asyncio.sleep(4)
                     # Запись результатов parsing в файл members_contacts.db, для дальнейшего inviting
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
                 except ValueError:
-                    logger.info(
-                        f"❌ Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!")
+                    await log_and_display(f"❌ Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!", list_view, page)
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
             client.disconnect()  # Разрываем соединение telegram
