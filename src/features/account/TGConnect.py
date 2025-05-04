@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import asyncio
+import datetime
 import os
 import os.path
 import shutil
@@ -162,7 +163,8 @@ class TGConnect:
         :param list_view: Список для отображения информации.
         """
         try:
-            await log_and_display(message=f"Запуск проверки аккаунтов Telegram 📁", list_view=list_view, page=page)
+            start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+            await log_and_display(message=f"Запуск проверки аккаунтов Telegram 📁.\n🕒 Время старта: {str(start_time)}", list_view=list_view, page=page)
             await checking_the_proxy_for_work(list_view=list_view, page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_file in await find_filess(directory_path=path_accounts_folder, extension='session'):
@@ -170,6 +172,11 @@ class TGConnect:
                 # Проверка аккаунтов
                 await self.verify_account(page=page, session_name=session_file, list_view=list_view)
             await log_and_display(message=f"Окончание проверки аккаунтов Telegram 📁", list_view=list_view, page=page)
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            await log_and_display(
+                message=f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                list_view=list_view, page=page)
+            await show_notification(page, "🔚 Проверка аккаунтов завершена")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
