@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import flet as ft
 
 from src.core.configs import BUTTON_WIDTH, BUTTON_HEIGHT
