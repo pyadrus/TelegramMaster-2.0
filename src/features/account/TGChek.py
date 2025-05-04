@@ -3,8 +3,7 @@
 import flet as ft
 
 from src.core.configs import BUTTON_WIDTH, BUTTON_HEIGHT
-from src.core.localization import (main_menu, checking_accounts, validation_check_ru,
-                                   renaming_accounts_ru, full_verification_ru)
+from src.core.localization import (main_menu, checking_accounts, renaming_accounts_ru, full_verification_ru)
 from src.features.account.TGConnect import TGConnect
 from src.locales.translations_loader import translations
 
@@ -57,7 +56,8 @@ class TGChek:
                                            text=translations["ru"]["account_verification"]["spam_check"],
                                            on_click=checking_for_spam_bots),
                          # ✅ Проверка на валидность
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=validation_check_ru,
+                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                                           text=translations["ru"]["account_verification"]["validation"],
                                            on_click=validation_check),
                          # ✏️ Переименование аккаунтов
                          ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=renaming_accounts_ru,

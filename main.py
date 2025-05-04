@@ -170,16 +170,16 @@ async def main(page: ft.Page):
                 logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
             # __________________________________________________________________________________________________________
             elif page.route == "/account_connection_menu":  # Подключение аккаунтов 'меню'.
-                await account_connection_menu(page)
+                await account_connection_menu(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/connecting_accounts_by_number":  # Подключение аккаунтов по номеру телефона 'Меню'
-                await TGConnect().connecting_number_accounts(page, list_view)
+                await TGConnect().connecting_number_accounts(page=page, list_view=list_view)
             # __________________________________________________________________________________________________________
             elif page.route == "/connecting_accounts_by_session":  # Подключение session аккаунтов 'Меню'
-                await TGConnect().connecting_session_accounts(page)
+                await TGConnect().connecting_session_accounts(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/creating_groups_and_chats_menu":  # Меню "Создание групп и чатов"
-                await creating_groups_and_chats_menu(page)
+                await creating_groups_and_chats_menu(page=page)
             elif page.route == "/creating_groups":  # Создание групп (чатов)
                 await CreatingGroupsAndChats().creating_groups_and_chats(page=page)
             # __________________________________________________________________________________________________________
@@ -190,18 +190,18 @@ async def main(page: ft.Page):
                 await SendTelegramMessages().send_files_to_personal_chats(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
-                await bio_editing_menu(page)
+                await bio_editing_menu(page=page)
             elif page.route == "/edit_description":  # Изменение описания
-                await AccountBIO().change_bio_profile_gui(page)
+                await AccountBIO().change_bio_profile_gui(page=page)
             elif page.route == "/name_change":  # Изменение имени профиля Telegram
-                await AccountBIO().change_name_profile_gui(page)
+                await AccountBIO().change_name_profile_gui(page=page)
             elif page.route == "/change_surname":  # Изменение фамилии
-                await AccountBIO().change_last_name_profile_gui(page)
+                await AccountBIO().change_last_name_profile_gui(page=page)
             elif page.route == "/edit_photo":  # Изменение фото
-                await AccountBIO().change_photo_profile_gui(page, list_view=list_view)
-                await show_notification(page, "🔚 Фото изменено")  # Выводим уведомление пользователю
+                await AccountBIO().change_photo_profile_gui(page=page, list_view=list_view)
+                await show_notification(page=page, message="🔚 Фото изменено")  # Выводим уведомление пользователю
             elif page.route == "/changing_username":  # Изменение username
-                await AccountBIO().change_username_profile_gui(page)
+                await AccountBIO().change_username_profile_gui(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
                 await settings_menu(page)
