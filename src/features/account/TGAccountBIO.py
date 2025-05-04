@@ -233,13 +233,15 @@ class AccountActions:
                 await log_and_display(f"{session_name}", list_view, page)
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
-                for photo_file in await find_files(directory_path="user_data/bio", extension='jpg', list_view=list_view, page=page):
+                for photo_file in await find_files(directory_path="user_data/bio", extension='jpg', list_view=list_view,
+                                                   page=page):
                     try:
                         await client.connect()
                         await client(functions.photos.UploadProfilePhotoRequest(
                             file=await client.upload_file(f"user_data/bio/{photo_file[0]}.jpg")))
                     except AuthKeyUnregisteredError:
-                        await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
+                        await show_notification(page,
+                                                "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                     finally:
                         await client.disconnect()
         except Exception as error:

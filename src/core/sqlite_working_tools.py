@@ -111,7 +111,8 @@ class DatabaseHandler:
             self.close()
             return records
         except sqlite3.DatabaseError as error:  # Ошибка при открытии базы данных
-            await log_and_display(f"❌ Ошибка при открытии базы данных, возможно база данных повреждена: {error}", list_view, page)
+            await log_and_display(f"❌ Ошибка при открытии базы данных, возможно база данных повреждена: {error}",
+                                  list_view, page)
             return []
         except sqlite3.Error as error:  # Ошибка при открытии базы данных
             await log_and_display(f"❌ Ошибка при открытии базы данных: {error}", list_view, page)
@@ -178,7 +179,8 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities, list_view, page: ft.Page) -> None:
+    async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities, list_view,
+                               page: ft.Page) -> None:
         """
         Запись действий аккаунта в базу данных
 
@@ -214,7 +216,8 @@ class DatabaseHandler:
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns, list_view, page: ft.Page) -> None:
+    async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns, list_view,
+                                        page: ft.Page) -> None:
         """
         Удаляем не рабочий proxy с software_database.db, таблица proxy
 

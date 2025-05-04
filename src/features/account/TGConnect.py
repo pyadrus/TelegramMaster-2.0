@@ -162,14 +162,14 @@ class TGConnect:
         :param list_view: Список для отображения информации.
         """
         try:
-            await log_and_display(f"Запуск проверки аккаунтов Telegram из папки 📁: accounts", list_view, page)
-            await checking_the_proxy_for_work(list_view, page)  # Проверка proxy
+            await log_and_display(message=f"Запуск проверки аккаунтов Telegram 📁", list_view=list_view, page=page)
+            await checking_the_proxy_for_work(list_view=list_view, page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_file in await find_filess(directory_path=path_accounts_folder, extension='session'):
-                await log_and_display(f"⚠️ Проверяемый аккаунт: user_data/accounts/{session_file}", list_view, page)
+                await log_and_display(message=f"⚠️ Проверяемый аккаунт: {session_file}", list_view=list_view, page=page)
                 # Проверка аккаунтов
                 await self.verify_account(page=page, session_name=session_file, list_view=list_view)
-            await log_and_display(f"Окончание проверки аккаунтов Telegram из папки 📁: accounts", list_view, page)
+            await log_and_display(message=f"Окончание проверки аккаунтов Telegram 📁", list_view=list_view, page=page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -184,7 +184,7 @@ class TGConnect:
             await checking_the_proxy_for_work(list_view=list_view, page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
-                await log_and_display(message=f"⚠️ Переименовываемый аккаунт: user_data/accounts/{session_name}",
+                await log_and_display(message=f"⚠️ Переименовываемый аккаунт: {session_name}",
                                       list_view=list_view, page=page)
                 # Переименовывание аккаунтов
                 telegram_client = await self.get_telegram_client(page=page, session_name=session_name,
@@ -248,12 +248,10 @@ class TGConnect:
         :param list_view: Список для отображения информации.
         :return TelegramClient: TelegramClient
         """
-        await log_and_display(
-            f"Подключение к аккаунту: {account_directory}/{session_name}. Используем API ID: {self.api_id}, API Hash: {self.api_hash}",
-            list_view, page)
+        await log_and_display(message=f"Подключение к аккаунту: {session_name}", list_view=list_view, page=page)
         telegram_client = None  # Инициализируем переменную
         try:
-            telegram_client = TelegramClient(f"{account_directory}/{session_name}", api_id=self.api_id,
+            telegram_client = TelegramClient(session=f"{account_directory}/{session_name}", api_id=self.api_id,
                                              api_hash=self.api_hash,
                                              system_version="4.16.30-vxCUSTOM",
                                              proxy=await reading_proxy_data_from_the_database(
@@ -261,26 +259,28 @@ class TGConnect:
             await telegram_client.connect()
             return telegram_client
         except sqlite3.OperationalError:
-            await log_and_display(f"❌ Аккаунт {account_directory}/{session_name} поврежден.", list_view, page)
+            await log_and_display(message=f"❌ Аккаунт {session_name} поврежден.", list_view=list_view, page=page)
             return None
         except sqlite3.DatabaseError:
-            await log_and_display(f"❌ Аккаунт {session_name} поврежден.", list_view, page)
+            await log_and_display(message=f"❌ Аккаунт {session_name} поврежден.", list_view=list_view, page=page)
             return None
         except AuthKeyDuplicatedError:
             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
-            await log_and_display(f"❌ На данный момент аккаунт {session_name} запущен под другим ip", list_view, page)
+            await log_and_display(message=f"❌ Аккаунт {session_name} запущен под другим ip", list_view=list_view,
+                                  page=page)
             working_with_accounts(f"{account_directory}/{session_name}.session",
                                   f"user_data/accounts/banned/{session_name}.session")
             return None
         except AttributeError as error:
-            await log_and_display(f"❌ Ошибка: {error}", list_view, page)
+            await log_and_display(message=f"❌ Ошибка: {error}", list_view=list_view, page=page)
             return None
         except ValueError:
-            await log_and_display(f"❌ Ошибка подключения прокси к аккаунту {session_name}.", list_view, page)
+            await log_and_display(message=f"❌ Ошибка подключения прокси к аккаунту {session_name}.",
+                                  list_view=list_view, page=page)
             return None
         except Exception as error:
             await telegram_client.disconnect()
-            await log_and_display(f"❌ Ошибка: {error}", list_view, page)
+            await log_and_display(message=f"❌ Ошибка: {error}", list_view=list_view, page=page)
             return None
 
     async def connecting_number_accounts(self, page: ft.Page, list_view):

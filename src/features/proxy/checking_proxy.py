@@ -20,7 +20,8 @@ async def reading_proxy_data_from_the_database(db_handler, list_view: ft.ListVie
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
-        proxy_random_list = random.choice(await db_handler.open_and_read_data(table_name="proxy", list_view=list_view, page=page))
+        proxy_random_list = random.choice(
+            await db_handler.open_and_read_data(table_name="proxy", list_view=list_view, page=page))
         proxy = {'proxy_type': (proxy_random_list[0]), 'addr': proxy_random_list[1], 'port': int(proxy_random_list[2]),
                  'username': proxy_random_list[3], 'password': proxy_random_list[4], 'rdns': proxy_random_list[5]}
         return proxy
@@ -53,7 +54,8 @@ async def checking_the_proxy_for_work(list_view, page: ft.Page) -> None:
         logger.exception(f"❌ Ошибка: {error}")
 
 
-async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler, list_view, page: ft.Page) -> None:
+async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler, list_view,
+                                                page: ft.Page) -> None:
     """Подключение к proxy с проверкой на работоспособность где: proxy_type - тип proxy (например: SOCKS5),
     addr - адрес (например: 194.67.248.9), port - порт (например: 9795), username - логин (например: username),
     password - пароль (например: password)
@@ -73,7 +75,9 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
         # Указываем параметры прокси
         proxy = {'http': f'{proxy_type}://{username}:{password}@{addr}:{port}'}
         emoji, country = get_country_flag(addr)
-        await log_and_display(f"Проверяемый прокси: {proxy_type}://{username}:{password}@{addr}:{port}. Страна proxy {country} {emoji}", list_view, page)
+        await log_and_display(
+            f"Проверяемый прокси: {proxy_type}://{username}:{password}@{addr}:{port}. Страна proxy {country} {emoji}",
+            list_view, page)
         requests.get('http://example.org', proxies=proxy)
         await log_and_display(f"⚠️ Proxy: {proxy_type}://{username}:{password}@{addr}:{port} рабочий!", list_view, page)
     # RequestException исключение возникает при ошибках, которые могут быть вызваны при запросе к веб-серверу.

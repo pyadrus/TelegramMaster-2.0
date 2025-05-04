@@ -64,7 +64,8 @@ class ViewingPosts:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def viewing_posts(self, client, link_post, number, link_channel, list_view: ft.ListView, page: ft.Page) -> None:
+    async def viewing_posts(self, client, link_post, number, link_channel, list_view: ft.ListView,
+                            page: ft.Page) -> None:
         """
         Накрутка просмотров постов
 

@@ -128,7 +128,8 @@ class WorkingWithReactions:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_reactions_folder,
                                                                    list_view=list_view)
-                chat = read_json_file(filename='user_data/reactions/link_channel.json')  # TODO переместить путь к файлу в конфиг
+                chat = read_json_file(
+                    filename='user_data/reactions/link_channel.json')  # TODO переместить путь к файлу в конфиг
                 await log_and_display(f"{chat}", list_view, page)
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
 

@@ -29,10 +29,13 @@ class TGChek:
             """Проверка валидности аккаунтов"""
             try:
                 start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view, page)
+                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
+                                      page)
                 await self.TGConnect.verify_all_accounts(page=page, list_view=list_view)
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                await log_and_display(f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}", list_view, page)
+                await log_and_display(
+                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                    list_view, page)
                 await show_notification(page, "🔚 Проверка аккаунтов завершена")
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
@@ -41,10 +44,13 @@ class TGChek:
             """Переименование аккаунтов"""
             try:
                 start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                await log_and_display(f"▶️ Переименование аккаунтов началось.\n🕒 Время старта: {str(start_time)}", list_view, page)
+                await log_and_display(f"▶️ Переименование аккаунтов началось.\n🕒 Время старта: {str(start_time)}",
+                                      list_view, page)
                 await self.TGConnect.get_account_details(page=page, list_view=list_view)
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                await log_and_display(f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}", list_view, page)
+                await log_and_display(
+                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                    list_view, page)
                 await show_notification(page, "🔚 Проверка аккаунтов завершена")
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
@@ -53,7 +59,8 @@ class TGChek:
             """Проверка на спам ботов"""
             try:
                 start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view, page)
+                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
+                                      page)
                 for folder in await find_folders(directory_path=path_accounts_folder):
                     await log_and_display(f"Проверка аккаунтов из папки 📁 {folder} через спам бот", list_view, page)
                     if folder == "invalid_account":
@@ -61,7 +68,9 @@ class TGChek:
                     else:
                         await self.TGConnect.check_for_spam(page=page, list_view=list_view)
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                await log_and_display(f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}", list_view, page)
+                await log_and_display(
+                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                    list_view, page)
                 await show_notification(page, "🔚 Проверка аккаунтов завершена")
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
@@ -70,12 +79,15 @@ class TGChek:
             """Полная проверка аккаунтов"""
             try:
                 start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view, page)
+                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
+                                      page)
                 await validation_check(_)  # Проверка валидности аккаунтов
                 await renaming_accounts(_)  # Переименование аккаунтов
                 await checking_for_spam_bots(_)  # Проверка на спам ботов
                 finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                await log_and_display(f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}", list_view, page)
+                await log_and_display(
+                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                    list_view, page)
                 await show_notification(page, "🔚 Проверка аккаунтов завершена")
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
@@ -95,11 +107,15 @@ class TGChek:
                      list_view,
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🤖 Проверка через спам бот
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=checking_through_a_spam_bot_ru, on_click=checking_for_spam_bots),
+                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                                           text=checking_through_a_spam_bot_ru, on_click=checking_for_spam_bots),
                          # ✅ Проверка на валидность
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=validation_check_ru, on_click=validation_check),
+                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=validation_check_ru,
+                                           on_click=validation_check),
                          # ✏️ Переименование аккаунтов
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=renaming_accounts_ru, on_click=renaming_accounts),
+                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=renaming_accounts_ru,
+                                           on_click=renaming_accounts),
                          # 🔍 Полная проверка
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=full_verification_ru, on_click=full_verification),
+                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=full_verification_ru,
+                                           on_click=full_verification),
                      ])]))

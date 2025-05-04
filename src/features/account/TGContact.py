@@ -40,7 +40,8 @@ class TGContact:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def parsing_and_recording_contacts_in_the_database(self, client, list_view: ft.ListView, page: ft.Page) -> None:
+    async def parsing_and_recording_contacts_in_the_database(self, client, list_view: ft.ListView,
+                                                             page: ft.Page) -> None:
         """
         Парсинг и запись контактов в базу данных
 
@@ -93,7 +94,8 @@ class TGContact:
             return None
 
     @staticmethod
-    async def we_show_and_delete_the_contact_of_the_phone_book(client, user, list_view: ft.ListView, page: ft.Page) -> None:
+    async def we_show_and_delete_the_contact_of_the_phone_book(client, user, list_view: ft.ListView,
+                                                               page: ft.Page) -> None:
         """
         Показываем и удаляем контакт телефонной книги
 
@@ -151,7 +153,8 @@ class TGContact:
         :param page: Страница интерфейса
         """
         try:
-            records: list = await self.db_handler.open_and_read_data(table_name="contact", list_view=list_view, page=page)
+            records: list = await self.db_handler.open_and_read_data(table_name="contact", list_view=list_view,
+                                                                     page=page)
             await log_and_display(f"Всего номеров: {len(records)}", list_view, page)
             entities: list = []  # Создаем список сущностей
             for rows in records:
@@ -172,12 +175,15 @@ class TGContact:
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
                 except ValueError:
-                    await log_and_display(f"❌ Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!", list_view, page)
+                    await log_and_display(
+                        f"❌ Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!",
+                        list_view, page)
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
             client.disconnect()  # Разрываем соединение telegram
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
-            await self.db_handler.remove_records_without_username(list_view, page)  # Чистка списка parsing списка, если нет username
+            await self.db_handler.remove_records_without_username(list_view,
+                                                                  page)  # Чистка списка parsing списка, если нет username
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 

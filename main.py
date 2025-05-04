@@ -133,7 +133,8 @@ async def main(page: ft.Page):
                 start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
                 logger.info('Время старта: ' + str(start))
                 logger.info("▶️ Начало Формирования списка контактов")
-                await DatabaseHandler().open_and_read_data(table_name="contact", list_view=list_view, page=page)  # Удаление списка с контактами
+                await DatabaseHandler().open_and_read_data(table_name="contact", list_view=list_view,
+                                                           page=page)  # Удаление списка с контактами
                 await SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
                                                            "contact", "/working_with_contacts", "contact")
                 logger.info("🔚 Конец Формирования списка контактов")
@@ -285,5 +286,6 @@ if __name__ == '__main__':
             asyncio.run(main_run(list_view=ft.ListView(), page=page))
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
+
 
     ft.app(target=main)
