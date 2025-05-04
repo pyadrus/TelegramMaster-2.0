@@ -15,13 +15,14 @@ from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, Use
 from thefuzz import fuzz
 
 from src.core.configs import ConfigReader, BUTTON_HEIGHT, line_width_button, path_accounts_folder
-from src.core.localization import back_button, done_button
+from src.core.localization import done_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import working_with_accounts, find_filess
 from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
 from src.features.proxy.checking_proxy import checking_the_proxy_for_work
 from src.features.proxy.checking_proxy import reading_proxy_data_from_the_database
 from src.gui.menu import show_notification, log_and_display
+from src.locales.translations_loader import translations
 
 
 class TGConnect:
@@ -85,12 +86,12 @@ class TGConnect:
             await log_and_display(message=f"⛔ Аккаунт banned: {session_name}. {str(exception)}", list_view=list_view,
                                   page=page)
             await telegram_client.disconnect()
-            working_with_accounts(f"user_data/accounts/{session_name}.session",
-                                  f"user_data/accounts/banned/{session_name}.session")
+            working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
+                                  new_account_folder=f"user_data/accounts/banned/{session_name}.session")
         except sqlite3.OperationalError:
             await telegram_client.disconnect()
-            working_with_accounts(f"user_data/accounts/{session_name}.session",
-                                  f"user_data/accounts/banned/{session_name}.session")
+            working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
+                                  new_account_folder=f"user_data/accounts/banned/{session_name}.session")
 
     async def check_for_spam(self, page: ft.Page, list_view: ft.ListView) -> None:
         """
@@ -420,7 +421,7 @@ class TGConnect:
                           phone_number,
                           ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                             on_click=btn_click),  # Кнопка "Готово",
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["back"],
                                             on_click=back_button_clicked)  # Кнопка "Назад"
                           ])  # Создаем вид, который будет содержать поле ввода и кнопку
             page.views.append(input_view)  # Добавляем созданный вид на страницу
@@ -476,7 +477,7 @@ class TGConnect:
                     selected_files,  # Поле для отображения выбранного файла
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text="Выбрать session файл",
                                       on_click=lambda _: pick_files_dialog.pick_files()),  # Кнопка выбора файла
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["back"],
                                       on_click=back_button_clicked)  # Кнопка возврата
                 ]
             )

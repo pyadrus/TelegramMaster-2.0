@@ -15,12 +15,13 @@ from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitEr
 from telethon.tl.functions.channels import InviteToChannelRequest
 
 from src.core.configs import ConfigReader, path_inviting_folder, line_width_button, BUTTON_HEIGHT
-from src.core.localization import back_button, start_button
+from src.core.localization import start_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.menu import show_notification, log_and_display
+from src.locales.translations_loader import translations
 
 
 class InvitingToAGroup:
@@ -326,7 +327,7 @@ class InvitingToAGroup:
                     ft.Column(),  # Резерв для приветствия или других элементов интерфейса
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_button,
                                       on_click=add_items),  # Кнопка "🚀 Начать инвайтинг"
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["back"],
                                       on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
                 ],
             )

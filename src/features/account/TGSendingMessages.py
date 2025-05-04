@@ -14,7 +14,7 @@ from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError
 from src.core.configs import (ConfigReader, path_send_message_folder, path_folder_with_messages,
                               path_send_message_folder_answering_machine_message,
                               path_send_message_folder_answering_machine, line_width_button, BUTTON_HEIGHT)
-from src.core.localization import done_button, back_button, sending_messages_files_via_chats_ru
+from src.core.localization import done_button, sending_messages_files_via_chats_ru
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_files, all_find_files, record_inviting_results, find_filess
 from src.core.utils import read_json_file
@@ -22,6 +22,7 @@ from src.core.utils import record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.menu import log_and_display
+from src.locales.translations_loader import translations
 
 
 class SendTelegramMessages:
@@ -125,7 +126,7 @@ class SendTelegramMessages:
         button_done = ft.ElevatedButton(text=done_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
         # Кнопка "Назад"
-        button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
+        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
         t = ft.Text()
         # Разделение интерфейса на верхнюю и нижнюю части
@@ -152,7 +153,7 @@ class SendTelegramMessages:
         list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         # Кнопка "Назад"
-        button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
+        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
         # Создание View с элементами
         page.views.append(
@@ -305,7 +306,7 @@ class SendTelegramMessages:
         button_done = ft.ElevatedButton(text=done_button, width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
         # Кнопка "Назад"
-        button_back = ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
+        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
         t = ft.Text()
         # Разделение интерфейса на верхнюю и нижнюю части

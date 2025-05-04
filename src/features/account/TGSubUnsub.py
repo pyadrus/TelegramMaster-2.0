@@ -17,11 +17,11 @@ from telethon.tl.functions.messages import ImportChatInviteRequest
 
 from src.core.configs import (ConfigReader, path_subscription_folder, path_unsubscribe_folder, line_width_button,
                               BUTTON_HEIGHT)
-from src.core.localization import back_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.gui.menu import log_and_display
+from src.locales.translations_loader import translations
 
 
 class SubscribeUnsubscribeTelegram:
@@ -225,7 +225,8 @@ class SubscribeUnsubscribeTelegram:
                     ft.Column(),  # Резерв для приветствия или других элементов интерфейса
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text="🚀 Начать подписку",
                                       on_click=add_items),  # Кнопка "🚀 Начать подписку"
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                      text=translations["ru"]["buttons"]["back"],
                                       on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
                 ],
             )

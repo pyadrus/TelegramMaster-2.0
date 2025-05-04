@@ -9,9 +9,10 @@ import flet as ft  # Импортируем библиотеку flet
 from flet_core import ListView
 
 from src.core.configs import BUTTON_HEIGHT, line_width_button
-from src.core.localization import back_button, done_button
+from src.core.localization import done_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.gui.menu import show_notification, log_and_display
+from src.locales.translations_loader import translations
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
 config.read("user_data/config/config.ini")
@@ -137,7 +138,7 @@ class SettingPage:
                               on_click=on_append_click),
             ft.ElevatedButton(text="Очистить данные и записать по новой", width=line_width_button, height=BUTTON_HEIGHT,
                               on_click=on_clear_and_write_click),
-            ft.ElevatedButton(text=back_button, width=line_width_button, height=BUTTON_HEIGHT,
+            ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button, height=BUTTON_HEIGHT,
                               on_click=on_back_click)
         ]
 
@@ -295,7 +296,8 @@ class SettingPage:
                         controls=fields + [
                             ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                               on_click=btn_click),
-                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                              text=translations["ru"]["buttons"]["back"],
                                               on_click=back_button_clicked)
                         ]
                     )]))
@@ -325,8 +327,8 @@ async def recording_limits_file(time_1, time_2, variable: str, list_view: ft.Lis
         config.set(f"{variable}", f"{variable}_2", time_2)
     except configparser.NoSectionError as error:
         await log_and_display(
-            f"❌ Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_data/config/config.ini",
-            list_view, page)
+            message=f"❌ Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_data/config/config.ini",
+            list_view=list_view, page=page)
     return config
 
 
@@ -398,7 +400,8 @@ async def reaction_gui(page: ft.Page):
                 ft.Column([ft.Row(checkboxes[i:i + 9]) for i in range(0, len(checkboxes), 9)]),  # Чекбоксы в колонках
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                   on_click=button_clicked),  # Кнопка "Готово",
-                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=back_button,
+                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                  text=translations["ru"]["buttons"]["back"],
                                   on_click=back_button_clicked),  # Кнопка "Назад"
             ]
         )
