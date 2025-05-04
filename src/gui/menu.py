@@ -16,8 +16,9 @@ from src.core.localization import (
     subscribe_unsubscribe, subscription, unsubscribe, connecting_accounts, connecting_accounts_by_phone_number,
     connecting_session_accounts, to_boost_views, to_unsubscribe, to_subscribe, to_send_messages, for_marking_reactions,
     to_work_with_reactions, for_parsing, for_inviting, to_create_groups, to_work_with_numbers, to_edit_bio,
-    for_the_answering_machine, working_with_reactions, parsing, settings, main_menu, creating_groups_chats
+    for_the_answering_machine, working_with_reactions, parsing, settings, creating_groups_chats
 )
+from src.locales.translations_loader import translations
 
 
 async def settings_menu(page: ft.Page):
@@ -28,7 +29,7 @@ async def settings_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/settings",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      settings,
@@ -110,7 +111,7 @@ async def bio_editing_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/bio_editing",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      editing_bio,
@@ -147,7 +148,7 @@ async def inviting_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/inviting",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      inviting_ru,
@@ -181,7 +182,7 @@ async def working_with_contacts_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/working_with_contacts",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      working_with_contacts_menu_ru,
@@ -215,7 +216,7 @@ async def menu_parsing(page: ft.Page):
     """
     page.views.append(
         ft.View("/parsing",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      parsing,
@@ -257,7 +258,7 @@ async def reactions_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/working_with_reactions",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      working_with_reactions,
@@ -286,7 +287,7 @@ async def viewing_posts_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/viewing_posts_menu",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      we_are_winding_up_post_views_ru,
@@ -312,7 +313,7 @@ async def subscribe_and_unsubscribe_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/subscribe_unsubscribe",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      subscribe_unsubscribe,
@@ -340,7 +341,7 @@ async def account_connection_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/account_connection_menu",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      connecting_accounts,
@@ -370,7 +371,7 @@ async def connecting_accounts_by_number_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/connecting_accounts_by_number",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      connecting_accounts_by_phone_number,
@@ -442,7 +443,7 @@ async def creating_groups_and_chats_menu(page: ft.Page):
 
     page.views.append(
         ft.View("/creating_groups_and_chats_menu",
-                [ft.AppBar(title=ft.Text(main_menu),
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
                      creating_groups_chats,

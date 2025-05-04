@@ -3,7 +3,7 @@
 import flet as ft
 
 from src.core.configs import BUTTON_WIDTH, BUTTON_HEIGHT
-from src.core.localization import (main_menu, checking_accounts)
+from src.core.localization import (checking_accounts)
 from src.features.account.TGConnect import TGConnect
 from src.locales.translations_loader import translations
 
@@ -39,7 +39,7 @@ class TGChek:
 
         page.views.append(
             ft.View("/account_verification_menu",
-                    [ft.AppBar(title=ft.Text(main_menu),
+                    [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                      ft.Text(spans=[ft.TextSpan(
                          checking_accounts,

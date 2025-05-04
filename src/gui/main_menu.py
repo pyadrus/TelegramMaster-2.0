@@ -5,9 +5,10 @@ from src.core.configs import BUTTON_HEIGHT, small_button_width, line_width_butto
 from src.core.localization import (inviting_ru, we_are_winding_up_post_views_ru, editing_bio,
                                    working_with_contacts_menu_ru, subscribe_unsubscribe,
                                    checking_accounts, connecting_accounts, working_with_reactions, parsing,
-                                   settings, main_menu, creating_groups_chats, text_1, text_link_1, text_2, text_link_2,
+                                   settings, creating_groups_chats, text_1, text_link_1, text_2, text_link_2,
                                    documentation, sending_personal_messages_with_limits_ru,
                                    sending_messages_via_chats_ru)
+from src.locales.translations_loader import translations
 
 
 async def main_menu_program(page: ft.Page):
@@ -17,7 +18,7 @@ async def main_menu_program(page: ft.Page):
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
-        ft.View("/", [ft.AppBar(title=ft.Text(main_menu),
+        ft.View("/", [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                                 bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                       ft.Text(spans=[ft.TextSpan(
                           f"{program_name}",

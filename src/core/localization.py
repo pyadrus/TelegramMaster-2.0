@@ -88,8 +88,6 @@ to_subscribe: str = "🔔 Для подписки"
 to_unsubscribe: str = "🚫 Для отписки"
 to_boost_views: str = "📈 Для накрутки просмотров"
 
-main_menu: str = "Главное меню"
-
 # Сообщения в главное меню TelegramMaster 2.0
 text_1: str = 'Аккаунт  Telegram: '
 text_2: str = "Канал Telegram: "
