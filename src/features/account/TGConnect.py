@@ -92,7 +92,7 @@ class TGConnect:
             working_with_accounts(f"user_data/accounts/{session_name}.session",
                                   f"user_data/accounts/banned/{session_name}.session")
 
-    async def check_for_spam(self, page: ft.Page, list_view) -> None:
+    async def check_for_spam(self, page: ft.Page, list_view: ft.ListView) -> None:
         """
         Проверка аккаунта на спам через @SpamBot
 
@@ -100,12 +100,16 @@ class TGConnect:
         :param list_view: Список для отображения аккаунтов.
         """
         try:
+            start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+            await log_and_display(message=f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}",
+                                  list_view=list_view, page=page)
             for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
-                telegram_client = await self.get_telegram_client(page=page, session_name=session_name,
-                                                                 account_directory=path_accounts_folder,
-                                                                 list_view=list_view)
+                telegram_client: TelegramClient = await self.get_telegram_client(page=page, session_name=session_name,
+                                                                                 account_directory=path_accounts_folder,
+                                                                                 list_view=list_view)
                 try:
-                    await telegram_client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
+                    await telegram_client.send_message(entity='SpamBot',
+                                                       message='/start')  # Находим спам бот, и вводим команду /start
                     for message in await telegram_client.get_messages('SpamBot'):
                         await log_and_display(message=f"{session_name} {message.message}", list_view=list_view,
                                               page=page)
@@ -155,14 +159,19 @@ class TGConnect:
                         except sqlite3.OperationalError as e:
                             await log_and_display(message=f"Ошибка при отключении аккаунта: {session_name}",
                                                   list_view=list_view, page=page)
-                            await self.handle_banned_account(telegram_client, session_name, e, list_view, page)
+                            await self.handle_banned_account(telegram_client=telegram_client, session_name=session_name,
+                                                             exception=e, list_view=list_view, page=page)
 
                 except YouBlockedUserError:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
                 except (AttributeError, AuthKeyUnregisteredError) as e:
                     await log_and_display(message=f"❌ Ошибка: {e}", list_view=list_view, page=page)
                     continue
-
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            await log_and_display(
+                message=f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                list_view=list_view, page=page)
+            await show_notification(page=page, message="🔚 Проверка аккаунтов завершена")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
@@ -232,6 +241,22 @@ class TGConnect:
                         list_view=list_view, page=page)
                     working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
                                           new_account_folder=f"user_data/accounts/banned/{session_name}.session")
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            await log_and_display(
+                message=f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                list_view=list_view, page=page)
+            await show_notification(page=page, message="🔚 Проверка аккаунтов завершена")
+        except Exception as error:
+            logger.exception(f"❌ Ошибка: {error}")
+
+    async def checking_all_accounts(self, page: ft.Page, list_view: ft.ListView) -> None:
+        try:
+            start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+            await log_and_display(message=f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}",
+                                  list_view=list_view, page=page)
+            await self.verify_all_accounts(page=page, list_view=list_view)  # Проверка валидности аккаунтов
+            await self.get_account_details(page=page, list_view=list_view)  # Переименование аккаунтов
+            await self.check_for_spam(page=page, list_view=list_view)  # Проверка на спам ботов
             finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
             await log_and_display(
                 message=f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",

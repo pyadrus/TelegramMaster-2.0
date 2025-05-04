@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
-import datetime
 
 import flet as ft
-from loguru import logger
 
-from src.core.configs import BUTTON_WIDTH, BUTTON_HEIGHT, path_accounts_folder
+from src.core.configs import BUTTON_WIDTH, BUTTON_HEIGHT
 from src.core.localization import (main_menu, checking_accounts, checking_through_a_spam_bot_ru, validation_check_ru,
                                    renaming_accounts_ru, full_verification_ru)
-from src.core.utils import find_folders
 from src.features.account.TGConnect import TGConnect
-from src.gui.menu import show_notification, log_and_display
 
 
 class TGChek:
@@ -35,40 +31,11 @@ class TGChek:
 
         async def checking_for_spam_bots(_):
             """Проверка на спам ботов"""
-            try:
-                start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
-                                      page)
-                for folder in await find_folders(directory_path=path_accounts_folder):
-                    await log_and_display(f"Проверка аккаунтов из папки 📁 {folder} через спам бот", list_view, page)
-                    if folder == "invalid_account":
-                        continue  # Продолжаем цикл, пропуская эту итерацию
-                    else:
-                        await self.TGConnect.check_for_spam(page=page, list_view=list_view)
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                await log_and_display(
-                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
-                    list_view, page)
-                await show_notification(page, "🔚 Проверка аккаунтов завершена")
-            except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")
+            await self.TGConnect.check_for_spam(page=page, list_view=list_view)
 
         async def full_verification(_):
             """Полная проверка аккаунтов"""
-            try:
-                start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                await log_and_display(f"▶️ Проверка аккаунтов началась.\n🕒 Время старта: {str(start_time)}", list_view,
-                                      page)
-                await validation_check(_)  # Проверка валидности аккаунтов
-                await renaming_accounts(_)  # Переименование аккаунтов
-                await checking_for_spam_bots(_)  # Проверка на спам ботов
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                await log_and_display(
-                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
-                    list_view, page)
-                await show_notification(page, "🔚 Проверка аккаунтов завершена")
-            except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")
+            await self.TGConnect.checking_all_accounts(page=page, list_view=list_view)
 
         page.views.append(
             ft.View("/account_verification_menu",
