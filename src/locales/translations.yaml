@@ -1,6 +1,16 @@
 ru:
   menu:
     main: "Главное меню"
+    parsing: "📊 Парсинг"
+    contacts: "📇 Работа с контактами"
+    subscribe_unsubscribe: "🔄 Подписка, отписка"
+    account_connect: "🔐 Подключение аккаунтов"
+    reactions: "❤️ Работа с реакциями"
+    account_check: "🔍 Проверка аккаунтов"
+    create_groups: "👥 Создание групп (чатов)"
+    edit_bio: "✏️ Редактирование BIO"
+    settings: "⚙️ Настройки"
+    documentation: "📖 Документация"
 
   buttons:
     back: "⬅️ Назад"

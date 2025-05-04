@@ -4,7 +4,7 @@ import flet as ft
 from src.core.configs import BUTTON_HEIGHT, small_button_width, line_width_button, program_name
 from src.core.localization import (inviting_ru, we_are_winding_up_post_views_ru, editing_bio,
                                    working_with_contacts_menu_ru, subscribe_unsubscribe,
-                                   checking_accounts, connecting_accounts, working_with_reactions, parsing,
+                                   connecting_accounts, working_with_reactions, parsing,
                                    settings, creating_groups_chats, text_1, text_link_1, text_2, text_link_2,
                                    documentation, sending_personal_messages_with_limits_ru,
                                    sending_messages_via_chats_ru)
@@ -69,7 +69,7 @@ async def main_menu_program(page: ft.Page):
                                                     on_click=lambda _: page.go("/working_with_reactions")),
                                   # 🔍 Проверка аккаунтов
                                   ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                                    text=checking_accounts,
+                                                    text=translations["ru"]["menu"]["account_check"],
                                                     on_click=lambda _: page.go("/account_verification_menu")), ]),
                           # 👥 Создание групп (чатов)
                           ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
