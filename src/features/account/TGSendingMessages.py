@@ -14,7 +14,7 @@ from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError
 from src.core.configs import (ConfigReader, path_send_message_folder, path_folder_with_messages,
                               path_send_message_folder_answering_machine_message,
                               path_send_message_folder_answering_machine, line_width_button, BUTTON_HEIGHT)
-from src.core.localization import done_button, sending_messages_files_via_chats_ru
+from src.core.localization import sending_messages_files_via_chats_ru
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_files, all_find_files, record_inviting_results, find_filess
 from src.core.utils import read_json_file
@@ -123,7 +123,7 @@ class SendTelegramMessages:
         # Поле для формирования списка чатов
         account_limits_inputs = ft.TextField(label="Введите лимит на сообщения", multiline=True, max_lines=12)
         # Кнопка "Готово"
-        button_done = ft.ElevatedButton(text=done_button, width=line_width_button, height=BUTTON_HEIGHT,
+        button_done = ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
         # Кнопка "Назад"
         button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button, height=BUTTON_HEIGHT,
@@ -303,7 +303,7 @@ class SendTelegramMessages:
         # Поле для формирования списка чатов
         chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=True, max_lines=12)
         # Кнопка "Готово"
-        button_done = ft.ElevatedButton(text=done_button, width=line_width_button, height=BUTTON_HEIGHT,
+        button_done = ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=line_width_button, height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
         # Кнопка "Назад"
         button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button, height=BUTTON_HEIGHT,

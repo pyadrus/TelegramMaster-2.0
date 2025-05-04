@@ -2,7 +2,6 @@
 import flet as ft  # Импортируем библиотеку flet
 
 from src.core.configs import line_width_button, BUTTON_HEIGHT
-from src.core.localization import done_button
 from src.locales.translations_loader import translations
 
 
@@ -22,7 +21,8 @@ def function_button_ready(page: ft.Page, btn_click, back_button_clicked, user_in
             [
                 user_input,
                 ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
+                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                  text=translations["ru"]["buttons"]["done"],
                                   on_click=btn_click),  # Кнопка "Готово"
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                   text=translations["ru"]["buttons"]["back"],
@@ -48,7 +48,8 @@ def function_button_ready_reactions(page: ft.Page, btn_click, back_button_clicke
                 chat,  # Поле ввода ссылки на чат
                 message,  # Поле ввода ссылки пост
                 ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
-                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
+                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                  text=translations["ru"]["buttons"]["done"],
                                   on_click=btn_click),  # Кнопка "Готово"
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                   text=translations["ru"]["buttons"]["back"],
@@ -75,7 +76,8 @@ def function_button_ready_viewing(page: ft.Page, btn_click, back_button_clicked,
                 link_channel,  # Поле ввода ссылки на чат
                 link_post,  # Поле ввода ссылки пост
                 ft.Column(),  # Колонка для размещения других элементов (при необходимости)
-                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
+                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                  text=translations["ru"]["buttons"]["done"],
                                   on_click=btn_click),  # Кнопка "Готово"
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                   text=translations["ru"]["buttons"]["back"],

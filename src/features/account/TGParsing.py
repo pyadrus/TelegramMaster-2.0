@@ -21,7 +21,6 @@ from telethon.tl.types import (
 
 from src.core.configs import (line_width_button, BUTTON_HEIGHT, time_activity_user_2,
                               path_accounts_folder)
-from src.core.localization import done_button
 from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates, MembersAdmin
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
@@ -750,7 +749,8 @@ class ParsingGroupMembers:
                         chat_input,  # Поле ввода ссылки на чат 🔗
                         limit_active_user,  # Поле ввода количества сообщений 💬
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
-                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
+                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                          text=translations["ru"]["buttons"]["done"],
                                           on_click=btn_click),  # Кнопка "✅ Готово"
                         ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                           text=translations["ru"]["buttons"]["back"],

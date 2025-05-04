@@ -15,7 +15,6 @@ from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, Use
 from thefuzz import fuzz
 
 from src.core.configs import ConfigReader, BUTTON_HEIGHT, line_width_button, path_accounts_folder
-from src.core.localization import done_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import working_with_accounts, find_filess
 from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
@@ -393,7 +392,7 @@ class TGConnect:
                                     logger.exception(f"❌ Ошибка при вводе пароля: {ex}")
 
                             button_password = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                                                text=done_button,
+                                                                text=translations["ru"]["buttons"]["done"],
                                                                 on_click=btn_click_password)  # Кнопка "Готово"
                             page.views.append(ft.View(controls=[pass_2fa, button_password]))
                             page.update()  # Обновляем страницу, чтобы интерфейс отобразился
@@ -404,9 +403,10 @@ class TGConnect:
                             logger.exception(f"❌ Ошибка при авторизации: {e}")
                             await telegram_client.disconnect()  # Отключаемся от Telegram
 
-                    button_code = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
-                                                    on_click=btn_click_code)  # Кнопка "Готово"
-                    page.views.append(ft.View(controls=[passww, button_code]))
+                    page.views.append(ft.View(controls=[passww,
+                                                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                                                          text=translations["ru"]["buttons"]["done"],
+                                                                          on_click=btn_click_code)]))  # Кнопка "Готово"
                     page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
                 page.update()
 
@@ -419,9 +419,11 @@ class TGConnect:
             input_view = ft.View(
                 controls=[ft.Text(f"Подключение аккаунтов Telegram", size=15, color="pink600"),
                           phone_number,
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
+                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                            text=translations["ru"]["buttons"]["done"],
                                             on_click=btn_click),  # Кнопка "Готово",
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["back"],
+                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                            text=translations["ru"]["buttons"]["back"],
                                             on_click=back_button_clicked)  # Кнопка "Назад"
                           ])  # Создаем вид, который будет содержать поле ввода и кнопку
             page.views.append(input_view)  # Добавляем созданный вид на страницу
@@ -477,7 +479,8 @@ class TGConnect:
                     selected_files,  # Поле для отображения выбранного файла
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text="Выбрать session файл",
                                       on_click=lambda _: pick_files_dialog.pick_files()),  # Кнопка выбора файла
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["back"],
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                      text=translations["ru"]["buttons"]["back"],
                                       on_click=back_button_clicked)  # Кнопка возврата
                 ]
             )
