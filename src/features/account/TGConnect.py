@@ -82,7 +82,8 @@ class TGConnect:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            await log_and_display(message=f"⛔ Аккаунт banned: {session_name}. {str(exception)}", list_view=list_view, page=page)
+            await log_and_display(message=f"⛔ Аккаунт banned: {session_name}. {str(exception)}", list_view=list_view,
+                                  page=page)
             await telegram_client.disconnect()
             working_with_accounts(f"user_data/accounts/{session_name}.session",
                                   f"user_data/accounts/banned/{session_name}.session")
@@ -199,11 +200,14 @@ class TGConnect:
         :param list_view: Список для отображения информации.
         """
         try:
+            start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
+            await log_and_display(message=f"▶️ Переименование аккаунтов началось.\n🕒 Время старта: {str(start_time)}",
+                                  list_view=list_view, page=page)
             await checking_the_proxy_for_work(list_view=list_view, page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
-                await log_and_display(message=f"⚠️ Переименовываемый аккаунт: {session_name}",
-                                      list_view=list_view, page=page)
+                await log_and_display(message=f"⚠️ Переименовываемый аккаунт: {session_name}", list_view=list_view,
+                                      page=page)
                 # Переименовывание аккаунтов
                 telegram_client = await self.get_telegram_client(page=page, session_name=session_name,
                                                                  account_directory=path_accounts_folder,
@@ -228,6 +232,11 @@ class TGConnect:
                         list_view=list_view, page=page)
                     working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
                                           new_account_folder=f"user_data/accounts/banned/{session_name}.session")
+            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
+            await log_and_display(
+                message=f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
+                list_view=list_view, page=page)
+            await show_notification(page=page, message="🔚 Проверка аккаунтов завершена")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 

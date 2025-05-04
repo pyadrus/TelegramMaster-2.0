@@ -27,25 +27,11 @@ class TGChek:
 
         async def validation_check(_) -> None:
             """Проверка валидности аккаунтов"""
-            try:
-                await self.TGConnect.verify_all_accounts(page=page, list_view=list_view)
-            except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")
+            await self.TGConnect.verify_all_accounts(page=page, list_view=list_view)
 
         async def renaming_accounts(_):
             """Переименование аккаунтов"""
-            try:
-                start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                await log_and_display(f"▶️ Переименование аккаунтов началось.\n🕒 Время старта: {str(start_time)}",
-                                      list_view, page)
-                await self.TGConnect.get_account_details(page=page, list_view=list_view)
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                await log_and_display(
-                    f"🔚 Конец проверки.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
-                    list_view, page)
-                await show_notification(page, "🔚 Проверка аккаунтов завершена")
-            except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")
+            await self.TGConnect.get_account_details(page=page, list_view=list_view)
 
         async def checking_for_spam_bots(_):
             """Проверка на спам ботов"""
