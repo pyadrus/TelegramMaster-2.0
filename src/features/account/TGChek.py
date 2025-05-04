@@ -3,9 +3,10 @@
 import flet as ft
 
 from src.core.configs import BUTTON_WIDTH, BUTTON_HEIGHT
-from src.core.localization import (main_menu, checking_accounts, checking_through_a_spam_bot_ru, validation_check_ru,
+from src.core.localization import (main_menu, checking_accounts, validation_check_ru,
                                    renaming_accounts_ru, full_verification_ru)
 from src.features.account.TGConnect import TGConnect
+from src.locales.translations_loader import translations
 
 
 class TGChek:
@@ -53,7 +54,8 @@ class TGChek:
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🤖 Проверка через спам бот
                          ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                           text=checking_through_a_spam_bot_ru, on_click=checking_for_spam_bots),
+                                           text=translations["ru"]["account_verification"]["spam_check"],
+                                           on_click=checking_for_spam_bots),
                          # ✅ Проверка на валидность
                          ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=validation_check_ru,
                                            on_click=validation_check),
