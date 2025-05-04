@@ -21,7 +21,7 @@ from telethon.tl.types import (
 
 from src.core.configs import (line_width_button, BUTTON_HEIGHT, time_activity_user_2,
                               path_accounts_folder)
-from src.core.localization import start_button, done_button
+from src.core.localization import done_button
 from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates, MembersAdmin
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
@@ -339,9 +339,11 @@ class ParsingGroupMembers:
                     ft.Column(),  # резерв для приветствия или других элементов интерфейса
                     selected_files,  # Отображение выбранных файлов
                     button_select_file,  # Кнопка для выбора файлов
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=start_button,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                      text=translations["ru"]["buttons"]["start"],
                                       on_click=add_items),  # Кнопка "🚀 Начать парсинг"
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["back"],
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                      text=translations["ru"]["buttons"]["back"],
                                       on_click=lambda _: self.back_button_clicked(page))  # Кнопка "⬅️ Назад"
                 ],
             )
@@ -516,7 +518,8 @@ class ParsingGroupMembers:
                                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                   text="📂 Выбрать группу",
                                                   on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
-                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["back"],
+                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                                  text=translations["ru"]["buttons"]["back"],
                                                   on_click=lambda _: self.back_button_clicked(page)),
                                 # Кнопка "⬅️ Назад"
                                 result_text, list_view,
@@ -749,7 +752,8 @@ class ParsingGroupMembers:
                         ft.Column(),  # Колонка для размещения других элементов (при необходимости)
                         ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=done_button,
                                           on_click=btn_click),  # Кнопка "✅ Готово"
-                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["back"],
+                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                          text=translations["ru"]["buttons"]["back"],
                                           on_click=lambda _: self.back_button_clicked(page))  # Кнопка "⬅️ Назад"
                     ]
                 ))
