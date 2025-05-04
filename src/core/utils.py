@@ -5,8 +5,9 @@ import os
 import os.path
 import random  # Импортируем модуль random, чтобы генерировать случайное число
 
-from loguru import logger
 import flet as ft
+from loguru import logger
+
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.gui.menu import log_and_display
 

@@ -232,7 +232,9 @@ class SettingPage:
                 larger_times = int(larger_timex.value)
                 if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
                     # Если условие прошло проверку, то возвращаем первое и второе время
-                    writing_settings_to_a_file(await recording_limits_file(str(smaller_times), str(larger_times), variable=variable, list_view=list_view, page=page))
+                    writing_settings_to_a_file(
+                        await recording_limits_file(str(smaller_times), str(larger_times), variable=variable,
+                                                    list_view=list_view, page=page))
                     list_view.controls.append(ft.Text("Данные успешно записаны!"))  # отображаем сообщение в ListView
                     await show_notification(page, "Данные успешно записаны!")
                     page.go("/settings")  # Изменение маршрута в представлении существующих настроек
@@ -305,7 +307,8 @@ def writing_settings_to_a_file(config) -> None:
         config.write(setup)  # Записываем данные в файл
 
 
-async def recording_limits_file(time_1, time_2, variable: str, list_view: ft.ListView, page: ft.Page) -> configparser.ConfigParser:
+async def recording_limits_file(time_1, time_2, variable: str, list_view: ft.ListView,
+                                page: ft.Page) -> configparser.ConfigParser:
     """
     Запись данных в файл TelegramMaster/user_data/config.ini
 

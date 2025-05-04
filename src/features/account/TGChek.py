@@ -2,6 +2,7 @@
 import datetime
 
 import flet as ft
+from loguru import logger
 
 from src.core.configs import BUTTON_WIDTH, BUTTON_HEIGHT, path_accounts_folder
 from src.core.localization import (main_menu, checking_accounts, checking_through_a_spam_bot_ru, validation_check_ru,
@@ -9,7 +10,6 @@ from src.core.localization import (main_menu, checking_accounts, checking_throug
 from src.core.utils import find_folders
 from src.features.account.TGConnect import TGConnect
 from src.gui.menu import show_notification, log_and_display
-from loguru import logger
 
 
 class TGChek:

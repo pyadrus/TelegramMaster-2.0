@@ -2,10 +2,11 @@
 import datetime
 import sqlite3
 
+import flet as ft
 from loguru import logger
 from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField
 from peewee import fn, IntegerField
-import flet as ft
+
 from src.core.configs import path_folder_database
 from src.gui.menu import log_and_display
 

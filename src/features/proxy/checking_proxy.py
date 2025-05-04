@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import random
 
+import flet as ft
 import requests
 from loguru import logger
-import flet as ft
+
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.features.auth.logging_in import get_country_flag
 from src.gui.menu import log_and_display

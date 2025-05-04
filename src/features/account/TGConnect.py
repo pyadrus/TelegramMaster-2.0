@@ -81,10 +81,15 @@ class TGConnect:
         :param list_view: Список для отображения аккаунтов.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        await log_and_display(f"⛔ Аккаунт banned: {session_name}. {str(exception)}", list_view, page)
-        await telegram_client.disconnect()
-        working_with_accounts(f"user_data/accounts/{session_name}.session",
-                              f"user_data/accounts/banned/{session_name}.session")
+        try:
+            await log_and_display(message=f"⛔ Аккаунт banned: {session_name}. {str(exception)}", list_view=list_view, page=page)
+            await telegram_client.disconnect()
+            working_with_accounts(f"user_data/accounts/{session_name}.session",
+                                  f"user_data/accounts/banned/{session_name}.session")
+        except sqlite3.OperationalError:
+            await telegram_client.disconnect()
+            working_with_accounts(f"user_data/accounts/{session_name}.session",
+                                  f"user_data/accounts/banned/{session_name}.session")
 
     async def check_for_spam(self, page: ft.Page, list_view) -> None:
         """
@@ -95,13 +100,14 @@ class TGConnect:
         """
         try:
             for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
-                telegram_client = await self.get_telegram_client(page, session_name,
+                telegram_client = await self.get_telegram_client(page=page, session_name=session_name,
                                                                  account_directory=path_accounts_folder,
                                                                  list_view=list_view)
                 try:
                     await telegram_client.send_message('SpamBot', '/start')  # Находим спам бот, и вводим команду /start
                     for message in await telegram_client.get_messages('SpamBot'):
-                        await log_and_display(f"{session_name} {message.message}", list_view, page)
+                        await log_and_display(message=f"{session_name} {message.message}", list_view=list_view,
+                                              page=page)
                         similarity_ratio_ru: int = fuzz.ratio(f"{message.message}",
                                                               "Очень жаль, что Вы с этим столкнулись. К сожалению, "
                                                               "иногда наша антиспам-система излишне сурово реагирует на "
@@ -113,10 +119,11 @@ class TGConnect:
                                                               "Если пользователь написал Вам первым, Вы сможете ответить, "
                                                               "несмотря на ограничения.")
                         if similarity_ratio_ru >= 97:
-                            await log_and_display(f"⛔ Аккаунт заблокирован", list_view, page)
+                            await log_and_display(message=f"⛔ Аккаунт заблокирован", list_view=list_view, page=page)
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                             await log_and_display(
-                                f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}", list_view, page)
+                                message=f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}",
+                                list_view=list_view, page=page)
                             # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
                             working_with_accounts(f"user_data/accounts/{session_name}.session",
                                                   f"user_data/accounts/banned/{session_name}.session")
@@ -130,26 +137,29 @@ class TGConnect:
                                                               "or add them to groups and channels. Of course, when people "
                                                               "contact you first, you can always reply to them.")
                         if similarity_ratio_en >= 97:
-                            await log_and_display(f"⛔ Аккаунт заблокирован", list_view, page)
+                            await log_and_display(message=f"⛔ Аккаунт заблокирован", list_view=list_view, page=page)
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                             await log_and_display(
-                                f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}", list_view, page)
+                                message=f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}",
+                                list_view=list_view, page=page)
                             # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
-                            await log_and_display(f"{session_name}", list_view, page)
+                            await log_and_display(message=f"{session_name}", list_view=list_view, page=page)
                             working_with_accounts(f"user_data/accounts/{session_name}.session",
                                                   f"user_data/accounts/banned/{session_name}.session")
-                        await log_and_display(f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}",
-                                              list_view, page)
+                        await log_and_display(
+                            message=f"Проверка аккаунтов через SpamBot. {session_name}: {message.message}",
+                            list_view=list_view, page=page)
                         try:
                             await telegram_client.disconnect()  # Отключаемся от аккаунта, для освобождения процесса session файла.
                         except sqlite3.OperationalError as e:
-                            await log_and_display(f"Ошибка при отключении аккаунта: {session_name}", list_view, page)
+                            await log_and_display(message=f"Ошибка при отключении аккаунта: {session_name}",
+                                                  list_view=list_view, page=page)
                             await self.handle_banned_account(telegram_client, session_name, e, list_view, page)
 
                 except YouBlockedUserError:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
                 except (AttributeError, AuthKeyUnregisteredError) as e:
-                    await log_and_display(f"❌ Ошибка: {e}", list_view, page)
+                    await log_and_display(message=f"❌ Ошибка: {e}", list_view=list_view, page=page)
                     continue
 
         except Exception as error:
@@ -164,7 +174,8 @@ class TGConnect:
         """
         try:
             start_time = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-            await log_and_display(message=f"Запуск проверки аккаунтов Telegram 📁.\n🕒 Время старта: {str(start_time)}", list_view=list_view, page=page)
+            await log_and_display(message=f"Запуск проверки аккаунтов Telegram 📁.\n🕒 Время старта: {str(start_time)}",
+                                  list_view=list_view, page=page)
             await checking_the_proxy_for_work(list_view=list_view, page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_file in await find_filess(directory_path=path_accounts_folder, extension='session'):
