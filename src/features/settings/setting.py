@@ -293,7 +293,8 @@ class SettingPage:
                     list_view,  # отображение логов 📝
                     ft.Column(
                         controls=fields + [
-                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["done"],
+                            ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                              text=translations["ru"]["buttons"]["done"],
                                               on_click=btn_click),
                             ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                               text=translations["ru"]["buttons"]["back"],
@@ -397,7 +398,8 @@ async def reaction_gui(page: ft.Page):
             controls=[
                 t,
                 ft.Column([ft.Row(checkboxes[i:i + 9]) for i in range(0, len(checkboxes), 9)]),  # Чекбоксы в колонках
-                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["done"],
+                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                  text=translations["ru"]["buttons"]["done"],
                                   on_click=button_clicked),  # Кнопка "Готово",
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                   text=translations["ru"]["buttons"]["back"],

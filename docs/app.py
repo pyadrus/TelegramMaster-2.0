@@ -12,18 +12,6 @@ from loguru import logger
 
 # Импорт необходимых переменных и функций
 from src.core.configs import program_name, program_version, date_of_program_change
-from src.core.localization import (
-                                   inviting_ru,
-                                   invitation_1_time_per_hour_ru, invitation_at_a_certain_time_ru,
-                                   inviting_every_day_ru, setting_reactions,
-                                   we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
-                                   sending_messages_via_chats_ru, sending_personal_messages_with_limits_ru,
-                                   changing_the_username,
-                                   changing_the_photo, changing_the_description, name_change_n,
-                                   name_change_f, creating_a_contact_list, show_a_list_of_contacts,
-                                   deleting_contacts, adding_contacts,
-                                   subscription, unsubscribe, connecting_accounts_by_phone_number,
-                                   connecting_session_accounts)
 from src.locales.translations_loader import translations
 
 app = FastAPI()
@@ -59,10 +47,10 @@ async def inviting_page(request: Request):
     """🚀 Инвайтинг"""
     logger.info("Запущена страница инвайтинга")
     return templates.TemplateResponse("inviting.html", {"request": request, "program_name": program_name,
-                                                        "inviting_ru": inviting_ru,
-                                                        "invitation_1_time_per_hour_ru": invitation_1_time_per_hour_ru,
-                                                        "invitation_at_a_certain_time_ru": invitation_at_a_certain_time_ru,
-                                                        "inviting_every_day_ru": inviting_every_day_ru})
+                                                        "inviting_ru": translations["ru"]["inviting_menu"]["inviting"],
+                                                        "invitation_1_time_per_hour_ru": translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"],
+                                                        "invitation_at_a_certain_time_ru": translations["ru"]["inviting_menu"]["invitation_at_a_certain_time"],
+                                                        "inviting_every_day_ru": translations["ru"]["inviting_menu"]["inviting_every_day"]})
 
 
 @app.get("/inviting/inviting_with_limits_in_telegram_master", response_class=HTMLResponse)
@@ -72,10 +60,10 @@ async def inviting_with_limits_in_telegram_master(request: Request):
     return templates.TemplateResponse("inviting/inviting_with_limits_in_telegram_master.html",
                                       {
                                           "request": request, "program_name": program_name,
-                                          "inviting_ru": inviting_ru,
-                                          "invitation_1_time_per_hour_ru": invitation_1_time_per_hour_ru,
-                                          "invitation_at_a_certain_time": invitation_at_a_certain_time_ru,
-                                          "inviting_every_day_ru": inviting_every_day_ru,
+                                          "inviting_ru": translations["ru"]["inviting_menu"]["inviting"],
+                                          "invitation_1_time_per_hour_ru": translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"],
+                                          "invitation_at_a_certain_time": translations["ru"]["inviting_menu"]["invitation_at_a_certain_time"],
+                                          "inviting_every_day_ru": translations["ru"]["inviting_menu"]["inviting_every_day"],
                                           "start_inviting_button": translations["ru"]["buttons"]["start"],
                                       })
 
@@ -87,8 +75,8 @@ async def inviting_1_time_per_hour(request: Request):
     return templates.TemplateResponse("inviting/inviting_1_time_per_hour.html",
                                       {
                                           "request": request, "program_name": program_name,
-                                          "inviting_ru": inviting_ru,
-                                          "invitation_1_time_per_hour_ru": invitation_1_time_per_hour_ru,
+                                          "inviting_ru": translations["ru"]["inviting_menu"]["inviting"],
+                                          "invitation_1_time_per_hour_ru": translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"],
                                           "start_inviting_button": translations["ru"]["buttons"]["start"],
                                       })
 
@@ -99,9 +87,10 @@ async def inviting_at_a_certain_time(request: Request):
     logger.info("Запущена страница 🚀 Инвайтинг")
     return templates.TemplateResponse("inviting/inviting_at_a_certain_time.html",
                                       {"request": request, "program_name": program_name,
-                                       "inviting": inviting_ru,
-                                       "invitation_at_a_certain_time_ru": invitation_at_a_certain_time_ru,
-                                       "time_between_subscriptions_ru": translations["ru"]["menu_settings"]["time_between_subscriptions"],
+                                       "inviting": translations["ru"]["inviting_menu"]["inviting"],
+                                       "invitation_at_a_certain_time_ru": translations["ru"]["inviting_menu"]["invitation_at_a_certain_time"],
+                                       "time_between_subscriptions_ru": translations["ru"]["menu_settings"][
+                                           "time_between_subscriptions"],
                                        "start_inviting_button": translations["ru"]["buttons"]["start"],
                                        })
 
@@ -112,9 +101,10 @@ async def inviting_every_day(request: Request):
     logger.info("Запущена страница 🚀 Инвайтинг")
     return templates.TemplateResponse("inviting/inviting_every_day.html",
                                       {"request": request, "program_name": program_name,
-                                       "inviting_ru": inviting_ru,
-                                       "inviting_every_day_ru": inviting_every_day_ru,
-                                       "time_between_subscriptions_ru": translations["ru"]["menu_settings"]["time_between_subscriptions"],
+                                       "inviting_ru": translations["ru"]["inviting_menu"]["inviting"],
+                                       "inviting_every_day_ru": translations["ru"]["inviting_menu"]["inviting_every_day"],
+                                       "time_between_subscriptions_ru": translations["ru"]["menu_settings"][
+                                           "time_between_subscriptions"],
                                        "start_inviting_button": translations["ru"]["buttons"]["start"],
                                        })
 
@@ -126,8 +116,8 @@ async def sending_messages(request: Request):
     try:
         logger.info("Запущено страница рассылки сообщений")
         return templates.TemplateResponse('sending_messages.html', {"request": request, "program_name": program_name,
-                                                                    "sending_messages_via_chats_ru": sending_messages_via_chats_ru,
-                                                                    "sending_personal_messages_with_limits_ru": sending_personal_messages_with_limits_ru,
+                                                                    "sending_messages_via_chats_ru": translations["ru"]["message_sending_menu"]["sending_messages_via_chats"],
+                                                                    "sending_personal_messages_with_limits_ru": translations["ru"]["message_sending_menu"]["sending_personal_messages_with_limits"],
                                                                     })
     except Exception as e:
         logger.exception(e)
@@ -138,11 +128,11 @@ async def editing_bio(request: Request):
     """Редактирование BIO"""
     logger.info("Запущена страница редактирования БИО")
     return templates.TemplateResponse('editing_bio.html', {"request": request, "program_name": program_name,
-                                                           "changing_the_username": changing_the_username,
-                                                           "changing_the_photo": changing_the_photo,
-                                                           "changing_the_description": changing_the_description,
-                                                           "name_change_n": name_change_n,
-                                                           "name_change_f": name_change_f,
+                                                           "changing_the_username": translations["ru"]["edit_bio_menu"]["changing_the_username"],
+                                                           "changing_the_photo": translations["ru"]["edit_bio_menu"]["changing_the_photo"],
+                                                           "changing_the_description": translations["ru"]["edit_bio_menu"]["changing_the_description"],
+                                                           "name_change_n": translations["ru"]["edit_bio_menu"]["name_change_n"],
+                                                           "name_change_f": translations["ru"]["edit_bio_menu"]["name_change_f"],
                                                            })
 
 
@@ -151,11 +141,12 @@ async def working_with_contacts(request: Request):
     """Работа с контактами"""
     logger.info("Запущена страница работы с контактами")
     return templates.TemplateResponse('working_with_contacts.html', {"request": request, "program_name": program_name,
-                                                                     "creating_a_contact_list": creating_a_contact_list,
-                                                                     "show_a_list_of_contacts": show_a_list_of_contacts,
-                                                                     "deleting_contacts": deleting_contacts,
-                                                                     "adding_contacts": adding_contacts,
-                                                                     "working_with_contacts_menu_ru": translations["ru"]["menu"]["contacts"],
+                                                                     "creating_a_contact_list": translations["ru"]["contacts_menu"]["creating_a_contact_list"],
+                                                                     "show_a_list_of_contacts": translations["ru"]["contacts_menu"]["show_a_list_of_contacts"],
+                                                                     "deleting_contacts": translations["ru"]["contacts_menu"]["deleting_contacts"],
+                                                                     "adding_contacts": translations["ru"]["contacts_menu"]["adding_contacts"],
+                                                                     "working_with_contacts_menu_ru":
+                                                                         translations["ru"]["menu"]["contacts"],
                                                                      })
 
 
@@ -165,21 +156,44 @@ async def settings(request: Request):
     """⚙️ Настройки"""
     logger.info("Запущена страница настроек")
     return templates.TemplateResponse('settings.html', {"request": request, "program_name": program_name,
-                                                        "choice_of_reactions_ru": translations["ru"]["menu_settings"]["choice_of_reactions"],
-                                                        "proxy_entry_ru": translations["ru"]["menu_settings"]["changing_accounts_ru"],
-                                                        "changing_accounts_ru": translations["ru"]["menu_settings"]["changing_accounts"],
-                                                        "recording_api_id_api_hash_ru": translations["ru"]["menu_settings"]["recording_api_id_api_hash"],
-                                                        "time_between_subscriptions_ru": translations["ru"]["menu_settings"]["time_between_subscriptions"],
-                                                        "message_recording_ru": translations["ru"]["menu_settings"]["message_recording"],
-                                                        "link_entry_ru": translations["ru"]["menu_settings"]["link_entry"],
-                                                        "account_limits_ru": translations["ru"]["menu_settings"]["account_limits"],
-                                                        "message_limits_ru": translations["ru"]["menu_settings"]["message_limits"],
-                                                        "time_between_subscriptionss_ru": translations["ru"]["menu_settings"]["time_between_subscriptionss"],
-                                                        "creating_username_list_ru": translations["ru"]["menu_settings"]["creating_username_list"],
-                                                        "recording_the_time_between_messages_ru": translations["ru"]["menu_settings"]["recording_the_time_between_messages"],
-                                                        "time_between_invites_sending_messages_ru": translations["ru"]["menu_settings"]["time_between_invites_sending_messages"],
-                                                        "recording_reaction_link_ru": translations["ru"]["menu_settings"]["recording_reaction_link"],
-                                                        "forming_list_of_chats_channels_ru": translations["ru"]["menu_settings"]["forming_list_of_chats_channels"],
+                                                        "choice_of_reactions_ru": translations["ru"]["menu_settings"][
+                                                            "choice_of_reactions"],
+                                                        "proxy_entry_ru": translations["ru"]["menu_settings"][
+                                                            "changing_accounts_ru"],
+                                                        "changing_accounts_ru": translations["ru"]["menu_settings"][
+                                                            "changing_accounts"],
+                                                        "recording_api_id_api_hash_ru":
+                                                            translations["ru"]["menu_settings"][
+                                                                "recording_api_id_api_hash"],
+                                                        "time_between_subscriptions_ru":
+                                                            translations["ru"]["menu_settings"][
+                                                                "time_between_subscriptions"],
+                                                        "message_recording_ru": translations["ru"]["menu_settings"][
+                                                            "message_recording"],
+                                                        "link_entry_ru": translations["ru"]["menu_settings"][
+                                                            "link_entry"],
+                                                        "account_limits_ru": translations["ru"]["menu_settings"][
+                                                            "account_limits"],
+                                                        "message_limits_ru": translations["ru"]["menu_settings"][
+                                                            "message_limits"],
+                                                        "time_between_subscriptionss_ru":
+                                                            translations["ru"]["menu_settings"][
+                                                                "time_between_subscriptionss"],
+                                                        "creating_username_list_ru":
+                                                            translations["ru"]["menu_settings"][
+                                                                "creating_username_list"],
+                                                        "recording_the_time_between_messages_ru":
+                                                            translations["ru"]["menu_settings"][
+                                                                "recording_the_time_between_messages"],
+                                                        "time_between_invites_sending_messages_ru":
+                                                            translations["ru"]["menu_settings"][
+                                                                "time_between_invites_sending_messages"],
+                                                        "recording_reaction_link_ru":
+                                                            translations["ru"]["menu_settings"][
+                                                                "recording_reaction_link"],
+                                                        "forming_list_of_chats_channels_ru":
+                                                            translations["ru"]["menu_settings"][
+                                                                "forming_list_of_chats_channels"],
                                                         })
 
 
@@ -312,7 +326,8 @@ async def recording_the_time_between_messages(request: Request):
     return templates.TemplateResponse('settings/recording_the_time_between_messages.html', {
         "request": request,
         "program_name": program_name,
-        "recording_the_time_between_messages_ru": translations["ru"]["menu_settings"]["recording_the_time_between_messages"],
+        "recording_the_time_between_messages_ru": translations["ru"]["menu_settings"][
+            "recording_the_time_between_messages"],
     })
 
 
@@ -323,7 +338,8 @@ async def time_between_invites_sending_messages(request: Request):
     return templates.TemplateResponse('settings/time_between_invites_sending_messages.html', {
         "request": request,
         "program_name": program_name,
-        "time_between_invites_sending_messages_ru": translations["ru"]["menu_settings"]["time_between_invites_sending_messages"],
+        "time_between_invites_sending_messages_ru": translations["ru"]["menu_settings"][
+            "time_between_invites_sending_messages"],
     })
 
 
@@ -357,9 +373,9 @@ async def working_with_reactions(request: Request):
     logger.info("Запущена страница работы с реакциями")
     return templates.TemplateResponse('working_with_reactions.html',
                                       {"request": request, "program_name": program_name,
-                                       "setting_reactions": setting_reactions,
-                                       "we_are_winding_up_post_views_ru": we_are_winding_up_post_views_ru,
-                                       "automatic_setting_of_reactions": automatic_setting_of_reactions})
+                                       "setting_reactions": translations["ru"]["reactions_menu"]["setting_reactions"],
+                                       "we_are_winding_up_post_views_ru": translations["ru"]["reactions_menu"]["we_are_winding_up_post_views"],
+                                       "automatic_setting_of_reactions": translations["ru"]["reactions_menu"]["automatic_setting_of_reactions"]})
 
 
 @app.get('/we_are_winding_up_post_views', response_class=HTMLResponse)
@@ -368,10 +384,11 @@ async def we_are_winding_up_post_views(request: Request):
     logger.info("Запущена страница '👁️‍🗨️ Накручиваем просмотры постов' ")
     return templates.TemplateResponse('we_are_winding_up_post_views.html',
                                       {"request": request, "program_name": program_name,
-                                       "setting_reactions": setting_reactions,
-                                       "we_are_winding_up_post_views_ru": we_are_winding_up_post_views_ru,
-                                       "automatic_setting_of_reactions": automatic_setting_of_reactions,
-                                       "forming_list_of_chats_channels_ru": translations["ru"]["menu_settings"]["forming_list_of_chats_channels"],
+                                       "setting_reactions": translations["ru"]["reactions_menu"]["setting_reactions"],
+                                       "we_are_winding_up_post_views_ru": translations["ru"]["reactions_menu"]["we_are_winding_up_post_views"],
+                                       "automatic_setting_of_reactions": translations["ru"]["reactions_menu"]["automatic_setting_of_reactions"],
+                                       "forming_list_of_chats_channels_ru": translations["ru"]["menu_settings"][
+                                           "forming_list_of_chats_channels"],
                                        })
 
 
@@ -380,12 +397,23 @@ async def parsing(request: Request):
     """🔍 Парсинг"""
     logger.info("Запущена страница парсинга")
     return templates.TemplateResponse('parsing.html', {"request": request, "program_name": program_name,
-                                                       "parse_single_or_multiple_groups": translations["ru"]["parsing_menu"]["parse_single_or_multiple_groups"],
-                                                       "parse_selected_user_subscribed_group": translations["ru"]["parsing_menu"]["parse_selected_user_subscribed_group"],
-                                                       "parse_active_group_members": translations["ru"]["parsing_menu"]["parse_active_group_members"],
-                                                       "parse_account_subscribed_groups_channels": translations["ru"]["parsing_menu"]["parse_account_subscribed_groups_channels"],
-                                                       "clear_previously_parsed_data_list": translations["ru"]["parsing_menu"]["clear_previously_parsed_data_list"],
-                                                       "importing_a_list_of_parsed_data": translations["ru"]["parsing_menu"]["importing_a_list_of_parsed_data"]})
+                                                       "parse_single_or_multiple_groups":
+                                                           translations["ru"]["parsing_menu"][
+                                                               "parse_single_or_multiple_groups"],
+                                                       "parse_selected_user_subscribed_group":
+                                                           translations["ru"]["parsing_menu"][
+                                                               "parse_selected_user_subscribed_group"],
+                                                       "parse_active_group_members": translations["ru"]["parsing_menu"][
+                                                           "parse_active_group_members"],
+                                                       "parse_account_subscribed_groups_channels":
+                                                           translations["ru"]["parsing_menu"][
+                                                               "parse_account_subscribed_groups_channels"],
+                                                       "clear_previously_parsed_data_list":
+                                                           translations["ru"]["parsing_menu"][
+                                                               "clear_previously_parsed_data_list"],
+                                                       "importing_a_list_of_parsed_data":
+                                                           translations["ru"]["parsing_menu"][
+                                                               "importing_a_list_of_parsed_data"]})
 
 
 @app.get('/subscribe_unsubscribe', response_class=HTMLResponse)
@@ -393,8 +421,8 @@ async def subscribe_unsubscribe(request: Request):
     """Подписка, отписка"""
     logger.info("Запущена страница подписки, отписки")
     return templates.TemplateResponse('subscribe_unsubscribe.html',
-                                      {"request": request, "program_name": program_name, "subscription": subscription,
-                                       "unsubscribe": unsubscribe})
+                                      {"request": request, "program_name": program_name, "subscription": translations["ru"]["subscribe_unsubscribe_menu"]["subscription"],
+                                       "unsubscribe": translations["ru"]["subscribe_unsubscribe_menu"]["unsubscribe"]})
 
 
 @app.get('/connect_accounts', response_class=HTMLResponse)
@@ -403,8 +431,8 @@ async def connect_accounts(request: Request):
     logger.info("Запущена страница подключения аккаунтов")
     return templates.TemplateResponse('connect_accounts.html',
                                       {"request": request, "program_name": program_name,
-                                       "connecting_accounts_by_phone_number": connecting_accounts_by_phone_number,
-                                       "connecting_session_accounts": connecting_session_accounts})
+                                       "connecting_accounts_by_phone_number": translations["ru"]["account_connect_menu"]["connecting_accounts_by_phone_number"],
+                                       "connecting_session_accounts": translations["ru"]["account_connect_menu"]["connecting_session_accounts"]})
 
 
 @app.get('/account_verification', response_class=HTMLResponse)

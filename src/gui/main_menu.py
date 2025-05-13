@@ -2,10 +2,6 @@
 import flet as ft
 
 from src.core.configs import BUTTON_HEIGHT, small_button_width, line_width_button, program_name
-from src.core.localization import (inviting_ru, we_are_winding_up_post_views_ru,
-                                   text_1, text_link_1, text_2, text_link_2,
-                                   sending_personal_messages_with_limits_ru,
-                                   sending_messages_via_chats_ru)
 from src.locales.translations_loader import translations
 
 
@@ -27,22 +23,24 @@ async def main_menu_program(page: ft.Page):
                                   gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                        ft.Colors.PURPLE])), ), ), ], ),
                       ft.Text(disabled=False,
-                              spans=[ft.TextSpan(text_1),
-                                     ft.TextSpan(text_link_1,
+                              spans=[ft.TextSpan(translations["ru"]["main_menu_texts"]["text_1"]),
+                                     ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"],
                                                  ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                                                 url=text_link_1, ), ], ),
+                                                 url=translations["ru"]["main_menu_texts"]["text_2"], ), ], ),
                       ft.Text(disabled=False,
-                              spans=[ft.TextSpan(text_2),
-                                     ft.TextSpan(text_link_2,
+                              spans=[ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"]),
+                                     ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"],
                                                  ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                                                 url=text_link_2, ), ], ),
+                                                 url=translations["ru"]["main_menu_texts"]["text_2"], ), ], ),
                       ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                           ft.Row(
                               # 🚀 Инвайтинг
-                              [ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=inviting_ru,
+                              [ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
+                                                 text=translations["ru"]["inviting_menu"]["inviting"],
                                                  on_click=lambda _: page.go("/inviting")),
                                # 📊 Парсинг
-                               ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=translations["ru"]["menu"]["parsing"],
+                               ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
+                                                 text=translations["ru"]["menu"]["parsing"],
                                                  on_click=lambda _: page.go("/parsing")), ]),
                           # 📇 Работа с контактами
                           ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
@@ -58,7 +56,8 @@ async def main_menu_program(page: ft.Page):
                                                     on_click=lambda _: page.go("/account_connection_menu")),
                                   # 📨 Отправка сообщений в личку
                                   ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                                    text=sending_personal_messages_with_limits_ru,
+                                                    text=translations["ru"]["message_sending_menu"][
+                                                        "sending_personal_messages_with_limits"],
                                                     on_click=lambda _: page.go(
                                                         "/sending_files_to_personal_account_with_limits")), ]),
                           # ❤️ Работа с реакциями
@@ -80,17 +79,20 @@ async def main_menu_program(page: ft.Page):
 
                           # 👁️‍🗨️ Накручиваем просмотры постов
                           ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                            text=we_are_winding_up_post_views_ru,
+                                            text=translations["ru"]["reactions_menu"]["we_are_winding_up_post_views"],
                                             on_click=lambda _: page.go("/viewing_posts_menu")),
                           # ⚙️ Настройки
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["menu"]["settings"],
+                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                            text=translations["ru"]["menu"]["settings"],
                                             on_click=lambda _: page.go("/settings")),
                           # 📖 Документация
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["menu"]["documentation"],
+                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                            text=translations["ru"]["menu"]["documentation"],
                                             on_click=lambda _: page.go("/documentation")),
                           # 💬 Рассылка сообщений по чатам
                           ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                            text=sending_messages_via_chats_ru,
+                                            text=translations["ru"]["message_sending_menu"][
+                                                "sending_messages_via_chats"],
                                             on_click=lambda _: page.go("/sending_messages_files_via_chats")),
 
                       ]), ]))

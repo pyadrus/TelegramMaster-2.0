@@ -14,7 +14,6 @@ from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError
 from src.core.configs import (ConfigReader, path_send_message_folder, path_folder_with_messages,
                               path_send_message_folder_answering_machine_message,
                               path_send_message_folder_answering_machine, line_width_button, BUTTON_HEIGHT)
-from src.core.localization import sending_messages_files_via_chats_ru
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_files, all_find_files, record_inviting_results, find_filess
 from src.core.utils import read_json_file
@@ -272,7 +271,7 @@ class SendTelegramMessages:
         """
         Рассылка сообщений + файлов по чатам
         """
-        output = ft.Text(sending_messages_files_via_chats_ru, size=18, weight=ft.FontWeight.BOLD)
+        output = ft.Text(translations["ru"]["message_sending_menu"]["sending_messages_files_via_chats"], size=18, weight=ft.FontWeight.BOLD)
 
         # Обработчик кнопки "Готово"
         async def button_clicked(_):

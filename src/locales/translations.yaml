@@ -1,16 +1,35 @@
 ru:
-  menu:
-    main: "Главное меню"
-    parsing: "📊 Парсинг"
-    contacts: "📇 Работа с контактами"
-    subscribe_unsubscribe: "🔄 Подписка, отписка"
-    account_connect: "🔐 Подключение аккаунтов"
-    reactions: "❤️ Работа с реакциями"
-    account_check: "🔍 Проверка аккаунтов"
-    create_groups: "👥 Создание групп (чатов)"
-    edit_bio: "✏️ Редактирование BIO"
-    settings: "⚙️ Настройки"
-    documentation: "📖 Документация
+  message_sending_menu:
+    sending_messages_via_chats: "💬 Рассылка сообщений по чатам"
+    sending_messages_files_via_chats: "💬 Рассылка сообщений по чатам"
+    sending_personal_messages_with_limits: "📨 Отправка сообщений в личку"
+
+  edit_bio_menu:
+    changing_the_username: "🔄 Изменение username"
+    changing_the_photo: "🖼️ Изменение фото"
+    changing_the_description: "✏️ Изменение описания"
+    name_change_n: "📝 Изменение имени"
+    name_change_f: "📝 Изменение фамилии"
+
+  contacts_menu:
+    creating_a_contact_list: "📋 Формирование списка контактов"
+    show_a_list_of_contacts: "👥 Показать список контактов"
+    deleting_contacts: "🗑️ Удаление контактов"
+    adding_contacts: "➕ Добавление контактов"
+
+  subscribe_unsubscribe_menu:
+    subscription: "🔔 Подписка"
+    unsubscribe: "🚫 Отписываемся"
+
+  account_connect_menu:
+    connecting_accounts_by_phone_number: "📞 Подключение по номеру телефона"
+    connecting_session_accounts: "🔑 Подключение session аккаунтов"
+
+  main_menu_texts:
+    text_1: "Аккаунт Telegram: "
+    text_2: "Канал Telegram: "
+    text_link_1: "https://t.me/PyAdminRU"
+    text_link_2: "https://t.me/master_tg_d"
 
   buttons:
     back: "⬅️ Назад"
@@ -61,3 +80,30 @@ ru:
     to_subscribe: "🔔 Для подписки"
     to_unsubscribe: "🚫 Для отписки"
     to_boost_views: "📈 Для накрутки просмотров"
+
+  inviting_menu:
+    inviting: "🚀 Инвайтинг"
+    invitation_1_time_per_hour: "⏰ Инвайтинг 1 раз в час"
+    invitation_at_a_certain_time: "🕒 Инвайтинг в определенное время"
+    inviting_every_day: "📅 Инвайтинг каждый день"
+
+  reactions_menu:
+    setting_reactions: "👍 Ставим реакции"
+    we_are_winding_up_post_views: "👁️‍🗨️ Накручиваем просмотры постов"
+    automatic_setting_of_reactions: "🤖 Автоматическое выставление реакций"
+
+  menu:
+    main: "Главное меню"
+    parsing: "📊 Парсинг"
+    contacts: "📇 Работа с контактами"
+    subscribe_unsubscribe: "🔄 Подписка, отписка"
+    account_connect: "🔐 Подключение аккаунтов"
+    reactions: "❤️ Работа с реакциями"
+    account_check: "🔍 Проверка аккаунтов"
+    create_groups: "👥 Создание групп (чатов)"
+    edit_bio: "✏️ Редактирование BIO"
+    settings: "⚙️ Настройки"
+    documentation: "📖 Документация"
+
+
+
