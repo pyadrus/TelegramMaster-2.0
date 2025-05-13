@@ -25,8 +25,8 @@ sending_messages_files_via_chats_ru: str = "💬 Рассылка сообщен
 sending_personal_messages_with_limits_ru: str = "📨 Отправка сообщений в личку"
 
 # Настройки меню
-choice_of_reactions_ru: str = "👍 Выбор реакций"
-proxy_entry_ru: str = "🔐 Запись proxy"
+# choice_of_reactions_ru: str = "👍 Выбор реакций"
+# proxy_entry_ru: str = "🔐 Запись proxy"
 changing_accounts_ru: str = "🔄 Смена аккаунтов"
 recording_api_id_api_hash_ru: str = "📝 Запись api_id, api_hash"
 time_between_subscriptions_ru: str = "⏰ Запись времени"

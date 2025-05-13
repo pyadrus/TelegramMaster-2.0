@@ -18,8 +18,7 @@ from src.core.localization import (parse_selected_user_subscribed_group, parse_s
                                    invitation_1_time_per_hour_ru, invitation_at_a_certain_time_ru,
                                    inviting_every_day_ru, importing_a_list_of_parsed_data, setting_reactions,
                                    we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
-                                   sending_messages_via_chats_ru, sending_personal_messages_with_limits_ru,
-                                   choice_of_reactions_ru, proxy_entry_ru, changing_accounts_ru,
+                                   sending_messages_via_chats_ru, sending_personal_messages_with_limits_ru, changing_accounts_ru,
                                    recording_api_id_api_hash_ru,
                                    time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
                                    account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
@@ -172,8 +171,8 @@ async def settings(request: Request):
     """⚙️ Настройки"""
     logger.info("Запущена страница настроек")
     return templates.TemplateResponse('settings.html', {"request": request, "program_name": program_name,
-                                                        "choice_of_reactions_ru": choice_of_reactions_ru,
-                                                        "proxy_entry_ru": proxy_entry_ru,
+                                                        "choice_of_reactions_ru": translations["ru"]["menu_settings"]["choice_of_reactions"],
+                                                        "proxy_entry_ru": translations["ru"]["menu_settings"]["changing_accounts_ru"],
                                                         "changing_accounts_ru": changing_accounts_ru,
                                                         "recording_api_id_api_hash_ru": recording_api_id_api_hash_ru,
                                                         "time_between_subscriptions_ru": time_between_subscriptions_ru,
@@ -197,7 +196,7 @@ async def choice_of_reactions(request: Request):
     return templates.TemplateResponse('settings/choice_of_reactions.html', {
         "request": request,
         "program_name": program_name,
-        "choice_of_reactions_ru": choice_of_reactions_ru,
+        "choice_of_reactions_ru": translations["ru"]["menu_settings"]["choice_of_reactions"],
     })
 
 
@@ -208,7 +207,7 @@ async def proxy_entry(request: Request):
     return templates.TemplateResponse('settings/proxy_entry.html', {
         "request": request,
         "program_name": program_name,
-        "proxy_entry_ru": proxy_entry_ru,
+        "proxy_entry_ru": translations["ru"]["menu_settings"]["changing_accounts_ru"],
     })
 
 
