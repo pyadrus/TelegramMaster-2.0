@@ -7,8 +7,7 @@ from src.core.localization import (
     parse_single_or_multiple_groups, parse_selected_user_subscribed_group, parse_active_group_members,
     inviting_every_day_ru, invitation_at_a_certain_time_ru, invitation_1_time_per_hour_ru, inviting_ru,
     importing_a_list_of_parsed_data, setting_reactions, automatic_setting_of_reactions,
-    message_recording_ru, link_entry_ru, account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
-    creating_username_list_ru, recording_the_time_between_messages_ru, time_between_invites_sending_messages_ru,
+    time_between_invites_sending_messages_ru,
     recording_reaction_link_ru, forming_list_of_chats_channels_ru, we_are_winding_up_post_views_ru, editing_bio,
     changing_the_username, changing_the_photo, changing_the_description, name_change_n, name_change_f,
     creating_a_contact_list, show_a_list_of_contacts, deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
@@ -61,32 +60,32 @@ async def settings_menu(page: ft.Page):
                                            on_click=lambda _: page.go("/time_between_subscriptions")),
                          # ✉️ Запись сообщений
                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                           text=message_recording_ru,
+                                           text=translations["ru"]["menu_settings"]["message_recording"],
                                            on_click=lambda _: page.go("/message_recording"))]),
                      ft.Row([
                          # 🔗 Запись ссылки для инвайтинга
                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                           text=link_entry_ru,
+                                           text=translations["ru"]["menu_settings"]["link_entry"],
                                            on_click=lambda _: page.go("/link_entry")),
                          # 📊 Лимиты на аккаунт
                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                           text=account_limits_ru,
+                                           text=translations["ru"]["menu_settings"]["account_limits"],
                                            on_click=lambda _: page.go("/account_limits"))]),
                      ft.Row([
                          # 📨 Лимиты на сообщения
                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                           text=message_limits_ru,
+                                           text=translations["ru"]["menu_settings"]["message_limits"],
                                            on_click=lambda _: page.go("/message_limits")),
                          # ⏳ Время между подпиской
                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                           text=time_between_subscriptionss_ru,
+                                           text=translations["ru"]["menu_settings"]["time_between_subscriptionss"],
                                            on_click=lambda _: page.go("/time_between_subscriptionss")), ]),
                      # 📋 Формирование списка username
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=creating_username_list_ru,
+                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=translations["ru"]["menu_settings"]["creating_username_list"],
                                        on_click=lambda _: page.go("/creating_username_list")),
                      # ⏱️ Запись времени между сообщениями
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=recording_the_time_between_messages_ru,
+                                       text=translations["ru"]["menu_settings"]["recording_the_time_between_messages"],
                                        on_click=lambda _: page.go("/recording_the_time_between_messages")),
                      # 🕒 Время между инвайтингом, рассылка сообщений
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,

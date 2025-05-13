@@ -19,9 +19,6 @@ from src.core.localization import (parse_selected_user_subscribed_group, parse_s
                                    inviting_every_day_ru, importing_a_list_of_parsed_data, setting_reactions,
                                    we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
                                    sending_messages_via_chats_ru, sending_personal_messages_with_limits_ru,
-                                   message_recording_ru, link_entry_ru,
-                                   account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
-                                   creating_username_list_ru, recording_the_time_between_messages_ru,
                                    time_between_invites_sending_messages_ru, recording_reaction_link_ru,
                                    forming_list_of_chats_channels_ru, changing_the_username,
                                    changing_the_photo, changing_the_description, name_change_n,
@@ -175,13 +172,13 @@ async def settings(request: Request):
                                                         "changing_accounts_ru": translations["ru"]["menu_settings"]["changing_accounts"],
                                                         "recording_api_id_api_hash_ru": translations["ru"]["menu_settings"]["recording_api_id_api_hash"],
                                                         "time_between_subscriptions_ru": translations["ru"]["menu_settings"]["time_between_subscriptions"],
-                                                        "message_recording_ru": message_recording_ru,
-                                                        "link_entry_ru": link_entry_ru,
-                                                        "account_limits_ru": account_limits_ru,
-                                                        "message_limits_ru": message_limits_ru,
-                                                        "time_between_subscriptionss_ru": time_between_subscriptionss_ru,
-                                                        "creating_username_list_ru": creating_username_list_ru,
-                                                        "recording_the_time_between_messages_ru": recording_the_time_between_messages_ru,
+                                                        "message_recording_ru": translations["ru"]["menu_settings"]["message_recording"],
+                                                        "link_entry_ru": translations["ru"]["menu_settings"]["link_entry"],
+                                                        "account_limits_ru": translations["ru"]["menu_settings"]["account_limits"],
+                                                        "message_limits_ru": translations["ru"]["menu_settings"]["message_limits"],
+                                                        "time_between_subscriptionss_ru": translations["ru"]["menu_settings"]["time_between_subscriptionss"],
+                                                        "creating_username_list_ru": translations["ru"]["menu_settings"]["creating_username_list"],
+                                                        "recording_the_time_between_messages_ru": translations["ru"]["menu_settings"]["recording_the_time_between_messages"],
                                                         "time_between_invites_sending_messages_ru": time_between_invites_sending_messages_ru,
                                                         "recording_reaction_link_ru": recording_reaction_link_ru,
                                                         "forming_list_of_chats_channels_ru": forming_list_of_chats_channels_ru,
@@ -251,7 +248,7 @@ async def message_recording(request: Request):
     return templates.TemplateResponse('settings/message_recording.html', {
         "request": request,
         "program_name": program_name,
-        "message_recording_ru": message_recording_ru,
+        "message_recording_ru": translations["ru"]["menu_settings"]["message_recording"],
     })
 
 
@@ -262,7 +259,7 @@ async def link_entry(request: Request):
     return templates.TemplateResponse('settings/link_entry.html', {
         "request": request,
         "program_name": program_name,
-        "link_entry_ru": link_entry_ru,
+        "link_entry_ru": translations["ru"]["menu_settings"]["link_entry"],
     })
 
 
@@ -273,7 +270,7 @@ async def account_limits(request: Request):
     return templates.TemplateResponse('settings/account_limits.html', {
         "request": request,
         "program_name": program_name,
-        "account_limits_ru": account_limits_ru,
+        "account_limits_ru": translations["ru"]["menu_settings"]["account_limits"],
     })
 
 
@@ -284,7 +281,7 @@ async def message_limits(request: Request):
     return templates.TemplateResponse('settings/message_limits.html', {
         "request": request,
         "program_name": program_name,
-        "message_limits_ru": message_limits_ru,
+        "message_limits_ru": translations["ru"]["menu_settings"]["message_limits"],
     })
 
 
@@ -295,7 +292,7 @@ async def time_between_subscriptionss(request: Request):
     return templates.TemplateResponse('settings/time_between_subscriptionss.html', {
         "request": request,
         "program_name": program_name,
-        "time_between_subscriptionss_ru": time_between_subscriptionss_ru,
+        "time_between_subscriptionss_ru": translations["ru"]["menu_settings"]["time_between_subscriptionss"],
     })
 
 
@@ -306,7 +303,7 @@ async def creating_username_list(request: Request):
     return templates.TemplateResponse('settings/creating_username_list.html', {
         "request": request,
         "program_name": program_name,
-        "creating_username_list_ru": creating_username_list_ru,
+        "creating_username_list_ru": translations["ru"]["menu_settings"]["creating_username_list"],
     })
 
 
@@ -317,7 +314,7 @@ async def recording_the_time_between_messages(request: Request):
     return templates.TemplateResponse('settings/recording_the_time_between_messages.html', {
         "request": request,
         "program_name": program_name,
-        "recording_the_time_between_messages_ru": recording_the_time_between_messages_ru,
+        "recording_the_time_between_messages_ru": translations["ru"]["menu_settings"]["recording_the_time_between_messages"],
     })
 
 
