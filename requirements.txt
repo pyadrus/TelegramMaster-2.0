@@ -11,3 +11,4 @@ openpyxl
 uvicorn
 fastapi
 PyYAML
+flet_core
