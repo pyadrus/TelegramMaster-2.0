@@ -64,23 +64,30 @@ class CreatingGroupsAndChats:
             """
             ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню создания групп.
             """
-            page.go("/creating_groups_and_chats_menu")  # переходим к основному меню создания групп 🏠
+            page.go("/")  # переходим к основному меню создания групп 🏠
 
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
             ft.View(
                 "/creating_groups_and_chats_menu",
-                [
-                    list_view,  # отображение логов 📝
-                    ft.Column(),  # резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                      text=translations["ru"]["buttons"]["start"],
-                                      on_click=add_items),  # Кнопка "🚀 Начать создание групп"
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                      text=translations["ru"]["buttons"]["back"],
-                                      on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
-                ],
-            )
-        )
+                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
+                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
 
+                 ft.Text(spans=[ft.TextSpan(
+                     translations["ru"]["menu"]["create_groups"],
+                     ft.TextStyle(
+                         size=20,
+                         weight=ft.FontWeight.BOLD,
+                         foreground=ft.Paint(
+                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                  ft.Colors.PURPLE])), ), ), ], ),
+                 list_view,  # отображение логов 📝
+                 ft.Column(),  # резерв для приветствия или других элементов интерфейса
+                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                   text=translations["ru"]["buttons"]["start"],
+                                   on_click=add_items),  # Кнопка "🚀 Начать создание групп"
+                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                   text=translations["ru"]["buttons"]["back"],
+                                   on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
+                 ],))
         page.update()  # обновляем страницу после добавления элементов управления 🔄

@@ -71,7 +71,8 @@ async def main_menu_program(page: ft.Page):
                           # 👥 Создание групп (чатов)
                           ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
                                                     text=translations["ru"]["menu"]["create_groups"],
-                                                    on_click=lambda _: page.go("/creating_groups_and_chats_menu")),
+                                                    on_click=lambda _: page.go("/creating_groups")),
+
                                   # ✏️ Редактирование_BIO
                                   ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
                                                     text=translations["ru"]["menu"]["edit_bio"],

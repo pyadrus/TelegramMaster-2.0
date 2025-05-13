@@ -451,33 +451,6 @@ async def connecting_accounts_by_number_menu(page: ft.Page):
                  ])]))
 
 
-async def creating_groups_and_chats_menu(page: ft.Page):
-    """
-    Меню создания групп и чатов
-
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    """
-
-    page.views.append(
-        ft.View("/creating_groups_and_chats_menu",
-                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
-                 ft.Text(spans=[ft.TextSpan(
-                     translations["ru"]["menu"]["create_groups"],
-                     ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
-                         foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
-                                                                                  ft.Colors.PURPLE])), ), ), ], ),
-                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     # 👥 Создание групп (чатов)
-                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["menu"]["create_groups"],
-                                       on_click=lambda _: page.go("/creating_groups")),
-                 ])]))
-
-
 async def log_and_display(message: str, list_view: ft.ListView, page: ft.Page, level: str = "info"):
     """
     Выводит сообщение в GUI и записывает лог с указанным уровнем с помощью loguru.

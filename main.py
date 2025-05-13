@@ -27,7 +27,7 @@ from src.features.settings.setting import SettingPage, get_unique_filename, reac
 from src.gui.main_menu import main_menu_program
 from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                           subscribe_and_unsubscribe_menu, account_connection_menu, viewing_posts_menu,
-                          show_notification, creating_groups_and_chats_menu, working_with_contacts_menu)
+                          show_notification, working_with_contacts_menu)
 
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
 
@@ -178,8 +178,6 @@ async def main(page: ft.Page):
             elif page.route == "/connecting_accounts_by_session":  # Подключение session аккаунтов 'Меню'
                 await TGConnect().connecting_session_accounts(page=page)
             # __________________________________________________________________________________________________________
-            elif page.route == "/creating_groups_and_chats_menu":  # Меню "Создание групп и чатов"
-                await creating_groups_and_chats_menu(page=page)
             elif page.route == "/creating_groups":  # Создание групп (чатов)
                 await CreatingGroupsAndChats().creating_groups_and_chats(page=page)
             # __________________________________________________________________________________________________________
