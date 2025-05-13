@@ -19,8 +19,7 @@ from src.core.localization import (parse_selected_user_subscribed_group, parse_s
                                    inviting_every_day_ru, importing_a_list_of_parsed_data, setting_reactions,
                                    we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
                                    sending_messages_via_chats_ru, sending_personal_messages_with_limits_ru,
-                                   recording_api_id_api_hash_ru,
-                                   time_between_subscriptions_ru, message_recording_ru, link_entry_ru,
+                                   message_recording_ru, link_entry_ru,
                                    account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
                                    creating_username_list_ru, recording_the_time_between_messages_ru,
                                    time_between_invites_sending_messages_ru, recording_reaction_link_ru,
@@ -107,7 +106,7 @@ async def inviting_at_a_certain_time(request: Request):
                                       {"request": request, "program_name": program_name,
                                        "inviting": inviting_ru,
                                        "invitation_at_a_certain_time_ru": invitation_at_a_certain_time_ru,
-                                       "time_between_subscriptions_ru": time_between_subscriptions_ru,
+                                       "time_between_subscriptions_ru": translations["ru"]["menu_settings"]["time_between_subscriptions"],
                                        "start_inviting_button": translations["ru"]["buttons"]["start"],
                                        })
 
@@ -120,7 +119,7 @@ async def inviting_every_day(request: Request):
                                       {"request": request, "program_name": program_name,
                                        "inviting_ru": inviting_ru,
                                        "inviting_every_day_ru": inviting_every_day_ru,
-                                       "time_between_subscriptions_ru": time_between_subscriptions_ru,
+                                       "time_between_subscriptions_ru": translations["ru"]["menu_settings"]["time_between_subscriptions"],
                                        "start_inviting_button": translations["ru"]["buttons"]["start"],
                                        })
 
@@ -174,8 +173,8 @@ async def settings(request: Request):
                                                         "choice_of_reactions_ru": translations["ru"]["menu_settings"]["choice_of_reactions"],
                                                         "proxy_entry_ru": translations["ru"]["menu_settings"]["changing_accounts_ru"],
                                                         "changing_accounts_ru": translations["ru"]["menu_settings"]["changing_accounts"],
-                                                        "recording_api_id_api_hash_ru": recording_api_id_api_hash_ru,
-                                                        "time_between_subscriptions_ru": time_between_subscriptions_ru,
+                                                        "recording_api_id_api_hash_ru": translations["ru"]["menu_settings"]["recording_api_id_api_hash"],
+                                                        "time_between_subscriptions_ru": translations["ru"]["menu_settings"]["time_between_subscriptions"],
                                                         "message_recording_ru": message_recording_ru,
                                                         "link_entry_ru": link_entry_ru,
                                                         "account_limits_ru": account_limits_ru,
@@ -229,7 +228,7 @@ async def recording_api_id_api_hash(request: Request):
     return templates.TemplateResponse('settings/recording_api_id_api_hash.html', {
         "request": request,
         "program_name": program_name,
-        "recording_api_id_api_hash_ru": recording_api_id_api_hash_ru,
+        "recording_api_id_api_hash_ru": translations["ru"]["menu_settings"]["recording_api_id_api_hash"],
     })
 
 
@@ -240,7 +239,7 @@ async def time_between_subscriptions(request: Request):
     return templates.TemplateResponse('settings/time_between_subscriptions.html', {
         "request": request,
         "program_name": program_name,
-        "time_between_subscriptions_ru": time_between_subscriptions_ru,
+        "time_between_subscriptions_ru": translations["ru"]["menu_settings"]["time_between_subscriptions"],
 
     })
 

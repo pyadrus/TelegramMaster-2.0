@@ -6,7 +6,7 @@ from src.core.configs import BUTTON_HEIGHT, small_button_width, BUTTON_WIDTH, li
 from src.core.localization import (
     parse_single_or_multiple_groups, parse_selected_user_subscribed_group, parse_active_group_members,
     inviting_every_day_ru, invitation_at_a_certain_time_ru, invitation_1_time_per_hour_ru, inviting_ru,
-    importing_a_list_of_parsed_data, setting_reactions, automatic_setting_of_reactions, recording_api_id_api_hash_ru, time_between_subscriptions_ru,
+    importing_a_list_of_parsed_data, setting_reactions, automatic_setting_of_reactions,
     message_recording_ru, link_entry_ru, account_limits_ru, message_limits_ru, time_between_subscriptionss_ru,
     creating_username_list_ru, recording_the_time_between_messages_ru, time_between_invites_sending_messages_ru,
     recording_reaction_link_ru, forming_list_of_chats_channels_ru, we_are_winding_up_post_views_ru, editing_bio,
@@ -52,12 +52,12 @@ async def settings_menu(page: ft.Page):
                                            on_click=lambda _: page.go("/changing_accounts")),
                          # 📝 Запись api_id, api_hash
                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                           text=recording_api_id_api_hash_ru,
+                                           text=translations["ru"]["menu_settings"]["recording_api_id_api_hash"],
                                            on_click=lambda _: page.go("/recording_api_id_api_hash"))]),
                      ft.Row([
                          # ⏰ Запись времени
                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                           text=time_between_subscriptions_ru,
+                                           text=translations["ru"]["menu_settings"]["time_between_subscriptions"],
                                            on_click=lambda _: page.go("/time_between_subscriptions")),
                          # ✉️ Запись сообщений
                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
