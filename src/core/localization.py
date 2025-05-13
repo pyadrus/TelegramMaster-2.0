@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
+from src.locales.translations_loader import translations
 
 # Парсинг меню
-parse_single_or_multiple_groups: str = "🔍 Парсинг одной группы / групп"
-parse_selected_user_subscribed_group: str = "📂 Парсинг выбранной группы из подписанных пользователем"
-parse_active_group_members: str = "👥 Парсинг активных участников группы"
-parse_account_subscribed_groups_channels: str = "📜 Парсинг групп / каналов на которые подписан аккаунт"
-clear_previously_parsed_data_list: str = "🗑️ Очистка списка от ранее спарсенных данных"
-importing_a_list_of_parsed_data = "📋 Импорт списка от ранее спарсенных данных"
+# parse_single_or_multiple_groups: str = "🔍 Парсинг одной группы / групп"
 
 # Инвайтинг меню
 inviting_ru: str = "🚀 Инвайтинг"
@@ -23,23 +19,6 @@ automatic_setting_of_reactions: str = "🤖 Автоматическое выс�
 sending_messages_via_chats_ru: str = "💬 Рассылка сообщений по чатам"
 sending_messages_files_via_chats_ru: str = "💬 Рассылка сообщений по чатам"
 sending_personal_messages_with_limits_ru: str = "📨 Отправка сообщений в личку"
-
-# Настройки меню
-# choice_of_reactions_ru: str = "👍 Выбор реакций"
-# proxy_entry_ru: str = "🔐 Запись proxy"
-# changing_accounts_ru: str = "🔄 Смена аккаунтов"
-# recording_api_id_api_hash_ru: str = "📝 Запись api_id, api_hash"
-# time_between_subscriptions_ru: str = "⏰ Запись времени"
-# message_recording_ru: str = "✉️ Запись сообщений"
-# link_entry_ru: str = "🔗 Запись ссылки для инвайтинга"
-# account_limits_ru: str = "📊 Лимиты на аккаунт"
-# message_limits_ru: str = "📨 Лимиты на сообщения"
-# time_between_subscriptionss_ru: str = "⏳ Время между подпиской"
-# creating_username_list_ru: str = "📋 Формирование списка username"
-# recording_the_time_between_messages_ru: str = "⏱️ Запись времени между сообщениями"
-# time_between_invites_sending_messages_ru: str = "🕒 Время между инвайтингом, рассылка сообщений"
-# recording_reaction_link_ru: str = "🔗 Запись ссылки для реакций"
-# forming_list_of_chats_channels_ru: str = "📑 Формирование списка чатов / каналов"
 
 # Главное меню
 parsing: str = "📊 Парсинг"
@@ -72,20 +51,6 @@ unsubscribe: str = "🚫 Отписываемся"
 # Меню подключения аккаунтов
 connecting_accounts_by_phone_number: str = "📞 Подключение по номеру телефона"
 connecting_session_accounts: str = "🔑 Подключение session аккаунтов"
-
-# Меню подключения аккаунтов по номеру телефона
-for_the_answering_machine: str = "🤖 Для автоответчика"
-to_edit_bio: str = "📝 Для редактирования BIO"
-to_work_with_numbers: str = "📞 Для работы с номерами"
-to_create_groups: str = "👥 Для создания групп"
-for_inviting: str = "🔗 Для инвайтинга"
-for_parsing: str = "📊 Для парсинга"
-to_work_with_reactions: str = "🎭 Для работы с реакциями"
-for_marking_reactions: str = "👍 Для проставления реакций"
-to_send_messages: str = "✉️ Для рассылки сообщений"
-to_subscribe: str = "🔔 Для подписки"
-to_unsubscribe: str = "🚫 Для отписки"
-to_boost_views: str = "📈 Для накрутки просмотров"
 
 # Сообщения в главное меню TelegramMaster 2.0
 text_1: str = 'Аккаунт  Telegram: '

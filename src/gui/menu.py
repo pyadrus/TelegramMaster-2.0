@@ -4,16 +4,14 @@ from loguru import logger
 
 from src.core.configs import BUTTON_HEIGHT, small_button_width, BUTTON_WIDTH, line_width_button
 from src.core.localization import (
-    parse_single_or_multiple_groups, parse_selected_user_subscribed_group, parse_active_group_members,
     inviting_every_day_ru, invitation_at_a_certain_time_ru, invitation_1_time_per_hour_ru, inviting_ru,
-    importing_a_list_of_parsed_data, setting_reactions, automatic_setting_of_reactions,
+    setting_reactions, automatic_setting_of_reactions,
     we_are_winding_up_post_views_ru, editing_bio,
     changing_the_username, changing_the_photo, changing_the_description, name_change_n, name_change_f,
     creating_a_contact_list, show_a_list_of_contacts, deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
     subscribe_unsubscribe, subscription, unsubscribe, connecting_accounts, connecting_accounts_by_phone_number,
-    connecting_session_accounts, to_boost_views, to_unsubscribe, to_subscribe, to_send_messages, for_marking_reactions,
-    to_work_with_reactions, for_parsing, for_inviting, to_create_groups, to_work_with_numbers, to_edit_bio,
-    for_the_answering_machine, working_with_reactions, parsing, settings, creating_groups_chats
+    connecting_session_accounts,
+    working_with_reactions, parsing, settings, creating_groups_chats
 )
 from src.locales.translations_loader import translations
 
@@ -39,14 +37,17 @@ async def settings_menu(page: ft.Page):
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.Row([
                          # 👍 Выбор реакций
-                         ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=translations["ru"]["menu_settings"]["choice_of_reactions"],
+                         ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
+                                           text=translations["ru"]["menu_settings"]["choice_of_reactions"],
                                            on_click=lambda _: page.go("/choice_of_reactions")),
                          # 🔐 Запись proxy
-                         ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=translations["ru"]["menu_settings"]["changing_accounts_ru"],
+                         ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
+                                           text=translations["ru"]["menu_settings"]["changing_accounts_ru"],
                                            on_click=lambda _: page.go("/proxy_entry"))]),
                      ft.Row([
                          # 🔄 Смена аккаунтов
-                         ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=translations["ru"]["menu_settings"]["changing_accounts"],
+                         ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
+                                           text=translations["ru"]["menu_settings"]["changing_accounts"],
                                            on_click=lambda _: page.go("/changing_accounts")),
                          # 📝 Запись api_id, api_hash
                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
@@ -80,7 +81,8 @@ async def settings_menu(page: ft.Page):
                                            text=translations["ru"]["menu_settings"]["time_between_subscriptionss"],
                                            on_click=lambda _: page.go("/time_between_subscriptionss")), ]),
                      # 📋 Формирование списка username
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=translations["ru"]["menu_settings"]["creating_username_list"],
+                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                                       text=translations["ru"]["menu_settings"]["creating_username_list"],
                                        on_click=lambda _: page.go("/creating_username_list")),
                      # ⏱️ Запись времени между сообщениями
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
@@ -88,10 +90,12 @@ async def settings_menu(page: ft.Page):
                                        on_click=lambda _: page.go("/recording_the_time_between_messages")),
                      # 🕒 Время между инвайтингом, рассылка сообщений
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["menu_settings"]["time_between_invites_sending_messages"],
+                                       text=translations["ru"]["menu_settings"][
+                                           "time_between_invites_sending_messages"],
                                        on_click=lambda _: page.go("/time_between_invites_sending_messages")),
                      # 🔗 Запись ссылки для реакций
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=translations["ru"]["menu_settings"]["recording_reaction_link"],
+                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                                       text=translations["ru"]["menu_settings"]["recording_reaction_link"],
                                        on_click=lambda _: page.go("/recording_reaction_link")),
                      # 📑 Формирование списка чатов / каналов
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
@@ -226,19 +230,19 @@ async def menu_parsing(page: ft.Page):
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 🔍 Парсинг одной группы / групп
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=parse_single_or_multiple_groups,
+                                       text=translations["ru"]["parsing_menu"]["parse_single_or_multiple_groups"],
                                        on_click=lambda _: page.go("/parsing_single_groups")),
                      # 📂 Парсинг выбранной группы из подписанных пользователем
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=parse_selected_user_subscribed_group,
+                                       text=translations["ru"]["parsing_menu"]["parse_selected_user_subscribed_group"],
                                        on_click=lambda _: page.go("/parsing_selected_group_user_subscribed")),
                      # 👥 Парсинг активных участников группы
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=parse_active_group_members,
+                                       text=translations["ru"]["parsing_menu"]["parse_active_group_members"],
                                        on_click=lambda _: page.go("/parsing_active_group_members")),
                      # 📋 Импорт списка от ранее спарсенных данных
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=importing_a_list_of_parsed_data,
+                                       text=translations["ru"]["parsing_menu"]["importing_a_list_of_parsed_data"],
                                        on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
                      # 📑 Формирование списка чатов / каналов
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
@@ -383,49 +387,49 @@ async def connecting_accounts_by_number_menu(page: ft.Page):
                      ft.Row(
                          # 🤖 Для автоответчика
                          [ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                            text=for_the_answering_machine,
+                                            text=translations["ru"]["account_connection_menu"]["for_the_answering_machine"],
                                             on_click=lambda _: page.go(
                                                 "/account_connection_number_answering_machine")),
                           # 📝 Для редактирования BIO
                           ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                            text=to_edit_bio,
+                                            text=translations["ru"]["account_connection_menu"]["to_edit_bio"],
                                             on_click=lambda _: page.go("/account_connection_number_bio"))]),
                      # 📞 Для работы с номерами
                      ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=to_work_with_numbers,
+                                               text=translations["ru"]["account_connection_menu"]["to_work_with_numbers"],
                                                on_click=lambda _: page.go("/account_connection_number_contact")),
                              # 👥 Для создания групп
                              ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=to_create_groups,
+                                               text=translations["ru"]["account_connection_menu"]["to_create_groups"],
                                                on_click=lambda _: page.go("/account_connection_number_creating"))]),
                      # 🔗 Для инвайтинга
-                     ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=for_inviting,
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=translations["ru"]["account_connection_menu"]["for_inviting"],
                                                on_click=lambda _: page.go("/account_connection_number_inviting")),
                              # 📊 Для парсинга
-                             ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=for_parsing,
+                             ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=translations["ru"]["account_connection_menu"]["for_parsing"],
                                                on_click=lambda _: page.go("/account_connection_number_parsing"))]),
                      # 🎭 Для работы с реакциями
                      ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=to_work_with_reactions,
+                                               text=translations["ru"]["account_connection_menu"]["to_work_with_reactions"],
                                                on_click=lambda _: page.go("/account_connection_number_reactions")),
                              # 👍 Для проставления реакций
                              ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=for_marking_reactions,
+                                               text=translations["ru"]["account_connection_menu"]["for_marking_reactions"],
                                                on_click=lambda _: page.go(
                                                    "/account_connection_number_reactions_list"))]),
                      # ✉️ Для рассылки сообщений
                      ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=to_send_messages,
+                                               text=translations["ru"]["account_connection_menu"]["to_send_messages"],
                                                on_click=lambda _: page.go("/account_connection_number_send_message")),
                              # 🔔 Для подписки
-                             ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=to_subscribe,
+                             ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=translations["ru"]["account_connection_menu"]["to_subscribe"],
                                                on_click=lambda _: page.go("/account_connection_number_subscription"))]),
                      # 🚫 Для отписки
-                     ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=to_unsubscribe,
+                     ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=translations["ru"]["account_connection_menu"]["to_unsubscribe"],
                                                on_click=lambda _: page.go("/account_connection_number_unsubscribe")),
                              # 📈 Для накрутки просмотров
                              ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=to_boost_views,
+                                               text=translations["ru"]["account_connection_menu"]["to_boost_views"],
                                                on_click=lambda _: page.go("/account_connection_number_viewing"))]),
 
                  ])]))

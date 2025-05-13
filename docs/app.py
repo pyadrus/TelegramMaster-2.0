@@ -12,11 +12,10 @@ from loguru import logger
 
 # Импорт необходимых переменных и функций
 from src.core.configs import program_name, program_version, date_of_program_change
-from src.core.localization import (parse_selected_user_subscribed_group, parse_single_or_multiple_groups,
-                                   parse_active_group_members, clear_previously_parsed_data_list,
-                                   parse_account_subscribed_groups_channels, inviting_ru,
+from src.core.localization import (
+                                   inviting_ru,
                                    invitation_1_time_per_hour_ru, invitation_at_a_certain_time_ru,
-                                   inviting_every_day_ru, importing_a_list_of_parsed_data, setting_reactions,
+                                   inviting_every_day_ru, setting_reactions,
                                    we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
                                    sending_messages_via_chats_ru, sending_personal_messages_with_limits_ru,
                                    changing_the_username,
@@ -381,12 +380,12 @@ async def parsing(request: Request):
     """🔍 Парсинг"""
     logger.info("Запущена страница парсинга")
     return templates.TemplateResponse('parsing.html', {"request": request, "program_name": program_name,
-                                                       "parse_single_or_multiple_groups": parse_single_or_multiple_groups,
-                                                       "parse_selected_user_subscribed_group": parse_selected_user_subscribed_group,
-                                                       "parse_active_group_members": parse_active_group_members,
-                                                       "parse_account_subscribed_groups_channels": parse_account_subscribed_groups_channels,
-                                                       "clear_previously_parsed_data_list": clear_previously_parsed_data_list,
-                                                       "importing_a_list_of_parsed_data": importing_a_list_of_parsed_data})
+                                                       "parse_single_or_multiple_groups": translations["ru"]["parsing_menu"]["parse_single_or_multiple_groups"],
+                                                       "parse_selected_user_subscribed_group": translations["ru"]["parsing_menu"]["parse_selected_user_subscribed_group"],
+                                                       "parse_active_group_members": translations["ru"]["parsing_menu"]["parse_active_group_members"],
+                                                       "parse_account_subscribed_groups_channels": translations["ru"]["parsing_menu"]["parse_account_subscribed_groups_channels"],
+                                                       "clear_previously_parsed_data_list": translations["ru"]["parsing_menu"]["clear_previously_parsed_data_list"],
+                                                       "importing_a_list_of_parsed_data": translations["ru"]["parsing_menu"]["importing_a_list_of_parsed_data"]})
 
 
 @app.get('/subscribe_unsubscribe', response_class=HTMLResponse)
