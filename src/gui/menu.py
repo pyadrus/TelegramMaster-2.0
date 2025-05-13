@@ -7,8 +7,7 @@ from src.core.localization import (
     parse_single_or_multiple_groups, parse_selected_user_subscribed_group, parse_active_group_members,
     inviting_every_day_ru, invitation_at_a_certain_time_ru, invitation_1_time_per_hour_ru, inviting_ru,
     importing_a_list_of_parsed_data, setting_reactions, automatic_setting_of_reactions,
-    time_between_invites_sending_messages_ru,
-    recording_reaction_link_ru, forming_list_of_chats_channels_ru, we_are_winding_up_post_views_ru, editing_bio,
+    we_are_winding_up_post_views_ru, editing_bio,
     changing_the_username, changing_the_photo, changing_the_description, name_change_n, name_change_f,
     creating_a_contact_list, show_a_list_of_contacts, deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
     subscribe_unsubscribe, subscription, unsubscribe, connecting_accounts, connecting_accounts_by_phone_number,
@@ -89,14 +88,14 @@ async def settings_menu(page: ft.Page):
                                        on_click=lambda _: page.go("/recording_the_time_between_messages")),
                      # 🕒 Время между инвайтингом, рассылка сообщений
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=time_between_invites_sending_messages_ru,
+                                       text=translations["ru"]["menu_settings"]["time_between_invites_sending_messages"],
                                        on_click=lambda _: page.go("/time_between_invites_sending_messages")),
                      # 🔗 Запись ссылки для реакций
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=recording_reaction_link_ru,
+                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT, text=translations["ru"]["menu_settings"]["recording_reaction_link"],
                                        on_click=lambda _: page.go("/recording_reaction_link")),
                      # 📑 Формирование списка чатов / каналов
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=forming_list_of_chats_channels_ru,
+                                       text=translations["ru"]["menu_settings"]["forming_list_of_chats_channels"],
                                        on_click=lambda _: page.go("/forming_list_of_chats_channels")),
                  ])]))
 
@@ -243,7 +242,7 @@ async def menu_parsing(page: ft.Page):
                                        on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
                      # 📑 Формирование списка чатов / каналов
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=forming_list_of_chats_channels_ru,
+                                       text=translations["ru"]["menu_settings"]["forming_list_of_chats_channels"],
                                        on_click=lambda _: page.go("/forming_list_of_chats_channels")),
                  ])]))
 

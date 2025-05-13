@@ -37,9 +37,9 @@ sending_personal_messages_with_limits_ru: str = "📨 Отправка сооб�
 # time_between_subscriptionss_ru: str = "⏳ Время между подпиской"
 # creating_username_list_ru: str = "📋 Формирование списка username"
 # recording_the_time_between_messages_ru: str = "⏱️ Запись времени между сообщениями"
-time_between_invites_sending_messages_ru: str = "🕒 Время между инвайтингом, рассылка сообщений"
-recording_reaction_link_ru: str = "🔗 Запись ссылки для реакций"
-forming_list_of_chats_channels_ru: str = "📑 Формирование списка чатов / каналов"
+# time_between_invites_sending_messages_ru: str = "🕒 Время между инвайтингом, рассылка сообщений"
+# recording_reaction_link_ru: str = "🔗 Запись ссылки для реакций"
+# forming_list_of_chats_channels_ru: str = "📑 Формирование списка чатов / каналов"
 
 # Главное меню
 parsing: str = "📊 Парсинг"

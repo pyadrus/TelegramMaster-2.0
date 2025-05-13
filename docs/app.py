@@ -19,8 +19,7 @@ from src.core.localization import (parse_selected_user_subscribed_group, parse_s
                                    inviting_every_day_ru, importing_a_list_of_parsed_data, setting_reactions,
                                    we_are_winding_up_post_views_ru, automatic_setting_of_reactions,
                                    sending_messages_via_chats_ru, sending_personal_messages_with_limits_ru,
-                                   time_between_invites_sending_messages_ru, recording_reaction_link_ru,
-                                   forming_list_of_chats_channels_ru, changing_the_username,
+                                   changing_the_username,
                                    changing_the_photo, changing_the_description, name_change_n,
                                    name_change_f, creating_a_contact_list, show_a_list_of_contacts,
                                    deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
@@ -179,9 +178,9 @@ async def settings(request: Request):
                                                         "time_between_subscriptionss_ru": translations["ru"]["menu_settings"]["time_between_subscriptionss"],
                                                         "creating_username_list_ru": translations["ru"]["menu_settings"]["creating_username_list"],
                                                         "recording_the_time_between_messages_ru": translations["ru"]["menu_settings"]["recording_the_time_between_messages"],
-                                                        "time_between_invites_sending_messages_ru": time_between_invites_sending_messages_ru,
-                                                        "recording_reaction_link_ru": recording_reaction_link_ru,
-                                                        "forming_list_of_chats_channels_ru": forming_list_of_chats_channels_ru,
+                                                        "time_between_invites_sending_messages_ru": translations["ru"]["menu_settings"]["time_between_invites_sending_messages"],
+                                                        "recording_reaction_link_ru": translations["ru"]["menu_settings"]["recording_reaction_link"],
+                                                        "forming_list_of_chats_channels_ru": translations["ru"]["menu_settings"]["forming_list_of_chats_channels"],
                                                         })
 
 
@@ -325,7 +324,7 @@ async def time_between_invites_sending_messages(request: Request):
     return templates.TemplateResponse('settings/time_between_invites_sending_messages.html', {
         "request": request,
         "program_name": program_name,
-        "time_between_invites_sending_messages_ru": time_between_invites_sending_messages_ru,
+        "time_between_invites_sending_messages_ru": translations["ru"]["menu_settings"]["time_between_invites_sending_messages"],
     })
 
 
@@ -336,7 +335,7 @@ async def recording_reaction_link(request: Request):
     return templates.TemplateResponse('settings/recording_reaction_link.html', {
         "request": request,
         "program_name": program_name,
-        "recording_reaction_link_ru": recording_reaction_link_ru,
+        "recording_reaction_link_ru": translations["ru"]["menu_settings"]["recording_reaction_link"],
     })
 
 
@@ -347,7 +346,7 @@ async def forming_list_of_chats_channels(request: Request):
     return templates.TemplateResponse('settings/forming_list_of_chats_channels.html', {
         "request": request,
         "program_name": program_name,
-        "forming_list_of_chats_channels_ru": forming_list_of_chats_channels_ru,
+        "forming_list_of_chats_channels_ru": translations["ru"]["menu_settings"]["forming_list_of_chats_channels"],
     })
 
 
@@ -373,7 +372,7 @@ async def we_are_winding_up_post_views(request: Request):
                                        "setting_reactions": setting_reactions,
                                        "we_are_winding_up_post_views_ru": we_are_winding_up_post_views_ru,
                                        "automatic_setting_of_reactions": automatic_setting_of_reactions,
-                                       "forming_list_of_chats_channels_ru": forming_list_of_chats_channels_ru,
+                                       "forming_list_of_chats_channels_ru": translations["ru"]["menu_settings"]["forming_list_of_chats_channels"],
                                        })
 
 
