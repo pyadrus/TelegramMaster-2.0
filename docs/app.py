@@ -21,7 +21,7 @@ from src.core.localization import (
                                    changing_the_username,
                                    changing_the_photo, changing_the_description, name_change_n,
                                    name_change_f, creating_a_contact_list, show_a_list_of_contacts,
-                                   deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
+                                   deleting_contacts, adding_contacts,
                                    subscription, unsubscribe, connecting_accounts_by_phone_number,
                                    connecting_session_accounts)
 from src.locales.translations_loader import translations
@@ -155,7 +155,7 @@ async def working_with_contacts(request: Request):
                                                                      "show_a_list_of_contacts": show_a_list_of_contacts,
                                                                      "deleting_contacts": deleting_contacts,
                                                                      "adding_contacts": adding_contacts,
-                                                                     "working_with_contacts_menu_ru": working_with_contacts_menu_ru,
+                                                                     "working_with_contacts_menu_ru": translations["ru"]["menu"]["contacts"],
                                                                      })
 
 

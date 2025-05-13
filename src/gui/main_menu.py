@@ -2,11 +2,9 @@
 import flet as ft
 
 from src.core.configs import BUTTON_HEIGHT, small_button_width, line_width_button, program_name
-from src.core.localization import (inviting_ru, we_are_winding_up_post_views_ru, editing_bio,
-                                   working_with_contacts_menu_ru, subscribe_unsubscribe,
-                                   connecting_accounts, working_with_reactions, parsing,
-                                   settings, creating_groups_chats, text_1, text_link_1, text_2, text_link_2,
-                                   documentation, sending_personal_messages_with_limits_ru,
+from src.core.localization import (inviting_ru, we_are_winding_up_post_views_ru,
+                                   text_1, text_link_1, text_2, text_link_2,
+                                   sending_personal_messages_with_limits_ru,
                                    sending_messages_via_chats_ru)
 from src.locales.translations_loader import translations
 
@@ -44,19 +42,19 @@ async def main_menu_program(page: ft.Page):
                               [ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=inviting_ru,
                                                  on_click=lambda _: page.go("/inviting")),
                                # 📊 Парсинг
-                               ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=parsing,
+                               ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT, text=translations["ru"]["menu"]["parsing"],
                                                  on_click=lambda _: page.go("/parsing")), ]),
                           # 📇 Работа с контактами
                           ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                                    text=working_with_contacts_menu_ru,
+                                                    text=translations["ru"]["menu"]["contacts"],
                                                     on_click=lambda _: page.go("/working_with_contacts")),
                                   # 🔄 Подписка, отписка
                                   ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                                    text=subscribe_unsubscribe,
+                                                    text=translations["ru"]["menu"]["subscribe_unsubscribe"],
                                                     on_click=lambda _: page.go("/subscribe_unsubscribe")), ]),
                           # 🔐 Подключение аккаунтов
                           ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                                    text=connecting_accounts,
+                                                    text=translations["ru"]["menu"]["account_connect"],
                                                     on_click=lambda _: page.go("/account_connection_menu")),
                                   # 📨 Отправка сообщений в личку
                                   ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
@@ -65,7 +63,7 @@ async def main_menu_program(page: ft.Page):
                                                         "/sending_files_to_personal_account_with_limits")), ]),
                           # ❤️ Работа с реакциями
                           ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                                    text=working_with_reactions,
+                                                    text=translations["ru"]["menu"]["reactions"],
                                                     on_click=lambda _: page.go("/working_with_reactions")),
                                   # 🔍 Проверка аккаунтов
                                   ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
@@ -73,11 +71,11 @@ async def main_menu_program(page: ft.Page):
                                                     on_click=lambda _: page.go("/account_verification_menu")), ]),
                           # 👥 Создание групп (чатов)
                           ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                                    text=creating_groups_chats,
+                                                    text=translations["ru"]["menu"]["create_groups"],
                                                     on_click=lambda _: page.go("/creating_groups_and_chats_menu")),
                                   # ✏️ Редактирование_BIO
                                   ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                                    text=editing_bio,
+                                                    text=translations["ru"]["menu"]["edit_bio"],
                                                     on_click=lambda _: page.go("/bio_editing")), ]),
 
                           # 👁️‍🗨️ Накручиваем просмотры постов
@@ -85,10 +83,10 @@ async def main_menu_program(page: ft.Page):
                                             text=we_are_winding_up_post_views_ru,
                                             on_click=lambda _: page.go("/viewing_posts_menu")),
                           # ⚙️ Настройки
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=settings,
+                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["menu"]["settings"],
                                             on_click=lambda _: page.go("/settings")),
                           # 📖 Документация
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=documentation,
+                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["menu"]["documentation"],
                                             on_click=lambda _: page.go("/documentation")),
                           # 💬 Рассылка сообщений по чатам
                           ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,

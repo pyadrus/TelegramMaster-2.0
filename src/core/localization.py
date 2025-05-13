@@ -20,17 +20,6 @@ sending_messages_via_chats_ru: str = "💬 Рассылка сообщений �
 sending_messages_files_via_chats_ru: str = "💬 Рассылка сообщений по чатам"
 sending_personal_messages_with_limits_ru: str = "📨 Отправка сообщений в личку"
 
-# Главное меню
-parsing: str = "📊 Парсинг"
-working_with_contacts_menu_ru: str = "📇 Работа с контактами"
-subscribe_unsubscribe: str = "🔄 Подписка, отписка"
-connecting_accounts: str = "🔐 Подключение аккаунтов"
-working_with_reactions: str = "❤️ Работа с реакциями"
-creating_groups_chats: str = "👥 Создание групп (чатов)"
-editing_bio: str = "✏️ Редактирование BIO"
-settings: str = "⚙️ Настройки"
-documentation: str = "📖 Документация"
-
 # Меню редактирование БИО
 changing_the_username: str = "🔄 Изменение username"
 changing_the_photo: str = "🖼️ Изменение фото"

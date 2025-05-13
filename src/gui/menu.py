@@ -6,12 +6,11 @@ from src.core.configs import BUTTON_HEIGHT, small_button_width, BUTTON_WIDTH, li
 from src.core.localization import (
     inviting_every_day_ru, invitation_at_a_certain_time_ru, invitation_1_time_per_hour_ru, inviting_ru,
     setting_reactions, automatic_setting_of_reactions,
-    we_are_winding_up_post_views_ru, editing_bio,
+    we_are_winding_up_post_views_ru,
     changing_the_username, changing_the_photo, changing_the_description, name_change_n, name_change_f,
-    creating_a_contact_list, show_a_list_of_contacts, deleting_contacts, adding_contacts, working_with_contacts_menu_ru,
-    subscribe_unsubscribe, subscription, unsubscribe, connecting_accounts, connecting_accounts_by_phone_number,
+    creating_a_contact_list, show_a_list_of_contacts, deleting_contacts, adding_contacts,
+    subscription, unsubscribe, connecting_accounts_by_phone_number,
     connecting_session_accounts,
-    working_with_reactions, parsing, settings, creating_groups_chats
 )
 from src.locales.translations_loader import translations
 
@@ -27,7 +26,7 @@ async def settings_menu(page: ft.Page):
                 [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
-                     settings,
+                     translations["ru"]["menu"]["settings"],
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
@@ -115,7 +114,7 @@ async def bio_editing_menu(page: ft.Page):
                 [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
-                     editing_bio,
+                     translations["ru"]["menu"]["edit_bio"],
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
@@ -186,7 +185,7 @@ async def working_with_contacts_menu(page: ft.Page):
                 [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
-                     working_with_contacts_menu_ru,
+                     translations["ru"]["menu"]["contacts"],
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
@@ -220,7 +219,7 @@ async def menu_parsing(page: ft.Page):
                 [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
-                     parsing,
+                     translations["ru"]["menu"]["parsing"],
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
@@ -262,7 +261,7 @@ async def reactions_menu(page: ft.Page):
                 [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
-                     working_with_reactions,
+                     translations["ru"]["menu"]["reactions"],
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
@@ -317,7 +316,7 @@ async def subscribe_and_unsubscribe_menu(page: ft.Page):
                 [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
-                     subscribe_unsubscribe,
+                     translations["ru"]["menu"]["subscribe_unsubscribe"],
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
@@ -345,7 +344,7 @@ async def account_connection_menu(page: ft.Page):
                 [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
-                     connecting_accounts,
+                     translations["ru"]["menu"]["account_connect"],
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
@@ -447,7 +446,7 @@ async def creating_groups_and_chats_menu(page: ft.Page):
                 [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(
-                     creating_groups_chats,
+                     translations["ru"]["menu"]["create_groups"],
                      ft.TextStyle(
                          size=20,
                          weight=ft.FontWeight.BOLD,
@@ -457,7 +456,7 @@ async def creating_groups_and_chats_menu(page: ft.Page):
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 👥 Создание групп (чатов)
                      ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                       text=creating_groups_chats,
+                                       text=translations["ru"]["menu"]["create_groups"],
                                        on_click=lambda _: page.go("/creating_groups")),
                  ])]))
 
