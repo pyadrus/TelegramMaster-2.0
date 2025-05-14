@@ -98,9 +98,7 @@ class InvitingToAGroup:
                             page, level="error")
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, page)
                     except UserNotMutualContactError:
-                        await log_and_display(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. User не является взаимным контактом.",
-                            page, level="error")
+                        await log_and_display(translations["ru"]["notifications_errors"]["user_not_mutual_contact"], page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, page)
                     except (UserKickedError, UserDeactivatedBanError):
                         await log_and_display(

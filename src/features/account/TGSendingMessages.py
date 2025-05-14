@@ -92,9 +92,7 @@ class SendTelegramMessages:
                                     await record_and_interrupt(time_from, time_to, page)
                                     break  # Прерываем работу и меняем аккаунт
                                 except UserNotMutualContactError:
-                                    await log_and_display(
-                                        f"❌ Отправляем сообщение в личку {username}. {username} не является взаимным контактом.",
-                                        page)
+                                    await log_and_display(translations["ru"]["notifications_errors"]["user_not_mutual_contact"], page)
                                 except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                                     await log_and_display(
                                         f"❌ Отправляем сообщение в личку {username}. Не корректное имя {username}.",
