@@ -74,18 +74,16 @@ class SendTelegramMessages:
                             # Количество аккаунтов на данный момент в работе
                             await log_and_display(f"Всего username: {len(number_usernames)}", page)
                             for rows in number_usernames:
-                                username = rows[
-                                    0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
+                                username = rows[0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
                                 await log_and_display(f"[!] Отправляем сообщение: {username}", page)
                                 try:
                                     user_to_add = await client.get_input_entity(username)
                                     messages, files = await self.all_find_and_all_files(page)
                                     await self.send_content(client, user_to_add, messages, files, page)
-                                    await log_and_display(
-                                        f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.",
-                                        page)
+                                    await log_and_display(f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.", page)
                                     await record_inviting_results(time_from, time_to, rows, page)
-                                except FloodWaitError as _:
+                                except FloodWaitError as e:
+                                    await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page, level="error")
                                     await record_and_interrupt(time_from, time_to, page)
                                     break  # Прерываем работу и меняем аккаунт
                                 except PeerFloodError:

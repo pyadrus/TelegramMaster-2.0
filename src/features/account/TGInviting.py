@@ -145,8 +145,8 @@ class InvitingToAGroup:
                             UserBannedInChannelError, SessionRevokedError):
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], page)
                         break  # Прерываем работу и меняем аккаунт
-                    except FloodWaitError as error:
-                        await log_and_display(f"{error}", page)
+                    except FloodWaitError as e:
+                        await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page, level="error")
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], page)
                         break  # Прерываем работу и меняем аккаунт
                     except AuthKeyUnregisteredError:
