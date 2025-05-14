@@ -13,13 +13,16 @@ from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError
 
 from src.core.configs import (ConfigReader, path_send_message_folder, path_folder_with_messages,
                               path_send_message_folder_answering_machine_message,
-                              path_send_message_folder_answering_machine, line_width_button, BUTTON_HEIGHT)
+                              path_send_message_folder_answering_machine, line_width_button, BUTTON_HEIGHT,
+                              time_sending_messages_1, time_sending_messages_2, time_subscription_1,
+                              time_subscription_2)
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_files, all_find_files, record_inviting_results, find_filess
 from src.core.utils import read_json_file
 from src.core.utils import record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.gui.gui import start_time, end_time
 from src.gui.menu import log_and_display
 from src.locales.translations_loader import translations
 
@@ -33,8 +36,6 @@ class SendTelegramMessages:
         self.tg_connect = TGConnect()
         self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
-        self.time_sending_messages_1, self.time_sending_messages_2 = self.config_reader.get_time_sending_messages()
-        self.time_subscription_1, self.time_subscription_2 = self.config_reader.get_time_subscription()
         self.account_extension = "session"  # Расширение файла аккаунта
         self.file_extension = "json"
 
@@ -50,8 +51,8 @@ class SendTelegramMessages:
 
         # Обработчик кнопки "Готово"
         async def button_clicked(_):
-            time_from = tb_time_from.value or self.time_sending_messages_1  # Получаем значение первого поля
-            time_to = tb_time_to.value or self.time_sending_messages_2  # Получаем значение второго поля
+            time_from = tb_time_from.value or time_sending_messages_1  # Получаем значение первого поля
+            time_to = tb_time_to.value or time_sending_messages_2  # Получаем значение второго поля
 
             # Получаем значение третьего поля и разделяем его на список по пробелам
             account_limits_input = account_limits_inputs.value  # Удаляем лишние пробелы
@@ -147,7 +148,8 @@ class SendTelegramMessages:
         return tb_time_from, tb_time_to
 
     async def performing_the_operation(self, page: ft.Page, checs, chat_list_fields) -> None:
-        """Рассылка сообщений по чатам"""
+        """Рассылка сообщений по чатам
+        :param checs: значение чекбокса"""
         # Создаем ListView для отображения логов
         page.views.clear()
         page.update()
@@ -213,7 +215,7 @@ class SendTelegramMessages:
                 logger.exception(f"❌ Ошибка: {error}")
         else:
             try:
-                start = await self.start_time(list_view, page)
+                start = await start_time(list_view, page)
                 for session_name in await find_filess(directory_path=path_send_message_folder,
                                                       extension=self.account_extension):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
@@ -232,24 +234,21 @@ class SendTelegramMessages:
                             await log_and_display(f"Группа {group_link} приватная или подписка запрещена.", list_view,
                                                   page)
                         except PeerFloodError:
-                            await record_and_interrupt(self.time_subscription_1, self.time_subscription_2, list_view,
-                                                       page)
+                            await record_and_interrupt(time_subscription_1, time_subscription_2, list_view, page)
                             break  # Прерываем работу и меняем аккаунт
                         except FloodWaitError as e:
                             await log_and_display(f"FloodWait! Ожидание {str(datetime.timedelta(seconds=e.seconds))}",
                                                   list_view, page)
                             await asyncio.sleep(e.seconds)
                         except UserBannedInChannelError:
-                            await record_and_interrupt(self.time_subscription_1, self.time_subscription_2, list_view,
-                                                       page)
+                            await record_and_interrupt(time_subscription_1, time_subscription_2, list_view, page)
                             break  # Прерываем работу и меняем аккаунт
                         except ChatAdminRequiredError:
                             await log_and_display(f"Нужны права администратора для отправки сообщений в {group_link}",
                                                   list_view, page)
                             break
                         except ChatWriteForbiddenError:
-                            await record_and_interrupt(self.time_subscription_1, self.time_subscription_2, list_view,
-                                                       page)
+                            await record_and_interrupt(time_subscription_1, time_subscription_2, list_view, page)
                             break  # Прерываем работу и меняем аккаунт
                         except SlowModeWaitError as e:
                             await log_and_display(
@@ -266,7 +265,7 @@ class SendTelegramMessages:
                             logger.exception(f"❌ Ошибка: {error}")
                     await client.disconnect()  # Разрываем соединение Telegram
                 await log_and_display("🔚 Конец отправки сообщений + файлов по чатам", list_view, page)
-                await self.end_time(start, list_view, page)
+                await end_time(start, list_view, page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
@@ -274,13 +273,9 @@ class SendTelegramMessages:
         """
         Рассылка сообщений + файлов по чатам
         """
-        output = ft.Text(translations["ru"]["message_sending_menu"]["sending_messages_files_via_chats"], size=18,
-                         weight=ft.FontWeight.BOLD)
 
         # Обработчик кнопки "Готово"
         async def button_clicked(_):
-            time_from = tb_time_from.value or self.time_sending_messages_1  # Получаем значение первого поля
-            time_to = tb_time_to.value or self.time_sending_messages_2  # Получаем значение второго поля
             # Получаем значение третьего поля и разделяем его на список по пробелам
             chat_list_input = chat_list_field.value.strip()  # Удаляем лишние пробелы
             if chat_list_input:  # Если поле не пустое
@@ -290,50 +285,36 @@ class SendTelegramMessages:
                 db_chat_list = await db_handler.open_and_read_data(table_name="writing_group_links",
                                                                    list_view=list_view, page=page)
                 chat_list_fields = [group[0] for group in db_chat_list]  # Извлекаем только ссылки из кортежей
-            checs = c.value  # Получаем значение чекбокса
-            if time_from < time_to:
-                await self.performing_the_operation(page, checs, chat_list_fields)
+            if tb_time_from.value or time_sending_messages_1 < tb_time_to.value or time_sending_messages_2:
+                await self.performing_the_operation(page, c.value, chat_list_fields)
             else:
                 t.value = f"Время сна: Некорректный диапазон, введите корректные значения"
                 t.update()
             page.update()
 
-        # GUI элементы
         # Чекбокс для работы с автоответчиком
         c = ft.Checkbox(label="Работа с автоответчиком")
         tb_time_from, tb_time_to = await self.sleep_selection_input()
-        sleep_time_group = ft.Row(controls=[tb_time_from, tb_time_to], spacing=20, )
         # Поле для формирования списка чатов
         chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=True, max_lines=12)
-        # Кнопка "Готово"
-        button_done = ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=line_width_button,
-                                        height=BUTTON_HEIGHT,
-                                        on_click=button_clicked, )
-        # Кнопка "Назад"
-        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button,
-                                        height=BUTTON_HEIGHT,
-                                        on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
+
         t = ft.Text()
         # Разделение интерфейса на верхнюю и нижнюю части
         page.views.append(
             ft.View(
                 "/sending_messages_via_chats_menu",
-                controls=[output, c, sleep_time_group, t, chat_list_field,
-                          ft.Column(  # Верхняя часть: контрольные элементы
-                              controls=[button_done, button_back, ],
-                          ), ], ))
-
-    @staticmethod
-    async def start_time(list_view, page):
-        start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-        await log_and_display('▶️ Время старта: ' + str(start), list_view, page)
-        return start
-
-    @staticmethod
-    async def end_time(start, list_view, page):
-        finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-        await log_and_display('Время окончания: ' + str(finish), list_view, page)
-        await log_and_display('Время работы: ' + str(finish - start), list_view, page)
+                controls=[
+                    ft.Text(translations["ru"]["message_sending_menu"]["sending_messages_files_via_chats"], size=18,
+                            weight=ft.FontWeight.BOLD), c, ft.Row(controls=[tb_time_from, tb_time_to], spacing=20, ), t,
+                    chat_list_field,
+                    ft.Column(  # Верхняя часть: контрольные элементы
+                        controls=[ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=line_width_button,
+                                                    height=BUTTON_HEIGHT,
+                                                    on_click=button_clicked, ),
+                                  ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button,
+                                                    height=BUTTON_HEIGHT,
+                                                    on_click=lambda _: page.go("/sending_messages_via_chats_menu")), ],
+                    ), ], ))
 
     async def send_content(self, client, target, messages, files, list_view, page: ft.Page):
         """
@@ -374,7 +355,7 @@ class SendTelegramMessages:
         Рандомный сон
         """
         try:
-            time_in_seconds = random.randrange(self.time_sending_messages_1, self.time_sending_messages_2)
+            time_in_seconds = random.randrange(time_sending_messages_1, time_sending_messages_2)
             await log_and_display(f"Спим {time_in_seconds} секунд...", list_view, page)
             await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
         except Exception as error:

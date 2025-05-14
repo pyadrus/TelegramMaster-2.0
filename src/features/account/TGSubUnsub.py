@@ -15,11 +15,12 @@ from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-from src.core.configs import (ConfigReader, path_subscription_folder, path_unsubscribe_folder, line_width_button,
-                              BUTTON_HEIGHT)
+from src.core.configs import (path_subscription_folder, path_unsubscribe_folder, line_width_button, BUTTON_HEIGHT,
+                              time_subscription_1, time_subscription_2)
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, find_filess
 from src.features.account.TGConnect import TGConnect
+from src.gui.gui import start_time
 from src.gui.menu import log_and_display
 from src.locales.translations_loader import translations
 
@@ -29,7 +30,6 @@ class SubscribeUnsubscribeTelegram:
     def __init__(self):
         self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
-        self.time_subscription_1, self.time_subscription_2 = ConfigReader().get_time_subscription()
 
     @staticmethod
     async def extract_channel_id(link):
@@ -187,9 +187,7 @@ class SubscribeUnsubscribeTelegram:
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
         async def add_items(_):
-            start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
-            # Индикация начала инвайтинга
-            await log_and_display(f"\n▶️ Начало Подписки.\n🕒 Время старта: {str(start)}", list_view, page)
+            start = await start_time(list_view, page)
             for session_name in await find_filess(directory_path=path_subscription_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_subscription_folder,
@@ -321,10 +319,8 @@ class SubscribeUnsubscribeTelegram:
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}",
                 list_view, page)
-            await self.db_handler.write_data_to_db("""SELECT *
-                                                      from writing_group_links""",
-                                                   """DELETE
-                                                      from writing_group_links
+            await self.db_handler.write_data_to_db("""SELECT * from writing_group_links""",
+                                                   """DELETE from writing_group_links
                                                       where writing_group_links = ?""",
                                                    groups_wr, list_view, page)
         except PeerFloodError:
@@ -336,7 +332,7 @@ class SubscribeUnsubscribeTelegram:
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Flood! wait for {str(datetime.timedelta(seconds=e.seconds))}",
                 list_view, page)
-            await record_and_interrupt(self.time_subscription_1, self.time_subscription_2, list_view, page)
+            await record_and_interrupt(time_subscription_1, time_subscription_2, list_view, page)
             # Прерываем работу и меняем аккаунт
             raise
         except InviteRequestSentError:

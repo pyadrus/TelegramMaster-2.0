@@ -217,3 +217,8 @@ path_send_message_folder_answering_machine = ConfigReader().path_send_message_fo
 path_send_message_folder_answering_machine_message = ConfigReader().path_send_message_folder_answering_machine_message()  # Путь к папке c сообщениями для автоответчика
 path_folder_with_messages = ConfigReader().path_folder_with_messages()  # Путь к папке с сообщениями
 path_folder_database = ConfigReader().path_folder_database()  # Путь к папке с базой данных
+
+time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_inviting()  # Время между сообщениями
+time_inviting_1, time_inviting_2 = ConfigReader().get_time_inviting()  # Время между инвайтингом, рассылка сообщений
+time_changing_accounts_1, time_changing_accounts_2 = ConfigReader().get_config_time_changing_accounts()  # Время смены аккаунтов
+time_subscription_1, time_subscription_2 = ConfigReader().get_time_subscription()

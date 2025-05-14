@@ -19,6 +19,7 @@ from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.gui.gui import start_time
 from src.gui.menu import show_notification, log_and_display
 from src.locales.translations_loader import translations
 
@@ -66,9 +67,7 @@ class InvitingToAGroup:
         :param dropdown:
         :return:
         """
-        start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
-        # Индикация начала инвайтинга
-        await log_and_display(f"▶️ Начало инвайтинга.\n🕒 Время старта: {str(start)}", list_view, page)
+        start = await start_time(list_view, page)
         page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
         try:
             for session_name in await find_filess(directory_path=path_inviting_folder, extension='session'):

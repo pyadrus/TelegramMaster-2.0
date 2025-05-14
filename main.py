@@ -7,8 +7,10 @@ from loguru import logger
 
 from docs.app import start_app
 from src.core.checking_program import CheckingProgram
-from src.core.configs import (ConfigReader, program_name, program_version, date_of_program_change, window_width,
-                              window_height, window_resizable)
+from src.core.configs import (program_name, program_version, date_of_program_change, window_width,
+                              window_height, window_resizable, time_sending_messages_1, time_sending_messages_2,
+                              time_inviting_1, time_inviting_2, time_changing_accounts_1, time_changing_accounts_2,
+                              time_subscription_1, time_subscription_2)
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
@@ -232,27 +234,22 @@ async def main(page: ft.Page):
                 await SettingPage().recording_text_for_sending_messages(page, "Введите ссылку для реакций",
                                                                         'user_data/reactions/link_channel.json')
             elif page.route == "/choice_of_reactions":  # Выбор реакций
-                await reaction_gui(page)
+                await reaction_gui(page=page)
             elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
-                time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_inviting()  # Время между сообщениями
-                time_sending_messages = [time_sending_messages_1, time_sending_messages_2]
-                await SettingPage().create_main_window(page, variable="time_sending_messages",
-                                                       time_range=time_sending_messages)
+
+                await SettingPage().create_main_window(page=page, variable="time_sending_messages",
+                                                       time_range=[time_sending_messages_1, time_sending_messages_2])
             elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
-                time_inviting_1, time_inviting_2 = ConfigReader().get_time_inviting()  # Время между инвайтингом, рассылка сообщений
-                time_inviting = [time_inviting_1, time_inviting_2]
-                await SettingPage().create_main_window(page, variable="time_inviting", time_range=time_inviting)
+                await SettingPage().create_main_window(page=page, variable="time_inviting",
+                                                       time_range=[time_inviting_1, time_inviting_2])
             elif page.route == "/changing_accounts":  # Смена аккаунтов
-                time_changing_accounts_1, time_changing_accounts_2 = ConfigReader().get_config_time_changing_accounts()  # Время смены аккаунтов
-                time_changing_accounts = [time_changing_accounts_1, time_changing_accounts_2]
-                await SettingPage().create_main_window(page, variable="time_changing_accounts",
-                                                       time_range=time_changing_accounts)
+                await SettingPage().create_main_window(page=page, variable="time_changing_accounts",
+                                                       time_range=[time_changing_accounts_1, time_changing_accounts_2])
             elif page.route == "/time_between_subscriptions":
                 await SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
             elif page.route == "/time_between_subscriptionss":  # Время между подпиской
-                time_subscription_1, time_subscription_2 = ConfigReader().get_time_subscription()
-                time_subscription = [time_subscription_1, time_subscription_2]
-                await SettingPage().create_main_window(page, variable="time_subscription", time_range=time_subscription)
+                await SettingPage().create_main_window(page=page, variable="time_subscription",
+                                                       time_range=[time_subscription_1, time_subscription_2])
             elif page.route == "/documentation":  # Открытие документации
                 start_app()
             elif page.route == "/errors":

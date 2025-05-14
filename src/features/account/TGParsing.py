@@ -25,6 +25,7 @@ from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.gui.gui import start_time
 from src.gui.menu import log_and_display
 from src.locales.translations_loader import translations
 
@@ -491,8 +492,7 @@ class ParsingGroupMembers:
 
                 # Обработчик нажатия кнопки выбора группы
                 async def handle_button_click(_) -> None:
-                    start = datetime.datetime.now()  # фиксируем время начала выполнения кода
-                    await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", list_view, page)
+                    start = await start_time(list_view, page)
                     await log_and_display(f"📂 Выбрана группа: {dropdown.value}", list_view, page)
                     await self.parse_group(client, dropdown.value, list_view,
                                            page)  # Запускаем парсинг выбранной группы
@@ -725,8 +725,7 @@ class ParsingGroupMembers:
 
             async def btn_click(_) -> None:
                 """✅ Функция-обработчик для кнопки "Готово"""
-                start = datetime.datetime.now()  # фиксируем время начала выполнения кода
-                await log_and_display(f"▶️ Начало парсинга.\n🕒 Время старта: {str(start)}", list_view, page)
+                start = await start_time(list_view, page)
                 await log_and_display(
                     f"🔗 Ссылка на чат: {chat_input.value}. 💬 Количество сообщений: {limit_active_user.value}",
                     list_view, page)

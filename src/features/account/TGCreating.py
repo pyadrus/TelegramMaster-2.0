@@ -11,6 +11,7 @@ from telethon import functions
 from src.core.configs import line_width_button, BUTTON_HEIGHT, path_accounts_folder
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
+from src.gui.gui import start_time
 from src.gui.menu import log_and_display
 from src.locales.translations_loader import translations
 
@@ -29,7 +30,6 @@ class CreatingGroupsAndChats:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        start = datetime.datetime.now()  # фиксируем время начала выполнения кода ⏱️
         selected_sessions = []  # Список для хранения выбранных session файлов
         list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         selected_files = ft.Text(value="Файлы не выбраны", selectable=True)
@@ -41,7 +41,7 @@ class CreatingGroupsAndChats:
             """
             🚀 Запускает процесс создания групп и отображает статус в интерфейсе.
             """
-            await log_and_display(f"▶️ Начало создания групп.\n🕒 Время старта: {str(start)}", list_view, page)
+            start = await start_time(list_view, page)
             page.update()
 
             if not selected_sessions:
