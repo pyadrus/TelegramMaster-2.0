@@ -25,7 +25,6 @@ from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.gui import start_time, end_time, list_view, log_and_display
-from src.gui.menu import show_notification
 from src.locales.translations_loader import translations
 
 
@@ -542,9 +541,7 @@ class ParsingGroupMembers:
                     await asyncio.sleep(2)
                     break
                 except ChannelPrivateError:
-                    await log_and_display(
-                        f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт",
-                        page, level="error")
+                    await log_and_display(translations["ru"]["notifications_errors"]["channel_private"], page)
                     await asyncio.sleep(2)
                     break
                 except AuthKeyUnregisteredError:

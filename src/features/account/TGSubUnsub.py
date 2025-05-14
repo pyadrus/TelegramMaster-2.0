@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import asyncio
-import datetime
 import random
 
 import flet as ft  # Импортируем библиотеку flet
@@ -21,7 +20,6 @@ from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.gui.gui import start_time, end_time, list_view, log_and_display
-from src.gui.menu import show_notification
 from src.locales.translations_loader import translations
 
 
@@ -242,9 +240,7 @@ class SubscribeUnsubscribeTelegram:
             if entity:
                 await client(LeaveChannelRequest(entity))
         except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
-            await log_and_display(
-                f"Группа или канал: {group_link}, является закрытым или аккаунт не имеет доступ  к {group_link}",
-                page)
+            await log_and_display(translations["ru"]["notifications_errors"]["channel_private"], page)
         except UserNotParticipantError:
             await log_and_display(f"❌ Попытка отписки от группы / канала {group_link}. Аккаунт не является участником.",
                                   page)
@@ -284,9 +280,7 @@ class SubscribeUnsubscribeTelegram:
                     break
             await log_and_display(f"❌  Список почистили, и в файл записали.", page)
         except ChannelPrivateError:
-            await log_and_display(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Указанный канал / группа {groups_wr} является приватным, или вам запретили подписываться.",
-                page)
+            await log_and_display(translations["ru"]["notifications_errors"]["channel_private"], page)
         except (UsernameInvalidError, ValueError, TypeError):
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}",
