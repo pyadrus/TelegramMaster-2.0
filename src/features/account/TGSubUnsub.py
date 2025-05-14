@@ -20,7 +20,7 @@ from src.core.configs import (path_subscription_folder, path_unsubscribe_folder,
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, find_filess
 from src.features.account.TGConnect import TGConnect
-from src.gui.gui import start_time
+from src.gui.gui import start_time, end_time
 from src.gui.menu import log_and_display
 from src.locales.translations_loader import translations
 
@@ -203,9 +203,7 @@ class SubscribeUnsubscribeTelegram:
                     # Проверка ссылок для подписки и подписка на группу или канал
                     await self.checking_links(page, client, link, list_view)
                 await client.disconnect()
-            finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-            await log_and_display(f"🔚 Конец Подписки.\n🕒 Время окончания: {finish}.\n"
-                                  f"⏳ Время работы: {finish - start}\n", list_view, page)
+            await end_time(start, list_view, page)
 
         async def back_button_clicked(_):
             """

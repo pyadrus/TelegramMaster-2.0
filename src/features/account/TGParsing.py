@@ -25,7 +25,7 @@ from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.gui import start_time
+from src.gui.gui import start_time, end_time
 from src.gui.menu import log_and_display
 from src.locales.translations_loader import translations
 
@@ -281,10 +281,7 @@ class ParsingGroupMembers:
                         await log_and_display(f"🔌 Отключение от аккаунта: {session_name}", list_view, page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
-            finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-            await log_and_display(
-                f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start_time}",
-                list_view, page)
+            await end_time(start, list_view, page)
 
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
             """Обработка выбора файлов"""
@@ -499,10 +496,7 @@ class ParsingGroupMembers:
                     await self.clean_parsing_list_and_remove_duplicates(list_view, page)
                     await client.disconnect()
                     # Переходим на экран парсинга только после завершения всех действий
-                    finish = datetime.datetime.now()  # фиксируем время окончания парсинга
-                    await log_and_display(
-                        f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", list_view,
-                        page)
+                    await end_time(start, list_view, page)
                     page.go("/parsing")
 
                 # Создаем выпадающий список с названиями групп
@@ -732,10 +726,7 @@ class ParsingGroupMembers:
                 # Вызов функции для парсинга активных пользователей (функция должна быть реализована)
                 await self.parse_active_users(chat_input.value, int(limit_active_user.value), page, list_view)
                 # Изменение маршрута на новый (если необходимо)
-                finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-                await log_and_display(
-                    f"🔚 Конец парсинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", list_view,
-                    page)
+                await end_time(start, list_view, page)
                 page.go("/parsing")  # Возвращаемся к основному меню парсинга 🏠
                 page.update()  # Обновление страницы для отображения изменений 🔄
 

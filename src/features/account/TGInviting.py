@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import asyncio
-import datetime
 import datetime as dt
 
 import flet as ft  # Импортируем библиотеку flet
@@ -19,7 +18,7 @@ from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.gui import start_time
+from src.gui.gui import start_time, end_time
 from src.gui.menu import show_notification, log_and_display
 from src.locales.translations_loader import translations
 
@@ -192,9 +191,7 @@ class InvitingToAGroup:
             await log_and_display(f"[!] Инвайтинг окончен!", list_view, page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
-        finish = datetime.datetime.now()  # фиксируем время окончания парсинга ⏰
-        await log_and_display(
-            f"🔚 Конец инвайтинга.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}", list_view, page)
+        await end_time(start, list_view, page)
         await show_notification(page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
         page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
 

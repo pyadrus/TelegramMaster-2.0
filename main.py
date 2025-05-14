@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import asyncio
-import datetime
 
 import flet as ft
 from loguru import logger
@@ -26,6 +25,7 @@ from src.features.account.TGViewingPosts import ViewingPosts
 from src.features.auth.logging_in import loging
 from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
+from src.gui.gui import end_time, start_time
 from src.gui.main_menu import main_menu_program
 from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                           subscribe_and_unsubscribe_menu, account_connection_menu, viewing_posts_menu,
@@ -76,47 +76,35 @@ async def main(page: ft.Page):
             elif page.route == "/subscription_all":  # Подписка
                 await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
             elif page.route == "/unsubscribe_all":  # Отписываемся
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
+                start = await start_time(list_view, page)
                 logger.info("▶️ Начало Отписка")
                 await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page, list_view=list_view)
                 logger.info("🔚 Конец Отписки")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                await end_time(start, list_view, page)
             # __________________________________________________________________________________________________________
             elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
                 await reactions_menu(page)
             elif page.route == "/setting_reactions":  # Ставим реакции
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
+                start = await start_time(list_view, page)
                 logger.info("▶️ Начало Проставления реакций")
                 await WorkingWithReactions().send_reaction_request(page, list_view=list_view)
                 logger.info("🔚 Конец Проставления реакций")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                await end_time(start, list_view, page)
             elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
+                start = await start_time(list_view, page)
                 logger.info("▶️ Начало Автоматического выставления реакций")
                 await WorkingWithReactions().setting_reactions(page=page, list_view=list_view)
                 logger.info("🔚 Конец Автоматического выставления реакций")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                await end_time(start, list_view, page)
             # __________________________________________________________________________________________________________
             elif page.route == "/viewing_posts_menu":  # Автоматическое выставление просмотров меню
                 await viewing_posts_menu(page)
             elif page.route == "/we_are_winding_up_post_views":  # ️‍🗨️ Накручиваем просмотры постов
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
+                start = await start_time(list_view, page)
                 logger.info("▶️ Начало Накрутки просмотров постов")
                 await ViewingPosts().viewing_posts_request(page, list_view=list_view)
                 logger.info("🔚 Конец Накрутки просмотров постов")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                await end_time(start, list_view, page)
             # __________________________________________________________________________________________________________
             elif page.route == "/parsing":  # Меню "Парсинг"
                 await menu_parsing(page)
@@ -132,44 +120,32 @@ async def main(page: ft.Page):
             elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
                 await working_with_contacts_menu(page)
             elif page.route == "/creating_contact_list":  # Формирование списка контактов
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
+                start = await start_time(list_view, page)
                 logger.info("▶️ Начало Формирования списка контактов")
                 await DatabaseHandler().open_and_read_data(table_name="contact", list_view=list_view,
                                                            page=page)  # Удаление списка с контактами
                 await SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
                                                            "contact", "/working_with_contacts", "contact")
                 logger.info("🔚 Конец Формирования списка контактов")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                await end_time(start, list_view, page)
             elif page.route == "/show_list_contacts":  # Показать список контактов
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
+                start = await start_time(list_view, page)
                 logger.info("▶️ Начало Показа списка контактов")
                 await TGContact().show_account_contact_list(page=page, list_view=list_view)
                 logger.info("🔚 Конец Показа списка контактов")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                await end_time(start, list_view, page)
             elif page.route == "/deleting_contacts":  # Удаление контактов
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
+                start = await start_time(list_view, page)
                 logger.info("▶️ Начало Удаления контактов")
                 await TGContact().delete_contact(page=page, list_view=list_view)
                 logger.info("🔚 Конец Удаления контактов")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                await end_time(start, list_view, page)
             elif page.route == "/adding_contacts":  # Добавление контактов
-                start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
-                logger.info('Время старта: ' + str(start))
+                start = await start_time(list_view, page)
                 logger.info("▶️ Начало Добавления контактов")
                 await TGContact().inviting_contact(page=page, list_view=list_view)
                 logger.info("🔚 Конец Добавления контактов")
-                finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
-                logger.info('Время окончания: ' + str(finish))
-                logger.info('Время работы: ' + str(finish - start))  # вычитаем время старта из времени окончания
+                await end_time(start, list_view, page)
             # __________________________________________________________________________________________________________
             elif page.route == "/account_connection_menu":  # Подключение аккаунтов 'меню'.
                 await account_connection_menu(page=page)

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import datetime
 import os
 import os.path
 import shutil
@@ -11,7 +10,7 @@ from telethon import functions
 from src.core.configs import line_width_button, BUTTON_HEIGHT, path_accounts_folder
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
-from src.gui.gui import start_time
+from src.gui.gui import start_time, end_time
 from src.gui.menu import log_and_display
 from src.locales.translations_loader import translations
 
@@ -82,10 +81,7 @@ class CreatingGroupsAndChats:
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
-            finish = datetime.datetime.now()
-            await log_and_display(
-                f"🔚 Конец создания групп.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
-                list_view, page)
+            await end_time(start, list_view, page)
 
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
             if e.files:
