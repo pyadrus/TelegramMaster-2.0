@@ -11,6 +11,7 @@ from src.features.account.TGConnect import TGConnect
 from src.gui.buttons import function_button_ready
 from src.gui.gui import log_and_display
 from src.gui.menu import show_notification
+from src.locales.translations_loader import translations
 
 
 class GUIManager:
@@ -131,7 +132,7 @@ class AccountActions:
                     result = await client(functions.account.UpdateProfileRequest(about=user_input))
                     await log_and_display(f"{result}\nПрофиль успешно обновлен!", page)
                 except AuthKeyUnregisteredError:
-                    await log_and_display(f"❌ Ошибка соединения с профилем", page)
+                    await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
                 finally:
                     await client.disconnect()
 
@@ -159,7 +160,7 @@ class AccountActions:
                     await client(functions.account.UpdateUsernameRequest(username=user_input))
                     await show_notification(page, f'Работа окончена')  # Выводим уведомление пользователю
                 except AuthKeyUnregisteredError:
-                    await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
+                    await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
                 except (UsernamePurchaseAvailableError, UsernameOccupiedError):
                     await show_notification(page, "❌ Никнейм уже занят")  # Выводим уведомление пользователю
                 except UsernameInvalidError:
@@ -186,7 +187,7 @@ class AccountActions:
                     result = await client(functions.account.UpdateProfileRequest(first_name=user_input))
                     await log_and_display(f"{result}\nИмя успешно обновлено!", page)
                 except AuthKeyUnregisteredError:
-                    await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
+                    await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
                 finally:
                     await client.disconnect()
                 await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
@@ -211,7 +212,7 @@ class AccountActions:
                     result = await client(functions.account.UpdateProfileRequest(last_name=user_input))
                     await log_and_display(f"{result}\nФамилия успешно обновлена!", page)
                 except AuthKeyUnregisteredError:
-                    await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
+                    await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
                 finally:
                     await client.disconnect()
                 await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
@@ -234,8 +235,7 @@ class AccountActions:
                         await client(functions.photos.UploadProfilePhotoRequest(
                             file=await client.upload_file(f"user_data/bio/{photo_file[0]}.jpg")))
                     except AuthKeyUnregisteredError:
-                        await show_notification(page,
-                                                "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
+                        await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
                     finally:
                         await client.disconnect()
         except Exception as error:

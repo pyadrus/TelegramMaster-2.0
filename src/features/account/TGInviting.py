@@ -39,7 +39,8 @@ class InvitingToAGroup:
         Получение ссылки для инвайтинга
         """
         try:
-            return await self.db_handler.open_and_read_data(table_name="links_inviting", page=page)  # Открываем базу данных
+            return await self.db_handler.open_and_read_data(table_name="links_inviting",
+                                                            page=page)  # Открываем базу данных
         except Exception as error:
             logger.exception(f"Ошибка: {error}")
             raise
@@ -68,7 +69,8 @@ class InvitingToAGroup:
         page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
         try:
             for session_name in await find_filess(directory_path=path_inviting_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name,account_directory=path_inviting_folder)
+                client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                   account_directory=path_inviting_folder)
                 await log_and_display(f"{dropdown.value}", page)
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, page)
@@ -84,7 +86,7 @@ class InvitingToAGroup:
                     # Инвайтинг в группу по полученному списку
 
                     try:
-                        await log_and_display(f"Попытка приглашения {username[0]} в группу {dropdown.value}.",page)
+                        await log_and_display(f"Попытка приглашения {username[0]} в группу {dropdown.value}.", page)
                         await client(InviteToChannelRequest(dropdown.value, [username[0]]))
                         await log_and_display(f"Удачно! Спим 5 секунд", page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, page)
@@ -92,7 +94,8 @@ class InvitingToAGroup:
                     # Ошибка инвайтинга продолжаем работу
                     except UserChannelsTooMuchError:
                         await log_and_display(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Превышен лимит у user каналов / супергрупп.", page, level="error")
+                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Превышен лимит у user каналов / супергрупп.",
+                            page, level="error")
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, page)
                     except UserNotMutualContactError:
                         await log_and_display(
@@ -149,15 +152,11 @@ class InvitingToAGroup:
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], page)
                         break  # Прерываем работу и меняем аккаунт
                     except AuthKeyUnregisteredError:
-                        await log_and_display(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Ошибка авторизации аккаунта",
-                            page)
+                        await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], page)
                         break
                     except PeerFloodError:
-                        await log_and_display(
-                            f"❌ Попытка приглашения {username} в группу {dropdown.value}. Настройки конфиденциальности {username} не позволяют вам inviting",
-                            page)
+                        await log_and_display(translations["ru"]["notifications_errors"]["peer_flood"], page, level="error")
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], page)
                         break  # Прерываем работу и меняем аккаунт
                     except KeyboardInterrupt:  # Закрытие окна программы
@@ -189,7 +188,8 @@ class InvitingToAGroup:
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
-        links_inviting = await self.getting_an_invitation_link_from_the_database(page)  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_the_database(
+            page)  # Получение ссылки для инвайтинга
 
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
@@ -214,7 +214,8 @@ class InvitingToAGroup:
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
-        links_inviting = await self.getting_an_invitation_link_from_the_database(page)  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_the_database(
+            page)  # Получение ссылки для инвайтинга
 
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
@@ -249,7 +250,8 @@ class InvitingToAGroup:
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
-        links_inviting = await self.getting_an_invitation_link_from_the_database(page)  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_the_database(
+            page)  # Получение ссылки для инвайтинга
 
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
@@ -319,7 +321,8 @@ class InvitingToAGroup:
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
-        links_inviting = await self.getting_an_invitation_link_from_the_database(page)  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_the_database(
+            page)  # Получение ссылки для инвайтинга
 
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
@@ -331,7 +334,7 @@ class InvitingToAGroup:
                 async def general_invitation_to_the_group_scheduler():
                     await self.general_invitation_to_the_group(page, dropdown)
 
-                await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}",page)
+                await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", page)
 
                 self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)),
                                     general_invitation_to_the_group_scheduler)

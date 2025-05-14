@@ -25,6 +25,7 @@ from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.gui import start_time, end_time, list_view, log_and_display
+from src.gui.menu import show_notification
 from src.locales.translations_loader import translations
 
 
@@ -83,7 +84,8 @@ class ParsingGroupMembers:
             for session_path in session_files:
                 session_name = os.path.basename(session_path)
                 try:
-                    client = await self.tg_connect.get_telegram_client(page, session_name,account_directory=path_accounts_folder)
+                    client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                       account_directory=path_accounts_folder)
                     for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links",
                                                                            page=page):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", page)
@@ -152,8 +154,7 @@ class ParsingGroupMembers:
                                                                 column="writing_group_links", value=groups)
                     await client.disconnect()
                 except FloodWaitError as e:
-                    await log_and_display(
-                        f"⚠️ Ошибка флуда аккаунта {session_name}, ожидание: {e.seconds} секунд. Переключение на другой аккаунт.",page)
+                    await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page, level="error")
                     await client.disconnect()
         except Exception as e:
             logger.exception(e)
@@ -253,10 +254,11 @@ class ParsingGroupMembers:
                         session_name = os.path.basename(session_path)
                         client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                            account_directory=path_accounts_folder)
-                        for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links", page=page):
+                        for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links",
+                                                                               page=page):
                             await log_and_display(f"🔍 Парсинг группы: {groups[0]}", page)
                             # подписываемся на группу
-                            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0],page)
+                            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0], page)
                             await self.parse_group(client, groups[0], page)  # выполняем парсинг группы
                             # Удаляем группу из списка после завершения парсинга 🗑️
                             await self.db_handler.delete_row_db(table="writing_group_links",
@@ -541,12 +543,12 @@ class ParsingGroupMembers:
                     break
                 except ChannelPrivateError:
                     await log_and_display(
-                        f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт", page, level="error")
+                        f"❌ Ошибка: канал / закрыт {target_group} или аккаунт забанен на канале или группе. Замените аккаунт",
+                        page, level="error")
                     await asyncio.sleep(2)
                     break
                 except AuthKeyUnregisteredError:
-                    await log_and_display(f"❌ Ошибка: неверный ключ авторизации аккаунта, выполните проверку аккаунтов",
-                                          page, level="error")
+                    await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
                     await asyncio.sleep(2)
                     break
 

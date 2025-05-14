@@ -212,9 +212,7 @@ class TGConnect:
                                           new_account_folder=f"user_data/accounts/banned/{session_name}.session")
                 except AuthKeyUnregisteredError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    await log_and_display(
-                        message=f"⛔ Битый файл или аккаунт banned: {session_name}.session. Возможно, запущен под другим IP",
-                        page=page)
+                    await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
                     working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
                                           new_account_folder=f"user_data/accounts/banned/{session_name}.session")
             await end_time(start, page)
@@ -335,7 +333,7 @@ class TGConnect:
                             page.go("/")  # Перенаправление в настройки, если 2FA не требуется
                             page.update()
                         except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
-                            await log_and_display(f"❌ Требуется двухфакторная аутентификация. Введите пароль.",
+                            await log_and_display(translations["ru"]["notifications_errors"]["two_factor_required"],
                                                   page)
                             pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
 
@@ -430,7 +428,8 @@ class TGConnect:
                     ft.Text(f"Подключение аккаунтов Telegram.\n\n Выберите session файл\n", size=15),
                     # Создаем текстовый элемент и добавляем его на страницу
                     selected_files,  # Поле для отображения выбранного файла
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["create_groups_menu"]["choose_session_files"],
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                      text=translations["ru"]["create_groups_menu"]["choose_session_files"],
                                       on_click=lambda _: pick_files_dialog.pick_files()),  # Кнопка выбора файла
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                       text=translations["ru"]["buttons"]["back"],

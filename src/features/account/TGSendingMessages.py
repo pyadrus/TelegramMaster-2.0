@@ -230,8 +230,7 @@ class SendTelegramMessages:
                             await record_and_interrupt(time_subscription_1, time_subscription_2, page)
                             break  # Прерываем работу и меняем аккаунт
                         except FloodWaitError as e:
-                            await log_and_display(f"FloodWait! Ожидание {str(datetime.timedelta(seconds=e.seconds))}",
-                                                  page)
+                            await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page, level="error")
                             await asyncio.sleep(e.seconds)
                         except UserBannedInChannelError:
                             await record_and_interrupt(time_subscription_1, time_subscription_2, page)
