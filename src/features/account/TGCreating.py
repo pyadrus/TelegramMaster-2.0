@@ -87,16 +87,12 @@ class CreatingGroupsAndChats:
                 f"🔚 Конец создания групп.\n🕒 Время окончания: {finish}.\n⏳ Время работы: {finish - start}",
                 list_view, page)
 
-        async def back_button_clicked(_):
-            page.go("/")
-
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
             if e.files:
                 selected_sessions.clear()
                 for file in e.files:
                     file_name = file.name
                     file_path = file.path
-
                     if file_name.endswith(".session"):
                         target_folder = path_accounts_folder
                         target_path = os.path.join(target_folder, file_name)
@@ -110,7 +106,6 @@ class CreatingGroupsAndChats:
                         selected_files.value = f"Файл {file_name} не является session файлом. Выберите только .session файлы."
                         selected_files.update()
                         return
-
                 selected_files.value = f"Выбраны session файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}"
                 selected_files.update()
             else:
@@ -123,56 +118,25 @@ class CreatingGroupsAndChats:
         pick_files_dialog = ft.FilePicker(on_result=btn_click)
         page.overlay.append(pick_files_dialog)
 
-        button_select_file = ft.ElevatedButton(
-            width=line_width_button,
-            height=BUTTON_HEIGHT,
-            text="Выбрать session файл(ы)",
-            on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True)
-        )
-
         # Добавляем элементы интерфейса на страницу
-        page.views.append(
-            ft.View(
-                "/creating_groups_and_chats_menu",
-                [
-                    ft.AppBar(
-                        title=ft.Text(translations["ru"]["menu"]["main"]),
-                        bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST
-                    ),
-                    ft.Text(
-                        spans=[
-                            ft.TextSpan(
-                                translations["ru"]["menu"]["create_groups"],
-                                ft.TextStyle(
-                                    size=20,
-                                    weight=ft.FontWeight.BOLD,
-                                    foreground=ft.Paint(
-                                        gradient=ft.PaintLinearGradient(
-                                            (0, 20), (150, 20),
-                                            [ft.Colors.PINK, ft.Colors.PURPLE]
-                                        )
-                                    ),
-                                ),
-                            ),
-                        ]
-                    ),
-                    list_view,
-                    selected_files,
-                    button_select_file,
-                    ft.ElevatedButton(
-                        width=line_width_button,
-                        height=BUTTON_HEIGHT,
-                        text=translations["ru"]["buttons"]["start"],
-                        on_click=add_items
-                    ),
-                    ft.ElevatedButton(
-                        width=line_width_button,
-                        height=BUTTON_HEIGHT,
-                        text=translations["ru"]["buttons"]["back"],
-                        on_click=back_button_clicked
-                    )
-                ]
-            )
-        )
-
+        page.views.append(ft.View("/creating_groups_and_chats_menu",
+                                  [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
+                                             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                                   ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["create_groups"], ft.TextStyle(
+                                       size=20, weight=ft.FontWeight.BOLD,
+                                       foreground=ft.Paint(gradient=ft.PaintLinearGradient((0, 20), (150, 20),
+                                                                                           [ft.Colors.PINK,
+                                                                                            ft.Colors.PURPLE]
+                                                                                           )), ), ), ]),
+                                   list_view,
+                                   selected_files,
+                                   ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                                     text="Выбрать session файл(ы)",
+                                                     on_click=lambda _: pick_files_dialog.pick_files(
+                                                         allow_multiple=True)),
+                                   ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                                     text=translations["ru"]["buttons"]["start"], on_click=add_items),
+                                   ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                                     text=translations["ru"]["buttons"]["back"],
+                                                     on_click=lambda _: page.go("/"))]))
         page.update()

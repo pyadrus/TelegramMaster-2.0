@@ -12,7 +12,7 @@ def function_button_ready(page: ft.Page, btn_click, back_button_clicked, user_in
     :param page: Страница интерфейса Flet для отображения элементов управления.
     :param btn_click: Кнопка "Готово"
     :param user_input: Введенные данные пользователем
-    :param back_button_clicked:Кнопка "Назад"
+    :param back_button_clicked: Кнопка "Назад"
     :return:
     """
     page.views.append(

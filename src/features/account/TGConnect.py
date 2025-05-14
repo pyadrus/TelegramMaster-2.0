@@ -410,12 +410,6 @@ class TGConnect:
                     page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
                 page.update()
 
-            async def back_button_clicked(_):
-                """
-                Кнопка возврата в меню настроек
-                """
-                page.go("/")
-
             input_view = ft.View(
                 controls=[ft.Text(f"Подключение аккаунтов Telegram", size=15, color="pink600"),
                           phone_number,
@@ -424,7 +418,7 @@ class TGConnect:
                                             on_click=btn_click),  # Кнопка "Готово",
                           ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                             text=translations["ru"]["buttons"]["back"],
-                                            on_click=back_button_clicked)  # Кнопка "Назад"
+                                            on_click=lambda _: page.go("/"))  # Кнопка "Назад"
                           ])  # Создаем вид, который будет содержать поле ввода и кнопку
             page.views.append(input_view)  # Добавляем созданный вид на страницу
             page.update()
@@ -465,10 +459,6 @@ class TGConnect:
                 selected_files.update()
                 page.update()
 
-            async def back_button_clicked(_):
-                """Кнопка возврата в меню настроек"""
-                page.go("/")
-
             pick_files_dialog = ft.FilePicker(on_result=btn_click)  # Инициализация выбора файлов
             page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
             # Добавляем все элементы на страницу
@@ -481,7 +471,7 @@ class TGConnect:
                                       on_click=lambda _: pick_files_dialog.pick_files()),  # Кнопка выбора файла
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                       text=translations["ru"]["buttons"]["back"],
-                                      on_click=back_button_clicked)  # Кнопка возврата
+                                      on_click=lambda _: page.go("/"))  # Кнопка возврата
                 ]
             )
             page.views.append(input_view)  # Добавляем созданный вид на страницу

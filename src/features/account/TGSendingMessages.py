@@ -122,10 +122,12 @@ class SendTelegramMessages:
         # Поле для формирования списка чатов
         account_limits_inputs = ft.TextField(label="Введите лимит на сообщения", multiline=True, max_lines=12)
         # Кнопка "Готово"
-        button_done = ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=line_width_button, height=BUTTON_HEIGHT,
+        button_done = ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=line_width_button,
+                                        height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
         # Кнопка "Назад"
-        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button, height=BUTTON_HEIGHT,
+        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button,
+                                        height=BUTTON_HEIGHT,
                                         on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
         t = ft.Text()
         # Разделение интерфейса на верхнюю и нижнюю части
@@ -152,7 +154,8 @@ class SendTelegramMessages:
         list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         # Кнопка "Назад"
-        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button, height=BUTTON_HEIGHT,
+        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button,
+                                        height=BUTTON_HEIGHT,
                                         on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
         # Создание View с элементами
         page.views.append(
@@ -271,7 +274,8 @@ class SendTelegramMessages:
         """
         Рассылка сообщений + файлов по чатам
         """
-        output = ft.Text(translations["ru"]["message_sending_menu"]["sending_messages_files_via_chats"], size=18, weight=ft.FontWeight.BOLD)
+        output = ft.Text(translations["ru"]["message_sending_menu"]["sending_messages_files_via_chats"], size=18,
+                         weight=ft.FontWeight.BOLD)
 
         # Обработчик кнопки "Готово"
         async def button_clicked(_):
@@ -302,10 +306,12 @@ class SendTelegramMessages:
         # Поле для формирования списка чатов
         chat_list_field = ft.TextField(label="Формирование списка чатов", multiline=True, max_lines=12)
         # Кнопка "Готово"
-        button_done = ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=line_width_button, height=BUTTON_HEIGHT,
+        button_done = ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=line_width_button,
+                                        height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
         # Кнопка "Назад"
-        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button, height=BUTTON_HEIGHT,
+        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button,
+                                        height=BUTTON_HEIGHT,
                                         on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
         t = ft.Text()
         # Разделение интерфейса на верхнюю и нижнюю части
