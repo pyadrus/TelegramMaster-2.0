@@ -307,7 +307,7 @@ class ParsingGroupMembers:
         page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
         # Кнопка для открытия диалога выбора файлов
         button_select_file = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                               text="Выбрать session файл(ы)",
+                                               text=translations["ru"]["create_groups_menu"]["choose_session_files"],
                                                on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True)
                                                # Разрешаем выбор нескольких файлов
                                                )

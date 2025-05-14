@@ -430,7 +430,7 @@ class TGConnect:
                     ft.Text(f"Подключение аккаунтов Telegram.\n\n Выберите session файл\n", size=15),
                     # Создаем текстовый элемент и добавляем его на страницу
                     selected_files,  # Поле для отображения выбранного файла
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text="Выбрать session файл",
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["create_groups_menu"]["choose_session_files"],
                                       on_click=lambda _: pick_files_dialog.pick_files()),  # Кнопка выбора файла
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                       text=translations["ru"]["buttons"]["back"],

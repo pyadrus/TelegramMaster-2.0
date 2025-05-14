@@ -52,31 +52,23 @@ class CreatingGroupsAndChats:
                 await log_and_display(
                     f"🚀 Начало парсинга с выбранных файлов: {', '.join([os.path.basename(s) for s in selected_sessions])}",
                     page)
-
             try:
                 for session_name in session_files:
-                    logger.debug(f"🚀 Начало работы с файлом {session_name}")
-
                     # Извлекаем только имя файла без расширения
                     session_filename = os.path.basename(session_name)  # 79117877238.session
                     session_name = os.path.splitext(session_filename)[0]  # 79117877238
-
-                    logger.debug(f"📁 Имя сессии без пути и расширения: {session_name}")
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_accounts_folder)
-
                     response = await client(functions.channels.CreateChannelRequest(
                         title='My awesome title',
                         about='Description for your group',
                         megagroup=True
                     ))
                     await log_and_display(f"{response.stringify()}", page)
-
             except TypeError:
                 pass
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
-
             await end_time(start, page)
 
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
@@ -88,11 +80,9 @@ class CreatingGroupsAndChats:
                     if file_name.endswith(".session"):
                         target_folder = path_accounts_folder
                         target_path = os.path.join(target_folder, file_name)
-
                         if not os.path.exists(target_path) or file_path != os.path.abspath(target_path):
                             os.makedirs(target_folder, exist_ok=True)
                             shutil.copy(file_path, target_path)
-
                         selected_sessions.append(target_path)
                     else:
                         selected_files.value = f"Файл {file_name} не является session файлом. Выберите только .session файлы."
@@ -118,12 +108,11 @@ class CreatingGroupsAndChats:
                                        size=20, weight=ft.FontWeight.BOLD,
                                        foreground=ft.Paint(gradient=ft.PaintLinearGradient((0, 20), (150, 20),
                                                                                            [ft.Colors.PINK,
-                                                                                            ft.Colors.PURPLE]
-                                                                                           )), ), ), ]),
-                                   list_view,
-                                   selected_files,
+                                                                                            ft.Colors.PURPLE])), ), ), ]),
+                                   list_view, selected_files,
                                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                                     text="Выбрать session файл(ы)",
+                                                     text=translations["ru"]["create_groups_menu"][
+                                                         "choose_session_files"],
                                                      on_click=lambda _: pick_files_dialog.pick_files(
                                                          allow_multiple=True)),
                                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,

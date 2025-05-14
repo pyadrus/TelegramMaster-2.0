@@ -105,5 +105,6 @@ ru:
     settings: "⚙️ Настройки"
     documentation: "📖 Документация"
 
-
+  create_groups_menu:
+    choose_session_files: "📂 Выбрать session файл(ы)"
 
