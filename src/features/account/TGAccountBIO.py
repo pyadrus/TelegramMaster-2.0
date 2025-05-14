@@ -9,7 +9,8 @@ from src.core.configs import path_bio_folder
 from src.core.utils import find_files, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.gui.buttons import function_button_ready
-from src.gui.menu import show_notification, log_and_display
+from src.gui.gui import log_and_display
+from src.gui.menu import show_notification
 
 
 class GUIManager:
@@ -52,14 +53,13 @@ class AccountBIO:
         self.account_actions = AccountActions(self.directory_path, self.extension, self.tg_connect)
         self.gui_manager = GUIManager()
 
-    async def change_photo_profile_gui(self, page: ft.Page, list_view: ft.ListView) -> None:
+    async def change_photo_profile_gui(self, page: ft.Page) -> None:
         """
         Изменение фото профиля Telegram через интерфейс Flet.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Отображение информации в виде списка.
         """
-        await self.account_actions.change_photo_profile(page, list_view)
+        await self.account_actions.change_photo_profile(page)
 
     async def change_username_profile_gui(self, page: ft.Page) -> None:
         """
@@ -108,19 +108,18 @@ class AccountActions:
         self.extension = extension  # расширение файла с аккаунтом Telegram (session)
         self.tg_connect = tg_connect  # объект класса TelegramConnect (подключение к Telegram аккаунту)
 
-    async def change_bio_profile(self, page: ft.Page, user_input, list_view: ft.ListView):
+    async def change_bio_profile(self, page: ft.Page, user_input):
         """
         Изменение описания профиля Telegram аккаунта.
 
         :param user_input - новое описание профиля Telegram
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список аккаунтов Telegram
         :return: None
         """
         try:
-            await log_and_display(f"Запуск смены  описания профиля", list_view, page)
+            await log_and_display(f"Запуск смены  описания профиля", page)
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
-                await log_and_display(f"{session_name}", list_view, page)
+                await log_and_display(f"{session_name}", page)
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
@@ -130,9 +129,9 @@ class AccountActions:
                     return
                 try:
                     result = await client(functions.account.UpdateProfileRequest(about=user_input))
-                    await log_and_display(f"{result}\nПрофиль успешно обновлен!", list_view, page)
+                    await log_and_display(f"{result}\nПрофиль успешно обновлен!", page)
                 except AuthKeyUnregisteredError:
-                    await log_and_display(f"❌ Ошибка соединения с профилем", list_view, page)
+                    await log_and_display(f"❌ Ошибка соединения с профилем", page)
                 finally:
                     await client.disconnect()
 
@@ -142,17 +141,16 @@ class AccountActions:
         await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
         page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
 
-    async def change_username_profile(self, page: ft.Page, user_input, list_view: ft.ListView) -> None:
+    async def change_username_profile(self, page: ft.Page, user_input) -> None:
         """
         Изменение username профиля Telegram
 
         :param user_input  - новое имя пользователя
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список аккаунтов Telegram
         """
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
-                await log_and_display(f"{session_name}", list_view, page)
+                await log_and_display(f"{session_name}", page)
                 client = await self.tg_connect.get_telegram_client(page,
                                                                    session_name=session_name,
                                                                    account_directory=self.directory_path)
@@ -171,23 +169,22 @@ class AccountActions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_name_profile(self, page: ft.Page, user_input, list_view: ft.ListView):
+    async def change_name_profile(self, page: ft.Page, user_input):
         """
         Изменение имени профиля
 
         :param user_input - новое имя пользователя
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список аккаунтов Telegram
         """
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
-                await log_and_display(f"{session_name}", list_view, page)
+                await log_and_display(f"{session_name}", page)
                 client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 try:
                     result = await client(functions.account.UpdateProfileRequest(first_name=user_input))
-                    await log_and_display(f"{result}\nИмя успешно обновлено!", list_view, page)
+                    await log_and_display(f"{result}\nИмя успешно обновлено!", page)
                 except AuthKeyUnregisteredError:
                     await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                 finally:
@@ -197,23 +194,22 @@ class AccountActions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_last_name_profile(self, page: ft.Page, user_input, list_view: ft.ListView):
+    async def change_last_name_profile(self, page: ft.Page, user_input):
         """
         Изменение фамилии профиля
 
         :param user_input - новое имя пользователя Telegram
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список аккаунтов Telegram
         """
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
-                await log_and_display(f"{session_name}", list_view, page)
+                await log_and_display(f"{session_name}", page)
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 try:
                     result = await client(functions.account.UpdateProfileRequest(last_name=user_input))
-                    await log_and_display(f"{result}\nФамилия успешно обновлена!", list_view, page)
+                    await log_and_display(f"{result}\nФамилия успешно обновлена!", page)
                 except AuthKeyUnregisteredError:
                     await show_notification(page, "❌ Ошибка соединения с профилем")  # Выводим уведомление пользователю
                 finally:
@@ -222,19 +218,17 @@ class AccountActions:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def change_photo_profile(self, page: ft.Page, list_view: ft.ListView):
+    async def change_photo_profile(self, page: ft.Page):
         """Изменение фото профиля.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список аккаунтов Telegram
         """
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
-                await log_and_display(f"{session_name}", list_view, page)
+                await log_and_display(f"{session_name}", page)
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
-                for photo_file in await find_files(directory_path="user_data/bio", extension='jpg', list_view=list_view,
-                                                   page=page):
+                for photo_file in await find_files(directory_path="user_data/bio", extension='jpg', page=page):
                     try:
                         await client.connect()
                         await client(functions.photos.UploadProfilePhotoRequest(

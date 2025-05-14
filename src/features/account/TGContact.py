@@ -13,7 +13,7 @@ from src.core.configs import path_contact_folder
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
-from src.gui.menu import log_and_display
+from src.gui.gui import log_and_display
 
 
 class TGContact:
@@ -35,58 +35,54 @@ class TGContact:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_contact_folder,
                                                                    list_view=list_view)
-                await self.parsing_and_recording_contacts_in_the_database(client, list_view, page)
+                await self.parsing_and_recording_contacts_in_the_database(client, page)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def parsing_and_recording_contacts_in_the_database(self, client, list_view: ft.ListView,
-                                                             page: ft.Page) -> None:
+    async def parsing_and_recording_contacts_in_the_database(self, client, page: ft.Page) -> None:
         """
         Парсинг и запись контактов в базу данных
 
         :param client: Телеграм клиент
-        :param list_view: Виджет для вывода информации
         :param page: Страница интерфейса
         """
         try:
             entities: list = []  # Создаем список сущностей
-            for contact in await self.get_and_parse_contacts(client, list_view, page):  # Выводим результат parsing
+            for contact in await self.get_and_parse_contacts(client, page):  # Выводим результат parsing
                 await self.get_user_data(contact, entities)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def we_get_the_account_id(self, client, list_view: ft.ListView, page: ft.Page) -> None:
+    async def we_get_the_account_id(self, client, page: ft.Page) -> None:
         """
         Получаем id аккаунта
 
         :param client: Телеграм клиент
-        :param list_view: Виджет для вывода информации
         :param page: Страница интерфейса
         """
         try:
             entities: list = []  # Создаем список сущностей
-            for user in await self.get_and_parse_contacts(client, list_view, page):  # Выводим результат parsing
+            for user in await self.get_and_parse_contacts(client, page):  # Выводим результат parsing
                 await self.get_user_data(user, entities)
-                await self.we_show_and_delete_the_contact_of_the_phone_book(client, user, list_view, page)
+                await self.we_show_and_delete_the_contact_of_the_phone_book(client, user, page)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def get_and_parse_contacts(client, list_view: ft.ListView, page: ft.Page):
+    async def get_and_parse_contacts(client, page: ft.Page):
         """
         Получаем контакты
 
         :param client: Телеграм клиент
-        :param list_view: Виджет для вывода информации
         :param page: Страница интерфейса
         """
         try:
             all_participants: list = []
             result = await client(functions.contacts.GetContactsRequest(hash=0))
-            await log_and_display(f"{result}", list_view, page)
+            await log_and_display(f"{result}", page)
             all_participants.extend(result.users)
             return all_participants
         except Exception as e:
@@ -94,19 +90,17 @@ class TGContact:
             return None
 
     @staticmethod
-    async def we_show_and_delete_the_contact_of_the_phone_book(client, user, list_view: ft.ListView,
-                                                               page: ft.Page) -> None:
+    async def we_show_and_delete_the_contact_of_the_phone_book(client, user, page: ft.Page) -> None:
         """
         Показываем и удаляем контакт телефонной книги
 
         :param client: Телеграм клиент
         :param user: Телеграм пользователя
-        :param list_view: Виджет для вывода информации
         :param page: Страница интерфейса
         """
         try:
             await client(functions.contacts.DeleteContactsRequest(id=[user.id]))
-            await log_and_display(f"Подождите 2 - 4 секунды", list_view, page)
+            await log_and_display(f"Подождите 2 - 4 секунды", page)
             await asyncio.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -124,7 +118,7 @@ class TGContact:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_contact_folder,
                                                                    list_view=list_view)
-                await self.we_get_the_account_id(client, list_view, page)
+                await self.we_get_the_account_id(client, page)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -140,22 +134,20 @@ class TGContact:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_contact_folder,
                                                                    list_view=list_view)
-                await self.add_contact_to_phone_book(client, list_view, page)
+                await self.add_contact_to_phone_book(client, page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def add_contact_to_phone_book(self, client, list_view: ft.ListView, page: ft.Page) -> None:
+    async def add_contact_to_phone_book(self, client, page: ft.Page) -> None:
         """
         Добавляем контакт в телефонную книгу
 
         :param client: Телеграм клиент
-        :param list_view: Виджет для вывода информации
         :param page: Страница интерфейса
         """
         try:
-            records: list = await self.db_handler.open_and_read_data(table_name="contact", list_view=list_view,
-                                                                     page=page)
-            await log_and_display(f"Всего номеров: {len(records)}", list_view, page)
+            records: list = await self.db_handler.open_and_read_data(table_name="contact", page=page)
+            await log_and_display(f"Всего номеров: {len(records)}", page)
             entities: list = []  # Создаем список сущностей
             for rows in records:
                 user = {"phone": rows[0]}
@@ -169,7 +161,7 @@ class TGContact:
                     # Получаем данные номера телефона https://docs.telethon.dev/en/stable/concepts/entities.html
                     contact = await client.get_entity(phone)
                     await self.get_user_data(contact, entities)
-                    await log_and_display(f"[+] Контакт с добавлен в телефонную книгу!", list_view, page)
+                    await log_and_display(f"[+] Контакт с добавлен в телефонную книгу!", page)
                     await asyncio.sleep(4)
                     # Запись результатов parsing в файл members_contacts.db, для дальнейшего inviting
                     # После работы с номером телефона, программа удаляет номер со списка
@@ -177,13 +169,12 @@ class TGContact:
                 except ValueError:
                     await log_and_display(
                         f"❌ Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!",
-                        list_view, page)
+                        page)
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
             client.disconnect()  # Разрываем соединение telegram
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
-            await self.db_handler.remove_records_without_username(list_view,
-                                                                  page)  # Чистка списка parsing списка, если нет username
+            await self.db_handler.remove_records_without_username(page)  # Чистка списка parsing списка, если нет username
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 

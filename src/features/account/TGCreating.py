@@ -10,8 +10,7 @@ from telethon import functions
 from src.core.configs import line_width_button, BUTTON_HEIGHT, path_accounts_folder
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
-from src.gui.gui import start_time, end_time
-from src.gui.menu import log_and_display
+from src.gui.gui import start_time, end_time, list_view, log_and_display
 from src.locales.translations_loader import translations
 
 
@@ -30,9 +29,7 @@ class CreatingGroupsAndChats:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         selected_sessions = []  # Список для хранения выбранных session файлов
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         selected_files = ft.Text(value="Файлы не выбраны", selectable=True)
-
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
@@ -40,21 +37,21 @@ class CreatingGroupsAndChats:
             """
             🚀 Запускает процесс создания групп и отображает статус в интерфейсе.
             """
-            start = await start_time(list_view, page)
+            start = await start_time(page)
             page.update()
 
             if not selected_sessions:
-                await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", list_view, page)
+                await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", page)
                 session_files = await find_filess(directory_path=path_accounts_folder, extension='session')
                 if not session_files:
-                    await log_and_display("❌ В папке нет session файлов для парсинга.", list_view, page)
+                    await log_and_display("❌ В папке нет session файлов для парсинга.", page)
                     page.update()
                     return
             else:
                 session_files = selected_sessions
                 await log_and_display(
                     f"🚀 Начало парсинга с выбранных файлов: {', '.join([os.path.basename(s) for s in selected_sessions])}",
-                    list_view, page)
+                    page)
 
             try:
                 for session_name in session_files:
@@ -74,14 +71,14 @@ class CreatingGroupsAndChats:
                         about='Description for your group',
                         megagroup=True
                     ))
-                    await log_and_display(f"{response.stringify()}", list_view, page)
+                    await log_and_display(f"{response.stringify()}", page)
 
             except TypeError:
                 pass
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
-            await end_time(start, list_view, page)
+            await end_time(start, page)
 
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
             if e.files:

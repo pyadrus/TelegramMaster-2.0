@@ -13,7 +13,7 @@ from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.buttons import function_button_ready_viewing
-from src.gui.menu import log_and_display
+from src.gui.gui import log_and_display
 
 
 class ViewingPosts:
@@ -45,7 +45,7 @@ class ViewingPosts:
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_viewing_folder,
                                                                        list_view=list_view)
-                    await log_and_display(f"[+] Работаем с каналом: {link_channel.value}", list_view, page)
+                    await log_and_display(f"[+] Работаем с каналом: {link_channel.value}", page)
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel.value, list_view, page)
                     msg_id = int(re.search(r'/(\d+)$', link_post.value).group(1))  # Получаем id сообщения из ссылки
                     await self.viewing_posts(client, link_post.value, msg_id, link_channel.value, list_view, page)
@@ -82,7 +82,7 @@ class ViewingPosts:
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel, list_view, page)
                 channel = await client.get_entity(link_channel)  # Получение информации о канале
                 await asyncio.sleep(5)
-                await log_and_display(f"Ссылка на пост: {link_post}\n", list_view, page)
+                await log_and_display(f"Ссылка на пост: {link_post}\n", page)
                 await asyncio.sleep(5)
                 await client(GetMessagesViewsRequest(peer=channel, id=[int(number)], increment=True))
             except KeyError:

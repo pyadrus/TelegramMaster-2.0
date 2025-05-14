@@ -10,7 +10,7 @@ from telethon import TelegramClient
 from telethon.errors import FilePartsInvalidError
 
 from src.core.configs import program_version, date_of_program_change, program_name
-from src.gui.menu import log_and_display
+from src.gui.gui import log_and_display
 
 
 async def getting_phone_number_data_by_phone_number(phone_numbers, list_view: ft.ListView, page: ft.Page):
@@ -31,7 +31,7 @@ async def getting_phone_number_data_by_phone_number(phone_numbers, list_view: ft
     operator_name = carrier.name_for_number(number, "ru")
 
     # Вывод информации
-    await log_and_display(f"Номер: {phone_numbers}, Оператор: {operator_name}, Страна: {country_name}", list_view, page)
+    await log_and_display(f"Номер: {phone_numbers}, Оператор: {operator_name}, Страна: {country_name}", page)
 
 
 def get_country_flag(ip_address):
@@ -85,7 +85,7 @@ async def loging(list_view: ft.ListView, page: ft.Page):
         await client.send_file(535185511, 'user_data/log/log_ERROR.log', caption=message)
         client.disconnect()
     except FilePartsInvalidError as error:
-        await log_and_display(f"{error}", list_view, page)
+        await log_and_display(f"{error}", page)
         client.disconnect()
 
 

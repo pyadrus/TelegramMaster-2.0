@@ -25,7 +25,7 @@ from src.features.account.TGViewingPosts import ViewingPosts
 from src.features.auth.logging_in import loging
 from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
-from src.gui.gui import end_time, start_time
+from src.gui.gui import end_time, start_time, list_view
 from src.gui.main_menu import main_menu_program
 from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                           subscribe_and_unsubscribe_menu, account_connection_menu, viewing_posts_menu,
@@ -47,7 +47,6 @@ async def main(page: ft.Page):
     page.window.resizable = window_resizable  # Разрешение изменения размера окна
 
     async def route_change(_):
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.views.clear()
         # ______________________________________________________________________________________________________________
         await main_menu_program(page)  # Главное меню программы
@@ -72,80 +71,81 @@ async def main(page: ft.Page):
                 await TGChek().account_verification_menu(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
-                await subscribe_and_unsubscribe_menu(page)
+                await subscribe_and_unsubscribe_menu(page=page)
             elif page.route == "/subscription_all":  # Подписка
                 await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
             elif page.route == "/unsubscribe_all":  # Отписываемся
-                start = await start_time(list_view, page)
+                start = await start_time(page=page)
                 logger.info("▶️ Начало Отписка")
                 await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page, list_view=list_view)
                 logger.info("🔚 Конец Отписки")
-                await end_time(start, list_view, page)
+                await end_time(start, page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
-                await reactions_menu(page)
+                await reactions_menu(page=page)
             elif page.route == "/setting_reactions":  # Ставим реакции
-                start = await start_time(list_view, page)
+                start = await start_time(page=page)
                 logger.info("▶️ Начало Проставления реакций")
-                await WorkingWithReactions().send_reaction_request(page, list_view=list_view)
+                await WorkingWithReactions().send_reaction_request(page=page, list_view=list_view)
                 logger.info("🔚 Конец Проставления реакций")
-                await end_time(start, list_view, page)
+                await end_time(start, page=page)
             elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
-                start = await start_time(list_view, page)
+                start = await start_time(page=page)
                 logger.info("▶️ Начало Автоматического выставления реакций")
                 await WorkingWithReactions().setting_reactions(page=page, list_view=list_view)
                 logger.info("🔚 Конец Автоматического выставления реакций")
-                await end_time(start, list_view, page)
+                await end_time(start, page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/viewing_posts_menu":  # Автоматическое выставление просмотров меню
-                await viewing_posts_menu(page)
+                await viewing_posts_menu(page=page)
             elif page.route == "/we_are_winding_up_post_views":  # ️‍🗨️ Накручиваем просмотры постов
-                start = await start_time(list_view, page)
+                start = await start_time(page=page)
                 logger.info("▶️ Начало Накрутки просмотров постов")
-                await ViewingPosts().viewing_posts_request(page, list_view=list_view)
+                await ViewingPosts().viewing_posts_request(page=page, list_view=list_view)
                 logger.info("🔚 Конец Накрутки просмотров постов")
-                await end_time(start, list_view, page)
+                await end_time(start, page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/parsing":  # Меню "Парсинг"
-                await menu_parsing(page)
+                await menu_parsing(page=page)
             elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
-                await ParsingGroupMembers().parse_groups(page)
+                await ParsingGroupMembers().parse_groups(page=page)
             elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
-                await ParsingGroupMembers().choose_and_parse_group(page, list_view=list_view)
+                await ParsingGroupMembers().choose_and_parse_group(page=page, list_view=list_view)
             elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
-                await ParsingGroupMembers().entering_data_for_parsing_active(page)
+                await ParsingGroupMembers().entering_data_for_parsing_active(page=page)
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
                 await ReceivingAndRecording().write_data_to_excel(file_name="user_data/parsed_chat_participants.xlsx")
             # __________________________________________________________________________________________________________
             elif page.route == "/working_with_contacts":  # Меню "Работа с контактами"
-                await working_with_contacts_menu(page)
+                await working_with_contacts_menu(page=page)
             elif page.route == "/creating_contact_list":  # Формирование списка контактов
-                start = await start_time(list_view, page)
+                start = await start_time(page=page)
                 logger.info("▶️ Начало Формирования списка контактов")
-                await DatabaseHandler().open_and_read_data(table_name="contact", list_view=list_view,
-                                                           page=page)  # Удаление списка с контактами
-                await SettingPage().output_the_input_field(page, "Введите список номеров телефонов", "contact",
-                                                           "contact", "/working_with_contacts", "contact")
+                await DatabaseHandler().open_and_read_data(table_name="contact", page=page)  # Удаление списка с контактами
+                await SettingPage().output_the_input_field(page=page, label="Введите список номеров телефонов",
+                                                           table_name="contact",
+                                                           column_name="contact", route="/working_with_contacts",
+                                                           into_columns="contact")
                 logger.info("🔚 Конец Формирования списка контактов")
-                await end_time(start, list_view, page)
+                await end_time(start, page=page)
             elif page.route == "/show_list_contacts":  # Показать список контактов
-                start = await start_time(list_view, page)
+                start = await start_time(page=page)
                 logger.info("▶️ Начало Показа списка контактов")
                 await TGContact().show_account_contact_list(page=page, list_view=list_view)
                 logger.info("🔚 Конец Показа списка контактов")
-                await end_time(start, list_view, page)
+                await end_time(start, page=page)
             elif page.route == "/deleting_contacts":  # Удаление контактов
-                start = await start_time(list_view, page)
+                start = await start_time(page=page)
                 logger.info("▶️ Начало Удаления контактов")
                 await TGContact().delete_contact(page=page, list_view=list_view)
                 logger.info("🔚 Конец Удаления контактов")
-                await end_time(start, list_view, page)
+                await end_time(start, page=page)
             elif page.route == "/adding_contacts":  # Добавление контактов
-                start = await start_time(list_view, page)
+                start = await start_time(page=page)
                 logger.info("▶️ Начало Добавления контактов")
                 await TGContact().inviting_contact(page=page, list_view=list_view)
                 logger.info("🔚 Конец Добавления контактов")
-                await end_time(start, list_view, page)
+                await end_time(start, page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/account_connection_menu":  # Подключение аккаунтов 'меню'.
                 await account_connection_menu(page=page)
@@ -174,15 +174,15 @@ async def main(page: ft.Page):
             elif page.route == "/change_surname":  # Изменение фамилии
                 await AccountBIO().change_last_name_profile_gui(page=page)
             elif page.route == "/edit_photo":  # Изменение фото
-                await AccountBIO().change_photo_profile_gui(page=page, list_view=list_view)
+                await AccountBIO().change_photo_profile_gui(page=page)
                 await show_notification(page=page, message="🔚 Фото изменено")  # Выводим уведомление пользователю
             elif page.route == "/changing_username":  # Изменение username
                 await AccountBIO().change_username_profile_gui(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
-                await settings_menu(page)
+                await settings_menu(page=page)
             elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash
-                await SettingPage().writing_api_id_api_hash(page)
+                await SettingPage().writing_api_id_api_hash(page=page)
             elif page.route == "/message_limits":  # Лимиты на сообщения
                 await SettingPage().record_setting(page, "message_limits", "Введите лимит на сообщения")
             elif page.route == "/account_limits":  # Лимиты на аккаунт
@@ -201,7 +201,7 @@ async def main(page: ft.Page):
                                                            "links_inviting",
                                                            "links_inviting", "/settings", "links_inviting")
             elif page.route == "/proxy_entry":  # Запись proxy
-                await SettingPage().creating_the_main_window_for_proxy_data_entry(page)
+                await SettingPage().creating_the_main_window_for_proxy_data_entry(page=page)
             elif page.route == "/message_recording":  # Запись сообщений
                 await SettingPage().recording_text_for_sending_messages(page, "Введите текст для сообщения",
                                                                         get_unique_filename(
@@ -222,7 +222,7 @@ async def main(page: ft.Page):
                 await SettingPage().create_main_window(page=page, variable="time_changing_accounts",
                                                        time_range=[time_changing_accounts_1, time_changing_accounts_2])
             elif page.route == "/time_between_subscriptions":
-                await SettingPage().recording_the_time_to_launch_an_invite_every_day(page)
+                await SettingPage().recording_the_time_to_launch_an_invite_every_day(page=page)
             elif page.route == "/time_between_subscriptionss":  # Время между подпиской
                 await SettingPage().create_main_window(page=page, variable="time_subscription",
                                                        time_range=[time_subscription_1, time_subscription_2])

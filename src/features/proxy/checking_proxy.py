@@ -7,7 +7,7 @@ from loguru import logger
 
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.features.auth.logging_in import get_country_flag
-from src.gui.menu import log_and_display
+from src.gui.gui import log_and_display
 
 
 async def reading_proxy_data_from_the_database(db_handler, list_view: ft.ListView, page: ft.Page):
@@ -41,8 +41,8 @@ async def checking_the_proxy_for_work(list_view, page: ft.Page) -> None:
     используется для различных тестов.
     """
     try:
-        for proxy_dic in await DatabaseHandler().open_and_read_data(table_name="proxy", list_view=list_view, page=page):
-            await log_and_display(f"{proxy_dic}", list_view, page)
+        for proxy_dic in await DatabaseHandler().open_and_read_data(table_name="proxy", page=page):
+            await log_and_display(f"{proxy_dic}", page)
             # Подключение к proxy с проверкой на работоспособность
             await connecting_to_proxy_with_verification(proxy_type=proxy_dic[0],  # Тип proxy (например: SOCKS5)
                                                         addr=proxy_dic[1],  # Адрес (например: 194.67.248.9)
@@ -78,13 +78,13 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
         emoji, country = get_country_flag(addr)
         await log_and_display(
             f"Проверяемый прокси: {proxy_type}://{username}:{password}@{addr}:{port}. Страна proxy {country} {emoji}",
-            list_view, page)
+            page)
         requests.get('http://example.org', proxies=proxy)
-        await log_and_display(f"⚠️ Proxy: {proxy_type}://{username}:{password}@{addr}:{port} рабочий!", list_view, page)
+        await log_and_display(f"⚠️ Proxy: {proxy_type}://{username}:{password}@{addr}:{port} рабочий!", page)
     # RequestException исключение возникает при ошибках, которые могут быть вызваны при запросе к веб-серверу.
     # Это может быть из-за недоступности сервера, ошибочного URL или других проблем с соединением.
     except requests.exceptions.RequestException:
-        await log_and_display(f"❌ Proxy не рабочий!", list_view, page)
+        await log_and_display(f"❌ Proxy не рабочий!", page)
         await db_handler.deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns)
     except Exception as error:
         logger.exception(f"❌ Ошибка: {error}")

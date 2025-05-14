@@ -8,7 +8,7 @@ from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField,
 from peewee import fn, IntegerField
 
 from src.core.configs import path_folder_database
-from src.gui.menu import log_and_display
+from src.gui.gui import log_and_display
 
 db = SqliteDatabase(path_folder_database)
 
@@ -92,12 +92,11 @@ class DatabaseHandler:
         """Закрытие соединения с базой данных"""
         self.sqlite_connection.close()
 
-    async def open_and_read_data(self, table_name, list_view: ft.ListView, page: ft.Page) -> list:
+    async def open_and_read_data(self, table_name, page: ft.Page) -> list:
         """
         Открываем базу и считываем данные из указанной таблицы
 
         :param table_name: Название таблицы, данные из которой требуется извлечь.
-        :param list_view: Объект класса ListView, который будет использоваться для отображения данных.
         :param page: Объект класса Page, который будет использоваться для отображения данных.
         :return: Список записей из таблицы
 
@@ -113,10 +112,10 @@ class DatabaseHandler:
             return records
         except sqlite3.DatabaseError as error:  # Ошибка при открытии базы данных
             await log_and_display(f"❌ Ошибка при открытии базы данных, возможно база данных повреждена: {error}",
-                                  list_view, page)
+                                  page)
             return []
         except sqlite3.Error as error:  # Ошибка при открытии базы данных
-            await log_and_display(f"❌ Ошибка при открытии базы данных: {error}", list_view, page)
+            await log_and_display(f"❌ Ошибка при открытии базы данных: {error}", page)
             return []
         finally:
             self.close()  # Закрываем соединение
@@ -180,15 +179,13 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities, list_view,
-                               page: ft.Page) -> None:
+    async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities, page: ft.Page) -> None:
         """
         Запись действий аккаунта в базу данных
 
         :param creating_a_table: создание таблицы
         :param writing_data_to_a_table: запись данных в таблицу
         :param entities: список записей в таблице
-        :param list_view: Объект класса ListView, который будет использоваться для отображения данных.
         :param page: Объект класса Page, который будет использоваться для отображения данных.
         """
         await self.connect()
@@ -198,7 +195,7 @@ class DatabaseHandler:
             self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
             self.close()  # cursor_members.close() – закрытие соединения с БД.
         except sqlite3.ProgrammingError as e:
-            await log_and_display(f"❌ Ошибка: {e}", list_view, page)
+            await log_and_display(f"❌ Ошибка: {e}", page)
             return  # Выходим из функции write_data_to_db
 
     async def write_parsed_chat_participants_to_db(self, entities) -> None:
@@ -217,11 +214,11 @@ class DatabaseHandler:
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns, list_view,
-                                        page: ft.Page) -> None:
+    async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns, page: ft.Page) -> None:
         """
         Удаляем не рабочий proxy с software_database.db, таблица proxy
 
+        :param page: Объект класса Page, который будет использоваться для отображения данных.
         :param proxy_type: тип proxy
         :param addr: адрес
         :param port: порт
@@ -234,7 +231,7 @@ class DatabaseHandler:
             f"DELETE FROM proxy WHERE proxy_type='{proxy_type}' AND addr='{addr}' AND port='{port}' AND "
             f"username='{username}' AND password='{password}' AND rdns='{rdns}'"
         )
-        await log_and_display(f"{self.cursor.rowcount} rows deleted", list_view, page)
+        await log_and_display(f"{self.cursor.rowcount} rows deleted", page)
         self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
@@ -301,13 +298,13 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def remove_records_without_username(self, list_view, page: ft.Page) -> None:
+    async def remove_records_without_username(self, page: ft.Page) -> None:
         """Чистка списка от участников у которых нет username"""
-        await log_and_display(f"Чищу список software_database.db от участников у которых нет username", list_view, page)
+        await log_and_display(f"Чищу список software_database.db от участников у которых нет username", page)
         await self.connect()
         self.cursor.execute('''SELECT * from members''')
         records: list = self.cursor.fetchall()
-        await log_and_display(f"Всего username: {len(records)}", list_view, page)
+        await log_and_display(f"Всего username: {len(records)}", page)
         for rows in records:
             ints_list1 = {"username": rows[0]}
             username = ints_list1["username"]

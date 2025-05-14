@@ -10,7 +10,8 @@ from flet_core import ListView
 
 from src.core.configs import BUTTON_HEIGHT, line_width_button
 from src.core.sqlite_working_tools import DatabaseHandler
-from src.gui.menu import show_notification, log_and_display
+from src.gui.gui import list_view, log_and_display
+from src.gui.menu import show_notification
 from src.locales.translations_loader import translations
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)
@@ -30,7 +31,6 @@ class SettingPage:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
 
         list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
@@ -64,7 +64,6 @@ class SettingPage:
         :param label: Текст для отображения в поле ввода.
         :param unique_filename: Имя файла для записи данных.
         """
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
 
         list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
@@ -97,8 +96,7 @@ class SettingPage:
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
         list_view: ListView = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         records: list = await self.db_handler.select_records_with_limit(table_name=table_name, limit=None)
-        await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page,
-                              list_view=list_view)
+        await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page)
 
         async def write_data(clear_before: bool = False) -> None:
             """Запись данных в БД с опцией предварительной очистки"""
@@ -151,7 +149,6 @@ class SettingPage:
         :param limit_type: Тип лимита.
         :param label: Текст для отображения в поле ввода.
         """
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
 
         list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
@@ -166,7 +163,7 @@ class SettingPage:
                 await show_notification(page, "Данные успешно записаны!")
             except configparser.NoSectionError as error:
                 await show_notification(page, "⚠️ Поврежден файл user_data/config/config.ini")
-                await log_and_display(f"Ошибка: {error}", list_view, page)
+                await log_and_display(f"Ошибка: {error}", page)
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
@@ -178,7 +175,6 @@ class SettingPage:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
         hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
@@ -189,10 +185,10 @@ class SettingPage:
                 hour = int(hour_textfield.value)
                 minutes = int(minutes_textfield.value)
                 if not 0 <= hour < 24:
-                    await log_and_display(f"Введите часы в пределах от 0 до 23!", list_view, page)
+                    await log_and_display(f"Введите часы в пределах от 0 до 23!", page)
                     return
                 if not 0 <= minutes < 60:
-                    await log_and_display(f"Введите минуты в пределах от 0 до 59!", list_view, page)
+                    await log_and_display(f"Введите минуты в пределах от 0 до 59!", page)
                     return
                 # Предполагая, что config является объектом, похожим на словарь
                 config.get("hour_minutes_every_day", "hour")
@@ -204,7 +200,7 @@ class SettingPage:
 
                 page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             except ValueError:
-                await log_and_display(f"Введите числовые значения для часов и минут!", list_view, page)
+                await log_and_display(f"Введите числовые значения для часов и минут!", page)
             page.update()  # Обновляем страницу
 
         self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click, list_view)
@@ -217,7 +213,6 @@ class SettingPage:
         :return: None
         """
 
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         for time_range_message in time_range:
             list_view.controls.append(
@@ -234,7 +229,7 @@ class SettingPage:
                     # Если условие прошло проверку, то возвращаем первое и второе время
                     writing_settings_to_a_file(
                         await recording_limits_file(str(smaller_times), str(larger_times), variable=variable,
-                                                    list_view=list_view, page=page))
+                                                    page=page))
                     list_view.controls.append(ft.Text("Данные успешно записаны!"))  # отображаем сообщение в ListView
                     await show_notification(page, "Данные успешно записаны!")
                     page.go("/settings")  # Изменение маршрута в представлении существующих настроек
@@ -252,7 +247,6 @@ class SettingPage:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
         api_id_data = ft.TextField(label="Введите api_id", multiline=True, max_lines=19)
@@ -309,15 +303,13 @@ def writing_settings_to_a_file(config) -> None:
         config.write(setup)  # Записываем данные в файл
 
 
-async def recording_limits_file(time_1, time_2, variable: str, list_view: ft.ListView,
-                                page: ft.Page) -> configparser.ConfigParser:
+async def recording_limits_file(time_1, time_2, variable: str, page: ft.Page) -> configparser.ConfigParser:
     """
     Запись данных в файл TelegramMaster/user_data/config.ini
 
     :param time_1: Время в секундах
     :param time_2: Время в секундах
     :param variable: Название переменной в файле config.ini
-    :param list_view: ListView для отображения логов
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
@@ -328,7 +320,7 @@ async def recording_limits_file(time_1, time_2, variable: str, list_view: ft.Lis
     except configparser.NoSectionError as error:
         await log_and_display(
             message=f"❌ Не удалось получить значение переменной: {error}. Проверьте TelegramMaster/user_data/config/config.ini",
-            list_view=list_view, page=page)
+            page=page)
     return config
 
 

@@ -3,6 +3,7 @@ import flet as ft
 
 from src.core.configs import BUTTON_WIDTH, BUTTON_HEIGHT
 from src.features.account.TGConnect import TGConnect
+from src.gui.gui import list_view
 from src.locales.translations_loader import translations
 
 
@@ -17,7 +18,6 @@ class TGChek:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
 
         async def validation_check(_) -> None:
             """Проверка валидности аккаунтов"""

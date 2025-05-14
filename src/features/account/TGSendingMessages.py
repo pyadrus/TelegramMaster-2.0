@@ -22,8 +22,7 @@ from src.core.utils import read_json_file
 from src.core.utils import record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.gui import start_time, end_time
-from src.gui.menu import log_and_display
+from src.gui.gui import start_time, end_time, list_view, log_and_display
 from src.locales.translations_loader import translations
 
 
@@ -47,7 +46,6 @@ class SendTelegramMessages:
         """
 
         output = ft.Text("Отправка сообщений в личку", size=18, weight=ft.FontWeight.BOLD)
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
 
         # Обработчик кнопки "Готово"
         async def button_clicked(_):
@@ -58,7 +56,7 @@ class SendTelegramMessages:
             account_limits_input = account_limits_inputs.value  # Удаляем лишние пробелы
             if account_limits_input:  # Если поле не пустое
                 account_limits = account_limits_input  # Разделяем строку по пробелам
-                await log_and_display(f"{account_limits}", list_view, page)
+                await log_and_display(f"{account_limits}", page)
             else:
                 account_limits = ConfigReader().get_limits()
             if time_from < time_to:
@@ -75,35 +73,35 @@ class SendTelegramMessages:
                                                                                                 limit=int(
                                                                                                     account_limits))
                             # Количество аккаунтов на данный момент в работе
-                            await log_and_display(f"Всего username: {len(number_usernames)}", list_view, page)
+                            await log_and_display(f"Всего username: {len(number_usernames)}", page)
                             for rows in number_usernames:
                                 username = rows[
                                     0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
-                                await log_and_display(f"[!] Отправляем сообщение: {username}", list_view, page)
+                                await log_and_display(f"[!] Отправляем сообщение: {username}", page)
                                 try:
                                     user_to_add = await client.get_input_entity(username)
                                     messages, files = await self.all_find_and_all_files(list_view, page)
                                     await self.send_content(client, user_to_add, messages, files, list_view, page)
                                     await log_and_display(
                                         f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.",
-                                        list_view, page)
-                                    await record_inviting_results(time_from, time_to, rows, list_view, page)
+                                        page)
+                                    await record_inviting_results(time_from, time_to, rows, page)
                                 except FloodWaitError as _:
-                                    await record_and_interrupt(time_from, time_to, list_view, page)
+                                    await record_and_interrupt(time_from, time_to, page)
                                     break  # Прерываем работу и меняем аккаунт
                                 except PeerFloodError:
-                                    await record_and_interrupt(time_from, time_to, list_view, page)
+                                    await record_and_interrupt(time_from, time_to, page)
                                     break  # Прерываем работу и меняем аккаунт
                                 except UserNotMutualContactError:
                                     await log_and_display(
                                         f"❌ Отправляем сообщение в личку {username}. {username} не является взаимным контактом.",
-                                        list_view, page)
+                                        page)
                                 except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                                     await log_and_display(
                                         f"❌ Отправляем сообщение в личку {username}. Не корректное имя {username}.",
-                                        list_view, page)
+                                        page)
                                 except ChatWriteForbiddenError:
-                                    await record_and_interrupt(time_from, time_to, list_view, page)
+                                    await record_and_interrupt(time_from, time_to, page)
                                     break  # Прерываем работу и меняем аккаунт
                                 except (TypeError, UnboundLocalError):
                                     continue  # Записываем ошибку в software_database.db и продолжаем работу
@@ -153,7 +151,6 @@ class SendTelegramMessages:
         # Создаем ListView для отображения логов
         page.views.clear()
         page.update()
-        list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         # Кнопка "Назад"
         button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button,
@@ -181,18 +178,18 @@ class SendTelegramMessages:
                     async def handle_private_messages(event):
                         """Обрабатывает входящие личные сообщения"""
                         if event.is_private:  # Проверяем, является ли сообщение личным
-                            await log_and_display(f"Входящее сообщение: {event.message.message}", list_view, page)
+                            await log_and_display(f"Входящее сообщение: {event.message.message}", page)
                             entities = find_files(
                                 directory_path=path_send_message_folder_answering_machine_message,
-                                extension=self.file_extension, list_view=list_view, page=page)
-                            await log_and_display(f"{entities}", list_view, page)
+                                extension=self.file_extension, page=page)
+                            await log_and_display(f"{entities}", page)
                             data = await self.select_and_read_random_file(entities, folder="answering_machine",
                                                                           list_view=list_view, page=page)
-                            await log_and_display(f"{data}", list_view, page)
+                            await log_and_display(f"{data}", page)
                             await event.respond(f'{data}')  # Отвечаем на входящее сообщение
 
                     # Получаем список чатов, которым нужно отправить сообщение
-                    await log_and_display(f"Всего групп: {len(chat_list_fields)}", list_view, page)
+                    await log_and_display(f"Всего групп: {len(chat_list_fields)}", page)
                     page.update()
                     for group_link in chat_list_fields:
                         try:
@@ -204,10 +201,10 @@ class SendTelegramMessages:
                         except UserBannedInChannelError:
                             await log_and_display(
                                 f"Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)",
-                                list_view, page)
+                                page)
                         except ValueError:
                             await log_and_display(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {group_link}",
-                                                  list_view, page)
+                                                  page)
                             break
                         await self.random_dream(list_view, page)  # Прерываем работу и меняем аккаунт
                     await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
@@ -215,14 +212,14 @@ class SendTelegramMessages:
                 logger.exception(f"❌ Ошибка: {error}")
         else:
             try:
-                start = await start_time(list_view, page)
+                start = await start_time(page)
                 for session_name in await find_filess(directory_path=path_send_message_folder,
                                                       extension=self.account_extension):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_send_message_folder,
                                                                        list_view=list_view)
                     # Открываем базу данных с группами, в которые будут рассылаться сообщения
-                    await log_and_display(f"Всего групп: {len(chat_list_fields)}", list_view, page)
+                    await log_and_display(f"Всего групп: {len(chat_list_fields)}", page)
                     for group_link in chat_list_fields:  # Поочередно выводим записанные группы
                         try:
                             await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link, list_view, page)
@@ -231,41 +228,40 @@ class SendTelegramMessages:
                             # Отправляем сообщения и файлы в группу
                             await self.send_content(client, group_link, messages, files, list_view, page)
                         except ChannelPrivateError:
-                            await log_and_display(f"Группа {group_link} приватная или подписка запрещена.", list_view,
-                                                  page)
+                            await log_and_display(f"Группа {group_link} приватная или подписка запрещена.", page)
                         except PeerFloodError:
-                            await record_and_interrupt(time_subscription_1, time_subscription_2, list_view, page)
+                            await record_and_interrupt(time_subscription_1, time_subscription_2, page)
                             break  # Прерываем работу и меняем аккаунт
                         except FloodWaitError as e:
                             await log_and_display(f"FloodWait! Ожидание {str(datetime.timedelta(seconds=e.seconds))}",
-                                                  list_view, page)
+                                                  page)
                             await asyncio.sleep(e.seconds)
                         except UserBannedInChannelError:
-                            await record_and_interrupt(time_subscription_1, time_subscription_2, list_view, page)
+                            await record_and_interrupt(time_subscription_1, time_subscription_2, page)
                             break  # Прерываем работу и меняем аккаунт
                         except ChatAdminRequiredError:
                             await log_and_display(f"Нужны права администратора для отправки сообщений в {group_link}",
-                                                  list_view, page)
+                                                  page)
                             break
                         except ChatWriteForbiddenError:
-                            await record_and_interrupt(time_subscription_1, time_subscription_2, list_view, page)
+                            await record_and_interrupt(time_subscription_1, time_subscription_2, page)
                             break  # Прерываем работу и меняем аккаунт
                         except SlowModeWaitError as e:
                             await log_and_display(
                                 f"Рассылка сообщений в группу: {group_link}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}",
-                                list_view, page)
+                                page)
                             await asyncio.sleep(e.seconds)
                         except ValueError:
                             await log_and_display(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {group_link}",
-                                                  list_view, page)
+                                                  page)
                             break
                         except (TypeError, UnboundLocalError):
                             continue  # Записываем ошибку в software_database.db и продолжаем работу
                         except Exception as error:
                             logger.exception(f"❌ Ошибка: {error}")
                     await client.disconnect()  # Разрываем соединение Telegram
-                await log_and_display("🔚 Конец отправки сообщений + файлов по чатам", list_view, page)
-                await end_time(start, list_view, page)
+                await log_and_display("🔚 Конец отправки сообщений + файлов по чатам", page)
+                await end_time(start, page)
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
@@ -283,7 +279,7 @@ class SendTelegramMessages:
             else:
                 # Если поле пустое, используем данные из базы данных
                 db_chat_list = await db_handler.open_and_read_data(table_name="writing_group_links",
-                                                                   list_view=list_view, page=page)
+                                                                   page=page)
                 chat_list_fields = [group[0] for group in db_chat_list]  # Извлекаем только ссылки из кортежей
             if tb_time_from.value or time_sending_messages_1 < tb_time_to.value or time_sending_messages_2:
                 await self.performing_the_operation(page, c.value, chat_list_fields)
@@ -326,11 +322,11 @@ class SendTelegramMessages:
         :param list_view: Лог-вью
         :param page: Страница
         """
-        await log_and_display(f"Отправляем сообщение: {target}", list_view, page)
+        await log_and_display(f"Отправляем сообщение: {target}", page)
         if not messages:
             for file in files:
                 await client.send_file(target, f"user_data/files_to_send/{file}")
-                await log_and_display(f"Файл {file} отправлен в {target}.", list_view, page)
+                await log_and_display(f"Файл {file} отправлен в {target}.", page)
         else:
             message = await self.select_and_read_random_file(messages, folder="message", list_view=list_view, page=page)
             if not files:
@@ -338,7 +334,7 @@ class SendTelegramMessages:
             else:
                 for file in files:
                     await client.send_file(target, f"user_data/files_to_send/{file}", caption=message)
-                    await log_and_display(f"Сообщение и файл отправлены: {target}", list_view, page)
+                    await log_and_display(f"Сообщение и файл отправлены: {target}", page)
         await self.random_dream(list_view, page)
 
     async def all_find_and_all_files(self, list_view, page: ft.Page):
@@ -346,7 +342,7 @@ class SendTelegramMessages:
         Находит все файлы в папке с сообщениями и папке с файлами для отправки.
         """
         messages = find_files(directory_path=path_folder_with_messages, extension=self.file_extension,
-                              list_view=list_view, page=page)
+                              page=page)
         files = all_find_files(directory_path="user_data/files_to_send")
         return messages, files
 
@@ -375,7 +371,7 @@ class SendTelegramMessages:
             if entities:  # Проверяем, что список не пустой, если он не пустой
                 # Выбираем рандомный файл для чтения
                 random_file = random.choice(entities)  # Выбираем случайный файл для чтения из списка файлов
-                await log_and_display(f"Выбран файл для чтения: {random_file[0]}.json", list_view, page)
+                await log_and_display(f"Выбран файл для чтения: {random_file[0]}.json", page)
                 data = read_json_file(filename=f"user_data/{folder}/{random_file[0]}.json")
             return data  # Возвращаем данные из файла
         except Exception as error:

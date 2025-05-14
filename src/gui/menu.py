@@ -451,22 +451,6 @@ async def connecting_accounts_by_number_menu(page: ft.Page):
                  ])]))
 
 
-async def log_and_display(message: str, list_view: ft.ListView, page: ft.Page, level: str = "info"):
-    """
-    Выводит сообщение в GUI и записывает лог с указанным уровнем с помощью loguru.
-
-    :param message: Текст сообщения для отображения и записи в лог
-    :param list_view: ListView для отображения сообщений
-    :param page: Страница интерфейса Flet для отображения элементов управления
-    :param level: Уровень логирования ("info" или "error"), по умолчанию "info"
-    """
-    if level.lower() == "error":
-        logger.error(message)
-    else:
-        list_view.controls.append(ft.Text(message))
-    page.update()
-
-
 async def show_notification(page: ft.Page, message: str):
     """
     Функция для показа уведомления
