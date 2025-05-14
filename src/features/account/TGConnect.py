@@ -174,7 +174,7 @@ class TGConnect:
         """
         try:
             start = await start_time(page)
-            await checking_the_proxy_for_work(list_view=list_view, page=page)  # Проверка proxy
+            await checking_the_proxy_for_work(page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_file in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 await log_and_display(message=f"⚠️ Проверяемый аккаунт: {session_file}", page=page)
@@ -195,7 +195,7 @@ class TGConnect:
         """
         try:
             start = await start_time(page)
-            await checking_the_proxy_for_work(list_view=list_view, page=page)  # Проверка proxy
+            await checking_the_proxy_for_work(page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 await log_and_display(message=f"⚠️ Переименовываемый аккаунт: {session_name}", page=page)
@@ -261,7 +261,7 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-        await getting_phone_number_data_by_phone_number(phone, list_view, page)  # Выводим информацию о номере телефона
+        await getting_phone_number_data_by_phone_number(phone, page)  # Выводим информацию о номере телефона
 
     async def get_telegram_client(self, page: ft.Page, session_name, account_directory, list_view):
         """
@@ -281,7 +281,7 @@ class TGConnect:
                                              api_hash=self.api_hash,
                                              system_version="4.16.30-vxCUSTOM",
                                              proxy=await reading_proxy_data_from_the_database(
-                                                 db_handler=self.db_handler, list_view=list_view, page=page))
+                                                 db_handler=self.db_handler, page=page))
             await telegram_client.connect()
             return telegram_client
         except sqlite3.OperationalError:
@@ -328,7 +328,7 @@ class TGConnect:
                                                  api_hash=self.api_hash,
                                                  system_version="4.16.30-vxCUSTOM",
                                                  proxy=await reading_proxy_data_from_the_database(
-                                                     db_handler=self.db_handler, list_view=list_view, page=page))
+                                                     db_handler=self.db_handler, page=page))
                 await telegram_client.connect()  # Подключаемся к Telegram
                 if not await telegram_client.is_user_authorized():
                     await log_and_display(f"Пользователь не авторизован", page)

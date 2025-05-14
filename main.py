@@ -161,7 +161,7 @@ async def main(page: ft.Page):
             # __________________________________________________________________________________________________________
             elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений по чатам
                 await CheckingProgram().check_before_sending_messages_via_chats(page=page)
-                await SendTelegramMessages().sending_messages_files_via_chats(page=page, list_view=list_view)
+                await SendTelegramMessages().sending_messages_files_via_chats(page=page)
             elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка сообщений в личку
                 await SendTelegramMessages().send_files_to_personal_chats(page=page)
             # __________________________________________________________________________________________________________
@@ -246,15 +246,15 @@ async def main(page: ft.Page):
     page.go(page.route)
 
 
-async def main_run(list_view, page):
+async def main_run(page):
     """Запуск программы"""
-    await loging(list_view, page)
+    await loging(page)
 
 
 if __name__ == '__main__':
     def app(page: ft.Page):
         try:
-            asyncio.run(main_run(list_view=ft.ListView(), page=page))
+            asyncio.run(main_run(page=page))
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 

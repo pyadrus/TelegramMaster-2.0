@@ -10,19 +10,18 @@ from src.features.auth.logging_in import get_country_flag
 from src.gui.gui import log_and_display
 
 
-async def reading_proxy_data_from_the_database(db_handler, list_view: ft.ListView, page: ft.Page):
+async def reading_proxy_data_from_the_database(db_handler, page: ft.Page):
     """
     Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
     username - логин (например: username), password - пароль (например: password)
 
     :param db_handler - объект класса DatabaseHandler
-    :param list_view - объект класса ListView
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
         proxy_random_list = random.choice(
-            await db_handler.open_and_read_data(table_name="proxy", list_view=list_view, page=page))
+            await db_handler.open_and_read_data(table_name="proxy", page=page))
         proxy = {'proxy_type': (proxy_random_list[0]), 'addr': proxy_random_list[1], 'port': int(proxy_random_list[2]),
                  'username': proxy_random_list[3], 'password': proxy_random_list[4], 'rdns': proxy_random_list[5]}
         return proxy
@@ -34,7 +33,7 @@ async def reading_proxy_data_from_the_database(db_handler, list_view: ft.ListVie
         return None
 
 
-async def checking_the_proxy_for_work(list_view, page: ft.Page) -> None:
+async def checking_the_proxy_for_work(page: ft.Page) -> None:
     """
     Проверка proxy на работоспособность с помощью Example.org. Example.org является примером адреса домена верхнего
     уровня, который используется для демонстрации работы сетевых протоколов. На этом сайте нет никакого контента, но он
@@ -50,12 +49,12 @@ async def checking_the_proxy_for_work(list_view, page: ft.Page) -> None:
                                                         username=proxy_dic[3],  # Логин (например: username)
                                                         password=proxy_dic[4],  # Пароль (например: password)
                                                         rdns=proxy_dic[5],
-                                                        db_handler=DatabaseHandler(), list_view=list_view, page=page)
+                                                        db_handler=DatabaseHandler(), page=page)
     except Exception as error:
         logger.exception(f"❌ Ошибка: {error}")
 
 
-async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler, list_view,
+async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler,
                                                 page: ft.Page) -> None:
     """Подключение к proxy с проверкой на работоспособность где: proxy_type - тип proxy (например: SOCKS5),
     addr - адрес (например: 194.67.248.9), port - порт (например: 9795), username - логин (например: username),
@@ -68,7 +67,6 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
     :param password: пароль (например: password)
     :param rdns: rdns (например: rdns)
     :param db_handler: объект класса DatabaseHandler
-    :param list_view: список для отображения
     :param page: страница
     """
     # Пробуем подключиться по прокси

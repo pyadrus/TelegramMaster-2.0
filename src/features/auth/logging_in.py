@@ -13,12 +13,11 @@ from src.core.configs import program_version, date_of_program_change, program_na
 from src.gui.gui import log_and_display
 
 
-async def getting_phone_number_data_by_phone_number(phone_numbers, list_view: ft.ListView, page: ft.Page):
+async def getting_phone_number_data_by_phone_number(phone_numbers, page: ft.Page):
     """
     Определение страны и оператора по номеру телефона
 
     :param phone_numbers: Номер телефона
-    :param list_view: Вид списка
     :param page: Страница
     :return: None
     """
@@ -58,7 +57,7 @@ def get_external_ip():
         return None
 
 
-async def loging(list_view: ft.ListView, page: ft.Page):
+async def loging(page: ft.Page):
     """
     Логирование TelegramMaster 2.0
     """

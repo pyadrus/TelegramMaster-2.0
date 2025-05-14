@@ -54,7 +54,7 @@ class WorkingWithReactions:
                     try:
                         await client(SendReactionRequest(peer=chat.value, msg_id=msg_id,
                                                          reaction=[types.ReactionEmoji(
-                                                             emoticon=f'{self.choosing_random_reaction(list_view, page)}')]))
+                                                             emoticon=f'{self.choosing_random_reaction(page)}')]))
                         await asyncio.sleep(1)
                         await client.disconnect()
                     except ReactionInvalidError:
@@ -76,12 +76,12 @@ class WorkingWithReactions:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def choosing_random_reaction(list_view, page):
+    async def choosing_random_reaction(page):
         """Выбираем случайное значение из списка (реакция)"""
         try:
             reaction_input = read_json_file(filename='user_data/reactions/reactions.json')
             random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
-            await log_and_display(f"{random_value}", list_view, page)
+            await log_and_display(f"{random_value}", page)
             return random_value
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
@@ -109,7 +109,7 @@ class WorkingWithReactions:
                 try:
                     await client(SendReactionRequest(peer=chat, msg_id=int(number),
                                                      reaction=[types.ReactionEmoji(
-                                                         emoticon=f'{self.choosing_random_reaction(list_view, page)}')]))
+                                                         emoticon=f'{self.choosing_random_reaction(page)}')]))
                     await asyncio.sleep(1)
                     await client.disconnect()
                 except ReactionInvalidError:

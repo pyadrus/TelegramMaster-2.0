@@ -188,7 +188,6 @@ class SubscribeUnsubscribeTelegram:
                                                                    list_view=list_view)
                 # Получение ссылки
                 links_inviting: list = await self.db_handler.open_and_read_data(table_name="writing_group_links",
-                                                                                list_view=list_view,
                                                                                 page=page)  # Открываем базу данных
                 await log_and_display(f"Ссылка для подписки и проверки:  {links_inviting}", page)
                 for link_tuple in links_inviting:
@@ -270,13 +269,12 @@ class SubscribeUnsubscribeTelegram:
         finally:
             await client.disconnect()  # Разрываем соединение с Telegram
 
-    async def subscribe_to_group_or_channel(self, client, groups_wr, list_view, page: ft.Page) -> None:
+    async def subscribe_to_group_or_channel(self, client, groups_wr, page: ft.Page) -> None:
         """
         Подписываемся на группу или канал
 
         :param groups_wr: str - группа или канал
         :param client:    TelegramClient - объект клиента
-        :param list_view: ListView для отображения логов.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         # цикл for нужен для того, что бы сработала команда brake команда break в Python используется только для выхода из
@@ -312,7 +310,7 @@ class SubscribeUnsubscribeTelegram:
             await self.db_handler.write_data_to_db("""SELECT * from writing_group_links""",
                                                    """DELETE from writing_group_links
                                                       where writing_group_links = ?""",
-                                                   groups_wr, list_view, page)
+                                                   groups_wr, page)
         except PeerFloodError:
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Предупреждение о Flood от Telegram.", page)

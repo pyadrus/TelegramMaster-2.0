@@ -80,7 +80,7 @@ class SendTelegramMessages:
                                 await log_and_display(f"[!] Отправляем сообщение: {username}", page)
                                 try:
                                     user_to_add = await client.get_input_entity(username)
-                                    messages, files = await self.all_find_and_all_files(list_view, page)
+                                    messages, files = await self.all_find_and_all_files(page)
                                     await self.send_content(client, user_to_add, messages, files, list_view, page)
                                     await log_and_display(
                                         f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.",
@@ -184,7 +184,7 @@ class SendTelegramMessages:
                                 extension=self.file_extension, page=page)
                             await log_and_display(f"{entities}", page)
                             data = await self.select_and_read_random_file(entities, folder="answering_machine",
-                                                                          list_view=list_view, page=page)
+                                                                          page=page)
                             await log_and_display(f"{data}", page)
                             await event.respond(f'{data}')  # Отвечаем на входящее сообщение
 
@@ -195,7 +195,7 @@ class SendTelegramMessages:
                         try:
                             await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link, list_view, page)
                             # Находит все файлы в папке с сообщениями и папке с файлами для отправки.
-                            messages, files = await self.all_find_and_all_files(list_view, page)
+                            messages, files = await self.all_find_and_all_files(page)
                             # Отправляем сообщения и файлы в группу
                             await self.send_content(client, group_link, messages, files, list_view, page)
                         except UserBannedInChannelError:
@@ -224,7 +224,7 @@ class SendTelegramMessages:
                         try:
                             await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link, list_view, page)
                             # Находит все файлы в папке с сообщениями и папке с файлами для отправки.
-                            messages, files = await self.all_find_and_all_files(list_view, page)
+                            messages, files = await self.all_find_and_all_files(page)
                             # Отправляем сообщения и файлы в группу
                             await self.send_content(client, group_link, messages, files, list_view, page)
                         except ChannelPrivateError:
@@ -265,7 +265,7 @@ class SendTelegramMessages:
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
 
-    async def sending_messages_files_via_chats(self, page: ft.Page, list_view: ft.ListView) -> None:
+    async def sending_messages_files_via_chats(self, page: ft.Page) -> None:
         """
         Рассылка сообщений + файлов по чатам
         """
@@ -328,7 +328,7 @@ class SendTelegramMessages:
                 await client.send_file(target, f"user_data/files_to_send/{file}")
                 await log_and_display(f"Файл {file} отправлен в {target}.", page)
         else:
-            message = await self.select_and_read_random_file(messages, folder="message", list_view=list_view, page=page)
+            message = await self.select_and_read_random_file(messages, folder="message", page=page)
             if not files:
                 await client.send_message(entity=target, message=message)
             else:
@@ -337,7 +337,7 @@ class SendTelegramMessages:
                     await log_and_display(f"Сообщение и файл отправлены: {target}", page)
         await self.random_dream(list_view, page)
 
-    async def all_find_and_all_files(self, list_view, page: ft.Page):
+    async def all_find_and_all_files(self, page: ft.Page):
         """
         Находит все файлы в папке с сообщениями и папке с файлами для отправки.
         """
@@ -358,13 +358,12 @@ class SendTelegramMessages:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def select_and_read_random_file(entities, folder, list_view, page: ft.Page):
+    async def select_and_read_random_file(entities, folder, page: ft.Page):
         """
         Выбираем рандомный файл для чтения
 
         :param entities: список файлов для чтения
         :param folder: папка для сохранения файлов
-        :param list_view: Лог вью
         :param page: Страница интерфейса
         """
         try:

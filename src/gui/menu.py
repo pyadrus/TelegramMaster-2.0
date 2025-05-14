@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import flet as ft
-from loguru import logger
 
 from src.core.configs import BUTTON_HEIGHT, small_button_width, BUTTON_WIDTH, line_width_button
 from src.locales.translations_loader import translations
