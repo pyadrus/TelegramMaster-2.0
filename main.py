@@ -25,7 +25,7 @@ from src.features.account.TGViewingPosts import ViewingPosts
 from src.features.auth.logging_in import loging
 from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
-from src.gui.gui import end_time, start_time, list_view
+from src.gui.gui import end_time, start_time
 from src.gui.main_menu import main_menu_program
 from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                           subscribe_and_unsubscribe_menu, account_connection_menu, viewing_posts_menu,
@@ -77,7 +77,7 @@ async def main(page: ft.Page):
             elif page.route == "/unsubscribe_all":  # Отписываемся
                 start = await start_time(page=page)
                 logger.info("▶️ Начало Отписка")
-                await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page, list_view=list_view)
+                await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page)
                 logger.info("🔚 Конец Отписки")
                 await end_time(start, page=page)
             # __________________________________________________________________________________________________________
@@ -86,13 +86,13 @@ async def main(page: ft.Page):
             elif page.route == "/setting_reactions":  # Ставим реакции
                 start = await start_time(page=page)
                 logger.info("▶️ Начало Проставления реакций")
-                await WorkingWithReactions().send_reaction_request(page=page, list_view=list_view)
+                await WorkingWithReactions().send_reaction_request(page=page)
                 logger.info("🔚 Конец Проставления реакций")
                 await end_time(start, page=page)
             elif page.route == "/automatic_setting_of_reactions":  # Автоматическое выставление реакций
                 start = await start_time(page=page)
                 logger.info("▶️ Начало Автоматического выставления реакций")
-                await WorkingWithReactions().setting_reactions(page=page, list_view=list_view)
+                await WorkingWithReactions().setting_reactions(page=page)
                 logger.info("🔚 Конец Автоматического выставления реакций")
                 await end_time(start, page=page)
             # __________________________________________________________________________________________________________
@@ -101,7 +101,7 @@ async def main(page: ft.Page):
             elif page.route == "/we_are_winding_up_post_views":  # ️‍🗨️ Накручиваем просмотры постов
                 start = await start_time(page=page)
                 logger.info("▶️ Начало Накрутки просмотров постов")
-                await ViewingPosts().viewing_posts_request(page=page, list_view=list_view)
+                await ViewingPosts().viewing_posts_request(page=page)
                 logger.info("🔚 Конец Накрутки просмотров постов")
                 await end_time(start, page=page)
             # __________________________________________________________________________________________________________
@@ -110,7 +110,7 @@ async def main(page: ft.Page):
             elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
                 await ParsingGroupMembers().parse_groups(page=page)
             elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
-                await ParsingGroupMembers().choose_and_parse_group(page=page, list_view=list_view)
+                await ParsingGroupMembers().choose_and_parse_group(page=page)
             elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
                 await ParsingGroupMembers().entering_data_for_parsing_active(page=page)
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
@@ -131,19 +131,19 @@ async def main(page: ft.Page):
             elif page.route == "/show_list_contacts":  # Показать список контактов
                 start = await start_time(page=page)
                 logger.info("▶️ Начало Показа списка контактов")
-                await TGContact().show_account_contact_list(page=page, list_view=list_view)
+                await TGContact().show_account_contact_list(page=page)
                 logger.info("🔚 Конец Показа списка контактов")
                 await end_time(start, page=page)
             elif page.route == "/deleting_contacts":  # Удаление контактов
                 start = await start_time(page=page)
                 logger.info("▶️ Начало Удаления контактов")
-                await TGContact().delete_contact(page=page, list_view=list_view)
+                await TGContact().delete_contact(page=page)
                 logger.info("🔚 Конец Удаления контактов")
                 await end_time(start, page=page)
             elif page.route == "/adding_contacts":  # Добавление контактов
                 start = await start_time(page=page)
                 logger.info("▶️ Начало Добавления контактов")
-                await TGContact().inviting_contact(page=page, list_view=list_view)
+                await TGContact().inviting_contact(page=page)
                 logger.info("🔚 Конец Добавления контактов")
                 await end_time(start, page=page)
             # __________________________________________________________________________________________________________
@@ -151,7 +151,7 @@ async def main(page: ft.Page):
                 await account_connection_menu(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/connecting_accounts_by_number":  # Подключение аккаунтов по номеру телефона 'Меню'
-                await TGConnect().connecting_number_accounts(page=page, list_view=list_view)
+                await TGConnect().connecting_number_accounts(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/connecting_accounts_by_session":  # Подключение session аккаунтов 'Меню'
                 await TGConnect().connecting_session_accounts(page=page)

@@ -33,17 +33,16 @@ class TGConnect:
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
 
-    async def verify_account(self, page: ft.Page, session_name, list_view) -> None:
+    async def verify_account(self, page: ft.Page, session_name) -> None:
         """
         Проверяет и сортирует аккаунты.
 
         :param session_name: Имя аккаунта для проверки аккаунта
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список для отображения аккаунтов.
         """
         try:
             await log_and_display(f"Проверка аккаунта {session_name}", page)
-            telegram_client = await self.get_telegram_client(page, session_name, path_accounts_folder, list_view)
+            telegram_client = await self.get_telegram_client(page, session_name, path_accounts_folder)
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
                 if not await telegram_client.is_user_authorized():  # Если аккаунт не авторизирован
@@ -90,19 +89,17 @@ class TGConnect:
             working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
                                   new_account_folder=f"user_data/accounts/banned/{session_name}.session")
 
-    async def check_for_spam(self, page: ft.Page, list_view: ft.ListView) -> None:
+    async def check_for_spam(self, page: ft.Page) -> None:
         """
         Проверка аккаунта на спам через @SpamBot
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список для отображения аккаунтов.
         """
         try:
             start = await start_time(page)
             for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 telegram_client: TelegramClient = await self.get_telegram_client(page=page, session_name=session_name,
-                                                                                 account_directory=path_accounts_folder,
-                                                                                 list_view=list_view)
+                                                                                 account_directory=path_accounts_folder)
                 try:
                     await telegram_client.send_message(entity='SpamBot',
                                                        message='/start')  # Находим спам бот, и вводим команду /start
@@ -165,12 +162,11 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def verify_all_accounts(self, page: ft.Page, list_view: ft.ListView) -> None:
+    async def verify_all_accounts(self, page: ft.Page) -> None:
         """
         Проверяет все аккаунты Telegram в указанной директории.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список для отображения информации.
         """
         try:
             start = await start_time(page)
@@ -179,19 +175,18 @@ class TGConnect:
             for session_file in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 await log_and_display(message=f"⚠️ Проверяемый аккаунт: {session_file}", page=page)
                 # Проверка аккаунтов
-                await self.verify_account(page=page, session_name=session_file, list_view=list_view)
+                await self.verify_account(page=page, session_name=session_file)
             await log_and_display(message=f"Окончание проверки аккаунтов Telegram 📁", page=page)
             await end_time(start, page)
             await show_notification(page, "🔚 Проверка аккаунтов завершена")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def get_account_details(self, page: ft.Page, list_view: ft.ListView):
+    async def get_account_details(self, page: ft.Page):
         """
         Получает информацию о Telegram аккаунте.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список для отображения информации.
         """
         try:
             start = await start_time(page)
@@ -201,12 +196,11 @@ class TGConnect:
                 await log_and_display(message=f"⚠️ Переименовываемый аккаунт: {session_name}", page=page)
                 # Переименовывание аккаунтов
                 telegram_client = await self.get_telegram_client(page=page, session_name=session_name,
-                                                                 account_directory=path_accounts_folder,
-                                                                 list_view=list_view)
+                                                                 account_directory=path_accounts_folder)
                 try:
                     me = await telegram_client.get_me()
                     await self.rename_session_file(telegram_client=telegram_client, phone_old=session_name,
-                                                   phone=me.phone, list_view=list_view, page=page)
+                                                   phone=me.phone, page=page)
                 except AttributeError:  # Если в get_me приходит NoneType (None)
                     pass
                 except TypeNotFoundError:
@@ -228,26 +222,25 @@ class TGConnect:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def checking_all_accounts(self, page: ft.Page, list_view: ft.ListView) -> None:
+    async def checking_all_accounts(self, page: ft.Page) -> None:
         try:
             start = await start_time(page)
-            await self.verify_all_accounts(page=page, list_view=list_view)  # Проверка валидности аккаунтов
-            await self.get_account_details(page=page, list_view=list_view)  # Переименование аккаунтов
-            await self.check_for_spam(page=page, list_view=list_view)  # Проверка на спам ботов
+            await self.verify_all_accounts(page=page)  # Проверка валидности аккаунтов
+            await self.get_account_details(page=page)  # Переименование аккаунтов
+            await self.check_for_spam(page=page)  # Проверка на спам ботов
             await end_time(start, page)
             await show_notification(page=page, message="🔚 Проверка аккаунтов завершена")
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
     @staticmethod
-    async def rename_session_file(telegram_client, phone_old, phone, list_view, page: ft.Page) -> None:
+    async def rename_session_file(telegram_client, phone_old, phone, page: ft.Page) -> None:
         """
         Переименовывает session файлы.
 
         :param telegram_client: Клиент для работы с Telegram
         :param phone_old: Номер телефона для переименования
         :param phone: Номер телефона для переименования (новое название для session файла)
-        :param list_view: Список для отображения информации.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await telegram_client.disconnect()  # Отключаемся от аккаунта для освобождения session файла
@@ -263,7 +256,7 @@ class TGConnect:
 
         await getting_phone_number_data_by_phone_number(phone, page)  # Выводим информацию о номере телефона
 
-    async def get_telegram_client(self, page: ft.Page, session_name, account_directory, list_view):
+    async def get_telegram_client(self, page: ft.Page, session_name, account_directory):
         """
         Подключение к Telegram, используя файл session.
         Имя файла сессии file[0] - session файл
@@ -271,7 +264,6 @@ class TGConnect:
         :param account_directory: Путь к директории
         :param session_name: Файл сессии (file[0] - session файл)
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список для отображения информации.
         :return TelegramClient: TelegramClient
         """
         await log_and_display(message=f"Подключение к аккаунту: {session_name}", page=page)
@@ -307,13 +299,12 @@ class TGConnect:
             await log_and_display(message=f"❌ Ошибка: {error}", page=page)
             return None
 
-    async def connecting_number_accounts(self, page: ft.Page, list_view):
+    async def connecting_number_accounts(self, page: ft.Page):
         """
         Подключение номера Telegram аккаунта с проверкой на валидность. Если ранее не было соединения, то запрашивается
         код.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Список для отображения информации.
         """
         try:
             # Создаем текстовый элемент и добавляем его на страницу

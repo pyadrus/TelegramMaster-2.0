@@ -63,8 +63,7 @@ class CreatingGroupsAndChats:
 
                     logger.debug(f"📁 Имя сессии без пути и расширения: {session_name}")
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_accounts_folder,
-                                                                       list_view=list_view)
+                                                                       account_directory=path_accounts_folder)
 
                     response = await client(functions.channels.CreateChannelRequest(
                         title='My awesome title',

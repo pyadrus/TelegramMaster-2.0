@@ -6,7 +6,6 @@ import os
 import sys
 
 import flet as ft  # Импортируем библиотеку flet
-from flet_core import ListView
 
 from src.core.configs import BUTTON_HEIGHT, line_width_button
 from src.core.sqlite_working_tools import DatabaseHandler
@@ -53,7 +52,7 @@ class SettingPage:
             page.update()
 
         self.add_view_with_fields_and_button(page, [proxy_type, addr_type, port_type, username_type, password_type],
-                                             btn_click, list_view)
+                                             btn_click)
 
     async def recording_text_for_sending_messages(self, page: ft.Page, label, unique_filename) -> None:
         """
@@ -79,7 +78,7 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        self.add_view_with_fields_and_button(page, [text_to_send], btn_click, list_view)
+        self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
 
     async def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str,
                                      into_columns: str) -> None:
@@ -94,7 +93,6 @@ class SettingPage:
         :param into_columns: Имя столбца в таблице, в который будут записаны данные.
         """
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
-        list_view: ListView = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
         records: list = await self.db_handler.select_records_with_limit(table_name=table_name, limit=None)
         await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page)
 
@@ -167,7 +165,7 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        self.add_view_with_fields_and_button(page, [limits], btn_click, list_view)
+        self.add_view_with_fields_and_button(page, [limits], btn_click)
 
     async def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
         """
@@ -203,7 +201,7 @@ class SettingPage:
                 await log_and_display(f"Введите числовые значения для часов и минут!", page)
             page.update()  # Обновляем страницу
 
-        self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click, list_view)
+        self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click)
 
     async def create_main_window(self, page: ft.Page, variable, time_range) -> None:
         """
@@ -239,7 +237,7 @@ class SettingPage:
                 list_view.controls.append(ft.Text("Ошибка: введите числовые значения!"))
             page.update()  # обновляем страницу
 
-        self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click, list_view)
+        self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click)
 
     async def writing_api_id_api_hash(self, page: ft.Page):
         """
@@ -261,17 +259,16 @@ class SettingPage:
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
-        self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], btn_click, list_view)
+        self.add_view_with_fields_and_button(page, [api_id_data, api_hash_data], btn_click)
 
     @staticmethod
-    def add_view_with_fields_and_button(page: ft.Page, fields: list, btn_click, list_view: ft.ListView) -> None:
+    def add_view_with_fields_and_button(page: ft.Page, fields: list, btn_click) -> None:
         """
         Добавляет представление с заданными текстовыми полями и кнопкой.
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param fields: Список текстовых полей для добавления
         :param btn_click: Кнопка для добавления
-        :param list_view: ListView для отображения логов 📝
         :return: None
         """
 

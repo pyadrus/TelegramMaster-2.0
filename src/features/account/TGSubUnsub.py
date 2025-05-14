@@ -184,8 +184,7 @@ class SubscribeUnsubscribeTelegram:
             start = await start_time(page)
             for session_name in await find_filess(directory_path=path_subscription_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_subscription_folder,
-                                                                   list_view=list_view)
+                                                                   account_directory=path_subscription_folder)
                 # Получение ссылки
                 links_inviting: list = await self.db_handler.open_and_read_data(table_name="writing_group_links",
                                                                                 page=page)  # Открываем базу данных
@@ -223,18 +222,16 @@ class SubscribeUnsubscribeTelegram:
 
         page.update()  # обновляем страницу после добавления элементов управления 🔄
 
-    async def unsubscribe_all(self, page: ft.Page, list_view) -> None:
+    async def unsubscribe_all(self, page: ft.Page) -> None:
         """
         Отписываемся от групп, каналов, личных сообщений
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: ListView для отображения логов.
         """
         try:
             for session_name in await find_filess(directory_path=path_unsubscribe_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_unsubscribe_folder,
-                                                                   list_view=list_view)
+                                                                   account_directory=path_unsubscribe_folder)
                 dialogs = client.iter_dialogs()
                 await log_and_display(f"Диалоги: {dialogs}", page)
                 async for dialog in dialogs:

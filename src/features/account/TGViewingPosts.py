@@ -26,12 +26,11 @@ class ViewingPosts:
         self.tg_connect = TGConnect()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 
-    async def viewing_posts_request(self, page: ft.Page, list_view: ft.ListView) -> None:
+    async def viewing_posts_request(self, page: ft.Page) -> None:
         """
         Ставим реакции на сообщения
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: ListView для отображения списка сессий.
         :return: None
         """
         try:
@@ -43,12 +42,11 @@ class ViewingPosts:
 
                 for session_name in await find_filess(directory_path=path_viewing_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_viewing_folder,
-                                                                       list_view=list_view)
+                                                                       account_directory=path_viewing_folder)
                     await log_and_display(f"[+] Работаем с каналом: {link_channel.value}", page)
-                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel.value, list_view, page)
+                    await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel.value, page)
                     msg_id = int(re.search(r'/(\d+)$', link_post.value).group(1))  # Получаем id сообщения из ссылки
-                    await self.viewing_posts(client, link_post.value, msg_id, link_channel.value, list_view, page)
+                    await self.viewing_posts(client, link_post.value, msg_id, link_channel.value, page)
                     await asyncio.sleep(1)
                     await client.disconnect()
                     # Изменение маршрута на новый (если необходимо)
@@ -64,8 +62,7 @@ class ViewingPosts:
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
 
-    async def viewing_posts(self, client, link_post, number, link_channel, list_view: ft.ListView,
-                            page: ft.Page) -> None:
+    async def viewing_posts(self, client, link_post, number, link_channel, page: ft.Page) -> None:
         """
         Накрутка просмотров постов
 
@@ -73,13 +70,12 @@ class ViewingPosts:
         :param link_post: Ссылка на пост
         :param number: Количество просмотров
         :param link_channel: Ссылка на канал
-        :param list_view: ListView для отображения списка сессий.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :return: None
         """
         try:
             try:
-                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel, list_view, page)
+                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel, page)
                 channel = await client.get_entity(link_channel)  # Получение информации о канале
                 await asyncio.sleep(5)
                 await log_and_display(f"Ссылка на пост: {link_post}\n", page)

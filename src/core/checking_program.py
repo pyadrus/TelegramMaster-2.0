@@ -38,11 +38,10 @@ class CheckingProgram:
                                                           limit=ConfigReader().get_limits())) == 0:
             await show_notification(page, "⛔ Не записана группа для инвайтинга")
 
-    async def checking_sending_messages_via_chats_with_answering_machine(self, page: ft.Page, list_view):
+    async def checking_sending_messages_via_chats_with_answering_machine(self, page: ft.Page):
         """
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (Рассылка сообщений по чатам с автоответчиком)
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view: Отображение списка
         """
         if not await find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
             await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")

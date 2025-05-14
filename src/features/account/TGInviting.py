@@ -56,12 +56,11 @@ class InvitingToAGroup:
                               f"Подключенные аккаунты {find_filesss}\n"
                               f"Всего подключенных аккаунтов: {len(find_filesss)}\n", page)
 
-    async def general_invitation_to_the_group(self, page: ft.Page, list_view, dropdown):
+    async def general_invitation_to_the_group(self, page: ft.Page, dropdown):
         """
         Основной метод для инвайтинга
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param list_view:
         :param dropdown:
         :return:
         """
@@ -69,12 +68,10 @@ class InvitingToAGroup:
         page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
         try:
             for session_name in await find_filess(directory_path=path_inviting_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_inviting_folder,
-                                                                   list_view=list_view)
+                client = await self.tg_connect.get_telegram_client(page, session_name,account_directory=path_inviting_folder)
                 await log_and_display(f"{dropdown.value}", page)
                 # Подписка на группу для инвайтинга
-                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, list_view, page)
+                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, page)
                 # Получение списка usernames
                 number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members",
                                                                                          limit=ConfigReader().get_limits())
@@ -200,14 +197,14 @@ class InvitingToAGroup:
             """
             🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
             """
-            await self.general_invitation_to_the_group(page, list_view, dropdown)
+            await self.general_invitation_to_the_group(page, dropdown)
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
                                options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
 
-        await self.create_invite_page(page, list_view, dropdown, add_items)
+        await self.create_invite_page(page, dropdown, add_items)
 
     async def launching_invite_every_day_certain_time(self, page: ft.Page) -> None:
         """
@@ -227,7 +224,7 @@ class InvitingToAGroup:
             """
 
             async def general_invitation_to_the_group_scheduler():
-                await self.general_invitation_to_the_group(page, list_view, dropdown)
+                await self.general_invitation_to_the_group(page, dropdown)
 
             await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", page)
             self.scheduler.daily(dt.time(hour=int(self.hour), minute=int(self.minutes)),
@@ -240,7 +237,7 @@ class InvitingToAGroup:
                                options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
 
-        await self.create_invite_page(page, list_view, dropdown, add_items)
+        await self.create_invite_page(page, dropdown, add_items)
 
     async def launching_an_invite_once_an_hour(self, page: ft.Page) -> None:
         """
@@ -263,7 +260,7 @@ class InvitingToAGroup:
             try:
 
                 async def general_invitation_to_the_group_scheduler():
-                    await self.general_invitation_to_the_group(page, list_view, dropdown)
+                    await self.general_invitation_to_the_group(page, dropdown)
 
                 await log_and_display("Запуск программы в 00 минут каждого часа", page)
 
@@ -280,10 +277,10 @@ class InvitingToAGroup:
                                options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
 
-        await self.create_invite_page(page, list_view, dropdown, add_items)
+        await self.create_invite_page(page, dropdown, add_items)
 
     @staticmethod
-    async def create_invite_page(page: ft.Page, list_view: ft.ListView, dropdown, add_items) -> None:
+    async def create_invite_page(page: ft.Page, dropdown, add_items) -> None:
 
         async def back_button_clicked(_):
             """
@@ -332,7 +329,7 @@ class InvitingToAGroup:
             """
             try:
                 async def general_invitation_to_the_group_scheduler():
-                    await self.general_invitation_to_the_group(page, list_view, dropdown)
+                    await self.general_invitation_to_the_group(page, dropdown)
 
                 await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}",page)
 
@@ -349,4 +346,4 @@ class InvitingToAGroup:
                                options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
 
-        await self.create_invite_page(page, list_view, dropdown, add_items)
+        await self.create_invite_page(page, dropdown, add_items)

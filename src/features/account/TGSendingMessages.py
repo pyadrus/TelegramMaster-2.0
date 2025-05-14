@@ -65,8 +65,7 @@ class SendTelegramMessages:
                     for session_name in await find_filess(directory_path=path_send_message_folder,
                                                           extension=self.account_extension):
                         client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_send_message_folder,
-                                                                           list_view=list_view)
+                                                                           account_directory=path_send_message_folder)
                         try:
                             # Открываем parsing список user_data/software_database.db для inviting в группу
                             number_usernames: list = await db_handler.select_records_with_limit(table_name="members",
@@ -81,7 +80,7 @@ class SendTelegramMessages:
                                 try:
                                     user_to_add = await client.get_input_entity(username)
                                     messages, files = await self.all_find_and_all_files(page)
-                                    await self.send_content(client, user_to_add, messages, files, list_view, page)
+                                    await self.send_content(client, user_to_add, messages, files, page)
                                     await log_and_display(
                                         f"Отправляем сообщение в личку {username}. Файл {files} отправлен пользователю {username}.",
                                         page)
@@ -171,8 +170,7 @@ class SendTelegramMessages:
                 for session_name in await find_filess(directory_path=path_send_message_folder_answering_machine,
                                                       extension=self.account_extension):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_send_message_folder_answering_machine,
-                                                                       list_view=list_view)
+                                                                       account_directory=path_send_message_folder_answering_machine)
 
                     @client.on(events.NewMessage(incoming=True))  # Обработчик личных сообщений
                     async def handle_private_messages(event):
@@ -193,11 +191,11 @@ class SendTelegramMessages:
                     page.update()
                     for group_link in chat_list_fields:
                         try:
-                            await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link, list_view, page)
+                            await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link, page)
                             # Находит все файлы в папке с сообщениями и папке с файлами для отправки.
                             messages, files = await self.all_find_and_all_files(page)
                             # Отправляем сообщения и файлы в группу
-                            await self.send_content(client, group_link, messages, files, list_view, page)
+                            await self.send_content(client, group_link, messages, files, page)
                         except UserBannedInChannelError:
                             await log_and_display(
                                 f"Вам запрещено отправлять сообщения в супергруппах/каналах (вызвано запросом SendMessageRequest)",
@@ -206,7 +204,7 @@ class SendTelegramMessages:
                             await log_and_display(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {group_link}",
                                                   page)
                             break
-                        await self.random_dream(list_view, page)  # Прерываем работу и меняем аккаунт
+                        await self.random_dream(page)  # Прерываем работу и меняем аккаунт
                     await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
             except Exception as error:
                 logger.exception(f"❌ Ошибка: {error}")
@@ -216,17 +214,16 @@ class SendTelegramMessages:
                 for session_name in await find_filess(directory_path=path_send_message_folder,
                                                       extension=self.account_extension):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_send_message_folder,
-                                                                       list_view=list_view)
+                                                                       account_directory=path_send_message_folder)
                     # Открываем базу данных с группами, в которые будут рассылаться сообщения
                     await log_and_display(f"Всего групп: {len(chat_list_fields)}", page)
                     for group_link in chat_list_fields:  # Поочередно выводим записанные группы
                         try:
-                            await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link, list_view, page)
+                            await self.sub_unsub_tg.subscribe_to_group_or_channel(client, group_link, page)
                             # Находит все файлы в папке с сообщениями и папке с файлами для отправки.
                             messages, files = await self.all_find_and_all_files(page)
                             # Отправляем сообщения и файлы в группу
-                            await self.send_content(client, group_link, messages, files, list_view, page)
+                            await self.send_content(client, group_link, messages, files, page)
                         except ChannelPrivateError:
                             await log_and_display(f"Группа {group_link} приватная или подписка запрещена.", page)
                         except PeerFloodError:
@@ -312,14 +309,13 @@ class SendTelegramMessages:
                                                     on_click=lambda _: page.go("/sending_messages_via_chats_menu")), ],
                     ), ], ))
 
-    async def send_content(self, client, target, messages, files, list_view, page: ft.Page):
+    async def send_content(self, client, target, messages, files, page: ft.Page):
         """
         Отправляет сообщения и файлы в личку.
         :param client: Телеграм клиент
         :param target: Ссылка на группу (или личку)
         :param messages: Список сообщений
         :param files: Список файлов
-        :param list_view: Лог-вью
         :param page: Страница
         """
         await log_and_display(f"Отправляем сообщение: {target}", page)
@@ -335,7 +331,7 @@ class SendTelegramMessages:
                 for file in files:
                     await client.send_file(target, f"user_data/files_to_send/{file}", caption=message)
                     await log_and_display(f"Сообщение и файл отправлены: {target}", page)
-        await self.random_dream(list_view, page)
+        await self.random_dream(page)
 
     async def all_find_and_all_files(self, page: ft.Page):
         """
@@ -346,13 +342,13 @@ class SendTelegramMessages:
         files = all_find_files(directory_path="user_data/files_to_send")
         return messages, files
 
-    async def random_dream(self, list_view, page):
+    async def random_dream(self, page):
         """
         Рандомный сон
         """
         try:
             time_in_seconds = random.randrange(time_sending_messages_1, time_sending_messages_2)
-            await log_and_display(f"Спим {time_in_seconds} секунд...", list_view, page)
+            await log_and_display(f"Спим {time_in_seconds} секунд...", page)
             await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
