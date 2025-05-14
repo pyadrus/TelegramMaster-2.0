@@ -41,13 +41,10 @@ class SettingPage:
         password_type = ft.TextField(label="Введите пароль, например ySfCfk: ", multiline=True, max_lines=19)
 
         async def btn_click(_) -> None:
-            rdns_types = "True"
-            proxy = [proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
-                     rdns_types]
-            await self.db_handler.save_proxy_data_to_db(proxy=proxy)
-
+            await self.db_handler.save_proxy_data_to_db(
+                proxy=[proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
+                       "True"])
             await show_notification(page, "Данные успешно записаны!")
-
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
@@ -64,17 +61,13 @@ class SettingPage:
         :param unique_filename: Имя файла для записи данных.
         """
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-
         list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
-
         text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
 
         async def btn_click(_) -> None:
             write_data_to_json_file(reactions=text_to_send.value,
                                     path_to_the_file=unique_filename)  # Сохраняем данные в файл
-
             await show_notification(page, "Данные успешно записаны!")
-
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
 
