@@ -212,7 +212,7 @@ class TGConnect:
                                           new_account_folder=f"user_data/accounts/banned/{session_name}.session")
                 except AuthKeyUnregisteredError:
                     await telegram_client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
+                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
                     working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
                                           new_account_folder=f"user_data/accounts/banned/{session_name}.session")
             await end_time(start, page)
@@ -333,7 +333,7 @@ class TGConnect:
                             page.go("/")  # Перенаправление в настройки, если 2FA не требуется
                             page.update()
                         except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
-                            await log_and_display(translations["ru"]["notifications_errors"]["two_factor_required"],
+                            await log_and_display(translations["ru"]["errors"]["two_factor_required"],
                                                   page)
                             pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
 

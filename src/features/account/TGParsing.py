@@ -142,18 +142,18 @@ class ParsingGroupMembers:
                                     await self.db_handler.delete_row_db(table="writing_group_links",
                                                                         column="writing_group_links", value=groups)
                         except UsernameInvalidError:
-                            await log_and_display(translations["ru"]["notifications_errors"]["group_entity_error"], page)
+                            await log_and_display(translations["ru"]["errors"]["group_entity_error"], page)
                             # Удаляем группу из списка после завершения парсинга 🗑️
                             await self.db_handler.delete_row_db(table="writing_group_links",
                                                                 column="writing_group_links", value=groups)
                         except ValueError:
-                            await log_and_display(translations["ru"]["notifications_errors"]["group_entity_error"], page)
+                            await log_and_display(translations["ru"]["errors"]["group_entity_error"], page)
                             # Удаляем группу из списка после завершения парсинга 🗑️
                             await self.db_handler.delete_row_db(table="writing_group_links",
                                                                 column="writing_group_links", value=groups)
                     await client.disconnect()
                 except FloodWaitError as e:
-                    await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page, level="error")
+                    await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
                     await client.disconnect()
         except Exception as e:
             logger.exception(e)
@@ -536,15 +536,15 @@ class ParsingGroupMembers:
                     await asyncio.sleep(2)
                     break
                 except ChatAdminRequiredError:
-                    await log_and_display(translations["ru"]["notifications_errors"]["admin_rights_required"], page)
+                    await log_and_display(translations["ru"]["errors"]["admin_rights_required"], page)
                     await asyncio.sleep(2)
                     break
                 except ChannelPrivateError:
-                    await log_and_display(translations["ru"]["notifications_errors"]["channel_private"], page)
+                    await log_and_display(translations["ru"]["errors"]["channel_private"], page)
                     await asyncio.sleep(2)
                     break
                 except AuthKeyUnregisteredError:
-                    await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
+                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
                     await asyncio.sleep(2)
                     break
 

@@ -68,20 +68,20 @@ class SubscribeUnsubscribeTelegram:
                                 await client(ImportChatInviteRequest(
                                     link_hash))  # Подписка на группу / канал по ссылке приглашению
                             except InviteHashInvalidError:
-                                await log_and_display(translations["ru"]["notifications_errors"]["invite_request_sent"], page)
+                                await log_and_display(translations["ru"]["errors"]["invite_request_sent"], page)
                         except InviteHashExpiredError:
-                            await log_and_display(translations["ru"]["notifications_errors"]["subscribe_error"], page)
+                            await log_and_display(translations["ru"]["errors"]["subscribe_error"], page)
                             try:
                                 await client(ImportChatInviteRequest(link_hash))  # Подписка на группу / канал по ссылке приглашению
                                 await log_and_display(f"Подписка на группу / канал по ссылке приглашению {link_hash}",
                                                       page)
                             except InviteHashInvalidError:
-                                await log_and_display(translations["ru"]["notifications_errors"]["invite_request_sent"], page)
+                                await log_and_display(translations["ru"]["errors"]["invite_request_sent"], page)
                     elif isinstance(result, types.ChatInviteAlready):
                         await log_and_display(
                             f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}", page)
                 except FloodWaitError as e:
-                    await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page, level="error")
+                    await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
 
             elif link.startswith("https://t.me/"):
                 # Извлекаем имя пользователя или группы
@@ -112,7 +112,7 @@ class SubscribeUnsubscribeTelegram:
                         await log_and_display(
                             f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}", page)
                 except FloodWaitError as e:
-                    await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page, level="error")
+                    await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
                 except InviteHashExpiredError:
                     await log_and_display(f"Повторная проверка ссылки: {link}", page)
                     result = await client(functions.contacts.ResolveUsernameRequest(username=link))
@@ -126,21 +126,21 @@ class SubscribeUnsubscribeTelegram:
                         await log_and_display(f"Не удалось найти публичный чат: {link}", page)
 
                 except AuthKeyUnregisteredError:
-                    await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
+                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
                     await asyncio.sleep(2)
                 except SessionPasswordNeededError:
-                    await log_and_display(translations["ru"]["notifications_errors"]["two_factor_required"], page)
+                    await log_and_display(translations["ru"]["errors"]["two_factor_required"], page)
                     await asyncio.sleep(2)
 
         except FloodWaitError as e:
-            await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page, level="error")
+            await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
         except InviteRequestSentError:
-            await log_and_display(translations["ru"]["notifications_errors"]["invite_request_sent"], page)
+            await log_and_display(translations["ru"]["errors"]["invite_request_sent"], page)
         except AuthKeyUnregisteredError:
-            await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
+            await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
             await asyncio.sleep(2)
         except SessionPasswordNeededError:
-            await log_and_display(translations["ru"]["notifications_errors"]["two_factor_required"], page)
+            await log_and_display(translations["ru"]["errors"]["two_factor_required"], page)
             await asyncio.sleep(2)
 
     async def subscribe_telegram(self, page: ft.Page) -> None:
@@ -230,9 +230,9 @@ class SubscribeUnsubscribeTelegram:
             if entity:
                 await client(LeaveChannelRequest(entity))
         except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
-            await log_and_display(translations["ru"]["notifications_errors"]["channel_private"], page)
+            await log_and_display(translations["ru"]["errors"]["channel_private"], page)
         except UserNotParticipantError:
-            await log_and_display(translations["ru"]["notifications_errors"]["unsubscribe_not_member"], page)
+            await log_and_display(translations["ru"]["errors"]["unsubscribe_not_member"], page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
         finally:
@@ -253,7 +253,7 @@ class SubscribeUnsubscribeTelegram:
             await client(JoinChannelRequest(groups_wr))
             await log_and_display(f"Аккаунт подписался на группу / канал: {groups_wr}", page)
         except SessionRevokedError:
-            await log_and_display(translations["ru"]["notifications_errors"]["invalid_auth_session_terminated"], page)
+            await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], page)
         except UserDeactivatedBanError:
             await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.", page)
         except ChannelsTooMuchError:
@@ -267,7 +267,7 @@ class SubscribeUnsubscribeTelegram:
                     break
             await log_and_display(f"❌  Список почистили, и в файл записали.", page)
         except ChannelPrivateError:
-            await log_and_display(translations["ru"]["notifications_errors"]["channel_private"], page)
+            await log_and_display(translations["ru"]["errors"]["channel_private"], page)
         except (UsernameInvalidError, ValueError, TypeError):
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}",
@@ -277,10 +277,10 @@ class SubscribeUnsubscribeTelegram:
                                                       where writing_group_links = ?""",
                                                    groups_wr, page)
         except PeerFloodError:
-            await log_and_display(translations["ru"]["notifications_errors"]["peer_flood"], page, level="error")
+            await log_and_display(translations["ru"]["errors"]["peer_flood"], page, level="error")
             await asyncio.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
-            await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page, level="error")
+            await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
             await record_and_interrupt(time_subscription_1, time_subscription_2, page)
             # Прерываем работу и меняем аккаунт
             raise

@@ -110,7 +110,7 @@ class WorkingWithReactions:
                     await asyncio.sleep(1)
                     await client.disconnect()
                 except ReactionInvalidError:
-                    await log_and_display(translations["ru"]["notifications_errors"]["invalid_reaction"], page)
+                    await log_and_display(translations["ru"]["errors"]["invalid_reaction"], page)
                     await asyncio.sleep(1)
                     await client.disconnect()
         except Exception as error:

@@ -87,7 +87,7 @@ class SendTelegramMessages:
                                     await record_inviting_results(time_from, time_to, rows, page)
                                 except FloodWaitError as e:
                                     await log_and_display(
-                                        f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page,
+                                        f"{translations["ru"]["errors"]["flood_wait"]}{e}", page,
                                         level="error")
                                     await record_and_interrupt(time_from, time_to, page)
                                     break  # Прерываем работу и меняем аккаунт
@@ -96,12 +96,12 @@ class SendTelegramMessages:
                                     break  # Прерываем работу и меняем аккаунт
                                 except UserNotMutualContactError:
                                     await log_and_display(
-                                        translations["ru"]["notifications_errors"]["user_not_mutual_contact"], page)
+                                        translations["ru"]["errors"]["user_not_mutual_contact"], page)
                                 except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
                                     await log_and_display(
-                                        translations["ru"]["notifications_errors"]["invalid_username"], page)
+                                        translations["ru"]["errors"]["invalid_username"], page)
                                 except ChatWriteForbiddenError:
-                                    await log_and_display(translations["ru"]["notifications_errors"]["chat_write_forbidden"], page)
+                                    await log_and_display(translations["ru"]["errors"]["chat_write_forbidden"], page)
                                     await record_and_interrupt(time_from, time_to, page)
                                     break  # Прерываем работу и меняем аккаунт
                                 except (TypeError, UnboundLocalError):
@@ -231,24 +231,24 @@ class SendTelegramMessages:
                             await record_and_interrupt(time_subscription_1, time_subscription_2, page)
                             break  # Прерываем работу и меняем аккаунт
                         except FloodWaitError as e:
-                            await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}",
+                            await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}",
                                                   page, level="error")
                             await asyncio.sleep(e.seconds)
                         except UserBannedInChannelError:
                             await record_and_interrupt(time_subscription_1, time_subscription_2, page)
                             break  # Прерываем работу и меняем аккаунт
                         except ChatAdminRequiredError:
-                            await log_and_display(translations["ru"]["notifications_errors"]["admin_rights_required"], page)
+                            await log_and_display(translations["ru"]["errors"]["admin_rights_required"], page)
                             break
                         except ChatWriteForbiddenError:
-                            await log_and_display(translations["ru"]["notifications_errors"]["chat_write_forbidden"], page)
+                            await log_and_display(translations["ru"]["errors"]["chat_write_forbidden"], page)
                             await record_and_interrupt(time_subscription_1, time_subscription_2, page)
                             break  # Прерываем работу и меняем аккаунт
                         except SlowModeWaitError as e:
-                            await log_and_display(translations["ru"]["notifications_errors"]["slow_mode_wait"], page)
+                            await log_and_display(translations["ru"]["errors"]["slow_mode_wait"], page)
                             await asyncio.sleep(e.seconds)
                         except ValueError:
-                            await log_and_display(translations["ru"]["notifications_errors"]["sending_error_check_link"], page)
+                            await log_and_display(translations["ru"]["errors"]["sending_error_check_link"], page)
                             break
                         except (TypeError, UnboundLocalError):
                             continue  # Записываем ошибку в software_database.db и продолжаем работу
