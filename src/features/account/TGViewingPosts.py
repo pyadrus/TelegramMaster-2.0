@@ -7,7 +7,7 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger  # Импортируем библиотеку loguru для логирования
 from telethon.tl.functions.messages import GetMessagesViewsRequest
 
-from src.core.configs import path_viewing_folder
+from src.core.configs import path_accounts_folder
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
@@ -40,9 +40,9 @@ class ViewingPosts:
 
             async def btn_click(_) -> None:
 
-                for session_name in await find_filess(directory_path=path_viewing_folder, extension='session'):
+                for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_viewing_folder)
+                                                                       account_directory=path_accounts_folder)
                     await log_and_display(f"[+] Работаем с каналом: {link_channel.value}", page)
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, link_channel.value, page)
                     msg_id = int(re.search(r'/(\d+)$', link_post.value).group(1))  # Получаем id сообщения из ссылки

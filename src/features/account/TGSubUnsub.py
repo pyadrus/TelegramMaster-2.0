@@ -14,8 +14,8 @@ from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-from src.core.configs import (path_subscription_folder, path_unsubscribe_folder, line_width_button, BUTTON_HEIGHT,
-                              time_subscription_1, time_subscription_2)
+from src.core.configs import (line_width_button, BUTTON_HEIGHT,
+                              time_subscription_1, time_subscription_2, path_accounts_folder)
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, find_filess
 from src.features.account.TGConnect import TGConnect
@@ -157,9 +157,9 @@ class SubscribeUnsubscribeTelegram:
 
         async def add_items(_):
             start = await start_time(page)
-            for session_name in await find_filess(directory_path=path_subscription_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_subscription_folder)
+                                                                   account_directory=path_accounts_folder)
                 # Получение ссылки
                 links_inviting: list = await self.db_handler.open_and_read_data(table_name="writing_group_links",
                                                                                 page=page)  # Открываем базу данных
@@ -204,9 +204,9 @@ class SubscribeUnsubscribeTelegram:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in await find_filess(directory_path=path_unsubscribe_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_unsubscribe_folder)
+                                                                   account_directory=path_accounts_folder)
                 dialogs = client.iter_dialogs()
                 await log_and_display(f"Диалоги: {dialogs}", page)
                 async for dialog in dialogs:

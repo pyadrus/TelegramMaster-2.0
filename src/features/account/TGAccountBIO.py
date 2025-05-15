@@ -5,7 +5,7 @@ from telethon import functions  # Импортируем библиотеку te
 from telethon.errors import (AuthKeyUnregisteredError, UsernamePurchaseAvailableError, UsernameOccupiedError,
                              UsernameInvalidError)
 
-from src.core.configs import path_bio_folder
+from src.core.configs import path_accounts_folder
 from src.core.utils import find_files, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.gui.buttons import function_button_ready
@@ -48,10 +48,9 @@ class AccountBIO:
     """
 
     def __init__(self):
-        self.directory_path = path_bio_folder
         self.extension = 'session'
         self.tg_connect = TGConnect()
-        self.account_actions = AccountActions(self.directory_path, self.extension, self.tg_connect)
+        self.account_actions = AccountActions(path_accounts_folder, self.extension, self.tg_connect)
         self.gui_manager = GUIManager()
 
     async def change_photo_profile_gui(self, page: ft.Page) -> None:

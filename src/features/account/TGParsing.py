@@ -495,10 +495,7 @@ class ParsingGroupMembers:
                                                   on_click=lambda _: self.back_button_clicked(page)),
                                 # Кнопка "⬅️ Назад"
                                 result_text, list_view,
-                            ])
-                        ],
-                    )  # Добавляем созданный вид на страницу
-                )
+                            ])],)  )
                 page.update()
         except Exception as error:
             logger.exception(error)

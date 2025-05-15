@@ -10,7 +10,7 @@ from telethon.errors import ReactionInvalidError
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest
 
-from src.core.configs import path_reactions_folder
+from src.core.configs import path_accounts_folder
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import read_json_file, find_filess
 from src.features.account.TGConnect import TGConnect
@@ -43,9 +43,9 @@ class WorkingWithReactions:
 
             async def btn_click(_) -> None:
                 # random_value = await self.choosing_random_reaction()  # Выбираем случайное значение из списка (реакция)
-                for session_name in await find_filess(directory_path=path_reactions_folder, extension='session'):
+                for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_reactions_folder)
+                                                                       account_directory=path_accounts_folder)
                     await log_and_display(f"[+] Работаем с группой: {chat.value}", page)
                     await self.sub_unsub_tg.subscribe_to_group_or_channel(client, chat.value, page)
                     msg_id = int(re.search(r'/(\d+)$', message.value).group(1))  # Получаем id сообщения из ссылки
@@ -121,9 +121,9 @@ class WorkingWithReactions:
         Выставление реакций на новые посты
         """
         try:
-            for session_name in await find_filess(directory_path=path_reactions_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_reactions_folder)
+                                                                   account_directory=path_accounts_folder)
                 chat = read_json_file(
                     filename='user_data/reactions/link_channel.json')  # TODO переместить путь к файлу в конфиг
                 await log_and_display(f"{chat}", page)

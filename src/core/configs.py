@@ -112,54 +112,6 @@ class ConfigReader:
         """
         return self.config_gui.get('window_resizable', 'window_resizable', fallback=None)
 
-    def path_inviting_folder(self) -> str | None:
-        """
-        Путь к папке для инвайтинга (путь к config файлу user_data/config/config_path.ini)
-        """
-        return self.config_path.get('path_inviting_folder', 'path_inviting_folder', fallback=None)
-
-    def path_subscription_folder(self) -> str | None:
-        """
-        Путь к папке для подписки (путь к config файлу user_data/config/config_path.ini)
-        """
-        return self.config_path.get('path_subscription_folder', 'path_subscription_folder', fallback=None)
-
-    def path_unsubscribe_folder(self) -> str | None:
-        """
-        Путь к папке для отписки (путь к config файлу user_data/config/config_path.ini)
-        """
-        return self.config_path.get('path_unsubscribe_folder', 'path_unsubscribe_folder', fallback=None)
-
-    def path_reactions_folder(self) -> str | None:
-        """
-        Путь к папке для реакций (путь к config файлу user_data/config/config_path.ini)
-        """
-        return self.config_path.get('path_reactions_folder', 'path_reactions_folder', fallback=None)
-
-    def path_contact_folder(self) -> str | None:
-        """
-        Путь к папке для контактов (путь к config файлу user_data/config/config_path.ini)
-        """
-        return self.config_path.get('path_contact_folder', 'path_contact_folder', fallback=None)
-
-    def path_send_message_folder(self) -> str | None:
-        """
-        Путь к папке для отправки сообщений (путь к config файлу user_data/config/config_path.ini)
-        """
-        return self.config_path.get('path_send_message_folder', 'path_send_message_folder', fallback=None)
-
-    def path_bio_folder(self) -> str | None:
-        """
-        Путь к папке для работы с био (путь к config файлу user_data/config/config_path.ini)
-        """
-        return self.config_path.get('path_bio_folder', 'path_bio_folder', fallback=None)
-
-    def path_viewing_folder(self) -> str | None:
-        """
-        Путь к папке для просмотров постов (путь к config файлу user_data/config/config_path.ini)
-        """
-        return self.config_path.get('path_viewing_folder', 'path_viewing_folder', fallback=None)
-
     def path_send_message_folder_answering_machine(self) -> str | None:
         """
         Путь к папке для автоответчика (путь к config файлу user_data/config/config_path.ini)
@@ -203,15 +155,6 @@ date_of_program_change = ConfigReader().date_of_program_change()  # Версия
 window_width = ConfigReader().window_width()  # Ширина программы
 window_height = ConfigReader().window_height()  # Ширина программы
 window_resizable = ConfigReader().window_resizable()  # Ширина программы
-
-path_inviting_folder = ConfigReader().path_inviting_folder()  # Путь к папке для инвайтинга
-path_subscription_folder = ConfigReader().path_subscription_folder()  # Путь к папке для подписки
-path_unsubscribe_folder = ConfigReader().path_unsubscribe_folder()  # Путь к папке для отписки
-path_reactions_folder = ConfigReader().path_reactions_folder()  # Путь к папке для реакций
-path_contact_folder = ConfigReader().path_contact_folder()  # Путь к папке для контактов
-path_send_message_folder = ConfigReader().path_send_message_folder()  # Путь к папке для отправки сообщений
-path_bio_folder = ConfigReader().path_bio_folder()  # Путь к папке для работы с био
-path_viewing_folder = ConfigReader().path_viewing_folder()  # Путь к папке для просмотров постов
 
 path_send_message_folder_answering_machine = ConfigReader().path_send_message_folder_answering_machine()  # Путь к папке для аккаунтов с автоответчиком
 path_send_message_folder_answering_machine_message = ConfigReader().path_send_message_folder_answering_machine_message()  # Путь к папке c сообщениями для автоответчика

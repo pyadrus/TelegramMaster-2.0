@@ -13,7 +13,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitEr
                              UserDeactivatedBanError, AuthKeyUnregisteredError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-from src.core.configs import ConfigReader, path_inviting_folder, line_width_button, BUTTON_HEIGHT
+from src.core.configs import ConfigReader, line_width_button, BUTTON_HEIGHT, path_accounts_folder
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
 from src.features.account.TGConnect import TGConnect
@@ -51,7 +51,7 @@ class InvitingToAGroup:
         """
         number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members", limit=None)
         account_limit = ConfigReader().get_limits()
-        find_filesss = await find_filess(directory_path=path_inviting_folder, extension='session')
+        find_filesss = await find_filess(directory_path=path_accounts_folder, extension='session')
         await log_and_display(f"Лимит на аккаунт: {account_limit}\n"
                               f"Всего участников: {len(number_usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"
@@ -68,9 +68,9 @@ class InvitingToAGroup:
         start = await start_time(page)
         page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
         try:
-            for session_name in await find_filess(directory_path=path_inviting_folder, extension='session'):
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_inviting_folder)
+                                                                   account_directory=path_accounts_folder)
                 await log_and_display(f"{dropdown.value}", page)
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, page)

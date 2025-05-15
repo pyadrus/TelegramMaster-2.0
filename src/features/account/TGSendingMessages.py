@@ -11,11 +11,11 @@ from telethon.errors import (ChannelPrivateError, PeerFloodError, FloodWaitError
                              ChatWriteForbiddenError, UserNotMutualContactError, UserIdInvalidError,
                              UsernameNotOccupiedError, UsernameInvalidError, ChatAdminRequiredError, SlowModeWaitError)
 
-from src.core.configs import (ConfigReader, path_send_message_folder, path_folder_with_messages,
+from src.core.configs import (ConfigReader, path_folder_with_messages,
                               path_send_message_folder_answering_machine_message,
                               path_send_message_folder_answering_machine, line_width_button, BUTTON_HEIGHT,
                               time_sending_messages_1, time_sending_messages_2, time_subscription_1,
-                              time_subscription_2)
+                              time_subscription_2, path_accounts_folder)
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_files, all_find_files, record_inviting_results, find_filess
 from src.core.utils import read_json_file
@@ -62,10 +62,10 @@ class SendTelegramMessages:
             if time_from < time_to:
                 try:
                     # Просим пользователя ввести расширение сообщения
-                    for session_name in await find_filess(directory_path=path_send_message_folder,
+                    for session_name in await find_filess(directory_path=path_accounts_folder,
                                                           extension=self.account_extension):
                         client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                           account_directory=path_send_message_folder)
+                                                                           account_directory=path_accounts_folder)
                         try:
                             # Открываем parsing список user_data/software_database.db для inviting в группу
                             number_usernames: list = await db_handler.select_records_with_limit(table_name="members",
@@ -212,10 +212,10 @@ class SendTelegramMessages:
         else:
             try:
                 start = await start_time(page)
-                for session_name in await find_filess(directory_path=path_send_message_folder,
+                for session_name in await find_filess(directory_path=path_accounts_folder,
                                                       extension=self.account_extension):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_send_message_folder)
+                                                                       account_directory=path_accounts_folder)
                     # Открываем базу данных с группами, в которые будут рассылаться сообщения
                     await log_and_display(f"Всего групп: {len(chat_list_fields)}", page)
                     for group_link in chat_list_fields:  # Поочередно выводим записанные группы
