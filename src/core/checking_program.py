@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import flet as ft
 
-from src.core.configs import (ConfigReader, path_send_message_folder_answering_machine_message,
-                              path_folder_with_messages)
+from src.core.configs import path_send_message_folder_answering_machine_message, path_folder_with_messages, limits
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_filess
 from src.gui.menu import show_notification
@@ -21,8 +20,7 @@ class CheckingProgram:
         ⛔ Проверка наличия сформированного списка с чатами для рассылки по чатам.
         ⛔ Проверка папки с сообщениями на наличие заготовленных сообщений.
         """
-        if len(await db_handler.select_records_with_limit(table_name="writing_group_links",
-                                                          limit=ConfigReader().get_limits())) == 0:
+        if len(await db_handler.select_records_with_limit(table_name="writing_group_links", limit=limits)) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
 
     @staticmethod
@@ -31,11 +29,9 @@ class CheckingProgram:
         ⛔ Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        if len(await db_handler.select_records_with_limit(table_name="members",
-                                                          limit=ConfigReader().get_limits())) == 0:
+        if len(await db_handler.select_records_with_limit(table_name="members", limit=limits)) == 0:
             await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
-        if len(await db_handler.select_records_with_limit(table_name="links_inviting",
-                                                          limit=ConfigReader().get_limits())) == 0:
+        if len(await db_handler.select_records_with_limit(table_name="links_inviting", limit=limits)) == 0:
             await show_notification(page, "⛔ Не записана группа для инвайтинга")
 
     async def checking_sending_messages_via_chats_with_answering_machine(self, page: ft.Page):
@@ -49,6 +45,5 @@ class CheckingProgram:
                                  extension=self.file_extension):
             await show_notification(page,
                                     f"⛔ Нет заготовленных сообщений для автоответчика в папке {path_send_message_folder_answering_machine_message}")
-        if len(await db_handler.select_records_with_limit(table_name="writing_group_links",
-                                                          limit=ConfigReader().get_limits())) == 0:
+        if len(await db_handler.select_records_with_limit(table_name="writing_group_links", limit=limits)) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")

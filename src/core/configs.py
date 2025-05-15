@@ -139,6 +139,8 @@ class ConfigReader:
         """
         return self.config_path.get('path_folder_database',
                                     'path_folder_database', fallback=None)
+# Лимиты
+limits = ConfigReader().get_limits()
 
 
 time_activity_user_2 = ConfigReader().time_activity_user_2()

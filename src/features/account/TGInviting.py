@@ -13,7 +13,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitEr
                              UserDeactivatedBanError, AuthKeyUnregisteredError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-from src.core.configs import ConfigReader, line_width_button, BUTTON_HEIGHT, path_accounts_folder
+from src.core.configs import ConfigReader, line_width_button, BUTTON_HEIGHT, path_accounts_folder, limits
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
 from src.features.account.TGConnect import TGConnect
@@ -50,9 +50,8 @@ class InvitingToAGroup:
         Получение данных для инвайтинга
         """
         number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members", limit=None)
-        account_limit = ConfigReader().get_limits()
         find_filesss = await find_filess(directory_path=path_accounts_folder, extension='session')
-        await log_and_display(f"Лимит на аккаунт: {account_limit}\n"
+        await log_and_display(f"Лимит на аккаунт: {limits}\n"
                               f"Всего участников: {len(number_usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"
                               f"Всего подключенных аккаунтов: {len(find_filesss)}\n", page)
@@ -75,8 +74,7 @@ class InvitingToAGroup:
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, page)
                 # Получение списка usernames
-                number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members",
-                                                                                         limit=ConfigReader().get_limits())
+                number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members", limit=limits)
                 if len(number_usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", page)
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page)
