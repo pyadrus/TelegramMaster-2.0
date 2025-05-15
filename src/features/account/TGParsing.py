@@ -536,8 +536,7 @@ class ParsingGroupMembers:
                     await asyncio.sleep(2)
                     break
                 except ChatAdminRequiredError:
-                    await log_and_display(f"❌ Ошибка: не хватает прав администратора {target_group}", page,
-                                          level="error")
+                    await log_and_display(translations["ru"]["notifications_errors"]["admin_rights_required"], page)
                     await asyncio.sleep(2)
                     break
                 except ChannelPrivateError:
