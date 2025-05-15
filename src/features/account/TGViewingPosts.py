@@ -60,7 +60,7 @@ class ViewingPosts:
             function_button_ready_viewing(page, btn_click, back_button_clicked, link_channel, link_post)
 
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def viewing_posts(self, client, link_post, number, link_channel, page: ft.Page) -> None:
         """
@@ -84,4 +84,4 @@ class ViewingPosts:
             except KeyError:
                 sys.exit(1)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)

@@ -233,8 +233,8 @@ async def main(page: ft.Page):
                 page.views.append(ft.View("/errors", []))
 
             page.update()
-        except Exception as e:
-            logger.exception(f"❌ Ошибка: {e}")
+        except Exception as error:
+            logger.exception(error)
 
     def view_pop(_):
         page.views.pop()
@@ -256,7 +256,7 @@ if __name__ == '__main__':
         try:
             asyncio.run(main_run(page=page))
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
 
     ft.app(target=main)

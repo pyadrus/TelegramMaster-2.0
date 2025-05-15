@@ -155,8 +155,8 @@ class ParsingGroupMembers:
                 except FloodWaitError as e:
                     await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
                     await client.disconnect()
-        except Exception as e:
-            logger.exception(e)
+        except Exception as error:
+            logger.exception(error)
 
     async def parse_groups(self, page: ft.Page) -> None:
         """
@@ -268,7 +268,7 @@ class ParsingGroupMembers:
                         await client.disconnect()
                         await log_and_display(f"🔌 Отключение от аккаунта: {session_name}", page)
             except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")
+                logger.exception(error)
             await end_time(start, page)
 
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
@@ -351,7 +351,7 @@ class ParsingGroupMembers:
             await log_and_display(f"{entities}", page)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def parse_active_users(self, chat_input, limit_active_user, page) -> None:
         """
@@ -380,7 +380,7 @@ class ParsingGroupMembers:
                 await client.disconnect()  # Разрываем соединение telegram
             await self.clean_parsing_list_and_remove_duplicates(page)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def get_active_users(self, client, chat, limit_active_user, page) -> None:
         """
@@ -411,7 +411,7 @@ class ParsingGroupMembers:
                 else:
                     await log_and_display(f"Сообщение {message.id} не имеет действительного from_id.", page)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     @staticmethod
     async def filtering_groups(chats):
@@ -501,7 +501,7 @@ class ParsingGroupMembers:
                 )
                 page.update()
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     @staticmethod
     async def parse_users(client, target_group, page: ft.Page):
@@ -550,7 +550,7 @@ class ParsingGroupMembers:
 
             return all_participants
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
             raise
 
     async def get_all_participants(self, all_participants, page: ft.Page) -> list:
@@ -571,7 +571,7 @@ class ParsingGroupMembers:
             logger.exception(f"❌ Ошибка: {error}")
             return []  # Возвращаем пустой список в случае ошибки
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
             return []  # Возвращаем пустой список в случае ошибки
 
     async def get_user_data(self, user, entities, page: ft.Page) -> None:
@@ -596,7 +596,7 @@ class ParsingGroupMembers:
                 f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
             page.update()  # Обновление страницы для каждого элемента данных
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def receiving_data(self, user):
         """
@@ -630,7 +630,7 @@ class ParsingGroupMembers:
                 user_premium)
             return entity
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
             raise
 
     @staticmethod
@@ -666,7 +666,7 @@ class ParsingGroupMembers:
                 except TypeError:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def entering_data_for_parsing_active(self, page: ft.Page) -> None:
         """
@@ -718,5 +718,5 @@ class ParsingGroupMembers:
                     ]
                 ))
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 # 690

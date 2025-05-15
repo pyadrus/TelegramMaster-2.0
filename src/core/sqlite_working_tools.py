@@ -160,7 +160,7 @@ class DatabaseHandler:
             self.close()  # Закрываем базу данных
             return records
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
             raise
 
     async def write_parsed_chat_participants_to_db_active(self, entities) -> None:

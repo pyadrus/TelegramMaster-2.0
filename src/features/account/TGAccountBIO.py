@@ -39,7 +39,7 @@ class GUIManager:
 
             function_button_ready(page, btn_click, back_button_clicked, user_input)  # Функция для кнопки "Готово"
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
 
 class AccountBIO:
@@ -137,7 +137,7 @@ class AccountActions:
                     await client.disconnect()
 
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
         await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
         page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
@@ -168,7 +168,7 @@ class AccountActions:
                 finally:
                     await client.disconnect()
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def change_name_profile(self, page: ft.Page, user_input):
         """
@@ -193,7 +193,7 @@ class AccountActions:
                 await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
                 page.go("/bio_editing")  # переходим к основному меню изменения имени профиля 🏠
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def change_last_name_profile(self, page: ft.Page, user_input):
         """
@@ -217,7 +217,7 @@ class AccountActions:
                     await client.disconnect()
                 await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def change_photo_profile(self, page: ft.Page):
         """Изменение фото профиля.
@@ -239,7 +239,7 @@ class AccountActions:
                     finally:
                         await client.disconnect()
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
         await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
         page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠

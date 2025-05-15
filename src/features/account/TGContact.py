@@ -38,7 +38,7 @@ class TGContact:
                 await self.parsing_and_recording_contacts_in_the_database(client, page)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def parsing_and_recording_contacts_in_the_database(self, client, page: ft.Page) -> None:
         """
@@ -53,7 +53,7 @@ class TGContact:
                 await self.get_user_data(contact, entities)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def we_get_the_account_id(self, client, page: ft.Page) -> None:
         """
@@ -69,7 +69,7 @@ class TGContact:
                 await self.we_show_and_delete_the_contact_of_the_phone_book(client, user, page)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     @staticmethod
     async def get_and_parse_contacts(client, page: ft.Page):
@@ -85,8 +85,8 @@ class TGContact:
             await log_and_display(f"{result}", page)
             all_participants.extend(result.users)
             return all_participants
-        except Exception as e:
-            logger.exception(f"❌ Ошибка: {e}")
+        except Exception as error:
+            logger.exception(error)
             return None
 
     @staticmethod
@@ -103,7 +103,7 @@ class TGContact:
             await log_and_display(f"Подождите 2 - 4 секунды", page)
             await asyncio.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def delete_contact(self, page) -> None:
         """
@@ -119,7 +119,7 @@ class TGContact:
                 await self.we_get_the_account_id(client, page)
                 client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def inviting_contact(self, page: ft.Page) -> None:
         """
@@ -133,7 +133,7 @@ class TGContact:
                                                                    account_directory=path_contact_folder)
                 await self.add_contact_to_phone_book(client, page)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def add_contact_to_phone_book(self, client, page: ft.Page) -> None:
         """
@@ -172,7 +172,7 @@ class TGContact:
             await self.db_handler.remove_records_without_username(
                 page)  # Чистка списка parsing списка, если нет username
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     @staticmethod
     async def get_user_data(user, entities) -> None:
@@ -212,4 +212,4 @@ class TGContact:
                 [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
                  user_premium])
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)

@@ -214,7 +214,7 @@ class SubscribeUnsubscribeTelegram:
                     await client.delete_dialog(dialog)
                 await client.disconnect()
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     @staticmethod
     async def unsubscribe_from_the_group(client, group_link, page: ft.Page) -> None:
@@ -234,7 +234,7 @@ class SubscribeUnsubscribeTelegram:
         except UserNotParticipantError:
             await log_and_display(translations["ru"]["errors"]["unsubscribe_not_member"], page)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
         finally:
             await client.disconnect()  # Разрываем соединение с Telegram
 
@@ -289,4 +289,4 @@ class SubscribeUnsubscribeTelegram:
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения администратором на вступление в группу",
                 page)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)

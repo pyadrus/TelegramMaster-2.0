@@ -42,7 +42,7 @@ class InvitingToAGroup:
             return await self.db_handler.open_and_read_data(table_name="links_inviting",
                                                             page=page)  # Открываем базу данных
         except Exception as error:
-            logger.exception(f"Ошибка: {error}")
+            logger.exception(error)
             raise
 
     async def data_for_inviting(self, page: ft.Page):
@@ -144,7 +144,7 @@ class InvitingToAGroup:
                         client.disconnect()  # Разрываем соединение telegram
                         await log_and_display(translations["ru"]["errors"]["script_stopped"], page, level="error")
                     except Exception as error:
-                        logger.exception(f"❌ Ошибка: {error}")
+                        logger.exception(error)
                     else:
                         await log_and_display(
                             f"[+] Участник {username} добавлен, если не состоит в чате {dropdown.value}",
@@ -153,7 +153,7 @@ class InvitingToAGroup:
                 await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page)
             await log_and_display(f"[!] Инвайтинг окончен!", page)
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
         await end_time(start, page)
         await show_notification(page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
         page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
@@ -253,7 +253,7 @@ class InvitingToAGroup:
                 while True:
                     await asyncio.sleep(1)
             except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")
+                logger.exception(error)
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
@@ -323,7 +323,7 @@ class InvitingToAGroup:
                     await asyncio.sleep(1)
 
             except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")
+                logger.exception(error)
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,

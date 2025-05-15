@@ -109,7 +109,7 @@ class SendTelegramMessages:
                         except KeyError:
                             sys.exit(1)
                 except Exception as error:
-                    logger.exception(f"❌ Ошибка: {error}")
+                    logger.exception(error)
             else:
                 t.value = f"Время сна: Некорректный диапазон, введите корректные значения"
                 t.update()
@@ -208,7 +208,7 @@ class SendTelegramMessages:
                         await self.random_dream(page)  # Прерываем работу и меняем аккаунт
                     await client.run_until_disconnected()  # Запускаем программу и ждем отключения клиента
             except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")
+                logger.exception(error)
         else:
             try:
                 start = await start_time(page)
@@ -253,12 +253,12 @@ class SendTelegramMessages:
                         except (TypeError, UnboundLocalError):
                             continue  # Записываем ошибку в software_database.db и продолжаем работу
                         except Exception as error:
-                            logger.exception(f"❌ Ошибка: {error}")
+                            logger.exception(error)
                     await client.disconnect()  # Разрываем соединение Telegram
                 await log_and_display("🔚 Конец отправки сообщений + файлов по чатам", page)
                 await end_time(start, page)
             except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")
+                logger.exception(error)
 
     async def sending_messages_files_via_chats(self, page: ft.Page) -> None:
         """
@@ -349,7 +349,7 @@ class SendTelegramMessages:
             await log_and_display(f"Спим {time_in_seconds} секунд...", page)
             await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     @staticmethod
     async def select_and_read_random_file(entities, folder, page: ft.Page):
@@ -368,5 +368,5 @@ class SendTelegramMessages:
                 data = read_json_file(filename=f"user_data/{folder}/{random_file[0]}.json")
             return data  # Возвращаем данные из файла
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
             return None

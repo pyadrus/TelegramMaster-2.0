@@ -28,8 +28,8 @@ async def reading_proxy_data_from_the_database(db_handler, page: ft.Page):
     except IndexError:
         proxy = None
         return proxy
-    except Exception as e:
-        logger.exception(f"❌ Ошибка: {e}")
+    except Exception as error:
+        logger.exception(error)
         return None
 
 
@@ -51,7 +51,7 @@ async def checking_the_proxy_for_work(page: ft.Page) -> None:
                                                         rdns=proxy_dic[5],
                                                         db_handler=DatabaseHandler(), page=page)
     except Exception as error:
-        logger.exception(f"❌ Ошибка: {error}")
+        logger.exception(error)
 
 
 async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler,
@@ -85,4 +85,4 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
         await log_and_display(f"❌ Proxy не рабочий!", page)
         await db_handler.deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns)
     except Exception as error:
-        logger.exception(f"❌ Ошибка: {error}")
+        logger.exception(error)

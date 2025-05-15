@@ -29,7 +29,7 @@ class CreatingGroupsAndChats:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         selected_sessions = []  # Список для хранения выбранных session файлов
-        selected_files = ft.Text(value="Файлы не выбраны", selectable=True)
+        selected_files = ft.Text(value=translations["ru"]["notifications"]["files_not_selected"], selectable=True)
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
@@ -41,7 +41,7 @@ class CreatingGroupsAndChats:
             page.update()
 
             if not selected_sessions:
-                await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", page)
+                await log_and_display(translations["ru"]["errors"]["files_not_selected_warning"], page)
                 session_files = await find_filess(directory_path=path_accounts_folder, extension='session')
                 if not session_files:
                     await log_and_display(translations["ru"]["errors"]["no_session_files"], page)
@@ -49,21 +49,21 @@ class CreatingGroupsAndChats:
                     return
             else:
                 session_files = selected_sessions
-                await log_and_display(translations["ru"]["errors"]["start_creating"], page)
+                await log_and_display(translations["ru"]["notifications"]["start_creating"], page)
             try:
                 for session_name in session_files:
                     # Извлекаем только имя файла без расширения
                     session_name = os.path.splitext(os.path.basename(session_name))[0]
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_accounts_folder)
-                    response = await client(functions.channels.CreateChannelRequest(
-                        title='My awesome title', about='Description for your group', megagroup=True
-                    ))
+                    await client(functions.channels.CreateChannelRequest(title='My awesome title',
+                                                                         about='Description for your group',
+                                                                         megagroup=True))
                     await log_and_display(translations["ru"]["notifications"]["notification_creating"], page)
             except TypeError:
                 pass
             except Exception as error:
-                logger.exception(f"❌ Ошибка: {error}")
+                logger.exception(error)
             await end_time(start, page)
 
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
@@ -108,7 +108,8 @@ class CreatingGroupsAndChats:
                                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                      text=translations["ru"]["create_groups_menu"][
                                                          "choose_session_files"],
-                                                     on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True)),
+                                                     on_click=lambda _: pick_files_dialog.pick_files(
+                                                         allow_multiple=True)),
                                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                      text=translations["ru"]["buttons"]["start"], on_click=add_items),
                                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,

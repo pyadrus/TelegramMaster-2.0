@@ -72,7 +72,7 @@ class WorkingWithReactions:
             function_button_ready_reactions(page, btn_click, back_button_clicked, chat, message)
 
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     @staticmethod
     async def choosing_random_reaction(page):
@@ -83,7 +83,7 @@ class WorkingWithReactions:
             await log_and_display(f"{random_value}", page)
             return random_value
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
             return None
 
     async def reactions_for_groups_and_messages_test(self, number, chat, page: ft.Page) -> None:
@@ -114,7 +114,7 @@ class WorkingWithReactions:
                     await asyncio.sleep(1)
                     await client.disconnect()
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def setting_reactions(self, page: ft.Page) -> None:
         """
@@ -140,4 +140,4 @@ class WorkingWithReactions:
 
                 await client.run_until_disconnected()  # Запуск клиента в режиме ожидания событий
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)

@@ -27,8 +27,8 @@ async def index(request: Request):
     logger.info("Запущена главная страница документации")
     try:
         return templates.TemplateResponse("index.html", {"request": request, "program_name": program_name})
-    except Exception as e:
-        logger.exception(f"Error rendering the template: {e}")
+    except Exception as error:
+        logger.exception(error)
         return {"error": "Failed to render template"}
 
 
@@ -134,8 +134,8 @@ async def sending_messages(request: Request):
                                                                         translations["ru"]["message_sending_menu"][
                                                                             "sending_personal_messages_with_limits"],
                                                                     })
-    except Exception as e:
-        logger.exception(e)
+    except Exception as error:
+        logger.exception(error)
 
 
 @app.get('/editing_bio', response_class=HTMLResponse)
@@ -555,4 +555,4 @@ def start_app():
 
         server_process.join()  # Ждем завершения процесса
     except Exception as error:
-        logger.error(f"Ошибка при отслеживании изменений: {error}")
+        logger.exception(error)

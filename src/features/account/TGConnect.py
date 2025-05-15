@@ -64,7 +64,7 @@ class TGConnect:
                 working_with_accounts(f"user_data/accounts/{session_name}.session",
                                       f"user_data/accounts/banned/{session_name}.session")
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     @staticmethod
     async def handle_banned_account(telegram_client, session_name, exception, page: ft.Page):
@@ -160,7 +160,7 @@ class TGConnect:
             await end_time(start, page)
             await show_notification(page=page, message="🔚 Проверка аккаунтов завершена")
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def verify_all_accounts(self, page: ft.Page) -> None:
         """
@@ -180,7 +180,7 @@ class TGConnect:
             await end_time(start, page)
             await show_notification(page, "🔚 Проверка аккаунтов завершена")
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def get_account_details(self, page: ft.Page):
         """
@@ -218,7 +218,7 @@ class TGConnect:
             await end_time(start, page)
             await show_notification(page=page, message="🔚 Проверка аккаунтов завершена")
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     async def checking_all_accounts(self, page: ft.Page) -> None:
         try:
@@ -229,7 +229,7 @@ class TGConnect:
             await end_time(start, page)
             await show_notification(page=page, message="🔚 Проверка аккаунтов завершена")
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     @staticmethod
     async def rename_session_file(telegram_client, phone_old, phone, page: ft.Page) -> None:
@@ -250,7 +250,7 @@ class TGConnect:
             # Если файл существует, то удаляем дубликат
             os.remove(f"user_data/accounts/{phone_old}.session")
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
         await getting_phone_number_data_by_phone_number(phone, page)  # Выводим информацию о номере телефона
 
@@ -294,7 +294,7 @@ class TGConnect:
             return None
         except Exception as error:
             await telegram_client.disconnect()
-            await log_and_display(message=f"❌ Ошибка: {error}", page=page)
+            logger.exception(error)
             return None
 
     async def connecting_number_accounts(self, page: ft.Page):
@@ -349,8 +349,8 @@ class TGConnect:
                                     await log_and_display(f"❌ Неверный пароль.", page)
                                     await show_notification(page, f"⚠️ Неверный пароль. Попробуйте еще раз.")
                                     page.go("/")  # Изменение маршрута в представлении существующих настроек
-                                except Exception as ex:
-                                    logger.exception(f"❌ Ошибка при вводе пароля: {ex}")
+                                except Exception as error:
+                                    logger.exception(error)
 
                             button_password = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                                 text=translations["ru"]["buttons"]["done"],
@@ -360,8 +360,8 @@ class TGConnect:
                         except ApiIdInvalidError:
                             await log_and_display(f"[!] Неверные API ID или API Hash.", page)
                             await telegram_client.disconnect()  # Отключаемся от Telegram
-                        except Exception as e:
-                            logger.exception(f"❌ Ошибка при авторизации: {e}")
+                        except Exception as error:
+                            logger.exception(error)
                             await telegram_client.disconnect()  # Отключаемся от Telegram
 
                     page.views.append(ft.View(controls=[passww,
@@ -384,7 +384,7 @@ class TGConnect:
             page.views.append(input_view)  # Добавляем созданный вид на страницу
             page.update()
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
 
     @staticmethod
     async def connecting_session_accounts(page: ft.Page):
@@ -440,4 +440,4 @@ class TGConnect:
             page.update()
 
         except Exception as error:
-            logger.exception(f"❌ Ошибка: {error}")
+            logger.exception(error)
