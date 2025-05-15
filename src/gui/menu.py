@@ -27,7 +27,7 @@ async def settings_menu(page: ft.Page):
                                            on_click=lambda _: page.go("/choice_of_reactions")),
                          # 🔐 Запись proxy
                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                           text=translations["ru"]["menu_settings"]["changing_accounts_ru"],
+                                           text=translations["ru"]["menu_settings"]["proxy_entry"],
                                            on_click=lambda _: page.go("/proxy_entry"))]),
                      ft.Row([
                          # 🔄 Смена аккаунтов

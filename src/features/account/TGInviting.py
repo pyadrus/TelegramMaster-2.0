@@ -74,7 +74,8 @@ class InvitingToAGroup:
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, page)
                 # Получение списка usernames
-                number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members", limit=limits)
+                number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members",
+                                                                                         limit=limits)
                 if len(number_usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", page)
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page)
@@ -122,7 +123,8 @@ class InvitingToAGroup:
                         await log_and_display(translations["ru"]["errors"]["invite_request_sent"], page)
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, page)
                         break  # Прерываем работу и меняем аккаунт
-                    except (ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError, UserBannedInChannelError, SessionRevokedError):
+                    except (ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError, UserBannedInChannelError,
+                            SessionRevokedError):
                         await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], page)
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], page)
                         break  # Прерываем работу и меняем аккаунт

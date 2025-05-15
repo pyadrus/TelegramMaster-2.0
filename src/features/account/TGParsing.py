@@ -38,18 +38,10 @@ class ParsingGroupMembers:
 
     async def clean_parsing_list_and_remove_duplicates(self, page: ft.Page):
         """Очищает список парсинга от записей без имени пользователя и удаляет дубликаты по идентификатору."""
-
         # Очистка списка парсинга от записей без имени пользователя
         await self.db_handler.remove_records_without_username(page)
         # Удаление дублирующихся записей по идентификатору
         await self.db_handler.remove_duplicate_ids(table_name="members", column_name="id")
-
-    @staticmethod
-    def back_button_clicked(page):
-        """
-        ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню парсинга.
-        """
-        page.go("/parsing")  # переходим к основному меню парсинга 🏠
 
     @staticmethod
     async def get_user_online_status(user):
@@ -225,9 +217,8 @@ class ParsingGroupMembers:
                     return
             else:
                 session_files = selected_sessions
-                await log_and_display(
-                    f"🚀 Начало парсинга с выбранных файлов: {', '.join([os.path.basename(s) for s in selected_sessions])}",
-                    page)
+                logger.debug(f"🔍 Выбранные файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}")
+                await log_and_display(f"🚀 Начало парсинга с выбранных файлов: {', '.join([os.path.basename(s) for s in selected_sessions])}", page)
 
             start = await start_time(page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
@@ -236,6 +227,7 @@ class ParsingGroupMembers:
                     # Обрабатываем все файлы сессий по очереди 📂
                     for session_path in session_files:
                         session_name = os.path.basename(session_path)
+                        logger.debug(f"🔍 Парсинг групп/каналов, в которых состоит аккаунт: {session_name}")
                         client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                            account_directory=path_accounts_folder)
                         await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", page)
@@ -267,9 +259,10 @@ class ParsingGroupMembers:
                             # Завершаем работу клиента после завершения парсинга 🔌
                         await client.disconnect()
                         await log_and_display(f"🔌 Отключение от аккаунта: {session_name}", page)
+                await end_time(start, page)
             except Exception as error:
                 logger.exception(error)
-            await end_time(start, page)
+
 
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
             """Обработка выбора файлов"""
@@ -297,6 +290,8 @@ class ParsingGroupMembers:
                         return
 
                 selected_files.value = f"Выбраны session файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}"
+                session_name = os.path.splitext(os.path.basename(selected_files.value))[0]
+                logger.debug(f"Выбраны файлы: {session_name}")
                 selected_files.update()
             else:
                 selected_files.value = "Выбор файлов отменен"
@@ -305,6 +300,7 @@ class ParsingGroupMembers:
             page.update()
 
         pick_files_dialog = ft.FilePicker(on_result=btn_click)  # Инициализация выбора файлов
+        logger.debug(f"Инициализация выбора файлов {pick_files_dialog}")
         page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
         # Кнопка для открытия диалога выбора файлов
         button_select_file = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
@@ -315,24 +311,20 @@ class ParsingGroupMembers:
 
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
-            ft.View(
-                "/parsing",
-                [
-                    list_view,  # отображение логов 📝
-                    ft.Column([admin_switch, account_groups_switch, members_switch]),
-                    # переключатели в столбце для корректного отображения
-                    ft.Column(),  # резерв для приветствия или других элементов интерфейса
-                    selected_files,  # Отображение выбранных файлов
-                    button_select_file,  # Кнопка для выбора файлов
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                      text=translations["ru"]["buttons"]["start"],
-                                      on_click=add_items),  # Кнопка "🚀 Начать парсинг"
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                      text=translations["ru"]["buttons"]["back"],
-                                      on_click=lambda _: self.back_button_clicked(page))  # Кнопка "⬅️ Назад"
-                ],
-            )
-        )
+            ft.View("/parsing", [
+                list_view,  # отображение логов 📝
+                ft.Column([admin_switch, account_groups_switch, members_switch]),
+                # переключатели в столбце для корректного отображения
+                ft.Column(),  # резерв для приветствия или других элементов интерфейса
+                selected_files,  # Отображение выбранных файлов
+                button_select_file,  # Кнопка для выбора файлов
+                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                  text=translations["ru"]["buttons"]["start"],
+                                  on_click=add_items),  # Кнопка "🚀 Начать парсинг"
+                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                  text=translations["ru"]["buttons"]["back"],
+                                  on_click=lambda _: page.go("parsing"))  # Кнопка "⬅️ Назад"
+            ], ))
         page.update()  # обновляем страницу после добавления элементов управления 🔄
 
     async def parse_group(self, client, groups_wr, page) -> None:
@@ -492,10 +484,10 @@ class ParsingGroupMembers:
                                                   on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
                                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                   text=translations["ru"]["buttons"]["back"],
-                                                  on_click=lambda _: self.back_button_clicked(page)),
+                                                  on_click=lambda _: page.go("parsing")),
                                 # Кнопка "⬅️ Назад"
                                 result_text, list_view,
-                            ])],)  )
+                            ])], ))
                 page.update()
         except Exception as error:
             logger.exception(error)
@@ -711,7 +703,7 @@ class ParsingGroupMembers:
                                           on_click=btn_click),  # Кнопка "✅ Готово"
                         ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                           text=translations["ru"]["buttons"]["back"],
-                                          on_click=lambda _: self.back_button_clicked(page))  # Кнопка "⬅️ Назад"
+                                          on_click=lambda _: page.go("parsing"))  # Кнопка "⬅️ Назад"
                     ]
                 ))
         except Exception as error:

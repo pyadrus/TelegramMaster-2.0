@@ -92,7 +92,7 @@ class DatabaseHandler:
         """Закрытие соединения с базой данных"""
         self.sqlite_connection.close()
 
-    async def open_and_read_data(self, table_name, page: ft.Page) -> list:
+    async def open_and_read_data(self, table_name, page: ft.Page):
         """
         Открываем базу и считываем данные из указанной таблицы
 

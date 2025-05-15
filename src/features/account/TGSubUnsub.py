@@ -72,7 +72,8 @@ class SubscribeUnsubscribeTelegram:
                         except InviteHashExpiredError:
                             await log_and_display(translations["ru"]["errors"]["subscribe_error"], page)
                             try:
-                                await client(ImportChatInviteRequest(link_hash))  # Подписка на группу / канал по ссылке приглашению
+                                await client(ImportChatInviteRequest(
+                                    link_hash))  # Подписка на группу / канал по ссылке приглашению
                                 await log_and_display(f"Подписка на группу / канал по ссылке приглашению {link_hash}",
                                                       page)
                             except InviteHashInvalidError:
