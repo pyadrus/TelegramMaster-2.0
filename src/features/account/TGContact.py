@@ -14,6 +14,7 @@ from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.gui.gui import log_and_display
+from src.locales.translations_loader import translations
 
 
 class TGContact:
@@ -163,9 +164,7 @@ class TGContact:
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
                 except ValueError:
-                    await log_and_display(
-                        f"❌ Контакт с номером {phone} не зарегистрирован или отсутствует возможность добавить в телефонную книгу!",
-                        page)
+                    await log_and_display(translations["ru"]["notifications_errors"]["contact_not_registered_or_cannot_add"], page)
                     # После работы с номером телефона, программа удаляет номер со списка
                     await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
             client.disconnect()  # Разрываем соединение telegram

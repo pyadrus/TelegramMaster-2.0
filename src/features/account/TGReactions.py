@@ -17,6 +17,7 @@ from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.buttons import function_button_ready_reactions
 from src.gui.gui import log_and_display
+from src.locales.translations_loader import translations
 
 
 class WorkingWithReactions:
@@ -109,7 +110,7 @@ class WorkingWithReactions:
                     await asyncio.sleep(1)
                     await client.disconnect()
                 except ReactionInvalidError:
-                    await log_and_display(f"❌ Ошибка : Предоставлена неверная реакция", page)
+                    await log_and_display(translations["ru"]["notifications_errors"]["invalid_reaction"], page)
                     await asyncio.sleep(1)
                     await client.disconnect()
         except Exception as error:

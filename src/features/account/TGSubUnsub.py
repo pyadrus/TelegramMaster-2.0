@@ -68,21 +68,15 @@ class SubscribeUnsubscribeTelegram:
                                 await client(ImportChatInviteRequest(
                                     link_hash))  # Подписка на группу / канал по ссылке приглашению
                             except InviteHashInvalidError:
-                                await log_and_display(
-                                    f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
-                                    page)
-                        except InviteHashExpiredError as error:
-                            await log_and_display(
-                                f"Ошибка при подписке на группу / канал по ссылке приглашению {error}", page)
+                                await log_and_display(translations["ru"]["notifications_errors"]["invite_request_sent"], page)
+                        except InviteHashExpiredError:
+                            await log_and_display(translations["ru"]["notifications_errors"]["subscribe_error"], page)
                             try:
-                                await client(ImportChatInviteRequest(
-                                    link_hash))  # Подписка на группу / канал по ссылке приглашению
+                                await client(ImportChatInviteRequest(link_hash))  # Подписка на группу / канал по ссылке приглашению
                                 await log_and_display(f"Подписка на группу / канал по ссылке приглашению {link_hash}",
                                                       page)
                             except InviteHashInvalidError:
-                                await log_and_display(
-                                    f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
-                                    page)
+                                await log_and_display(translations["ru"]["notifications_errors"]["invite_request_sent"], page)
                     elif isinstance(result, types.ChatInviteAlready):
                         await log_and_display(
                             f"Вы уже состоите в группе: {link}, Название группы: {result.chat.title}", page)
@@ -140,15 +134,11 @@ class SubscribeUnsubscribeTelegram:
 
         except FloodWaitError as e:
             await log_and_display(f"{translations["ru"]["notifications_errors"]["flood_wait"]}{e}", page, level="error")
-
         except InviteRequestSentError:
-            await log_and_display(f"Отправлена заявка на вступление в группу / канал по ссылке приглашению {link}",
-                                  page, level="error")
-
+            await log_and_display(translations["ru"]["notifications_errors"]["invite_request_sent"], page)
         except AuthKeyUnregisteredError:
             await log_and_display(translations["ru"]["notifications_errors"]["auth_key_unregistered"], page)
             await asyncio.sleep(2)
-
         except SessionPasswordNeededError:
             await log_and_display(translations["ru"]["notifications_errors"]["two_factor_required"], page)
             await asyncio.sleep(2)
@@ -242,8 +232,7 @@ class SubscribeUnsubscribeTelegram:
         except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
             await log_and_display(translations["ru"]["notifications_errors"]["channel_private"], page)
         except UserNotParticipantError:
-            await log_and_display(f"❌ Попытка отписки от группы / канала {group_link}. Аккаунт не является участником.",
-                                  page)
+            await log_and_display(translations["ru"]["notifications_errors"]["unsubscribe_not_member"], page)
         except Exception as error:
             logger.exception(f"❌ Ошибка: {error}")
         finally:
@@ -264,9 +253,7 @@ class SubscribeUnsubscribeTelegram:
             await client(JoinChannelRequest(groups_wr))
             await log_and_display(f"Аккаунт подписался на группу / канал: {groups_wr}", page)
         except SessionRevokedError:
-            await log_and_display(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Авторизация была признана недействительной из-за того, что пользователь завершил все сеансы.",
-                page)
+            await log_and_display(translations["ru"]["notifications_errors"]["invalid_auth_session_terminated"], page)
         except UserDeactivatedBanError:
             await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.", page)
         except ChannelsTooMuchError:

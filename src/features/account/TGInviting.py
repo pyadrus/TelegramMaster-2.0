@@ -125,6 +125,7 @@ class InvitingToAGroup:
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, page)
                         break  # Прерываем работу и меняем аккаунт
                     except (ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError, UserBannedInChannelError, SessionRevokedError):
+                        await log_and_display(translations["ru"]["notifications_errors"]["invalid_auth_session_terminated"], page)
                         await record_and_interrupt(self.time_inviting[0], self.time_inviting[1], page)
                         break  # Прерываем работу и меняем аккаунт
                     except FloodWaitError as e:

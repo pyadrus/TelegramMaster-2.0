@@ -245,13 +245,10 @@ class SendTelegramMessages:
                             await record_and_interrupt(time_subscription_1, time_subscription_2, page)
                             break  # Прерываем работу и меняем аккаунт
                         except SlowModeWaitError as e:
-                            await log_and_display(
-                                f"Рассылка сообщений в группу: {group_link}. SlowModeWait! wait for {str(datetime.timedelta(seconds=e.seconds))}",
-                                page)
+                            await log_and_display(translations["ru"]["notifications_errors"]["slow_mode_wait"], page)
                             await asyncio.sleep(e.seconds)
                         except ValueError:
-                            await log_and_display(f"❌ Ошибка рассылки, проверьте ссылку  на группу: {group_link}",
-                                                  page)
+                            await log_and_display(translations["ru"]["notifications_errors"]["sending_error_check_link"], page)
                             break
                         except (TypeError, UnboundLocalError):
                             continue  # Записываем ошибку в software_database.db и продолжаем работу

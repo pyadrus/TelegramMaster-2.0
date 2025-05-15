@@ -142,12 +142,12 @@ class ParsingGroupMembers:
                                     await self.db_handler.delete_row_db(table="writing_group_links",
                                                                         column="writing_group_links", value=groups)
                         except UsernameInvalidError:
-                            await log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}", page)
+                            await log_and_display(translations["ru"]["notifications_errors"]["group_entity_error"], page)
                             # Удаляем группу из списка после завершения парсинга 🗑️
                             await self.db_handler.delete_row_db(table="writing_group_links",
                                                                 column="writing_group_links", value=groups)
                         except ValueError:
-                            await log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}", page)
+                            await log_and_display(translations["ru"]["notifications_errors"]["group_entity_error"], page)
                             # Удаляем группу из списка после завершения парсинга 🗑️
                             await self.db_handler.delete_row_db(table="writing_group_links",
                                                                 column="writing_group_links", value=groups)
