@@ -20,8 +20,7 @@ async def reading_proxy_data_from_the_database(db_handler, page: ft.Page):
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
-        proxy_random_list = random.choice(
-            await db_handler.open_and_read_data(table_name="proxy", page=page))
+        proxy_random_list = random.choice(await db_handler.open_and_read_data(table_name="proxy", page=page))
         proxy = {'proxy_type': (proxy_random_list[0]), 'addr': proxy_random_list[1], 'port': int(proxy_random_list[2]),
                  'username': proxy_random_list[3], 'password': proxy_random_list[4], 'rdns': proxy_random_list[5]}
         return proxy

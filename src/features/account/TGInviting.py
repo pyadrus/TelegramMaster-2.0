@@ -199,12 +199,12 @@ class InvitingToAGroup:
             🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
             """
 
-            async def general_invitation_to_the_group_scheduler():
+            async def general_invitation_group_scheduler():
                 await self.general_invitation_to_the_group(page, dropdown)
 
             await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", page)
             self.scheduler.daily(dt.time(hour=int(self.hour), minute=int(self.minutes)),
-                                 general_invitation_to_the_group_scheduler)
+                                 general_invitation_group_scheduler)
             while True:
                 await asyncio.sleep(1)
 
@@ -230,12 +230,12 @@ class InvitingToAGroup:
             """
             try:
 
-                async def general_invitation_to_the_group_scheduler():
+                async def general_invitation_group_scheduler():
                     await self.general_invitation_to_the_group(page, dropdown)
 
                 await log_and_display("Запуск программы в 00 минут каждого часа", page)
                 self.scheduler.hourly(dt.time(minute=00, second=00),
-                                      general_invitation_to_the_group_scheduler)  # Асинхронная функция для выполнения
+                                      general_invitation_group_scheduler)  # Асинхронная функция для выполнения
                 while True:
                     await asyncio.sleep(1)
             except Exception as error:
@@ -243,8 +243,7 @@ class InvitingToAGroup:
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
-                               options=[ft.DropdownOption(link[0]) for link in links_inviting],
-                               autofocus=True)
+                               options=[ft.DropdownOption(link[0]) for link in links_inviting], autofocus=True)
         await self.create_invite_page(page, dropdown, add_items)
 
     @staticmethod
@@ -260,8 +259,8 @@ class InvitingToAGroup:
                     dropdown,  # Выпадающий список с названиями групп
                     ft.Column(),  # Резерв для приветствия или других элементов интерфейса
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                      text=translations["ru"]["buttons"]["start"],
-                                      on_click=add_items),  # Кнопка "🚀 Начать инвайтинг"
+                                      text=translations["ru"]["buttons"]["start"], on_click=add_items),
+                    # Кнопка "🚀 Начать инвайтинг"
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                       text=translations["ru"]["buttons"]["back"],
                                       on_click=lambda _: page.go("/inviting"))  # Кнопка "⬅️ Назад"
@@ -287,11 +286,12 @@ class InvitingToAGroup:
             🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
             """
             try:
-                async def general_invitation_to_the_group_scheduler():
+                async def general_invitation_group_scheduler():
                     await self.general_invitation_to_the_group(page, dropdown)
+
                 await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", page)
                 self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)),
-                                    general_invitation_to_the_group_scheduler)
+                                    general_invitation_group_scheduler)
                 while True:
                     await asyncio.sleep(1)
             except Exception as error:

@@ -477,7 +477,7 @@ class ParsingGroupMembers:
                                                                   text=translations["ru"]["buttons"]["back"],
                                                                   on_click=lambda _: page.go("parsing")),
                                                 result_text, list_view,
-                                                ])],))
+                                                ])], ))
                 page.update()
         except Exception as error:
             logger.exception(error)
