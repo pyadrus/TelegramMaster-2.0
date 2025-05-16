@@ -6,13 +6,12 @@ import flet as ft
 from loguru import logger
 from telethon import functions
 from telethon import types
-from telethon.tl.types import (UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth,
-                               UserStatusOnline, UserStatusEmpty)
 
 from src.core.configs import path_accounts_folder
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
+from src.features.account.TGParsing import ParsingGroupMembers
 from src.gui.gui import log_and_display
 from src.locales.translations_loader import translations
 
@@ -189,23 +188,7 @@ class TGContact:
             last_name = user.last_name if user.last_name else ""
             photos_id = (
                 "Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
-            online_at = "Был(а) недавно"
-            # Статусы пользователя https://core.telegram.org/type/UserStatus
-            if isinstance(user.status, (
-                    UserStatusRecently, UserStatusOffline, UserStatusLastWeek, UserStatusLastMonth, UserStatusOnline,
-                    UserStatusEmpty)):
-                if isinstance(user.status, UserStatusOffline):
-                    online_at = user.status.was_online
-                if isinstance(user.status, UserStatusRecently):
-                    online_at = "Был(а) недавно"
-                if isinstance(user.status, UserStatusLastWeek):
-                    online_at = "Был(а) на этой неделе"
-                if isinstance(user.status, UserStatusLastMonth):
-                    online_at = "Был(а) в этом месяце"
-                if isinstance(user.status, UserStatusOnline):
-                    online_at = user.status.expires
-                if isinstance(user.status, UserStatusEmpty):
-                    online_at = "статус пользователя еще не определен"
+            online_at = await ParsingGroupMembers.get_user_online_status(user)
             user_premium = "Пользователь с premium" if user.premium else ""
 
             entities.append(

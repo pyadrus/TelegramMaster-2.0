@@ -49,11 +49,11 @@ async def main(page: ft.Page):
     async def route_change(_):
         page.views.clear()
         # ______________________________________________________________________________________________________________
-        await main_menu_program(page)  # Главное меню программы
+        await main_menu_program(page=page)  # Главное меню программы
         # ______________________________________________________________________________________________________________
         try:
             if page.route == "/inviting":  # Меню "🚀 Инвайтинг"
-                await inviting_menu(page)
+                await inviting_menu(page=page)
             elif page.route == "/inviting_without_limits":  # 🚀 Инвайтинг
                 await CheckingProgram().check_before_inviting(page=page)
                 await InvitingToAGroup().inviting_without_limits(page=page)

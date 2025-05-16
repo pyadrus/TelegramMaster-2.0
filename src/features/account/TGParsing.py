@@ -316,11 +316,9 @@ class ParsingGroupMembers:
                 selected_files,  # Отображение выбранных файлов
                 button_select_file,  # Кнопка для выбора файлов
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                  text=translations["ru"]["buttons"]["start"],
-                                  on_click=add_items),  # Кнопка "🚀 Начать парсинг"
+                                  text=translations["ru"]["buttons"]["start"], on_click=add_items),
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                  text=translations["ru"]["buttons"]["back"],
-                                  on_click=lambda _: page.go("parsing"))  # Кнопка "⬅️ Назад"
+                                  text=translations["ru"]["buttons"]["back"], on_click=lambda _: page.go("parsing"))
             ], ))
         page.update()  # обновляем страницу после добавления элементов управления 🔄
 
@@ -335,8 +333,7 @@ class ParsingGroupMembers:
         """
         try:
             # Записываем parsing данные в файл user_data/software_database.db
-            entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, page),
-                                                             page)
+            entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, page), page)
             await log_and_display(f"{entities}", page)
             await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
@@ -355,7 +352,6 @@ class ParsingGroupMembers:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder)
                 await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input, page)
-
                 try:
                     # Преобразуем значение time_activity_user_2 в целое число (если оно None, используем 5 по умолчанию).
                     await asyncio.sleep(
@@ -364,7 +360,6 @@ class ParsingGroupMembers:
                     # Если произошла ошибка преобразования (например, time_activity_user_2 имеет неподдерживаемый тип),
                     # то делаем паузу по умолчанию в 5 секунд.
                     await asyncio.sleep(5)  # По умолчанию 5, если None или неправильный тип
-
                 await self.get_active_users(client, chat_input, limit_active_user, page)
                 await client.disconnect()  # Разрываем соединение telegram
             await self.clean_parsing_list_and_remove_duplicates(page)
@@ -474,17 +469,15 @@ class ParsingGroupMembers:
                     ft.View(
                         "/parsing",
                         [
-                            ft.Column(controls=[
-                                dropdown,
-                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                                  text="📂 Выбрать группу",
-                                                  on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
-                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                                  text=translations["ru"]["buttons"]["back"],
-                                                  on_click=lambda _: page.go("parsing")),
-                                # Кнопка "⬅️ Назад"
-                                result_text, list_view,
-                            ])], ))
+                            ft.Column(controls=[dropdown,
+                                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                                                  text="📂 Выбрать группу",
+                                                                  on_click=handle_button_click),
+                                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                                                  text=translations["ru"]["buttons"]["back"],
+                                                                  on_click=lambda _: page.go("parsing")),
+                                                result_text, list_view,
+                                                ])],))
                 page.update()
         except Exception as error:
             logger.exception(error)
