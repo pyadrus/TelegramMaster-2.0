@@ -16,8 +16,9 @@ async def settings_menu(page: ft.Page):
                 [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                  ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["settings"],
-                     ft.TextStyle(size=20, weight=ft.FontWeight.BOLD, foreground=ft.Paint(
-                         gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK, ft.Colors.PURPLE]))))]),
+                                            ft.TextStyle(size=20, weight=ft.FontWeight.BOLD, foreground=ft.Paint(
+                                                gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                                     ft.Colors.PURPLE]))))]),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      ft.Row([
                          # 👍 Выбор реакций
@@ -74,7 +75,8 @@ async def settings_menu(page: ft.Page):
                                        on_click=lambda _: page.go("/recording_the_time_between_messages")),
                      # 🕒 Время между инвайтингом, рассылка сообщений
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["menu_settings"]["time_between_invites_sending_messages"],
+                                       text=translations["ru"]["menu_settings"][
+                                           "time_between_invites_sending_messages"],
                                        on_click=lambda _: page.go("/time_between_invites_sending_messages")),
                      # 🔗 Запись ссылки для реакций
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
@@ -126,9 +128,6 @@ async def bio_editing_menu(page: ft.Page):
                                        text=translations["ru"]["edit_bio_menu"]["name_change_f"],
                                        on_click=lambda _: page.go("/change_surname")),
                  ])]))
-
-
-
 
 
 async def working_with_contacts_menu(page: ft.Page):
@@ -292,36 +291,6 @@ async def subscribe_and_unsubscribe_menu(page: ft.Page):
                  ])]))
 
 
-async def account_connection_menu(page: ft.Page):
-    """
-    Меню подключения аккаунтов
-
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    """
-    page.views.append(
-        ft.View("/account_connection_menu",
-                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
-                 ft.Text(spans=[ft.TextSpan(
-                     translations["ru"]["menu"]["account_connect"],
-                     ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
-                         foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
-                                                                                  ft.Colors.PURPLE])), ), ), ], ),
-                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     # 📞 Подключение аккаунтов по номеру телефона
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["account_connect_menu"]["connecting_accounts_by_phone_number"],
-                                       on_click=lambda _: page.go("/connecting_accounts_by_number")),
-                     # 🔑 Подключение session аккаунтов
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["account_connect_menu"]["connecting_session_accounts"],
-                                       on_click=lambda _: page.go("/connecting_accounts_by_session")),
-                 ])]))
-
-
 async def connecting_accounts_by_number_menu(page: ft.Page):
     """
     Меню подключения аккаунтов по номеру телефона
@@ -345,7 +314,8 @@ async def connecting_accounts_by_number_menu(page: ft.Page):
                      ft.Row(
                          # 🤖 Для автоответчика
                          [ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                            text=translations["ru"]["account_connection_menu"]["for_the_answering_machine"],
+                                            text=translations["ru"]["account_connection_menu"][
+                                                "for_the_answering_machine"],
                                             on_click=lambda _: page.go("/account_connection_number_answering_machine")),
                           # 📝 Для редактирования BIO
                           ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
@@ -353,7 +323,8 @@ async def connecting_accounts_by_number_menu(page: ft.Page):
                                             on_click=lambda _: page.go("/account_connection_number_bio"))]),
                      # 📞 Для работы с номерами
                      ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"]["to_work_with_numbers"],
+                                               text=translations["ru"]["account_connection_menu"][
+                                                   "to_work_with_numbers"],
                                                on_click=lambda _: page.go("/account_connection_number_contact")),
                              # 👥 Для создания групп
                              ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
@@ -369,12 +340,15 @@ async def connecting_accounts_by_number_menu(page: ft.Page):
                                                on_click=lambda _: page.go("/account_connection_number_parsing"))]),
                      # 🎭 Для работы с реакциями
                      ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"]["to_work_with_reactions"],
+                                               text=translations["ru"]["account_connection_menu"][
+                                                   "to_work_with_reactions"],
                                                on_click=lambda _: page.go("/account_connection_number_reactions")),
                              # 👍 Для проставления реакций
                              ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"]["for_marking_reactions"],
-                                               on_click=lambda _: page.go("/account_connection_number_reactions_list"))]),
+                                               text=translations["ru"]["account_connection_menu"][
+                                                   "for_marking_reactions"],
+                                               on_click=lambda _: page.go(
+                                                   "/account_connection_number_reactions_list"))]),
                      # ✉️ Для рассылки сообщений
                      ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
                                                text=translations["ru"]["account_connection_menu"]["to_send_messages"],

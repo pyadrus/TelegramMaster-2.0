@@ -14,7 +14,8 @@ from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-from src.core.configs import (line_width_button, BUTTON_HEIGHT, time_subscription_1, time_subscription_2, path_accounts_folder)
+from src.core.configs import (line_width_button, BUTTON_HEIGHT, time_subscription_1, time_subscription_2,
+                              path_accounts_folder)
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, find_filess
 from src.features.account.TGConnect import TGConnect

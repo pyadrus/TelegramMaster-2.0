@@ -28,8 +28,8 @@ from src.features.settings.setting import SettingPage, get_unique_filename, reac
 from src.gui.gui import end_time, start_time
 from src.gui.main_menu import main_menu_program
 from src.gui.menu import (bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
-                          subscribe_and_unsubscribe_menu, account_connection_menu, viewing_posts_menu,
-                          show_notification, working_with_contacts_menu)
+                          subscribe_and_unsubscribe_menu, viewing_posts_menu, show_notification,
+                          working_with_contacts_menu)
 
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
 
@@ -138,13 +138,7 @@ async def main(page: ft.Page):
                 await end_time(start, page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/account_connection_menu":  # Подключение аккаунтов 'меню'.
-                await account_connection_menu(page=page)
-            # __________________________________________________________________________________________________________
-            elif page.route == "/connecting_accounts_by_number":  # Подключение аккаунтов по номеру телефона 'Меню'
-                await TGConnect().connecting_number_accounts(page=page)
-            # __________________________________________________________________________________________________________
-            elif page.route == "/connecting_accounts_by_session":  # Подключение session аккаунтов 'Меню'
-                await TGConnect().connecting_session_accounts(page=page)
+                await TGConnect().account_connection_menu(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/creating_groups":  # Создание групп (чатов)
                 await CreatingGroupsAndChats().creating_groups_and_chats(page=page)

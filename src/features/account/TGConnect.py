@@ -299,140 +299,126 @@ class TGConnect:
             logger.exception(error)
             return None
 
-    async def connecting_number_accounts(self, page: ft.Page):
+    async def account_connection_menu(self, page: ft.Page):
         """
-        Подключение номера Telegram аккаунта с проверкой на валидность. Если ранее не было соединения, то запрашивается
-        код.
+        Меню подключения аккаунтов
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        try:
-            # Создаем текстовый элемент и добавляем его на страницу
-            phone_number = ft.TextField(label="Введите номер телефона:", multiline=False, max_lines=1)
 
-            async def btn_click(_) -> None:
-                phone_number_value = phone_number.value
-                await log_and_display(f"Номер телефона: {phone_number_value}", page)
-                # Дальнейшая обработка после записи номера телефона
-                telegram_client = TelegramClient(
-                    f"user_data/accounts/{phone_number_value}",
-                    api_id=self.api_id, api_hash=self.api_hash, system_version="4.16.30-vxCUSTOM",
-                    proxy=await reading_proxy_data_from_the_database(db_handler=self.db_handler, page=page))
-                await telegram_client.connect()  # Подключаемся к Telegram
-                if not await telegram_client.is_user_authorized():
-                    await log_and_display(f"Пользователь не авторизован", page)
-                    await telegram_client.send_code_request(phone_number_value)  # Отправка кода на телефон
-                    await asyncio.sleep(2)
-                    passww = ft.TextField(label="Введите код telegram:", multiline=True, max_lines=1)
+        # Создаем текстовый элемент и добавляем его на страницу
+        phone_number = ft.TextField(label="Введите номер телефона:", multiline=False, max_lines=1)
 
-                    async def btn_click_code(_) -> None:
-                        try:
-                            await log_and_display(f"Код telegram: {passww.value}", page)
-                            await telegram_client.sign_in(phone_number_value, passww.value)  # Авторизация с кодом
-                            telegram_client.disconnect()
-                            page.go("/")  # Перенаправление в настройки, если 2FA не требуется
-                            page.update()
-                        except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
-                            await log_and_display(translations["ru"]["errors"]["two_factor_required"], page)
-                            pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
+        async def connecting_number_accounts(_) -> None:
+            phone_number_value = phone_number.value
+            await log_and_display(f"Номер телефона: {phone_number_value}", page)
+            # Дальнейшая обработка после записи номера телефона
+            telegram_client = TelegramClient(
+                f"user_data/accounts/{phone_number_value}",
+                api_id=self.api_id, api_hash=self.api_hash, system_version="4.16.30-vxCUSTOM",
+                proxy=await reading_proxy_data_from_the_database(db_handler=self.db_handler, page=page))
+            await telegram_client.connect()  # Подключаемся к Telegram
+            if not await telegram_client.is_user_authorized():
+                await log_and_display(f"Пользователь не авторизован", page)
+                await telegram_client.send_code_request(phone_number_value)  # Отправка кода на телефон
+                await asyncio.sleep(2)
+                passww = ft.TextField(label="Введите код telegram:", multiline=True, max_lines=1)
 
-                            async def btn_click_password(_) -> None:
-                                await log_and_display(f"Пароль telegram: {pass_2fa.value}", page)
-                                try:
-                                    await telegram_client.sign_in(password=pass_2fa.value)
-                                    await log_and_display(f"Успешная авторизация.", page)
-                                    telegram_client.disconnect()
-                                    page.go("/")  # Изменение маршрута в представлении существующих настроек
-                                    page.update()
-                                except PasswordHashInvalidError:
-                                    await log_and_display(f"❌ Неверный пароль.", page)
-                                    await show_notification(page, f"⚠️ Неверный пароль. Попробуйте еще раз.")
-                                    page.go("/")  # Изменение маршрута в представлении существующих настроек
-                                except Exception as error:
-                                    logger.exception(error)
+                async def btn_click_code(_) -> None:
+                    try:
+                        await log_and_display(f"Код telegram: {passww.value}", page)
+                        await telegram_client.sign_in(phone_number_value, passww.value)  # Авторизация с кодом
+                        telegram_client.disconnect()
+                        page.go("/")  # Перенаправление в настройки, если 2FA не требуется
+                        page.update()
+                    except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
+                        await log_and_display(translations["ru"]["errors"]["two_factor_required"], page)
+                        pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
 
-                            button_password = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                                                text=translations["ru"]["buttons"]["done"],
-                                                                on_click=btn_click_password)  # Кнопка "Готово"
-                            page.views.append(ft.View(controls=[pass_2fa, button_password]))
-                            page.update()  # Обновляем страницу, чтобы интерфейс отобразился
-                        except ApiIdInvalidError:
-                            await log_and_display(f"[!] Неверные API ID или API Hash.", page)
-                            await telegram_client.disconnect()  # Отключаемся от Telegram
-                        except Exception as error:
-                            logger.exception(error)
-                            await telegram_client.disconnect()  # Отключаемся от Telegram
+                        async def btn_click_password(_) -> None:
+                            await log_and_display(f"Пароль telegram: {pass_2fa.value}", page)
+                            try:
+                                await telegram_client.sign_in(password=pass_2fa.value)
+                                await log_and_display(f"Успешная авторизация.", page)
+                                telegram_client.disconnect()
+                                page.go("/")  # Изменение маршрута в представлении существующих настроек
+                                page.update()
+                            except PasswordHashInvalidError:
+                                await log_and_display(f"❌ Неверный пароль.", page)
+                                await show_notification(page, f"⚠️ Неверный пароль. Попробуйте еще раз.")
+                                page.go("/")  # Изменение маршрута в представлении существующих настроек
+                            except Exception as error:
+                                logger.exception(error)
 
-                    page.views.append(ft.View(controls=[passww,
-                                                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                                                          text=translations["ru"]["buttons"]["done"],
-                                                                          on_click=btn_click_code)]))  # Кнопка "Готово"
-                    page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
-                page.update()
+                        button_password = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                                            text=translations["ru"]["buttons"]["done"],
+                                                            on_click=btn_click_password)  # Кнопка "Готово"
+                        page.views.append(ft.View(controls=[pass_2fa, button_password]))
+                        page.update()  # Обновляем страницу, чтобы интерфейс отобразился
+                    except ApiIdInvalidError:
+                        await log_and_display(f"[!] Неверные API ID или API Hash.", page)
+                        await telegram_client.disconnect()  # Отключаемся от Telegram
+                    except Exception as error:
+                        logger.exception(error)
+                        await telegram_client.disconnect()  # Отключаемся от Telegram
 
-            input_view = ft.View(
-                controls=[
-                    ft.Text(f"Подключение аккаунтов Telegram", size=15, color="pink600"), phone_number,
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                      text=translations["ru"]["buttons"]["done"], on_click=btn_click),
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                      text=translations["ru"]["buttons"]["back"], on_click=lambda _: page.go("/"))])
-            page.views.append(input_view)  # Добавляем созданный вид на страницу
+                page.views.append(ft.View(controls=[passww,
+                                                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                                                      text=translations["ru"]["buttons"]["done"],
+                                                                      on_click=btn_click_code)]))  # Кнопка "Готово"
+                page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
             page.update()
-        except Exception as error:
-            logger.exception(error)
 
-    @staticmethod
-    async def connecting_session_accounts(page: ft.Page):
-        """
-        Подключение сессии Telegram
+        # Поле для отображения выбранного файла
+        selected_files = ft.Text(value="Session файл не выбран", size=12)
 
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        """
-        try:
-            # Поле для отображения выбранного файла
-            selected_files = ft.Text(value="Session файл не выбран", size=12)
-
-            async def btn_click(e: ft.FilePickerResultEvent) -> None:
-                """Обработка выбора файла"""
-                if e.files:
-                    file_name = e.files[0].name  # Имя файла
-                    file_path = e.files[0].path  # Путь к файлу
-                    # Проверка расширения файла на ".session"
-                    if file_name.endswith(".session"):
-                        selected_files.value = f"Выбран session файл: {file_name}"
-                        selected_files.update()
-                        # Определяем целевой путь для копирования файла
-                        target_path = os.path.join(path_accounts_folder, file_name)
-                        # Создаем директорию, если она не существует
-                        os.makedirs(path_accounts_folder, exist_ok=True)
-                        # Копируем файл
-                        shutil.copy(file_path, target_path)
-                        selected_files.value = f"Файл скопирован в: {target_path}"
-                    else:
-                        selected_files.value = "Выбранный файл не является session файлом"
+        async def btn_click(e: ft.FilePickerResultEvent) -> None:
+            """Обработка выбора файла"""
+            if e.files:
+                file_name = e.files[0].name  # Имя файла
+                file_path = e.files[0].path  # Путь к файлу
+                # Проверка расширения файла на ".session"
+                if file_name.endswith(".session"):
+                    selected_files.value = f"Выбран session файл: {file_name}"
+                    selected_files.update()
+                    # Определяем целевой путь для копирования файла
+                    target_path = os.path.join(path_accounts_folder, file_name)
+                    # Создаем директорию, если она не существует
+                    os.makedirs(path_accounts_folder, exist_ok=True)
+                    # Копируем файл
+                    shutil.copy(file_path, target_path)
+                    selected_files.value = f"Файл скопирован в: {target_path}"
                 else:
-                    selected_files.value = "Выбор файла отменен"
-                selected_files.update()
-                page.update()
-
-            pick_files_dialog = ft.FilePicker(on_result=btn_click)  # Инициализация выбора файлов
-            page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
-            # Добавляем все элементы на страницу
-            input_view = ft.View(
-                controls=[
-                    ft.Text(f"Подключение аккаунтов Telegram.\n\n Выберите session файл\n", size=15),
-                    # Создаем текстовый элемент и добавляем его на страницу
-                    selected_files,  # Поле для отображения выбранного файла
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                      text=translations["ru"]["create_groups_menu"]["choose_session_files"],
-                                      on_click=lambda _: pick_files_dialog.pick_files()),  # Кнопка выбора файла
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                      text=translations["ru"]["buttons"]["back"],
-                                      on_click=lambda _: page.go("/"))  # Кнопка возврата
-                ])
-            page.views.append(input_view)  # Добавляем созданный вид на страницу
+                    selected_files.value = "Выбранный файл не является session файлом"
+            else:
+                selected_files.value = "Выбор файла отменен"
+            selected_files.update()
             page.update()
 
-        except Exception as error:
-            logger.exception(error)
+        pick_files_dialog = ft.FilePicker(on_result=btn_click)  # Инициализация выбора файлов
+        page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
+
+        page.views.append(
+            ft.View("/account_connection_menu",
+                    [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
+                               bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                     ft.Text(spans=[ft.TextSpan(
+                         translations["ru"]["menu"]["account_connect"],
+                         ft.TextStyle(
+                             size=20,
+                             weight=ft.FontWeight.BOLD,
+                             foreground=ft.Paint(
+                                 gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                      ft.Colors.PURPLE])), ), ), ], ),
+                     phone_number,
+                     # 📞 Подключение аккаунтов по номеру телефона
+                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                       text=translations["ru"]["buttons"]["done"], on_click=connecting_number_accounts),
+                     ft.Text(f"Подключение аккаунтов Telegram.\n\n Выберите session файл\n", size=15),
+                     selected_files,  # Поле для отображения выбранного файла
+                     ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                         # 🔑 Подключение session аккаунтов
+                         ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                           text=translations["ru"]["create_groups_menu"]["choose_session_files"],
+                                           on_click=lambda _: pick_files_dialog.pick_files()),  # Кнопка выбора файла
+                     ])]))
