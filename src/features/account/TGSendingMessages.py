@@ -32,7 +32,6 @@ class SendTelegramMessages:
 
     def __init__(self):
         self.tg_connect = TGConnect()
-        self.config_reader = ConfigReader()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
         self.account_extension = "session"  # Расширение файла аккаунта
         self.file_extension = "json"

@@ -18,8 +18,7 @@ from telethon.tl.types import (
     UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently
 )
 
-from src.core.configs import (line_width_button, BUTTON_HEIGHT, time_activity_user_2,
-                              path_accounts_folder)
+from src.core.configs import line_width_button, BUTTON_HEIGHT, time_activity_user_2, path_accounts_folder
 from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates, MembersAdmin
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
@@ -160,18 +159,15 @@ class ParsingGroupMembers:
         selected_sessions = []  # Список для хранения выбранных session файлов
 
         admin_switch = ft.CupertinoSwitch(
-            label="Парсить только администраторов",
-            value=False,
+            label="Парсить только администраторов", value=False,
             tooltip="Если включено, парсятся только администраторы групп. Если выключено, парсятся все участники групп."
         )
         account_groups_switch = ft.CupertinoSwitch(
-            label="Парсить группы и каналы, в которых состоит аккаунт",
-            value=False,
+            label="Парсить группы и каналы, в которых состоит аккаунт", value=False,
             tooltip="Если включено, парсятся группы и каналы, в которых состоит аккаунт."
         )
         members_switch = ft.CupertinoSwitch(
-            label="Парсить только участников",
-            value=False,
+            label="Парсить только участников", value=False,
             tooltip="Если включено, парсятся только участники групп. Если выключено, парсятся все участники групп."
         )
 
@@ -218,7 +214,9 @@ class ParsingGroupMembers:
             else:
                 session_files = selected_sessions
                 logger.debug(f"🔍 Выбранные файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}")
-                await log_and_display(f"🚀 Начало парсинга с выбранных файлов: {', '.join([os.path.basename(s) for s in selected_sessions])}", page)
+                await log_and_display(
+                    f"🚀 Начало парсинга с выбранных файлов: {', '.join([os.path.basename(s) for s in selected_sessions])}",
+                    page)
 
             start = await start_time(page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
@@ -262,7 +260,6 @@ class ParsingGroupMembers:
                 await end_time(start, page)
             except Exception as error:
                 logger.exception(error)
-
 
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
             """Обработка выбора файлов"""

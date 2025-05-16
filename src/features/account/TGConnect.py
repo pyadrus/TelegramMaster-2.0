@@ -333,8 +333,7 @@ class TGConnect:
                             page.go("/")  # Перенаправление в настройки, если 2FA не требуется
                             page.update()
                         except SessionPasswordNeededError:  # Если аккаунт защищен паролем, запрашиваем пароль
-                            await log_and_display(translations["ru"]["errors"]["two_factor_required"],
-                                                  page)
+                            await log_and_display(translations["ru"]["errors"]["two_factor_required"], page)
                             pass_2fa = ft.TextField(label="Введите пароль telegram:", multiline=False, max_lines=1)
 
                             async def btn_click_password(_) -> None:
@@ -372,15 +371,12 @@ class TGConnect:
                 page.update()
 
             input_view = ft.View(
-                controls=[ft.Text(f"Подключение аккаунтов Telegram", size=15, color="pink600"),
-                          phone_number,
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                            text=translations["ru"]["buttons"]["done"],
-                                            on_click=btn_click),  # Кнопка "Готово",
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                            text=translations["ru"]["buttons"]["back"],
-                                            on_click=lambda _: page.go("/"))  # Кнопка "Назад"
-                          ])  # Создаем вид, который будет содержать поле ввода и кнопку
+                controls=[
+                    ft.Text(f"Подключение аккаунтов Telegram", size=15, color="pink600"), phone_number,
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                      text=translations["ru"]["buttons"]["done"], on_click=btn_click),
+                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                      text=translations["ru"]["buttons"]["back"], on_click=lambda _: page.go("/"))])
             page.views.append(input_view)  # Добавляем созданный вид на страницу
             page.update()
         except Exception as error:
@@ -434,8 +430,7 @@ class TGConnect:
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                       text=translations["ru"]["buttons"]["back"],
                                       on_click=lambda _: page.go("/"))  # Кнопка возврата
-                ]
-            )
+                ])
             page.views.append(input_view)  # Добавляем созданный вид на страницу
             page.update()
 

@@ -51,9 +51,9 @@ class WorkingWithReactions:
                     msg_id = int(re.search(r'/(\d+)$', message.value).group(1))  # Получаем id сообщения из ссылки
                     await asyncio.sleep(5)
                     try:
-                        await client(SendReactionRequest(peer=chat.value, msg_id=msg_id,
-                                                         reaction=[types.ReactionEmoji(
-                                                             emoticon=f'{self.choosing_random_reaction(page)}')]))
+                        await client(SendReactionRequest(
+                            peer=chat.value, msg_id=msg_id,
+                            reaction=[types.ReactionEmoji(emoticon=f'{self.choosing_random_reaction(page)}')]))
                         await asyncio.sleep(1)
                         await client.disconnect()
                     except ReactionInvalidError:
@@ -78,8 +78,7 @@ class WorkingWithReactions:
     async def choosing_random_reaction(page):
         """Выбираем случайное значение из списка (реакция)"""
         try:
-            reaction_input = read_json_file(filename='user_data/reactions/reactions.json')
-            random_value = random.choice(reaction_input)  # Выбираем случайное значение из списка
+            random_value = random.choice(read_json_file(filename='user_data/reactions/reactions.json'))
             await log_and_display(f"{random_value}", page)
             return random_value
         except Exception as error:
@@ -124,8 +123,7 @@ class WorkingWithReactions:
             for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder)
-                chat = read_json_file(
-                    filename='user_data/reactions/link_channel.json')  # TODO переместить путь к файлу в конфиг
+                chat = read_json_file(filename='user_data/reactions/link_channel.json')
                 await log_and_display(f"{chat}", page)
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
 

@@ -121,7 +121,8 @@ async def main(page: ft.Page):
             elif page.route == "/creating_contact_list":  # Формирование списка контактов
                 start = await start_time(page=page)
                 logger.info("▶️ Начало Формирования списка контактов")
-                await DatabaseHandler().open_and_read_data(table_name="contact", page=page)  # Удаление списка с контактами
+                await DatabaseHandler().open_and_read_data(table_name="contact",
+                                                           page=page)  # Удаление списка с контактами
                 await SettingPage().output_the_input_field(page=page, label="Введите список номеров телефонов",
                                                            table_name="contact",
                                                            column_name="contact", route="/working_with_contacts",

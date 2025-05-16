@@ -140,5 +140,6 @@ ru:
     unsubscribe_not_member: "❌ Попытка отписки от группы / канала {group_link}. Аккаунт не является участником."
     invalid_auth_session_terminated: "❌ Авторизация недействительна — пользователь завершил все сеансы."
     no_session_files: "❌ В папке нет session файлов для парсинга."
+    chat_member_add_failed: "❌ Не удалось добавить пользователя в чат. Telegram не сообщил точную причину."
 
 

@@ -10,7 +10,7 @@ from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitEr
                              UserBannedInChannelError, UserNotMutualContactError, ChatAdminRequiredError,
                              UserKickedError, ChannelPrivateError, UserIdInvalidError, UsernameNotOccupiedError,
                              UsernameInvalidError, InviteRequestSentError, TypeNotFoundError, SessionRevokedError,
-                             UserDeactivatedBanError, AuthKeyUnregisteredError)
+                             UserDeactivatedBanError, AuthKeyUnregisteredError, BadRequestError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
 from src.core.configs import ConfigReader, line_width_button, BUTTON_HEIGHT, path_accounts_folder, limits
@@ -113,6 +113,8 @@ class InvitingToAGroup:
                         await record_inviting_results(self.time_inviting[0], self.time_inviting[1], username, page)
                     except (TypeError, UnboundLocalError):
                         await log_and_display(translations["ru"]["errors"]["type_or_scope"], page)
+                    except BadRequestError:
+                        await log_and_display(translations["ru"]["errors"]["chat_member_add_failed"], page)
 
                     # Ошибка инвайтинга прерываем работу
                     except ChatWriteForbiddenError:
