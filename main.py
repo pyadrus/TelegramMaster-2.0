@@ -27,7 +27,7 @@ from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
 from src.gui.gui import end_time, start_time
 from src.gui.main_menu import main_menu_program
-from src.gui.menu import (inviting_menu, bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
+from src.gui.menu import (bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
                           subscribe_and_unsubscribe_menu, account_connection_menu, viewing_posts_menu,
                           show_notification, working_with_contacts_menu)
 
@@ -53,19 +53,8 @@ async def main(page: ft.Page):
         # ______________________________________________________________________________________________________________
         try:
             if page.route == "/inviting":  # Меню "🚀 Инвайтинг"
-                await inviting_menu(page=page)
-            elif page.route == "/inviting_without_limits":  # 🚀 Инвайтинг
                 await CheckingProgram().check_before_inviting(page=page)
-                await InvitingToAGroup().inviting_without_limits(page=page)
-            elif page.route == "/inviting_1_time_per_hour":  # ⏰ Инвайтинг 1 раз в час
-                await CheckingProgram().check_before_inviting(page=page)
-                await InvitingToAGroup().launching_an_invite_once_an_hour(page=page)
-            elif page.route == "/inviting_certain_time":  # 🕒 Инвайтинг в определенное время
-                await CheckingProgram().check_before_inviting(page=page)
-                await InvitingToAGroup().schedule_invite(page=page)
-            elif page.route == "/inviting_every_day":  # 📅 Инвайтинг каждый день
-                await CheckingProgram().check_before_inviting(page=page)
-                await InvitingToAGroup().launching_invite_every_day_certain_time(page=page)
+                await InvitingToAGroup().inviting_menu(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/account_verification_menu":  # "Проверка аккаунтов"
                 await TGChek().account_verification_menu(page=page)
