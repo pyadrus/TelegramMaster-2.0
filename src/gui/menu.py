@@ -102,8 +102,7 @@ async def bio_editing_menu(page: ft.Page):
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["menu"]["edit_bio"],
                      ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
+                         size=20, weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                   ft.Colors.PURPLE])), ), ), ], ),
@@ -144,8 +143,7 @@ async def inviting_menu(page: ft.Page):
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["inviting_menu"]["inviting"],
                      ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
+                         size=20, weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                   ft.Colors.PURPLE])), ), ), ], ),
@@ -182,8 +180,7 @@ async def working_with_contacts_menu(page: ft.Page):
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["menu"]["contacts"],
                      ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
+                         size=20, weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                   ft.Colors.PURPLE])), ), ), ], ),
@@ -220,8 +217,7 @@ async def menu_parsing(page: ft.Page):
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["menu"]["parsing"],
                      ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
+                         size=20, weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                   ft.Colors.PURPLE])), ), ), ], ),
@@ -262,8 +258,7 @@ async def reactions_menu(page: ft.Page):
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["menu"]["reactions"],
                      ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
+                         size=20, weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                   ft.Colors.PURPLE])), ), ), ], ),
@@ -292,8 +287,7 @@ async def viewing_posts_menu(page: ft.Page):
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["reactions_menu"]["we_are_winding_up_post_views"],
                      ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
+                         size=20, weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                   ft.Colors.PURPLE])), ), ), ], ),
@@ -318,8 +312,7 @@ async def subscribe_and_unsubscribe_menu(page: ft.Page):
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["menu"]["subscribe_unsubscribe"],
                      ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
+                         size=20, weight=ft.FontWeight.BOLD,
                          foreground=ft.Paint(
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                   ft.Colors.PURPLE])), ), ), ], ),
@@ -353,7 +346,6 @@ async def account_connection_menu(page: ft.Page):
                          foreground=ft.Paint(
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                   ft.Colors.PURPLE])), ), ), ], ),
-
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 📞 Подключение аккаунтов по номеру телефона
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
