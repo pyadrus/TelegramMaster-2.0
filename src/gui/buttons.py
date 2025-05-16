@@ -22,11 +22,9 @@ def function_button_ready(page: ft.Page, btn_click, back_button_clicked, user_in
                 user_input,
                 ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                  text=translations["ru"]["buttons"]["done"],
-                                  on_click=btn_click),  # Кнопка "Готово"
+                                  text=translations["ru"]["buttons"]["done"], on_click=btn_click),  # Кнопка "Готово"
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                  text=translations["ru"]["buttons"]["back"],
-                                  on_click=back_button_clicked),  # Кнопка "Назад"
+                                  text=translations["ru"]["buttons"]["back"], on_click=back_button_clicked),  # Кнопка "Назад"
             ], ))
 
 
@@ -49,11 +47,9 @@ def function_button_ready_reactions(page: ft.Page, btn_click, back_button_clicke
                 message,  # Поле ввода ссылки пост
                 ft.Column(),  # Заполнитель для приветствия или другого содержимого (необязательно)
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                  text=translations["ru"]["buttons"]["done"],
-                                  on_click=btn_click),  # Кнопка "Готово"
+                                  text=translations["ru"]["buttons"]["done"], on_click=btn_click),  # Кнопка "Готово"
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                  text=translations["ru"]["buttons"]["back"],
-                                  on_click=back_button_clicked),  # Кнопка "Назад"
+                                  text=translations["ru"]["buttons"]["back"], on_click=back_button_clicked),  # Кнопка "Назад"
             ], ))
 
 
@@ -77,9 +73,7 @@ def function_button_ready_viewing(page: ft.Page, btn_click, back_button_clicked,
                 link_post,  # Поле ввода ссылки пост
                 ft.Column(),  # Колонка для размещения других элементов (при необходимости)
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                  text=translations["ru"]["buttons"]["done"],
-                                  on_click=btn_click),  # Кнопка "Готово"
+                                  text=translations["ru"]["buttons"]["done"], on_click=btn_click),  # Кнопка "Готово"
                 ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                  text=translations["ru"]["buttons"]["back"],
-                                  on_click=back_button_clicked),  # Кнопка "Назад"
+                                  text=translations["ru"]["buttons"]["back"], on_click=back_button_clicked),  # Кнопка "Назад"
             ]))

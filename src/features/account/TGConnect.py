@@ -63,6 +63,8 @@ class TGConnect:
                 await telegram_client.disconnect()
                 working_with_accounts(f"user_data/accounts/{session_name}.session",
                                       f"user_data/accounts/banned/{session_name}.session")
+            except AttributeError:
+                pass
         except Exception as error:
             logger.exception(error)
 
