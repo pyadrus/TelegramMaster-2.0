@@ -13,8 +13,8 @@ from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitEr
                              UserDeactivatedBanError, AuthKeyUnregisteredError, BadRequestError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-from src.core.configs import ConfigReader, line_width_button, BUTTON_HEIGHT, path_accounts_folder, limits, \
-    time_inviting_1, time_inviting_2
+from src.core.configs import (ConfigReader, line_width_button, BUTTON_HEIGHT, path_accounts_folder, limits,
+                              time_inviting_1, time_inviting_2)
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
 from src.features.account.TGConnect import TGConnect
@@ -150,13 +150,13 @@ class InvitingToAGroup:
                     else:
                         await log_and_display(
                             f"[+] Участник {username} добавлен, если не состоит в чате {dropdown.value}",
-                            page)
-                        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
-                await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page)
-            await log_and_display(f"[!] Инвайтинг окончен!", page)
+                            page=page)
+                        await record_inviting_results(time_inviting_1, time_inviting_2, username, page=page)
+                await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page=page)
+            await log_and_display(f"[!] Инвайтинг окончен!", page=page)
         except Exception as error:
             logger.exception(error)
-        await end_time(start, page)
+        await end_time(start, page=page)
         await show_notification(page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
         page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
 
@@ -167,13 +167,10 @@ class InvitingToAGroup:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-
         links_inviting = await self.getting_an_invitation_link_from_the_database(
             page)  # Получение ссылки для инвайтинга
-
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
@@ -193,13 +190,10 @@ class InvitingToAGroup:
         """
         📅 Инвайтинг каждый день. Запуск приглашения участников каждый день в определенное время, выбранное пользователем.
         """
-
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-
         links_inviting = await self.getting_an_invitation_link_from_the_database(
             page)  # Получение ссылки для инвайтинга
-
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
@@ -217,10 +211,8 @@ class InvitingToAGroup:
                 await asyncio.sleep(1)
 
         # Создаем выпадающий список с названиями групп
-        dropdown = ft.Dropdown(width=line_width_button,
-                               options=[ft.DropdownOption(link[0]) for link in links_inviting],
+        dropdown = ft.Dropdown(width=line_width_button, options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
-
         await self.create_invite_page(page, dropdown, add_items)
 
     async def launching_an_invite_once_an_hour(self, page: ft.Page) -> None:
@@ -229,13 +221,10 @@ class InvitingToAGroup:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-
         links_inviting = await self.getting_an_invitation_link_from_the_database(
             page)  # Получение ссылки для инвайтинга
-
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
@@ -248,10 +237,8 @@ class InvitingToAGroup:
                     await self.general_invitation_to_the_group(page, dropdown)
 
                 await log_and_display("Запуск программы в 00 минут каждого часа", page)
-
                 self.scheduler.hourly(dt.time(minute=00, second=00),
                                       general_invitation_to_the_group_scheduler)  # Асинхронная функция для выполнения
-
                 while True:
                     await asyncio.sleep(1)
             except Exception as error:
@@ -261,17 +248,10 @@ class InvitingToAGroup:
         dropdown = ft.Dropdown(width=line_width_button,
                                options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
-
         await self.create_invite_page(page, dropdown, add_items)
 
     @staticmethod
     async def create_invite_page(page: ft.Page, dropdown, add_items) -> None:
-
-        async def back_button_clicked(_):
-            """
-            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню инвайтинга.
-            """
-            page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
 
         # Добавляем кнопки и другие элементы управления на страницу
         page.views.append(
@@ -287,7 +267,7 @@ class InvitingToAGroup:
                                       on_click=add_items),  # Кнопка "🚀 Начать инвайтинг"
                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                       text=translations["ru"]["buttons"]["back"],
-                                      on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
+                                      on_click=lambda _: page.go("/inviting"))  # Кнопка "⬅️ Назад"
                 ],
             )
         )

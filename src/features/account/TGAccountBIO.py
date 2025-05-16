@@ -123,7 +123,6 @@ class AccountActions:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
-
                 if len(user_input) > 70:
                     await show_notification(page, f"❌ Описание профиля превышает 70 символов ({len(user_input)}).")
                     return
