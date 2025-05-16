@@ -34,7 +34,7 @@ class InvitingToAGroup:
         self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
         self.scheduler = Scheduler()  # Создаем экземпляр планировщика
 
-    async def getting_an_invitation_link_from_the_database(self, page: ft.Page):
+    async def getting_an_invitation_link_from_database(self, page: ft.Page):
         """"
         Получение ссылки для инвайтинга
         """
@@ -169,8 +169,7 @@ class InvitingToAGroup:
         """
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-        links_inviting = await self.getting_an_invitation_link_from_the_database(
-            page)  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_database(page)  # Получение ссылки для инвайтинга
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
@@ -192,8 +191,7 @@ class InvitingToAGroup:
         """
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-        links_inviting = await self.getting_an_invitation_link_from_the_database(
-            page)  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_database(page)  # Получение ссылки для инвайтинга
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
@@ -223,8 +221,7 @@ class InvitingToAGroup:
         """
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-        links_inviting = await self.getting_an_invitation_link_from_the_database(
-            page)  # Получение ссылки для инвайтинга
+        links_inviting = await self.getting_an_invitation_link_from_database(page)  # Получение ссылки для инвайтинга
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
@@ -280,13 +277,9 @@ class InvitingToAGroup:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-
-        links_inviting = await self.getting_an_invitation_link_from_the_database(
-            page)  # Получение ссылки для инвайтинга
-
+        links_inviting = await self.getting_an_invitation_link_from_database(page)  # Получение ссылки для инвайтинга
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         async def add_items(_):
@@ -296,14 +289,11 @@ class InvitingToAGroup:
             try:
                 async def general_invitation_to_the_group_scheduler():
                     await self.general_invitation_to_the_group(page, dropdown)
-
                 await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", page)
-
                 self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)),
                                     general_invitation_to_the_group_scheduler)
                 while True:
                     await asyncio.sleep(1)
-
             except Exception as error:
                 logger.exception(error)
 
