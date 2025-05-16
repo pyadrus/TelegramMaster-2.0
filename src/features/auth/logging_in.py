@@ -61,10 +61,8 @@ async def loging(page: ft.Page):
     """
     Логирование TelegramMaster 2.0
     """
-
     local_ip = get_external_ip()
     emoji, country = get_country_flag(local_ip)
-
     client = TelegramClient('src/features/auth/log',
                             api_id=7655060,
                             api_hash="cc1290cd733c1f1d407598e5a31be4a8")

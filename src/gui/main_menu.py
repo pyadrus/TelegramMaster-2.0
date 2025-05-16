@@ -92,8 +92,7 @@ async def main_menu_program(page: ft.Page):
                                             on_click=lambda _: page.go("/documentation")),
                           # 💬 Рассылка сообщений по чатам
                           ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                            text=translations["ru"]["message_sending_menu"][
-                                                "sending_messages_via_chats"],
+                                            text=translations["ru"]["message_sending_menu"]["sending_messages_via_chats"],
                                             on_click=lambda _: page.go("/sending_messages_files_via_chats")),
 
                       ]), ]))

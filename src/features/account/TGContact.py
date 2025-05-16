@@ -182,14 +182,8 @@ class TGContact:
         :param entities: Список сущностей
         """
         try:
-            username = user.username if user.username else "NONE"
-            user_phone = user.phone if user.phone else "Номер телефона скрыт"
-            first_name = user.first_name if user.first_name else ""
-            last_name = user.last_name if user.last_name else ""
-            photos_id = (
-                "Пользователь с фото" if isinstance(user.photo, types.UserProfilePhoto) else "Пользователь без фото")
-            online_at = await ParsingGroupMembers.get_user_online_status(user)
-            user_premium = "Пользователь с premium" if user.premium else ""
+            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await ParsingGroupMembers().receiving_data(
+                user)
 
             entities.append(
                 [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,

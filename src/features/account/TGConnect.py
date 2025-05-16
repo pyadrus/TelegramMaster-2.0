@@ -314,12 +314,10 @@ class TGConnect:
                 phone_number_value = phone_number.value
                 await log_and_display(f"Номер телефона: {phone_number_value}", page)
                 # Дальнейшая обработка после записи номера телефона
-                telegram_client = TelegramClient(f"user_data/accounts/{phone_number_value}",
-                                                 api_id=self.api_id,
-                                                 api_hash=self.api_hash,
-                                                 system_version="4.16.30-vxCUSTOM",
-                                                 proxy=await reading_proxy_data_from_the_database(
-                                                     db_handler=self.db_handler, page=page))
+                telegram_client = TelegramClient(
+                    f"user_data/accounts/{phone_number_value}",
+                    api_id=self.api_id, api_hash=self.api_hash, system_version="4.16.30-vxCUSTOM",
+                    proxy=await reading_proxy_data_from_the_database(db_handler=self.db_handler, page=page))
                 await telegram_client.connect()  # Подключаемся к Telegram
                 if not await telegram_client.is_user_authorized():
                     await log_and_display(f"Пользователь не авторизован", page)
