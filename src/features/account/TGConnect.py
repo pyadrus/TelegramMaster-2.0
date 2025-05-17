@@ -42,7 +42,8 @@ class TGConnect:
         """
         try:
             await log_and_display(f"Проверка аккаунта {session_name}", page)
-            telegram_client = await self.get_telegram_client(page, session_name, path_accounts_folder)
+            telegram_client = await self.get_telegram_client(page=page, session_name=session_name,
+                                                             account_directory=path_accounts_folder)
             try:
                 await telegram_client.connect()  # Подсоединяемся к Telegram аккаунта
                 if not await telegram_client.is_user_authorized():  # Если аккаунт не авторизирован
@@ -270,8 +271,7 @@ class TGConnect:
         telegram_client = None  # Инициализируем переменную
         try:
             telegram_client = TelegramClient(session=f"{account_directory}/{session_name}", api_id=self.api_id,
-                                             api_hash=self.api_hash,
-                                             system_version="4.16.30-vxCUSTOM",
+                                             api_hash=self.api_hash, system_version="4.16.30-vxCUSTOM",
                                              proxy=await reading_proxy_data_from_the_database(
                                                  db_handler=self.db_handler, page=page))
             await telegram_client.connect()
@@ -403,7 +403,7 @@ class TGConnect:
                     [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
                                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                      ft.Text(spans=[ft.TextSpan(
-                         translations["ru"]["menu"]["account_connect"],
+                         "Подключение аккаунта Telegram по номеру телефона.",
                          ft.TextStyle(
                              size=20,
                              weight=ft.FontWeight.BOLD,
@@ -413,8 +413,24 @@ class TGConnect:
                      phone_number,
                      # 📞 Подключение аккаунтов по номеру телефона
                      ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["buttons"]["done"], on_click=connecting_number_accounts),
-                     ft.Text(f"Подключение аккаунтов Telegram.\n\n Выберите session файл\n", size=15),
+                                       text="Получить код", on_click=connecting_number_accounts),
+
+                     ft.Divider(
+                         color="blue",  # Цвет линии
+                         height=10,  # Расстояние от предыдущего элемента
+                         thickness=1.5,  # Толщина линии
+                     ),
+
+                     ft.Text(spans=[ft.TextSpan(
+                         "Подключение session аккаунтов Telegram",
+                         ft.TextStyle(
+                             size=20,
+                             weight=ft.FontWeight.BOLD,
+                             foreground=ft.Paint(
+                                 gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                      ft.Colors.PURPLE])), ), ), ], ),
+
+                     ft.Text(f"Выберите session файл\n", size=15),
                      selected_files,  # Поле для отображения выбранного файла
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🔑 Подключение session аккаунтов

@@ -41,12 +41,10 @@ class TGChek:
                                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
                      ft.Text(spans=[ft.TextSpan(
                          translations["ru"]["menu"]["account_check"],
-                         ft.TextStyle(
-                             size=20,
-                             weight=ft.FontWeight.BOLD,
-                             foreground=ft.Paint(
-                                 gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
-                                                                                      ft.Colors.PURPLE])), ), ), ], ),
+                         ft.TextStyle(size=20, weight=ft.FontWeight.BOLD,
+                                      foreground=ft.Paint(
+                                          gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                               ft.Colors.PURPLE])), ), ), ], ),
                      list_view,
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🤖 Проверка через спам бот

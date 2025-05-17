@@ -120,7 +120,7 @@ class AccountActions:
             await log_and_display(f"Запуск смены  описания профиля", page)
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
                 await log_and_display(f"{session_name}", page)
-                client = await self.tg_connect.get_telegram_client(page, session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 if len(user_input) > 70:
@@ -150,8 +150,7 @@ class AccountActions:
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
                 await log_and_display(f"{session_name}", page)
-                client = await self.tg_connect.get_telegram_client(page,
-                                                                   session_name=session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 try:
@@ -203,7 +202,7 @@ class AccountActions:
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
                 await log_and_display(f"{session_name}", page)
-                client = await self.tg_connect.get_telegram_client(page, session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 try:
@@ -225,7 +224,7 @@ class AccountActions:
         try:
             for session_name in await find_filess(directory_path=self.directory_path, extension=self.extension):
                 await log_and_display(f"{session_name}", page)
-                client = await self.tg_connect.get_telegram_client(page, session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
                                                                    account_directory=self.directory_path)
                 for photo_file in await find_files(directory_path="user_data/bio", extension='jpg', page=page):
                     try:
