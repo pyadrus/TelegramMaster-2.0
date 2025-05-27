@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <title>🚀 Инвайтинг</title>
@@ -11,56 +12,60 @@
     <!-- Стили для кнопки "Вверх" -->
     <link rel="stylesheet" href="/static/css/to-top-style.css">
 </head>
-<body>
-<div class="container">
-    <!-- Подключение бокового меню -->
-    <div id="menu-placeholder"></div>
-    <!-- Основной контент -->
-    <div class="content">
-        <h1 style="text-align: center;">🚀 Инвайтинг ({{program_name}})</h1>
-        <!-- Меню навигации -->
-        <div class="card-container">
-            <div class="card">
-                <!-- 🚀 Инвайтинг -->
-                <p class="heading">{{inviting_ru}}</p>
-                <p>{{inviting_ru}}</p>
-                <button class="card-button"><a
-                        href="{{ url_for('inviting_with_limits_in_telegram_master') }}">Перейти</a></button>
-            </div>
-            <div class="card">
-                <!-- ⏰ Инвайтинг 1 раз в час -->
-                <p class="heading">{{invitation_1_time_per_hour_ru}}</p>
-                <p>{{invitation_1_time_per_hour_ru}}</p>
-                <button class="card-button"><a href="{{ url_for('inviting_1_time_per_hour') }}">Перейти</a></button>
-            </div>
-            <div class="card">
-                <!-- 🕒 Инвайтинг в определенное время -->
-                <p class="heading">{{invitation_at_a_certain_time_ru}}</p>
-                <p>{{invitation_at_a_certain_time_ru}}</p>
-                <button class="card-button"><a href="{{ url_for('inviting_at_a_certain_time') }}">Перейти</a></button>
-            </div>
 
-            <div class="card">
-                <!-- 📅 Инвайтинг каждый день -->
-                <p class="heading">{{inviting_every_day_ru}}</p>
-                <p>{{inviting_every_day_ru}}</p>
-                <button class="card-button"><a href="{{ url_for('inviting_every_day') }}">Перейти</a></button>
+<body>
+    <div class="container">
+        <!-- Подключение бокового меню -->
+        <div id="menu-placeholder"></div>
+        <!-- Основной контент -->
+        <div class="content">
+            <h1 style="text-align: center;">🚀 Инвайтинг ({{program_name}})</h1>
+            <!-- Меню навигации -->
+            <div class="card-container">
+                <div class="card">
+                    <!-- 🚀 Инвайтинг -->
+                    <p class="heading">{{inviting_ru}}</p>
+                    <p>{{inviting_ru}}</p>
+                    <button class="card-button"><a
+                            href="{{ url_for('inviting_with_limits_in_telegram_master') }}">Перейти</a></button>
+                </div>
+                <div class="card">
+                    <!-- ⏰ Инвайтинг 1 раз в час -->
+                    <p class="heading">{{invitation_1_time_per_hour_ru}}</p>
+                    <p>{{invitation_1_time_per_hour_ru}}</p>
+                    <button class="card-button"><a href="{{ url_for('inviting_1_time_per_hour') }}">Перейти</a></button>
+                </div>
+                <div class="card">
+                    <!-- 🕒 Инвайтинг в определенное время -->
+                    <p class="heading">{{invitation_at_a_certain_time_ru}}</p>
+                    <p>{{invitation_at_a_certain_time_ru}}</p>
+                    <button class="card-button"><a
+                            href="{{ url_for('inviting_at_a_certain_time') }}">Перейти</a></button>
+                </div>
+
+                <div class="card">
+                    <!-- 📅 Инвайтинг каждый день -->
+                    <p class="heading">{{inviting_every_day_ru}}</p>
+                    <p>{{inviting_every_day_ru}}</p>
+                    <button class="card-button"><a href="{{ url_for('inviting_every_day') }}">Перейти</a></button>
+                </div>
             </div>
-        </div>
-        <div
+            <div
                 style="border: 2px solid #f5c6cbf5; background-color: #f8d7da; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif;">
-            <h3 style="color: #721c24; margin: 0 0 10px;">ПРИМЕЧАНИЕ:</h3>
-            <p style="color: #721c24; margin: 0; font-size: 16px;">
-                ⚠️ {{program_name}} отправляет приглашения в Telegram исключительно по <strong>username</strong>. Он
-                выполняет эту задачу <strong>последовательно</strong>, а не параллельно, чтобы обеспечить
-                максимальную надежность. Пожалуйста, обратите внимание, что {{program_name}} <strong>не может</strong>
-                выполнять инвайтинг в <strong>Telegram-каналы</strong>.
-            </p>
+                <h3 style="color: #721c24; margin: 0 0 10px;">ПРИМЕЧАНИЕ:</h3>
+                <p style="color: #721c24; margin: 0; font-size: 16px;">
+                    ⚠️ {{program_name}} отправляет приглашения в Telegram исключительно по <strong>username</strong>. Он
+                    выполняет эту задачу <strong>последовательно</strong>, а не параллельно, чтобы обеспечить
+                    максимальную надежность. Пожалуйста, обратите внимание, что {{program_name}} <strong>не
+                        может</strong>
+                    выполнять инвайтинг в <strong>Telegram-каналы</strong>.
+                </p>
+            </div>
+            <hr /> <!-- Горизонтальная линия-->
+            <!-- Кнопка "Вверх" -->
+            <a href="#" id="to-top" title="Вверх"><i class="fas fa-chevron-up" aria-hidden="true"></i></a>
         </div>
-        <hr/> <!-- Горизонтальная линия-->
-        <!-- Кнопка "Вверх" -->
-        <a href="#" id="to-top" title="Вверх"><i class="fas fa-chevron-up" aria-hidden="true"></i></a>
     </div>
-</div>
 </body>
+
 </html>
