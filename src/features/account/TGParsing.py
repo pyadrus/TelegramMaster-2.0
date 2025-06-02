@@ -171,6 +171,10 @@ class ParsingGroupMembers:
             tooltip="Если включено, парсятся только участники групп. Если выключено, парсятся все участники групп."
         )
 
+        # Поле для ввода ссылки на чат
+        chat_input = ft.TextField(label="🔗 Введите ссылку на чат, с которого будут собираться участники.",
+                                  multiline=False, max_lines=1)
+        
         # Обработчики для взаимоисключающего поведения
         def toggle_admin_switch(_):
             if admin_switch.value:
@@ -204,6 +208,17 @@ class ParsingGroupMembers:
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
 
+            data = chat_input.value.split()
+            logger.info(f"Полученные данные: {data}")  # Отладка
+            # Удаляем дубликаты
+            unique_records = list(set(data))
+            await self.db_handler.write_to_single_column_table(
+                name_database="writing_group_links",
+                database_columns="writing_group_links",
+                into_columns="writing_group_links",
+                recorded_data=unique_records
+            )
+            
             if not selected_sessions:
                 await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", page)
                 session_files = await find_filess(directory_path=path_accounts_folder, extension='session')
@@ -310,7 +325,7 @@ class ParsingGroupMembers:
         page.views.append(
             ft.View("/parsing", [
                 list_view,  # отображение логов 📝
-                ft.Column([admin_switch, account_groups_switch, members_switch]),
+                ft.Column([admin_switch, account_groups_switch, members_switch, chat_input]),
                 # переключатели в столбце для корректного отображения
                 ft.Column(),  # резерв для приветствия или других элементов интерфейса
                 selected_files,  # Отображение выбранных файлов
