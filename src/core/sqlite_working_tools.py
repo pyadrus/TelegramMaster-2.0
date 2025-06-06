@@ -51,6 +51,25 @@ class MembersAdmin(Model):
         table_name = 'members_admin'
 
 
+class MembersGroups(Model):
+    """
+    Таблица для хранения данных администраторов групп в таблице members_admin
+    """
+    username = CharField(max_length=255, null=True)
+    user_id = BigIntegerField(unique=True)
+    access_hash = BigIntegerField(null=True)
+    first_name = CharField(max_length=255, null=True)
+    last_name = CharField(max_length=255, null=True)
+    user_phone = CharField(max_length=255, null=True)
+    online_at = DateTimeField(null=True)
+    photos_id = CharField(max_length=255, null=True)
+    user_premium = BooleanField(default=False)
+
+    class Meta:
+        database = db
+        table_name = 'members'
+
+
 def remove_duplicates():
     """
     Удаление дублирующихся id в таблице groups_and_channels
@@ -132,8 +151,7 @@ class DatabaseHandler:
         :param column_name: Имя столбца
         """
         await self.connect()
-        self.cursor.execute(f"DELETE FROM {table_name} WHERE row{column_name} NOT IN (SELECT MIN(row{column_name}) "
-                            f"FROM {table_name} GROUP BY {column_name})")
+        self.cursor.execute(f"DELETE FROM {table_name} WHERE row{column_name} NOT IN (SELECT MIN(row{column_name}) FROM {table_name} GROUP BY {column_name}")
         self.sqlite_connection.commit()
         self.close()
 
@@ -163,21 +181,37 @@ class DatabaseHandler:
             logger.exception(error)
             raise
 
-    async def write_parsed_chat_participants_to_db_active(self, entities) -> None:
-        """
-        Запись результатов parsing участников чата
+    # async def write_parsed_chat_participants_to_db_active(self, entities) -> None:
+    #     """
+    #     Запись результатов parsing участников чата
 
-        :param entities: список результатов parsing
-        """
-        await self.connect()
-        # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
-                            "user_phone, online_at, photos_id, user_premium)")
-        self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
-                                "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                [entities])
-        self.sqlite_connection.commit()
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
+    #     :param entities: список результатов parsing
+    #     """
+    #     await self.connect()
+    #     # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
+    #     self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, user_id, access_hash, first_name, last_name, "
+    #                         "user_phone, online_at, photos_id, user_premium)")
+    #     self.cursor.executemany("INSERT INTO members(username, user_id, access_hash, first_name, last_name, user_phone, "
+    #                             "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    #                             [entities])
+    #     self.sqlite_connection.commit()
+    #     self.close()  # cursor_members.close() – закрытие соединения с БД.
+
+    # async def write_parsed_chat_participants_to_db(self, entities) -> None:
+    #         """
+    #         Запись результатов parsing участников чата
+
+    #         :param entities: список результатов parsing
+    #         """
+    #         await self.connect()
+    #         for line in entities:
+    #             # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
+    #             self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, user_id, access_hash, first_name, last_name, "
+    #                                 "user_phone, online_at, photos_id, user_premium)")
+    #             self.cursor.executemany("INSERT INTO members(username, user_id, access_hash, first_name, last_name, user_phone, "
+    #                                     "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (line,), )
+    #             self.sqlite_connection.commit()
+    #         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities, page: ft.Page) -> None:
         """
@@ -197,22 +231,6 @@ class DatabaseHandler:
         except sqlite3.ProgrammingError as e:
             await log_and_display(f"❌ Ошибка: {e}", page)
             return  # Выходим из функции write_data_to_db
-
-    async def write_parsed_chat_participants_to_db(self, entities) -> None:
-        """
-        Запись результатов parsing участников чата
-
-        :param entities: список результатов parsing
-        """
-        await self.connect()
-        for line in entities:
-            # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, id, access_hash, first_name, last_name, "
-                                "user_phone, online_at, photos_id, user_premium)")
-            self.cursor.executemany("INSERT INTO members(username, id, access_hash, first_name, last_name, user_phone, "
-                                    "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (line,), )
-            self.sqlite_connection.commit()
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns, page: ft.Page) -> None:
         """
@@ -256,9 +274,18 @@ class DatabaseHandler:
     async def save_proxy_data_to_db(self, proxy) -> None:
         """Запись данных proxy в базу данных"""
         await self.connect()
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS proxy (proxy_type, addr, port, username, password, rdns)''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS proxy
+                               (
+                                   proxy_type,
+                                   addr,
+                                   port,
+                                   username,
+                                   password,
+                                   rdns
+                               )''')
         self.cursor.executemany(
-            '''INSERT INTO proxy(proxy_type, addr, port, username, password, rdns) VALUES (?, ?, ?, ?, ?, ?)''',
+            '''INSERT INTO proxy(proxy_type, addr, port, username, password, rdns)
+               VALUES (?, ?, ?, ?, ?, ?)''',
             (proxy,), )
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
@@ -298,28 +325,29 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def remove_records_without_username(self, page: ft.Page) -> None:
-        """Чистка списка от участников у которых нет username"""
-        await log_and_display(f"Чищу список software_database.db от участников у которых нет username", page)
-        await self.connect()
-        self.cursor.execute('''SELECT * from members''')
-        records: list = self.cursor.fetchall()
-        await log_and_display(f"Всего username: {len(records)}", page)
-        for rows in records:
-            ints_list1 = {"username": rows[0]}
-            username = ints_list1["username"]
-            username_name = "NONE"
-            if username == username_name:
-                # Удаляем пользователя без username
-                self.cursor.execute('''DELETE from members where username = ?''', (username_name,))
-                self.sqlite_connection.commit()
+    # async def remove_records_without_username(self, page: ft.Page) -> None:
+    #     """Чистка списка от участников у которых нет username"""
+    #     await log_and_display(f"Чищу список software_database.db от участников у которых нет username", page)
+    #     await self.connect()
+    #     self.cursor.execute('''SELECT * from members''')
+    #     records: list = self.cursor.fetchall()
+    #     await log_and_display(f"Всего username: {len(records)}", page)
+    #     for rows in records:
+    #         ints_list1 = {"username": rows[0]}
+    #         username = ints_list1["username"]
+    #         username_name = "NONE"
+    #         if username == username_name:
+    #             # Удаляем пользователя без username
+    #             self.cursor.execute('''DELETE from members where username = ?''', (username_name,))
+    #             self.sqlite_connection.commit()
 
     async def read_parsed_chat_participants_from_db(self):
         """
         Чтение данных из базы данных.
         """
         await self.connect()
-        self.cursor.execute('''SELECT * FROM members''')
+        self.cursor.execute('''SELECT *
+                               FROM members''')
         data = self.cursor.fetchall()
         self.close()
         return data

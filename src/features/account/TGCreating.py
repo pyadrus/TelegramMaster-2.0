@@ -7,10 +7,11 @@ import flet as ft
 from loguru import logger
 from telethon import functions
 
-from src.core.configs import line_width_button, BUTTON_HEIGHT, path_accounts_folder
+from src.core.configs import (BUTTON_HEIGHT, line_width_button,
+                              path_accounts_folder)
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
-from src.gui.gui import start_time, end_time, list_view, log_and_display
+from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
 
 

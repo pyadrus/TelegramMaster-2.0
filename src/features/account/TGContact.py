@@ -4,8 +4,7 @@ import random
 
 import flet as ft
 from loguru import logger
-from telethon import functions
-from telethon import types
+from telethon import functions, types
 
 from src.core.configs import path_accounts_folder
 from src.core.sqlite_working_tools import DatabaseHandler

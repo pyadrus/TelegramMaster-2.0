@@ -4,22 +4,25 @@ import random
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
-from telethon import functions
-from telethon import types
-from telethon.errors import (ChannelsTooMuchError, ChannelPrivateError, UsernameInvalidError, PeerFloodError,
-                             FloodWaitError, InviteRequestSentError, UserDeactivatedBanError, SessionRevokedError,
-                             InviteHashExpiredError, InviteHashInvalidError, AuthKeyUnregisteredError,
-                             SessionPasswordNeededError, UserNotParticipantError)
-from telethon.tl.functions.channels import JoinChannelRequest
-from telethon.tl.functions.channels import LeaveChannelRequest
+from telethon import functions, types
+from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError,
+                             ChannelsTooMuchError, FloodWaitError,
+                             InviteHashExpiredError, InviteHashInvalidError,
+                             InviteRequestSentError, PeerFloodError,
+                             SessionPasswordNeededError, SessionRevokedError,
+                             UserDeactivatedBanError, UsernameInvalidError,
+                             UserNotParticipantError)
+from telethon.tl.functions.channels import (JoinChannelRequest,
+                                            LeaveChannelRequest)
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-from src.core.configs import (line_width_button, BUTTON_HEIGHT, time_subscription_1, time_subscription_2,
-                              path_accounts_folder)
+from src.core.configs import (BUTTON_HEIGHT, line_width_button,
+                              path_accounts_folder, time_subscription_1,
+                              time_subscription_2)
 from src.core.sqlite_working_tools import DatabaseHandler
-from src.core.utils import record_and_interrupt, find_filess
+from src.core.utils import find_filess, record_and_interrupt
 from src.features.account.TGConnect import TGConnect
-from src.gui.gui import start_time, end_time, list_view, log_and_display
+from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
 
 
@@ -273,8 +276,10 @@ class SubscribeUnsubscribeTelegram:
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}",
                 page)
-            await self.db_handler.write_data_to_db("""SELECT * from writing_group_links""",
-                                                   """DELETE from writing_group_links
+            await self.db_handler.write_data_to_db("""SELECT *
+                                                      from writing_group_links""",
+                                                   """DELETE
+                                                      from writing_group_links
                                                       where writing_group_links = ?""",
                                                    groups_wr, page)
         except PeerFloodError:

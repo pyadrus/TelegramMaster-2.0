@@ -283,63 +283,7 @@
         "documentation": {}
     },
     {
-        "label": "ConfigReader",
-        "importPath": "src.core.configs",
-        "description": "src.core.configs",
-        "isExtraImport": true,
-        "detail": "src.core.configs",
-        "documentation": {}
-    },
-    {
         "label": "BUTTON_HEIGHT",
-        "importPath": "src.core.configs",
-        "description": "src.core.configs",
-        "isExtraImport": true,
-        "detail": "src.core.configs",
-        "documentation": {}
-    },
-    {
-        "label": "line_width_button",
-        "importPath": "src.core.configs",
-        "description": "src.core.configs",
-        "isExtraImport": true,
-        "detail": "src.core.configs",
-        "documentation": {}
-    },
-    {
-        "label": "path_accounts_folder",
-        "importPath": "src.core.configs",
-        "description": "src.core.configs",
-        "isExtraImport": true,
-        "detail": "src.core.configs",
-        "documentation": {}
-    },
-    {
-        "label": "path_accounts_folder",
-        "importPath": "src.core.configs",
-        "description": "src.core.configs",
-        "isExtraImport": true,
-        "detail": "src.core.configs",
-        "documentation": {}
-    },
-    {
-        "label": "line_width_button",
-        "importPath": "src.core.configs",
-        "description": "src.core.configs",
-        "isExtraImport": true,
-        "detail": "src.core.configs",
-        "documentation": {}
-    },
-    {
-        "label": "BUTTON_HEIGHT",
-        "importPath": "src.core.configs",
-        "description": "src.core.configs",
-        "isExtraImport": true,
-        "detail": "src.core.configs",
-        "documentation": {}
-    },
-    {
-        "label": "path_accounts_folder",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -363,7 +307,7 @@
         "documentation": {}
     },
     {
-        "label": "BUTTON_HEIGHT",
+        "label": "path_accounts_folder",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -372,6 +316,54 @@
     },
     {
         "label": "path_accounts_folder",
+        "importPath": "src.core.configs",
+        "description": "src.core.configs",
+        "isExtraImport": true,
+        "detail": "src.core.configs",
+        "documentation": {}
+    },
+    {
+        "label": "BUTTON_HEIGHT",
+        "importPath": "src.core.configs",
+        "description": "src.core.configs",
+        "isExtraImport": true,
+        "detail": "src.core.configs",
+        "documentation": {}
+    },
+    {
+        "label": "line_width_button",
+        "importPath": "src.core.configs",
+        "description": "src.core.configs",
+        "isExtraImport": true,
+        "detail": "src.core.configs",
+        "documentation": {}
+    },
+    {
+        "label": "path_accounts_folder",
+        "importPath": "src.core.configs",
+        "description": "src.core.configs",
+        "isExtraImport": true,
+        "detail": "src.core.configs",
+        "documentation": {}
+    },
+    {
+        "label": "BUTTON_HEIGHT",
+        "importPath": "src.core.configs",
+        "description": "src.core.configs",
+        "isExtraImport": true,
+        "detail": "src.core.configs",
+        "documentation": {}
+    },
+    {
+        "label": "BUTTON_WIDTH",
+        "importPath": "src.core.configs",
+        "description": "src.core.configs",
+        "isExtraImport": true,
+        "detail": "src.core.configs",
+        "documentation": {}
+    },
+    {
+        "label": "ConfigReader",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -380,6 +372,22 @@
     },
     {
         "label": "limits",
+        "importPath": "src.core.configs",
+        "description": "src.core.configs",
+        "isExtraImport": true,
+        "detail": "src.core.configs",
+        "documentation": {}
+    },
+    {
+        "label": "line_width_button",
+        "importPath": "src.core.configs",
+        "description": "src.core.configs",
+        "isExtraImport": true,
+        "detail": "src.core.configs",
+        "documentation": {}
+    },
+    {
+        "label": "path_accounts_folder",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -403,7 +411,7 @@
         "documentation": {}
     },
     {
-        "label": "BUTTON_WIDTH",
+        "label": "BUTTON_HEIGHT",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -419,7 +427,7 @@
         "documentation": {}
     },
     {
-        "label": "BUTTON_HEIGHT",
+        "label": "path_accounts_folder",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -443,7 +451,7 @@
         "documentation": {}
     },
     {
-        "label": "path_accounts_folder",
+        "label": "BUTTON_HEIGHT",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -459,7 +467,7 @@
         "documentation": {}
     },
     {
-        "label": "path_folder_with_messages",
+        "label": "line_width_button",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -467,7 +475,15 @@
         "documentation": {}
     },
     {
-        "label": "path_send_message_folder_answering_machine_message",
+        "label": "path_accounts_folder",
+        "importPath": "src.core.configs",
+        "description": "src.core.configs",
+        "isExtraImport": true,
+        "detail": "src.core.configs",
+        "documentation": {}
+    },
+    {
+        "label": "path_folder_with_messages",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -483,15 +499,7 @@
         "documentation": {}
     },
     {
-        "label": "line_width_button",
-        "importPath": "src.core.configs",
-        "description": "src.core.configs",
-        "isExtraImport": true,
-        "detail": "src.core.configs",
-        "documentation": {}
-    },
-    {
-        "label": "BUTTON_HEIGHT",
+        "label": "path_send_message_folder_answering_machine_message",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -531,7 +539,7 @@
         "documentation": {}
     },
     {
-        "label": "path_accounts_folder",
+        "label": "BUTTON_HEIGHT",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -547,7 +555,7 @@
         "documentation": {}
     },
     {
-        "label": "BUTTON_HEIGHT",
+        "label": "path_accounts_folder",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -564,14 +572,6 @@
     },
     {
         "label": "time_subscription_2",
-        "importPath": "src.core.configs",
-        "description": "src.core.configs",
-        "isExtraImport": true,
-        "detail": "src.core.configs",
-        "documentation": {}
-    },
-    {
-        "label": "path_accounts_folder",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
         "isExtraImport": true,
@@ -996,14 +996,6 @@
         "documentation": {}
     },
     {
-        "label": "db",
-        "importPath": "src.core.sqlite_working_tools",
-        "description": "src.core.sqlite_working_tools",
-        "isExtraImport": true,
-        "detail": "src.core.sqlite_working_tools",
-        "documentation": {}
-    },
-    {
         "label": "GroupsAndChannels",
         "importPath": "src.core.sqlite_working_tools",
         "description": "src.core.sqlite_working_tools",
@@ -1012,7 +1004,7 @@
         "documentation": {}
     },
     {
-        "label": "remove_duplicates",
+        "label": "MembersAdmin",
         "importPath": "src.core.sqlite_working_tools",
         "description": "src.core.sqlite_working_tools",
         "isExtraImport": true,
@@ -1020,7 +1012,23 @@
         "documentation": {}
     },
     {
-        "label": "MembersAdmin",
+        "label": "MembersGroups",
+        "importPath": "src.core.sqlite_working_tools",
+        "description": "src.core.sqlite_working_tools",
+        "isExtraImport": true,
+        "detail": "src.core.sqlite_working_tools",
+        "documentation": {}
+    },
+    {
+        "label": "db",
+        "importPath": "src.core.sqlite_working_tools",
+        "description": "src.core.sqlite_working_tools",
+        "isExtraImport": true,
+        "detail": "src.core.sqlite_working_tools",
+        "documentation": {}
+    },
+    {
+        "label": "remove_duplicates",
         "importPath": "src.core.sqlite_working_tools",
         "description": "src.core.sqlite_working_tools",
         "isExtraImport": true,
@@ -1116,6 +1124,14 @@
         "documentation": {}
     },
     {
+        "label": "find_filess",
+        "importPath": "src.core.utils",
+        "description": "src.core.utils",
+        "isExtraImport": true,
+        "detail": "src.core.utils",
+        "documentation": {}
+    },
+    {
         "label": "working_with_accounts",
         "importPath": "src.core.utils",
         "description": "src.core.utils",
@@ -1188,22 +1204,6 @@
         "documentation": {}
     },
     {
-        "label": "find_filess",
-        "importPath": "src.core.utils",
-        "description": "src.core.utils",
-        "isExtraImport": true,
-        "detail": "src.core.utils",
-        "documentation": {}
-    },
-    {
-        "label": "find_files",
-        "importPath": "src.core.utils",
-        "description": "src.core.utils",
-        "isExtraImport": true,
-        "detail": "src.core.utils",
-        "documentation": {}
-    },
-    {
         "label": "all_find_files",
         "importPath": "src.core.utils",
         "description": "src.core.utils",
@@ -1212,7 +1212,7 @@
         "documentation": {}
     },
     {
-        "label": "record_inviting_results",
+        "label": "find_files",
         "importPath": "src.core.utils",
         "description": "src.core.utils",
         "isExtraImport": true,
@@ -1244,7 +1244,7 @@
         "documentation": {}
     },
     {
-        "label": "record_and_interrupt",
+        "label": "record_inviting_results",
         "importPath": "src.core.utils",
         "description": "src.core.utils",
         "isExtraImport": true,
@@ -1253,6 +1253,14 @@
     },
     {
         "label": "find_filess",
+        "importPath": "src.core.utils",
+        "description": "src.core.utils",
+        "isExtraImport": true,
+        "detail": "src.core.utils",
+        "documentation": {}
+    },
+    {
+        "label": "record_and_interrupt",
         "importPath": "src.core.utils",
         "description": "src.core.utils",
         "isExtraImport": true,
@@ -1511,22 +1519,6 @@
         "documentation": {}
     },
     {
-        "label": "start_time",
-        "importPath": "src.gui.gui",
-        "description": "src.gui.gui",
-        "isExtraImport": true,
-        "detail": "src.gui.gui",
-        "documentation": {}
-    },
-    {
-        "label": "log_and_display",
-        "importPath": "src.gui.gui",
-        "description": "src.gui.gui",
-        "isExtraImport": true,
-        "detail": "src.gui.gui",
-        "documentation": {}
-    },
-    {
         "label": "log_and_display",
         "importPath": "src.gui.gui",
         "description": "src.gui.gui",
@@ -1536,6 +1528,14 @@
     },
     {
         "label": "start_time",
+        "importPath": "src.gui.gui",
+        "description": "src.gui.gui",
+        "isExtraImport": true,
+        "detail": "src.gui.gui",
+        "documentation": {}
+    },
+    {
+        "label": "log_and_display",
         "importPath": "src.gui.gui",
         "description": "src.gui.gui",
         "isExtraImport": true,
@@ -1631,7 +1631,7 @@
         "documentation": {}
     },
     {
-        "label": "log_and_display",
+        "label": "start_time",
         "importPath": "src.gui.gui",
         "description": "src.gui.gui",
         "isExtraImport": true,
@@ -1639,7 +1639,7 @@
         "documentation": {}
     },
     {
-        "label": "start_time",
+        "label": "log_and_display",
         "importPath": "src.gui.gui",
         "description": "src.gui.gui",
         "isExtraImport": true,
@@ -1696,6 +1696,14 @@
     },
     {
         "label": "log_and_display",
+        "importPath": "src.gui.gui",
+        "description": "src.gui.gui",
+        "isExtraImport": true,
+        "detail": "src.gui.gui",
+        "documentation": {}
+    },
+    {
+        "label": "start_time",
         "importPath": "src.gui.gui",
         "description": "src.gui.gui",
         "isExtraImport": true,
@@ -1916,7 +1924,7 @@
         "documentation": {}
     },
     {
-        "label": "UsernamePurchaseAvailableError",
+        "label": "UsernameInvalidError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -1932,71 +1940,7 @@
         "documentation": {}
     },
     {
-        "label": "UsernameInvalidError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "AuthKeyDuplicatedError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "PhoneNumberBannedError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UserDeactivatedBanError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "TimedOutError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "AuthKeyNotFound",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "TypeNotFoundError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "AuthKeyUnregisteredError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "SessionPasswordNeededError",
+        "label": "UsernamePurchaseAvailableError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2012,7 +1956,23 @@
         "documentation": {}
     },
     {
-        "label": "YouBlockedUserError",
+        "label": "AuthKeyDuplicatedError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "AuthKeyNotFound",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "AuthKeyUnregisteredError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2028,7 +1988,7 @@
         "documentation": {}
     },
     {
-        "label": "AuthKeyDuplicatedError",
+        "label": "PhoneNumberBannedError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2036,7 +1996,7 @@
         "documentation": {}
     },
     {
-        "label": "PeerFloodError",
+        "label": "SessionPasswordNeededError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2044,111 +2004,7 @@
         "documentation": {}
     },
     {
-        "label": "FloodWaitError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UserPrivacyRestrictedError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UserChannelsTooMuchError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "BotGroupsBlockedError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "ChatWriteForbiddenError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UserBannedInChannelError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UserNotMutualContactError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "ChatAdminRequiredError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UserKickedError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "ChannelPrivateError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UserIdInvalidError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UsernameNotOccupiedError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UsernameInvalidError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "InviteRequestSentError",
+        "label": "TimedOutError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2164,7 +2020,7 @@
         "documentation": {}
     },
     {
-        "label": "SessionRevokedError",
+        "label": "UserDeactivatedBanError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2172,7 +2028,15 @@
         "documentation": {}
     },
     {
-        "label": "UserDeactivatedBanError",
+        "label": "YouBlockedUserError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "AuthKeyDuplicatedError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2196,7 +2060,15 @@
         "documentation": {}
     },
     {
-        "label": "AuthKeyUnregisteredError",
+        "label": "BotGroupsBlockedError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "ChannelPrivateError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2212,7 +2084,143 @@
         "documentation": {}
     },
     {
+        "label": "ChatWriteForbiddenError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "FloodWaitError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "InviteRequestSentError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "PeerFloodError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "SessionRevokedError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "TypeNotFoundError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserBannedInChannelError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserChannelsTooMuchError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserDeactivatedBanError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserIdInvalidError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserKickedError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UsernameInvalidError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UsernameNotOccupiedError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserNotMutualContactError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserPrivacyRestrictedError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "AuthKeyUnregisteredError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
         "label": "ChannelPrivateError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "ChatAdminRequiredError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2252,23 +2260,7 @@
         "documentation": {}
     },
     {
-        "label": "PeerFloodError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "FloodWaitError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UserBannedInChannelError",
+        "label": "ChatAdminRequiredError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2284,71 +2276,7 @@
         "documentation": {}
     },
     {
-        "label": "UserNotMutualContactError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UserIdInvalidError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UsernameNotOccupiedError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UsernameInvalidError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "ChatAdminRequiredError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "SlowModeWaitError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "ChannelsTooMuchError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "ChannelPrivateError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UsernameInvalidError",
+        "label": "FloodWaitError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2364,31 +2292,79 @@
         "documentation": {}
     },
     {
+        "label": "SlowModeWaitError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserBannedInChannelError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserIdInvalidError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UsernameInvalidError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UsernameNotOccupiedError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserNotMutualContactError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "AuthKeyUnregisteredError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "ChannelPrivateError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "ChannelsTooMuchError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
         "label": "FloodWaitError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "InviteRequestSentError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UserDeactivatedBanError",
-        "importPath": "telethon.errors",
-        "description": "telethon.errors",
-        "isExtraImport": true,
-        "detail": "telethon.errors",
-        "documentation": {}
-    },
-    {
-        "label": "SessionRevokedError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2412,7 +2388,15 @@
         "documentation": {}
     },
     {
-        "label": "AuthKeyUnregisteredError",
+        "label": "InviteRequestSentError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "PeerFloodError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2421,6 +2405,30 @@
     },
     {
         "label": "SessionPasswordNeededError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "SessionRevokedError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UserDeactivatedBanError",
+        "importPath": "telethon.errors",
+        "description": "telethon.errors",
+        "isExtraImport": true,
+        "detail": "telethon.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UsernameInvalidError",
         "importPath": "telethon.errors",
         "description": "telethon.errors",
         "isExtraImport": true,
@@ -2573,7 +2581,7 @@
         "documentation": {}
     },
     {
-        "label": "getting_phone_number_data_by_phone_number",
+        "label": "\\",
         "importPath": "src.features.auth.logging_in",
         "description": "src.features.auth.logging_in",
         "isExtraImport": true,
@@ -2773,14 +2781,6 @@
         "documentation": {}
     },
     {
-        "label": "UserProfilePhoto",
-        "importPath": "telethon.tl.types",
-        "description": "telethon.tl.types",
-        "isExtraImport": true,
-        "detail": "telethon.tl.types",
-        "documentation": {}
-    },
-    {
         "label": "ChannelParticipantsSearch",
         "importPath": "telethon.tl.types",
         "description": "telethon.tl.types",
@@ -2797,7 +2797,7 @@
         "documentation": {}
     },
     {
-        "label": "UserStatusEmpty",
+        "label": "InputUser",
         "importPath": "telethon.tl.types",
         "description": "telethon.tl.types",
         "isExtraImport": true,
@@ -2805,7 +2805,15 @@
         "documentation": {}
     },
     {
-        "label": "InputUser",
+        "label": "UserProfilePhoto",
+        "importPath": "telethon.tl.types",
+        "description": "telethon.tl.types",
+        "isExtraImport": true,
+        "detail": "telethon.tl.types",
+        "documentation": {}
+    },
+    {
+        "label": "UserStatusEmpty",
         "importPath": "telethon.tl.types",
         "description": "telethon.tl.types",
         "isExtraImport": true,
@@ -3281,6 +3289,15 @@
         "importPath": "src.core.sqlite_working_tools",
         "description": "src.core.sqlite_working_tools",
         "peekOfCode": "class MembersAdmin(Model):\n    \"\"\"\n    Таблица для хранения данных администраторов групп в таблице members_admin\n    \"\"\"\n    username = CharField(max_length=255, null=True)\n    user_id = BigIntegerField(unique=True)\n    access_hash = BigIntegerField(null=True)\n    first_name = CharField(max_length=255, null=True)\n    last_name = CharField(max_length=255, null=True)\n    phone = CharField(max_length=255, null=True)",
+        "detail": "src.core.sqlite_working_tools",
+        "documentation": {}
+    },
+    {
+        "label": "MembersGroups",
+        "kind": 6,
+        "importPath": "src.core.sqlite_working_tools",
+        "description": "src.core.sqlite_working_tools",
+        "peekOfCode": "class MembersGroups(Model):\n    \"\"\"\n    Таблица для хранения данных администраторов групп в таблице members_admin\n    \"\"\"\n    username = CharField(max_length=255, null=True)\n    user_id = BigIntegerField(unique=True)\n    access_hash = BigIntegerField(null=True)\n    first_name = CharField(max_length=255, null=True)\n    last_name = CharField(max_length=255, null=True)\n    user_phone = CharField(max_length=255, null=True)",
         "detail": "src.core.sqlite_working_tools",
         "documentation": {}
     },

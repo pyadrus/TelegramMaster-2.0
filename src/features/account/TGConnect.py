@@ -8,18 +8,23 @@ import sqlite3
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import TelegramClient
-from telethon.errors import (AuthKeyDuplicatedError, PhoneNumberBannedError, UserDeactivatedBanError, TimedOutError,
-                             AuthKeyNotFound, TypeNotFoundError, AuthKeyUnregisteredError, SessionPasswordNeededError,
-                             ApiIdInvalidError, YouBlockedUserError, PasswordHashInvalidError)
+from telethon.errors import (ApiIdInvalidError, AuthKeyDuplicatedError,
+                             AuthKeyNotFound, AuthKeyUnregisteredError,
+                             PasswordHashInvalidError, PhoneNumberBannedError,
+                             SessionPasswordNeededError, TimedOutError,
+                             TypeNotFoundError, UserDeactivatedBanError,
+                             YouBlockedUserError)
 from thefuzz import fuzz
 
-from src.core.configs import ConfigReader, BUTTON_HEIGHT, line_width_button, path_accounts_folder
+from src.core.configs import (BUTTON_HEIGHT, ConfigReader, line_width_button,
+                              path_accounts_folder)
 from src.core.sqlite_working_tools import DatabaseHandler
-from src.core.utils import working_with_accounts, find_filess
-from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
-from src.features.proxy.checking_proxy import checking_the_proxy_for_work
-from src.features.proxy.checking_proxy import reading_proxy_data_from_the_database
-from src.gui.gui import end_time, start_time, log_and_display
+from src.core.utils import find_filess, working_with_accounts
+from src.features.auth.logging_in import \
+    getting_phone_number_data_by_phone_number
+from src.features.proxy.checking_proxy import (
+    checking_the_proxy_for_work, reading_proxy_data_from_the_database)
+from src.gui.gui import end_time, log_and_display, start_time
 from src.gui.menu import show_notification
 from src.locales.translations_loader import translations
 

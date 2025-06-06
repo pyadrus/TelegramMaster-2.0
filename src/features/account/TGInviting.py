@@ -5,21 +5,29 @@ import datetime as dt
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from scheduler.asyncio import Scheduler
-from telethon.errors import (AuthKeyDuplicatedError, PeerFloodError, FloodWaitError, UserPrivacyRestrictedError,
-                             UserChannelsTooMuchError, BotGroupsBlockedError, ChatWriteForbiddenError,
-                             UserBannedInChannelError, UserNotMutualContactError, ChatAdminRequiredError,
-                             UserKickedError, ChannelPrivateError, UserIdInvalidError, UsernameNotOccupiedError,
-                             UsernameInvalidError, InviteRequestSentError, TypeNotFoundError, SessionRevokedError,
-                             UserDeactivatedBanError, AuthKeyUnregisteredError, BadRequestError)
+from telethon.errors import (AuthKeyDuplicatedError, AuthKeyUnregisteredError,
+                             BadRequestError, BotGroupsBlockedError,
+                             ChannelPrivateError, ChatAdminRequiredError,
+                             ChatWriteForbiddenError, FloodWaitError,
+                             InviteRequestSentError, PeerFloodError,
+                             SessionRevokedError, TypeNotFoundError,
+                             UserBannedInChannelError,
+                             UserChannelsTooMuchError, UserDeactivatedBanError,
+                             UserIdInvalidError, UserKickedError,
+                             UsernameInvalidError, UsernameNotOccupiedError,
+                             UserNotMutualContactError,
+                             UserPrivacyRestrictedError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-from src.core.configs import (ConfigReader, line_width_button, BUTTON_HEIGHT, path_accounts_folder, limits,
-                              time_inviting_1, time_inviting_2, BUTTON_WIDTH)
+from src.core.configs import (BUTTON_HEIGHT, BUTTON_WIDTH, ConfigReader,
+                              limits, line_width_button, path_accounts_folder,
+                              time_inviting_1, time_inviting_2)
 from src.core.sqlite_working_tools import DatabaseHandler
-from src.core.utils import record_and_interrupt, record_inviting_results, find_filess
+from src.core.utils import (find_filess, record_and_interrupt,
+                            record_inviting_results)
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.gui import start_time, end_time, list_view, log_and_display
+from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.menu import show_notification
 from src.locales.translations_loader import translations
 

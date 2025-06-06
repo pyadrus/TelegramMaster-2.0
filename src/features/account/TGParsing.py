@@ -8,22 +8,27 @@ import time
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions, types
-from telethon.errors import (AuthKeyUnregisteredError, ChatAdminRequiredError, ChannelPrivateError, FloodWaitError,
+from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError,
+                             ChatAdminRequiredError, FloodWaitError,
                              UsernameInvalidError)
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import (
-    ChannelParticipantsAdmins, UserProfilePhoto, ChannelParticipantsSearch, InputPeerEmpty, UserStatusEmpty, InputUser,
-    UserStatusLastMonth, UserStatusLastWeek, UserStatusOffline, UserStatusOnline, UserStatusRecently
-)
+from telethon.tl.types import (ChannelParticipantsAdmins,
+                               ChannelParticipantsSearch, InputPeerEmpty,
+                               InputUser, UserProfilePhoto, UserStatusEmpty,
+                               UserStatusLastMonth, UserStatusLastWeek,
+                               UserStatusOffline, UserStatusOnline,
+                               UserStatusRecently)
 
-from src.core.configs import line_width_button, BUTTON_HEIGHT, time_activity_user_2, path_accounts_folder
-from src.core.sqlite_working_tools import DatabaseHandler, db, GroupsAndChannels, remove_duplicates, MembersAdmin
+from src.core.configs import (BUTTON_HEIGHT, line_width_button,
+                              path_accounts_folder, time_activity_user_2)
+from src.core.sqlite_working_tools import (DatabaseHandler, GroupsAndChannels,
+                                           MembersAdmin, MembersGroups, db, remove_duplicates)
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
-from src.gui.gui import start_time, end_time, list_view, log_and_display
+from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
 
 
@@ -37,8 +42,10 @@ class ParsingGroupMembers:
 
     async def clean_parsing_list_and_remove_duplicates(self, page: ft.Page):
         """Очищает список парсинга от записей без имени пользователя и удаляет дубликаты по идентификатору."""
+
         # Очистка списка парсинга от записей без имени пользователя
-        await self.db_handler.remove_records_without_username(page)
+        # await self.db_handler.remove_records_without_username(page)
+
         # Удаление дублирующихся записей по идентификатору
         await self.db_handler.remove_duplicate_ids(table_name="members", column_name="id")
 
@@ -174,7 +181,7 @@ class ParsingGroupMembers:
         # Поле для ввода ссылки на чат
         chat_input = ft.TextField(label="🔗 Введите ссылку на чат, с которого будут собираться участники.",
                                   multiline=False, max_lines=1)
-        
+
         # Обработчики для взаимоисключающего поведения
         def toggle_admin_switch(_):
             if admin_switch.value:
@@ -210,7 +217,7 @@ class ParsingGroupMembers:
 
             data = chat_input.value.split()
             logger.info(f"Полученные данные: {data}")  # Отладка
-            # Удаляем дубликаты
+            # Удаляем дубликаты ссылок введенных пользователем
             unique_records = list(set(data))
             await self.db_handler.write_to_single_column_table(
                 name_database="writing_group_links",
@@ -218,7 +225,7 @@ class ParsingGroupMembers:
                 into_columns="writing_group_links",
                 recorded_data=unique_records
             )
-            
+
             if not selected_sessions:
                 await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", page)
                 session_files = await find_filess(directory_path=path_accounts_folder, extension='session')
@@ -349,8 +356,25 @@ class ParsingGroupMembers:
         try:
             # Записываем parsing данные в файл user_data/software_database.db
             entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, page), page)
-            await log_and_display(f"{entities}", page)
-            await self.db_handler.write_parsed_chat_participants_to_db(entities)
+            await log_and_display(f"Полученные данные: {log_data}", page)
+            logger.info(f"Полученные данные: {log_data}")
+            log_data = {
+                "username": user.username or "", "user_id": user.id,
+                "access_hash": user.access_hash, "first_name": user.first_name or "",
+                "last_name": user.last_name or "", "user_phone": user.phone or "",
+                "online_at": online_at, "photos_id": photos_id,
+                "user_premium": user_premium,
+            }
+            db.create_tables([MembersGroups])
+            with db.atomic():  # Атомарная транзакция для записи данных
+                MembersGroups.create(
+                    username=log_data['username'], user_id=log_data['user_id'],
+                    access_hash=log_data['access_hash'], first_name=log_data['first_name'],
+                    last_name=log_data['last_name'], user_phone=log_data['phone'],
+                    online_at=log_data['online_at'], photos_id=log_data['photo_status'],
+                    user_premium=log_data['premium_status'],
+                )
+            # await self.db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
             logger.exception(error)
 
