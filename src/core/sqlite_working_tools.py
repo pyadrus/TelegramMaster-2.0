@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import sqlite3
-
+from peewee import fn
 import flet as ft
 from loguru import logger
 from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField
@@ -49,6 +49,30 @@ class MembersAdmin(Model):
     class Meta:
         database = db
         table_name = 'members_admin'
+
+
+def remove_duplicate_ids():
+    """Удаление дублирующихся id в таблице members"""
+    # Получаем все user_id, которые дублируются
+    duplicate_user_ids = (
+        MembersGroups.select(MembersGroups.user_id)
+        .group_by(MembersGroups.user_id)
+        .having(fn.COUNT(MembersGroups.user_id) > 1)
+    )
+
+    for user_id_row in duplicate_user_ids:
+        user_id = user_id_row.user_id
+
+        # Получаем все записи с этим user_id
+        duplicates = MembersGroups.select().where(MembersGroups.user_id == user_id)
+
+        # Сохраняем первую, остальные удаляем
+        first = True
+        for record in duplicates:
+            if first:
+                first = False
+                continue
+            record.delete_instance()
 
 
 class MembersGroups(Model):
@@ -139,21 +163,22 @@ class DatabaseHandler:
         finally:
             self.close()  # Закрываем соединение
 
-    async def remove_duplicate_ids(self, table_name, column_name) -> None:
-        """
-        Этот запрос удаляет все дублирующиеся записи в поле id. Данный запрос использует функцию MIN(), которая возвращает
-        минимальное значение из списка значений. Функция MIN() будет применена к полю rowid, которое является уникальным
-        идентификатором каждой записи в таблице members. Данный запрос сначала выбирает минимальное значение rowid для
-        каждой записи в поле id. Затем он удаляет все записи, у которых rowid не равен минимальному значению.
-        Это позволяет оставить только уникальные значения в поле id.
-
-        :param table_name: Название таблицы, данные из которой требуется извлечь.
-        :param column_name: Имя столбца
-        """
-        await self.connect()
-        self.cursor.execute(f"DELETE FROM {table_name} WHERE row{column_name} NOT IN (SELECT MIN(row{column_name}) FROM {table_name} GROUP BY {column_name}")
-        self.sqlite_connection.commit()
-        self.close()
+    # async def remove_duplicate_ids(self, table_name, column_name) -> None:
+    #     """
+    #     Этот запрос удаляет все дублирующиеся записи в поле id. Данный запрос использует функцию MIN(), которая возвращает
+    #     минимальное значение из списка значений. Функция MIN() будет применена к полю rowid, которое является уникальным
+    #     идентификатором каждой записи в таблице members. Данный запрос сначала выбирает минимальное значение rowid для
+    #     каждой записи в поле id. Затем он удаляет все записи, у которых rowid не равен минимальному значению.
+    #     Это позволяет оставить только уникальные значения в поле id.
+    #
+    #     :param table_name: Название таблицы, данные из которой требуется извлечь.
+    #     :param column_name: Имя столбца
+    #     """
+    #     await self.connect()
+    #     self.cursor.execute(
+    #         f"DELETE FROM {table_name} WHERE row{column_name} NOT IN (SELECT MIN(row{column_name}) FROM {table_name} GROUP BY {column_name}")
+    #     self.sqlite_connection.commit()
+    #     self.close()
 
     async def select_records_with_limit(self, table_name, limit) -> list:
         """

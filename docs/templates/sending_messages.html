@@ -14,307 +14,307 @@
 </head>
 
 <body>
-    <div class="container">
-        <!-- Боковое меню -->
-        <div id="menu-placeholder"></div>
-        <div class="content">
-            <h1 style="text-align: center; color: #0c5460; font-size: 28px;">📧 Рассылка сообщений</h1>
-            <!-- Меню навигации -->
-            <div class="card-container">
-                <div class="card">
-                    <p class="heading">{{sending_messages_via_chats_ru}}</p>
-                    <p>{{sending_messages_via_chats_ru}}</p>
-                    <button class="card-button"><a href="#sending_messages_via_chats">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <p class="heading">{{sending_personal_messages_with_limits_ru}}</p>
-                    <p>{{sending_personal_messages_with_limits_ru}}</p>
-                    <button class="card-button"><a href="#sending_personal_messages_with_limits_ru">Перейти</a></button>
-                </div>
+<div class="container">
+    <!-- Боковое меню -->
+    <div id="menu-placeholder"></div>
+    <div class="content">
+        <h1 style="text-align: center; color: #0c5460; font-size: 28px;">📧 Рассылка сообщений</h1>
+        <!-- Меню навигации -->
+        <div class="card-container">
+            <div class="card">
+                <p class="heading">{{ sending_messages_via_chats_ru }}</p>
+                <p>{{ sending_messages_via_chats_ru }}</p>
+                <button class="card-button"><a href="#sending_messages_via_chats">Перейти</a></button>
             </div>
-            <!-- Важное примечание -->
-            <div
-                style="border: 2px solid #f5c6cbf5; background-color: #f8d7da; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif;">
-                <h3 style="color: #721c24; margin: 0 0 10px;">ПРИМЕЧАНИЕ:</h3>
-                <p style="color: #721c24; margin: 0; font-size: 16px;">
-                    💡 Важно!<br><br>
-                    <strong>{{program_name}}</strong> отправляет сообщения в личку
-                    <strong>только по username</strong> и делает это <strong>последовательно</strong>, а не параллельно
-                    (без
-                    использования потоков).<br><br>
-                    При рассылке по чатам сообщения отправляются <strong>только в открытые чаты</strong>. Учитывайте,
-                    что в
-                    некоторых чатах
-                    могут быть <strong>ограничения на публикацию</strong> (боты-защитники, антиспам-фильтры, запреты на
-                    отправку сообщений и т. д.).
-                </p>
+            <div class="card">
+                <p class="heading">{{ sending_personal_messages_with_limits_ru }}</p>
+                <p>{{ sending_personal_messages_with_limits_ru }}</p>
+                <button class="card-button"><a href="#sending_personal_messages_with_limits_ru">Перейти</a></button>
             </div>
-            <hr />
-            <!-- Рассылка сообщений по чатам -->
-            <h2 id="sending_messages_via_chats" style="text-align: center; color: #0c5460; font-size: 24px;">
-                {{sending_messages_via_chats_ru}}</h2>
-            <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Описание</h3>
-            <div
-                style="border: 2px solid #d1ecf1; background-color: #e3f4f9; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <h3 style="color: #0c5460; margin: 0 0 15px; font-size: 20px;">📝 Функция
-                    «{{sending_messages_via_chats_ru}}»</h3>
-                <p style="color: #0c5460; margin: 0; font-size: 16px; line-height: 1.6;">
-                    Функция <strong>«{{sending_messages_via_chats_ru}}»</strong> в {{program_name}} предоставляет
-                    возможность отправлять сообщения и файлы в группы (чаты) Telegram. Более того, она позволяет не
-                    только
-                    отправлять сообщения, но и автоматически отвечать на них с подключенного аккаунта.
-                </p>
-            </div>
-            <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Подготовка перед запуском</h3>
-            <blockquote
-                style="border: 2px solid #d4edda; background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <ol style="color: #155724; font-size: 16px; line-height: 1.6;">
-                    <li><a href="{{ url_for('launch_telegrammaster') }}"
-                            style="color: #138496; text-decoration: none;">Запустите
-                            {{program_name}}</a></li>
-                    <li>
-                        <a href="{{ url_for('connect_accounts') }}"
-                            style="color: #138496; text-decoration: none;">Подключите
-                            аккаунты к {{program_name}}</a> или скопируйте session файл в папку:
-                        <code
-                            style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{program_name}}/user_data/accounts/send_message</code>
-                    </li>
-                    <li><a href="{{ url_for('forming_list_of_chats_channels') }}"
-                            style="color: #138496; text-decoration: none;">Сформируйте список групп (чатов)</a></li>
-                    <li><a href="{{ url_for('message_recording') }}" style="color: #138496; text-decoration: none;">🔄
-                            Запишите сообщения для рассылки.</a></li>
-                    <li>
-                        Если потребуется использование автоответчика, запишите сообщения для автоответчика,
-                        <ol>
-                            <li>📂 Перейдите в папку
-                                <code
-                                    style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{program_name}}/user_data/answering_machine</code>.
-                            </li>
-                            <li>📄 Откройте файл
-                                <code
-                                    style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">answering_machine_messages.json</code>.
-                            </li>
-                            <li>🖋️ Введите сообщение, которое будет использоваться в автоответе вашего аккаунта,
-                                рассылавшего сообщения. Сообщение должно быть в кавычках, например:
-                                <code
-                                    style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">"Сообщение"</code>.
-                            </li>
-                        </ol>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('connect_accounts') }}"
-                            style="color: #138496; text-decoration: none;">Подключите
-                            аккаунты к {{program_name}} для автоответчика</a>
-                        или скопируйте session файл в папку:
-                        <code
-                            style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{program_name}}/user_data/accounts/answering_machine</code>
-                    </li>
-                    <li>
-                        Подготовка перед отправкой файлов
-                        <ol>
-                            <li>Перейдите в папку
-                                <code
-                                    style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{program_name}}/user_data/files_to_send</code>
-                            </li>
-                            <li>Поместите туда файлы для рассылки.</li>
-                        </ol>
-                    </li>
-                </ol>
-            </blockquote>
-            <h2 id="sending_messages_files_via_chats" style="text-align: center; color: #0c5460; font-size: 24px;">
-                {{sending_messages_files_via_chats_ru}}</h2>
-            <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Рассылка сообщений по чатам</h3>
-            <blockquote>
-                <ol>
-                    <li>
-                        Перейдите в раздел <b>«Рассылка сообщений»</b>.
-                        <p style="text-align: center;"><img src="/static/images/sending_messages.png"
-                                alt="Telegram Master" width="40%"></p>
-                    </li>
-                    <li>
-                        Выберите функцию <b>«💬 Рассылка сообщений по чатам»</b>.
-                        <p style="text-align: center;"><img src="/static/images/sending_messages_files_via_chats_ru.png"
-                                alt="Telegram Master" width="40%"></p>
-                    </li>
-                    <li>Введите время сна в поле ввода от и до. (Если данные введены не правильно, то программа выдаст
-                        предупреждение пользователю).
-                    </li>
-                    <li>Введите список групп (чатов) в поле ввода, если список ранее не был сформирован.</li>
-                    <li>Если планируете использовать автоответчик, то поставьте галочку «Работа с автоответчиком».</li>
-                    <li>Нажмите «Готово».
-                        <p style="text-align: center;"><img src="/static/images/done_button.png" alt="Telegram Master"
-                                width="40%"></p>
-                    </li>
-                </ol>
-            </blockquote>
-            <p style="text-align: center;">
-                <img src="/static/images/sending_messages_files_via_chats_ru_2.png" alt="Telegram Master" width="40%">
-            </p>
-            <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Логирование и контроль работы</h3>
-            <p style="color: #0c5460; font-size: 16px; line-height: 1.6;">
-                Все действия записываются в лог-файл: <code>{{program_name}}/user_data/log/log.log</code>.
-            </p>
-            <div
-                style="border: 2px solid #f0c14b; background-color: #fff8dc; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <h3 style="color: #9c6500; margin: 0 0 15px; font-size: 18px;">📝 Предупреждения:</h3>
-                <ul style="color: #7a4f00; margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.6;">
-                    <li>При превышении лимитов Telegram может временно заблокировать аккаунт или удалить аккаунт.</li>
-                    <li>Если нет свободных аккаунтов для продолжения рассылки, программа завершит работу и уведомит
-                        пользователя.
-                    </li>
-                </ul>
-            </div>
-            <hr />
-            <!-- Отправка сообщений в личку -->
-            <h2 id="sending_personal_messages_with_limits_ru"
-                style="text-align: center; color: #0c5460; font-size: 24px;">
-                {{sending_personal_messages_with_limits_ru}}</h2>
-            <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Описание</h3>
-            <p style="color: #0c5460; font-size: 16px; line-height: 1.6;">
-                Функция <b>«{{sending_personal_messages_with_limits_ru}}»</b> в {{program_name}} позволяет отправлять
-                сообщения / файлы пользователям Telegram по ранее спарсенному или сформированному списку username.
-            </p>
-            <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Подготовка перед запуском</h3>
-            <div
-                style="border: 2px solid #d4edda; background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <p style="color: #0c5460; font-size: 18px; margin: 0 0 15px;">📝 Перед началом работы убедитесь, что
-                    выполнены следующие шаги:</p>
-                <ol style="color: #0c5460; font-size: 16px; line-height: 1.6; padding-left: 20px;">
-                    <li><a href="{{ url_for('launch_telegrammaster') }}"
-                            style="color: #138496; text-decoration: none;">Запустите
-                            {{program_name}}</a></li>
-                    <li>
-                        <a href="{{ url_for('connect_accounts') }}"
-                            style="color: #138496; text-decoration: none;">Подключите
-                            аккаунты к {{program_name}}</a> или скопируйте session файл аккаунта в папку:
-                        <code
-                            style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{program_name}}/user_data/accounts/send_message</code>
-                    </li>
-                    <li><a href="#recording_messages_for_distribution"
-                            style="color: #138496; text-decoration: none;">Запишите
-                            сообщения для рассылки.</a></li>
-                    <li><a href="{{ url_for('parsing') }}" style="color: #138496; text-decoration: none;">Выполните
-                            парсинг
-                            участников группы для последующей рассылки сообщений в личку.</a></li>
-                    <li>
-                        Поместите файл для отправки в папку:
-                        <code
-                            style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{program_name}}/user_data/files_to_send</code>
-                    </li>
-                </ol>
-            </div>
-            <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Отправка файлов / сообщений в личку</h3>
-            <blockquote>
-                <ol>
-                    <li>
-                        Перейдите в раздел <b>«Рассылка сообщений»</b>.
-                        <p style="text-align: center;"><img src="/static/images/sending_messages.png"
-                                alt="Telegram Master" width="40%"></p>
-                    </li>
-                    <li>
-                        Выберите функцию <b>«📨 Отправка сообщений в личку»</b>.
-                        <p style="text-align: center;"><img
-                                src="/static/images/sending_personal_messages_with_limits_ru.png" alt="Telegram Master"
-                                width="40%"></p>
-                    </li>
-                    <li>Запишите лимит на аккаунт в поле ввода в виде числа (например: 3).</li>
-                    <li>Введите время сна в поле ввода от и до. (Если данные введены не правильно, то программа выдаст
-                        предупреждение пользователю).
-                    </li>
-                    <li>Нажмите «Готово».
-                        <p style="text-align: center;"><img src="/static/images/done_button.png" alt="Telegram Master"
-                                width="40%"></p>
-                    </li>
-                </ol>
-            </blockquote>
-            <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Логирование и контроль работы</h3>
-            <p style="color: #0c5460; font-size: 16px; line-height: 1.6;">
-                Во время отправки сообщений программа автоматически удаляет username из базы данных
-                <code>{{program_name}}/user_data/software_database.db</code>,
-                если сообщение было отправлено или отправка не удалась. Все действия также фиксируются в лог-файле:
-                <code>{{program_name}}/user_data/log/log.log</code>.
-            </p>
-            <div
-                style="border: 2px solid #f0c14b; background-color: #fff8dc; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <h3 style="color: #9c6500; margin: 0 0 15px; font-size: 18px;">📝 Предупреждения:</h3>
-                <ul style="color: #7a4f00; margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.6;">
-                    <li>Функция <b>«Отправка файлов в личку»</b> позволяет рассылать неограниченное количество сообщений
-                        и
-                        файлов пользователям Telegram.
-                    </li>
-                    <li>Если Telegram выдаст предупреждение о спаме или флуде, а свободных аккаунтов для продолжения
-                        рассылки нет, программа завершит работу и уведомит пользователя.
-                    </li>
-                </ul>
-            </div>
-            <hr />
-            <!-- Порядок действий -->
-            <h3 style="text-align: left; color: #0c5460; font-size: 20px;">🤖 Порядок действий при рассылке сообщений в
-                чаты
-                или в личку через {{program_name}}</h3>
-            <blockquote>
-                <ol>
-                    <li>📂 {{program_name}} проверяет папку
-                        <code>{{program_name}}/user_data/accounts/send_message</code> на
-                        наличие session-аккаунтов.
-                    </li>
-                    <li>🗃️ Открывает базу данных <code>user_data/software_database.db</code> и сканирует таблицу
-                        <code>writing_group_links</code>
-                        для поиска доступных групп.
-                    </li>
-                    <li>📄 Загружает файл из папки <code>{{program_name}}/user_data/files_to_send</code> для рассылки
-                        сообщений.
-                    </li>
-                    <li>Проверка на наличие заранее заготовленных сообщений в папке
-                        <code>{{program_name}}/user_data/message</code>.
-                    </li>
-                </ol>
-            </blockquote>
-            <h3 style="text-align: left; color: #0c5460; font-size: 20px;">🤖 Как работает автоответчик при рассылке
-                сообщений по чатам {{program_name}}</h3>
-            <p style="color: #0c5460; font-size: 16px; line-height: 1.6;">
-                Если во время рассылки включена функция автоответчика, программа автоматически отвечает на входящие
-                сообщения. Тексты автоответов берутся из <code>user_data/answering_machine</code>.
-            </p>
-            <blockquote>
-                <ol>
-                    <li>📂 Программа сканирует папку <code>{{program_name}}/user_data/accounts/answering_machine</code>
-                        на
-                        наличие session-аккаунтов.
-                    </li>
-                    <li>🗃️ Проверяет базу данных <code>user_data/software_database.db</code> и таблицу
-                        <code>writing_group_links</code>
-                        на наличие групп.
-                    </li>
-                    <li>📄 Загружает сообщение в формате <code>json</code> из папки
-                        <code>{{program_name}}/user_data/message</code> для рассылки.
-                    </li>
-                    <li>🔀 Выбирает случайное сообщение из папки <code>{{program_name}}/user_data/message</code>.</li>
-                    <li>📩 Если подключенный аккаунт получает входящее сообщение, программа берет автоответ из
-                        <code>user_data/answering_machine/answering_machine_messages.json</code>.
-                    </li>
-                </ol>
-            </blockquote>
-            <div
-                style="border: 2px solid #f0c14b; background-color: #fff8dc; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <h3 style="color: #9c6500; margin: 0 0 15px; font-size: 18px;">📝 ПРИМЕЧАНИЕ:</h3>
-                <ul style="color: #7a4f00; margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.6;">
-                    <li><strong>✅ Проверка путей и форматов:</strong> Убедитесь, что все пути к файлам указаны
-                        корректно, а
-                        форматы поддерживаются программой.
-                    </li>
-                    <li><strong>🔄 Обновление настроек:</strong> При внесении изменений в сообщения, список чатов или
-                        автоответы рекомендуется перезапустить {{program_name}} для их корректного применения.
-                    </li>
-                    <li><strong>💡 Дополнительная рекомендация:</strong> Перед запуском программы всегда проверяйте
-                        правильность указанных данных, чтобы избежать возможных ошибок.
-                    </li>
-                </ul>
-            </div>
-            <!-- Кнопка "Вверх" -->
-            <a href="#" id="to-top" title="Вверх"><i class="fas fa-chevron-up" aria-hidden="true"></i></a>
         </div>
+        <!-- Важное примечание -->
+        <div
+                style="border: 2px solid #f5c6cbf5; background-color: #f8d7da; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif;">
+            <h3 style="color: #721c24; margin: 0 0 10px;">ПРИМЕЧАНИЕ:</h3>
+            <p style="color: #721c24; margin: 0; font-size: 16px;">
+                💡 Важно!<br><br>
+                <strong>{{ program_name }}</strong> отправляет сообщения в личку
+                <strong>только по username</strong> и делает это <strong>последовательно</strong>, а не параллельно
+                (без
+                использования потоков).<br><br>
+                При рассылке по чатам сообщения отправляются <strong>только в открытые чаты</strong>. Учитывайте,
+                что в
+                некоторых чатах
+                могут быть <strong>ограничения на публикацию</strong> (боты-защитники, антиспам-фильтры, запреты на
+                отправку сообщений и т. д.).
+            </p>
+        </div>
+        <hr/>
+        <!-- Рассылка сообщений по чатам -->
+        <h2 id="sending_messages_via_chats" style="text-align: center; color: #0c5460; font-size: 24px;">
+            {{ sending_messages_via_chats_ru }}</h2>
+        <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Описание</h3>
+        <div
+                style="border: 2px solid #d1ecf1; background-color: #e3f4f9; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #0c5460; margin: 0 0 15px; font-size: 20px;">📝 Функция
+                «{{ sending_messages_via_chats_ru }}»</h3>
+            <p style="color: #0c5460; margin: 0; font-size: 16px; line-height: 1.6;">
+                Функция <strong>«{{ sending_messages_via_chats_ru }}»</strong> в {{ program_name }} предоставляет
+                возможность отправлять сообщения и файлы в группы (чаты) Telegram. Более того, она позволяет не
+                только
+                отправлять сообщения, но и автоматически отвечать на них с подключенного аккаунта.
+            </p>
+        </div>
+        <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Подготовка перед запуском</h3>
+        <blockquote
+                style="border: 2px solid #d4edda; background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <ol style="color: #155724; font-size: 16px; line-height: 1.6;">
+                <li><a href="{{ url_for('launch_telegrammaster') }}"
+                       style="color: #138496; text-decoration: none;">Запустите
+                    {{ program_name }}</a></li>
+                <li>
+                    <a href="{{ url_for('connect_accounts') }}"
+                       style="color: #138496; text-decoration: none;">Подключите
+                        аккаунты к {{ program_name }}</a> или скопируйте session файл в папку:
+                    <code
+                            style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{ program_name }}/user_data/accounts/send_message</code>
+                </li>
+                <li><a href="{{ url_for('forming_list_of_chats_channels') }}"
+                       style="color: #138496; text-decoration: none;">Сформируйте список групп (чатов)</a></li>
+                <li><a href="{{ url_for('message_recording') }}" style="color: #138496; text-decoration: none;">🔄
+                    Запишите сообщения для рассылки.</a></li>
+                <li>
+                    Если потребуется использование автоответчика, запишите сообщения для автоответчика,
+                    <ol>
+                        <li>📂 Перейдите в папку
+                            <code
+                                    style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{ program_name }}/user_data/answering_machine</code>.
+                        </li>
+                        <li>📄 Откройте файл
+                            <code
+                                    style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">answering_machine_messages.json</code>.
+                        </li>
+                        <li>🖋️ Введите сообщение, которое будет использоваться в автоответе вашего аккаунта,
+                            рассылавшего сообщения. Сообщение должно быть в кавычках, например:
+                            <code
+                                    style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">"Сообщение"</code>.
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <a href="{{ url_for('connect_accounts') }}"
+                       style="color: #138496; text-decoration: none;">Подключите
+                        аккаунты к {{ program_name }} для автоответчика</a>
+                    или скопируйте session файл в папку:
+                    <code
+                            style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{ program_name }}/user_data/accounts/answering_machine</code>
+                </li>
+                <li>
+                    Подготовка перед отправкой файлов
+                    <ol>
+                        <li>Перейдите в папку
+                            <code
+                                    style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{ program_name }}/user_data/files_to_send</code>
+                        </li>
+                        <li>Поместите туда файлы для рассылки.</li>
+                    </ol>
+                </li>
+            </ol>
+        </blockquote>
+        <h2 id="sending_messages_files_via_chats" style="text-align: center; color: #0c5460; font-size: 24px;">
+            {{ sending_messages_files_via_chats_ru }}</h2>
+        <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Рассылка сообщений по чатам</h3>
+        <blockquote>
+            <ol>
+                <li>
+                    Перейдите в раздел <b>«Рассылка сообщений»</b>.
+                    <p style="text-align: center;"><img src="/static/images/sending_messages.png"
+                                                        alt="Telegram Master" width="40%"></p>
+                </li>
+                <li>
+                    Выберите функцию <b>«💬 Рассылка сообщений по чатам»</b>.
+                    <p style="text-align: center;"><img src="/static/images/sending_messages_files_via_chats_ru.png"
+                                                        alt="Telegram Master" width="40%"></p>
+                </li>
+                <li>Введите время сна в поле ввода от и до. (Если данные введены не правильно, то программа выдаст
+                    предупреждение пользователю).
+                </li>
+                <li>Введите список групп (чатов) в поле ввода, если список ранее не был сформирован.</li>
+                <li>Если планируете использовать автоответчик, то поставьте галочку «Работа с автоответчиком».</li>
+                <li>Нажмите «Готово».
+                    <p style="text-align: center;"><img src="/static/images/done_button.png" alt="Telegram Master"
+                                                        width="40%"></p>
+                </li>
+            </ol>
+        </blockquote>
+        <p style="text-align: center;">
+            <img src="/static/images/sending_messages_files_via_chats_ru_2.png" alt="Telegram Master" width="40%">
+        </p>
+        <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Логирование и контроль работы</h3>
+        <p style="color: #0c5460; font-size: 16px; line-height: 1.6;">
+            Все действия записываются в лог-файл: <code>{{ program_name }}/user_data/log/log.log</code>.
+        </p>
+        <div
+                style="border: 2px solid #f0c14b; background-color: #fff8dc; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #9c6500; margin: 0 0 15px; font-size: 18px;">📝 Предупреждения:</h3>
+            <ul style="color: #7a4f00; margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.6;">
+                <li>При превышении лимитов Telegram может временно заблокировать аккаунт или удалить аккаунт.</li>
+                <li>Если нет свободных аккаунтов для продолжения рассылки, программа завершит работу и уведомит
+                    пользователя.
+                </li>
+            </ul>
+        </div>
+        <hr/>
+        <!-- Отправка сообщений в личку -->
+        <h2 id="sending_personal_messages_with_limits_ru"
+            style="text-align: center; color: #0c5460; font-size: 24px;">
+            {{ sending_personal_messages_with_limits_ru }}</h2>
+        <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Описание</h3>
+        <p style="color: #0c5460; font-size: 16px; line-height: 1.6;">
+            Функция <b>«{{ sending_personal_messages_with_limits_ru }}»</b> в {{ program_name }} позволяет отправлять
+            сообщения / файлы пользователям Telegram по ранее спарсенному или сформированному списку username.
+        </p>
+        <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Подготовка перед запуском</h3>
+        <div
+                style="border: 2px solid #d4edda; background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <p style="color: #0c5460; font-size: 18px; margin: 0 0 15px;">📝 Перед началом работы убедитесь, что
+                выполнены следующие шаги:</p>
+            <ol style="color: #0c5460; font-size: 16px; line-height: 1.6; padding-left: 20px;">
+                <li><a href="{{ url_for('launch_telegrammaster') }}"
+                       style="color: #138496; text-decoration: none;">Запустите
+                    {{ program_name }}</a></li>
+                <li>
+                    <a href="{{ url_for('connect_accounts') }}"
+                       style="color: #138496; text-decoration: none;">Подключите
+                        аккаунты к {{ program_name }}</a> или скопируйте session файл аккаунта в папку:
+                    <code
+                            style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{ program_name }}/user_data/accounts/send_message</code>
+                </li>
+                <li><a href="#recording_messages_for_distribution"
+                       style="color: #138496; text-decoration: none;">Запишите
+                    сообщения для рассылки.</a></li>
+                <li><a href="{{ url_for('parsing') }}" style="color: #138496; text-decoration: none;">Выполните
+                    парсинг
+                    участников группы для последующей рассылки сообщений в личку.</a></li>
+                <li>
+                    Поместите файл для отправки в папку:
+                    <code
+                            style="background-color: #e9ecef; padding: 2px 5px; border-radius: 4px;">{{ program_name }}/user_data/files_to_send</code>
+                </li>
+            </ol>
+        </div>
+        <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Отправка файлов / сообщений в личку</h3>
+        <blockquote>
+            <ol>
+                <li>
+                    Перейдите в раздел <b>«Рассылка сообщений»</b>.
+                    <p style="text-align: center;"><img src="/static/images/sending_messages.png"
+                                                        alt="Telegram Master" width="40%"></p>
+                </li>
+                <li>
+                    Выберите функцию <b>«📨 Отправка сообщений в личку»</b>.
+                    <p style="text-align: center;"><img
+                            src="/static/images/sending_personal_messages_with_limits_ru.png" alt="Telegram Master"
+                            width="40%"></p>
+                </li>
+                <li>Запишите лимит на аккаунт в поле ввода в виде числа (например: 3).</li>
+                <li>Введите время сна в поле ввода от и до. (Если данные введены не правильно, то программа выдаст
+                    предупреждение пользователю).
+                </li>
+                <li>Нажмите «Готово».
+                    <p style="text-align: center;"><img src="/static/images/done_button.png" alt="Telegram Master"
+                                                        width="40%"></p>
+                </li>
+            </ol>
+        </blockquote>
+        <h3 style="text-align: left; color: #0c5460; font-size: 20px;">Логирование и контроль работы</h3>
+        <p style="color: #0c5460; font-size: 16px; line-height: 1.6;">
+            Во время отправки сообщений программа автоматически удаляет username из базы данных
+            <code>{{ program_name }}/user_data/software_database.db</code>,
+            если сообщение было отправлено или отправка не удалась. Все действия также фиксируются в лог-файле:
+            <code>{{ program_name }}/user_data/log/log.log</code>.
+        </p>
+        <div
+                style="border: 2px solid #f0c14b; background-color: #fff8dc; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #9c6500; margin: 0 0 15px; font-size: 18px;">📝 Предупреждения:</h3>
+            <ul style="color: #7a4f00; margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.6;">
+                <li>Функция <b>«Отправка файлов в личку»</b> позволяет рассылать неограниченное количество сообщений
+                    и
+                    файлов пользователям Telegram.
+                </li>
+                <li>Если Telegram выдаст предупреждение о спаме или флуде, а свободных аккаунтов для продолжения
+                    рассылки нет, программа завершит работу и уведомит пользователя.
+                </li>
+            </ul>
+        </div>
+        <hr/>
+        <!-- Порядок действий -->
+        <h3 style="text-align: left; color: #0c5460; font-size: 20px;">🤖 Порядок действий при рассылке сообщений в
+            чаты
+            или в личку через {{ program_name }}</h3>
+        <blockquote>
+            <ol>
+                <li>📂 {{ program_name }} проверяет папку
+                    <code>{{ program_name }}/user_data/accounts/send_message</code> на
+                    наличие session-аккаунтов.
+                </li>
+                <li>🗃️ Открывает базу данных <code>user_data/software_database.db</code> и сканирует таблицу
+                    <code>writing_group_links</code>
+                    для поиска доступных групп.
+                </li>
+                <li>📄 Загружает файл из папки <code>{{ program_name }}/user_data/files_to_send</code> для рассылки
+                    сообщений.
+                </li>
+                <li>Проверка на наличие заранее заготовленных сообщений в папке
+                    <code>{{ program_name }}/user_data/message</code>.
+                </li>
+            </ol>
+        </blockquote>
+        <h3 style="text-align: left; color: #0c5460; font-size: 20px;">🤖 Как работает автоответчик при рассылке
+            сообщений по чатам {{ program_name }}</h3>
+        <p style="color: #0c5460; font-size: 16px; line-height: 1.6;">
+            Если во время рассылки включена функция автоответчика, программа автоматически отвечает на входящие
+            сообщения. Тексты автоответов берутся из <code>user_data/answering_machine</code>.
+        </p>
+        <blockquote>
+            <ol>
+                <li>📂 Программа сканирует папку <code>{{ program_name }}/user_data/accounts/answering_machine</code>
+                    на
+                    наличие session-аккаунтов.
+                </li>
+                <li>🗃️ Проверяет базу данных <code>user_data/software_database.db</code> и таблицу
+                    <code>writing_group_links</code>
+                    на наличие групп.
+                </li>
+                <li>📄 Загружает сообщение в формате <code>json</code> из папки
+                    <code>{{ program_name }}/user_data/message</code> для рассылки.
+                </li>
+                <li>🔀 Выбирает случайное сообщение из папки <code>{{ program_name }}/user_data/message</code>.</li>
+                <li>📩 Если подключенный аккаунт получает входящее сообщение, программа берет автоответ из
+                    <code>user_data/answering_machine/answering_machine_messages.json</code>.
+                </li>
+            </ol>
+        </blockquote>
+        <div
+                style="border: 2px solid #f0c14b; background-color: #fff8dc; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #9c6500; margin: 0 0 15px; font-size: 18px;">📝 ПРИМЕЧАНИЕ:</h3>
+            <ul style="color: #7a4f00; margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.6;">
+                <li><strong>✅ Проверка путей и форматов:</strong> Убедитесь, что все пути к файлам указаны
+                    корректно, а
+                    форматы поддерживаются программой.
+                </li>
+                <li><strong>🔄 Обновление настроек:</strong> При внесении изменений в сообщения, список чатов или
+                    автоответы рекомендуется перезапустить {{ program_name }} для их корректного применения.
+                </li>
+                <li><strong>💡 Дополнительная рекомендация:</strong> Перед запуском программы всегда проверяйте
+                    правильность указанных данных, чтобы избежать возможных ошибок.
+                </li>
+            </ul>
+        </div>
+        <!-- Кнопка "Вверх" -->
+        <a href="#" id="to-top" title="Вверх"><i class="fas fa-chevron-up" aria-hidden="true"></i></a>
     </div>
+</div>
 </body>
 
 </html>

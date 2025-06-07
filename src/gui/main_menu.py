@@ -21,12 +21,12 @@ async def main_menu_program(page: ft.Page):
                               weight=ft.FontWeight.BOLD,
                               foreground=ft.Paint(
                                   gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
-                                                                                       ft.Colors.PURPLE])),),),],),
+                                                                                       ft.Colors.PURPLE])), ), ), ], ),
                       ft.Text(disabled=False,
                               spans=[ft.TextSpan(translations["ru"]["main_menu_texts"]["text_1"]),
                                      ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"],
                                                  ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                                                 url=translations["ru"]["main_menu_texts"]["text_2"],),],),
+                                                 url=translations["ru"]["main_menu_texts"]["text_2"], ), ], ),
                       ft.Text(disabled=False,
                               spans=[ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"]),
                                      ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"],
@@ -92,7 +92,8 @@ async def main_menu_program(page: ft.Page):
                                             on_click=lambda _: page.go("/documentation")),
                           # 💬 Рассылка сообщений по чатам
                           ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                            text=translations["ru"]["message_sending_menu"]["sending_messages_via_chats"],
+                                            text=translations["ru"]["message_sending_menu"][
+                                                "sending_messages_via_chats"],
                                             on_click=lambda _: page.go("/sending_messages_files_via_chats")),
 
                       ]), ]))

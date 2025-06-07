@@ -8,132 +8,132 @@
     <link rel="stylesheet" href="/static/css/style.css?version=0.1.1">
     <link rel="stylesheet" href="/static/css/card.css?version=0.1.4">
     <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css?version=0.1.1">
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css?version=0.1.1">
     <script src="/static/js/menu.js"></script>
     <!-- Стили для кнопки "Вверх" -->
     <link rel="stylesheet" href="/static/css/to-top-style.css">
 </head>
 
 <body>
-    <div class="container">
-        <!-- Подключение бокового меню -->
-        <div id="menu-placeholder"></div>
-        <!-- Основной контент -->
-        <div class="content">
-            <h1 style="text-align: center;">⚙️ Настройки</h1>
-            <!-- Меню навигации -->
-            <hr /> <!-- Горизонтальная линия-->
-            <div class="card-container">
-                <div class="card">
-                    <!-- 👍 Выбор реакций -->
-                    <p class="heading">{{ choice_of_reactions_ru }}</p>
-                    <p>{{ choice_of_reactions_ru }}</p>
-                    <button class="card-button"><a href="{{ url_for('choice_of_reactions') }}">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <!-- 🔐 Запись proxy -->
-                    <p class="heading">{{proxy_entry_ru}}</p>
-                    <p>{{proxy_entry_ru}}</p>
-                    <button class="card-button"><a href="{{ url_for('proxy_entry') }}">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <!-- 🔄 Смена аккаунтов -->
-                    <p class="heading">{{changing_accounts_ru}}</p>
-                    <p>{{changing_accounts_ru}}</p>
-                    <button class="card-button"><a href="{{ url_for('changing_accounts') }}">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <!-- 📝 Запись api_id, api_hash -->
-                    <p class="heading">{{recording_api_id_api_hash_ru}}</p>
-                    <p>{{recording_api_id_api_hash_ru}}</p>
-                    <button class="card-button"><a
-                            href="{{ url_for('recording_api_id_api_hash') }}">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <!-- ⏰ Запись времени -->
-                    <p class="heading">{{time_between_subscriptions_ru}}</p>
-                    <p>{{time_between_subscriptions_ru}}</p>
-                    <button class="card-button"><a
-                            href="{{ url_for('time_between_subscriptions') }}">Перейти</a></button>
-                </div>
+<div class="container">
+    <!-- Подключение бокового меню -->
+    <div id="menu-placeholder"></div>
+    <!-- Основной контент -->
+    <div class="content">
+        <h1 style="text-align: center;">⚙️ Настройки</h1>
+        <!-- Меню навигации -->
+        <hr/> <!-- Горизонтальная линия-->
+        <div class="card-container">
+            <div class="card">
+                <!-- 👍 Выбор реакций -->
+                <p class="heading">{{ choice_of_reactions_ru }}</p>
+                <p>{{ choice_of_reactions_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('choice_of_reactions') }}">Перейти</a></button>
             </div>
-            <br><br>
-            <div class="card-container">
-                <div class="card">
-                    <!-- ✉️ Запись сообщений -->
-                    <p class="heading">{{message_recording_ru}}</p>
-                    <p>{{message_recording_ru}}</p>
-                    <button class="card-button"><a href="{{ url_for('message_recording') }}">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <!-- 🔗 Запись ссылки для инвайтинга -->
-                    <p class="heading">{{link_entry_ru}}</p>
-                    <p>{{link_entry_ru}}</p>
-                    <button class="card-button"><a href="{{ url_for('link_entry') }}">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <!-- 📊 Лимиты на аккаунт -->
-                    <p class="heading">{{account_limits_ru}}</p>
-                    <p>{{account_limits_ru}}</p>
-                    <button class="card-button"><a href="{{ url_for('account_limits') }}">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <!-- 📨 Лимиты на сообщения -->
-                    <p class="heading">{{message_limits_ru}}</p>
-                    <p>{{message_limits_ru}}</p>
-                    <button class="card-button"><a href="{{ url_for('message_limits') }}">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <!-- ⏳ Время между подпиской -->
-                    <p class="heading">{{time_between_subscriptionss_ru}}</p>
-                    <p>{{time_between_subscriptionss_ru}}</p>
-                    <button class="card-button"><a
-                            href="{{ url_for('time_between_subscriptionss') }}">Перейти</a></button>
-                </div>
+            <div class="card">
+                <!-- 🔐 Запись proxy -->
+                <p class="heading">{{ proxy_entry_ru }}</p>
+                <p>{{ proxy_entry_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('proxy_entry') }}">Перейти</a></button>
             </div>
-            <br><br>
-            <div class="card-container">
-                <div class="card">
-                    <!-- 📋 Формирование списка username -->
-                    <p class="heading">{{creating_username_list_ru}}</p>
-                    <p>{{creating_username_list_ru}}</p>
-                    <button class="card-button"><a href="{{ url_for('creating_username_list') }}">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <!-- ⏱️ Запись времени между сообщениями -->
-                    <p class="heading">{{recording_the_time_between_messages_ru}}</p>
-                    <p>{{recording_the_time_between_messages_ru}}</p>
-                    <button class="card-button"><a
-                            href="{{ url_for('recording_the_time_between_messages') }}">Перейти</a>
-                    </button>
-                </div>
-                <div class="card">
-                    <!-- 🕒 Время между инвайтингом, рассылка сообщений -->
-                    <p class="heading">{{time_between_invites_sending_messages_ru}}</p>
-                    <p>{{time_between_invites_sending_messages_ru}}</p>
-                    <button class="card-button"><a
-                            href="{{ url_for('time_between_invites_sending_messages') }}">Перейти</a>
-                    </button>
-                </div>
-                <div class="card">
-                    <!-- 🔗 Запись ссылки для реакций -->
-                    <p class="heading">{{recording_reaction_link_ru}}</p>
-                    <p>{{recording_reaction_link_ru}}</p>
-                    <button class="card-button"><a href="{{ url_for('recording_reaction_link') }}">Перейти</a></button>
-                </div>
-                <div class="card">
-                    <!-- 📑 Формирование списка чатов/каналов -->
-                    <p class="heading">{{forming_list_of_chats_channels_ru}}</p>
-                    <p>{{forming_list_of_chats_channels_ru}}</p>
-                    <button class="card-button"><a href="{{ url_for('forming_list_of_chats_channels') }}">Перейти</a>
-                    </button>
-                </div>
+            <div class="card">
+                <!-- 🔄 Смена аккаунтов -->
+                <p class="heading">{{ changing_accounts_ru }}</p>
+                <p>{{ changing_accounts_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('changing_accounts') }}">Перейти</a></button>
             </div>
-            <hr /> <!-- Горизонтальная линия-->
-            <!-- Кнопка "Вверх" -->
-            <a href="#" id="to-top" title="Вверх"><i class="fas fa-chevron-up" aria-hidden="true"></i></a>
+            <div class="card">
+                <!-- 📝 Запись api_id, api_hash -->
+                <p class="heading">{{ recording_api_id_api_hash_ru }}</p>
+                <p>{{ recording_api_id_api_hash_ru }}</p>
+                <button class="card-button"><a
+                        href="{{ url_for('recording_api_id_api_hash') }}">Перейти</a></button>
+            </div>
+            <div class="card">
+                <!-- ⏰ Запись времени -->
+                <p class="heading">{{ time_between_subscriptions_ru }}</p>
+                <p>{{ time_between_subscriptions_ru }}</p>
+                <button class="card-button"><a
+                        href="{{ url_for('time_between_subscriptions') }}">Перейти</a></button>
+            </div>
         </div>
+        <br><br>
+        <div class="card-container">
+            <div class="card">
+                <!-- ✉️ Запись сообщений -->
+                <p class="heading">{{ message_recording_ru }}</p>
+                <p>{{ message_recording_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('message_recording') }}">Перейти</a></button>
+            </div>
+            <div class="card">
+                <!-- 🔗 Запись ссылки для инвайтинга -->
+                <p class="heading">{{ link_entry_ru }}</p>
+                <p>{{ link_entry_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('link_entry') }}">Перейти</a></button>
+            </div>
+            <div class="card">
+                <!-- 📊 Лимиты на аккаунт -->
+                <p class="heading">{{ account_limits_ru }}</p>
+                <p>{{ account_limits_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('account_limits') }}">Перейти</a></button>
+            </div>
+            <div class="card">
+                <!-- 📨 Лимиты на сообщения -->
+                <p class="heading">{{ message_limits_ru }}</p>
+                <p>{{ message_limits_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('message_limits') }}">Перейти</a></button>
+            </div>
+            <div class="card">
+                <!-- ⏳ Время между подпиской -->
+                <p class="heading">{{ time_between_subscriptionss_ru }}</p>
+                <p>{{ time_between_subscriptionss_ru }}</p>
+                <button class="card-button"><a
+                        href="{{ url_for('time_between_subscriptionss') }}">Перейти</a></button>
+            </div>
+        </div>
+        <br><br>
+        <div class="card-container">
+            <div class="card">
+                <!-- 📋 Формирование списка username -->
+                <p class="heading">{{ creating_username_list_ru }}</p>
+                <p>{{ creating_username_list_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('creating_username_list') }}">Перейти</a></button>
+            </div>
+            <div class="card">
+                <!-- ⏱️ Запись времени между сообщениями -->
+                <p class="heading">{{ recording_the_time_between_messages_ru }}</p>
+                <p>{{ recording_the_time_between_messages_ru }}</p>
+                <button class="card-button"><a
+                        href="{{ url_for('recording_the_time_between_messages') }}">Перейти</a>
+                </button>
+            </div>
+            <div class="card">
+                <!-- 🕒 Время между инвайтингом, рассылка сообщений -->
+                <p class="heading">{{ time_between_invites_sending_messages_ru }}</p>
+                <p>{{ time_between_invites_sending_messages_ru }}</p>
+                <button class="card-button"><a
+                        href="{{ url_for('time_between_invites_sending_messages') }}">Перейти</a>
+                </button>
+            </div>
+            <div class="card">
+                <!-- 🔗 Запись ссылки для реакций -->
+                <p class="heading">{{ recording_reaction_link_ru }}</p>
+                <p>{{ recording_reaction_link_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('recording_reaction_link') }}">Перейти</a></button>
+            </div>
+            <div class="card">
+                <!-- 📑 Формирование списка чатов/каналов -->
+                <p class="heading">{{ forming_list_of_chats_channels_ru }}</p>
+                <p>{{ forming_list_of_chats_channels_ru }}</p>
+                <button class="card-button"><a href="{{ url_for('forming_list_of_chats_channels') }}">Перейти</a>
+                </button>
+            </div>
+        </div>
+        <hr/> <!-- Горизонтальная линия-->
+        <!-- Кнопка "Вверх" -->
+        <a href="#" id="to-top" title="Вверх"><i class="fas fa-chevron-up" aria-hidden="true"></i></a>
     </div>
+</div>
 </body>
 
 </html>

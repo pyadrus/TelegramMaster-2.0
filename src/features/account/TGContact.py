@@ -181,11 +181,12 @@ class TGContact:
         :param entities: Список сущностей
         """
         try:
-            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await ParsingGroupMembers().receiving_data(
-                user)
-
             entities.append(
-                [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
-                 user_premium])
+                [await ParsingGroupMembers().get_username(user), user.id, user.access_hash,
+                 await ParsingGroupMembers().get_first_name(user), await ParsingGroupMembers().get_last_name(user),
+                 await ParsingGroupMembers().get_user_phone(user),
+                 await ParsingGroupMembers().get_user_online_status(user),
+                 await ParsingGroupMembers().get_photo_status(user),
+                 await ParsingGroupMembers().get_user_premium_status(user)])
         except Exception as error:
             logger.exception(error)

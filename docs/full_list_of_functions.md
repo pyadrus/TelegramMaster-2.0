@@ -1,60 +1,60 @@
 <h2>Main functions of TelegramMaster:</h2>
 
 - ✅ Inviting:
-  - ✅ Inviting
-  - ✅ Inviting once per hour
-  - ✅ Inviting at a specific time
-  - ✅ Inviting every day
+    - ✅ Inviting
+    - ✅ Inviting once per hour
+    - ✅ Inviting at a specific time
+    - ✅ Inviting every day
 - Parsing:
-  - Parsing one group - groups
-  - Parsing a selected group from those subscribed by the user
-  - Parsing active group members
-  - Parsing groups - channels to which the account is subscribed
-  - Clearing the list of previously parsed data
+    - Parsing one group - groups
+    - Parsing a selected group from those subscribed by the user
+    - Parsing active group members
+    - Parsing groups - channels to which the account is subscribed
+    - Clearing the list of previously parsed data
 - Contact management:
-  - Creating a contact list
-  - Displaying the contact list
-  - Deleting contacts
-  - Adding contacts
+    - Creating a contact list
+    - Displaying the contact list
+    - Deleting contacts
+    - Adding contacts
 - Subscribing, unsubscribing:
-  - Subscribing
-  - Unsubscribing
+    - Subscribing
+    - Unsubscribing
 - Account connection:
-  - ✅ Connecting accounts via phone number
-  - ✅ Connecting session accounts
+    - ✅ Connecting accounts via phone number
+    - ✅ Connecting session accounts
 - Message distribution:
-  - ✅ Sending messages in private (message distribution, files, messages + files)
-  - ✅ Chat message distribution (message distribution, files, messages + files)
+    - ✅ Sending messages in private (message distribution, files, messages + files)
+    - ✅ Chat message distribution (message distribution, files, messages + files)
 - Working with reactions:
-  - Setting reactions
-  - Boosting post views
-  - Automatic reaction setting
+    - Setting reactions
+    - Boosting post views
+    - Automatic reaction setting
 - Account verification:
-  - Verification via spam bot
-  - Validity check
-  - Renaming accounts
-  - Full verification
-  - Group (chat) creation
+    - Verification via spam bot
+    - Validity check
+    - Renaming accounts
+    - Full verification
+    - Group (chat) creation
 - Editing BIO:
-  - Changing username
-  - Changing profile picture
-  - Changing description
-  - Changing first name
-  - Changing last name
+    - Changing username
+    - Changing profile picture
+    - Changing description
+    - Changing first name
+    - Changing last name
 - Settings:
-  - Reaction selection
-  - Proxy configuration
-  - Account switching
-  - api_id, api_hash setup
-  - Time setup
-  - Message recording
-  - Link recording
-  - Limits per account
-  - Message limits
-  - Username list formation
-  - Time between subscriptions
-  - Recording time between messages
-  - Time between inviting, message distribution
-  - Reaction link recording
-  - Chat / channel list formation
-  - Clearing the formed chat list
+    - Reaction selection
+    - Proxy configuration
+    - Account switching
+    - api_id, api_hash setup
+    - Time setup
+    - Message recording
+    - Link recording
+    - Limits per account
+    - Message limits
+    - Username list formation
+    - Time between subscriptions
+    - Recording time between messages
+    - Time between inviting, message distribution
+    - Reaction link recording
+    - Chat / channel list formation
+    - Clearing the formed chat list

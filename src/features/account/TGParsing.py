@@ -7,7 +7,7 @@ import time
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
-from telethon import functions, types
+from telethon import functions
 from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError,
                              ChatAdminRequiredError, FloodWaitError,
                              UsernameInvalidError)
@@ -20,6 +20,7 @@ from telethon.tl.types import (ChannelParticipantsAdmins,
                                UserStatusLastMonth, UserStatusLastWeek,
                                UserStatusOffline, UserStatusOnline,
                                UserStatusRecently)
+from telethon.tl.types import User
 
 from src.core.configs import (BUTTON_HEIGHT, line_width_button,
                               path_accounts_folder, time_activity_user_2)
@@ -40,38 +41,14 @@ class ParsingGroupMembers:
         self.tg_connect = TGConnect()
         self.tg_subscription_manager = SubscribeUnsubscribeTelegram()
 
-    async def clean_parsing_list_and_remove_duplicates(self, page: ft.Page):
-        """Очищает список парсинга от записей без имени пользователя и удаляет дубликаты по идентификатору."""
+    # async def clean_parsing_list_and_remove_duplicates(self):
+    #     """Очищает список парсинга от записей без имени пользователя и удаляет дубликаты по идентификатору."""
 
-        # Очистка списка парсинга от записей без имени пользователя
-        # await self.db_handler.remove_records_without_username(page)
+    # Очистка списка парсинга от записей без имени пользователя
+    # await self.db_handler.remove_records_without_username(page)
 
-        # Удаление дублирующихся записей по идентификатору
-        await self.db_handler.remove_duplicate_ids(table_name="members", column_name="id")
-
-    @staticmethod
-    async def get_user_online_status(user):
-        """
-        Определяет статус онлайна пользователя на основе его статуса.
-        https://core.telegram.org/type/UserStatus
-        :param user: Объект пользователя из Telethon
-        :return: Строка или datetime, описывающая статус онлайна
-        """
-        online_at = "Был(а) недавно"  # Значение по умолчанию
-        if user.status:
-            if isinstance(user.status, UserStatusOffline):
-                online_at = user.status.was_online
-            elif isinstance(user.status, UserStatusRecently):
-                online_at = "Был(а) недавно"
-            elif isinstance(user.status, UserStatusLastWeek):
-                online_at = "Был(а) на этой неделе"
-            elif isinstance(user.status, UserStatusLastMonth):
-                online_at = "Был(а) в этом месяце"
-            elif isinstance(user.status, UserStatusOnline):
-                online_at = user.status.expires
-            elif isinstance(user.status, UserStatusEmpty):
-                online_at = "Статус пользователя не определен"
-        return online_at
+    # Удаление дублирующихся записей по идентификатору
+    # remove_duplicate_ids()
 
     async def obtaining_administrators(self, session_files, page: ft.Page):
         """
@@ -99,16 +76,16 @@ class ParsingGroupMembers:
                                     # Получаем полную информацию о пользователе
                                     full_user = await client(GetFullUserRequest(id=user.id))
                                     bio = full_user.full_user.about or ""
-                                    photos_id = "C фото" if isinstance(user.photo, UserProfilePhoto) else "Без фото"
-                                    online_at = await self.get_user_online_status(user)
-                                    user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
                                     user_status = "Admin"
                                     log_data = {
-                                        "username": user.username or "", "user_id": user.id,
-                                        "access_hash": user.access_hash, "first_name": user.first_name or "",
-                                        "last_name": user.last_name or "", "phone": user.phone or "",
-                                        "online_at": online_at, "photo_status": photos_id,
-                                        "premium_status": user_premium, "user_status": user_status,
+                                        "username": await self.get_username(user), "user_id": user.id,
+                                        "access_hash": user.access_hash, "first_name": await self.get_first_name(user),
+                                        "last_name": await self.get_last_name(user),
+                                        "phone": await self.get_user_phone(user),
+                                        "online_at": await self.get_user_online_status(user),
+                                        "photo_status": await self.get_photo_status(user),
+                                        "premium_status": await self.get_user_premium_status(user),
+                                        "user_status": user_status,
                                         "bio": bio or "", "group": groups[0]
                                     }
                                     # Задержка для избежания ограничений Telegram API
@@ -275,7 +252,6 @@ class ParsingGroupMembers:
                             await self.db_handler.delete_row_db(table="writing_group_links",
                                                                 column="writing_group_links", value=groups)
                             # Очищаем список и удаляем дубликаты после завершения обработки всех групп
-                            await self.clean_parsing_list_and_remove_duplicates(page)
                             # Завершаем работу клиента после завершения парсинга 🔌
                         await client.disconnect()
                         await log_and_display(f"🔌 Отключение от аккаунта: {session_name}", page)
@@ -353,30 +329,132 @@ class ParsingGroupMembers:
         :param groups_wr: ссылка на группу
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
+        await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", page)
+
         try:
-            # Записываем parsing данные в файл user_data/software_database.db
-            entities: list = await self.get_all_participants(await self.parse_users(client, groups_wr, page), page)
-            await log_and_display(f"Полученные данные: {log_data}", page)
-            logger.info(f"Полученные данные: {log_data}")
-            log_data = {
-                "username": user.username or "", "user_id": user.id,
-                "access_hash": user.access_hash, "first_name": user.first_name or "",
-                "last_name": user.last_name or "", "user_phone": user.phone or "",
-                "online_at": online_at, "photos_id": photos_id,
-                "user_premium": user_premium,
-            }
-            db.create_tables([MembersGroups])
-            with db.atomic():  # Атомарная транзакция для записи данных
-                MembersGroups.create(
-                    username=log_data['username'], user_id=log_data['user_id'],
-                    access_hash=log_data['access_hash'], first_name=log_data['first_name'],
-                    last_name=log_data['last_name'], user_phone=log_data['phone'],
-                    online_at=log_data['online_at'], photos_id=log_data['photo_status'],
-                    user_premium=log_data['premium_status'],
-                )
-            # await self.db_handler.write_parsed_chat_participants_to_db(entities)
+
+            all_participants: list = []
+            while_condition = True
+            # my_filter = ChannelParticipantsSearch("")
+            offset = 0
+            while while_condition:
+                try:
+                    participants = await client(
+                        GetParticipantsRequest(channel=groups_wr, offset=offset, filter=ChannelParticipantsSearch(""),
+                                               limit=200,
+                                               hash=0))
+                    all_participants.extend(participants.users)
+                    offset += len(participants.users)
+                    if len(participants.users) < 1:
+                        while_condition = False
+                except TypeError:
+                    await log_and_display(f"❌ Ошибка: {groups_wr} не является группой / каналом.", page,
+                                          level="error")
+                    await asyncio.sleep(2)
+                    break
+                except ChatAdminRequiredError:
+                    await log_and_display(translations["ru"]["errors"]["admin_rights_required"], page)
+                    await asyncio.sleep(2)
+                    break
+                except ChannelPrivateError:
+                    await log_and_display(translations["ru"]["errors"]["channel_private"], page)
+                    await asyncio.sleep(2)
+                    break
+                except AuthKeyUnregisteredError:
+                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
+                    await asyncio.sleep(2)
+                    break
+
+            # entities: list = [] # Создаем пустой список для хранения данных участников
+            for user in all_participants:
+                # Получение данных пользователя
+                # username, user_phone, first_name, last_name, await self.get_photo_status(user), online_at, user_premium = await self.receiving_data(user)
+                # Добавление данных в список сущностей
+                # entities.append([username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, await self.get_photo_status(user), user_premium])
+                # Отображение данных на странице
+                # list_view.controls.append(ft.Text(f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {await self.get_photo_status(user)}, {user_premium}"))
+                # page.update()  # Обновление страницы для каждого элемента данных
+
+                await log_and_display(f"Полученные данные: {user}", page)
+                logger.info(f"Полученные данные: {user}")
+                # online_at = await self.get_user_online_status(user)
+                # user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
+                log_data = {
+                    "username": await self.get_username(user), "user_id": user.id,
+                    "access_hash": user.access_hash, "first_name": await self.get_first_name(user),
+                    "last_name": await self.get_last_name(user), "user_phone": await self.get_user_phone(user),
+                    "online_at": await self.get_user_online_status(user),
+                    "photos_id": await self.get_photo_status(user),
+                    "user_premium": await self.get_user_premium_status(user),
+                }
+                db.create_tables([MembersGroups])
+                with db.atomic():  # Атомарная транзакция для записи данных
+                    MembersGroups.get_or_create(
+                        user_id=log_data["user_id"],
+                        defaults={
+                            "username": log_data["username"],
+                            "access_hash": log_data["access_hash"],
+                            "first_name": log_data["first_name"],
+                            "last_name": log_data["last_name"],
+                            "user_phone": log_data["user_phone"],
+                            "online_at": log_data["online_at"],
+                            "photos_id": log_data["photos_id"],
+                            "user_premium": log_data["user_premium"],
+                        }
+                    )
+        except TypeError as error:
+            logger.exception(f"❌ Ошибка: {error}")
+            return []  # Возвращаем пустой список в случае ошибки
         except Exception as error:
             logger.exception(error)
+
+    @staticmethod
+    async def get_last_name(user: User) -> str:
+        return user.last_name or ""
+
+    @staticmethod
+    async def get_first_name(user: User) -> str:
+        return user.first_name or ""
+
+    @staticmethod
+    async def get_username(user: User) -> str:
+        return user.username or ""
+
+    @staticmethod
+    async def get_user_phone(user: User) -> str:
+        return user.phone if getattr(user, "phone", None) else "Номер телефона скрыт"
+
+    @staticmethod
+    async def get_user_premium_status(user: User) -> str:
+        return "Пользователь с premium" if getattr(user, "premium", False) else "Обычный пользователь"
+
+    @staticmethod
+    async def get_photo_status(user: User) -> str:
+        return "С фото" if isinstance(user.photo, UserProfilePhoto) else "Без фото"
+
+    @staticmethod
+    async def get_user_online_status(user):
+        """
+        Определяет статус онлайна пользователя на основе его статуса.
+        https://core.telegram.org/type/UserStatus
+        :param user: Объект пользователя из Telethon
+        :return: Строка или datetime, описывающая статус онлайна
+        """
+        online_at = "Был(а) недавно"  # Значение по умолчанию
+        if user.status:
+            if isinstance(user.status, UserStatusOffline):
+                online_at = user.status.was_online
+            elif isinstance(user.status, UserStatusRecently):
+                online_at = "Был(а) недавно"
+            elif isinstance(user.status, UserStatusLastWeek):
+                online_at = "Был(а) на этой неделе"
+            elif isinstance(user.status, UserStatusLastMonth):
+                online_at = "Был(а) в этом месяце"
+            elif isinstance(user.status, UserStatusOnline):
+                online_at = user.status.expires
+            elif isinstance(user.status, UserStatusEmpty):
+                online_at = "Статус пользователя не определен"
+        return online_at
 
     async def parse_active_users(self, chat_input, limit_active_user, page) -> None:
         """
@@ -401,7 +479,6 @@ class ParsingGroupMembers:
                     await asyncio.sleep(5)  # По умолчанию 5, если None или неправильный тип
                 await self.get_active_users(client, chat_input, limit_active_user, page)
                 await client.disconnect()  # Разрываем соединение telegram
-            await self.clean_parsing_list_and_remove_duplicates(page)
         except Exception as error:
             logger.exception(error)
 
@@ -495,7 +572,6 @@ class ParsingGroupMembers:
                     start = await start_time(page)
                     await log_and_display(f"📂 Выбрана группа: {dropdown.value}", page)
                     await self.parse_group(client, dropdown.value, page)  # Запускаем парсинг выбранной группы
-                    await self.clean_parsing_list_and_remove_duplicates(page)
                     await client.disconnect()
                     # Переходим на экран парсинга только после завершения всех действий
                     await end_time(start, page)
@@ -521,118 +597,76 @@ class ParsingGroupMembers:
         except Exception as error:
             logger.exception(error)
 
-    @staticmethod
-    async def parse_users(client, target_group, page: ft.Page):
-        """
-        🧑‍🤝‍🧑 Парсинг и сбор данных пользователей группы или канала.
-        Метод осуществляет поиск участников в указанной группе или канале, собирает их данные и сохраняет в файле.
+    # @staticmethod
+    # async def parse_users(client, target_group, page: ft.Page):
+    #     """
+    #     🧑‍🤝‍🧑 Парсинг и сбор данных пользователей группы или канала.
+    #     Метод осуществляет поиск участников в указанной группе или канале, собирает их данные и сохраняет в файле.
+    #
+    #     :param client: Клиент Telegram.
+    #     :param target_group: Группа или канал, участники которого будут собраны.
+    #     :param page: Страница интерфейса Flet для отображения элементов управления.
+    #     :return: Список участников.
+    #     """
+    #     try:
+    #         await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", page)
+    #
+    #         all_participants: list = []
+    #         while_condition = True
+    #         my_filter = ChannelParticipantsSearch("")
+    #         offset = 0
+    #         while while_condition:
+    #             try:
+    #                 participants = await client(
+    #                     GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200,
+    #                                            hash=0))
+    #                 all_participants.extend(participants.users)
+    #                 offset += len(participants.users)
+    #                 if len(participants.users) < 1:
+    #                     while_condition = False
+    #             except TypeError:
+    #                 await log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", page,
+    #                                       level="error")
+    #                 await asyncio.sleep(2)
+    #                 break
+    #             except ChatAdminRequiredError:
+    #                 await log_and_display(translations["ru"]["errors"]["admin_rights_required"], page)
+    #                 await asyncio.sleep(2)
+    #                 break
+    #             except ChannelPrivateError:
+    #                 await log_and_display(translations["ru"]["errors"]["channel_private"], page)
+    #                 await asyncio.sleep(2)
+    #                 break
+    #             except AuthKeyUnregisteredError:
+    #                 await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
+    #                 await asyncio.sleep(2)
+    #                 break
+    #
+    #         return all_participants
+    #     except Exception as error:
+    #         logger.exception(error)
+    #         raise
 
-        :param client: Клиент Telegram.
-        :param target_group: Группа или канал, участники которого будут собраны.
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :return: Список участников.
-        """
-        try:
-            await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", page)
-
-            all_participants: list = []
-            while_condition = True
-            my_filter = ChannelParticipantsSearch("")
-            offset = 0
-            while while_condition:
-                try:
-                    participants = await client(
-                        GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200,
-                                               hash=0))
-                    all_participants.extend(participants.users)
-                    offset += len(participants.users)
-                    if len(participants.users) < 1:
-                        while_condition = False
-                except TypeError:
-                    await log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", page,
-                                          level="error")
-                    await asyncio.sleep(2)
-                    break
-                except ChatAdminRequiredError:
-                    await log_and_display(translations["ru"]["errors"]["admin_rights_required"], page)
-                    await asyncio.sleep(2)
-                    break
-                except ChannelPrivateError:
-                    await log_and_display(translations["ru"]["errors"]["channel_private"], page)
-                    await asyncio.sleep(2)
-                    break
-                except AuthKeyUnregisteredError:
-                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
-                    await asyncio.sleep(2)
-                    break
-
-            return all_participants
-        except Exception as error:
-            logger.exception(error)
-            raise
-
-    async def get_all_participants(self, all_participants, page: ft.Page) -> list:
-        """
-        Сбор данных всех участников.
-        Метод проходит по списку участников, получает их данные и сохраняет их в список сущностей.
-
-        :param all_participants: Список объектов участников.
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :return: Список собранных данных участников.
-        """
-        try:
-            entities: list = []  # Создаем пустой список для хранения данных участников
-            for user in all_participants:
-                await self.get_user_data(user, entities, page)
-            return entities  # Возвращаем словарь пользователей
-        except TypeError as error:
-            logger.exception(f"❌ Ошибка: {error}")
-            return []  # Возвращаем пустой список в случае ошибки
-        except Exception as error:
-            logger.exception(error)
-            return []  # Возвращаем пустой список в случае ошибки
-
-    async def get_user_data(self, user, entities, page: ft.Page) -> None:
-        """
-        Получение и сохранение данных пользователя.
-        Метод получает данные пользователя, добавляет их в список сущностей и отображает на странице.
-
-        :param user: Объект пользователя.
-        :param entities: Список сущностей для хранения данных пользователя.
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        """
-        try:
-            # Получение данных пользователя
-            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(
-                user)
-            # Добавление данных в список сущностей
-            entities.append(
-                [username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
-                 user_premium])
-            # Отображение данных на странице
-            list_view.controls.append(ft.Text(
-                f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {photos_id}, {user_premium}"))
-            page.update()  # Обновление страницы для каждого элемента данных
-        except Exception as error:
-            logger.exception(error)
-
-    async def receiving_data(self, user):
-        """
-        Получение и обработка данных пользователя.
-        Метод извлекает и форматирует различные данные профиля пользователя, такие как имя, номер телефона, статус онлайн,
-        наличие фотографии и премиум-аккаунт.
-
-        :param user: Объект пользователя.
-        :return: Кортеж со значениями: username, user_phone, first_name, last_name, photos_id, online_at, user_premium.
-        """
-        usernames = user.username if user.username else ""
-        user_phone = user.phone if user.phone else "Номер телефона скрыт"
-        first_name = user.first_name if user.first_name else ""
-        last_name = user.last_name if user.last_name else ""
-        photos_id = ("C фото" if isinstance(user.photo, types.UserProfilePhoto) else "Без фото")
-        online_at = await self.get_user_online_status(user)
-        user_premium = "Пользователь с premium" if user.premium else ""
-        return usernames, user_phone, first_name, last_name, photos_id, online_at, user_premium
+    # async def get_all_participants(self, all_participants, page: ft.Page) -> list:
+    #     """
+    #     Сбор данных всех участников.
+    #     Метод проходит по списку участников, получает их данные и сохраняет их в список сущностей.
+    #
+    #     :param all_participants: Список объектов участников.
+    #     :param page: Страница интерфейса Flet для отображения элементов управления.
+    #     :return: Список собранных данных участников.
+    #     """
+    #     try:
+    #         entities: list = []  # Создаем пустой список для хранения данных участников
+    #         for user in all_participants:
+    #             await self.get_user_data(user, entities, page)
+    #         return entities  # Возвращаем словарь пользователей
+    #     except TypeError as error:
+    #         logger.exception(f"❌ Ошибка: {error}")
+    #         return []  # Возвращаем пустой список в случае ошибки
+    #     except Exception as error:
+    #         logger.exception(error)
+    #         return []  # Возвращаем пустой список в случае ошибки
 
     async def get_active_user_data(self, user):
         """
@@ -641,11 +675,11 @@ class ParsingGroupMembers:
         :param user: пользователь
         """
         try:
-            username, user_phone, first_name, last_name, photos_id, online_at, user_premium = await self.receiving_data(
-                user)
             entity = (
-                username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, photos_id,
-                user_premium)
+                await self.get_username(user), user.id, user.access_hash, await self.get_first_name(user),
+                await self.get_last_name(user), await self.get_user_phone(user),
+                await self.get_user_online_status(user), await self.get_photo_status(user),
+                await self.get_user_premium_status(user))
             return entity
         except Exception as error:
             logger.exception(error)
@@ -671,7 +705,6 @@ class ParsingGroupMembers:
                     # Получение количества участников
                     participants_count = getattr(full_channel_info.full_chat, 'participants_count', 0)
                     # Время синтаксического анализа
-                    parsing_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                     await log_and_display(
                         f"{dialog.id}, {channel_details.title}, https://t.me/{channel_details.username}, {participants_count}",
                         page)
@@ -679,7 +712,7 @@ class ParsingGroupMembers:
                         GroupsAndChannels.create(
                             id=dialog.id, title=channel_details.title, about=full_channel_info.full_chat.about,
                             link=f"https://t.me/{channel_details.username}", members_count=participants_count,
-                            parsing_time=parsing_time
+                            parsing_time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                         )
                 except TypeError:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу

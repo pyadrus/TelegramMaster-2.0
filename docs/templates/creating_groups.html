@@ -14,62 +14,62 @@
 </head>
 
 <body>
-    <div class="container">
-        <!-- Подключение бокового меню -->
-        <div id="menu-placeholder"></div>
-        <!-- Основной контент -->
-        <div class="content">
-            <h1 id="{{ program_name }}-">Создание групп (чатов)</h1>
-            <hr /> <!-- Горизонтальная линия-->
-            <p>Для создания группы (чата) в аккаунте Telegram, для этого выполните следующие действия:<br></p>
-            <blockquote>
-                1️⃣ Запустите {{program_name}} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
-                    {{program_name}}</a>).<br>
-                <!-- Изображение с центровкой -->
-                <p style="text-align: center;">
-                    <!-- Пример правильного пути к изображению -->
-                    <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master" width="40%">
-                </p>
-                2️⃣ Подключите аккаунты к {{program_name}} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
-                    аккаунтов Telegram к {{program_name}})</a> или скопировать session файл аккаунта в папку
-                <code>{{program_name}}/user_data/accounts/creating</code><br>
-                <!-- Изображение с центровкой -->
-                <p style="text-align: center;">
-                    <!-- Пример правильного пути к изображению -->
-                    <img src="/static/images/connecting_accounts/connecting_accounts.png" alt="Telegram Master"
-                        width="40%">
-                </p>
-                3️⃣ Перейдите в меню "Создание групп (чатов)"
-                <!-- Изображение с центровкой -->
-                <p style="text-align: center;">
-                    <!-- Пример правильного пути к изображению -->
-                    <img src="/static/images/creating_groups_and_chats_menu.png" alt="Telegram Master" width="40%">
-                </p>
-                4️⃣ Запустите функцию "Создание групп (чатов)"<br>
-                <!-- Изображение с центровкой -->
-                <p style="text-align: center;">
-                    <!-- Пример правильного пути к изображению -->
-                    <img src="/static/images/start_creating.png" alt="Telegram Master" width="40%">
-                </p>
-                <div
+<div class="container">
+    <!-- Подключение бокового меню -->
+    <div id="menu-placeholder"></div>
+    <!-- Основной контент -->
+    <div class="content">
+        <h1 id="{{ program_name }}-">Создание групп (чатов)</h1>
+        <hr/> <!-- Горизонтальная линия-->
+        <p>Для создания группы (чата) в аккаунте Telegram, для этого выполните следующие действия:<br></p>
+        <blockquote>
+            1️⃣ Запустите {{ program_name }} (см. <a href="{{ url_for('launch_telegrammaster') }}">Запуск
+            {{ program_name }}</a>).<br>
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="/static/images/TelegramMaster_2.png" alt="Telegram Master" width="40%">
+            </p>
+            2️⃣ Подключите аккаунты к {{ program_name }} <a href="{{ url_for('connect_accounts') }}">(см. Подключение
+            аккаунтов Telegram к {{ program_name }})</a> или скопировать session файл аккаунта в папку
+            <code>{{ program_name }}/user_data/accounts/creating</code><br>
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="/static/images/connecting_accounts/connecting_accounts.png" alt="Telegram Master"
+                     width="40%">
+            </p>
+            3️⃣ Перейдите в меню "Создание групп (чатов)"
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="/static/images/creating_groups_and_chats_menu.png" alt="Telegram Master" width="40%">
+            </p>
+            4️⃣ Запустите функцию "Создание групп (чатов)"<br>
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="/static/images/start_creating.png" alt="Telegram Master" width="40%">
+            </p>
+            <div
                     style="border: 2px solid #f5c6cbf5; background-color: #f8d7da; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: Arial, sans-serif;">
-                    <h3 style="color: #721c24; margin: 0 0 10px;">Обратите внимание:</h3>
-                    <p style="color: #721c24; margin: 0; font-size: 16px;">
-                        Если возникнет ошибка в работе с аккаунтом, то программа выдаст предупреждение и подсказку, по
-                        устранению данной ошибки.
-                    </p>
-                </div>
-                <!-- Изображение с центровкой -->
-                <p style="text-align: center;">
-                    <!-- Пример правильного пути к изображению -->
-                    <img src="/static/images/error_creating_groups.png" alt="Telegram Master" width="40%">
+                <h3 style="color: #721c24; margin: 0 0 10px;">Обратите внимание:</h3>
+                <p style="color: #721c24; margin: 0; font-size: 16px;">
+                    Если возникнет ошибка в работе с аккаунтом, то программа выдаст предупреждение и подсказку, по
+                    устранению данной ошибки.
                 </p>
-            </blockquote>
-            <hr /> <!-- Горизонтальная линия-->
-            <!-- Кнопка "Вверх" -->
-            <a href="#" id="to-top" title="Вверх"><i class="fas fa-chevron-up" aria-hidden="true"></i></a>
-        </div>
+            </div>
+            <!-- Изображение с центровкой -->
+            <p style="text-align: center;">
+                <!-- Пример правильного пути к изображению -->
+                <img src="/static/images/error_creating_groups.png" alt="Telegram Master" width="40%">
+            </p>
+        </blockquote>
+        <hr/> <!-- Горизонтальная линия-->
+        <!-- Кнопка "Вверх" -->
+        <a href="#" id="to-top" title="Вверх"><i class="fas fa-chevron-up" aria-hidden="true"></i></a>
     </div>
+</div>
 </body>
 
 </html>
