@@ -3,29 +3,25 @@ import asyncio
 import os
 import os.path
 import shutil
+import sqlite3
 import time
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
-from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError,
-                             ChatAdminRequiredError, FloodWaitError,
+from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError, ChatAdminRequiredError, FloodWaitError,
                              UsernameInvalidError)
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import (ChannelParticipantsAdmins,
-                               ChannelParticipantsSearch, InputPeerEmpty,
-                               InputUser, UserProfilePhoto, UserStatusEmpty,
-                               UserStatusLastMonth, UserStatusLastWeek,
-                               UserStatusOffline, UserStatusOnline,
-                               UserStatusRecently)
+from telethon.tl.types import (ChannelParticipantsAdmins, ChannelParticipantsSearch, InputPeerEmpty,
+                               InputUser, UserProfilePhoto, UserStatusEmpty, UserStatusLastMonth, UserStatusLastWeek,
+                               UserStatusOffline, UserStatusOnline, UserStatusRecently)
 from telethon.tl.types import User
 
-from src.core.configs import (BUTTON_HEIGHT, line_width_button,
-                              path_accounts_folder, time_activity_user_2)
-from src.core.sqlite_working_tools import (DatabaseHandler, GroupsAndChannels,
-                                           MembersAdmin, MembersGroups, db, remove_duplicates)
+from src.core.configs import BUTTON_HEIGHT, line_width_button, path_accounts_folder, time_activity_user_2
+from src.core.sqlite_working_tools import (DatabaseHandler, GroupsAndChannels, MembersAdmin, MembersGroups, db,
+                                           remove_duplicates)
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -78,8 +74,10 @@ class ParsingGroupMembers:
                                     bio = full_user.full_user.about or ""
                                     user_status = "Admin"
                                     log_data = {
-                                        "username": await self.get_username(user), "user_id": user.id,
-                                        "access_hash": user.access_hash, "first_name": await self.get_first_name(user),
+                                        "username": await self.get_username(user),
+                                        "user_id": user.id,
+                                        "access_hash": user.access_hash,
+                                        "first_name": await self.get_first_name(user),
                                         "last_name": await self.get_last_name(user),
                                         "phone": await self.get_user_phone(user),
                                         "online_at": await self.get_user_online_status(user),
@@ -253,7 +251,14 @@ class ParsingGroupMembers:
                                                                 column="writing_group_links", value=groups)
                             # Очищаем список и удаляем дубликаты после завершения обработки всех групп
                             # Завершаем работу клиента после завершения парсинга 🔌
-                        await client.disconnect()
+
+                        try:
+                            await client.disconnect()
+                        except sqlite3.DatabaseError:
+                            await log_and_display(
+                                f"❌ Ошибка при отключении аккаунта {session_name}, возможно поврежденный аккаунт. Выполните проверку аккаунтов",
+                                page)
+
                         await log_and_display(f"🔌 Отключение от аккаунта: {session_name}", page)
                 await end_time(start, page)
             except Exception as error:
@@ -377,7 +382,6 @@ class ParsingGroupMembers:
 
                 await log_and_display(f"Полученные данные: {user}", page)
                 logger.info(f"Полученные данные: {user}")
-                # online_at = await self.get_user_online_status(user)
                 # user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
                 log_data = {
                     "username": await self.get_username(user), "user_id": user.id,
@@ -501,7 +505,14 @@ class ParsingGroupMembers:
                         from_user = InputUser(user_id=user.id, access_hash=user.access_hash)  # Создаем InputUser
                         await log_and_display(f"{from_user}", page)
                         # Получаем данные о пользователе
-                        entities = await self.get_active_user_data(user)
+                        # entities = await self.get_active_user_data(user)
+
+                        entities = (
+                            await self.get_username(user), user.id, user.access_hash, await self.get_first_name(user),
+                            await self.get_last_name(user), await self.get_user_phone(user),
+                            await self.get_user_online_status(user), await self.get_photo_status(user),
+                            await self.get_user_premium_status(user))
+
                         await log_and_display(f"{entities}", page)
                         await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
                     except ValueError as e:
@@ -543,6 +554,64 @@ class ParsingGroupMembers:
             group_names.append(group.title)  # Добавляем название группы в список
         return group_names
 
+    async def group_selection_and_parsing(self, page: ft.Page, session_name, path_parsing_folder):
+        """
+        📌 Выбираем группу из подписанных и запускаем парсинг
+
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        :return: None
+        """
+        # list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
+        page.controls.append(list_view)
+
+        client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_parsing_folder)
+        chats = []
+        last_date = None
+        result = await client(
+            GetDialogsRequest(offset_date=last_date, offset_id=0, offset_peer=InputPeerEmpty(), limit=200,
+                              hash=0))
+        chats.extend(result.chats)
+        groups = await self.filtering_groups(chats)  # Получаем отфильтрованные группы
+        group_titles = await self.name_of_the_groups(groups)  # Получаем названия групп
+        logger.info(group_titles)
+        # Создаем текст для отображения результата
+        result_text = ft.Text(value="📂 Выберите группу для парсинга")
+
+        # Обработчик нажатия кнопки выбора группы
+        async def handle_button_click(_) -> None:
+            await log_and_display("▶️ Начало парсинга.\n🕒", list_view, level="info")
+            await log_and_display(f"📂 Выбрана группа: {dropdown.value}", list_view, level="info")
+
+            await self.parse_group(client, dropdown.value, page)  # Запускаем парсинг выбранной группы
+            await client.disconnect()
+            # Переходим на экран парсинга только после завершения всех действий
+            await log_and_display("🔚 Конец парсинга.", list_view, level="info")
+            page.go("/parsing")
+
+        async def back_button_clicked(_):
+            """⬅️ Кнопка возврата в меню настроек"""
+            page.go("/parsing")
+
+        # Создаем выпадающий список с названиями групп
+        dropdown = ft.Dropdown(width=line_width_button,
+                               options=[ft.dropdown.Option(title) for title in group_titles],
+                               autofocus=True)
+        page.views.append(
+            ft.View(
+                "/parsing",
+                [
+                    ft.Column(controls=[
+                        dropdown,
+                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                          text="📂 Выбрать группу",
+                                          on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
+                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                          text=translations["ru"]["buttons"]["back"],
+                                          on_click=lambda _: page.go("parsing")),
+                        result_text, list_view,
+                    ])], ))
+        page.update()
+
     async def choose_and_parse_group(self, page: ft.Page) -> None:
         """
         📌 Выбираем группу из подписанных и запускаем парсинг
@@ -550,52 +619,73 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :return: None
         """
-        page.controls.append(list_view)
-        try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_accounts_folder)
-                chats = []
-                last_date = None
-                result = await client(
-                    GetDialogsRequest(offset_date=last_date, offset_id=0, offset_peer=InputPeerEmpty(), limit=200,
-                                      hash=0))
-                chats.extend(result.chats)
-                groups = await self.filtering_groups(chats)  # Получаем отфильтрованные группы
-                group_titles = await self.name_of_the_groups(groups)  # Получаем названия групп
-                await log_and_display(f"{group_titles}", page)
-                # Создаем текст для отображения результата
-                result_text = ft.Text(value="📂 Выберите группу для парсинга")
+        selected_sessions = []  # Список для хранения выбранных session файлов
+        selected_files = ft.Text(value="Session файл не выбран", size=12)  # Поле для отображения выбранного файла
+        list_view = ft.ListView(expand=True, spacing=5, padding=10)  # Инициализация логов
 
-                # Обработчик нажатия кнопки выбора группы
-                async def handle_button_click(_) -> None:
-                    start = await start_time(page)
-                    await log_and_display(f"📂 Выбрана группа: {dropdown.value}", page)
-                    await self.parse_group(client, dropdown.value, page)  # Запускаем парсинг выбранной группы
-                    await client.disconnect()
-                    # Переходим на экран парсинга только после завершения всех действий
-                    await end_time(start, page)
-                    page.go("/parsing")
+        async def btn_click(e: ft.FilePickerResultEvent) -> None:
+            """Обработка выбора файлов"""
+            if e.files:
+                selected_sessions.clear()
+                for file in e.files:
+                    if file.name.endswith(".session"):
+                        dest_path = os.path.join(path_accounts_folder, file.name)
+                        if not os.path.exists(dest_path) or file.path != os.path.abspath(dest_path):
+                            os.makedirs(path_accounts_folder, exist_ok=True)
+                            shutil.copy(file.path, dest_path)
+                        selected_sessions.append(dest_path)
+                    else:
+                        selected_files.value = f"❌ Файл {file.name} не является session файлом. Выберите только .session файлы."
+                        selected_files.update()
+                        return
+                selected_files.value = f"✅ Выбраны session файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}"
+                selected_files.update()
+            else:
+                selected_files.value = "Выбор файлов отменен"
+                selected_files.update()
+            page.update()
 
-                # Создаем выпадающий список с названиями групп
-                dropdown = ft.Dropdown(width=line_width_button,
-                                       options=[ft.DropdownOption(title) for title in group_titles], autofocus=True)
-                page.views.append(
-                    ft.View(
-                        "/parsing",
-                        [
-                            ft.Column(controls=[dropdown,
-                                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                                                  text="📂 Выбрать группу",
-                                                                  on_click=handle_button_click),
-                                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                                                  text=translations["ru"]["buttons"]["back"],
-                                                                  on_click=lambda _: page.go("parsing")),
-                                                result_text, list_view,
-                                                ])], ))
-                page.update()
-        except Exception as error:
-            logger.exception(error)
+        async def on_ready_click(_):
+            """Запускаем выбор группы, если файл выбран"""
+            if not selected_sessions:
+                selected_files.value = "❗ Выберите хотя бы один .session файл перед продолжением."
+                selected_files.update()
+                return
+            # Используем только первый выбранный файл
+            session_path = selected_sessions[0]
+            session_name = os.path.splitext(os.path.basename(session_path))[0]
+            await self.group_selection_and_parsing(page, session_name, path_accounts_folder)
+
+        pick_files_dialog = ft.FilePicker(on_result=btn_click)
+        page.overlay.append(pick_files_dialog)
+
+        page.views.append(
+            ft.View(
+                "/parsing",
+                controls=[
+                    list_view,
+                    ft.Column(controls=[
+                        selected_files,
+                        ft.ElevatedButton(
+                            width=line_width_button, height=BUTTON_HEIGHT,
+                            text=translations["ru"]["create_groups_menu"]["choose_session_files"],
+                            on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True)
+                        ),
+                        ft.ElevatedButton(
+                            width=line_width_button, height=BUTTON_HEIGHT,
+                            text="Готово",
+                            on_click=on_ready_click  # Исправлено: передаем функцию, а не сразу вызываем
+                        ),
+                        ft.ElevatedButton(
+                            width=line_width_button, height=BUTTON_HEIGHT,
+                            text=translations["ru"]["buttons"]["back"],
+                            on_click=lambda _: page.go("/parsing")  # Исправлено: добавлен слэш
+                        ),
+                    ])
+                ]
+            )
+        )
+        page.update()
 
     # @staticmethod
     # async def parse_users(client, target_group, page: ft.Page):
@@ -668,22 +758,22 @@ class ParsingGroupMembers:
     #         logger.exception(error)
     #         return []  # Возвращаем пустой список в случае ошибки
 
-    async def get_active_user_data(self, user):
-        """
-        Получаем данные активного пользователя
-
-        :param user: пользователь
-        """
-        try:
-            entity = (
-                await self.get_username(user), user.id, user.access_hash, await self.get_first_name(user),
-                await self.get_last_name(user), await self.get_user_phone(user),
-                await self.get_user_online_status(user), await self.get_photo_status(user),
-                await self.get_user_premium_status(user))
-            return entity
-        except Exception as error:
-            logger.exception(error)
-            raise
+    # async def get_active_user_data(self, user):
+    #     """
+    #     Получаем данные активного пользователя
+    #
+    #     :param user: пользователь
+    #     """
+    #     try:
+    #         entity = (
+    #             await self.get_username(user), user.id, user.access_hash, await self.get_first_name(user),
+    #             await self.get_last_name(user), await self.get_user_phone(user),
+    #             await self.get_user_online_status(user), await self.get_photo_status(user),
+    #             await self.get_user_premium_status(user))
+    #         return entity
+    #     except Exception as error:
+    #         logger.exception(error)
+    #         raise
 
     @staticmethod
     async def forming_a_list_of_groups(client, page: ft.Page) -> None:

@@ -16,14 +16,11 @@ from telethon.errors import (ApiIdInvalidError, AuthKeyDuplicatedError,
                              YouBlockedUserError)
 from thefuzz import fuzz
 
-from src.core.configs import (BUTTON_HEIGHT, ConfigReader, line_width_button,
-                              path_accounts_folder)
+from src.core.configs import BUTTON_HEIGHT, ConfigReader, line_width_button, path_accounts_folder
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess, working_with_accounts
-from src.features.auth.logging_in import \
-    getting_phone_number_data_by_phone_number
-from src.features.proxy.checking_proxy import (
-    checking_the_proxy_for_work, reading_proxy_data_from_the_database)
+from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
+from src.features.proxy.checking_proxy import checking_the_proxy_for_work, reading_proxy_data_from_the_database
 from src.gui.gui import end_time, log_and_display, start_time
 from src.gui.menu import show_notification
 from src.locales.translations_loader import translations

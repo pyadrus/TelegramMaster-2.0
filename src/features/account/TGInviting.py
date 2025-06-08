@@ -23,8 +23,7 @@ from src.core.configs import (BUTTON_HEIGHT, BUTTON_WIDTH, ConfigReader,
                               limits, line_width_button, path_accounts_folder,
                               time_inviting_1, time_inviting_2)
 from src.core.sqlite_working_tools import DatabaseHandler
-from src.core.utils import (find_filess, record_and_interrupt,
-                            record_inviting_results)
+from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
