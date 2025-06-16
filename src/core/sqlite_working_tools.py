@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import sqlite3
-from peewee import fn
+
 import flet as ft
 from loguru import logger
 from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField
@@ -163,23 +163,6 @@ class DatabaseHandler:
         finally:
             self.close()  # Закрываем соединение
 
-    # async def remove_duplicate_ids(self, table_name, column_name) -> None:
-    #     """
-    #     Этот запрос удаляет все дублирующиеся записи в поле id. Данный запрос использует функцию MIN(), которая возвращает
-    #     минимальное значение из списка значений. Функция MIN() будет применена к полю rowid, которое является уникальным
-    #     идентификатором каждой записи в таблице members. Данный запрос сначала выбирает минимальное значение rowid для
-    #     каждой записи в поле id. Затем он удаляет все записи, у которых rowid не равен минимальному значению.
-    #     Это позволяет оставить только уникальные значения в поле id.
-    #
-    #     :param table_name: Название таблицы, данные из которой требуется извлечь.
-    #     :param column_name: Имя столбца
-    #     """
-    #     await self.connect()
-    #     self.cursor.execute(
-    #         f"DELETE FROM {table_name} WHERE row{column_name} NOT IN (SELECT MIN(row{column_name}) FROM {table_name} GROUP BY {column_name}")
-    #     self.sqlite_connection.commit()
-    #     self.close()
-
     async def select_records_with_limit(self, table_name, limit) -> list:
         """
         Выбирает записи из указанной таблицы БД с возможностью ограничения количества результатов.
@@ -206,37 +189,23 @@ class DatabaseHandler:
             logger.exception(error)
             raise
 
-    # async def write_parsed_chat_participants_to_db_active(self, entities) -> None:
-    #     """
-    #     Запись результатов parsing участников чата
+    async def write_parsed_chat_participants_to_db(self, entities) -> None:
+        """
+        Запись результатов parsing участников чата
 
-    #     :param entities: список результатов parsing
-    #     """
-    #     await self.connect()
-    #     # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
-    #     self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, user_id, access_hash, first_name, last_name, "
-    #                         "user_phone, online_at, photos_id, user_premium)")
-    #     self.cursor.executemany("INSERT INTO members(username, user_id, access_hash, first_name, last_name, user_phone, "
-    #                             "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    #                             [entities])
-    #     self.sqlite_connection.commit()
-    #     self.close()  # cursor_members.close() – закрытие соединения с БД.
-
-    # async def write_parsed_chat_participants_to_db(self, entities) -> None:
-    #         """
-    #         Запись результатов parsing участников чата
-
-    #         :param entities: список результатов parsing
-    #         """
-    #         await self.connect()
-    #         for line in entities:
-    #             # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
-    #             self.cursor.execute("CREATE TABLE IF NOT EXISTS members(username, user_id, access_hash, first_name, last_name, "
-    #                                 "user_phone, online_at, photos_id, user_premium)")
-    #             self.cursor.executemany("INSERT INTO members(username, user_id, access_hash, first_name, last_name, user_phone, "
-    #                                     "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (line,), )
-    #             self.sqlite_connection.commit()
-    #         self.close()  # cursor_members.close() – закрытие соединения с БД.
+        :param entities: список результатов parsing
+        """
+        await self.connect()
+        for line in entities:
+            # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
+            self.cursor.execute(
+                "CREATE TABLE IF NOT EXISTS members(username, user_id, access_hash, first_name, last_name, "
+                "user_phone, online_at, photos_id, user_premium)")
+            self.cursor.executemany(
+                "INSERT INTO members(username, user_id, access_hash, first_name, last_name, user_phone, "
+                "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (line,), )
+            self.sqlite_connection.commit()
+        self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities, page: ft.Page) -> None:
         """
@@ -350,21 +319,24 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    # async def remove_records_without_username(self, page: ft.Page) -> None:
-    #     """Чистка списка от участников у которых нет username"""
-    #     await log_and_display(f"Чищу список software_database.db от участников у которых нет username", page)
-    #     await self.connect()
-    #     self.cursor.execute('''SELECT * from members''')
-    #     records: list = self.cursor.fetchall()
-    #     await log_and_display(f"Всего username: {len(records)}", page)
-    #     for rows in records:
-    #         ints_list1 = {"username": rows[0]}
-    #         username = ints_list1["username"]
-    #         username_name = "NONE"
-    #         if username == username_name:
-    #             # Удаляем пользователя без username
-    #             self.cursor.execute('''DELETE from members where username = ?''', (username_name,))
-    #             self.sqlite_connection.commit()
+    async def remove_records_without_username(self, page: ft.Page) -> None:
+        """Чистка списка от участников у которых нет username"""
+        await log_and_display(f"Чищу список software_database.db от участников у которых нет username", page)
+        await self.connect()
+        self.cursor.execute('''SELECT *
+                               from members''')
+        records: list = self.cursor.fetchall()
+        await log_and_display(f"Всего username: {len(records)}", page)
+        for rows in records:
+            ints_list1 = {"username": rows[0]}
+            username = ints_list1["username"]
+            username_name = "NONE"
+            if username == username_name:
+                # Удаляем пользователя без username
+                self.cursor.execute('''DELETE
+                                       from members
+                                       where username = ?''', (username_name,))
+                self.sqlite_connection.commit()
 
     async def read_parsed_chat_participants_from_db(self):
         """

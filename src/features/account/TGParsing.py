@@ -28,6 +28,7 @@ from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
 
+
 class UserInfo:
     @staticmethod
     async def get_last_name(user: User) -> str:
@@ -383,9 +384,7 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", page)
-
         try:
-
             all_participants: list = []
             while_condition = True
             # my_filter = ChannelParticipantsSearch("")
@@ -434,11 +433,13 @@ class ParsingGroupMembers:
                 log_data = {
                     "username": await UserInfo().get_username(user), "user_id": user.id,
                     "access_hash": user.access_hash, "first_name": await UserInfo().get_first_name(user),
-                    "last_name": await UserInfo().get_last_name(user), "user_phone": await UserInfo().get_user_phone(user),
+                    "last_name": await UserInfo().get_last_name(user),
+                    "user_phone": await UserInfo().get_user_phone(user),
                     "online_at": await UserInfo().get_user_online_status(user),
                     "photos_id": await UserInfo().get_photo_status(user),
                     "user_premium": await UserInfo().get_user_premium_status(user),
                 }
+
                 db.create_tables([MembersGroups])
                 with db.atomic():  # Атомарная транзакция для записи данных
                     MembersGroups.get_or_create(
@@ -459,8 +460,6 @@ class ParsingGroupMembers:
             return []  # Возвращаем пустой список в случае ошибки
         except Exception as error:
             logger.exception(error)
-
-
 
     async def parse_active_users(self, chat_input, limit_active_user, page) -> None:
         """
@@ -509,14 +508,47 @@ class ParsingGroupMembers:
                         # Получаем данные о пользователе
                         # entities = await self.get_active_user_data(user)
 
-                        entities = (
-                            await UserInfo().get_username(user), user.id, user.access_hash, await UserInfo().get_first_name(user),
-                            await UserInfo().get_last_name(user), await UserInfo().get_user_phone(user),
-                            await UserInfo().get_user_online_status(user), await UserInfo().get_photo_status(user),
-                            await UserInfo().get_user_premium_status(user))
+                        # entities = (
+                        #     await UserInfo().get_username(user), user.id, user.access_hash,
+                        #     await UserInfo().get_first_name(user),
+                        #     await UserInfo().get_last_name(user), await UserInfo().get_user_phone(user),
+                        #     await UserInfo().get_user_online_status(user), await UserInfo().get_photo_status(user),
+                        #     await UserInfo().get_user_premium_status(user))
+                        # await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
 
-                        await log_and_display(f"{entities}", page)
-                        await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
+                        log_data = {
+                            "username": await UserInfo().get_username(user),
+                            "user_id": user.id,
+                            "access_hash": user.access_hash,
+                            "first_name": await UserInfo().get_first_name(user),
+                            "last_name": await UserInfo().get_last_name(user),
+                            "user_phone": await UserInfo().get_user_phone(user),
+                            "online_at": await UserInfo().get_user_online_status(user),
+                            "photos_id": await UserInfo().get_photo_status(user),
+                            "user_premium": await UserInfo().get_user_premium_status(user),
+                        }
+
+                        await log_and_display(f"{log_data}", page)
+
+                        db.create_tables([MembersGroups])
+                        with db.atomic():  # Атомарная транзакция для записи данных
+                            MembersGroups.get_or_create(
+                                user_id=log_data["user_id"],
+                                defaults={
+                                    "username": log_data["username"],
+                                    "access_hash": log_data["access_hash"],
+                                    "first_name": log_data["first_name"],
+                                    "last_name": log_data["last_name"],
+                                    "user_phone": log_data["user_phone"],
+                                    "online_at": log_data["online_at"],
+                                    "photos_id": log_data["photos_id"],
+                                    "user_premium": log_data["user_premium"],
+                                }
+                            )
+
+
+
+
                     except ValueError as e:
                         await log_and_display(
                             f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}",
@@ -561,6 +593,8 @@ class ParsingGroupMembers:
         📌 Выбираем группу из подписанных и запускаем парсинг
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param session_name: Имя сессии для подключения.
+        :param path_parsing_folder: Путь к папке сессий для парсинга
         :return: None
         """
         # list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
@@ -590,9 +624,9 @@ class ParsingGroupMembers:
             await log_and_display("🔚 Конец парсинга.", list_view, level="info")
             page.go("/parsing")
 
-        async def back_button_clicked(_):
-            """⬅️ Кнопка возврата в меню настроек"""
-            page.go("/parsing")
+        # async def back_button_clicked(_):
+        #     """⬅️ Кнопка возврата в меню настроек"""
+        #     page.go("/parsing")
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
@@ -603,6 +637,7 @@ class ParsingGroupMembers:
                 "/parsing",
                 [
                     ft.Column(controls=[
+                        result_text, list_view,
                         dropdown,
                         ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                           text="📂 Выбрать группу",
@@ -610,7 +645,7 @@ class ParsingGroupMembers:
                         ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                           text=translations["ru"]["buttons"]["back"],
                                           on_click=lambda _: page.go("parsing")),
-                        result_text, list_view,
+
                     ])], ))
         page.update()
 
@@ -623,7 +658,8 @@ class ParsingGroupMembers:
         """
         selected_sessions = []  # Список для хранения выбранных session файлов
         selected_files = ft.Text(value="Session файл не выбран", size=12)  # Поле для отображения выбранного файла
-        list_view = ft.ListView(expand=True, spacing=5, padding=10)  # Инициализация логов
+
+        # list_view = ft.ListView(expand=True, spacing=5, padding=10)  # Инициализация логов
 
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
             """Обработка выбора файлов"""
@@ -827,6 +863,7 @@ class ParsingGroupMembers:
             # Поле для ввода количества сообщений
             limit_active_user = ft.TextField(label="💬 Введите количество сообщений, которые будем парсить:",
                                              multiline=False, max_lines=1)
+
             async def btn_click(_) -> None:
                 """✅ Функция-обработчик для кнопки "Готово"""
                 start = await start_time(page)
@@ -839,6 +876,7 @@ class ParsingGroupMembers:
                 await end_time(start, page)
                 page.go("/parsing")  # Возвращаемся к основному меню парсинга 🏠
                 page.update()  # Обновление страницы для отображения изменений 🔄
+
             # Добавление представления на страницу
             page.views.append(
                 ft.View(
