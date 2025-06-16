@@ -28,6 +28,55 @@ from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
 
+class UserInfo:
+    @staticmethod
+    async def get_last_name(user: User) -> str:
+        return user.last_name or ""
+
+    @staticmethod
+    async def get_first_name(user: User) -> str:
+        return user.first_name or ""
+
+    @staticmethod
+    async def get_username(user: User) -> str:
+        return user.username or ""
+
+    @staticmethod
+    async def get_user_phone(user: User) -> str:
+        return user.phone if getattr(user, "phone", None) else "Номер телефона скрыт"
+
+    @staticmethod
+    async def get_user_premium_status(user: User) -> str:
+        return "Пользователь с premium" if getattr(user, "premium", False) else "Обычный пользователь"
+
+    @staticmethod
+    async def get_photo_status(user: User) -> str:
+        return "С фото" if isinstance(user.photo, UserProfilePhoto) else "Без фото"
+
+    @staticmethod
+    async def get_user_online_status(user):
+        """
+        Определяет статус онлайна пользователя на основе его статуса.
+        https://core.telegram.org/type/UserStatus
+        :param user: Объект пользователя из Telethon
+        :return: Строка или datetime, описывающая статус онлайна
+        """
+        online_at = "Был(а) недавно"  # Значение по умолчанию
+        if user.status:
+            if isinstance(user.status, UserStatusOffline):
+                online_at = user.status.was_online
+            elif isinstance(user.status, UserStatusRecently):
+                online_at = "Был(а) недавно"
+            elif isinstance(user.status, UserStatusLastWeek):
+                online_at = "Был(а) на этой неделе"
+            elif isinstance(user.status, UserStatusLastMonth):
+                online_at = "Был(а) в этом месяце"
+            elif isinstance(user.status, UserStatusOnline):
+                online_at = user.status.expires
+            elif isinstance(user.status, UserStatusEmpty):
+                online_at = "Статус пользователя не определен"
+        return online_at
+
 
 class ParsingGroupMembers:
     """Класс для парсинга групп, на которые подписан аккаунт."""
@@ -72,18 +121,17 @@ class ParsingGroupMembers:
                                     # Получаем полную информацию о пользователе
                                     full_user = await client(GetFullUserRequest(id=user.id))
                                     bio = full_user.full_user.about or ""
-                                    user_status = "Admin"
                                     log_data = {
-                                        "username": await self.get_username(user),
+                                        "username": await UserInfo().get_username(user),
                                         "user_id": user.id,
                                         "access_hash": user.access_hash,
-                                        "first_name": await self.get_first_name(user),
-                                        "last_name": await self.get_last_name(user),
-                                        "phone": await self.get_user_phone(user),
-                                        "online_at": await self.get_user_online_status(user),
-                                        "photo_status": await self.get_photo_status(user),
-                                        "premium_status": await self.get_user_premium_status(user),
-                                        "user_status": user_status,
+                                        "first_name": await UserInfo().get_first_name(user),
+                                        "last_name": await UserInfo().get_last_name(user),
+                                        "phone": await UserInfo().get_user_phone(user),
+                                        "online_at": await UserInfo().get_user_online_status(user),
+                                        "photo_status": await UserInfo().get_photo_status(user),
+                                        "premium_status": await UserInfo().get_user_premium_status(user),
+                                        "user_status": "Admin",
                                         "bio": bio or "", "group": groups[0]
                                     }
                                     # Задержка для избежания ограничений Telegram API
@@ -192,13 +240,13 @@ class ParsingGroupMembers:
 
             data = chat_input.value.split()
             logger.info(f"Полученные данные: {data}")  # Отладка
+
             # Удаляем дубликаты ссылок введенных пользователем
-            unique_records = list(set(data))
             await self.db_handler.write_to_single_column_table(
                 name_database="writing_group_links",
                 database_columns="writing_group_links",
                 into_columns="writing_group_links",
-                recorded_data=unique_records
+                recorded_data=list(set(data))
             )
 
             if not selected_sessions:
@@ -384,12 +432,12 @@ class ParsingGroupMembers:
                 logger.info(f"Полученные данные: {user}")
                 # user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
                 log_data = {
-                    "username": await self.get_username(user), "user_id": user.id,
-                    "access_hash": user.access_hash, "first_name": await self.get_first_name(user),
-                    "last_name": await self.get_last_name(user), "user_phone": await self.get_user_phone(user),
-                    "online_at": await self.get_user_online_status(user),
-                    "photos_id": await self.get_photo_status(user),
-                    "user_premium": await self.get_user_premium_status(user),
+                    "username": await UserInfo().get_username(user), "user_id": user.id,
+                    "access_hash": user.access_hash, "first_name": await UserInfo().get_first_name(user),
+                    "last_name": await UserInfo().get_last_name(user), "user_phone": await UserInfo().get_user_phone(user),
+                    "online_at": await UserInfo().get_user_online_status(user),
+                    "photos_id": await UserInfo().get_photo_status(user),
+                    "user_premium": await UserInfo().get_user_premium_status(user),
                 }
                 db.create_tables([MembersGroups])
                 with db.atomic():  # Атомарная транзакция для записи данных
@@ -412,53 +460,7 @@ class ParsingGroupMembers:
         except Exception as error:
             logger.exception(error)
 
-    @staticmethod
-    async def get_last_name(user: User) -> str:
-        return user.last_name or ""
 
-    @staticmethod
-    async def get_first_name(user: User) -> str:
-        return user.first_name or ""
-
-    @staticmethod
-    async def get_username(user: User) -> str:
-        return user.username or ""
-
-    @staticmethod
-    async def get_user_phone(user: User) -> str:
-        return user.phone if getattr(user, "phone", None) else "Номер телефона скрыт"
-
-    @staticmethod
-    async def get_user_premium_status(user: User) -> str:
-        return "Пользователь с premium" if getattr(user, "premium", False) else "Обычный пользователь"
-
-    @staticmethod
-    async def get_photo_status(user: User) -> str:
-        return "С фото" if isinstance(user.photo, UserProfilePhoto) else "Без фото"
-
-    @staticmethod
-    async def get_user_online_status(user):
-        """
-        Определяет статус онлайна пользователя на основе его статуса.
-        https://core.telegram.org/type/UserStatus
-        :param user: Объект пользователя из Telethon
-        :return: Строка или datetime, описывающая статус онлайна
-        """
-        online_at = "Был(а) недавно"  # Значение по умолчанию
-        if user.status:
-            if isinstance(user.status, UserStatusOffline):
-                online_at = user.status.was_online
-            elif isinstance(user.status, UserStatusRecently):
-                online_at = "Был(а) недавно"
-            elif isinstance(user.status, UserStatusLastWeek):
-                online_at = "Был(а) на этой неделе"
-            elif isinstance(user.status, UserStatusLastMonth):
-                online_at = "Был(а) в этом месяце"
-            elif isinstance(user.status, UserStatusOnline):
-                online_at = user.status.expires
-            elif isinstance(user.status, UserStatusEmpty):
-                online_at = "Статус пользователя не определен"
-        return online_at
 
     async def parse_active_users(self, chat_input, limit_active_user, page) -> None:
         """
@@ -508,10 +510,10 @@ class ParsingGroupMembers:
                         # entities = await self.get_active_user_data(user)
 
                         entities = (
-                            await self.get_username(user), user.id, user.access_hash, await self.get_first_name(user),
-                            await self.get_last_name(user), await self.get_user_phone(user),
-                            await self.get_user_online_status(user), await self.get_photo_status(user),
-                            await self.get_user_premium_status(user))
+                            await UserInfo().get_username(user), user.id, user.access_hash, await UserInfo().get_first_name(user),
+                            await UserInfo().get_last_name(user), await UserInfo().get_user_phone(user),
+                            await UserInfo().get_user_online_status(user), await UserInfo().get_photo_status(user),
+                            await UserInfo().get_user_premium_status(user))
 
                         await log_and_display(f"{entities}", page)
                         await self.db_handler.write_parsed_chat_participants_to_db_active(entities)
@@ -817,17 +819,14 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-
             page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
             page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-
             # Поле для ввода ссылки на чат
             chat_input = ft.TextField(label="🔗 Введите ссылку на чат, с которого будем собирать активных:",
                                       multiline=False, max_lines=1)
             # Поле для ввода количества сообщений
             limit_active_user = ft.TextField(label="💬 Введите количество сообщений, которые будем парсить:",
                                              multiline=False, max_lines=1)
-
             async def btn_click(_) -> None:
                 """✅ Функция-обработчик для кнопки "Готово"""
                 start = await start_time(page)
@@ -840,7 +839,6 @@ class ParsingGroupMembers:
                 await end_time(start, page)
                 page.go("/parsing")  # Возвращаемся к основному меню парсинга 🏠
                 page.update()  # Обновление страницы для отображения изменений 🔄
-
             # Добавление представления на страницу
             page.views.append(
                 ft.View(

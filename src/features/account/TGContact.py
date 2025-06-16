@@ -10,7 +10,7 @@ from src.core.configs import path_accounts_folder
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
-from src.features.account.TGParsing import ParsingGroupMembers
+from src.features.account.TGParsing import UserInfo
 from src.gui.gui import log_and_display
 from src.locales.translations_loader import translations
 
@@ -182,11 +182,11 @@ class TGContact:
         """
         try:
             entities.append(
-                [await ParsingGroupMembers().get_username(user), user.id, user.access_hash,
-                 await ParsingGroupMembers().get_first_name(user), await ParsingGroupMembers().get_last_name(user),
-                 await ParsingGroupMembers().get_user_phone(user),
-                 await ParsingGroupMembers().get_user_online_status(user),
-                 await ParsingGroupMembers().get_photo_status(user),
-                 await ParsingGroupMembers().get_user_premium_status(user)])
+                [await UserInfo().get_username(user), user.id, user.access_hash,
+                 await UserInfo().get_first_name(user), await UserInfo().get_last_name(user),
+                 await UserInfo().get_user_phone(user),
+                 await UserInfo().get_user_online_status(user),
+                 await UserInfo().get_photo_status(user),
+                 await UserInfo().get_user_premium_status(user)])
         except Exception as error:
             logger.exception(error)
