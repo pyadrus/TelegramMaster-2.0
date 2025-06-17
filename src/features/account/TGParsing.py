@@ -168,15 +168,29 @@ class ParsingGroupMembers:
             )
             chat_input = ft.TextField(label="🔗 Введите ссылку на чат...", multiline=False, max_lines=1)
 
+            """
+            📝 Создает интерфейс для ввода данных для парсинга активных пользователей.
+            Отображает поля для ввода ссылки на чат и количества сообщений, а также кнопки для подтверждения и возврата.
+
+            :param page: Страница интерфейса Flet для отображения элементов управления.
+            """
             # Поле для ввода ссылки на чат
             chat_input_active = ft.TextField(label="🔗 Введите ссылку на чат, с которого будем собирать активных:",
                                              multiline=False, max_lines=1)
-
             # Поле для ввода количества сообщений
             limit_active_user = ft.TextField(label="💬 Введите количество сообщений, которые будем парсить:",
                                              multiline=False, max_lines=1)
-            list_view = ft.ListView(expand=True)  # Создаем ListView для логов или сообщений
 
+            async def btn_click(_) -> None:
+                """✅ Функция-обработчик для кнопки "Готово"""
+                start = await start_time(page)
+                await log_and_display(f"🔗 Ссылка на чат: {chat_input.value}. 💬 Количество сообщений: {limit_active_user.value}", page)
+                # Вызов функции для парсинга активных пользователей (функция должна быть реализована)
+                await self.parse_active_users(chat_input.value, int(limit_active_user.value), page, phone_number)
+                # Изменение маршрута на новый (если необходимо)
+                await end_time(start, page)
+                page.go("/parsing")  # Возвращаемся к основному меню парсинга 🏠
+                page.update()  # Обновление страницы для отображения изменений 🔄
 
             """
             📌 Выбираем группу из подписанных и запускаем парсинг
@@ -223,9 +237,11 @@ class ParsingGroupMembers:
                                account_groups_switch,
                                members_switch,
                                chat_input,
+                               await GUIProgram().diver_castom(), # разделительная линия
                                chat_input_active,  # поле ввода для активных пользователей
                                limit_active_user,  # поле для количества сообщений для парсинга активных пользователей
-                               await GUIProgram().diver_castom(),
+                               ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text=translations["ru"]["buttons"]["done"], on_click=btn_click), # Кнопка "✅ Готово"
+                               await GUIProgram().diver_castom(), # разделительная линия
                                result_text,
                                dropdown,  # выпадающий список с названиями групп
                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text="📂 Выбрать группу", on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
@@ -285,8 +301,6 @@ class ParsingGroupMembers:
 
     async def account_selection_menu(self, page):
         """Отображает список доступных аккаунтов для последующего выбора."""
-        list_view = ft.ListView(expand=True)
-
         page.views.append(ft.View(
             "/parsing",
             controls=[
@@ -555,29 +569,30 @@ class ParsingGroupMembers:
         except Exception as error:
             logger.exception(error)
 
-    async def parse_active_users(self, chat_input, limit_active_user, page) -> None:
+    async def parse_active_users(self, chat_input, limit_active_user, page, phone_number) -> None:
         """
         Parsing участников, которые пишут в чат (активных участников)
 
         :param chat_input: Ссылка на чат
         :param limit_active_user: лимит активных участников
         :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param phone_number: Номер телефона пользователя
         """
         try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_accounts_folder)
-                await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input, page)
-                try:
-                    # Преобразуем значение time_activity_user_2 в целое число (если оно None, используем 5 по умолчанию).
-                    await asyncio.sleep(
-                        int(time_activity_user_2 or 5))  # По умолчанию 5, если None или некорректный тип
-                except TypeError:
-                    # Если произошла ошибка преобразования (например, time_activity_user_2 имеет неподдерживаемый тип),
-                    # то делаем паузу по умолчанию в 5 секунд.
-                    await asyncio.sleep(5)  # По умолчанию 5, если None или неправильный тип
-                await self.get_active_users(client, chat_input, limit_active_user, page)
-                await client.disconnect()  # Разрываем соединение telegram
+            client = await self.tg_connect.get_telegram_client(page, phone_number, account_directory=path_accounts_folder)
+            # for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+            # client = await self.tg_connect.get_telegram_client(page, session_name,
+            #                                                    account_directory=path_accounts_folder)
+            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input, page)
+            try:
+                # Преобразуем значение time_activity_user_2 в целое число (если оно None, используем 5 по умолчанию).
+                await asyncio.sleep(int(time_activity_user_2 or 5))  # По умолчанию 5, если None или некорректный тип
+            except TypeError:
+                # Если произошла ошибка преобразования (например, time_activity_user_2 имеет неподдерживаемый тип),
+                # то делаем паузу по умолчанию в 5 секунд.
+                await asyncio.sleep(5)  # По умолчанию 5, если None или неправильный тип
+            await self.get_active_users(client, chat_input, limit_active_user, page)
+            await client.disconnect()  # Разрываем соединение telegram
         except Exception as error:
             logger.exception(error)
 
@@ -801,47 +816,4 @@ class ParsingGroupMembers:
         except Exception as error:
             logger.exception(error)
 
-    async def entering_data_for_parsing_active(self, page: ft.Page) -> None:
-        """
-        📝 Создает интерфейс для ввода данных для парсинга активных пользователей.
-        Отображает поля для ввода ссылки на чат и количества сообщений, а также кнопки для подтверждения и возврата.
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        """
-        try:
-            page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-            page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-
-            async def btn_click(_) -> None:
-                """✅ Функция-обработчик для кнопки "Готово"""
-                start = await start_time(page)
-                await log_and_display(
-                    f"🔗 Ссылка на чат: {chat_input.value}. 💬 Количество сообщений: {limit_active_user.value}",
-                    page)
-                # Вызов функции для парсинга активных пользователей (функция должна быть реализована)
-                await self.parse_active_users(chat_input.value, int(limit_active_user.value), page)
-                # Изменение маршрута на новый (если необходимо)
-                await end_time(start, page)
-                page.go("/parsing")  # Возвращаемся к основному меню парсинга 🏠
-                page.update()  # Обновление страницы для отображения изменений 🔄
-
-            # Добавление представления на страницу
-            page.views.append(
-                ft.View(
-                    "/parsing",  # Маршрут для этого представления
-                    [
-                        list_view,  # отображение логов 📝
-                        chat_input,  # Поле ввода ссылки на чат 🔗
-                        limit_active_user,  # Поле ввода количества сообщений 💬
-                        ft.Column(),  # Колонка для размещения других элементов (при необходимости)
-                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                          text=translations["ru"]["buttons"]["done"],
-                                          on_click=btn_click),  # Кнопка "✅ Готово"
-                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                          text=translations["ru"]["buttons"]["back"],
-                                          on_click=lambda _: page.go("parsing"))  # Кнопка "⬅️ Назад"
-                    ]
-                ))
-        except Exception as error:
-            logger.exception(error)
 # 690
