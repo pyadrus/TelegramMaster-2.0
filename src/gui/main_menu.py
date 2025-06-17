@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flet as ft
 
-from src.core.configs import BUTTON_HEIGHT, small_button_width, line_width_button, program_name
+from src.core.configs import BUTTON_HEIGHT, small_button_width, line_width_button, program_name, BUTTON_WIDTH
 from src.locales.translations_loader import translations
 
 
@@ -95,5 +95,8 @@ async def main_menu_program(page: ft.Page):
                                             text=translations["ru"]["message_sending_menu"][
                                                 "sending_messages_via_chats"],
                                             on_click=lambda _: page.go("/sending_messages_files_via_chats")),
-
+                          # 📋 Импорт списка от ранее спарсенных данных
+                          ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                                            text=translations["ru"]["parsing_menu"]["importing_a_list_of_parsed_data"],
+                                            on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
                       ]), ]))

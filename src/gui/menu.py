@@ -197,10 +197,8 @@ async def menu_parsing(page: ft.Page):
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                        text=translations["ru"]["parsing_menu"]["parse_active_group_members"],
                                        on_click=lambda _: page.go("/parsing_active_group_members")),
-                     # 📋 Импорт списка от ранее спарсенных данных
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["parsing_menu"]["importing_a_list_of_parsed_data"],
-                                       on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
+
+
                  ])]))
 
 
