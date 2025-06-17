@@ -142,19 +142,32 @@ class ParsingGroupMembers:
         )
         chat_input = ft.TextField(label="🔗 Введите ссылку на чат...", multiline=False, max_lines=1)
 
+        # Поле для ввода ссылки на чат
+        chat_input_active = ft.TextField(label="🔗 Введите ссылку на чат, с которого будем собирать активных:",
+                                  multiline=False, max_lines=1)
+
+        # Поле для ввода количества сообщений
+        limit_active_user = ft.TextField(label="💬 Введите количество сообщений, которые будем парсить:",
+                                         multiline=False, max_lines=1)
+
+        group_titles = "Uheggf"
+        # Создаем выпадающий список с названиями групп
+        dropdown = ft.Dropdown(width=line_width_button,
+                               options=[ft.dropdown.Option(title) for title in group_titles],
+                               autofocus=True)
+
         list_view = ft.ListView(expand=True)  # Создаем ListView для логов или сообщений
 
         page.views.append(ft.View(
             "/parsing_options",
             controls=[
                 list_view,
-                ft.Column([admin_switch, account_groups_switch, members_switch, chat_input]),
-                ft.ElevatedButton(
-                    width=line_width_button,
-                    height=BUTTON_HEIGHT,
-                    text=translations["ru"]["buttons"]["back"],
-                    on_click=lambda e: page.go("/parsing")
-                )
+                ft.Column([admin_switch, account_groups_switch, members_switch, chat_input,
+                           chat_input_active, # поле ввода для активных пользователей
+                           limit_active_user, # поле для количества сообщений для парсинга активных пользователей
+                           dropdown # выпадающий список с названиями групп
+                           ]),
+                await self.key_app_bar(),
             ]
         ))
         page.update()
@@ -648,10 +661,7 @@ class ParsingGroupMembers:
             await log_and_display("🔚 Конец парсинга.", list_view, level="info")
             page.go("/parsing")
 
-        # Создаем выпадающий список с названиями групп
-        dropdown = ft.Dropdown(width=line_width_button,
-                               options=[ft.dropdown.Option(title) for title in group_titles],
-                               autofocus=True)
+
         page.views.append(
             ft.View(
                 "/parsing",
@@ -830,12 +840,8 @@ class ParsingGroupMembers:
         try:
             page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
             page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-            # Поле для ввода ссылки на чат
-            chat_input = ft.TextField(label="🔗 Введите ссылку на чат, с которого будем собирать активных:",
-                                      multiline=False, max_lines=1)
-            # Поле для ввода количества сообщений
-            limit_active_user = ft.TextField(label="💬 Введите количество сообщений, которые будем парсить:",
-                                             multiline=False, max_lines=1)
+
+
 
             async def btn_click(_) -> None:
                 """✅ Функция-обработчик для кнопки "Готово"""
