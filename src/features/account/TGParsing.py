@@ -82,7 +82,7 @@ class ParsingGroupMembers:
     """Класс для парсинга групп, на которые подписан аккаунт."""
 
     def __init__(self):
-        self.db_handler = DatabaseHandler()
+        # self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
         self.tg_subscription_manager = SubscribeUnsubscribeTelegram()
 
