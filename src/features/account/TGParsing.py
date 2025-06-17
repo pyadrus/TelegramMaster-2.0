@@ -77,6 +77,23 @@ class UserInfo:
                 online_at = "Статус пользователя не определен"
         return online_at
 
+class GUIProgram:
+    """Элементы графического интерфейса программы."""
+
+    async def key_app_bar(self):
+        """Кнопка в верхней панели приложения (возврат в главное меню)."""
+        return ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]), bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST)
+
+    async def outputs_text_gradient(self):
+        """Выводит текст с градиентом на странице."""
+        # Создаем текст с градиентным оформлением через TextStyle
+        return ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["parsing"],
+                                          ft.TextStyle(size=20, weight=ft.FontWeight.BOLD,
+                                                       foreground=ft.Paint(color=ft.Colors.PINK, ), ), )])
+
+    async def diver_castom(self):
+        """Разделительная линия"""
+        return ft.Divider(height=1, color="red")
 
 class ParsingGroupMembers:
     """Класс для парсинга групп, на которые подписан аккаунт."""
@@ -85,10 +102,6 @@ class ParsingGroupMembers:
         # self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
         self.tg_subscription_manager = SubscribeUnsubscribeTelegram()
-
-    async def key_app_bar(self):
-        """Кнопки в верхней панели приложения (возврат в главное меню)."""
-        return ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]), bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST)
 
     async def file_selection_processing(self, page, e) -> None:
         """Обработка выбора файлов"""
@@ -126,11 +139,16 @@ class ParsingGroupMembers:
         # Переходим на новую страницу
         page.go("/parsing_options")
 
+
+
+
+
     async def show_parsing_options(self, page):
         """Отображает опции парсинга после выбора аккаунтов."""
         try:
             selected_sessions = page.session.get("selected_sessions") or []
             logger.info(f"Selected sessions: {selected_sessions}")
+
             if selected_sessions:
                 session_file = selected_sessions[0]
                 phone_number = os.path.splitext(os.path.basename(session_file))[0]
@@ -182,6 +200,7 @@ class ParsingGroupMembers:
 
             # Обработчик нажатия кнопки выбора группы
             async def handle_button_click(_) -> None:
+                logger.warning("Начало парсинга")
                 await log_and_display("▶️ Начало парсинга.\n🕒", list_view, level="info")
                 await log_and_display(f"📂 Выбрана группа: {dropdown.value}", list_view, level="info")
 
@@ -189,7 +208,7 @@ class ParsingGroupMembers:
                 await client.disconnect()
                 # Переходим на экран парсинга только после завершения всех действий
                 await log_and_display("🔚 Конец парсинга.", list_view, level="info")
-                # page.go("/parsing")
+                logger.warning("Конец парсинга.")
 
             # Создаем текст для отображения результата
             result_text = ft.Text(value="📂 Выберите группу для парсинга")
@@ -206,16 +225,12 @@ class ParsingGroupMembers:
                                chat_input,
                                chat_input_active,  # поле ввода для активных пользователей
                                limit_active_user,  # поле для количества сообщений для парсинга активных пользователей
+                               await GUIProgram().diver_castom(),
                                result_text,
                                dropdown,  # выпадающий список с названиями групп
                                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text="📂 Выбрать группу", on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
-                               ft.ElevatedButton(
-                                   width=line_width_button, height=BUTTON_HEIGHT,
-                                   text="Готово",
-                                   on_click=page.go("/parsing")  # Исправлено: передаем функцию, а не сразу вызываем
-                               ),
                                ]),
-                    await self.key_app_bar(),
+                    await GUIProgram().key_app_bar(),
                 ]
             ))
             page.update()
@@ -268,13 +283,6 @@ class ParsingGroupMembers:
             )
         ])
 
-    async def outputs_text_gradient(self, page):
-        """Выводит текст с градиентом на странице."""
-        # Создаем текст с градиентным оформлением через TextStyle
-        return ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["parsing"],
-                                          ft.TextStyle(size=20, weight=ft.FontWeight.BOLD,
-                                                       foreground=ft.Paint(color=ft.Colors.PINK, ), ), )])
-
     async def account_selection_menu(self, page):
         """Отображает список доступных аккаунтов для последующего выбора."""
         list_view = ft.ListView(expand=True)
@@ -282,8 +290,8 @@ class ParsingGroupMembers:
         page.views.append(ft.View(
             "/parsing",
             controls=[
-                await self.key_app_bar(),
-                await self.outputs_text_gradient(page),
+                await GUIProgram().key_app_bar(),
+                await GUIProgram().outputs_text_gradient(),
                 list_view,
                 await self.button_select_file(page),  # исправлено название метода
             ]
