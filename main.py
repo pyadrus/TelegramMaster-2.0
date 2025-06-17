@@ -27,7 +27,7 @@ from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
 from src.gui.gui import end_time, start_time
 from src.gui.main_menu import main_menu_program
-from src.gui.menu import (bio_editing_menu, settings_menu, menu_parsing, reactions_menu,
+from src.gui.menu import (bio_editing_menu, settings_menu, reactions_menu,
                           subscribe_and_unsubscribe_menu, viewing_posts_menu, show_notification,
                           working_with_contacts_menu)
 
@@ -94,8 +94,13 @@ async def main(page: ft.Page):
                 logger.info("🔚 Конец Накрутки просмотров постов")
                 await end_time(start, page=page)
             # __________________________________________________________________________________________________________
+
             elif page.route == "/parsing":  # Меню "Парсинг"
-                await menu_parsing(page=page)
+                await ParsingGroupMembers().account_selection_menu(page=page)
+            elif page.route == "/parsing_options":  # Парсинг
+                await ParsingGroupMembers().show_parsing_options(page=page)
+
+
             elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
                 await ParsingGroupMembers().parse_groups(page=page)
             elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы

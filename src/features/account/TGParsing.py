@@ -5,7 +5,6 @@ import os.path
 import shutil
 import sqlite3
 import time
-
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
@@ -87,14 +86,144 @@ class ParsingGroupMembers:
         self.tg_connect = TGConnect()
         self.tg_subscription_manager = SubscribeUnsubscribeTelegram()
 
-    # async def clean_parsing_list_and_remove_duplicates(self):
-    #     """Очищает список парсинга от записей без имени пользователя и удаляет дубликаты по идентификатору."""
+    async def key_app_bar(self):
+        """Кнопки в верхней панели приложения (возврат в главное меню)."""
+        return ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]), bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST)
 
-    # Очистка списка парсинга от записей без имени пользователя
-    # await self.db_handler.remove_records_without_username(page)
+    async def file_selection_processing(self, page, e) -> None:
+        """Обработка выбора файлов"""
+        selected_sessions = []
+        selected_files = ft.Text(value="Session файл не выбран", size=12)
 
-    # Удаление дублирующихся записей по идентификатору
-    # remove_duplicate_ids()
+        # Предположим, что ты добавил selected_files в какой-то контейнер, например:
+        container = page.views[-1].controls[2]  # например, в конец текущего View
+        container.controls.append(selected_files)
+
+        selected_sessions.clear()
+        for file in e.files:
+            if file.name.endswith(".session"):
+                dest_path = os.path.join(path_accounts_folder, file.name)
+                if not os.path.exists(dest_path) or file.path != os.path.abspath(dest_path):
+                    os.makedirs(path_accounts_folder, exist_ok=True)
+                    shutil.copy(file.path, dest_path)
+                selected_sessions.append(dest_path)
+            else:
+                selected_files.value = f"❌ Файл {file.name} не является session файлом. Выберите только .session файлы."
+                selected_files.color = ft.Colors.RED
+                selected_files.update()
+                return
+
+        selected_files.value = f"✅ Выбраны session файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}"
+        selected_files.color = ft.Colors.GREEN
+        selected_files.update()
+        await page.update_async()
+
+        # Сохраняем выбранные аккаунты в состоянии приложения или передаём их как параметр
+        page.session.set("selected_sessions", selected_sessions)
+
+        # Переходим на новую страницу
+        page.go("/parsing_options")
+
+    async def show_parsing_options(self, page):
+        """Отображает опции парсинга после выбора аккаунтов."""
+        selected_sessions = page.session.get("selected_sessions") or []
+
+        admin_switch = ft.CupertinoSwitch(
+            label="Парсить только администраторов", value=False,
+            tooltip="Если включено, парсятся только администраторы групп."
+        )
+        account_groups_switch = ft.CupertinoSwitch(
+            label="Парсить группы и каналы, в которых состоит аккаунт", value=False,
+            tooltip="Если включено, парсятся группы и каналы, в которых состоит аккаунт."
+        )
+        members_switch = ft.CupertinoSwitch(
+            label="Парсить только участников", value=False,
+            tooltip="Если включено, парсятся только участники групп."
+        )
+        chat_input = ft.TextField(label="🔗 Введите ссылку на чат...", multiline=False, max_lines=1)
+
+        list_view = ft.ListView(expand=True)  # Создаем ListView для логов или сообщений
+
+        page.views.append(ft.View(
+            "/parsing_options",
+            controls=[
+                list_view,
+                ft.Column([admin_switch, account_groups_switch, members_switch, chat_input]),
+                ft.ElevatedButton(
+                    width=line_width_button,
+                    height=BUTTON_HEIGHT,
+                    text=translations["ru"]["buttons"]["back"],
+                    on_click=lambda e: page.go("/parsing")
+                )
+            ]
+        ))
+        page.update()
+
+    async def button_select_file(self, page):
+        """Кнопка выбора session-файла и переход на страницу опций парсинга"""
+        selected_file_name = ft.Text(value="Session файл не выбран", size=12)
+
+        async def btn_click(e: ft.FilePickerResultEvent) -> None:
+            """Обработка выбора файла"""
+            if e.files:
+                file_name = e.files[0].name
+                file_path = e.files[0].path
+
+                if file_name.endswith(".session"):
+                    # Удаляем расширение .session
+                    clean_name = os.path.splitext(file_name)[0]
+                    selected_file_name.value = f"✅ Выбран аккаунт: {clean_name}"
+                    selected_file_name.color = ft.Colors.GREEN
+                    selected_file_name.update()
+
+                    # Сохраняем путь или имя файла в сессию
+                    page.session.set("selected_sessions", [file_path])
+
+                    # Переходим на страницу опций
+                    await self.show_parsing_options(page)
+                    return
+                else:
+                    selected_file_name.value = "❌ Выбранный файл не является .session"
+                    selected_file_name.color = ft.Colors.RED
+            else:
+                selected_file_name.value = "Выбор файла отменен"
+                selected_file_name.color = ft.Colors.RED
+
+            selected_file_name.update()
+            await page.update_async()
+
+        pick_files_dialog = ft.FilePicker(on_result=btn_click)
+        page.overlay.append(pick_files_dialog)
+
+        return ft.Column([
+            selected_file_name,
+            ft.ElevatedButton(
+                width=line_width_button,
+                height=BUTTON_HEIGHT,
+                text="📂 Выбрать session файл",
+                on_click=lambda e: pick_files_dialog.pick_files(allow_multiple=False)
+            )
+        ])
+
+    async def outputs_text_gradient(self, page):
+        """Выводит текст с градиентом на странице."""
+        # Создаем текст с градиентным оформлением через TextStyle
+        return ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["parsing"], ft.TextStyle(size=20, weight=ft.FontWeight.BOLD, foreground=ft.Paint(color=ft.Colors.PINK,),),)])
+
+    async def account_selection_menu(self, page):
+        """Отображает список доступных аккаунтов для последующего выбора."""
+        list_view = ft.ListView(expand=True)
+
+        page.views.append(ft.View(
+            "/parsing",
+            controls=[
+                await self.key_app_bar(),
+                await self.outputs_text_gradient(page),
+                list_view,
+                await self.button_select_file(page),  # исправлено название метода
+            ]
+        ))
+        page.update()
 
     async def obtaining_administrators(self, session_files, page: ft.Page):
         """
@@ -104,10 +233,8 @@ class ParsingGroupMembers:
             for session_path in session_files:
                 session_name = os.path.basename(session_path)
                 try:
-                    client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_accounts_folder)
-                    for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links",
-                                                                           page=page):
+                    client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
+                    for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links", page=page):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", page)
                         try:
                             entity = await client.get_entity(groups[0])  # Получаем сущность группы/канала
@@ -187,24 +314,10 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
 
-        selected_sessions = []  # Список для хранения выбранных session файлов
 
-        admin_switch = ft.CupertinoSwitch(
-            label="Парсить только администраторов", value=False,
-            tooltip="Если включено, парсятся только администраторы групп. Если выключено, парсятся все участники групп."
-        )
-        account_groups_switch = ft.CupertinoSwitch(
-            label="Парсить группы и каналы, в которых состоит аккаунт", value=False,
-            tooltip="Если включено, парсятся группы и каналы, в которых состоит аккаунт."
-        )
-        members_switch = ft.CupertinoSwitch(
-            label="Парсить только участников", value=False,
-            tooltip="Если включено, парсятся только участники групп. Если выключено, парсятся все участники групп."
-        )
 
-        # Поле для ввода ссылки на чат
-        chat_input = ft.TextField(label="🔗 Введите ссылку на чат, с которого будут собираться участники.",
-                                  multiline=False, max_lines=1)
+
+
 
         # Обработчики для взаимоисключающего поведения
         def toggle_admin_switch(_):
@@ -233,9 +346,6 @@ class ParsingGroupMembers:
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
-        # Поле для отображения выбранного файла
-        selected_files = ft.Text(value="Session файл не выбран", size=12)
-
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
 
@@ -249,20 +359,6 @@ class ParsingGroupMembers:
                 into_columns="writing_group_links",
                 recorded_data=list(set(data))
             )
-
-            if not selected_sessions:
-                await log_and_display("⚠️ Файлы не выбраны. Используются все session файлы из папки.", page)
-                session_files = await find_filess(directory_path=path_accounts_folder, extension='session')
-                if not session_files:
-                    await log_and_display("❌ В папке нет session файлов для парсинга.", page)
-                    page.update()
-                    return
-            else:
-                session_files = selected_sessions
-                logger.debug(f"🔍 Выбранные файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}")
-                await log_and_display(
-                    f"🚀 Начало парсинга с выбранных файлов: {', '.join([os.path.basename(s) for s in selected_sessions])}",
-                    page)
 
             start = await start_time(page)
             page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
@@ -300,7 +396,6 @@ class ParsingGroupMembers:
                                                                 column="writing_group_links", value=groups)
                             # Очищаем список и удаляем дубликаты после завершения обработки всех групп
                             # Завершаем работу клиента после завершения парсинга 🔌
-
                         try:
                             await client.disconnect()
                         except sqlite3.DatabaseError:
@@ -313,66 +408,7 @@ class ParsingGroupMembers:
             except Exception as error:
                 logger.exception(error)
 
-        async def btn_click(e: ft.FilePickerResultEvent) -> None:
-            """Обработка выбора файлов"""
-            if e.files:
-                selected_sessions.clear()  # Очищаем список перед добавлением новых файлов
-                for file in e.files:
-                    file_name = file.name  # Имя файла
-                    file_path = file.path  # Путь к файлу
 
-                    # Проверка расширения файла на ".session"
-                    if file_name.endswith(".session"):
-                        target_folder = path_accounts_folder
-                        target_path = os.path.join(target_folder, file_name)
-
-                        # Проверяем, существует ли файл уже в целевой папке
-                        if not os.path.exists(target_path) or file_path != os.path.abspath(target_path):
-                            # Создаем директорию, если она не существует
-                            os.makedirs(target_folder, exist_ok=True)
-                            # Копируем файл только если он отличается
-                            shutil.copy(file_path, target_path)
-                        selected_sessions.append(target_path)  # Добавляем целевой путь
-                    else:
-                        selected_files.value = f"Файл {file_name} не является session файлом. Выберите только .session файлы."
-                        selected_files.update()
-                        return
-
-                selected_files.value = f"Выбраны session файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}"
-                session_name = os.path.splitext(os.path.basename(selected_files.value))[0]
-                logger.debug(f"Выбраны файлы: {session_name}")
-                selected_files.update()
-            else:
-                selected_files.value = "Выбор файлов отменен"
-                selected_files.update()
-
-            page.update()
-
-        pick_files_dialog = ft.FilePicker(on_result=btn_click)  # Инициализация выбора файлов
-        logger.debug(f"Инициализация выбора файлов {pick_files_dialog}")
-        page.overlay.append(pick_files_dialog)  # Добавляем FilePicker на страницу
-        # Кнопка для открытия диалога выбора файлов
-        button_select_file = ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["create_groups_menu"]["choose_session_files"],
-                                               on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True)
-                                               # Разрешаем выбор нескольких файлов
-                                               )
-
-        # Добавляем кнопки и другие элементы управления на страницу
-        page.views.append(
-            ft.View("/parsing", [
-                list_view,  # отображение логов 📝
-                ft.Column([admin_switch, account_groups_switch, members_switch, chat_input]),
-                # переключатели в столбце для корректного отображения
-                ft.Column(),  # резерв для приветствия или других элементов интерфейса
-                selected_files,  # Отображение выбранных файлов
-                button_select_file,  # Кнопка для выбора файлов
-                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                  text=translations["ru"]["buttons"]["start"], on_click=add_items),
-                ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                  text=translations["ru"]["buttons"]["back"], on_click=lambda _: page.go("parsing"))
-            ], ))
-        page.update()  # обновляем страницу после добавления элементов управления 🔄
 
     async def parse_group(self, client, groups_wr, page) -> None:
         """
@@ -417,16 +453,7 @@ class ParsingGroupMembers:
                     await asyncio.sleep(2)
                     break
 
-            # entities: list = [] # Создаем пустой список для хранения данных участников
             for user in all_participants:
-                # Получение данных пользователя
-                # username, user_phone, first_name, last_name, await self.get_photo_status(user), online_at, user_premium = await self.receiving_data(user)
-                # Добавление данных в список сущностей
-                # entities.append([username, user.id, user.access_hash, first_name, last_name, user_phone, online_at, await self.get_photo_status(user), user_premium])
-                # Отображение данных на странице
-                # list_view.controls.append(ft.Text(f"{username}, {user.id}, {user.access_hash}, {first_name}, {last_name}, {user_phone}, {online_at}, {await self.get_photo_status(user)}, {user_premium}"))
-                # page.update()  # Обновление страницы для каждого элемента данных
-
                 await log_and_display(f"Полученные данные: {user}", page)
                 logger.info(f"Полученные данные: {user}")
                 # user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
@@ -546,9 +573,6 @@ class ParsingGroupMembers:
                                 }
                             )
 
-
-
-
                     except ValueError as e:
                         await log_and_display(
                             f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}",
@@ -624,10 +648,6 @@ class ParsingGroupMembers:
             await log_and_display("🔚 Конец парсинга.", list_view, level="info")
             page.go("/parsing")
 
-        # async def back_button_clicked(_):
-        #     """⬅️ Кнопка возврата в меню настроек"""
-        #     page.go("/parsing")
-
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=line_width_button,
                                options=[ft.dropdown.Option(title) for title in group_titles],
@@ -656,59 +676,12 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :return: None
         """
-        selected_sessions = []  # Список для хранения выбранных session файлов
-        selected_files = ft.Text(value="Session файл не выбран", size=12)  # Поле для отображения выбранного файла
-
-        # list_view = ft.ListView(expand=True, spacing=5, padding=10)  # Инициализация логов
-
-        async def btn_click(e: ft.FilePickerResultEvent) -> None:
-            """Обработка выбора файлов"""
-            if e.files:
-                selected_sessions.clear()
-                for file in e.files:
-                    if file.name.endswith(".session"):
-                        dest_path = os.path.join(path_accounts_folder, file.name)
-                        if not os.path.exists(dest_path) or file.path != os.path.abspath(dest_path):
-                            os.makedirs(path_accounts_folder, exist_ok=True)
-                            shutil.copy(file.path, dest_path)
-                        selected_sessions.append(dest_path)
-                    else:
-                        selected_files.value = f"❌ Файл {file.name} не является session файлом. Выберите только .session файлы."
-                        selected_files.update()
-                        return
-                selected_files.value = f"✅ Выбраны session файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}"
-                selected_files.update()
-            else:
-                selected_files.value = "Выбор файлов отменен"
-                selected_files.update()
-            page.update()
-
-        async def on_ready_click(_):
-            """Запускаем выбор группы, если файл выбран"""
-            if not selected_sessions:
-                selected_files.value = "❗ Выберите хотя бы один .session файл перед продолжением."
-                selected_files.update()
-                return
-            # Используем только первый выбранный файл
-            session_path = selected_sessions[0]
-            session_name = os.path.splitext(os.path.basename(session_path))[0]
-            await self.group_selection_and_parsing(page, session_name, path_accounts_folder)
-
-        pick_files_dialog = ft.FilePicker(on_result=btn_click)
-        page.overlay.append(pick_files_dialog)
-
         page.views.append(
             ft.View(
                 "/parsing",
                 controls=[
                     list_view,
                     ft.Column(controls=[
-                        selected_files,
-                        ft.ElevatedButton(
-                            width=line_width_button, height=BUTTON_HEIGHT,
-                            text=translations["ru"]["create_groups_menu"]["choose_session_files"],
-                            on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True)
-                        ),
                         ft.ElevatedButton(
                             width=line_width_button, height=BUTTON_HEIGHT,
                             text="Готово",
