@@ -5,6 +5,7 @@ import os.path
 import shutil
 import sqlite3
 import time
+
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
@@ -19,8 +20,7 @@ from telethon.tl.types import (ChannelParticipantsAdmins, ChannelParticipantsSea
 from telethon.tl.types import User
 
 from src.core.configs import BUTTON_HEIGHT, line_width_button, path_accounts_folder, time_activity_user_2
-from src.core.sqlite_working_tools import (DatabaseHandler, GroupsAndChannels, MembersAdmin, MembersGroups, db,
-                                           remove_duplicates)
+from src.core.sqlite_working_tools import GroupsAndChannels, MembersAdmin, MembersGroups, db, remove_duplicates
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -119,58 +119,108 @@ class ParsingGroupMembers:
         await page.update_async()
 
         # Сохраняем выбранные аккаунты в состоянии приложения или передаём их как параметр
-        page.session.set("selected_sessions", selected_sessions)
+        # Извлекаем телефоны из путей к session-файлам
+        phones = [os.path.splitext(os.path.basename(path))[0] for path in selected_sessions]
+        page.session.set("selected_sessions", phones)
 
         # Переходим на новую страницу
         page.go("/parsing_options")
 
     async def show_parsing_options(self, page):
         """Отображает опции парсинга после выбора аккаунтов."""
-        selected_sessions = page.session.get("selected_sessions") or []
+        try:
+            selected_sessions = page.session.get("selected_sessions") or []
+            logger.info(f"Selected sessions: {selected_sessions}")
+            if selected_sessions:
+                session_file = selected_sessions[0]
+                phone_number = os.path.splitext(os.path.basename(session_file))[0]
+                print(phone_number)  # 77477770399
 
-        admin_switch = ft.CupertinoSwitch(
-            label="Парсить только администраторов", value=False,
-            tooltip="Если включено, парсятся только администраторы групп."
-        )
-        account_groups_switch = ft.CupertinoSwitch(
-            label="Парсить группы и каналы, в которых состоит аккаунт", value=False,
-            tooltip="Если включено, парсятся группы и каналы, в которых состоит аккаунт."
-        )
-        members_switch = ft.CupertinoSwitch(
-            label="Парсить только участников", value=False,
-            tooltip="Если включено, парсятся только участники групп."
-        )
-        chat_input = ft.TextField(label="🔗 Введите ссылку на чат...", multiline=False, max_lines=1)
+            admin_switch = ft.CupertinoSwitch(
+                label="Парсить только администраторов", value=False,
+                tooltip="Если включено, парсятся только администраторы групп."
+            )
+            account_groups_switch = ft.CupertinoSwitch(
+                label="Парсить группы и каналы, в которых состоит аккаунт", value=False,
+                tooltip="Если включено, парсятся группы и каналы, в которых состоит аккаунт."
+            )
+            members_switch = ft.CupertinoSwitch(
+                label="Парсить только участников", value=False,
+                tooltip="Если включено, парсятся только участники групп."
+            )
+            chat_input = ft.TextField(label="🔗 Введите ссылку на чат...", multiline=False, max_lines=1)
 
-        # Поле для ввода ссылки на чат
-        chat_input_active = ft.TextField(label="🔗 Введите ссылку на чат, с которого будем собирать активных:",
-                                  multiline=False, max_lines=1)
+            # Поле для ввода ссылки на чат
+            chat_input_active = ft.TextField(label="🔗 Введите ссылку на чат, с которого будем собирать активных:",
+                                             multiline=False, max_lines=1)
 
-        # Поле для ввода количества сообщений
-        limit_active_user = ft.TextField(label="💬 Введите количество сообщений, которые будем парсить:",
-                                         multiline=False, max_lines=1)
+            # Поле для ввода количества сообщений
+            limit_active_user = ft.TextField(label="💬 Введите количество сообщений, которые будем парсить:",
+                                             multiline=False, max_lines=1)
+            list_view = ft.ListView(expand=True)  # Создаем ListView для логов или сообщений
 
-        group_titles = "Uheggf"
-        # Создаем выпадающий список с названиями групп
-        dropdown = ft.Dropdown(width=line_width_button,
-                               options=[ft.dropdown.Option(title) for title in group_titles],
-                               autofocus=True)
 
-        list_view = ft.ListView(expand=True)  # Создаем ListView для логов или сообщений
+            """
+            📌 Выбираем группу из подписанных и запускаем парсинг
+            
+            Выпадающий список с названиями групп для парсинга участников
+            :param page: Страница интерфейса Flet для отображения элементов управления.
+            :param session_name: Имя сессии для подключения.
+            :param path_parsing_folder: Путь к папке сессий для парсинга
+            :return: None
+            """
 
-        page.views.append(ft.View(
-            "/parsing_options",
-            controls=[
-                list_view,
-                ft.Column([admin_switch, account_groups_switch, members_switch, chat_input,
-                           chat_input_active, # поле ввода для активных пользователей
-                           limit_active_user, # поле для количества сообщений для парсинга активных пользователей
-                           dropdown # выпадающий список с названиями групп
-                           ]),
-                await self.key_app_bar(),
-            ]
-        ))
-        page.update()
+            page.controls.append(list_view)
+            client = await self.tg_connect.get_telegram_client(page, phone_number, account_directory=path_accounts_folder)
+            chats = []
+            last_date = None
+            result = await client(GetDialogsRequest(offset_date=last_date, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+            chats.extend(result.chats)
+            groups = await self.filtering_groups(chats)  # Получаем отфильтрованные группы
+            group_titles = await self.name_of_the_groups(groups)  # Получаем названия групп
+            logger.info(group_titles)
+
+            # Обработчик нажатия кнопки выбора группы
+            async def handle_button_click(_) -> None:
+                await log_and_display("▶️ Начало парсинга.\n🕒", list_view, level="info")
+                await log_and_display(f"📂 Выбрана группа: {dropdown.value}", list_view, level="info")
+
+                await self.parse_group(client, dropdown.value, page)  # Запускаем парсинг выбранной группы
+                await client.disconnect()
+                # Переходим на экран парсинга только после завершения всех действий
+                await log_and_display("🔚 Конец парсинга.", list_view, level="info")
+                # page.go("/parsing")
+
+            # Создаем текст для отображения результата
+            result_text = ft.Text(value="📂 Выберите группу для парсинга")
+            # Создаем выпадающий список с названиями групп
+            dropdown = ft.Dropdown(width=line_width_button, options=[ft.dropdown.Option(title) for title in group_titles], autofocus=True)
+
+            page.views.append(ft.View(
+                "/parsing_options",
+                controls=[
+                    list_view,
+                    ft.Column([admin_switch,
+                               account_groups_switch,
+                               members_switch,
+                               chat_input,
+                               chat_input_active,  # поле ввода для активных пользователей
+                               limit_active_user,  # поле для количества сообщений для парсинга активных пользователей
+                               result_text,
+                               dropdown,  # выпадающий список с названиями групп
+                               ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text="📂 Выбрать группу", on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
+                               ft.ElevatedButton(
+                                   width=line_width_button, height=BUTTON_HEIGHT,
+                                   text="Готово",
+                                   on_click=page.go("/parsing")  # Исправлено: передаем функцию, а не сразу вызываем
+                               ),
+                               ]),
+                    await self.key_app_bar(),
+                ]
+            ))
+            page.update()
+        except Exception as e:
+            logger.exception(e)
 
     async def button_select_file(self, page):
         """Кнопка выбора session-файла и переход на страницу опций парсинга"""
@@ -221,7 +271,9 @@ class ParsingGroupMembers:
     async def outputs_text_gradient(self, page):
         """Выводит текст с градиентом на странице."""
         # Создаем текст с градиентным оформлением через TextStyle
-        return ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["parsing"], ft.TextStyle(size=20, weight=ft.FontWeight.BOLD, foreground=ft.Paint(color=ft.Colors.PINK,),),)])
+        return ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["parsing"],
+                                          ft.TextStyle(size=20, weight=ft.FontWeight.BOLD,
+                                                       foreground=ft.Paint(color=ft.Colors.PINK, ), ), )])
 
     async def account_selection_menu(self, page):
         """Отображает список доступных аккаунтов для последующего выбора."""
@@ -246,7 +298,8 @@ class ParsingGroupMembers:
             for session_path in session_files:
                 session_name = os.path.basename(session_path)
                 try:
-                    client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
+                    client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                       account_directory=path_accounts_folder)
                     for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links", page=page):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", page)
                         try:
@@ -326,11 +379,6 @@ class ParsingGroupMembers:
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-
-
-
-
-
 
         # Обработчики для взаимоисключающего поведения
         def toggle_admin_switch(_):
@@ -420,8 +468,6 @@ class ParsingGroupMembers:
                 await end_time(start, page)
             except Exception as error:
                 logger.exception(error)
-
-
 
     async def parse_group(self, client, groups_wr, page) -> None:
         """
@@ -625,89 +671,6 @@ class ParsingGroupMembers:
             group_names.append(group.title)  # Добавляем название группы в список
         return group_names
 
-    async def group_selection_and_parsing(self, page: ft.Page, session_name, path_parsing_folder):
-        """
-        📌 Выбираем группу из подписанных и запускаем парсинг
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param session_name: Имя сессии для подключения.
-        :param path_parsing_folder: Путь к папке сессий для парсинга
-        :return: None
-        """
-        # list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
-        page.controls.append(list_view)
-
-        client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_parsing_folder)
-        chats = []
-        last_date = None
-        result = await client(
-            GetDialogsRequest(offset_date=last_date, offset_id=0, offset_peer=InputPeerEmpty(), limit=200,
-                              hash=0))
-        chats.extend(result.chats)
-        groups = await self.filtering_groups(chats)  # Получаем отфильтрованные группы
-        group_titles = await self.name_of_the_groups(groups)  # Получаем названия групп
-        logger.info(group_titles)
-        # Создаем текст для отображения результата
-        result_text = ft.Text(value="📂 Выберите группу для парсинга")
-
-        # Обработчик нажатия кнопки выбора группы
-        async def handle_button_click(_) -> None:
-            await log_and_display("▶️ Начало парсинга.\n🕒", list_view, level="info")
-            await log_and_display(f"📂 Выбрана группа: {dropdown.value}", list_view, level="info")
-
-            await self.parse_group(client, dropdown.value, page)  # Запускаем парсинг выбранной группы
-            await client.disconnect()
-            # Переходим на экран парсинга только после завершения всех действий
-            await log_and_display("🔚 Конец парсинга.", list_view, level="info")
-            page.go("/parsing")
-
-
-        page.views.append(
-            ft.View(
-                "/parsing",
-                [
-                    ft.Column(controls=[
-                        result_text, list_view,
-                        dropdown,
-                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                          text="📂 Выбрать группу",
-                                          on_click=handle_button_click),  # Кнопка "Выбрать группу" 📂
-                        ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                          text=translations["ru"]["buttons"]["back"],
-                                          on_click=lambda _: page.go("parsing")),
-
-                    ])], ))
-        page.update()
-
-    async def choose_and_parse_group(self, page: ft.Page) -> None:
-        """
-        📌 Выбираем группу из подписанных и запускаем парсинг
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :return: None
-        """
-        page.views.append(
-            ft.View(
-                "/parsing",
-                controls=[
-                    list_view,
-                    ft.Column(controls=[
-                        ft.ElevatedButton(
-                            width=line_width_button, height=BUTTON_HEIGHT,
-                            text="Готово",
-                            on_click=on_ready_click  # Исправлено: передаем функцию, а не сразу вызываем
-                        ),
-                        ft.ElevatedButton(
-                            width=line_width_button, height=BUTTON_HEIGHT,
-                            text=translations["ru"]["buttons"]["back"],
-                            on_click=lambda _: page.go("/parsing")  # Исправлено: добавлен слэш
-                        ),
-                    ])
-                ]
-            )
-        )
-        page.update()
-
     # @staticmethod
     # async def parse_users(client, target_group, page: ft.Page):
     #     """
@@ -840,8 +803,6 @@ class ParsingGroupMembers:
         try:
             page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
             page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-
-
 
             async def btn_click(_) -> None:
                 """✅ Функция-обработчик для кнопки "Готово"""

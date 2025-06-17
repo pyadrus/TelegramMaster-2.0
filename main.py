@@ -103,8 +103,6 @@ async def main(page: ft.Page):
 
             elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
                 await ParsingGroupMembers().parse_groups(page=page)
-            elif page.route == "/parsing_selected_group_user_subscribed":  # Парсинг выбранной группы
-                await ParsingGroupMembers().choose_and_parse_group(page=page)
             elif page.route == "/parsing_active_group_members":  # Парсинг активных участников группы
                 await ParsingGroupMembers().entering_data_for_parsing_active(page=page)
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
