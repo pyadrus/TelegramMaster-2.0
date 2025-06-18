@@ -675,6 +675,14 @@
         "documentation": {}
     },
     {
+        "label": "BUTTON_WIDTH",
+        "importPath": "src.core.configs",
+        "description": "src.core.configs",
+        "isExtraImport": true,
+        "detail": "src.core.configs",
+        "documentation": {}
+    },
+    {
         "label": "BUTTON_HEIGHT",
         "importPath": "src.core.configs",
         "description": "src.core.configs",
@@ -988,14 +996,6 @@
         "documentation": {}
     },
     {
-        "label": "DatabaseHandler",
-        "importPath": "src.core.sqlite_working_tools",
-        "description": "src.core.sqlite_working_tools",
-        "isExtraImport": true,
-        "detail": "src.core.sqlite_working_tools",
-        "documentation": {}
-    },
-    {
         "label": "GroupsAndChannels",
         "importPath": "src.core.sqlite_working_tools",
         "description": "src.core.sqlite_working_tools",
@@ -1188,14 +1188,6 @@
         "documentation": {}
     },
     {
-        "label": "find_filess",
-        "importPath": "src.core.utils",
-        "description": "src.core.utils",
-        "isExtraImport": true,
-        "detail": "src.core.utils",
-        "documentation": {}
-    },
-    {
         "label": "read_json_file",
         "importPath": "src.core.utils",
         "description": "src.core.utils",
@@ -1325,14 +1317,6 @@
     },
     {
         "label": "settings_menu",
-        "importPath": "src.gui.menu",
-        "description": "src.gui.menu",
-        "isExtraImport": true,
-        "detail": "src.gui.menu",
-        "documentation": {}
-    },
-    {
-        "label": "menu_parsing",
         "importPath": "src.gui.menu",
         "description": "src.gui.menu",
         "isExtraImport": true,
@@ -1853,14 +1837,6 @@
     },
     {
         "label": "functions",
-        "importPath": "telethon",
-        "description": "telethon",
-        "isExtraImport": true,
-        "detail": "telethon",
-        "documentation": {}
-    },
-    {
-        "label": "types",
         "importPath": "telethon",
         "description": "telethon",
         "isExtraImport": true,
@@ -2581,7 +2557,7 @@
         "documentation": {}
     },
     {
-        "label": "\\",
+        "label": "getting_phone_number_data_by_phone_number",
         "importPath": "src.features.auth.logging_in",
         "description": "src.features.auth.logging_in",
         "isExtraImport": true,
@@ -2621,7 +2597,7 @@
         "documentation": {}
     },
     {
-        "label": "ParsingGroupMembers",
+        "label": "UserInfo",
         "importPath": "src.features.account.TGParsing",
         "description": "src.features.account.TGParsing",
         "isExtraImport": true,
@@ -2798,6 +2774,14 @@
     },
     {
         "label": "InputUser",
+        "importPath": "telethon.tl.types",
+        "description": "telethon.tl.types",
+        "isExtraImport": true,
+        "detail": "telethon.tl.types",
+        "documentation": {}
+    },
+    {
+        "label": "User",
         "importPath": "telethon.tl.types",
         "description": "telethon.tl.types",
         "isExtraImport": true,
@@ -3311,6 +3295,15 @@
         "documentation": {}
     },
     {
+        "label": "remove_duplicate_ids",
+        "kind": 2,
+        "importPath": "src.core.sqlite_working_tools",
+        "description": "src.core.sqlite_working_tools",
+        "peekOfCode": "def remove_duplicate_ids():\n    \"\"\"Удаление дублирующихся id в таблице members\"\"\"\n    # Получаем все user_id, которые дублируются\n    duplicate_user_ids = (\n        MembersGroups.select(MembersGroups.user_id)\n        .group_by(MembersGroups.user_id)\n        .having(fn.COUNT(MembersGroups.user_id) > 1)\n    )\n    for user_id_row in duplicate_user_ids:\n        user_id = user_id_row.user_id",
+        "detail": "src.core.sqlite_working_tools",
+        "documentation": {}
+    },
+    {
         "label": "remove_duplicates",
         "kind": 2,
         "importPath": "src.core.sqlite_working_tools",
@@ -3437,11 +3430,29 @@
         "documentation": {}
     },
     {
+        "label": "UserInfo",
+        "kind": 6,
+        "importPath": "src.features.account.TGParsing",
+        "description": "src.features.account.TGParsing",
+        "peekOfCode": "class UserInfo:\n    @staticmethod\n    async def get_last_name(user: User) -> str:\n        return user.last_name or \"\"\n    @staticmethod\n    async def get_first_name(user: User) -> str:\n        return user.first_name or \"\"\n    @staticmethod\n    async def get_username(user: User) -> str:\n        return user.username or \"\"",
+        "detail": "src.features.account.TGParsing",
+        "documentation": {}
+    },
+    {
+        "label": "GUIProgram",
+        "kind": 6,
+        "importPath": "src.features.account.TGParsing",
+        "description": "src.features.account.TGParsing",
+        "peekOfCode": "class GUIProgram:\n    \"\"\"Элементы графического интерфейса программы.\"\"\"\n    async def key_app_bar(self):\n        \"\"\"Кнопка в верхней панели приложения (возврат в главное меню).\"\"\"\n        return ft.AppBar(\n            title=ft.Text(translations[\"ru\"][\"menu\"][\"main\"]),\n            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,\n        )\n    async def outputs_text_gradient(self):\n        \"\"\"Выводит текст с градиентом на странице.\"\"\"",
+        "detail": "src.features.account.TGParsing",
+        "documentation": {}
+    },
+    {
         "label": "ParsingGroupMembers",
         "kind": 6,
         "importPath": "src.features.account.TGParsing",
         "description": "src.features.account.TGParsing",
-        "peekOfCode": "class ParsingGroupMembers:\n    \"\"\"Класс для парсинга групп, на которые подписан аккаунт.\"\"\"\n    def __init__(self):\n        self.db_handler = DatabaseHandler()\n        self.tg_connect = TGConnect()\n        self.tg_subscription_manager = SubscribeUnsubscribeTelegram()\n    async def clean_parsing_list_and_remove_duplicates(self, page: ft.Page):\n        \"\"\"Очищает список парсинга от записей без имени пользователя и удаляет дубликаты по идентификатору.\"\"\"\n        # Очистка списка парсинга от записей без имени пользователя\n        await self.db_handler.remove_records_without_username(page)",
+        "peekOfCode": "class ParsingGroupMembers:\n    \"\"\"Класс для парсинга групп, на которые подписан аккаунт.\"\"\"\n    def __init__(self):\n        # self.db_handler = DatabaseHandler()\n        self.tg_connect = TGConnect()\n        self.tg_subscription_manager = SubscribeUnsubscribeTelegram()\n    async def file_selection_processing(self, page, e) -> None:\n        \"\"\"Обработка выбора файлов\"\"\"\n        selected_sessions = []\n        selected_files = ft.Text(value=\"Session файл не выбран\", size=12)",
         "detail": "src.features.account.TGParsing",
         "documentation": {}
     },
