@@ -124,294 +124,160 @@ class ParsingGroupMembers:
     """Класс для парсинга групп, на которые подписан аккаунт."""
 
     def __init__(self):
-        # self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
         self.tg_subscription_manager = SubscribeUnsubscribeTelegram()
 
-    async def file_selection_processing(self, page, e) -> None:
-        """Обработка выбора файлов"""
-        selected_sessions = []
-        selected_files = ft.Text(value="Session файл не выбран", size=12)
-
-        # Предположим, что ты добавил selected_files в какой-то контейнер, например:
-        container = page.views[-1].controls[2]  # например, в конец текущего View
-        container.controls.append(selected_files)
-
-        selected_sessions.clear()
-        for file in e.files:
-            if file.name.endswith(".session"):
-                dest_path = os.path.join(path_accounts_folder, file.name)
-                if not os.path.exists(dest_path) or file.path != os.path.abspath(
-                    dest_path
-                ):
-                    os.makedirs(path_accounts_folder, exist_ok=True)
-                    shutil.copy(file.path, dest_path)
-                selected_sessions.append(dest_path)
-            else:
-                selected_files.value = f"❌ Файл {file.name} не является session файлом. Выберите только .session файлы."
-                selected_files.color = ft.Colors.RED
-                selected_files.update()
+    async def account_selection_menu(self, page):
+        async def btn_click_file_picker(e: ft.FilePickerResultEvent):
+            if not e.files:
+                file_text.value = "❌ Файл не выбран"
+                file_text.color = ft.Colors.RED
+                page.update()
                 return
 
-        selected_files.value = f"✅ Выбраны session файлы: {', '.join([os.path.basename(s) for s in selected_sessions])}"
-        selected_files.color = ft.Colors.GREEN
-        selected_files.update()
-        await page.update_async()
+            file = e.files[0]
+            if not file.name.endswith(".session"):
+                file_text.value = f"❌ Неверный файл: {file.name}"
+                file_text.color = ft.Colors.RED
+                page.update()
+                return
 
-        # Сохраняем выбранные аккаунты в состоянии приложения или передаём их как параметр
-        # Извлекаем телефоны из путей к session-файлам
-        phones = [
-            os.path.splitext(os.path.basename(path))[0] for path in selected_sessions
-        ]
-        page.session.set("selected_sessions", phones)
+            # Просто сохраняем путь к session-файлу
+            session_path = os.path.abspath(file.path)
+            phone = os.path.splitext(os.path.basename(file.name))[0]  # например, "77076324730"
 
-        # Переходим на новую страницу
-        page.go("/parsing_options")
+            # Сохраняем путь к session-файлу в session
+            page.session.set("selected_sessions", [session_path])
 
-    async def show_parsing_options(self, page):
-        """Отображает опции парсинга после выбора аккаунтов."""
-        try:
-            selected_sessions = page.session.get("selected_sessions") or []
-            logger.info(f"Selected sessions: {selected_sessions}")
+            # Показываем успешный выбор
+            file_text.value = f"✅ Аккаунт выбран: {phone}"
+            file_text.color = ft.Colors.GREEN
 
-            if selected_sessions:
-                session_file = selected_sessions[0]
-                phone_number = os.path.splitext(os.path.basename(session_file))[0]
-                print(phone_number)  # 77477770399
+            # 🔓 Разблокируем интерфейс
+            admin_switch.disabled = False
+            members_switch.disabled = False
+            account_groups_switch.disabled = False
 
-            admin_switch = ft.CupertinoSwitch(
-                label="Администраторов",
-                value=False,
-                tooltip="Если включено, парсятся только администраторы групп.",
-            )
-            account_groups_switch = ft.CupertinoSwitch(
-                label="Группы / каналы, в которых состоит аккаунт",
-                value=False,
-                tooltip="Если включено, парсятся группы и каналы, в которых состоит аккаунт.",
-            )
-            members_switch = ft.CupertinoSwitch(
-                label="Участников",
-                value=False,
-                tooltip="Если включено, парсятся только участники групп.",
-            )
-            chat_input = ft.TextField(
-                label="🔗 Введите ссылку на чат...", multiline=False, max_lines=1
-            )
+            chat_input.disabled = False
+            chat_input_active.disabled = False
+            limit_active_user.disabled = False
 
-            """
-            📝 Создает интерфейс для ввода данных для парсинга активных пользователей.
-            Отображает поля для ввода ссылки на чат и количества сообщений, а также кнопки для подтверждения и возврата.
+            dropdown.disabled = False
+            btn_active_parse.disabled = False
+            btn_group_parse.disabled = False
 
-            :param page: Страница интерфейса Flet для отображения элементов управления.
-            """
-            # Поле для ввода ссылки на чат
-            chat_input_active = ft.TextField(
-                label="🔗 Введите ссылку на чат, с которого будем собирать активных:",
-                multiline=False,
-                max_lines=1,
-            )
-            # Поле для ввода количества сообщений
-            limit_active_user = ft.TextField(
-                label="💬 Введите количество сообщений, которые будем парсить:",
-                multiline=False,
-                max_lines=1,
-            )
-
-            async def btn_click(_) -> None:
-                """✅ Функция-обработчик для кнопки "Готово"""
-                start = await start_time(page)
-                await log_and_display(
-                    f"🔗 Ссылка на чат: {chat_input.value}. 💬 Количество сообщений: {limit_active_user.value}",
-                    page,
-                )
-                # Вызов функции для парсинга активных пользователей (функция должна быть реализована)
-                await self.parse_active_users(
-                    chat_input.value, int(limit_active_user.value), page, phone_number
-                )
-                # Изменение маршрута на новый (если необходимо)
-                await end_time(start, page)
-                page.go("/parsing")  # Возвращаемся к основному меню парсинга 🏠
-                page.update()  # Обновление страницы для отображения изменений 🔄
-
-            """
-            📌 Выбираем группу из подписанных и запускаем парсинг
-            
-            Выпадающий список с названиями групп для парсинга участников
-            :param page: Страница интерфейса Flet для отображения элементов управления.
-            :param session_name: Имя сессии для подключения.
-            :param path_parsing_folder: Путь к папке сессий для парсинга
-            :return: None
-            """
-
-            page.controls.append(list_view)
-            client = await self.tg_connect.get_telegram_client(
-                page, phone_number, account_directory=path_accounts_folder
-            )
-            chats = []
-            last_date = None
-            result = await client(
-                GetDialogsRequest(
-                    offset_date=last_date,
-                    offset_id=0,
-                    offset_peer=InputPeerEmpty(),
-                    limit=200,
-                    hash=0,
-                )
-            )
-            chats.extend(result.chats)
-            groups = await self.filtering_groups(
-                chats
-            )  # Получаем отфильтрованные группы
-            group_titles = await self.name_of_the_groups(
-                groups
-            )  # Получаем названия групп
-            logger.info(group_titles)
-
-            # Обработчик нажатия кнопки выбора группы
-            async def handle_button_click(_) -> None:
-                logger.warning("Начало парсинга")
-                await log_and_display("▶️ Начало парсинга.\n🕒", list_view, level="info")
-                await log_and_display(
-                    f"📂 Выбрана группа: {dropdown.value}", list_view, level="info"
-                )
-
-                await self.parse_group(
-                    client, dropdown.value, page
-                )  # Запускаем парсинг выбранной группы
-                await client.disconnect()
-                # Переходим на экран парсинга только после завершения всех действий
-                await log_and_display("🔚 Конец парсинга.", list_view, level="info")
-                logger.warning("Конец парсинга.")
-
-            # Создаем текст для отображения результата
-            result_text = ft.Text(value="📂 Выберите группу для парсинга")
-            # Создаем выпадающий список с названиями групп
-            dropdown = ft.Dropdown(
-                width=line_width_button,
-                options=[ft.dropdown.Option(title) for title in group_titles],
-                autofocus=True,
-            )
-
-            page.views.append(
-                ft.View(
-                    "/parsing_options",
-                    controls=[
-                        list_view,
-                        ft.Column(
-                            [
-                                await GUIProgram().diver_castom(),  # разделительная линия
-                                ft.Row(
-                                    [
-                                        admin_switch,
-                                        members_switch,
-                                        account_groups_switch,
-                                    ]
-                                ),
-                                chat_input,
-                                ft.ElevatedButton(
-                                    width=line_width_button,
-                                    height=BUTTON_HEIGHT,
-                                    text=translations["ru"]["buttons"]["done"],
-                                    on_click=btn_click,
-                                ),
-                                # Кнопка "✅ Готово"
-                                await GUIProgram().diver_castom(),  # разделительная линия
-                                ft.Row(
-                                    [
-                                        chat_input_active,  # поле ввода для активных пользователей
-                                        limit_active_user,
-                                    ]
-                                ),
-                                # поле для количества сообщений для парсинга активных пользователей
-                                ft.ElevatedButton(
-                                    width=line_width_button,
-                                    height=BUTTON_HEIGHT,
-                                    text=translations["ru"]["buttons"]["done"],
-                                    on_click=btn_click,
-                                ),
-                                # Кнопка "✅ Готово"
-                                await GUIProgram().diver_castom(),  # разделительная линия
-                                result_text,
-                                dropdown,  # выпадающий список с названиями групп
-                                ft.ElevatedButton(
-                                    width=line_width_button,
-                                    height=BUTTON_HEIGHT,
-                                    text="📂 Выбрать группу",
-                                    on_click=handle_button_click,
-                                ),  # Кнопка "Выбрать группу" 📂
-                            ]
-                        ),
-                        await GUIProgram().key_app_bar(),
-                    ],
-                )
-            )
+            await load_groups()  # ⬅️ Подгружаем группы
             page.update()
-        except Exception as e:
-            logger.exception(e)
 
-    async def button_select_file(self, page):
-        """Кнопка выбора session-файла и переход на страницу опций парсинга"""
-        selected_file_name = ft.Text(value="Session файл не выбран", size=12)
+        # Создание элементов управления
+        file_text = ft.Text(value="📂 Выберите .session файл", size=14)
+        file_picker = ft.FilePicker(on_result=btn_click_file_picker)
+        page.overlay.append(file_picker)
+        pick_button = ft.ElevatedButton(
+            text="📁 Выбрать session файл",
+            on_click=lambda _: file_picker.pick_files(allow_multiple=False)
+        )
 
-        async def btn_click(e: ft.FilePickerResultEvent) -> None:
-            """Обработка выбора файла"""
-            if e.files:
-                file_name = e.files[0].name
-                file_path = e.files[0].path
+        # Кнопки-переключатели
+        admin_switch = ft.CupertinoSwitch(label="Администраторов", value=False, disabled=True)
+        members_switch = ft.CupertinoSwitch(label="Участников", value=False, disabled=True)
+        account_groups_switch = ft.CupertinoSwitch(label="Группы аккаунта", value=False, disabled=True)
 
-                if file_name.endswith(".session"):
-                    # Удаляем расширение .session
-                    clean_name = os.path.splitext(file_name)[0]
-                    selected_file_name.value = f"✅ Выбран аккаунт: {clean_name}"
-                    selected_file_name.color = ft.Colors.GREEN
-                    selected_file_name.update()
+        chat_input = ft.TextField(label="🔗 Введите ссылку на чат...", disabled=True)
+        chat_input_active = ft.TextField(label="🔗 Ссылка для активных", expand=True, disabled=True)
+        limit_active_user = ft.TextField(label="💬 Кол-во сообщений", expand=True, disabled=True)
 
-                    # Сохраняем путь или имя файла в сессию
-                    page.session.set("selected_sessions", [file_path])
+        # Выпадающий список для выбора группы
+        dropdown = ft.Dropdown(width=line_width_button, options=[], autofocus=True, disabled=True)
+        result_text = ft.Text(value="📂 Группы не загружены")
 
-                    # Переходим на страницу опций
-                    await self.show_parsing_options(page)
-                    return
-                else:
-                    selected_file_name.value = "❌ Выбранный файл не является .session"
-                    selected_file_name.color = ft.Colors.RED
-            else:
-                selected_file_name.value = "Выбор файла отменен"
-                selected_file_name.color = ft.Colors.RED
+        async def load_groups():
+            selected = page.session.get("selected_sessions") or []
+            if not selected:
+                await log_and_display("⚠️ Сначала выберите аккаунт", page)
+                return
 
-            selected_file_name.update()
-            await page.update_async()
+            session_path = selected[0]
+            phone = os.path.splitext(os.path.basename(session_path))[0]
+            client = await self.tg_connect.get_telegram_client(page, phone, path_accounts_folder)
+            result = await client(GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+            groups = await self.filtering_groups(result.chats)
+            titles = await self.name_of_the_groups(groups)
+            dropdown.options = [ft.dropdown.Option(t) for t in titles]
+            result_text.value = f"🔽 Найдено групп: {len(titles)}"
+            page.update()
+            return client
 
-        pick_files_dialog = ft.FilePicker(on_result=btn_click)
-        page.overlay.append(pick_files_dialog)
+        async def start_group_parsing(_):
+            client = await load_groups()
+            if not dropdown.value:
+                await log_and_display("⚠️ Группа не выбрана", page)
+                return
+            await log_and_display(f"▶️ Парсинг группы: {dropdown.value}", page)
+            await self.parse_group(client, dropdown.value, page)
+            await client.disconnect()
+            await log_and_display("🔚 Парсинг завершен", page)
 
-        return ft.Column(
-            [
-                selected_file_name,
-                ft.ElevatedButton(
-                    width=line_width_button,
-                    height=BUTTON_HEIGHT,
-                    text="📂 Выбрать session файл",
-                    on_click=lambda e: pick_files_dialog.pick_files(
-                        allow_multiple=False
-                    ),
-                ),
+        async def start_active_parsing(_):
+            selected = page.session.get("selected_sessions") or []
+            if not selected:
+                await log_and_display("⚠️ Сначала выберите аккаунт", page)
+                return
+
+            phone = os.path.splitext(os.path.basename(selected[0]))[0]
+            chat = chat_input_active.value
+            try:
+                limit = int(limit_active_user.value)
+            except ValueError:
+                await log_and_display("⚠️ Некорректное число сообщений", page)
+                return
+
+            await log_and_display(f"🔍 Сканируем чат: {chat} на {limit} сообщений", page)
+            await self.parse_active_users(chat, limit, page, phone)
+
+        btn_active_parse = ft.ElevatedButton(text="🔍 Активные пользователи", on_click=start_active_parsing,
+                                             disabled=True)
+        btn_group_parse = ft.ElevatedButton(text="📂 Парсить выбранную группу", on_click=start_group_parsing,
+                                            disabled=True)
+
+        # После успешного выбора файла:
+        admin_switch.disabled = False
+        members_switch.disabled = False
+        account_groups_switch.disabled = False
+
+        chat_input.disabled = False
+        chat_input_active.disabled = False
+        limit_active_user.disabled = False
+
+        dropdown.disabled = False
+        btn_active_parse.disabled = False
+        btn_group_parse.disabled = False
+        page.update()
+
+        # Представление (View)
+        view = ft.View(
+            route="/parsing",
+            controls=[
+                await GUIProgram().key_app_bar(),
+                await GUIProgram().outputs_text_gradient(),
+                list_view,
+                ft.Column([
+                    file_text,
+                    pick_button,
+                    ft.Row([admin_switch, members_switch, account_groups_switch]),
+                    ft.Divider(),
+                    chat_input,
+                    ft.Row([chat_input_active, limit_active_user]),
+                    btn_active_parse,
+                    ft.Divider(),
+                    result_text,
+                    dropdown,
+                    btn_group_parse,
+                ])
             ]
         )
 
-    async def account_selection_menu(self, page):
-        """Отображает список доступных аккаунтов для последующего выбора."""
-        page.views.append(
-            ft.View(
-                "/parsing",
-                controls=[
-                    await GUIProgram().key_app_bar(),
-                    await GUIProgram().outputs_text_gradient(),
-                    list_view,
-                    await self.button_select_file(page),  # исправлено название метода
-                ],
-            )
-        )
+        page.views.append(view)
         page.update()
 
     async def obtaining_administrators(self, session_files, page: ft.Page):
@@ -426,7 +292,7 @@ class ParsingGroupMembers:
                         page, session_name, account_directory=path_accounts_folder
                     )
                     for groups in await self.db_handler.open_and_read_data(
-                        table_name="writing_group_links", page=page
+                            table_name="writing_group_links", page=page
                     ):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", page)
                         try:
@@ -437,46 +303,32 @@ class ParsingGroupMembers:
                             if hasattr(entity, "megagroup") and entity.megagroup:
                                 # Получаем итератор администраторов
                                 async for user in client.iter_participants(
-                                    entity, filter=ChannelParticipantsAdmins
+                                        entity, filter=ChannelParticipantsAdmins
                                 ):
                                     # Формируем отображаемое имя администратора
                                     admin_name = (user.first_name or "").strip()
                                     if user.last_name:
                                         admin_name += f" {user.last_name}"
                                     # Получаем полную информацию о пользователе
-                                    full_user = await client(
-                                        GetFullUserRequest(id=user.id)
-                                    )
+                                    full_user = await client(GetFullUserRequest(id=user.id))
                                     bio = full_user.full_user.about or ""
                                     log_data = {
                                         "username": await UserInfo().get_username(user),
                                         "user_id": user.id,
                                         "access_hash": user.access_hash,
-                                        "first_name": await UserInfo().get_first_name(
-                                            user
-                                        ),
-                                        "last_name": await UserInfo().get_last_name(
-                                            user
-                                        ),
+                                        "first_name": await UserInfo().get_first_name(user),
+                                        "last_name": await UserInfo().get_last_name(user),
                                         "phone": await UserInfo().get_user_phone(user),
-                                        "online_at": await UserInfo().get_user_online_status(
-                                            user
-                                        ),
-                                        "photo_status": await UserInfo().get_photo_status(
-                                            user
-                                        ),
-                                        "premium_status": await UserInfo().get_user_premium_status(
-                                            user
-                                        ),
+                                        "online_at": await UserInfo().get_user_online_status(user),
+                                        "photo_status": await UserInfo().get_photo_status(user),
+                                        "premium_status": await UserInfo().get_user_premium_status(user),
                                         "user_status": "Admin",
                                         "bio": bio or "",
                                         "group": groups[0],
                                     }
                                     # Задержка для избежания ограничений Telegram API
                                     await asyncio.sleep(0.5)
-                                    await log_and_display(
-                                        f"Полученные данные: {log_data}", page
-                                    )
+                                    await log_and_display(f"Полученные данные: {log_data}", page)
                                     with db.atomic():  # Атомарная транзакция для записи данных
                                         MembersAdmin.create(
                                             username=log_data["username"],
@@ -636,7 +488,7 @@ class ParsingGroupMembers:
                             page, session_name, account_directory=path_accounts_folder
                         )
                         for groups in await self.db_handler.open_and_read_data(
-                            table_name="writing_group_links", page=page
+                                table_name="writing_group_links", page=page
                         ):
                             await log_and_display(
                                 f"🔍 Парсинг группы: {groups[0]}", page
@@ -768,7 +620,7 @@ class ParsingGroupMembers:
             logger.exception(error)
 
     async def parse_active_users(
-        self, chat_input, limit_active_user, page, phone_number
+            self, chat_input, limit_active_user, page, phone_number
     ) -> None:
         """
         Parsing участников, которые пишут в чат (активных участников)
@@ -813,7 +665,7 @@ class ParsingGroupMembers:
         """
         try:
             async for message in client.iter_messages(
-                chat, limit=int(limit_active_user)
+                    chat, limit=int(limit_active_user)
             ):
                 if message.from_id is not None:
                     try:
@@ -1045,6 +897,5 @@ class ParsingGroupMembers:
                     continue  # Записываем ошибку в software_database.db и продолжаем работу
         except Exception as error:
             logger.exception(error)
-
 
 # 690

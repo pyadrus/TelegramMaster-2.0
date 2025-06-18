@@ -97,8 +97,6 @@ async def main(page: ft.Page):
 
             elif page.route == "/parsing":  # Меню "Парсинг"
                 await ParsingGroupMembers().account_selection_menu(page=page)
-            elif page.route == "/parsing_options":  # Парсинг
-                await ParsingGroupMembers().show_parsing_options(page=page)
 
 
             elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
