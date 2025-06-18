@@ -90,14 +90,16 @@ class UserInfo:
 class GUIProgram:
     """Элементы графического интерфейса программы."""
 
-    async def key_app_bar(self):
+    @staticmethod
+    async def key_app_bar():
         """Кнопка в верхней панели приложения (возврат в главное меню)."""
         return ft.AppBar(
             title=ft.Text(translations["ru"]["menu"]["main"]),
             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
         )
 
-    async def outputs_text_gradient(self):
+    @staticmethod
+    async def outputs_text_gradient():
         """Выводит текст с градиентом на странице."""
         # Создаем текст с градиентным оформлением через TextStyle
         return ft.Text(
@@ -115,7 +117,8 @@ class GUIProgram:
             ]
         )
 
-    async def diver_castom(self):
+    @staticmethod
+    async def diver_castom():
         """Разделительная линия"""
         return ft.Divider(height=1, color="red")
 
@@ -128,6 +131,7 @@ class ParsingGroupMembers:
         self.tg_subscription_manager = SubscribeUnsubscribeTelegram()
 
     async def account_selection_menu(self, page):
+
         async def btn_click_file_picker(e: ft.FilePickerResultEvent):
             if not e.files:
                 file_text.value = "❌ Файл не выбран"
