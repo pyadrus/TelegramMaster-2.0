@@ -10,7 +10,7 @@ from src.core.configs import path_accounts_folder
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
-from src.features.account.TGParsing import UserInfo
+from src.features.account.parsing.parsing import UserInfo
 from src.gui.gui import log_and_display
 from src.locales.translations_loader import translations
 

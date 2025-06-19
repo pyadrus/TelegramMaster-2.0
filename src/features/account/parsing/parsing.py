@@ -8,119 +8,21 @@ import time
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
-from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError,
-                             ChatAdminRequiredError, FloodWaitError,
+from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError, ChatAdminRequiredError, FloodWaitError,
                              UsernameInvalidError)
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import (ChannelParticipantsAdmins,
-                               ChannelParticipantsSearch, InputPeerEmpty,
-                               InputUser, User, UserProfilePhoto,
-                               UserStatusEmpty, UserStatusLastMonth,
-                               UserStatusLastWeek, UserStatusOffline,
-                               UserStatusOnline, UserStatusRecently)
+from telethon.tl.types import (ChannelParticipantsAdmins, ChannelParticipantsSearch, InputPeerEmpty, InputUser)
 
-from src.core.configs import (line_width_button,
-                              path_accounts_folder, time_activity_user_2, BUTTON_HEIGHT)
-from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin,
-                                           MembersGroups, db,
-                                           remove_duplicates)
+from src.core.configs import (line_width_button, path_accounts_folder, time_activity_user_2, BUTTON_HEIGHT)
+from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, MembersGroups, db, remove_duplicates)
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.features.account.parsing.gui_elements import GUIProgram
+from src.features.account.parsing.user_info import UserInfo
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
-
-
-class UserInfo:
-    @staticmethod
-    async def get_last_name(user: User) -> str:
-        return user.last_name or ""
-
-    @staticmethod
-    async def get_first_name(user: User) -> str:
-        return user.first_name or ""
-
-    @staticmethod
-    async def get_username(user: User) -> str:
-        return user.username or ""
-
-    @staticmethod
-    async def get_user_phone(user: User) -> str:
-        return user.phone if getattr(user, "phone", None) else "Номер телефона скрыт"
-
-    @staticmethod
-    async def get_user_premium_status(user: User) -> str:
-        return (
-            "Пользователь с premium"
-            if getattr(user, "premium", False)
-            else "Обычный пользователь"
-        )
-
-    @staticmethod
-    async def get_photo_status(user: User) -> str:
-        return "С фото" if isinstance(user.photo, UserProfilePhoto) else "Без фото"
-
-    @staticmethod
-    async def get_user_online_status(user):
-        """
-        Определяет статус онлайна пользователя на основе его статуса.
-        https://core.telegram.org/type/UserStatus
-        :param user: Объект пользователя из Telethon
-        :return: Строка или datetime, описывающая статус онлайна
-        """
-        online_at = "Был(а) недавно"  # Значение по умолчанию
-        if user.status:
-            if isinstance(user.status, UserStatusOffline):
-                online_at = user.status.was_online
-            elif isinstance(user.status, UserStatusRecently):
-                online_at = "Был(а) недавно"
-            elif isinstance(user.status, UserStatusLastWeek):
-                online_at = "Был(а) на этой неделе"
-            elif isinstance(user.status, UserStatusLastMonth):
-                online_at = "Был(а) в этом месяце"
-            elif isinstance(user.status, UserStatusOnline):
-                online_at = user.status.expires
-            elif isinstance(user.status, UserStatusEmpty):
-                online_at = "Статус пользователя не определен"
-        return online_at
-
-
-class GUIProgram:
-    """Элементы графического интерфейса программы."""
-
-    @staticmethod
-    async def key_app_bar():
-        """Кнопка в верхней панели приложения (возврат в главное меню)."""
-        return ft.AppBar(
-            title=ft.Text(translations["ru"]["menu"]["main"]),
-            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
-        )
-
-    @staticmethod
-    async def outputs_text_gradient():
-        """Выводит текст с градиентом на странице."""
-        # Создаем текст с градиентным оформлением через TextStyle
-        return ft.Text(
-            spans=[
-                ft.TextSpan(
-                    translations["ru"]["menu"]["parsing"],
-                    ft.TextStyle(
-                        size=20,
-                        weight=ft.FontWeight.BOLD,
-                        foreground=ft.Paint(
-                            color=ft.Colors.PINK,
-                        ),
-                    ),
-                )
-            ]
-        )
-
-    @staticmethod
-    async def diver_castom():
-        """Разделительная линия"""
-        return ft.Divider(height=1, color="red")
-
 
 class ParsingGroupMembers:
     """Класс для парсинга групп, на которые подписан аккаунт."""
@@ -175,7 +77,8 @@ class ParsingGroupMembers:
         file_text = ft.Text(value="📂 Выберите .session файл", size=14)
         file_picker = ft.FilePicker(on_result=btn_click_file_picker)
         page.overlay.append(file_picker)
-        pick_button = ft.ElevatedButton(text="📁 Выбрать session файл", width=line_width_button, height=BUTTON_HEIGHT, on_click=lambda _: file_picker.pick_files(allow_multiple=False))
+        pick_button = ft.ElevatedButton(text="📁 Выбрать session файл", width=line_width_button, height=BUTTON_HEIGHT,
+                                        on_click=lambda _: file_picker.pick_files(allow_multiple=False))
 
         # Кнопки-переключатели
         admin_switch = ft.CupertinoSwitch(label="Администраторов", value=False, disabled=True)
@@ -206,7 +109,6 @@ class ParsingGroupMembers:
         account_groups_switch.on_change = toggle_account_groups_switch
         members_switch.on_change = toggle_members_switch
 
-
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
             try:
@@ -224,9 +126,10 @@ class ParsingGroupMembers:
                         for session_path in session_files:
                             session_name = os.path.basename(session_path)
                             logger.debug(f"🔍 Парсинг групп/каналов, в которых состоит аккаунт: {session_name}")
-                            client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
+                            client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                               account_directory=path_accounts_folder)
                             await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", page)
-                            await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", page,)
+                            await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", page, )
                             await self.forming_a_list_of_groups(client, page)
                             remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
 
@@ -234,37 +137,21 @@ class ParsingGroupMembers:
                         # Если выбрано парсить администраторов, выполняем парсинг администраторов 👤
                         await self.obtaining_administrators(session_files, page)
 
-                    if members_switch.value: # Парсинг участников
-                        # Обрабатываем все файлы сессий по очереди 📂
-                        # Сохраняем название session-файла
-                        selected = page.session.get("selected_sessions") or []
-                        phone = selected[0]
-                        logger.warning(f"Парсинг участников с аккаунта {phone}")
+                    if members_switch.value:  # Парсинг участников
+                        await self.parsing_group_members(data, page)  # Парсинг участников
 
-                        client = await self.tg_connect.get_telegram_client(page, phone, account_directory=path_accounts_folder)
-                        for groups in data:
-                            await log_and_display(f"🔍 Парсинг группы: {groups}", page)
-                            # подписываемся на группу
-                            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups, page)
-                            await self.parse_group(client, groups, page)  # выполняем парсинг группы
-                            # Завершаем работу клиента после завершения парсинга 🔌
-                        try:
-                            await client.disconnect()
-                        except sqlite3.DatabaseError:
-                            await log_and_display(f"❌ Ошибка при отключении аккаунта {session_name}, возможно поврежденный аккаунт. Выполните проверку аккаунтов", page,)
-
-                            await log_and_display(f"🔌 Отключение от аккаунта: {session_name}", page)
                     await end_time(start, page)
                 except Exception as error:
                     logger.exception(error)
             except Exception as error:
                 logger.exception(error)
+
         chat_input = ft.TextField(label="🔗 Введите ссылку на чат...", disabled=True)
         chat_input_active = ft.TextField(label="🔗 Ссылка для активных", expand=True, disabled=True)
         limit_active_user = ft.TextField(label="💬 Кол-во сообщений", expand=True, disabled=True)
 
         # Выпадающий список для выбора группы
-        dropdown = ft.Dropdown(width=line_width_button, options=[], autofocus=True,  disabled=True)
+        dropdown = ft.Dropdown(width=line_width_button, options=[], autofocus=True, disabled=True)
         result_text = ft.Text(value="📂 Группы не загружены")
 
         async def load_groups():
@@ -278,7 +165,8 @@ class ParsingGroupMembers:
                 phone = os.path.splitext(os.path.basename(session_path))[0]
                 logger.warning(f"🔍 Работаем с аккаунтом {phone}")
                 client = await self.tg_connect.get_telegram_client(page, phone, path_accounts_folder)
-                result = await client(GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+                result = await client(
+                    GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
                 groups = await self.filtering_groups(result.chats)
                 titles = await self.name_of_the_groups(groups)
                 dropdown.options = [ft.dropdown.Option(t) for t in titles]
@@ -319,9 +207,12 @@ class ParsingGroupMembers:
             await log_and_display(f"🔍 Сканируем чат: {chat} на {limit} сообщений", page)
             await self.parse_active_users(chat, limit, page, phone)
 
-        parse_button = ft.ElevatedButton(text="🔍 Парсить", width=line_width_button, height=BUTTON_HEIGHT, on_click=add_items, disabled=True)
-        btn_active_parse = ft.ElevatedButton(text="🔍 Активные пользователи", width=line_width_button, height=BUTTON_HEIGHT, on_click=start_active_parsing, disabled=True)
-        btn_group_parse = ft.ElevatedButton(text="📂 Парсить выбранную группу", width=line_width_button, height=BUTTON_HEIGHT, on_click=start_group_parsing, disabled=True)
+        parse_button = ft.ElevatedButton(text="🔍 Парсить", width=line_width_button, height=BUTTON_HEIGHT,
+                                         on_click=add_items, disabled=True)
+        btn_active_parse = ft.ElevatedButton(text="🔍 Активные пользователи", width=line_width_button,
+                                             height=BUTTON_HEIGHT, on_click=start_active_parsing, disabled=True)
+        btn_group_parse = ft.ElevatedButton(text="📂 Парсить выбранную группу", width=line_width_button,
+                                            height=BUTTON_HEIGHT, on_click=start_group_parsing, disabled=True)
 
         # После успешного выбора файла:
         admin_switch.disabled = False
@@ -350,7 +241,7 @@ class ParsingGroupMembers:
                     pick_button,
                     ft.Row([admin_switch, members_switch, account_groups_switch]),
                     chat_input,
-                    parse_button, # ⬅️ Кнопка для парсинга
+                    parse_button,  # ⬅️ Кнопка для парсинга
                     ft.Divider(),
                     ft.Row([chat_input_active, limit_active_user]),
                     btn_active_parse,
@@ -363,6 +254,29 @@ class ParsingGroupMembers:
         )
         page.views.append(view)
         page.update()
+
+    async def parsing_group_members(self, data, page):
+        """Главный метод для запуска процесса парсинга групп и отображения статуса в интерфейсе."""
+        # Обрабатываем все файлы сессий по очереди 📂
+        # Сохраняем название session-файла
+        selected = page.session.get("selected_sessions") or []
+        phone = selected[0]
+        logger.warning(f"Парсинг участников с аккаунта {phone}")
+
+        client = await self.tg_connect.get_telegram_client(page, phone, account_directory=path_accounts_folder)
+        for groups in data:
+            await log_and_display(f"🔍 Парсинг группы: {groups}", page)
+            # подписываемся на группу
+            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups, page)
+            await self.parse_group(client, groups, page)  # выполняем парсинг группы
+            # Завершаем работу клиента после завершения парсинга 🔌
+        try:
+            await client.disconnect()
+        except sqlite3.DatabaseError:
+            await log_and_display(
+                f"❌ Ошибка при отключении аккаунта {phone}, возможно поврежденный аккаунт. Выполните проверку аккаунтов",
+                page, )
+            await log_and_display(f"🔌 Отключение от аккаунта: {phone}", page)
 
     async def parse_group(self, client, groups_wr, page) -> None:
         """
@@ -381,13 +295,16 @@ class ParsingGroupMembers:
             offset = 0
             while while_condition:
                 try:
-                    participants = await client(GetParticipantsRequest(channel=groups_wr, offset=offset, filter=ChannelParticipantsSearch(""), limit=200, hash=0,))
+                    participants = await client(
+                        GetParticipantsRequest(channel=groups_wr, offset=offset, filter=ChannelParticipantsSearch(""),
+                                               limit=200, hash=0, ))
                     all_participants.extend(participants.users)
                     offset += len(participants.users)
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    await log_and_display(f"❌ Ошибка: {groups_wr} не является группой / каналом.", page, level="error",)
+                    await log_and_display(f"❌ Ошибка: {groups_wr} не является группой / каналом.", page,
+                                          level="error", )
                     await asyncio.sleep(2)
                     break
                 except ChatAdminRequiredError:
@@ -446,7 +363,8 @@ class ParsingGroupMembers:
             for session_path in session_files:
                 session_name = os.path.basename(session_path)
                 try:
-                    client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
+                    client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                       account_directory=path_accounts_folder)
                     for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links", page=page):
                         await log_and_display(f"🔍 Парсинг группы: {groups[0]}", page)
                         try:
@@ -495,27 +413,33 @@ class ParsingGroupMembers:
                                             group_name=log_data["group"],
                                         )
                                 # Удаляем группу из списка после завершения парсинга 🗑️
-                                await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups,)
+                                await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                    column="writing_group_links", value=groups, )
                             else:
                                 try:
                                     await log_and_display(f"Это не группа, а канал: {entity.title}", page)
                                     # Удаляем группу из списка после завершения парсинга 🗑️
-                                    await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups,)
+                                    await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                        column="writing_group_links", value=groups, )
                                 except AttributeError:
-                                    await log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}", page,)
+                                    await log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}",
+                                                          page, )
                                     # Удаляем группу из списка после завершения парсинга 🗑️
-                                    await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups,)
+                                    await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                        column="writing_group_links", value=groups, )
                         except UsernameInvalidError:
                             await log_and_display(translations["ru"]["errors"]["group_entity_error"], page)
                             # Удаляем группу из списка после завершения парсинга 🗑️
-                            await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups,)
+                            await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                column="writing_group_links", value=groups, )
                         except ValueError:
                             await log_and_display(translations["ru"]["errors"]["group_entity_error"], page)
                             # Удаляем группу из списка после завершения парсинга 🗑️
-                            await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups,)
+                            await self.db_handler.delete_row_db(table="writing_group_links",
+                                                                column="writing_group_links", value=groups, )
                     await client.disconnect()
                 except FloodWaitError as e:
-                    await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error",)
+                    await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error", )
                     await client.disconnect()
         except Exception as error:
             logger.exception(error)
@@ -530,7 +454,8 @@ class ParsingGroupMembers:
         :param phone_number: Номер телефона пользователя
         """
         try:
-            client = await self.tg_connect.get_telegram_client(page, phone_number, account_directory=path_accounts_folder)
+            client = await self.tg_connect.get_telegram_client(page, phone_number,
+                                                               account_directory=path_accounts_folder)
             await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input, page)
             try:
                 # Преобразуем значение time_activity_user_2 в целое число (если оно None, используем 5 по умолчанию).
@@ -591,9 +516,10 @@ class ParsingGroupMembers:
                                 },
                             )
                     except ValueError as e:
-                        await log_and_display(f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}", page,)
+                        await log_and_display(
+                            f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}", page, )
                 else:
-                    await log_and_display(f"Сообщение {message.id} не имеет действительного from_id.", page,)
+                    await log_and_display(f"Сообщение {message.id} не имеет действительного from_id.", page, )
         except Exception as error:
             logger.exception(error)
 
@@ -647,7 +573,9 @@ class ParsingGroupMembers:
                     # Получение количества участников
                     participants_count = getattr(full_channel_info.full_chat, "participants_count", 0)
                     # Время синтаксического анализа
-                    await log_and_display(f"{dialog.id}, {channel_details.title}, https://t.me/{channel_details.username}, {participants_count}", page,)
+                    await log_and_display(
+                        f"{dialog.id}, {channel_details.title}, https://t.me/{channel_details.username}, {participants_count}",
+                        page, )
                     with db.atomic():  # Атомарная транзакция для записи данных
                         GroupsAndChannels.create(
                             id=dialog.id,
@@ -751,7 +679,5 @@ class ParsingGroupMembers:
     #     except Exception as error:
     #         logger.exception(error)
     #         raise
-
-
 
 # 690
