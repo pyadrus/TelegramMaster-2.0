@@ -24,6 +24,43 @@ from src.features.account.parsing.user_info import UserInfo
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
 
+class ToggleController:
+    """Обработчики для взаимоисключающего поведения"""
+
+    def __init__(self, admin_switch, account_groups_switch, members_switch):
+        self.admin_switch = admin_switch
+        self.account_groups_switch = account_groups_switch
+        self.members_switch = members_switch
+
+    def toggle_admin_switch(self, page):
+        """Обработчик переключателя администраторов"""
+        if self.admin_switch.value:
+            self.account_groups_switch.value = False
+            self.members_switch.value = False
+        page.update()
+
+    def toggle_account_groups_switch(self, page):
+        """Обработчик переключателя групп аккаунта"""
+        if self.account_groups_switch.value:
+            self.admin_switch.value = False
+            self.members_switch.value = False
+        page.update()
+
+
+    def toggle_members_switch(self, page):
+        """Обработчик переключателя участников"""
+        if self.members_switch.value:
+            self.admin_switch.value = False
+            self.account_groups_switch.value = False
+        page.update()
+
+    def element_handler(self, page):
+        """Присоединяем обработчики к элементам интерфейса"""
+        # Привязываем обработчики, используя lambda для передачи параметра event
+        self.admin_switch.on_change = lambda e: self.toggle_admin_switch(page)
+        self.account_groups_switch.on_change = lambda e: self.toggle_account_groups_switch(page)
+        self.members_switch.on_change = lambda e: self.toggle_members_switch(page)
+
 class ParsingGroupMembers:
     """Класс для парсинга групп, на которые подписан аккаунт."""
 
@@ -85,29 +122,7 @@ class ParsingGroupMembers:
         members_switch = ft.CupertinoSwitch(label="Участников", value=False, disabled=True)
         account_groups_switch = ft.CupertinoSwitch(label="Группы аккаунта", value=False, disabled=True)
 
-        # Обработчики для взаимоисключающего поведения
-        def toggle_admin_switch(_):
-            if admin_switch.value:
-                account_groups_switch.value = False
-                members_switch.value = False
-            page.update()
-
-        def toggle_account_groups_switch(_):
-            if account_groups_switch.value:
-                admin_switch.value = False
-                members_switch.value = False
-            page.update()
-
-        def toggle_members_switch(_):
-            if members_switch.value:
-                admin_switch.value = False
-                account_groups_switch.value = False
-            page.update()
-
-        # Присоединяем обработчики к элементам интерфейса
-        admin_switch.on_change = toggle_admin_switch
-        account_groups_switch.on_change = toggle_account_groups_switch
-        members_switch.on_change = toggle_members_switch
+        ToggleController(admin_switch, account_groups_switch, members_switch).element_handler(page)
 
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
