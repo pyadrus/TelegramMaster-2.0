@@ -29,7 +29,7 @@ async def read_writing_group_links():
     """
 
     db.connect(reuse_if_open=True)
-    db.create_tables([WritingGroupLinks])
+
 
     links = [entry.writing_group_links for entry in WritingGroupLinks.select()]
     return links
@@ -41,7 +41,7 @@ async def read_writing_group_links():
 # Запись ссылки на группу в таблицу writing_group_links
 async def write_to_single_column_table_peewee(data: list[str]):
     db.connect()
-    db.create_tables([WritingGroupLinks])
+
 
     for line in set(data):
         cleaned_line = line.strip()

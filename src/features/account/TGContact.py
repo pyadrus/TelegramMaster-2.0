@@ -97,7 +97,7 @@ class TGContact:
         :param page: Страница интерфейса
         """
         try:
-            await client(functions.contacts.DeleteContactsRequest(id=[user.id]))
+            await client(functions.contacts.DeleteContactsRequest(id=[await UserInfo().get_user_id(user)]))
             await log_and_display(f"Подождите 2 - 4 секунды", page)
             await asyncio.sleep(random.randrange(2, 3, 4))  # Спим для избежания ошибки о flood
         except Exception as error:
@@ -182,7 +182,7 @@ class TGContact:
         """
         try:
             entities.append(
-                [await UserInfo().get_username(user), user.id, user.access_hash,
+                [await UserInfo().get_username(user), await UserInfo().get_user_id(user), await UserInfo().get_access_hash(user),
                  await UserInfo().get_first_name(user), await UserInfo().get_last_name(user),
                  await UserInfo().get_user_phone(user),
                  await UserInfo().get_user_online_status(user),

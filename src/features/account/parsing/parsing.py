@@ -26,6 +26,18 @@ from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
 
 
+async def collect_user_log_data(user):
+    return {
+        "username": await UserInfo().get_username(user),
+        "user_id": await UserInfo().get_user_id(user),
+        "access_hash": await UserInfo().get_access_hash(user),
+        "first_name": await UserInfo().get_first_name(user),
+        "last_name": await UserInfo().get_last_name(user),
+        "user_phone": await UserInfo().get_user_phone(user),
+        "online_at": await UserInfo().get_user_online_status(user),
+        "photos_id": await UserInfo().get_photo_status(user),
+        "user_premium": await UserInfo().get_user_premium_status(user),
+    }
 
 class ParsingGroupMembers:
     """Класс для парсинга групп, на которые подписан аккаунт."""
@@ -33,6 +45,8 @@ class ParsingGroupMembers:
     def __init__(self):
         self.tg_connect = TGConnect()
         self.tg_subscription_manager = SubscribeUnsubscribeTelegram()
+
+
 
     async def account_selection_menu(self, page):
 
@@ -109,8 +123,7 @@ class ParsingGroupMembers:
                             logger.debug(f"🔍 Парсинг групп/каналов, в которых состоит аккаунт: {session_name}")
                             client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                                account_directory=path_accounts_folder)
-                            await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", page)
-                            await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", page, )
+                            await log_and_display(f"🔗 Подключение к аккаунту: {session_name}\n 🔄 Парсинг групп/каналов, на которые подписан аккаунт", page)
                             await self.forming_a_list_of_groups(client, page)
                             remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
 
@@ -146,8 +159,7 @@ class ParsingGroupMembers:
                 phone = os.path.splitext(os.path.basename(session_path))[0]
                 logger.warning(f"🔍 Работаем с аккаунтом {phone}")
                 client = await self.tg_connect.get_telegram_client(page, phone, path_accounts_folder)
-                result = await client(
-                    GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+                result = await client(GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
                 groups = await self.filtering_groups(result.chats)
                 titles = await self.name_of_the_groups(groups)
                 dropdown.options = [ft.dropdown.Option(t) for t in titles]
@@ -240,11 +252,10 @@ class ParsingGroupMembers:
         """Главный метод для запуска процесса парсинга групп и отображения статуса в интерфейсе."""
         # Обрабатываем все файлы сессий по очереди 📂
         # Сохраняем название session-файла
-        selected = page.session.get("selected_sessions") or []
-        phone = selected[0]
-        logger.warning(f"Парсинг участников с аккаунта {phone}")
+        phone = page.session.get("selected_sessions") or []
+        logger.warning(f"Парсинг участников с аккаунта {phone[0]}")
 
-        client = await self.tg_connect.get_telegram_client(page, phone, account_directory=path_accounts_folder)
+        client = await self.tg_connect.get_telegram_client(page, phone[0], account_directory=path_accounts_folder)
         for groups in data:
             await log_and_display(f"🔍 Парсинг группы: {groups}", page)
             # подписываемся на группу
@@ -255,9 +266,9 @@ class ParsingGroupMembers:
             await client.disconnect()
         except sqlite3.DatabaseError:
             await log_and_display(
-                f"❌ Ошибка при отключении аккаунта {phone}, возможно поврежденный аккаунт. Выполните проверку аккаунтов",
+                f"❌ Ошибка при отключении аккаунта {phone[0]}, возможно поврежденный аккаунт. Выполните проверку аккаунтов",
                 page, )
-            await log_and_display(f"🔌 Отключение от аккаунта: {phone}", page)
+            await log_and_display(f"🔌 Отключение от аккаунта: {phone[0]}", page)
 
     async def parse_group(self, client, groups_wr, page) -> None:
         """
@@ -300,22 +311,12 @@ class ParsingGroupMembers:
                     await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
                     await asyncio.sleep(2)
                     break
+
             for user in all_participants:
                 await log_and_display(f"Полученные данные: {user}", page)
                 logger.info(f"Полученные данные: {user}")
                 # user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
-                log_data = {
-                    "username": await UserInfo().get_username(user),
-                    "user_id": user.id,
-                    "access_hash": user.access_hash,
-                    "first_name": await UserInfo().get_first_name(user),
-                    "last_name": await UserInfo().get_last_name(user),
-                    "user_phone": await UserInfo().get_user_phone(user),
-                    "online_at": await UserInfo().get_user_online_status(user),
-                    "photos_id": await UserInfo().get_photo_status(user),
-                    "user_premium": await UserInfo().get_user_premium_status(user),
-                }
-                db.create_tables([MembersGroups])
+                log_data = await collect_user_log_data(user)
                 with db.atomic():  # Атомарная транзакция для записи данных
                     MembersGroups.get_or_create(
                         user_id=log_data["user_id"],
@@ -359,12 +360,10 @@ class ParsingGroupMembers:
                                     if user.last_name:
                                         admin_name += f" {user.last_name}"
                                     # Получаем полную информацию о пользователе
-                                    full_user = await client(GetFullUserRequest(id=user.id))
-                                    bio = full_user.full_user.about or ""
                                     log_data = {
                                         "username": await UserInfo().get_username(user),
-                                        "user_id": user.id,
-                                        "access_hash": user.access_hash,
+                                        "user_id": await UserInfo().get_user_id(user),
+                                        "access_hash": await UserInfo().get_access_hash(user),
                                         "first_name": await UserInfo().get_first_name(user),
                                         "last_name": await UserInfo().get_last_name(user),
                                         "phone": await UserInfo().get_user_phone(user),
@@ -372,7 +371,7 @@ class ParsingGroupMembers:
                                         "photo_status": await UserInfo().get_photo_status(user),
                                         "premium_status": await UserInfo().get_user_premium_status(user),
                                         "user_status": "Admin",
-                                        "bio": bio or "",
+                                        "bio": await client(GetFullUserRequest(id=await UserInfo().get_user_id(user))).full_user.about or "",
                                         "group": groups[0],
                                     }
                                     # Задержка для избежания ограничений Telegram API
@@ -466,22 +465,11 @@ class ParsingGroupMembers:
                         await log_and_display(f"{message.from_id}", page)
                         # Получаем входную сущность пользователя
                         user = await client.get_entity(message.from_id.user_id)  # Получаем полную сущность
-                        from_user = InputUser(user_id=user.id, access_hash=user.access_hash)  # Создаем InputUser
+                        from_user = InputUser(user_id=await UserInfo().get_user_id(user), access_hash=await UserInfo().get_access_hash(user))  # Создаем InputUser
                         await log_and_display(f"{from_user}", page)
                         # Получаем данные о пользователе
-                        log_data = {
-                            "username": await UserInfo().get_username(user),
-                            "user_id": user.id,
-                            "access_hash": user.access_hash,
-                            "first_name": await UserInfo().get_first_name(user),
-                            "last_name": await UserInfo().get_last_name(user),
-                            "user_phone": await UserInfo().get_user_phone(user),
-                            "online_at": await UserInfo().get_user_online_status(user),
-                            "photos_id": await UserInfo().get_photo_status(user),
-                            "user_premium": await UserInfo().get_user_premium_status(user),
-                        }
+                        log_data = await collect_user_log_data(user)
                         await log_and_display(f"{log_data}", page)
-                        db.create_tables([MembersGroups])
                         with db.atomic():  # Атомарная транзакция для записи данных
                             MembersGroups.get_or_create(
                                 user_id=log_data["user_id"],
@@ -652,7 +640,6 @@ class ParsingGroupMembers:
     #     """
     #     try:
     #         entity = (
-    #             await self.get_username(user), user.id, user.access_hash, await self.get_first_name(user),
     #             await self.get_last_name(user), await self.get_user_phone(user),
     #             await self.get_user_online_status(user), await self.get_photo_status(user),
     #             await self.get_user_premium_status(user))

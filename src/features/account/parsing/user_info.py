@@ -5,8 +5,16 @@ from telethon.tl.types import (User, UserProfilePhoto,
                                UserStatusLastWeek, UserStatusOffline,
                                UserStatusOnline, UserStatusRecently)
 
-
 class UserInfo:
+
+    @staticmethod
+    async def get_user_id(user: User) -> int:
+        return user.id
+
+    @staticmethod
+    async def get_access_hash(user: User) -> int:
+        return user.access_hash
+
     @staticmethod
     async def get_last_name(user: User) -> str:
         return user.last_name or ""
@@ -25,11 +33,7 @@ class UserInfo:
 
     @staticmethod
     async def get_user_premium_status(user: User) -> str:
-        return (
-            "Пользователь с premium"
-            if getattr(user, "premium", False)
-            else "Обычный пользователь"
-        )
+        return "Пользователь с premium" if getattr(user, "premium", False) else "Обычный пользователь"
 
     @staticmethod
     async def get_photo_status(user: User) -> str:

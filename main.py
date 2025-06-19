@@ -10,7 +10,7 @@ from src.core.configs import (program_name, program_version, date_of_program_cha
                               window_height, window_resizable, time_sending_messages_1, time_sending_messages_2,
                               time_inviting_1, time_inviting_2, time_changing_accounts_1, time_changing_accounts_2,
                               time_subscription_1, time_subscription_2)
-from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.sqlite_working_tools import DatabaseHandler, db, MembersGroups, WritingGroupLinks
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
 from src.features.account.TGConnect import TGConnect
@@ -228,6 +228,7 @@ async def main(page: ft.Page):
 
 async def main_run(page):
     """Запуск программы"""
+    db.create_tables([MembersGroups, WritingGroupLinks])
     await loging(page)
 
 
