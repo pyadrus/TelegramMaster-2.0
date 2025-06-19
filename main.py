@@ -98,9 +98,6 @@ async def main(page: ft.Page):
             elif page.route == "/parsing":  # Меню "Парсинг"
                 await ParsingGroupMembers().account_selection_menu(page=page)
 
-
-            elif page.route == "/parsing_single_groups":  # 🔍 Парсинг одной группы / групп
-                await ParsingGroupMembers().parse_groups(page=page)
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
                 await ReceivingAndRecording().write_data_to_excel(file_name="user_data/parsed_chat_participants.xlsx")
             # __________________________________________________________________________________________________________

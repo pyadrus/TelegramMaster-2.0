@@ -146,11 +146,9 @@ class ParsingGroupMembers:
                 return
 
             # Просто сохраняем путь к session-файлу
-            session_path = os.path.abspath(file.path)
             phone = os.path.splitext(os.path.basename(file.name))[0]  # например, "77076324730"
-
-            # Сохраняем путь к session-файлу в session
-            page.session.set("selected_sessions", [session_path])
+            # Сохраняем название session-файла
+            page.session.set("selected_sessions", [phone])
 
             # Показываем успешный выбор
             file_text.value = f"✅ Аккаунт выбран: {phone}"
@@ -168,6 +166,7 @@ class ParsingGroupMembers:
             dropdown.disabled = False
             btn_active_parse.disabled = False
             btn_group_parse.disabled = False
+            parse_button.disabled = False
 
             await load_groups()  # ⬅️ Подгружаем группы
             page.update()
@@ -210,60 +209,56 @@ class ParsingGroupMembers:
 
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
-
-            data = chat_input.value.split()
-            logger.info(f"Полученные данные: {data}")  # Отладка
-
-            # Удаляем дубликаты ссылок введенных пользователем
-            await self.db_handler.write_to_single_column_table(
-                name_database="writing_group_links",
-                database_columns="writing_group_links",
-                into_columns="writing_group_links",
-                recorded_data=list(set(data)),
-            )
-
-            start = await start_time(page)
-            page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
             try:
-                if account_groups_switch.value:
-                    # Обрабатываем все файлы сессий по очереди 📂
-                    for session_path in session_files:
-                        session_name = os.path.basename(session_path)
-                        logger.debug(f"🔍 Парсинг групп/каналов, в которых состоит аккаунт: {session_name}")
-                        client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
-                        await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", page)
-                        await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", page,)
-                        await self.forming_a_list_of_groups(client, page)
-                        remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
+                data = chat_input.value.split()
+                logger.info(f"Полученные данные: {data}")  # Отладка
 
-                if admin_switch.value:
-                    # Если выбрано парсить администраторов, выполняем парсинг администраторов 👤
-                    await self.obtaining_administrators(session_files, page)
+                # Удаляем дубликаты ссылок введенных пользователем
+                # await write_to_single_column_table_peewee(data)
 
-                if members_switch.value:
-                    # Обрабатываем все файлы сессий по очереди 📂
-                    for session_path in session_files:
-                        session_name = os.path.basename(session_path)
-                        client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
-                        for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links", page=page):
-                            await log_and_display(f"🔍 Парсинг группы: {groups[0]}", page)
+                start = await start_time(page)
+                page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
+                try:
+                    if account_groups_switch.value:
+                        # Обрабатываем все файлы сессий по очереди 📂
+                        for session_path in session_files:
+                            session_name = os.path.basename(session_path)
+                            logger.debug(f"🔍 Парсинг групп/каналов, в которых состоит аккаунт: {session_name}")
+                            client = await self.tg_connect.get_telegram_client(page, session_name, account_directory=path_accounts_folder)
+                            await log_and_display(f"🔗 Подключение к аккаунту: {session_name}", page)
+                            await log_and_display(f"🔄 Парсинг групп/каналов, на которые подписан аккаунт", page,)
+                            await self.forming_a_list_of_groups(client, page)
+                            remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
+
+                    if admin_switch.value:
+                        # Если выбрано парсить администраторов, выполняем парсинг администраторов 👤
+                        await self.obtaining_administrators(session_files, page)
+
+                    if members_switch.value: # Парсинг участников
+                        # Обрабатываем все файлы сессий по очереди 📂
+                        # Сохраняем название session-файла
+                        selected = page.session.get("selected_sessions") or []
+                        phone = selected[0]
+                        logger.warning(f"Парсинг участников с аккаунта {phone}")
+
+                        client = await self.tg_connect.get_telegram_client(page, phone, account_directory=path_accounts_folder)
+                        for groups in data:
+                            await log_and_display(f"🔍 Парсинг группы: {groups}", page)
                             # подписываемся на группу
-                            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups[0], page)
-                            await self.parse_group(client, groups[0], page)  # выполняем парсинг группы
-                            # Удаляем группу из списка после завершения парсинга 🗑️
-                            await self.db_handler.delete_row_db(table="writing_group_links", column="writing_group_links", value=groups,)
-                            # Очищаем список и удаляем дубликаты после завершения обработки всех групп
+                            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, groups, page)
+                            await self.parse_group(client, groups, page)  # выполняем парсинг группы
                             # Завершаем работу клиента после завершения парсинга 🔌
                         try:
                             await client.disconnect()
                         except sqlite3.DatabaseError:
                             await log_and_display(f"❌ Ошибка при отключении аккаунта {session_name}, возможно поврежденный аккаунт. Выполните проверку аккаунтов", page,)
 
-                        await log_and_display(f"🔌 Отключение от аккаунта: {session_name}", page)
-                await end_time(start, page)
+                            await log_and_display(f"🔌 Отключение от аккаунта: {session_name}", page)
+                    await end_time(start, page)
+                except Exception as error:
+                    logger.exception(error)
             except Exception as error:
                 logger.exception(error)
-
         chat_input = ft.TextField(label="🔗 Введите ссылку на чат...", disabled=True)
         chat_input_active = ft.TextField(label="🔗 Ссылка для активных", expand=True, disabled=True)
         limit_active_user = ft.TextField(label="💬 Кол-во сообщений", expand=True, disabled=True)
@@ -340,6 +335,7 @@ class ParsingGroupMembers:
         dropdown.disabled = False
         btn_active_parse.disabled = False
         btn_group_parse.disabled = False
+        parse_button.disabled = False
         page.update()
 
         # Представление (View)

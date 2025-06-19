@@ -4,14 +4,52 @@ import sqlite3
 
 import flet as ft
 from loguru import logger
-from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField
-from peewee import fn, IntegerField
+from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField, fn, IntegerField
 
 from src.core.configs import path_folder_database
 from src.gui.gui import log_and_display
 
 db = SqliteDatabase(path_folder_database)
 
+class WritingGroupLinks(Model):
+    """
+    Таблица для хранения ссылок на группы в таблице writing_group_links
+    """
+    writing_group_links = CharField(unique=True)  # уникальность для защиты от дубликатов
+
+    class Meta:
+        database = db
+        table_name = 'writing_group_links'
+
+async def read_writing_group_links():
+    """
+    Считывает все ссылки на группы из таблицы writing_group_links.
+
+    :return: Список строк (ссылок на группы)
+    """
+
+    db.connect(reuse_if_open=True)
+    db.create_tables([WritingGroupLinks])
+
+    links = [entry.writing_group_links for entry in WritingGroupLinks.select()]
+    return links
+
+
+
+
+
+# Запись ссылки на группу в таблицу writing_group_links
+async def write_to_single_column_table_peewee(data: list[str]):
+    db.connect()
+    db.create_tables([WritingGroupLinks])
+
+    for line in set(data):
+        cleaned_line = line.strip()
+        try:
+            WritingGroupLinks.create(writing_group_links=cleaned_line)
+        except Exception as e:
+            logger.exception(e)
+    db.close()
 
 class GroupsAndChannels(Model):
     """
