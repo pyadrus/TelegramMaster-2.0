@@ -3,7 +3,6 @@ import asyncio
 import datetime
 import os
 import os.path
-import time
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
@@ -12,11 +11,10 @@ from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError, Chat
                              UsernameInvalidError)
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
-from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import (ChannelParticipantsAdmins, ChannelParticipantsSearch, InputPeerEmpty, InputUser)
 
 from src.core.configs import (line_width_button, path_accounts_folder, time_activity_user_2, BUTTON_HEIGHT)
-from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, MembersGroups, db, remove_duplicates)
+from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, MembersGroups, db)
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.features.account.parsing.gui_elements import GUIProgram
@@ -330,7 +328,6 @@ class ParsingGroupMembers:
             try:
                 client = await self.tg_connect.get_telegram_client(page, phone[0],
                                                                    account_directory=path_accounts_folder)
-                # for groups in await self.db_handler.open_and_read_data(table_name="writing_group_links", page=page):
                 await log_and_display(f"🔍 Парсинг группы: {groups}", page)
                 try:
                     entity = await client.get_entity(groups)  # Получаем сущность группы/канала
@@ -342,9 +339,6 @@ class ParsingGroupMembers:
                             admin_name = (user.first_name or "").strip()
                             if user.last_name:
                                 admin_name += f" {user.last_name}"
-
-                            full_user = await client(GetFullUserRequest(id=await UserInfo().get_user_id(user)))
-                            bio = full_user.full_user.about or ""
 
                             # Получаем полную информацию о пользователе
                             log_data = {
@@ -358,27 +352,34 @@ class ParsingGroupMembers:
                                 "photo_status": await UserInfo().get_photo_status(user),
                                 "premium_status": await UserInfo().get_user_premium_status(user),
                                 "user_status": "Admin",
-                                "bio": bio,
-                                "group": groups[0],
+                                "bio": await UserInfo().get_bio_user(await UserInfo().get_full_user_info(user, client)),
+                                "group": groups,
                             }
                             # Задержка для избежания ограничений Telegram API
                             await asyncio.sleep(0.5)
                             await log_and_display(f"Полученные данные: {log_data}", page)
-                            with db.atomic():  # Атомарная транзакция для записи данных
-                                MembersAdmin.create(
-                                    username=log_data["username"],
-                                    user_id=log_data["user_id"],
-                                    access_hash=log_data["access_hash"],
-                                    first_name=log_data["first_name"],
-                                    last_name=log_data["last_name"],
-                                    phone=log_data["phone"],
-                                    online_at=log_data["online_at"],
-                                    photo_status=log_data["photo_status"],
-                                    premium_status=log_data["premium_status"],
-                                    user_status=log_data["user_status"],
-                                    bio=log_data["bio"],
-                                    group_name=log_data["group"],
-                                )
+
+                            existing_user = MembersAdmin.select().where(
+                                MembersAdmin.user_id == log_data["user_id"]).first()
+                            if not existing_user:
+                                with db.atomic():
+                                    MembersAdmin.create(
+                                        username=log_data["username"],
+                                        user_id=log_data["user_id"],
+                                        access_hash=log_data["access_hash"],
+                                        first_name=log_data["first_name"],
+                                        last_name=log_data["last_name"],
+                                        phone=log_data["phone"],
+                                        online_at=log_data["online_at"],
+                                        photo_status=log_data["photo_status"],
+                                        premium_status=log_data["premium_status"],
+                                        user_status=log_data["user_status"],
+                                        bio=log_data["bio"],
+                                        group_name=log_data["group"],
+                                    )
+                            else:
+                                await log_and_display(
+                                    f"⚠️ Пользователь с user_id {log_data['user_id']} уже есть в базе. Пропущен.", page)
                     else:
                         try:
                             await log_and_display(f"Это не группа, а канал: {entity.title}", page)

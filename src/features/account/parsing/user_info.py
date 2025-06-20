@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import (User, UserProfilePhoto,
                                UserStatusEmpty, UserStatusLastMonth,
                                UserStatusLastWeek, UserStatusOffline,
@@ -9,7 +10,14 @@ from telethon.tl.types import (User, UserProfilePhoto,
 class UserInfo:
 
     @staticmethod
-    async def get_user_id(user: User) -> int:
+    async def get_bio_user(full_user):
+        return full_user.full_user.about or ""
+
+    async def get_full_user_info(self, user: User, client):
+        full_user = await client(GetFullUserRequest(id=await self.get_user_id(user)))
+        return full_user
+
+    async def get_user_id(self, user: User) -> int:
         return user.id
 
     @staticmethod

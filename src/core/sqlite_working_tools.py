@@ -71,7 +71,7 @@ class MembersAdmin(Model):
     Таблица для хранения данных администраторов групп в таблице members_admin
     """
     username = CharField(max_length=255, null=True)
-    user_id = BigIntegerField(unique=True)
+    user_id = IntegerField(unique=True)
     access_hash = BigIntegerField(null=True)
     first_name = CharField(max_length=255, null=True)
     last_name = CharField(max_length=255, null=True)
