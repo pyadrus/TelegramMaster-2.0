@@ -2,6 +2,7 @@
 import flet as ft
 
 from src.core.configs import BUTTON_HEIGHT, small_button_width, line_width_button, program_name, BUTTON_WIDTH
+from src.features.account.parsing.gui_elements import GUIProgram
 from src.locales.translations_loader import translations
 
 
@@ -12,8 +13,7 @@ async def main_menu_program(page: ft.Page):
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     page.views.append(
-        ft.View("/", [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+        ft.View("/", [await GUIProgram().key_app_bar(),
                       ft.Text(spans=[ft.TextSpan(
                           f"{program_name}",
                           ft.TextStyle(

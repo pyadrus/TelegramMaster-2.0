@@ -26,6 +26,7 @@ from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.features.account.parsing.gui_elements import GUIProgram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.menu import show_notification
 from src.locales.translations_loader import translations
@@ -112,8 +113,7 @@ class InvitingToAGroup:
 
         page.views.append(
             ft.View("/inviting",
-                    [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                               bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                    [await GUIProgram().key_app_bar(),
                      ft.Text(spans=[ft.TextSpan(
                          translations["ru"]["inviting_menu"]["inviting"],
                          ft.TextStyle(size=20, weight=ft.FontWeight.BOLD,

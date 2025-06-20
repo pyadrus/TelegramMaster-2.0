@@ -10,6 +10,7 @@ from telethon import functions
 from src.core.configs import BUTTON_HEIGHT, line_width_button, path_accounts_folder
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
+from src.features.account.parsing.gui_elements import GUIProgram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
 
@@ -97,8 +98,7 @@ class CreatingGroupsAndChats:
 
         # Добавляем элементы интерфейса на страницу
         page.views.append(ft.View("/creating_groups_and_chats_menu",
-                                  [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                                             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                                  [await GUIProgram().key_app_bar(),
                                    ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["create_groups"], ft.TextStyle(
                                        size=20, weight=ft.FontWeight.BOLD,
                                        foreground=ft.Paint(gradient=ft.PaintLinearGradient((0, 20), (150, 20),

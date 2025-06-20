@@ -19,6 +19,7 @@ from thefuzz import fuzz
 from src.core.configs import BUTTON_HEIGHT, ConfigReader, line_width_button, path_accounts_folder
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess, working_with_accounts
+from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
 from src.features.proxy.checking_proxy import checking_the_proxy_for_work, reading_proxy_data_from_the_database
 from src.gui.gui import end_time, log_and_display, start_time
@@ -402,8 +403,7 @@ class TGConnect:
 
         page.views.append(
             ft.View("/account_connection_menu",
-                    [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                               bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                    [await GUIProgram().key_app_bar(),
                      ft.Text(spans=[ft.TextSpan(
                          "Подключение аккаунта Telegram по номеру телефона.",
                          ft.TextStyle(

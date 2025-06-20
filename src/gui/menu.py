@@ -2,6 +2,7 @@
 import flet as ft
 
 from src.core.configs import BUTTON_HEIGHT, small_button_width, BUTTON_WIDTH, line_width_button
+from src.features.account.parsing.gui_elements import GUIProgram
 from src.locales.translations_loader import translations
 
 
@@ -13,8 +14,7 @@ async def settings_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/settings",
-                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                [await GUIProgram().key_app_bar(),
                  ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["settings"],
                                             ft.TextStyle(size=20, weight=ft.FontWeight.BOLD, foreground=ft.Paint(
                                                 gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
@@ -97,8 +97,7 @@ async def bio_editing_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/bio_editing",
-                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                [await GUIProgram().key_app_bar(),
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["menu"]["edit_bio"],
                      ft.TextStyle(
@@ -138,8 +137,7 @@ async def working_with_contacts_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/working_with_contacts",
-                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                [await GUIProgram().key_app_bar(),
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["menu"]["contacts"],
                      ft.TextStyle(
@@ -175,7 +173,7 @@ async def menu_parsing(page: ft.Page):
     """
     page.views.append(
         ft.View("/parsing",
-                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]), bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                [await GUIProgram().key_app_bar(),
                  ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["parsing"],
                      ft.TextStyle(size=20, weight=ft.FontWeight.BOLD, foreground=ft.Paint(
                              gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
@@ -206,8 +204,7 @@ async def reactions_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/working_with_reactions",
-                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                [await GUIProgram().key_app_bar(),
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["menu"]["reactions"],
                      ft.TextStyle(
@@ -235,8 +232,7 @@ async def viewing_posts_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/viewing_posts_menu",
-                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                [await GUIProgram().key_app_bar(),
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["reactions_menu"]["we_are_winding_up_post_views"],
                      ft.TextStyle(
@@ -260,8 +256,7 @@ async def subscribe_and_unsubscribe_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/subscribe_unsubscribe",
-                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                [await GUIProgram().key_app_bar(),
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["menu"]["subscribe_unsubscribe"],
                      ft.TextStyle(
@@ -289,8 +284,7 @@ async def connecting_accounts_by_number_menu(page: ft.Page):
     """
     page.views.append(
         ft.View("/connecting_accounts_by_number",
-                [ft.AppBar(title=ft.Text(translations["ru"]["menu"]["main"]),
-                           bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                [await GUIProgram().key_app_bar(),
                  ft.Text(spans=[ft.TextSpan(
                      translations["ru"]["account_connect_menu"]["connecting_accounts_by_phone_number"],
                      ft.TextStyle(
