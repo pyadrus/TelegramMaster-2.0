@@ -11,6 +11,7 @@ class GUIProgram:
     async def key_app_bar():
         """Кнопка в верхней панели приложения (возврат в главное меню)."""
         return ft.AppBar(
+            toolbar_height=40,
             title=ft.Text(translations["ru"]["menu"]["main"]),
             bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
         )
