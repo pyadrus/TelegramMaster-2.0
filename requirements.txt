@@ -11,4 +11,6 @@ openpyxl
 uvicorn
 fastapi
 PyYAML
-flet_core
+jinja2
+flet_desktop
+flet_cli
