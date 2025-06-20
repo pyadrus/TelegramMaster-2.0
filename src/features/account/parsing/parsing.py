@@ -190,24 +190,16 @@ class ParsingGroupMembers:
 
         parse_button = ft.ElevatedButton(text="🔍 Парсить", width=line_width_button, height=BUTTON_HEIGHT,
                                          on_click=add_items, disabled=True)
-        # btn_active_parse = ft.ElevatedButton(text="🔍 Активные пользователи", width=line_width_button,
-        #                                      height=BUTTON_HEIGHT, on_click=start_active_parsing, disabled=True)
-        # btn_group_parse = ft.ElevatedButton(text="📂 Парсить выбранную группу", width=line_width_button,
-        #                                     height=BUTTON_HEIGHT, on_click=start_group_parsing, disabled=True)
 
         # После успешного выбора файла:
         admin_switch.disabled = False
         members_switch.disabled = False
         account_groups_switch.disabled = False
         account_group_selection_switch.disabled = False
-
         chat_input.disabled = False
         chat_input_active.disabled = False
         limit_active_user.disabled = False
-
         dropdown.disabled = False
-        # btn_active_parse.disabled = False
-        # btn_group_parse.disabled = False
         parse_button.disabled = False
         page.update()
 
@@ -223,14 +215,11 @@ class ParsingGroupMembers:
                     pick_button,
                     ft.Row([admin_switch, members_switch, account_groups_switch, account_group_selection_switch, active_switch]),
                     chat_input,
-
                     ft.Divider(),
                     ft.Row([chat_input_active, limit_active_user]),
-                    # btn_active_parse,
                     ft.Divider(),
                     result_text,
                     dropdown,
-                    # btn_group_parse,
                     parse_button,  # ⬅️ Кнопка для парсинга
                 ])
             ]

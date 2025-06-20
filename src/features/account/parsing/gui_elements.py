@@ -25,13 +25,13 @@ class GUIProgram:
                     translations["ru"]["menu"]["parsing"],
                     ft.TextStyle(
                         size=20,
-                        weight=ft.FontWeight.BOLD,
+                        weight=ft.FontWeight.NORMAL,
                         foreground=ft.Paint(
                             color=ft.Colors.PINK,
                         ),
                     ),
                 )
-            ]
+            ],
         )
 
     @staticmethod
