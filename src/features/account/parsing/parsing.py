@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import asyncio
+import datetime
 import os
 import os.path
 import time
@@ -59,7 +60,8 @@ async def parse_group(groups_wr, page) -> None:
         while while_condition:
             try:
                 logger.warning(f"🔍 Получаем участников группы: {groups_wr}")
-                participants = await client(GetParticipantsRequest(channel=groups_wr, offset=offset, filter=my_filter, limit=200, hash=0,))
+                participants = await client(
+                    GetParticipantsRequest(channel=groups_wr, offset=offset, filter=my_filter, limit=200, hash=0, ))
                 all_participants.extend(participants.users)
                 offset += len(participants.users)
                 if len(participants.users) < 1:
@@ -399,11 +401,10 @@ class ParsingGroupMembers:
         # Обрабатываем все файлы сессий по очереди 📂
         phone = page.session.get("selected_sessions") or []
         logger.debug(f"🔍 Парсинг групп/каналов, в которых состоит аккаунт: {phone}")
-        client = await self.tg_connect.get_telegram_client(page, phone, account_directory=path_accounts_folder)
+        client = await self.tg_connect.get_telegram_client(page, phone[0], account_directory=path_accounts_folder)
         await log_and_display(
             f"🔗 Подключение к аккаунту: {phone}\n 🔄 Парсинг групп/каналов, на которые подписан аккаунт", page)
         await self.forming_a_list_of_groups(client, page)
-        remove_duplicates()  # Чистка дубликатов в базе данных 🧹 (таблица groups_and_channels, колонка id)
 
     async def parse_active_users(self, chat_input, limit_active_user, page, phone_number) -> None:
         """
@@ -507,7 +508,7 @@ class ParsingGroupMembers:
     @staticmethod
     async def forming_a_list_of_groups(client, page: ft.Page) -> None:
         """
-        Формирует список групп и каналов.
+        Формирует список групп и каналов без дублирования записей.
 
         Метод собирает информацию о группах и каналах, включая их ID, название, описание, ссылку, количество участников
         и время последнего парсинга. Данные сохраняются в базу данных.
@@ -519,29 +520,67 @@ class ParsingGroupMembers:
             async for dialog in client.iter_dialogs():
                 try:
                     entity = await client.get_entity(dialog.id)
+
+                    # Пропускаем личные чаты
+                    from telethon.tl.types import Chat, Channel
+                    if isinstance(entity, Chat):
+                        logger.debug(f"💬 Пропущен личный чат: {dialog.id}")
+                        continue
+
+                    # Проверяем, является ли супергруппой или каналом
+                    if not getattr(entity, 'megagroup', False) and not getattr(entity, 'broadcast', False):
+                        continue
+
                     full_channel_info = await client(functions.channels.GetFullChannelRequest(channel=entity))
-                    channel_details = await client.get_entity(full_channel_info.full_chat)
-                    # Получение количества участников
-                    participants_count = getattr(full_channel_info.full_chat, "participants_count", 0)
-                    # Время синтаксического анализа
+                    chat = full_channel_info.full_chat
+
+                    if not hasattr(chat, 'participants_count'):
+                        logger.warning(f"⚠️ participants_count отсутствует для {dialog.id}")
+                        continue
+
+                    participants_count = chat.participants_count
+                    username = getattr(entity, 'username', None)
+                    link = f"https://t.me/{username}" if username else None
+
+                    title = entity.title or "Без названия"
+                    about = getattr(chat, 'about', '')
+
+                    # Логируем информацию
                     await log_and_display(
-                        f"{dialog.id}, {channel_details.title}, https://t.me/{channel_details.username}, {participants_count}",
-                        page, )
-                    with db.atomic():  # Атомарная транзакция для записи данных
-                        GroupsAndChannels.create(
+                        f"{dialog.id}, {title}, {link or 'без ссылки'}, {participants_count}",
+                        page,
+                    )
+
+                    # Сохраняем/обновляем запись в БД
+                    with db.atomic():
+                        GroupsAndChannels.insert(
                             id=dialog.id,
-                            title=channel_details.title,
-                            about=full_channel_info.full_chat.about,
-                            link=f"https://t.me/{channel_details.username}",
+                            title=title,
+                            about=about,
+                            link=link,
                             members_count=participants_count,
-                            parsing_time=time.strftime(
-                                "%Y-%m-%d %H:%M:%S", time.localtime()
-                            ),
-                        )
-                except TypeError:
-                    continue  # Записываем ошибку в software_database.db и продолжаем работу
+                            parsing_time=datetime.datetime.now()
+                        ).on_conflict(
+                            conflict_target=[GroupsAndChannels.id],
+                            preserve=[GroupsAndChannels.id],
+                            update={
+                                GroupsAndChannels.title: title,
+                                GroupsAndChannels.about: about,
+                                GroupsAndChannels.link: link,
+                                GroupsAndChannels.members_count: participants_count,
+                                GroupsAndChannels.parsing_time: datetime.datetime.now(),
+                            }
+                        ).execute()
+
+                except TypeError as te:
+                    logger.warning(f"❌ TypeError при обработке диалога {dialog.id}: {te}")
+                    continue
+                except Exception as e:
+                    logger.exception(f"⚠️ Ошибка при обработке диалога {dialog.id}: {e}")
+                    continue
+
         except Exception as error:
-            logger.exception(error)
+            logger.exception(f"🔥 Критическая ошибка в forming_a_list_of_groups: {error}")
 
     # @staticmethod
     # async def parse_users(client, target_group, page: ft.Page):

@@ -57,7 +57,7 @@ class GroupsAndChannels(Model):
     id = IntegerField(primary_key=True)
     title = CharField(max_length=255)
     about = TextField(null=True)
-    link = CharField(max_length=255)
+    link = CharField(max_length=255, null=True)
     members_count = IntegerField(default=0)
     parsing_time = DateTimeField(default=datetime.datetime.now)
 
