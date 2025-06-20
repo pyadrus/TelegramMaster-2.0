@@ -98,10 +98,8 @@ async def main(page: ft.Page):
                 logger.info("🔚 Конец Накрутки просмотров постов")
                 await end_time(start, page=page)
             # __________________________________________________________________________________________________________
-
             elif page.route == "/parsing":  # Меню "Парсинг"
                 await ParsingGroupMembers().account_selection_menu(page=page)
-
             elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
                 await ReceivingAndRecording().write_data_to_excel(file_name="user_data/parsed_chat_participants.xlsx")
             # __________________________________________________________________________________________________________

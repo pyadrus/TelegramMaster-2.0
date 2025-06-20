@@ -144,6 +144,7 @@ class ParsingGroupMembers:
             admin_switch.disabled = False
             members_switch.disabled = False
             account_groups_switch.disabled = False
+            active_switch.disabled = False
 
             chat_input.disabled = False
             chat_input_active.disabled = False
@@ -174,7 +175,7 @@ class ParsingGroupMembers:
         contacts_switch = ft.CupertinoSwitch(label="Контакты", value=False, disabled=True)
 
         ToggleController(admin_switch, account_groups_switch, members_switch,
-                         account_group_selection_switch).element_handler(page)
+                         account_group_selection_switch, active_switch).element_handler(page)
 
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
@@ -224,6 +225,7 @@ class ParsingGroupMembers:
         members_switch.disabled = False
         account_groups_switch.disabled = False
         account_group_selection_switch.disabled = False
+        active_switch.disabled = False
         chat_input.disabled = False
         chat_input_active.disabled = False
         limit_active_user.disabled = False
@@ -284,7 +286,8 @@ class ParsingGroupMembers:
             await log_and_display("⚠️ Сначала выберите аккаунт", page)
             return
 
-        phone = os.path.splitext(os.path.basename(selected[0]))[0]
+        phone = page.session.get("selected_sessions") or []
+        logger.debug(f"Аккаунт: {phone}")
         chat = chat_input_active.value
         try:
             limit = int(limit_active_user.value)
@@ -293,7 +296,7 @@ class ParsingGroupMembers:
             return
 
         await log_and_display(f"🔍 Сканируем чат: {chat} на {limit} сообщений", page)
-        await self.parse_active_users(chat, limit, page, phone)
+        await self.parse_active_users(chat, limit, page, phone[0])
 
     async def load_groups(self, page, dropdown, result_text):
         try:
@@ -306,8 +309,7 @@ class ParsingGroupMembers:
             phone = os.path.splitext(os.path.basename(session_path))[0]
             logger.warning(f"🔍 Работаем с аккаунтом {phone}")
             client = await self.tg_connect.get_telegram_client(page, phone, path_accounts_folder)
-            result = await client(
-                GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+            result = await client(GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
             groups = await self.filtering_groups(result.chats)
             titles = await self.name_of_the_groups(groups)
             dropdown.options = [ft.dropdown.Option(t) for t in titles]
@@ -409,28 +411,27 @@ class ParsingGroupMembers:
 
     async def parse_active_users(self, chat_input, limit_active_user, page, phone_number) -> None:
         """
-        Parsing участников, которые пишут в чат (активных участников)
-
-        :param chat_input: Ссылка на чат
-        :param limit_active_user: лимит активных участников
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param phone_number: Номер телефона пользователя
+        Парсинг активных пользователей в чате.
         """
+        # client = None
         try:
             client = await self.tg_connect.get_telegram_client(page, phone_number,
                                                                account_directory=path_accounts_folder)
             await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input, page)
+
             try:
-                # Преобразуем значение time_activity_user_2 в целое число (если оно None, используем 5 по умолчанию).
-                await asyncio.sleep(int(time_activity_user_2 or 5))  # По умолчанию 5, если None или некорректный тип
+                await asyncio.sleep(int(time_activity_user_2 or 5))
             except TypeError:
-                # Если произошла ошибка преобразования (например, time_activity_user_2 имеет неподдерживаемый тип),
-                # то делаем паузу по умолчанию в 5 секунд.
-                await asyncio.sleep(5)  # По умолчанию 5, если None или неправильный тип
+                await asyncio.sleep(5)
+
+            # Все операции с Telegram API должны быть здесь
             await self.get_active_users(client, chat_input, limit_active_user, page)
-            await client.disconnect()  # Разрываем соединение telegram
+
         except Exception as error:
             logger.exception(error)
+        # finally:
+        #     if client and client.is_connected():
+        #         await client.disconnect()
 
     async def get_active_users(self, client, chat, limit_active_user, page) -> None:
         """
@@ -442,12 +443,17 @@ class ParsingGroupMembers:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            async for message in client.iter_messages(chat, limit=int(limit_active_user)):
-                if message.from_id is not None:
+            entity = await client.get_entity(chat)
+            async for message in client.iter_messages(entity, limit=limit_active_user):
+            # async for message in client.iter_messages(chat, limit=int(limit_active_user)):
+                from_id = getattr(message, 'from_id', None)
+                if from_id:
+                    user = await client.get_entity(from_id)
+                # if message.from_id is not None:
                     try:
                         await log_and_display(f"{message.from_id}", page)
                         # Получаем входную сущность пользователя
-                        user = await client.get_entity(message.from_id.user_id)  # Получаем полную сущность
+                        # user = await client.get_entity(message.from_id.user_id)  # Получаем полную сущность
                         from_user = InputUser(user_id=await UserInfo().get_user_id(user),
                                               access_hash=await UserInfo().get_access_hash(user))  # Создаем InputUser
                         await log_and_display(f"{from_user}", page)
@@ -582,92 +588,5 @@ class ParsingGroupMembers:
 
         except Exception as error:
             logger.exception(f"🔥 Критическая ошибка в forming_a_list_of_groups: {error}")
-
-    # @staticmethod
-    # async def parse_users(client, target_group, page: ft.Page):
-    #     """
-    #     🧑‍🤝‍🧑 Парсинг и сбор данных пользователей группы или канала.
-    #     Метод осуществляет поиск участников в указанной группе или канале, собирает их данные и сохраняет в файле.
-    #
-    #     :param client: Клиент Telegram.
-    #     :param target_group: Группа или канал, участники которого будут собраны.
-    #     :param page: Страница интерфейса Flet для отображения элементов управления.
-    #     :return: Список участников.
-    #     """
-    #     try:
-    #         await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", page)
-    #
-    #         all_participants: list = []
-    #         while_condition = True
-    #         my_filter = ChannelParticipantsSearch("")
-    #         offset = 0
-    #         while while_condition:
-    #             try:
-    #                 participants = await client(
-    #                     GetParticipantsRequest(channel=target_group, offset=offset, filter=my_filter, limit=200,
-    #                                            hash=0))
-    #                 all_participants.extend(participants.users)
-    #                 offset += len(participants.users)
-    #                 if len(participants.users) < 1:
-    #                     while_condition = False
-    #             except TypeError:
-    #                 await log_and_display(f"❌ Ошибка: {target_group} не является группой / каналом.", page,
-    #                                       level="error")
-    #                 await asyncio.sleep(2)
-    #                 break
-    #             except ChatAdminRequiredError:
-    #                 await log_and_display(translations["ru"]["errors"]["admin_rights_required"], page)
-    #                 await asyncio.sleep(2)
-    #                 break
-    #             except ChannelPrivateError:
-    #                 await log_and_display(translations["ru"]["errors"]["channel_private"], page)
-    #                 await asyncio.sleep(2)
-    #                 break
-    #             except AuthKeyUnregisteredError:
-    #                 await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
-    #                 await asyncio.sleep(2)
-    #                 break
-    #
-    #         return all_participants
-    #     except Exception as error:
-    #         logger.exception(error)
-    #         raise
-
-    # async def get_all_participants(self, all_participants, page: ft.Page) -> list:
-    #     """
-    #     Сбор данных всех участников.
-    #     Метод проходит по списку участников, получает их данные и сохраняет их в список сущностей.
-    #
-    #     :param all_participants: Список объектов участников.
-    #     :param page: Страница интерфейса Flet для отображения элементов управления.
-    #     :return: Список собранных данных участников.
-    #     """
-    #     try:
-    #         entities: list = []  # Создаем пустой список для хранения данных участников
-    #         for user in all_participants:
-    #             await self.get_user_data(user, entities, page)
-    #         return entities  # Возвращаем словарь пользователей
-    #     except TypeError as error:
-    #         logger.exception(f"❌ Ошибка: {error}")
-    #         return []  # Возвращаем пустой список в случае ошибки
-    #     except Exception as error:
-    #         logger.exception(error)
-    #         return []  # Возвращаем пустой список в случае ошибки
-
-    # async def get_active_user_data(self, user):
-    #     """
-    #     Получаем данные активного пользователя
-    #
-    #     :param user: пользователь
-    #     """
-    #     try:
-    #         entity = (
-    #             await self.get_last_name(user), await self.get_user_phone(user),
-    #             await self.get_user_online_status(user), await self.get_photo_status(user),
-    #             await self.get_user_premium_status(user))
-    #         return entity
-    #     except Exception as error:
-    #         logger.exception(error)
-    #         raise
 
 # 690
