@@ -86,7 +86,7 @@ class ParsingGroupMembers:
             # btn_group_parse.disabled = False
             parse_button.disabled = False
 
-            await load_groups()  # ⬅️ Подгружаем группы
+            await self.load_groups(page, dropdown, result_text)  # ⬅️ Подгружаем группы
             page.update()
 
         # Создание элементов управления
@@ -103,6 +103,8 @@ class ParsingGroupMembers:
         account_group_selection_switch = ft.CupertinoSwitch(label="Выбрать группу", value=False, disabled=True)
         # Todo добавить работу
         active_switch = ft.CupertinoSwitch(label="Активные", value=False, disabled=True)
+        # Todo добавить работу
+        contacts_switch = ft.CupertinoSwitch(label="Контакты", value=False, disabled=True)
 
         ToggleController(admin_switch, account_groups_switch, members_switch,
                          account_group_selection_switch).element_handler(page)
@@ -125,6 +127,8 @@ class ParsingGroupMembers:
                         await self.obtaining_administrators(page)
                     if members_switch.value:  # Парсинг участников
                         await self.parsing_group_members(data, page)  # Парсинг участников
+                    if active_switch.value:  # Парсинг активных пользователей
+                        pass
 
                     await end_time(start, page)
                 except Exception as error:
@@ -140,31 +144,8 @@ class ParsingGroupMembers:
         dropdown = ft.Dropdown(width=line_width_button, options=[], autofocus=True, disabled=True)
         result_text = ft.Text(value="📂 Группы не загружены")
 
-        async def load_groups():
-            try:
-                selected = page.session.get("selected_sessions") or []
-                if not selected:
-                    await log_and_display("⚠️ Сначала выберите аккаунт", page)
-                    return
-
-                session_path = selected[0]
-                phone = os.path.splitext(os.path.basename(session_path))[0]
-                logger.warning(f"🔍 Работаем с аккаунтом {phone}")
-                client = await self.tg_connect.get_telegram_client(page, phone, path_accounts_folder)
-                result = await client(
-                    GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
-                groups = await self.filtering_groups(result.chats)
-                titles = await self.name_of_the_groups(groups)
-                dropdown.options = [ft.dropdown.Option(t) for t in titles]
-                result_text.value = f"🔽 Найдено групп: {len(titles)}"
-                page.update()
-                return phone
-            except Exception as e:
-                logger.exception(e)
-                return None
-
         async def start_group_parsing(_):
-            phone = await load_groups()
+            phone = await self.load_groups(page, dropdown, result_text)
             logger.warning(f"🔍 Аккаунт: {phone}")
             client = await self.tg_connect.get_telegram_client(page, phone, path_accounts_folder)
             if not dropdown.value:
@@ -206,6 +187,15 @@ class ParsingGroupMembers:
         limit_active_user.disabled = False
         dropdown.disabled = False
         parse_button.disabled = False
+
+        # Выравнивание элементов управления
+        admin_switch.expand = True
+        members_switch.expand = True
+        account_groups_switch.expand = True
+
+        account_group_selection_switch.expand = True
+        active_switch.expand = True
+        contacts_switch.expand = True
         page.update()
 
         # Представление (View)
@@ -218,8 +208,8 @@ class ParsingGroupMembers:
                 ft.Column([
                     file_text,
                     pick_button,
-                    ft.Row([admin_switch, members_switch, account_groups_switch, account_group_selection_switch,
-                            active_switch]),
+                    ft.Row([admin_switch, members_switch, account_groups_switch, ]),
+                    ft.Row([account_group_selection_switch, active_switch, contacts_switch, ]),
                     chat_input,
                     ft.Divider(),
                     ft.Row([chat_input_active, limit_active_user]),
@@ -232,6 +222,29 @@ class ParsingGroupMembers:
         )
         page.views.append(view)
         page.update()
+
+    async def load_groups(self, page, dropdown, result_text):
+        try:
+            selected = page.session.get("selected_sessions") or []
+            if not selected:
+                await log_and_display("⚠️ Сначала выберите аккаунт", page)
+                return
+
+            session_path = selected[0]
+            phone = os.path.splitext(os.path.basename(session_path))[0]
+            logger.warning(f"🔍 Работаем с аккаунтом {phone}")
+            client = await self.tg_connect.get_telegram_client(page, phone, path_accounts_folder)
+            result = await client(
+                GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+            groups = await self.filtering_groups(result.chats)
+            titles = await self.name_of_the_groups(groups)
+            dropdown.options = [ft.dropdown.Option(t) for t in titles]
+            result_text.value = f"🔽 Найдено групп: {len(titles)}"
+            page.update()
+            return phone
+        except Exception as e:
+            logger.exception(e)
+            return None
 
     async def parsing_group_members(self, data, page):
         """Главный метод для запуска процесса парсинга групп и отображения статуса в интерфейсе."""
