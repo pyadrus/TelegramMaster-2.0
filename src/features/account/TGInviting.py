@@ -55,7 +55,8 @@ class InvitingToAGroup:
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         # Создаем выпадающий список с названиями групп
-        dropdown = ft.Dropdown(width=line_width_button, options=[ft.DropdownOption(link[0]) for link in links_inviting], autofocus=True)
+        dropdown = ft.Dropdown(width=line_width_button, options=[ft.DropdownOption(link[0]) for link in links_inviting],
+                               autofocus=True)
 
         async def inviting_without_limits(_):
             """
@@ -75,7 +76,8 @@ class InvitingToAGroup:
                     await self.general_invitation_to_the_group(page, dropdown)
 
                 await log_and_display("Запуск программы в 00 минут каждого часа", page)
-                self.scheduler.hourly(dt.time(minute=00, second=00), general_invitation_group_scheduler)  # Асинхронная функция для выполнения
+                self.scheduler.hourly(dt.time(minute=00, second=00),
+                                      general_invitation_group_scheduler)  # Асинхронная функция для выполнения
                 while True:
                     await asyncio.sleep(1)
             except Exception as error:
@@ -89,8 +91,10 @@ class InvitingToAGroup:
             try:
                 async def general_invitation_group_scheduler():
                     await self.general_invitation_to_the_group(page, dropdown)
+
                 await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", page)
-                self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)), general_invitation_group_scheduler)
+                self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)),
+                                    general_invitation_group_scheduler)
                 while True:
                     await asyncio.sleep(1)
             except Exception as error:

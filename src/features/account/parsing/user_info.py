@@ -5,6 +5,7 @@ from telethon.tl.types import (User, UserProfilePhoto,
                                UserStatusLastWeek, UserStatusOffline,
                                UserStatusOnline, UserStatusRecently)
 
+
 class UserInfo:
 
     @staticmethod

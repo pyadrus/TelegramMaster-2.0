@@ -56,8 +56,10 @@ async def main_menu_program(page: ft.Page):
                                                     on_click=lambda _: page.go("/account_connection_menu")),
                                   # 📨 Отправка сообщений в личку
                                   ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                                    text=translations["ru"]["message_sending_menu"]["sending_personal_messages_with_limits"],
-                                                    on_click=lambda _: page.go("/sending_files_to_personal_account_with_limits")), ]),
+                                                    text=translations["ru"]["message_sending_menu"][
+                                                        "sending_personal_messages_with_limits"],
+                                                    on_click=lambda _: page.go(
+                                                        "/sending_files_to_personal_account_with_limits")), ]),
                           # ❤️ Работа с реакциями
                           ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
                                                     text=translations["ru"]["menu"]["reactions"],
@@ -88,7 +90,8 @@ async def main_menu_program(page: ft.Page):
                                             on_click=lambda _: page.go("/documentation")),
                           # 💬 Рассылка сообщений по чатам
                           ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
-                                            text=translations["ru"]["message_sending_menu"]["sending_messages_via_chats"],
+                                            text=translations["ru"]["message_sending_menu"][
+                                                "sending_messages_via_chats"],
                                             on_click=lambda _: page.go("/sending_messages_files_via_chats")),
                           # 📋 Импорт списка от ранее спарсенных данных
                           ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,

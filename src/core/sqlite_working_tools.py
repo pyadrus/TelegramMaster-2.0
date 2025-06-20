@@ -4,12 +4,14 @@ import sqlite3
 
 import flet as ft
 from loguru import logger
-from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField, fn, IntegerField
+from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField, fn, \
+    IntegerField
 
 from src.core.configs import path_folder_database
 from src.gui.gui import log_and_display
 
 db = SqliteDatabase(path_folder_database)
+
 
 class WritingGroupLinks(Model):
     """
@@ -21,6 +23,7 @@ class WritingGroupLinks(Model):
         database = db
         table_name = 'writing_group_links'
 
+
 async def read_writing_group_links():
     """
     Считывает все ссылки на группы из таблицы writing_group_links.
@@ -30,18 +33,13 @@ async def read_writing_group_links():
 
     db.connect(reuse_if_open=True)
 
-
     links = [entry.writing_group_links for entry in WritingGroupLinks.select()]
     return links
-
-
-
 
 
 # Запись ссылки на группу в таблицу writing_group_links
 async def write_to_single_column_table_peewee(data: list[str]):
     db.connect()
-
 
     for line in set(data):
         cleaned_line = line.strip()
@@ -50,6 +48,7 @@ async def write_to_single_column_table_peewee(data: list[str]):
         except Exception as e:
             logger.exception(e)
     db.close()
+
 
 class GroupsAndChannels(Model):
     """

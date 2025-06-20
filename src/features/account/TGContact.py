@@ -182,7 +182,8 @@ class TGContact:
         """
         try:
             entities.append(
-                [await UserInfo().get_username(user), await UserInfo().get_user_id(user), await UserInfo().get_access_hash(user),
+                [await UserInfo().get_username(user), await UserInfo().get_user_id(user),
+                 await UserInfo().get_access_hash(user),
                  await UserInfo().get_first_name(user), await UserInfo().get_last_name(user),
                  await UserInfo().get_user_phone(user),
                  await UserInfo().get_user_online_status(user),

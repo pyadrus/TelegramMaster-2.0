@@ -165,37 +165,6 @@ async def working_with_contacts_menu(page: ft.Page):
                  ])]))
 
 
-async def menu_parsing(page: ft.Page):
-    """
-    Парсинг меню
-
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    """
-    page.views.append(
-        ft.View("/parsing",
-                [await GUIProgram().key_app_bar(),
-                 ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["parsing"],
-                     ft.TextStyle(size=20, weight=ft.FontWeight.BOLD, foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
-                                                                                  ft.Colors.PURPLE])), ), ), ], ),
-                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     # 🔍 Парсинг одной группы / групп
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["parsing_menu"]["parse_single_or_multiple_groups"],
-                                       on_click=lambda _: page.go("/parsing_single_groups")),
-                     # 📂 Парсинг выбранной группы из подписанных пользователем
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["parsing_menu"]["parse_selected_user_subscribed_group"],
-                                       on_click=lambda _: page.go("/parsing_selected_group_user_subscribed")),
-                     # 👥 Парсинг активных участников группы
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["parsing_menu"]["parse_active_group_members"],
-                                       on_click=lambda _: page.go("/parsing_active_group_members")),
-
-
-                 ])]))
-
-
 async def reactions_menu(page: ft.Page):
     """
     Меню работа с реакциями
@@ -273,83 +242,6 @@ async def subscribe_and_unsubscribe_menu(page: ft.Page):
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                        text=translations["ru"]["subscribe_unsubscribe_menu"]["unsubscribe"],
                                        on_click=lambda _: page.go("/unsubscribe_all")),
-                 ])]))
-
-
-async def connecting_accounts_by_number_menu(page: ft.Page):
-    """
-    Меню подключения аккаунтов по номеру телефона
-
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    """
-    page.views.append(
-        ft.View("/connecting_accounts_by_number",
-                [await GUIProgram().key_app_bar(),
-                 ft.Text(spans=[ft.TextSpan(
-                     translations["ru"]["account_connect_menu"]["connecting_accounts_by_phone_number"],
-                     ft.TextStyle(
-                         size=20,
-                         weight=ft.FontWeight.BOLD,
-                         foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
-                                                                                  ft.Colors.PURPLE])), ), ), ], ),
-                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-
-                     ft.Row(
-                         # 🤖 Для автоответчика
-                         [ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                            text=translations["ru"]["account_connection_menu"][
-                                                "for_the_answering_machine"],
-                                            on_click=lambda _: page.go("/account_connection_number_answering_machine")),
-                          # 📝 Для редактирования BIO
-                          ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                            text=translations["ru"]["account_connection_menu"]["to_edit_bio"],
-                                            on_click=lambda _: page.go("/account_connection_number_bio"))]),
-                     # 📞 Для работы с номерами
-                     ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"][
-                                                   "to_work_with_numbers"],
-                                               on_click=lambda _: page.go("/account_connection_number_contact")),
-                             # 👥 Для создания групп
-                             ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"]["to_create_groups"],
-                                               on_click=lambda _: page.go("/account_connection_number_creating"))]),
-                     # 🔗 Для инвайтинга
-                     ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"]["for_inviting"],
-                                               on_click=lambda _: page.go("/account_connection_number_inviting")),
-                             # 📊 Для парсинга
-                             ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"]["for_parsing"],
-                                               on_click=lambda _: page.go("/account_connection_number_parsing"))]),
-                     # 🎭 Для работы с реакциями
-                     ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"][
-                                                   "to_work_with_reactions"],
-                                               on_click=lambda _: page.go("/account_connection_number_reactions")),
-                             # 👍 Для проставления реакций
-                             ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"][
-                                                   "for_marking_reactions"],
-                                               on_click=lambda _: page.go(
-                                                   "/account_connection_number_reactions_list"))]),
-                     # ✉️ Для рассылки сообщений
-                     ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"]["to_send_messages"],
-                                               on_click=lambda _: page.go("/account_connection_number_send_message")),
-                             # 🔔 Для подписки
-                             ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"]["to_subscribe"],
-                                               on_click=lambda _: page.go("/account_connection_number_subscription"))]),
-                     # 🚫 Для отписки
-                     ft.Row([ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"]["to_unsubscribe"],
-                                               on_click=lambda _: page.go("/account_connection_number_unsubscribe")),
-                             # 📈 Для накрутки просмотров
-                             ft.ElevatedButton(width=small_button_width, height=BUTTON_HEIGHT,
-                                               text=translations["ru"]["account_connection_menu"]["to_boost_views"],
-                                               on_click=lambda _: page.go("/account_connection_number_viewing"))]),
-
                  ])]))
 
 

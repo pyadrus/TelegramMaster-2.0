@@ -26,7 +26,6 @@ class ToggleController:
             self.account_group_selection_switch.value = False
         page.update()
 
-
     def toggle_members_switch(self, page):
         """Обработчик переключателя участников"""
         if self.members_switch.value:
