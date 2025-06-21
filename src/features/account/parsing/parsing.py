@@ -38,6 +38,79 @@ async def collect_user_log_data(user):
     }
 
 
+async def save_group_channel_info(dialog, title, about, link, participants_count):
+    """
+    Функция сохраняет или обновляет информацию о группе или канале в базе данных.
+
+    :param dialog: объект диалогового окна Telegram API
+    :param title: заголовок группы или канала
+    :param about: описание группы или канала
+    :param link: ссылка на группу или канал
+    :param participants_count: количество участников группы или канала
+    """
+    with db.atomic():
+        GroupsAndChannels.insert(
+            id=dialog.id,
+            title=title,
+            about=about,
+            link=link,
+            members_count=participants_count,
+            parsing_time=datetime.now()
+        ).on_conflict(
+            conflict_target=[GroupsAndChannels.id],
+            preserve=[GroupsAndChannels.id],
+            update={
+                GroupsAndChannels.title: title,
+                GroupsAndChannels.about: about,
+                GroupsAndChannels.link: link,
+                GroupsAndChannels.members_count: participants_count,
+                GroupsAndChannels.parsing_time: datetime.now(),
+            }
+        ).execute()
+
+
+async def administrators_entries_in_database(log_data):
+    """Запись в базу данных всех администраторов."""
+    with db.atomic():
+        MembersAdmin.create(
+            username=log_data["username"],
+            user_id=log_data["user_id"],
+            access_hash=log_data["access_hash"],
+            first_name=log_data["first_name"],
+            last_name=log_data["last_name"],
+            phone=log_data["phone"],
+            online_at=log_data["online_at"],
+            photo_status=log_data["photo_status"],
+            premium_status=log_data["premium_status"],
+            user_status=log_data["user_status"],
+            bio=log_data["bio"],
+            group_name=log_data["group"],
+        )
+
+
+async def add_member_to_db(log_data):
+    """
+    Добавляет нового участника в базу данных или обновляет существующие данные.
+
+    :param log_data: словарь с информацией о пользователе
+    """
+    # Проверка существования пользователя в БД и атомарная запись новых данных
+    with db.atomic():
+        MembersGroups.get_or_create(
+            user_id=log_data["user_id"],
+            defaults={
+                "username": log_data["username"],
+                "access_hash": log_data["access_hash"],
+                "first_name": log_data["first_name"],
+                "last_name": log_data["last_name"],
+                "user_phone": log_data["user_phone"],
+                "online_at": log_data["online_at"],
+                "photos_id": log_data["photos_id"],
+                "user_premium": log_data["user_premium"],
+            }
+        )
+
+
 async def parse_group(groups_wr, page) -> None:
     """
     Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
@@ -149,8 +222,6 @@ class ParsingGroupMembers:
             limit_active_user.disabled = False
 
             dropdown.disabled = False
-            # btn_active_parse.disabled = False
-            # btn_group_parse.disabled = False
             parse_button.disabled = False
 
             page.update()
@@ -159,7 +230,8 @@ class ParsingGroupMembers:
         file_text = ft.Text(value="📂 Выберите .session файл", size=14)
         file_picker = ft.FilePicker(on_result=btn_click_file_picker)
         page.overlay.append(file_picker)
-        pick_button = ft.ElevatedButton(text="📁 Выбрать session файл", width=line_width_button, height=BUTTON_HEIGHT, on_click=lambda _: file_picker.pick_files(allow_multiple=False))
+        pick_button = ft.ElevatedButton(text="📁 Выбрать session файл", width=line_width_button, height=BUTTON_HEIGHT,
+                                        on_click=lambda _: file_picker.pick_files(allow_multiple=False))
 
         # Кнопки-переключатели
         account_groups_switch = ft.CupertinoSwitch(label="Группы аккаунта", value=False, disabled=True)
@@ -171,7 +243,8 @@ class ParsingGroupMembers:
         # Todo добавить работу
         contacts_switch = ft.CupertinoSwitch(label="Контакты", value=False, disabled=True)
 
-        ToggleController(admin_switch, account_groups_switch, members_switch, account_group_selection_switch, active_switch).element_handler(page)
+        ToggleController(admin_switch, account_groups_switch, members_switch, account_group_selection_switch,
+                         active_switch).element_handler(page)
 
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
@@ -353,21 +426,7 @@ class ParsingGroupMembers:
                             existing_user = MembersAdmin.select().where(
                                 MembersAdmin.user_id == log_data["user_id"]).first()
                             if not existing_user:
-                                with db.atomic():
-                                    MembersAdmin.create(
-                                        username=log_data["username"],
-                                        user_id=log_data["user_id"],
-                                        access_hash=log_data["access_hash"],
-                                        first_name=log_data["first_name"],
-                                        last_name=log_data["last_name"],
-                                        phone=log_data["phone"],
-                                        online_at=log_data["online_at"],
-                                        photo_status=log_data["photo_status"],
-                                        premium_status=log_data["premium_status"],
-                                        user_status=log_data["user_status"],
-                                        bio=log_data["bio"],
-                                        group_name=log_data["group"],
-                                    )
+                                await administrators_entries_in_database(log_data)
                             else:
                                 await log_and_display(
                                     f"⚠️ Пользователь с user_id {log_data['user_id']} уже есть в базе. Пропущен.", page)
@@ -402,25 +461,18 @@ class ParsingGroupMembers:
         """
         Парсинг активных пользователей в чате.
         """
-        # client = None
         try:
             client = await self.tg_connect.get_telegram_client(page, phone_number,
                                                                account_directory=path_accounts_folder)
             await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input, page)
-
             try:
                 await asyncio.sleep(int(time_activity_user_2 or 5))
             except TypeError:
                 await asyncio.sleep(5)
-
             # Все операции с Telegram API должны быть здесь
             await self.get_active_users(client, chat_input, limit_active_user, page)
-
         except Exception as error:
             logger.exception(error)
-        # finally:
-        #     if client and client.is_connected():
-        #         await client.disconnect()
 
     async def get_active_users(self, client, chat, limit_active_user, page) -> None:
         """
@@ -434,35 +486,19 @@ class ParsingGroupMembers:
         try:
             entity = await client.get_entity(chat)
             async for message in client.iter_messages(entity, limit=limit_active_user):
-                # async for message in client.iter_messages(chat, limit=int(limit_active_user)):
                 from_id = getattr(message, 'from_id', None)
                 if from_id:
                     user = await client.get_entity(from_id)
-                    # if message.from_id is not None:
                     try:
                         await log_and_display(f"{message.from_id}", page)
                         # Получаем входную сущность пользователя
-                        # user = await client.get_entity(message.from_id.user_id)  # Получаем полную сущность
                         from_user = InputUser(user_id=await UserInfo().get_user_id(user),
                                               access_hash=await UserInfo().get_access_hash(user))  # Создаем InputUser
                         await log_and_display(f"{from_user}", page)
                         # Получаем данные о пользователе
                         log_data = await collect_user_log_data(user)
                         await log_and_display(f"{log_data}", page)
-                        with db.atomic():  # Атомарная транзакция для записи данных
-                            MembersGroups.get_or_create(
-                                user_id=log_data["user_id"],
-                                defaults={
-                                    "username": log_data["username"],
-                                    "access_hash": log_data["access_hash"],
-                                    "first_name": log_data["first_name"],
-                                    "last_name": log_data["last_name"],
-                                    "user_phone": log_data["user_phone"],
-                                    "online_at": log_data["online_at"],
-                                    "photos_id": log_data["photos_id"],
-                                    "user_premium": log_data["user_premium"],
-                                },
-                            )
+                        await add_member_to_db(log_data)
                     except ValueError as e:
                         await log_and_display(
                             f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}", page, )
@@ -516,65 +552,33 @@ class ParsingGroupMembers:
             async for dialog in client.iter_dialogs():
                 try:
                     entity = await client.get_entity(dialog.id)
-
                     # Пропускаем личные чаты
                     from telethon.tl.types import Chat, Channel
                     if isinstance(entity, Chat):
                         logger.debug(f"💬 Пропущен личный чат: {dialog.id}")
                         continue
-
                     # Проверяем, является ли супергруппой или каналом
                     if not getattr(entity, 'megagroup', False) and not getattr(entity, 'broadcast', False):
                         continue
-
                     full_channel_info = await client(functions.channels.GetFullChannelRequest(channel=entity))
                     chat = full_channel_info.full_chat
-
                     if not hasattr(chat, 'participants_count'):
                         logger.warning(f"⚠️ participants_count отсутствует для {dialog.id}")
                         continue
-
                     participants_count = chat.participants_count
                     username = getattr(entity, 'username', None)
                     link = f"https://t.me/{username}" if username else None
-
                     title = entity.title or "Без названия"
                     about = getattr(chat, 'about', '')
-
                     # Логируем информацию
-                    await log_and_display(
-                        f"{dialog.id}, {title}, {link or 'без ссылки'}, {participants_count}",
-                        page,
-                    )
-
-                    # Сохраняем/обновляем запись в БД
-                    with db.atomic():
-                        GroupsAndChannels.insert(
-                            id=dialog.id,
-                            title=title,
-                            about=about,
-                            link=link,
-                            members_count=participants_count,
-                            parsing_time=datetime.datetime.now()
-                        ).on_conflict(
-                            conflict_target=[GroupsAndChannels.id],
-                            preserve=[GroupsAndChannels.id],
-                            update={
-                                GroupsAndChannels.title: title,
-                                GroupsAndChannels.about: about,
-                                GroupsAndChannels.link: link,
-                                GroupsAndChannels.members_count: participants_count,
-                                GroupsAndChannels.parsing_time: datetime.datetime.now(),
-                            }
-                        ).execute()
-
+                    await log_and_display(f"{dialog.id}, {title}, {link or 'без ссылки'}, {participants_count}", page, )
+                    await save_group_channel_info(dialog, title, about, link, participants_count)
                 except TypeError as te:
                     logger.warning(f"❌ TypeError при обработке диалога {dialog.id}: {te}")
                     continue
                 except Exception as e:
                     logger.exception(f"⚠️ Ошибка при обработке диалога {dialog.id}: {e}")
                     continue
-
         except Exception as error:
             logger.exception(f"🔥 Критическая ошибка в forming_a_list_of_groups: {error}")
 
