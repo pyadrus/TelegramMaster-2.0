@@ -159,31 +159,26 @@ class ParsingGroupMembers:
         file_text = ft.Text(value="📂 Выберите .session файл", size=14)
         file_picker = ft.FilePicker(on_result=btn_click_file_picker)
         page.overlay.append(file_picker)
-        pick_button = ft.ElevatedButton(text="📁 Выбрать session файл", width=line_width_button, height=BUTTON_HEIGHT,
-                                        on_click=lambda _: file_picker.pick_files(allow_multiple=False))
+        pick_button = ft.ElevatedButton(text="📁 Выбрать session файл", width=line_width_button, height=BUTTON_HEIGHT, on_click=lambda _: file_picker.pick_files(allow_multiple=False))
 
         # Кнопки-переключатели
+        account_groups_switch = ft.CupertinoSwitch(label="Группы аккаунта", value=False, disabled=True)
         admin_switch = ft.CupertinoSwitch(label="Администраторов", value=False, disabled=True)
         members_switch = ft.CupertinoSwitch(label="Участников", value=False, disabled=True)
-        account_groups_switch = ft.CupertinoSwitch(label="Группы аккаунта", value=False, disabled=True)
-        account_group_selection_switch = ft.CupertinoSwitch(label="Выбрать группу", value=False, disabled=True)
         # Todo добавить работу
         active_switch = ft.CupertinoSwitch(label="Активные", value=False, disabled=True)
+        account_group_selection_switch = ft.CupertinoSwitch(label="Выбрать группу", value=False, disabled=True)
         # Todo добавить работу
         contacts_switch = ft.CupertinoSwitch(label="Контакты", value=False, disabled=True)
 
-        ToggleController(admin_switch, account_groups_switch, members_switch,
-                         account_group_selection_switch, active_switch).element_handler(page)
+        ToggleController(admin_switch, account_groups_switch, members_switch, account_group_selection_switch, active_switch).element_handler(page)
 
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
             try:
                 data = chat_input.value.split()
                 logger.info(f"Полученные данные: {data}")  # Отладка
-
                 # Удаляем дубликаты ссылок введенных пользователем
-                # await write_to_single_column_table_peewee(data)
-
                 start = await start_time(page)
                 page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
                 try:
@@ -200,7 +195,6 @@ class ParsingGroupMembers:
                     if account_group_selection_switch.value:  # Парсинг выбранной группы
                         await self.load_groups(page, dropdown, result_text)  # ⬅️ Подгружаем группы
                         await self.start_group_parsing(page, dropdown, result_text)
-
                     await end_time(start, page)
                 except Exception as error:
                     logger.exception(error)
