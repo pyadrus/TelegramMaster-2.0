@@ -105,7 +105,6 @@ async def parse_group(groups_wr, page) -> None:
         return []  # Возвращаем пустой список в случае ошибки
     except Exception as error:
         logger.exception(error)
-        logger.exception(error)
 
 
 class ParsingGroupMembers:
@@ -147,7 +146,6 @@ class ParsingGroupMembers:
             active_switch.disabled = False
 
             chat_input.disabled = False
-            chat_input_active.disabled = False
             limit_active_user.disabled = False
 
             dropdown.disabled = False
@@ -198,7 +196,7 @@ class ParsingGroupMembers:
                         for groups in data:
                             await parse_group(groups, page)
                     if active_switch.value:  # Парсинг активных пользователей
-                        await self.start_active_parsing(page, chat_input_active, limit_active_user)
+                        await self.start_active_parsing(page, limit_active_user)
                     if account_group_selection_switch.value:  # Парсинг выбранной группы
                         await self.load_groups(page, dropdown, result_text)  # ⬅️ Подгружаем группы
                         await self.start_group_parsing(page, dropdown, result_text)
@@ -210,13 +208,10 @@ class ParsingGroupMembers:
                 logger.exception(error)
 
         chat_input = ft.TextField(label="🔗 Введите ссылку на чат...", disabled=True)
-        chat_input_active = ft.TextField(label="🔗 Ссылка для активных", expand=True, disabled=True)
         limit_active_user = ft.TextField(label="💬 Кол-во сообщений", expand=True, disabled=True)
-
         # Выпадающий список для выбора группы
         dropdown = ft.Dropdown(width=line_width_button, options=[], autofocus=True, disabled=True)
         result_text = ft.Text(value="📂 Группы не загружены")
-
         parse_button = ft.ElevatedButton(text="🔍 Парсить", width=line_width_button, height=BUTTON_HEIGHT,
                                          on_click=add_items, disabled=True)
 
@@ -227,7 +222,6 @@ class ParsingGroupMembers:
         account_group_selection_switch.disabled = False
         active_switch.disabled = False
         chat_input.disabled = False
-        chat_input_active.disabled = False
         limit_active_user.disabled = False
         dropdown.disabled = False
         parse_button.disabled = False
@@ -256,7 +250,7 @@ class ParsingGroupMembers:
                     ft.Row([account_group_selection_switch, active_switch, contacts_switch, ]),
                     chat_input,
                     ft.Divider(),
-                    ft.Row([chat_input_active, limit_active_user]),
+                    ft.Row([limit_active_user]),
                     ft.Divider(),
                     result_text,
                     dropdown,
@@ -276,7 +270,7 @@ class ParsingGroupMembers:
             return
         await log_and_display(f"▶️ Парсинг группы: {dropdown.value}", page)
         logger.warning(f"🔍 Парсим группу: {dropdown.value}")
-        await parse_group(client, dropdown.value, page)
+        await parse_group(client, groups_wr, page)
         await client.disconnect()
         await log_and_display("🔚 Парсинг завершен", page)
 
@@ -309,7 +303,8 @@ class ParsingGroupMembers:
             phone = os.path.splitext(os.path.basename(session_path))[0]
             logger.warning(f"🔍 Работаем с аккаунтом {phone}")
             client = await self.tg_connect.get_telegram_client(page, phone, path_accounts_folder)
-            result = await client(GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+            result = await client(
+                GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
             groups = await self.filtering_groups(result.chats)
             titles = await self.name_of_the_groups(groups)
             dropdown.options = [ft.dropdown.Option(t) for t in titles]
@@ -445,11 +440,11 @@ class ParsingGroupMembers:
         try:
             entity = await client.get_entity(chat)
             async for message in client.iter_messages(entity, limit=limit_active_user):
-            # async for message in client.iter_messages(chat, limit=int(limit_active_user)):
+                # async for message in client.iter_messages(chat, limit=int(limit_active_user)):
                 from_id = getattr(message, 'from_id', None)
                 if from_id:
                     user = await client.get_entity(from_id)
-                # if message.from_id is not None:
+                    # if message.from_id is not None:
                     try:
                         await log_and_display(f"{message.from_id}", page)
                         # Получаем входную сущность пользователя
