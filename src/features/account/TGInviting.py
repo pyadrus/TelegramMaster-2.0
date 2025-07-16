@@ -6,17 +6,13 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from scheduler.asyncio import Scheduler
 from telethon.errors import (AuthKeyDuplicatedError, AuthKeyUnregisteredError,
-                             BadRequestError, BotGroupsBlockedError,
-                             ChannelPrivateError, ChatAdminRequiredError,
-                             ChatWriteForbiddenError, FloodWaitError,
-                             InviteRequestSentError, PeerFloodError,
-                             SessionRevokedError, TypeNotFoundError,
-                             UserBannedInChannelError,
+                             BadRequestError, BotGroupsBlockedError, ChannelPrivateError, ChatAdminRequiredError,
+                             ChatWriteForbiddenError, FloodWaitError, InviteRequestSentError, PeerFloodError,
+                             SessionRevokedError, TypeNotFoundError, UserBannedInChannelError,
                              UserChannelsTooMuchError, UserDeactivatedBanError,
                              UserIdInvalidError, UserKickedError,
                              UsernameInvalidError, UsernameNotOccupiedError,
-                             UserNotMutualContactError,
-                             UserPrivacyRestrictedError)
+                             UserNotMutualContactError, UserPrivacyRestrictedError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
 from src.core.configs import (BUTTON_HEIGHT, BUTTON_WIDTH, ConfigReader,
@@ -152,8 +148,7 @@ class InvitingToAGroup:
         Получение ссылки для инвайтинга
         """
         try:
-            return await self.db_handler.open_and_read_data(table_name="links_inviting",
-                                                            page=page)  # Открываем базу данных
+            return await self.db_handler.open_and_read_data(table_name="links_inviting", page=page)  # Открываем базу данных
         except Exception as error:
             logger.exception(error)
             raise

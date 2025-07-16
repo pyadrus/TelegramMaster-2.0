@@ -4,8 +4,8 @@ import sqlite3
 
 import flet as ft
 from loguru import logger
-from peewee import SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField, fn, \
-    IntegerField
+from peewee import (SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField, fn,
+                    IntegerField)
 
 from src.core.configs import path_folder_database
 from src.gui.gui import log_and_display
@@ -250,6 +250,7 @@ class DatabaseHandler:
             logger.exception(error)
             raise
 
+    # ToDo Убрать функцию
     async def write_parsed_chat_participants_to_db(self, entities) -> None:
         """
         Запись результатов parsing участников чата
