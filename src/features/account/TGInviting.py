@@ -22,7 +22,7 @@ from telethon.tl.functions.channels import InviteToChannelRequest
 from src.core.configs import (BUTTON_HEIGHT, BUTTON_WIDTH, ConfigReader,
                               limits, line_width_button, path_accounts_folder,
                               time_inviting_1, time_inviting_2)
-from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.sqlite_working_tools import DatabaseHandler, select_records_with_limit
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -162,10 +162,11 @@ class InvitingToAGroup:
         """"
         Получение данных для инвайтинга
         """
-        number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members", limit=None)
+        usernames = select_records_with_limit(limit=None)
+        logger.info(usernames)
         find_filesss = await find_filess(directory_path=path_accounts_folder, extension='session')
         await log_and_display(f"Лимит на аккаунт: {limits}\n"
-                              f"Всего usernames: {len(number_usernames)}\n"
+                              f"Всего usernames: {len(usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"
                               f"Всего подключенных аккаунтов: {len(find_filesss)}\n", page)
 
@@ -177,7 +178,6 @@ class InvitingToAGroup:
         :param dropdown:
         :return:
         """
-
         start = await start_time(page)
         page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
         try:
@@ -188,13 +188,12 @@ class InvitingToAGroup:
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, page)
                 # Получение списка usernames
-                number_usernames: list = await self.db_handler.select_records_with_limit(table_name="members",
-                                                                                         limit=limits)
-                if len(number_usernames) == 0:
+                usernames = select_records_with_limit(limit=limits)
+                if len(usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", page)
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page)
                     break  # Прерываем работу и меняем аккаунт
-                for username in number_usernames:
+                for username in usernames:
                     await log_and_display(f"Пользователь username:{username[0]}", page)
                     # Инвайтинг в группу по полученному списку
 

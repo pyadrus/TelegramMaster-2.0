@@ -19,7 +19,7 @@ from src.core.configs import (
     path_send_message_folder_answering_machine_message,
     time_sending_messages_1, time_sending_messages_2, time_subscription_1,
     time_subscription_2)
-from src.core.sqlite_working_tools import db_handler
+from src.core.sqlite_working_tools import db_handler, select_records_with_limit
 from src.core.utils import (all_find_files, find_files, find_filess,
                             read_json_file, record_and_interrupt,
                             record_inviting_results)
@@ -57,10 +57,10 @@ class SendTelegramMessages:
             # Получаем значение третьего поля и разделяем его на список по пробелам
             account_limits_input = account_limits_inputs.value  # Удаляем лишние пробелы
             if account_limits_input:  # Если поле не пустое
-                account_limits = account_limits_input  # Разделяем строку по пробелам
-                await log_and_display(f"{account_limits}", page)
+                limits = account_limits_input  # Разделяем строку по пробелам
+                await log_and_display(f"{limits}", page)
             else:
-                account_limits = ConfigReader().get_limits()
+                limits = ConfigReader().get_limits()
             if time_from < time_to:
                 try:
                     # Просим пользователя ввести расширение сообщения
@@ -70,12 +70,10 @@ class SendTelegramMessages:
                                                                            account_directory=path_accounts_folder)
                         try:
                             # Открываем parsing список user_data/software_database.db для inviting в группу
-                            number_usernames: list = await db_handler.select_records_with_limit(table_name="members",
-                                                                                                limit=int(
-                                                                                                    account_limits))
+                            usernames = select_records_with_limit(limit=int(limits))
                             # Количество аккаунтов на данный момент в работе
-                            await log_and_display(f"Всего username: {len(number_usernames)}", page)
-                            for rows in number_usernames:
+                            await log_and_display(f"Всего username: {len(usernames)}", page)
+                            for rows in usernames:
                                 username = rows[
                                     0]  # Получаем имя аккаунта из базы данных user_data/software_database.db
                                 await log_and_display(f"[!] Отправляем сообщение: {username}", page)

@@ -131,6 +131,30 @@ class MembersGroups(Model):
         table_name = 'members'
 
 
+def select_records_with_limit(limit):
+    """Возвращает список usernames и user_id из таблицы members"""
+    usernames = []
+    query = MembersGroups.select(MembersGroups.username, MembersGroups.user_id)
+    for row in query:
+        if row.username == "":
+            logger.info(f"У пользователя User ID: {row.user_id} нет username", )
+        else:
+            logger.info(f"Username: {row.username}, User ID: {row.user_id}", )
+            usernames.append(row.username)
+
+    if limit is None:  # Если limit не указан, возвращаем все записи
+        return usernames
+    return usernames[:limit]  # Возвращаем первые limit записей, если указан
+
+
+class LinksInviting(Model):
+    links_inviting = CharField(unique=True)
+
+    class Meta:
+        database = db
+        table_name = 'links_inviting'
+
+
 def remove_duplicates():
     """
     Удаление дублирующихся id в таблице groups_and_channels
