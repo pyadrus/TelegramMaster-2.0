@@ -13,10 +13,9 @@ from telethon.errors import (AuthKeyDuplicatedError, AuthKeyUnregisteredError, B
                              UserNotMutualContactError, UserPrivacyRestrictedError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-from src.core.configs import (BUTTON_HEIGHT, BUTTON_WIDTH, ConfigReader,
-                              limits, line_width_button, path_accounts_folder,
-                              time_inviting_1, time_inviting_2)
-from src.core.sqlite_working_tools import DatabaseHandler, select_records_with_limit
+from src.core.configs import (BUTTON_HEIGHT, BUTTON_WIDTH, ConfigReader, limits, line_width_button,
+                              path_accounts_folder, time_inviting_1, time_inviting_2)
+from src.core.sqlite_working_tools import select_records_with_limit, get_links_inviting
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -29,7 +28,6 @@ from src.locales.translations_loader import translations
 class InvitingToAGroup:
 
     def __init__(self):
-        self.db_handler = DatabaseHandler()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
         self.tg_connect = TGConnect()
         self.config_reader = ConfigReader()
@@ -45,7 +43,7 @@ class InvitingToAGroup:
         list_view.controls.clear()  # ✅ Очистка логов перед новым запуском
         page.controls.append(list_view)  # Добавляем ListView на страницу для отображения логов 📝
         page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-        links_inviting = await self.getting_an_invitation_link_from_database(page)  # Получение ссылки для инвайтинга
+        links_inviting = get_links_inviting()  # Получаем список ссылок на группы для инвайтинга из базы данных
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         # Создаем выпадающий список с названиями групп
@@ -140,17 +138,6 @@ class InvitingToAGroup:
                                            on_click=launching_invite_every_day_certain_time),
                      ])]))
         page.update()  # обновляем страницу после добавления элементов управления 🔄
-
-    async def getting_an_invitation_link_from_database(self, page: ft.Page):
-        """"
-        Получение ссылки для инвайтинга
-        """
-        try:
-            return await self.db_handler.open_and_read_data(table_name="links_inviting",
-                                                            page=page)  # Открываем базу данных
-        except Exception as error:
-            logger.exception(error)
-            raise
 
     async def data_for_inviting(self, page: ft.Page):
         """"

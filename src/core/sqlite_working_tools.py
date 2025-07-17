@@ -155,6 +155,14 @@ class LinksInviting(Model):
         table_name = 'links_inviting'
 
 
+def get_links_inviting():
+    """Получаем ссылки на группы из таблицы links_inviting"""
+    links_inviting = []
+    for link in LinksInviting.select(LinksInviting.links_inviting):
+        links_inviting.append(link.links_inviting)
+    return links_inviting
+
+
 def remove_duplicates():
     """
     Удаление дублирующихся id в таблице groups_and_channels
