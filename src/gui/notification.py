@@ -11,7 +11,7 @@ async def show_notification(page: ft.Page, message: str):
     :param message: Текст уведомления.
     """
     # Переход обратно после закрытия диалога
-    dlg = ft.AlertDialog(title=ft.Text(message), on_dismiss=lambda e: page.go("/"))
+    dlg = ft.AlertDialog(title=ft.Text(message))
     page.overlay.append(dlg)
     dlg.open = True
     page.update()

@@ -5,13 +5,11 @@ import datetime as dt
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from scheduler.asyncio import Scheduler
-from telethon.errors import (AuthKeyDuplicatedError, AuthKeyUnregisteredError,
-                             BadRequestError, BotGroupsBlockedError, ChannelPrivateError, ChatAdminRequiredError,
-                             ChatWriteForbiddenError, FloodWaitError, InviteRequestSentError, PeerFloodError,
-                             SessionRevokedError, TypeNotFoundError, UserBannedInChannelError,
-                             UserChannelsTooMuchError, UserDeactivatedBanError,
-                             UserIdInvalidError, UserKickedError,
-                             UsernameInvalidError, UsernameNotOccupiedError,
+from telethon.errors import (AuthKeyDuplicatedError, AuthKeyUnregisteredError, BadRequestError, BotGroupsBlockedError,
+                             ChannelPrivateError, ChatAdminRequiredError, ChatWriteForbiddenError, FloodWaitError,
+                             InviteRequestSentError, PeerFloodError, SessionRevokedError, TypeNotFoundError,
+                             UserBannedInChannelError, UserChannelsTooMuchError, UserDeactivatedBanError,
+                             UserIdInvalidError, UserKickedError, UsernameInvalidError, UsernameNotOccupiedError,
                              UserNotMutualContactError, UserPrivacyRestrictedError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
@@ -224,7 +222,6 @@ class InvitingToAGroup:
                         await log_and_display(translations["ru"]["errors"]["type_or_scope"], page)
                     except BadRequestError:
                         await log_and_display(translations["ru"]["errors"]["chat_member_add_failed"], page)
-
                     # Ошибка инвайтинга прерываем работу
                     except ChatWriteForbiddenError:
                         await log_and_display(translations["ru"]["errors"]["chat_write_forbidden"], page)
