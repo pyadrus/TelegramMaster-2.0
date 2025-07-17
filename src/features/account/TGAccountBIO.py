@@ -11,7 +11,7 @@ from src.core.utils import find_files, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.gui.buttons import function_button_ready
 from src.gui.gui import log_and_display
-from src.gui.menu import show_notification
+from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
 
 

@@ -24,7 +24,7 @@ from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
-from src.gui.menu import show_notification
+from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
 
 
@@ -148,7 +148,8 @@ class InvitingToAGroup:
         Получение ссылки для инвайтинга
         """
         try:
-            return await self.db_handler.open_and_read_data(table_name="links_inviting", page=page)  # Открываем базу данных
+            return await self.db_handler.open_and_read_data(table_name="links_inviting",
+                                                            page=page)  # Открываем базу данных
         except Exception as error:
             logger.exception(error)
             raise

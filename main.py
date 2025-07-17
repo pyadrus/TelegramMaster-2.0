@@ -11,7 +11,7 @@ from src.core.configs import (program_name, program_version, date_of_program_cha
                               time_inviting_1, time_inviting_2, time_changing_accounts_1, time_changing_accounts_2,
                               time_subscription_1, time_subscription_2)
 from src.core.sqlite_working_tools import (DatabaseHandler, db, MembersGroups, WritingGroupLinks, GroupsAndChannels,
-                                           MembersAdmin)
+                                           MembersAdmin, LinksInviting)
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
 from src.features.account.TGConnect import TGConnect
@@ -29,8 +29,9 @@ from src.features.settings.setting import SettingPage, get_unique_filename, reac
 from src.gui.gui import end_time, start_time
 from src.gui.main_menu import main_menu_program
 from src.gui.menu import (bio_editing_menu, settings_menu, reactions_menu,
-                          subscribe_and_unsubscribe_menu, viewing_posts_menu, show_notification,
+                          subscribe_and_unsubscribe_menu, viewing_posts_menu,
                           working_with_contacts_menu)
+from src.gui.notification import show_notification
 
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
 
@@ -44,6 +45,8 @@ async def main(page: ft.Page):
     """
     db.connect()
     db.create_tables([MembersGroups, WritingGroupLinks, GroupsAndChannels, MembersAdmin])
+    db.create_tables([LinksInviting])  # Создаем таблицу для хранения ссылок для инвайтинга
+    db.create_tables([MembersGroups])  # Создаем таблицу для хранения спарсенных пользователей
 
     page.title = f"{program_name}: {program_version} (Дата изменения {date_of_program_change})"
     page.window.width = window_width  # Ширина окна

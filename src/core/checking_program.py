@@ -2,9 +2,9 @@
 import flet as ft
 
 from src.core.configs import path_send_message_folder_answering_machine_message, path_folder_with_messages, limits
-from src.core.sqlite_working_tools import db_handler, db, LinksInviting, MembersGroups, select_records_with_limit
+from src.core.sqlite_working_tools import db_handler, select_records_with_limit
 from src.core.utils import find_filess
-from src.gui.menu import show_notification
+from src.gui.notification import show_notification
 
 
 class CheckingProgram:
@@ -29,8 +29,6 @@ class CheckingProgram:
         ⛔ Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        db.create_tables([LinksInviting])  # Создаем таблицу для хранения ссылок для инвайтинга
-        db.create_tables([MembersGroups])  # Создаем таблицу для хранения спарсенных пользователей
         if len(select_records_with_limit(limit=limits)) == 0:
             await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
         if len(await db_handler.select_records_with_limit(table_name="links_inviting", limit=limits)) == 0:

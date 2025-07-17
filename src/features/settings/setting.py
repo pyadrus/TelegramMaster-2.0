@@ -10,7 +10,7 @@ import flet as ft  # Импортируем библиотеку flet
 from src.core.configs import BUTTON_HEIGHT, line_width_button
 from src.core.sqlite_working_tools import DatabaseHandler
 from src.gui.gui import list_view, log_and_display
-from src.gui.menu import show_notification
+from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
 
 config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=True)

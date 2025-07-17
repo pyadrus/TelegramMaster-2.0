@@ -23,7 +23,7 @@ from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
 from src.features.proxy.checking_proxy import checking_the_proxy_for_work, reading_proxy_data_from_the_database
 from src.gui.gui import end_time, log_and_display, start_time
-from src.gui.menu import show_notification
+from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
 
 
