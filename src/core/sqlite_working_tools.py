@@ -235,6 +235,7 @@ def cleaning_db(table_name):
     if table_name == 'links_inviting':  # Удаляем все записи из таблицы links_inviting
         LinksInviting.delete().execute()
 
+
 class DatabaseHandler:
 
     def __init__(self, db_file=path_folder_database):
@@ -399,59 +400,25 @@ class DatabaseHandler:
         self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def write_to_single_column_table(self, name_database, database_columns, into_columns, recorded_data) -> None:
-        """
-        Запись данных в таблицу с одной колонкой в базу данных
-
-        :param name_database: название таблицы
-        :param database_columns: название колон
-        :param into_columns: название колонки в таблице
-        :param recorded_data: данные для записи
-        """
-        await self.connect()
-        # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
-        self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {name_database}({database_columns})''')
-        for line in recorded_data:
-            # strip() - удаляет с конца и начала строки лишние пробелы, в том числе символ окончания строки
-            lines = line.strip()
-            self.cursor.execute(f'''INSERT INTO {into_columns} VALUES (?)''', (lines,))
-            self.sqlite_connection.commit()
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
-
-    # async def cleaning_db(self, name_database_table) -> None:
+    # async def write_to_single_column_table(self, name_database, database_columns, into_columns, recorded_data) -> None:
     #     """
-    #     Очистка указанной таблицы (name_database_table) в базе данных.
+    #     Запись данных в таблицу с одной колонкой в базу данных
     #
-    #     Этот метод устанавливает соединение с базой данных, удаляет все записи из указанной таблицы (name_database_table),
-    #     затем фиксирует изменения. После этого закрывает соединение с базой данных.
-    #
-    #     :param name_database_table: Название таблицы в базе данных
+    #     :param name_database: название таблицы
+    #     :param database_columns: название колон
+    #     :param into_columns: название колонки в таблице
+    #     :param recorded_data: данные для записи
     #     """
     #     await self.connect()
-    #     # Удаляем таблицу members, функция execute отвечает за SQL-запрос DELETE FROM - команда удаления базы данных
-    #     # name_database_table - название таблицы в базе данных
-    #     self.cursor.execute(f'''DELETE FROM {name_database_table};''')
-    #     self.sqlite_connection.commit()
+    #     # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
+    #     self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {name_database}({database_columns})''')
+    #     for line in recorded_data:
+    #         # strip() - удаляет с конца и начала строки лишние пробелы, в том числе символ окончания строки
+    #         lines = line.strip()
+    #         self.cursor.execute(f'''INSERT INTO {into_columns} VALUES (?)''', (lines,))
+    #         self.sqlite_connection.commit()
     #     self.close()  # cursor_members.close() – закрытие соединения с БД.
-
-    # async def remove_records_without_username(self, page: ft.Page) -> None:
-    #     """Чистка списка от участников у которых нет username"""
-    #     await log_and_display(f"Чищу список software_database.db от участников у которых нет username", page)
-    #     await self.connect()
-    #     self.cursor.execute('''SELECT *
-    #                            from members''')
-    #     records: list = self.cursor.fetchall()
-    #     await log_and_display(f"Всего username: {len(records)}", page)
-    #     for rows in records:
-    #         ints_list1 = {"username": rows[0]}
-    #         username = ints_list1["username"]
-    #         username_name = "NONE"
-    #         if username == username_name:
-    #             # Удаляем пользователя без username
-    #             self.cursor.execute('''DELETE
-    #                                    from members
-    #                                    where username = ?''', (username_name,))
-    #             self.sqlite_connection.commit()
 
 
 db_handler = DatabaseHandler()
+# 458

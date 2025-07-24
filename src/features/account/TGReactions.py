@@ -11,7 +11,6 @@ from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import SendReactionRequest
 
 from src.core.configs import path_accounts_folder
-from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess, read_json_file
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -26,7 +25,6 @@ class WorkingWithReactions:
     """
 
     def __init__(self):
-        self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 

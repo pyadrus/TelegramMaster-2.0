@@ -8,7 +8,6 @@ from loguru import logger  # Импортируем библиотеку loguru 
 from telethon.tl.functions.messages import GetMessagesViewsRequest
 
 from src.core.configs import path_accounts_folder
-from src.core.sqlite_working_tools import DatabaseHandler
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -22,7 +21,6 @@ class ViewingPosts:
     """
 
     def __init__(self):
-        self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
 

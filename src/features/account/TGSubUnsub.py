@@ -19,7 +19,7 @@ from telethon.tl.functions.messages import ImportChatInviteRequest
 from src.core.configs import (BUTTON_HEIGHT, line_width_button,
                               path_accounts_folder, time_subscription_1,
                               time_subscription_2)
-from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_filess, record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.gui.gui import end_time, list_view, log_and_display, start_time
@@ -29,7 +29,6 @@ from src.locales.translations_loader import translations
 class SubscribeUnsubscribeTelegram:
 
     def __init__(self):
-        self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
 
     @staticmethod
@@ -165,7 +164,7 @@ class SubscribeUnsubscribeTelegram:
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder)
                 # Получение ссылки
-                links_inviting: list = await self.db_handler.open_and_read_data(table_name="writing_group_links",
+                links_inviting: list = await db_handler.open_and_read_data(table_name="writing_group_links",
                                                                                 page=page)  # Открываем базу данных
                 await log_and_display(f"Ссылка для подписки и проверки:  {links_inviting}", page)
                 for link_tuple in links_inviting:
@@ -277,7 +276,7 @@ class SubscribeUnsubscribeTelegram:
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}",
                 page)
-            await self.db_handler.write_data_to_db("""SELECT *
+            await db_handler.write_data_to_db("""SELECT *
                                                       from writing_group_links""",
                                                    """DELETE
                                                       from writing_group_links

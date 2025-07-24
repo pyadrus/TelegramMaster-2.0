@@ -7,7 +7,7 @@ from loguru import logger
 from telethon import functions, types
 
 from src.core.configs import path_accounts_folder
-from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.parsing import UserInfo
@@ -21,7 +21,6 @@ class TGContact:
     """
 
     def __init__(self):
-        self.db_handler = DatabaseHandler()
         self.tg_connect = TGConnect()
 
     async def show_account_contact_list(self, page: ft.Page) -> None:
@@ -49,7 +48,7 @@ class TGContact:
             entities: list = []  # Создаем список сущностей
             for contact in await self.get_and_parse_contacts(client, page):  # Выводим результат parsing
                 await self.get_user_data(contact, entities)
-            await self.db_handler.write_parsed_chat_participants_to_db(entities)
+            await db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
             logger.exception(error)
 
@@ -65,7 +64,7 @@ class TGContact:
             for user in await self.get_and_parse_contacts(client, page):  # Выводим результат parsing
                 await self.get_user_data(user, entities)
                 await self.we_show_and_delete_the_contact_of_the_phone_book(client, user, page)
-            await self.db_handler.write_parsed_chat_participants_to_db(entities)
+            await db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
             logger.exception(error)
 
@@ -141,7 +140,7 @@ class TGContact:
         :param page: Страница интерфейса
         """
         try:
-            records: list = await self.db_handler.open_and_read_data(table_name="contact", page=page)
+            records: list = await db_handler.open_and_read_data(table_name="contact", page=page)
             await log_and_display(f"Всего номеров: {len(records)}", page)
             entities: list = []  # Создаем список сущностей
             for rows in records:
@@ -160,13 +159,13 @@ class TGContact:
                     await asyncio.sleep(4)
                     # Запись результатов parsing в файл members_contacts.db, для дальнейшего inviting
                     # После работы с номером телефона, программа удаляет номер со списка
-                    await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
+                    await db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
                 except ValueError:
                     await log_and_display(translations["ru"]["errors"]["contact_not_registered_or_cannot_add"], page)
                     # После работы с номером телефона, программа удаляет номер со списка
-                    await self.db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
+                    await db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
             client.disconnect()  # Разрываем соединение telegram
-            await self.db_handler.write_parsed_chat_participants_to_db(entities)
+            await db_handler.write_parsed_chat_participants_to_db(entities)
         except Exception as error:
             logger.exception(error)
 
