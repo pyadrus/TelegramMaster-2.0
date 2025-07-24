@@ -53,7 +53,8 @@ async def checking_the_proxy_for_work(page: ft.Page) -> None:
         logger.exception(error)
 
 
-async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, page: ft.Page) -> None:
+async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns,
+                                                page: ft.Page) -> None:
     """Подключение к proxy с проверкой на работоспособность где: proxy_type - тип proxy (например: SOCKS5),
     addr - адрес (например: 194.67.248.9), port - порт (например: 9795), username - логин (например: username),
     password - пароль (например: password)
@@ -64,7 +65,6 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
     :param username: логин (например: username)
     :param password: пароль (например: password)
     :param rdns: rdns (например: rdns)
-    :param db_handler: объект класса DatabaseHandler
     :param page: страница
     """
     # Пробуем подключиться по прокси
