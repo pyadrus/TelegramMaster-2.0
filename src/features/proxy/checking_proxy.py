@@ -5,7 +5,7 @@ import flet as ft
 import requests
 from loguru import logger
 
-from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.sqlite_working_tools import DatabaseHandler, deleting_an_invalid_proxy
 from src.features.auth.logging_in import get_country_flag
 from src.gui.gui import log_and_display
 
@@ -48,13 +48,12 @@ async def checking_the_proxy_for_work(page: ft.Page) -> None:
                                                         username=proxy_dic[3],  # Логин (например: username)
                                                         password=proxy_dic[4],  # Пароль (например: password)
                                                         rdns=proxy_dic[5],
-                                                        db_handler=DatabaseHandler(), page=page)
+                                                        page=page)
     except Exception as error:
         logger.exception(error)
 
 
-async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, db_handler,
-                                                page: ft.Page) -> None:
+async def connecting_to_proxy_with_verification(proxy_type, addr, port, username, password, rdns, page: ft.Page) -> None:
     """Подключение к proxy с проверкой на работоспособность где: proxy_type - тип proxy (например: SOCKS5),
     addr - адрес (например: 194.67.248.9), port - порт (например: 9795), username - логин (например: username),
     password - пароль (например: password)
@@ -82,6 +81,6 @@ async def connecting_to_proxy_with_verification(proxy_type, addr, port, username
     # Это может быть из-за недоступности сервера, ошибочного URL или других проблем с соединением.
     except requests.exceptions.RequestException:
         await log_and_display(f"❌ Proxy не рабочий!", page)
-        await db_handler.deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns)
+        await deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns, page)
     except Exception as error:
         logger.exception(error)

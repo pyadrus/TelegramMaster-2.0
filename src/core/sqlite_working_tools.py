@@ -382,27 +382,6 @@ class DatabaseHandler:
             await log_and_display(f"❌ Ошибка: {e}", page)
             return  # Выходим из функции write_data_to_db
 
-    async def deleting_an_invalid_proxy(self, proxy_type, addr, port, username, password, rdns, page: ft.Page) -> None:
-        """
-        Удаляем не рабочий proxy с software_database.db, таблица proxy
-
-        :param page: Объект класса Page, который будет использоваться для отображения данных.
-        :param proxy_type: тип proxy
-        :param addr: адрес
-        :param port: порт
-        :param username: имя пользователя
-        :param password: пароль
-        :param rdns: прокси
-        """
-        await self.connect()
-        self.cursor.execute(
-            f"DELETE FROM proxy WHERE proxy_type='{proxy_type}' AND addr='{addr}' AND port='{port}' AND "
-            f"username='{username}' AND password='{password}' AND rdns='{rdns}'"
-        )
-        await log_and_display(f"{self.cursor.rowcount} rows deleted", page)
-        self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
-
     async def delete_row_db(self, table, column, value) -> None:
         """
         Удаляет строку из таблицы
@@ -452,41 +431,30 @@ def save_proxy_data_to_db(proxy) -> None:
             password=proxy["password"],
             rdns=proxy["rdns"],
         )
-    # await self.connect()
-    # self.cursor.execute('''CREATE TABLE IF NOT EXISTS proxy
-    #                        (
-    #                            proxy_type,
-    #                            addr,
-    #                            port,
-    #                            username,
-    #                            password,
-    #                            rdns
-    #                        )''')
-    # self.cursor.executemany(
-    #     '''INSERT INTO proxy(proxy_type, addr, port, username, password, rdns)
-    #        VALUES (?, ?, ?, ?, ?, ?)''',
-    #     (proxy,), )
-    # self.sqlite_connection.commit()
-    # self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    # async def write_to_single_column_table(self, name_database, database_columns, into_columns, recorded_data) -> None:
-    #     """
-    #     Запись данных в таблицу с одной колонкой в базу данных
-    #
-    #     :param name_database: название таблицы
-    #     :param database_columns: название колон
-    #     :param into_columns: название колонки в таблице
-    #     :param recorded_data: данные для записи
-    #     """
-    #     await self.connect()
-    #     # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
-    #     self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {name_database}({database_columns})''')
-    #     for line in recorded_data:
-    #         # strip() - удаляет с конца и начала строки лишние пробелы, в том числе символ окончания строки
-    #         lines = line.strip()
-    #         self.cursor.execute(f'''INSERT INTO {into_columns} VALUES (?)''', (lines,))
-    #         self.sqlite_connection.commit()
-    #     self.close()  # cursor_members.close() – закрытие соединения с БД.
+
+async def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, rdns, page: ft.Page) -> None:
+    """
+    Удаляем не рабочий proxy с software_database.db, таблица proxy
+
+    :param page: Объект класса Page, который будет использоваться для отображения данных.
+    :param proxy_type: тип proxy
+    :param addr: адрес
+    :param port: порт
+    :param username: имя пользователя
+    :param password: пароль
+    :param rdns: прокси
+    """
+    query = Proxy.delete().where(
+        (Proxy.proxy_type == proxy_type) &
+        (Proxy.addr == addr) &
+        (Proxy.port == port) &
+        (Proxy.username == username) &
+        (Proxy.password == password) &
+        (Proxy.rdns == rdns)
+    )
+    deleted_count = query.execute()
+    await log_and_display(f"{deleted_count} rows deleted", page)
 
 
 db_handler = DatabaseHandler()
