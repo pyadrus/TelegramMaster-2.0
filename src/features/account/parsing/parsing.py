@@ -14,8 +14,7 @@ from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import (ChannelParticipantsAdmins, ChannelParticipantsSearch, InputPeerEmpty, InputUser)
 
 from src.core.configs import (line_width_button, path_accounts_folder, time_activity_user_2, BUTTON_HEIGHT)
-from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, MembersGroups, db, add_member_to_db,
-                                           add_member_to_db)
+from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, db, add_member_to_db)
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.features.account.parsing.gui_elements import GUIProgram

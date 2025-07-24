@@ -166,6 +166,7 @@ def create_database():
     db.create_tables([LinksInviting])  # Создаем таблицу для хранения ссылок для инвайтинга
     db.create_tables([MembersGroups])  # Создаем таблицу для хранения спарсенных пользователей
     db.create_tables([Contact])  # Создаем таблицу для хранения контактов
+    db.create_tables([Proxy])  # Создаем таблицу для хранения прокси
 
 
 def write_to_single_column_table():
@@ -420,24 +421,53 @@ class DatabaseHandler:
             self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def save_proxy_data_to_db(self, proxy) -> None:
-        """Запись данных proxy в базу данных"""
-        await self.connect()
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS proxy
-                               (
-                                   proxy_type,
-                                   addr,
-                                   port,
-                                   username,
-                                   password,
-                                   rdns
-                               )''')
-        self.cursor.executemany(
-            '''INSERT INTO proxy(proxy_type, addr, port, username, password, rdns)
-               VALUES (?, ?, ?, ?, ?, ?)''',
-            (proxy,), )
-        self.sqlite_connection.commit()
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
+
+"""Работа с таблицей proxy"""
+
+
+class Proxy(Model):
+    """
+    Таблица для хранения прокси в таблице proxy
+    """
+    proxy_type = CharField(max_length=255)
+    addr = CharField(max_length=255)
+    port = CharField(max_length=255)
+    username = CharField(max_length=255)
+    password = CharField(max_length=255)
+    rdns = CharField(max_length=255)
+
+    class Meta:
+        database = db
+        table_name = 'proxy'
+
+
+def save_proxy_data_to_db(proxy) -> None:
+    """Запись данных proxy в базу данных"""
+    with db.atomic():
+        Proxy.get_or_create(
+            proxy_type=proxy["proxy_type"],
+            addr=proxy["addr"],
+            port=proxy["port"],
+            username=proxy["username"],
+            password=proxy["password"],
+            rdns=proxy["rdns"],
+        )
+    # await self.connect()
+    # self.cursor.execute('''CREATE TABLE IF NOT EXISTS proxy
+    #                        (
+    #                            proxy_type,
+    #                            addr,
+    #                            port,
+    #                            username,
+    #                            password,
+    #                            rdns
+    #                        )''')
+    # self.cursor.executemany(
+    #     '''INSERT INTO proxy(proxy_type, addr, port, username, password, rdns)
+    #        VALUES (?, ?, ?, ?, ?, ?)''',
+    #     (proxy,), )
+    # self.sqlite_connection.commit()
+    # self.close()  # cursor_members.close() – закрытие соединения с БД.
 
     # async def write_to_single_column_table(self, name_database, database_columns, into_columns, recorded_data) -> None:
     #     """

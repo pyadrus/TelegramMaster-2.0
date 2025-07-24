@@ -8,7 +8,7 @@ import sys
 import flet as ft  # Импортируем библиотеку flet
 
 from src.core.configs import BUTTON_HEIGHT, line_width_button
-from src.core.sqlite_working_tools import DatabaseHandler, cleaning_db
+from src.core.sqlite_working_tools import DatabaseHandler, cleaning_db, save_proxy_data_to_db
 from src.gui.gui import list_view, log_and_display
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
@@ -41,9 +41,15 @@ class SettingPage:
         password_type = ft.TextField(label="Введите пароль, например ySfCfk: ", multiline=True, max_lines=19)
 
         async def btn_click(_) -> None:
-            await self.db_handler.save_proxy_data_to_db(
-                proxy=[proxy_type.value, addr_type.value, port_type.value, username_type.value, password_type.value,
-                       "True"])
+            proxy = {
+                "proxy_type": proxy_type.value,
+                "addr": addr_type.value,
+                "port": port_type.value,
+                "username": username_type.value,
+                "password": password_type.value,
+                "rdns": "True"
+            }
+            save_proxy_data_to_db(proxy=proxy)
             await show_notification(page, "Данные успешно записаны!")
             page.go("/settings")  # Изменение маршрута в представлении существующих настроек
             page.update()
@@ -98,7 +104,8 @@ class SettingPage:
             data = text_to_send.value.split()
             # Удаляем дубликаты
             unique_records = list(set(data))
-            await self.db_handler.write_to_single_column_table(name_database=table_name, database_columns=column_name, into_columns=into_columns, recorded_data=unique_records)
+            await self.db_handler.write_to_single_column_table(name_database=table_name, database_columns=column_name,
+                                                               into_columns=into_columns, recorded_data=unique_records)
             await show_notification(page, "Данные успешно записаны!")
             page.go(route)
             page.update()
