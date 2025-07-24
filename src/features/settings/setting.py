@@ -8,7 +8,7 @@ import sys
 import flet as ft  # Импортируем библиотеку flet
 
 from src.core.configs import BUTTON_HEIGHT, line_width_button
-from src.core.sqlite_working_tools import DatabaseHandler
+from src.core.sqlite_working_tools import DatabaseHandler, cleaning_db
 from src.gui.gui import list_view, log_and_display
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
@@ -91,8 +91,9 @@ class SettingPage:
 
         async def write_data(clear_before: bool = False) -> None:
             """Запись данных в БД с опцией предварительной очистки"""
-            if clear_before:
-                await self.db_handler.cleaning_db(name_database_table=table_name)
+
+            if clear_before:  # Проверяем, нужно ли очищать таблицу перед записью данных
+                cleaning_db(table_name=table_name)  # Очищаем таблицу перед записью данных
 
             data = text_to_send.value.split()
             # Удаляем дубликаты

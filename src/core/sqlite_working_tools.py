@@ -208,6 +208,33 @@ def remove_duplicates():
             record.delete_instance()
 
 
+class Contact(Model):
+    """
+    Таблица для хранения данных администраторов групп в таблице members_admin
+    """
+    contact = CharField(max_length=255, null=True)
+
+    class Meta:
+        database = db
+        table_name = 'contact'
+
+
+# TODO добавить все используемые таблицы
+def cleaning_db(table_name):
+    """
+    Очистка базы данных
+    :param table_name: Название таблицы, данные из которой требуется очистить.
+    """
+
+    if table_name == 'members':  # Удаляем все записи из таблицы members
+        MembersGroups.delete().execute()
+    if table_name == 'contact':  # Удаляем все записи из таблицы contact
+        Contact.delete().execute()
+    if table_name == 'writing_group_links':  # Удаляем все записи из таблицы writing_group_links
+        WritingGroupLinks.delete().execute()
+    if table_name == 'links_inviting':  # Удаляем все записи из таблицы links_inviting
+        LinksInviting.delete().execute()
+
 class DatabaseHandler:
 
     def __init__(self, db_file=path_folder_database):
@@ -391,40 +418,40 @@ class DatabaseHandler:
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def cleaning_db(self, name_database_table) -> None:
-        """
-        Очистка указанной таблицы (name_database_table) в базе данных.
+    # async def cleaning_db(self, name_database_table) -> None:
+    #     """
+    #     Очистка указанной таблицы (name_database_table) в базе данных.
+    #
+    #     Этот метод устанавливает соединение с базой данных, удаляет все записи из указанной таблицы (name_database_table),
+    #     затем фиксирует изменения. После этого закрывает соединение с базой данных.
+    #
+    #     :param name_database_table: Название таблицы в базе данных
+    #     """
+    #     await self.connect()
+    #     # Удаляем таблицу members, функция execute отвечает за SQL-запрос DELETE FROM - команда удаления базы данных
+    #     # name_database_table - название таблицы в базе данных
+    #     self.cursor.execute(f'''DELETE FROM {name_database_table};''')
+    #     self.sqlite_connection.commit()
+    #     self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-        Этот метод устанавливает соединение с базой данных, удаляет все записи из указанной таблицы (name_database_table),
-        затем фиксирует изменения. После этого закрывает соединение с базой данных.
-
-        :param name_database_table: Название таблицы в базе данных
-        """
-        await self.connect()
-        # Удаляем таблицу members, функция execute отвечает за SQL-запрос DELETE FROM - команда удаления базы данных
-        # name_database_table - название таблицы в базе данных
-        self.cursor.execute(f'''DELETE FROM {name_database_table};''')
-        self.sqlite_connection.commit()
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
-
-    async def remove_records_without_username(self, page: ft.Page) -> None:
-        """Чистка списка от участников у которых нет username"""
-        await log_and_display(f"Чищу список software_database.db от участников у которых нет username", page)
-        await self.connect()
-        self.cursor.execute('''SELECT *
-                               from members''')
-        records: list = self.cursor.fetchall()
-        await log_and_display(f"Всего username: {len(records)}", page)
-        for rows in records:
-            ints_list1 = {"username": rows[0]}
-            username = ints_list1["username"]
-            username_name = "NONE"
-            if username == username_name:
-                # Удаляем пользователя без username
-                self.cursor.execute('''DELETE
-                                       from members
-                                       where username = ?''', (username_name,))
-                self.sqlite_connection.commit()
+    # async def remove_records_without_username(self, page: ft.Page) -> None:
+    #     """Чистка списка от участников у которых нет username"""
+    #     await log_and_display(f"Чищу список software_database.db от участников у которых нет username", page)
+    #     await self.connect()
+    #     self.cursor.execute('''SELECT *
+    #                            from members''')
+    #     records: list = self.cursor.fetchall()
+    #     await log_and_display(f"Всего username: {len(records)}", page)
+    #     for rows in records:
+    #         ints_list1 = {"username": rows[0]}
+    #         username = ints_list1["username"]
+    #         username_name = "NONE"
+    #         if username == username_name:
+    #             # Удаляем пользователя без username
+    #             self.cursor.execute('''DELETE
+    #                                    from members
+    #                                    where username = ?''', (username_name,))
+    #             self.sqlite_connection.commit()
 
 
 db_handler = DatabaseHandler()

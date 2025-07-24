@@ -6,10 +6,8 @@ from src.core.sqlite_working_tools import read_parsed_chat_participants_from_db
 
 class ReceivingAndRecording:
 
-    # def __init__(self):
-    #     self.db_handler = DatabaseHandler()
-
-    async def write_data_to_excel(self, file_name):
+    @staticmethod
+    async def write_data_to_excel(file_name):
         """
         Запись данных в Excel файл.
         :param file_name: Имя файла для сохранения данных
