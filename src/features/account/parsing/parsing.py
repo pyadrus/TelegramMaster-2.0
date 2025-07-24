@@ -14,7 +14,8 @@ from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import (ChannelParticipantsAdmins, ChannelParticipantsSearch, InputPeerEmpty, InputUser)
 
 from src.core.configs import (line_width_button, path_accounts_folder, time_activity_user_2, BUTTON_HEIGHT)
-from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, MembersGroups, db)
+from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, MembersGroups, db, add_member_to_db,
+                                           add_member_to_db)
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.features.account.parsing.gui_elements import GUIProgram
@@ -88,29 +89,6 @@ async def administrators_entries_in_database(log_data):
         )
 
 
-async def add_member_to_db(log_data):
-    """
-    Добавляет нового участника в базу данных или обновляет существующие данные.
-
-    :param log_data: словарь с информацией о пользователе
-    """
-    # Проверка существования пользователя в БД и атомарная запись новых данных
-    with db.atomic():
-        MembersGroups.get_or_create(
-            user_id=log_data["user_id"],
-            defaults={
-                "username": log_data["username"],
-                "access_hash": log_data["access_hash"],
-                "first_name": log_data["first_name"],
-                "last_name": log_data["last_name"],
-                "user_phone": log_data["user_phone"],
-                "online_at": log_data["online_at"],
-                "photos_id": log_data["photos_id"],
-                "user_premium": log_data["user_premium"],
-            }
-        )
-
-
 async def parse_group(groups_wr, page) -> None:
     """
     Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
@@ -159,20 +137,8 @@ async def parse_group(groups_wr, page) -> None:
             logger.info(f"Полученные данные: {user}")
             # user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
             log_data = await collect_user_log_data(user)
-            with db.atomic():  # Атомарная транзакция для записи данных
-                MembersGroups.get_or_create(
-                    user_id=log_data["user_id"],
-                    defaults={
-                        "username": log_data["username"],
-                        "access_hash": log_data["access_hash"],
-                        "first_name": log_data["first_name"],
-                        "last_name": log_data["last_name"],
-                        "user_phone": log_data["user_phone"],
-                        "online_at": log_data["online_at"],
-                        "photos_id": log_data["photos_id"],
-                        "user_premium": log_data["user_premium"],
-                    },
-                )
+            add_member_to_db(log_data)
+
     except TypeError as error:
         logger.exception(f"❌ Ошибка: {error}")
         return []  # Возвращаем пустой список в случае ошибки

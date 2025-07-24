@@ -158,6 +158,7 @@ def cleaning_db(table_name):
     if table_name == 'links_inviting':  # Удаляем все записи из таблицы links_inviting
         LinksInviting.delete().execute()
 
+
 def create_database():
     """Создает все таблицы в базе данных"""
     db.connect()
@@ -165,7 +166,6 @@ def create_database():
     db.create_tables([LinksInviting])  # Создаем таблицу для хранения ссылок для инвайтинга
     db.create_tables([MembersGroups])  # Создаем таблицу для хранения спарсенных пользователей
     db.create_tables([Contact])  # Создаем таблицу для хранения контактов
-
 
 
 def write_to_single_column_table():
@@ -250,6 +250,29 @@ def remove_duplicate_ids():
                 first = False
                 continue
             record.delete_instance()
+
+
+async def add_member_to_db(log_data):
+    """
+    Добавляет нового участника в базу данных или обновляет существующие данные.
+
+    :param log_data: словарь с информацией о пользователе
+    """
+    # Проверка существования пользователя в БД и атомарная запись новых данных
+    with db.atomic():
+        MembersGroups.get_or_create(
+            user_id=log_data["user_id"],
+            defaults={
+                "username": log_data["username"],
+                "access_hash": log_data["access_hash"],
+                "first_name": log_data["first_name"],
+                "last_name": log_data["last_name"],
+                "user_phone": log_data["user_phone"],
+                "online_at": log_data["online_at"],
+                "photos_id": log_data["photos_id"],
+                "user_premium": log_data["user_premium"],
+            }
+        )
 
 
 class DatabaseHandler:
