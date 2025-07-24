@@ -88,83 +88,6 @@ class MembersAdmin(Model):
         table_name = 'members_admin'
 
 
-def remove_duplicate_ids():
-    """Удаление дублирующихся id в таблице members"""
-    # Получаем все user_id, которые дублируются
-    duplicate_user_ids = (
-        MembersGroups.select(MembersGroups.user_id)
-        .group_by(MembersGroups.user_id)
-        .having(fn.COUNT(MembersGroups.user_id) > 1)
-    )
-
-    for user_id_row in duplicate_user_ids:
-        user_id = user_id_row.user_id
-
-        # Получаем все записи с этим user_id
-        duplicates = MembersGroups.select().where(MembersGroups.user_id == user_id)
-
-        # Сохраняем первую, остальные удаляем
-        first = True
-        for record in duplicates:
-            if first:
-                first = False
-                continue
-            record.delete_instance()
-
-
-class MembersGroups(Model):
-    """
-    Таблица для хранения данных администраторов групп в таблице members_admin
-    """
-    username = CharField(max_length=255, null=True)
-    user_id = BigIntegerField(unique=True)
-    access_hash = BigIntegerField(null=True)
-    first_name = CharField(max_length=255, null=True)
-    last_name = CharField(max_length=255, null=True)
-    user_phone = CharField(max_length=255, null=True)
-    online_at = DateTimeField(null=True)
-    photos_id = CharField(max_length=255, null=True)
-    user_premium = BooleanField(default=False)
-
-    class Meta:
-        database = db
-        table_name = 'members'
-
-
-def read_parsed_chat_participants_from_db():
-    """
-    Чтение данных из базы данных.
-    """
-    data = []
-    query = MembersGroups.select(
-        MembersGroups.username, MembersGroups.user_id, MembersGroups.access_hash, MembersGroups.first_name,
-        MembersGroups.last_name, MembersGroups.user_phone, MembersGroups.online_at, MembersGroups.photos_id,
-        MembersGroups.user_premium
-    )
-    for row in query:
-        data.append((
-            row.username, row.user_id, row.access_hash, row.first_name, row.last_name,
-            row.user_phone, row.online_at, row.photos_id, row.user_premium
-        ))
-    return data
-
-
-def select_records_with_limit(limit):
-    """Возвращает список usernames и user_id из таблицы members"""
-    usernames = []
-    query = MembersGroups.select(MembersGroups.username, MembersGroups.user_id)
-    for row in query:
-        if row.username == "":
-            logger.info(f"У пользователя User ID: {row.user_id} нет username", )
-        else:
-            logger.info(f"Username: {row.username}, User ID: {row.user_id}", )
-            usernames.append(row.username)
-
-    if limit is None:  # Если limit не указан, возвращаем все записи
-        return usernames
-    return usernames[:limit]  # Возвращаем первые limit записей, если указан
-
-
 class LinksInviting(Model):
     links_inviting = CharField(unique=True)
 
@@ -234,6 +157,90 @@ def cleaning_db(table_name):
         WritingGroupLinks.delete().execute()
     if table_name == 'links_inviting':  # Удаляем все записи из таблицы links_inviting
         LinksInviting.delete().execute()
+
+
+def write_to_single_column_table():
+    """Запись username в таблицу members"""
+
+
+"""Работа с таблицей members"""
+
+
+class MembersGroups(Model):
+    """
+    Таблица для хранения данных администраторов групп в таблице members_admin
+    """
+    username = CharField(max_length=255, null=True)
+    user_id = BigIntegerField(unique=True)
+    access_hash = BigIntegerField(null=True)
+    first_name = CharField(max_length=255, null=True)
+    last_name = CharField(max_length=255, null=True)
+    user_phone = CharField(max_length=255, null=True)
+    online_at = DateTimeField(null=True)
+    photos_id = CharField(max_length=255, null=True)
+    user_premium = BooleanField(default=False)
+
+    class Meta:
+        database = db
+        table_name = 'members'
+
+
+def select_records_with_limit(limit):
+    """Возвращает список usernames и user_id из таблицы members"""
+    usernames = []
+    query = MembersGroups.select(MembersGroups.username, MembersGroups.user_id)
+    for row in query:
+        if row.username == "":
+            logger.info(f"У пользователя User ID: {row.user_id} нет username", )
+        else:
+            logger.info(f"Username: {row.username}, User ID: {row.user_id}", )
+            usernames.append(row.username)
+
+    if limit is None:  # Если limit не указан, возвращаем все записи
+        return usernames
+    return usernames[:limit]  # Возвращаем первые limit записей, если указан
+
+
+def read_parsed_chat_participants_from_db():
+    """
+    Чтение данных из базы данных.
+    """
+    data = []
+    query = MembersGroups.select(
+        MembersGroups.username, MembersGroups.user_id, MembersGroups.access_hash, MembersGroups.first_name,
+        MembersGroups.last_name, MembersGroups.user_phone, MembersGroups.online_at, MembersGroups.photos_id,
+        MembersGroups.user_premium
+    )
+    for row in query:
+        data.append((
+            row.username, row.user_id, row.access_hash, row.first_name, row.last_name,
+            row.user_phone, row.online_at, row.photos_id, row.user_premium
+        ))
+    return data
+
+
+def remove_duplicate_ids():
+    """Удаление дублирующихся id в таблице members"""
+    # Получаем все user_id, которые дублируются
+    duplicate_user_ids = (
+        MembersGroups.select(MembersGroups.user_id)
+        .group_by(MembersGroups.user_id)
+        .having(fn.COUNT(MembersGroups.user_id) > 1)
+    )
+
+    for user_id_row in duplicate_user_ids:
+        user_id = user_id_row.user_id
+
+        # Получаем все записи с этим user_id
+        duplicates = MembersGroups.select().where(MembersGroups.user_id == user_id)
+
+        # Сохраняем первую, остальные удаляем
+        first = True
+        for record in duplicates:
+            if first:
+                first = False
+                continue
+            record.delete_instance()
 
 
 class DatabaseHandler:

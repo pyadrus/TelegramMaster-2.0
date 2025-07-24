@@ -98,12 +98,7 @@ class SettingPage:
             data = text_to_send.value.split()
             # Удаляем дубликаты
             unique_records = list(set(data))
-            await self.db_handler.write_to_single_column_table(
-                name_database=table_name,
-                database_columns=column_name,
-                into_columns=into_columns,
-                recorded_data=unique_records
-            )
+            await self.db_handler.write_to_single_column_table(name_database=table_name, database_columns=column_name, into_columns=into_columns, recorded_data=unique_records)
             await show_notification(page, "Данные успешно записаны!")
             page.go(route)
             page.update()
