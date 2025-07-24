@@ -10,8 +10,7 @@ from src.core.configs import (program_name, program_version, date_of_program_cha
                               window_height, window_resizable, time_sending_messages_1, time_sending_messages_2,
                               time_inviting_1, time_inviting_2, time_changing_accounts_1, time_changing_accounts_2,
                               time_subscription_1, time_subscription_2)
-from src.core.sqlite_working_tools import (DatabaseHandler, db, MembersGroups, WritingGroupLinks, GroupsAndChannels,
-                                           MembersAdmin, LinksInviting, Contact)
+from src.core.sqlite_working_tools import (DatabaseHandler, create_database)
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
 from src.features.account.TGConnect import TGConnect
@@ -43,11 +42,7 @@ async def main(page: ft.Page):
     Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
-    db.connect()
-    db.create_tables([MembersGroups, WritingGroupLinks, GroupsAndChannels, MembersAdmin])
-    db.create_tables([LinksInviting])  # Создаем таблицу для хранения ссылок для инвайтинга
-    db.create_tables([MembersGroups])  # Создаем таблицу для хранения спарсенных пользователей
-    db.create_tables([Contact])  # Создаем таблицу для хранения контактов
+    create_database()  # Создание базы данных
 
     page.title = f"{program_name}: {program_version} (Дата изменения {date_of_program_change})"
     page.window.width = window_width  # Ширина окна

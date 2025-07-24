@@ -158,6 +158,15 @@ def cleaning_db(table_name):
     if table_name == 'links_inviting':  # Удаляем все записи из таблицы links_inviting
         LinksInviting.delete().execute()
 
+def create_database():
+    """Создает все таблицы в базе данных"""
+    db.connect()
+    db.create_tables([WritingGroupLinks, GroupsAndChannels, MembersAdmin])
+    db.create_tables([LinksInviting])  # Создаем таблицу для хранения ссылок для инвайтинга
+    db.create_tables([MembersGroups])  # Создаем таблицу для хранения спарсенных пользователей
+    db.create_tables([Contact])  # Создаем таблицу для хранения контактов
+
+
 
 def write_to_single_column_table():
     """Запись username в таблицу members"""
