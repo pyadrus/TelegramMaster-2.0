@@ -131,6 +131,24 @@ class MembersGroups(Model):
         table_name = 'members'
 
 
+def read_parsed_chat_participants_from_db():
+    """
+    Чтение данных из базы данных.
+    """
+    data = []
+    query = MembersGroups.select(
+        MembersGroups.username, MembersGroups.user_id, MembersGroups.access_hash, MembersGroups.first_name,
+        MembersGroups.last_name, MembersGroups.user_phone, MembersGroups.online_at, MembersGroups.photos_id,
+        MembersGroups.user_premium
+    )
+    for row in query:
+        data.append((
+            row.username, row.user_id, row.access_hash, row.first_name, row.last_name,
+            row.user_phone, row.online_at, row.photos_id, row.user_premium
+        ))
+    return data
+
+
 def select_records_with_limit(limit):
     """Возвращает список usernames и user_id из таблицы members"""
     usernames = []
@@ -407,17 +425,6 @@ class DatabaseHandler:
                                        from members
                                        where username = ?''', (username_name,))
                 self.sqlite_connection.commit()
-
-    async def read_parsed_chat_participants_from_db(self):
-        """
-        Чтение данных из базы данных.
-        """
-        await self.connect()
-        self.cursor.execute('''SELECT *
-                               FROM members''')
-        data = self.cursor.fetchall()
-        self.close()
-        return data
 
 
 db_handler = DatabaseHandler()
