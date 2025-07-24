@@ -4,7 +4,8 @@
 class ToggleController:
     """Обработчики для взаимоисключающего поведения"""
 
-    def __init__(self, admin_switch, account_groups_switch, members_switch, account_group_selection_switch, active_switch):
+    def __init__(self, admin_switch, account_groups_switch, members_switch, account_group_selection_switch,
+                 active_switch):
         self.admin_switch = admin_switch
         self.account_groups_switch = account_groups_switch
         self.members_switch = members_switch
@@ -55,7 +56,6 @@ class ToggleController:
             self.members_switch.value = False
             self.account_groups_switch.value = False
         page.update()
-
 
     def element_handler(self, page):
         """Присоединяем обработчики к элементам интерфейса"""

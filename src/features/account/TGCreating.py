@@ -108,7 +108,8 @@ class CreatingGroupsAndChats:
                                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                      text=translations["ru"]["create_groups_menu"][
                                                          "choose_session_files"],
-                                                     on_click=lambda _: pick_files_dialog.pick_files(allow_multiple=True)),
+                                                     on_click=lambda _: pick_files_dialog.pick_files(
+                                                         allow_multiple=True)),
                                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                                      text=translations["ru"]["buttons"]["start"], on_click=add_items),
                                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,

@@ -243,6 +243,3 @@ async def subscribe_and_unsubscribe_menu(page: ft.Page):
                                        text=translations["ru"]["subscribe_unsubscribe_menu"]["unsubscribe"],
                                        on_click=lambda _: page.go("/unsubscribe_all")),
                  ])]))
-
-
-

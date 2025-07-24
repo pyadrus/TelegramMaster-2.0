@@ -165,7 +165,7 @@ class SubscribeUnsubscribeTelegram:
                                                                    account_directory=path_accounts_folder)
                 # Получение ссылки
                 links_inviting: list = await db_handler.open_and_read_data(table_name="writing_group_links",
-                                                                                page=page)  # Открываем базу данных
+                                                                           page=page)  # Открываем базу данных
                 await log_and_display(f"Ссылка для подписки и проверки:  {links_inviting}", page)
                 for link_tuple in links_inviting:
                     link = link_tuple[0]
@@ -278,10 +278,10 @@ class SubscribeUnsubscribeTelegram:
                 page)
             await db_handler.write_data_to_db("""SELECT *
                                                       from writing_group_links""",
-                                                   """DELETE
-                                                      from writing_group_links
-                                                      where writing_group_links = ?""",
-                                                   groups_wr, page)
+                                              """DELETE
+                                                 from writing_group_links
+                                                 where writing_group_links = ?""",
+                                              groups_wr, page)
         except PeerFloodError:
             await log_and_display(translations["ru"]["errors"]["peer_flood"], page, level="error")
             await asyncio.sleep(random.randrange(50, 60))
