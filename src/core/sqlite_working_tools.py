@@ -4,7 +4,6 @@ import sqlite3
 
 import flet as ft
 from loguru import logger
-from openai import models
 from peewee import (SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField, fn,
                     IntegerField)
 
@@ -383,23 +382,14 @@ class DatabaseHandler:
             await log_and_display(f"❌ Ошибка: {e}", page)
             return  # Выходим из функции write_data_to_db
 
-async def delete_row_db(table, column, value) -> None:
+
+def delete_row_db(username) -> None:
     """
     Удаляет строку из таблицы
 
-    :param table: имя таблицы
-    :param column: имя колонки
-    :param value: значение
+    :param username: Имя пользователя
     """
-    if table == 'members':
-        model = MembersGroups
-    else:
-        raise ValueError(f"Неверное имя таблицы: {table}. ")
-    field = getattr(model, column, None)
-    if field is None:
-        raise  ValueError(f"Неверное имя колонки: {column}. ")
-    # Удаляем строки, соответствующие условию
-    model.delete().where(field == value).execute()
+    MembersGroups.delete().where(MembersGroups.username == username).execute()
 
     # await connect()
     # cursor.execute(f'''SELECT * from {table}''')  # Считываем таблицу
