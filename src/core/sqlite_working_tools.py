@@ -363,24 +363,14 @@ class DatabaseHandler:
             self.sqlite_connection.commit()
         self.close()  # cursor_members.close() – закрытие соединения с БД.
 
-    async def write_data_to_db(self, creating_a_table, writing_data_to_a_table, entities, page: ft.Page) -> None:
-        """
-        Запись действий аккаунта в базу данных
 
-        :param creating_a_table: создание таблицы
-        :param writing_data_to_a_table: запись данных в таблицу
-        :param entities: список записей в таблице
-        :param page: Объект класса Page, который будет использоваться для отображения данных.
-        """
-        await self.connect()
-        self.cursor.execute(creating_a_table)  # Считываем таблицу
-        try:
-            self.cursor.executemany(writing_data_to_a_table, (entities,))
-            self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
-            self.close()  # cursor_members.close() – закрытие соединения с БД.
-        except sqlite3.ProgrammingError as e:
-            await log_and_display(f"❌ Ошибка: {e}", page)
-            return  # Выходим из функции write_data_to_db
+def write_data_to_db(writing_group_links) -> None:
+    """
+    Запись действий аккаунта в базу данных
+
+    :param writing_group_links: Ссылка на группу
+    """
+    MembersGroups.delete().where(WritingGroupLinks.writing_group_links == writing_group_links).execute()
 
 
 def delete_row_db(username) -> None:

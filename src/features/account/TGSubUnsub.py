@@ -14,7 +14,7 @@ from telethon.tl.functions.messages import ImportChatInviteRequest
 
 from src.core.configs import (BUTTON_HEIGHT, line_width_button, path_accounts_folder, time_subscription_1,
                               time_subscription_2)
-from src.core.sqlite_working_tools import db_handler
+from src.core.sqlite_working_tools import db_handler, write_data_to_db
 from src.core.utils import find_filess, record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.gui.gui import end_time, list_view, log_and_display, start_time
@@ -271,12 +271,7 @@ class SubscribeUnsubscribeTelegram:
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}",
                 page)
-            await db_handler.write_data_to_db("""SELECT *
-                                                      from writing_group_links""",
-                                              """DELETE
-                                                 from writing_group_links
-                                                 where writing_group_links = ?""",
-                                              groups_wr, page)
+            write_data_to_db(groups_wr)
         except PeerFloodError:
             await log_and_display(translations["ru"]["errors"]["peer_flood"], page, level="error")
             await asyncio.sleep(random.randrange(50, 60))
