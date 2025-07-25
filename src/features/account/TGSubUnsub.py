@@ -5,19 +5,14 @@ import random
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions, types
-from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError,
-                             ChannelsTooMuchError, FloodWaitError,
-                             InviteHashExpiredError, InviteHashInvalidError,
-                             InviteRequestSentError, PeerFloodError,
-                             SessionPasswordNeededError, SessionRevokedError,
-                             UserDeactivatedBanError, UsernameInvalidError,
-                             UserNotParticipantError)
-from telethon.tl.functions.channels import (JoinChannelRequest,
-                                            LeaveChannelRequest)
+from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError, ChannelsTooMuchError, FloodWaitError,
+                             InviteHashExpiredError, InviteHashInvalidError, InviteRequestSentError, PeerFloodError,
+                             SessionPasswordNeededError, SessionRevokedError, UserDeactivatedBanError,
+                             UsernameInvalidError, UserNotParticipantError)
+from telethon.tl.functions.channels import JoinChannelRequest, LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-from src.core.configs import (BUTTON_HEIGHT, line_width_button,
-                              path_accounts_folder, time_subscription_1,
+from src.core.configs import (BUTTON_HEIGHT, line_width_button, path_accounts_folder, time_subscription_1,
                               time_subscription_2)
 from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_filess, record_and_interrupt
@@ -245,7 +240,7 @@ class SubscribeUnsubscribeTelegram:
         """
         Подписываемся на группу или канал
 
-        :param groups_wr: str - группа или канал
+        :param groups_wr: Str - группа или канал
         :param client:    TelegramClient - объект клиента
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """

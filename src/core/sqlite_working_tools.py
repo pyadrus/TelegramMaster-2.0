@@ -391,16 +391,6 @@ def delete_row_db(username) -> None:
     """
     MembersGroups.delete().where(MembersGroups.username == username).execute()
 
-    # await connect()
-    # cursor.execute(f'''SELECT * from {table}''')  # Считываем таблицу
-    # try:
-    #     cursor.execute(f'''DELETE from {table} where {column} = ?''', (value,))  # Удаляем строку
-    #     sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
-    # except sqlite3.ProgrammingError:
-    #     cursor.execute(f'''DELETE from {table} where {column} = ?''', value)
-    #     sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
-    # close()  # cursor_members.close() – закрытие соединения с БД.
-
 
 """Работа с таблицей proxy"""
 
@@ -439,7 +429,7 @@ async def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, 
     Удаляем не рабочий proxy с software_database.db, таблица proxy
 
     :param page: Объект класса Page, который будет использоваться для отображения данных.
-    :param proxy_type: тип proxy
+    :param proxy_type: Тип proxy
     :param addr: адрес
     :param port: порт
     :param username: имя пользователя
