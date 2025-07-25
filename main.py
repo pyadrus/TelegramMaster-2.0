@@ -10,7 +10,7 @@ from src.core.configs import (program_name, program_version, date_of_program_cha
                               window_height, window_resizable, time_sending_messages_1, time_sending_messages_2,
                               time_inviting_1, time_inviting_2, time_changing_accounts_1, time_changing_accounts_2,
                               time_subscription_1, time_subscription_2)
-from src.core.sqlite_working_tools import DatabaseHandler, create_database
+from src.core.sqlite_working_tools import create_database, open_and_read_data
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
 from src.features.account.TGConnect import TGConnect
@@ -106,15 +106,12 @@ async def main(page: ft.Page):
             elif page.route == "/creating_contact_list":  # Формирование списка контактов
                 start = await start_time(page=page)
                 logger.info("▶️ Начало Формирования списка контактов")
-                await DatabaseHandler().open_and_read_data(table_name="contact",
-                                                           page=page)  # Удаление списка с контактами
-
+                open_and_read_data(table_name="contact", page=page)  # Удаление списка с контактами
                 # TODO миграция на PEEWEE
                 await SettingPage().output_the_input_field(page=page, label="Введите список номеров телефонов",
                                                            table_name="contact",
                                                            column_name="contact", route="/working_with_contacts",
                                                            into_columns="contact")
-
                 logger.info("🔚 Конец Формирования списка контактов")
                 await end_time(start, page=page)
             elif page.route == "/show_list_contacts":  # Показать список контактов

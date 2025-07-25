@@ -19,7 +19,7 @@ from src.core.configs import (
     path_send_message_folder_answering_machine_message,
     time_sending_messages_1, time_sending_messages_2, time_subscription_1,
     time_subscription_2)
-from src.core.sqlite_working_tools import db_handler, select_records_with_limit
+from src.core.sqlite_working_tools import select_records_with_limit
 from src.core.utils import (all_find_files, find_files, find_filess,
                             read_json_file, record_and_interrupt,
                             record_inviting_results)

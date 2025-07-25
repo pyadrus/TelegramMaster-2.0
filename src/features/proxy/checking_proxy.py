@@ -5,7 +5,7 @@ import flet as ft
 import requests
 from loguru import logger
 
-from src.core.sqlite_working_tools import DatabaseHandler, deleting_an_invalid_proxy
+from src.core.sqlite_working_tools import deleting_an_invalid_proxy
 from src.features.auth.logging_in import get_country_flag
 from src.gui.gui import log_and_display
 
@@ -39,7 +39,7 @@ async def checking_the_proxy_for_work(page: ft.Page) -> None:
     используется для различных тестов.
     """
     try:
-        for proxy_dic in await DatabaseHandler().open_and_read_data(table_name="proxy", page=page):
+        for proxy_dic in await open_and_read_data(table_name="proxy", page=page):
             await log_and_display(f"{proxy_dic}", page)
             # Подключение к proxy с проверкой на работоспособность
             await connecting_to_proxy_with_verification(proxy_type=proxy_dic[0],  # Тип proxy (например: SOCKS5)

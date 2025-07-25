@@ -348,4 +348,10 @@ async def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, 
     deleted_count = query.execute()
     await log_and_display(f"{deleted_count} rows deleted", page)
 
+
+
+def open_and_read_data():
+    pass
+
+
 # 458

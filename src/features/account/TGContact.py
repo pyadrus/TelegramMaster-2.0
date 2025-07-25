@@ -7,7 +7,7 @@ from loguru import logger
 from telethon import functions, types
 
 from src.core.configs import path_accounts_folder
-from src.core.sqlite_working_tools import db_handler, add_member_to_db
+from src.core.sqlite_working_tools import add_member_to_db
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.parsing import UserInfo

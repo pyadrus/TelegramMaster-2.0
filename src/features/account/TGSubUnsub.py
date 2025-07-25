@@ -14,7 +14,7 @@ from telethon.tl.functions.messages import ImportChatInviteRequest
 
 from src.core.configs import (BUTTON_HEIGHT, line_width_button, path_accounts_folder, time_subscription_1,
                               time_subscription_2)
-from src.core.sqlite_working_tools import db_handler, write_data_to_db
+from src.core.sqlite_working_tools import write_data_to_db
 from src.core.utils import find_filess, record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.gui.gui import end_time, list_view, log_and_display, start_time

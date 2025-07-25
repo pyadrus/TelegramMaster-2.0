@@ -17,7 +17,6 @@ from telethon.errors import (ApiIdInvalidError, AuthKeyDuplicatedError,
 from thefuzz import fuzz
 
 from src.core.configs import BUTTON_HEIGHT, ConfigReader, line_width_button, path_accounts_folder
-from src.core.sqlite_working_tools import db_handler
 from src.core.utils import find_filess, working_with_accounts
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
@@ -275,7 +274,7 @@ class TGConnect:
             telegram_client = TelegramClient(session=f"{account_directory}/{session_name}", api_id=self.api_id,
                                              api_hash=self.api_hash, system_version="4.16.30-vxCUSTOM",
                                              proxy=await reading_proxy_data_from_the_database(
-                                                 db_handler=db_handler, page=page))
+                                                 db_handler=None, page=page))
             await telegram_client.connect()
             return telegram_client
         except sqlite3.OperationalError:
@@ -318,7 +317,7 @@ class TGConnect:
             telegram_client = TelegramClient(
                 f"user_data/accounts/{phone_number_value}",
                 api_id=self.api_id, api_hash=self.api_hash, system_version="4.16.30-vxCUSTOM",
-                proxy=await reading_proxy_data_from_the_database(db_handler=db_handler, page=page))
+                proxy=await reading_proxy_data_from_the_database(db_handler=None, page=page))
             await telegram_client.connect()  # Подключаемся к Telegram
             if not await telegram_client.is_user_authorized():
                 await log_and_display(f"Пользователь не авторизован", page)
