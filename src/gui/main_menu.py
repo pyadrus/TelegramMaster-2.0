@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flet as ft
 
-from src.core.configs import BUTTON_HEIGHT, small_button_width, line_width_button, program_name, BUTTON_WIDTH
+from src.core.configs import BUTTON_HEIGHT, small_button_width, line_width_button, program_name
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.locales.translations_loader import translations
 
@@ -24,12 +24,12 @@ async def main_menu_program(page: ft.Page):
                                                                                        ft.Colors.PURPLE])), ), ), ], ),
                       ft.Text(disabled=False,
                               spans=[ft.TextSpan(translations["ru"]["main_menu_texts"]["text_1"]),
-                                     ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"],
+                                     ft.TextSpan(translations["ru"]["main_menu_texts"]["text_link_1"],
                                                  ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                  url=translations["ru"]["main_menu_texts"]["text_2"], ), ], ),
                       ft.Text(disabled=False,
                               spans=[ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"]),
-                                     ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"],
+                                     ft.TextSpan(translations["ru"]["main_menu_texts"]["text_link_2"],
                                                  ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                  url=translations["ru"]["main_menu_texts"]["text_2"], ), ], ),
                       ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
@@ -94,7 +94,7 @@ async def main_menu_program(page: ft.Page):
                                                 "sending_messages_via_chats"],
                                             on_click=lambda _: page.go("/sending_messages_files_via_chats")),
                           # 📋 Импорт списка от ранее спарсенных данных
-                          ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
                                             text=translations["ru"]["parsing_menu"]["importing_a_list_of_parsed_data"],
                                             on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
                       ]), ]))
