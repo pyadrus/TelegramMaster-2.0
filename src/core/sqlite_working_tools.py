@@ -4,6 +4,7 @@ import sqlite3
 
 import flet as ft
 from loguru import logger
+from openai import models
 from peewee import (SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField, fn,
                     IntegerField)
 
@@ -382,23 +383,33 @@ class DatabaseHandler:
             await log_and_display(f"❌ Ошибка: {e}", page)
             return  # Выходим из функции write_data_to_db
 
-    async def delete_row_db(self, table, column, value) -> None:
-        """
-        Удаляет строку из таблицы
+async def delete_row_db(table, column, value) -> None:
+    """
+    Удаляет строку из таблицы
 
-        :param table: имя таблицы
-        :param column: имя колонки
-        :param value: значение
-        """
-        await self.connect()
-        self.cursor.execute(f'''SELECT * from {table}''')  # Считываем таблицу
-        try:
-            self.cursor.execute(f'''DELETE from {table} where {column} = ?''', (value,))  # Удаляем строку
-            self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
-        except sqlite3.ProgrammingError:
-            self.cursor.execute(f'''DELETE from {table} where {column} = ?''', value)
-            self.sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
+    :param table: имя таблицы
+    :param column: имя колонки
+    :param value: значение
+    """
+    if table == 'members':
+        model = MembersGroups
+    else:
+        raise ValueError(f"Неверное имя таблицы: {table}. ")
+    field = getattr(model, column, None)
+    if field is None:
+        raise  ValueError(f"Неверное имя колонки: {column}. ")
+    # Удаляем строки, соответствующие условию
+    model.delete().where(field == value).execute()
+
+    # await connect()
+    # cursor.execute(f'''SELECT * from {table}''')  # Считываем таблицу
+    # try:
+    #     cursor.execute(f'''DELETE from {table} where {column} = ?''', (value,))  # Удаляем строку
+    #     sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
+    # except sqlite3.ProgrammingError:
+    #     cursor.execute(f'''DELETE from {table} where {column} = ?''', value)
+    #     sqlite_connection.commit()  # cursor_members.commit() – применение всех изменений в таблицах БД
+    # close()  # cursor_members.close() – закрытие соединения с БД.
 
 
 """Работа с таблицей proxy"""
