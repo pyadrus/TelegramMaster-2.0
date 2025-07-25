@@ -7,7 +7,7 @@ from loguru import logger
 from telethon import functions, types
 
 from src.core.configs import path_accounts_folder
-from src.core.sqlite_working_tools import db_handler
+from src.core.sqlite_working_tools import db_handler, add_member_to_db
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.parsing import UserInfo
@@ -165,7 +165,7 @@ class TGContact:
                     # После работы с номером телефона, программа удаляет номер со списка
                     await db_handler.delete_row_db(table="contact", column="phone", value=user["phone"])
             client.disconnect()  # Разрываем соединение telegram
-            await db_handler.write_parsed_chat_participants_to_db(entities)
+            add_member_to_db(entities) # Запись должна быть в таблицу members
         except Exception as error:
             logger.exception(error)
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import datetime
-import sqlite3
 
 import flet as ft
 from loguru import logger
@@ -253,7 +252,7 @@ def remove_duplicate_ids():
             record.delete_instance()
 
 
-async def add_member_to_db(log_data):
+def add_member_to_db(log_data):
     """
     Добавляет нового участника в базу данных или обновляет существующие данные.
 
@@ -274,94 +273,6 @@ async def add_member_to_db(log_data):
                 "user_premium": log_data["user_premium"],
             }
         )
-
-
-class DatabaseHandler:
-
-    def __init__(self, db_file=path_folder_database):
-        self.db_file = db_file
-
-    async def connect(self) -> None:
-        """Подключение к базе данных"""
-        self.sqlite_connection = sqlite3.connect(self.db_file)
-        self.cursor = self.sqlite_connection.cursor()
-
-    def close(self) -> None:
-        """Закрытие соединения с базой данных"""
-        self.sqlite_connection.close()
-
-    async def open_and_read_data(self, table_name, page: ft.Page):
-        """
-        Открываем базу и считываем данные из указанной таблицы
-
-        :param table_name: Название таблицы, данные из которой требуется извлечь.
-        :param page: Объект класса Page, который будет использоваться для отображения данных.
-        :return: Список записей из таблицы
-
-        В случае ошибок базы данных (например, поврежденный файл базы данных или некорректный запрос)
-        метод ловит исключения типа `sqlite3.Error` и записывает ошибку в лог, но не выбрасывает её дальше.
-        Это предотвращает аварийное завершение работы программы и позволяет продолжить выполнение.
-        """
-        try:
-            await self.connect()
-            self.cursor.execute(f"SELECT * FROM {table_name}")
-            records = self.cursor.fetchall()
-            self.close()
-            return records
-        except sqlite3.DatabaseError as error:  # Ошибка при открытии базы данных
-            await log_and_display(f"❌ Ошибка при открытии базы данных, возможно база данных повреждена: {error}",
-                                  page)
-            return []
-        except sqlite3.Error as error:  # Ошибка при открытии базы данных
-            await log_and_display(f"❌ Ошибка при открытии базы данных: {error}", page)
-            return []
-        finally:
-            self.close()  # Закрываем соединение
-
-    async def select_records_with_limit(self, table_name, limit) -> list:
-        """
-        Выбирает записи из указанной таблицы БД с возможностью ограничения количества результатов.
-
-        Функция позволяет извлекать записи из заданной таблицы базы данных с учётом лимита на количество элементов.
-        Лимит определяется параметром `limit`. Если этот аргумент равен `None`, возвращаются все записи таблицы.
-
-        :param table_name: Имя таблицы, из которой будут извлечены данные.
-        :param limit: Максимальное количество записей, которое нужно вернуть. Если `None` — вернёт все записи.
-        :return list: Список кортежей с записями из таблицы.
-        """
-        try:
-            await self.connect()  # Подключаемся к базе данных
-            self.cursor.execute(f"SELECT * from {table_name}")  # Выполняем SQL-запрос на чтение всех записей из таблицы
-            # Если указан лимит, используем метод fetchmany(), иначе fetchall()
-            if limit is not None:
-                records: list = self.cursor.fetchmany(limit)
-            else:
-                records: list = self.cursor.fetchall()
-            self.cursor.close()
-            self.close()  # Закрываем базу данных
-            return records
-        except Exception as error:
-            logger.exception(error)
-            raise
-
-    # ToDo Убрать функцию
-    async def write_parsed_chat_participants_to_db(self, entities) -> None:
-        """
-        Запись результатов parsing участников чата
-
-        :param entities: список результатов parsing
-        """
-        await self.connect()
-        for line in entities:
-            # Записываем ссылку на группу для parsing в файл user_data/software_database.db"""
-            self.cursor.execute(
-                "CREATE TABLE IF NOT EXISTS members(username, user_id, access_hash, first_name, last_name, "
-                "user_phone, online_at, photos_id, user_premium)")
-            self.cursor.executemany(
-                "INSERT INTO members(username, user_id, access_hash, first_name, last_name, user_phone, "
-                "online_at, photos_id, user_premium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (line,), )
-            self.sqlite_connection.commit()
-        self.close()  # cursor_members.close() – закрытие соединения с БД.
 
 
 def write_data_to_db(writing_group_links) -> None:
@@ -437,6 +348,4 @@ async def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, 
     deleted_count = query.execute()
     await log_and_display(f"{deleted_count} rows deleted", page)
 
-
-db_handler = DatabaseHandler()
 # 458
