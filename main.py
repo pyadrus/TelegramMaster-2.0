@@ -4,7 +4,6 @@ import asyncio
 import flet as ft
 from loguru import logger
 
-from docs.app import start_app
 from src.core.checking_program import CheckingProgram
 from src.core.configs import (program_name, program_version, date_of_program_change, window_width,
                               window_height, window_resizable, time_sending_messages_1, time_sending_messages_2,
@@ -207,8 +206,6 @@ async def main(page: ft.Page):
             elif page.route == "/time_between_subscriptionss":  # Время между подпиской
                 await SettingPage().create_main_window(page=page, variable="time_subscription",
                                                        time_range=[time_subscription_1, time_subscription_2])
-            elif page.route == "/documentation":  # Открытие документации
-                start_app()
             elif page.route == "/errors":
                 # Пустая страница с уведомлением
                 page.views.append(ft.View("/errors", []))
