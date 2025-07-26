@@ -16,11 +16,11 @@ from src.features.account.TGChek import TGChek
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGContact import TGContact
 from src.features.account.TGCreating import CreatingGroupsAndChats
-from src.features.account.TGInviting import InvitingToAGroup
 from src.features.account.TGReactions import WorkingWithReactions
 from src.features.account.TGSendingMessages import SendTelegramMessages
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
 from src.features.account.TGViewingPosts import ViewingPosts
+from src.features.account.inviting.inviting import InvitingToAGroup
 from src.features.account.parsing.parsing import ParsingGroupMembers
 from src.features.auth.logging_in import loging
 from src.features.recording.receiving_and_recording import ReceivingAndRecording
@@ -55,7 +55,8 @@ async def main(page: ft.Page):
         # ______________________________________________________________________________________________________________
         try:
             if page.route == "/inviting":  # Меню "🚀 Инвайтинг"
-                await CheckingProgram().check_before_inviting(page=page)
+                # TODO миграция на Peewee. вернуть проверку на наличие аккаунтов, username, ссылки на инвайтинг
+                # await CheckingProgram().check_before_inviting(page=page)
                 await InvitingToAGroup().inviting_menu(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/account_verification_menu":  # "Проверка аккаунтов"

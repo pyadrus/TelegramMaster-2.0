@@ -13,7 +13,7 @@ from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import (ChannelParticipantsAdmins, ChannelParticipantsSearch, InputPeerEmpty, InputUser)
 
-from src.core.configs import (line_width_button, path_accounts_folder, time_activity_user_2, BUTTON_HEIGHT)
+from src.core.configs import (width_wide_button, path_accounts_folder, time_activity_user_2, BUTTON_HEIGHT)
 from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, db, add_member_to_db)
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -195,7 +195,7 @@ class ParsingGroupMembers:
         file_text = ft.Text(value="📂 Выберите .session файл", size=14)
         file_picker = ft.FilePicker(on_result=btn_click_file_picker)
         page.overlay.append(file_picker)
-        pick_button = ft.ElevatedButton(text="📁 Выбрать session файл", width=line_width_button, height=BUTTON_HEIGHT,
+        pick_button = ft.ElevatedButton(text="📁 Выбрать session файл", width=width_wide_button, height=BUTTON_HEIGHT,
                                         on_click=lambda _: file_picker.pick_files(allow_multiple=False))
 
         # Кнопки-переключатели
@@ -242,9 +242,9 @@ class ParsingGroupMembers:
         chat_input = ft.TextField(label="🔗 Введите ссылку на чат...", disabled=True)
         limit_active_user = ft.TextField(label="💬 Кол-во сообщений", expand=True, disabled=True)
         # Выпадающий список для выбора группы
-        dropdown = ft.Dropdown(width=line_width_button, options=[], autofocus=True, disabled=True)
+        dropdown = ft.Dropdown(width=width_wide_button, options=[], autofocus=True, disabled=True)
         result_text = ft.Text(value="📂 Группы не загружены")
-        parse_button = ft.ElevatedButton(text="🔍 Парсить", width=line_width_button, height=BUTTON_HEIGHT,
+        parse_button = ft.ElevatedButton(text="🔍 Парсить", width=width_wide_button, height=BUTTON_HEIGHT,
                                          on_click=add_items, disabled=True)
 
         # После успешного выбора файла:

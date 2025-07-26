@@ -12,7 +12,7 @@ from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError, Chan
 from telethon.tl.functions.channels import JoinChannelRequest, LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-from src.core.configs import (BUTTON_HEIGHT, line_width_button, path_accounts_folder, time_subscription_1,
+from src.core.configs import (BUTTON_HEIGHT, width_wide_button, path_accounts_folder, time_subscription_1,
                               time_subscription_2)
 from src.core.sqlite_working_tools import write_data_to_db
 from src.core.utils import find_filess, record_and_interrupt
@@ -184,9 +184,9 @@ class SubscribeUnsubscribeTelegram:
                     ft.Text(value="Подписка на группы / каналы Telegram"),  # Выбор группы для инвайтинга
                     list_view,  # Отображение логов 📝
                     ft.Column(),  # Резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT, text="🚀 Начать подписку",
+                    ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT, text="🚀 Начать подписку",
                                       on_click=add_items),  # Кнопка "🚀 Начать подписку"
-                    ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                    ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                       text=translations["ru"]["buttons"]["back"],
                                       on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
                 ],

@@ -14,7 +14,7 @@ from telethon.errors import (ChannelPrivateError, ChatAdminRequiredError,
                              UserNotMutualContactError)
 
 from src.core.configs import (
-    BUTTON_HEIGHT, ConfigReader, line_width_button, path_accounts_folder,
+    BUTTON_HEIGHT, ConfigReader, width_wide_button, path_accounts_folder,
     path_folder_with_messages, path_send_message_folder_answering_machine,
     path_send_message_folder_answering_machine_message,
     time_sending_messages_1, time_sending_messages_2, time_subscription_1,
@@ -122,11 +122,11 @@ class SendTelegramMessages:
         # Поле для формирования списка чатов
         account_limits_inputs = ft.TextField(label="Введите лимит на сообщения", multiline=True, max_lines=12)
         # Кнопка "Готово"
-        button_done = ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=line_width_button,
+        button_done = ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=width_wide_button,
                                         height=BUTTON_HEIGHT,
                                         on_click=button_clicked, )
         # Кнопка "Назад"
-        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button,
+        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=width_wide_button,
                                         height=BUTTON_HEIGHT,
                                         on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
         t = ft.Text()
@@ -153,7 +153,7 @@ class SendTelegramMessages:
         page.update()
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
         # Кнопка "Назад"
-        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button,
+        button_back = ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=width_wide_button,
                                         height=BUTTON_HEIGHT,
                                         on_click=lambda _: page.go("/sending_messages_via_chats_menu"))
         # Создание View с элементами
@@ -299,10 +299,10 @@ class SendTelegramMessages:
                             weight=ft.FontWeight.BOLD), c, ft.Row(controls=[tb_time_from, tb_time_to], spacing=20, ), t,
                     chat_list_field,
                     ft.Column(  # Верхняя часть: контрольные элементы
-                        controls=[ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=line_width_button,
+                        controls=[ft.ElevatedButton(text=translations["ru"]["buttons"]["done"], width=width_wide_button,
                                                     height=BUTTON_HEIGHT,
                                                     on_click=button_clicked, ),
-                                  ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=line_width_button,
+                                  ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=width_wide_button,
                                                     height=BUTTON_HEIGHT,
                                                     on_click=lambda _: page.go("/sending_messages_via_chats_menu")), ],
                     ), ], ))

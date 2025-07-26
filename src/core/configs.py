@@ -146,7 +146,7 @@ limits = ConfigReader().get_limits()
 
 time_activity_user_2 = ConfigReader().time_activity_user_2()
 
-line_width_button = ConfigReader().get_line_width_button()  # Получение ширины кнопки
+width_wide_button = ConfigReader().get_line_width_button()  # Получение ширины широкой кнопки (Широкая кнопка)
 BUTTON_HEIGHT = ConfigReader().get_line_height_button()  # Получение ширины кнопки
 small_button_width = ConfigReader().get_small_button_width()  # Ширина малой кнопки
 BUTTON_WIDTH = ConfigReader().line_width()  # Ширина окна и ширина строки

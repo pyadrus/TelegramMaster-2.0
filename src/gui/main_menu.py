@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flet as ft
 
-from src.core.configs import BUTTON_HEIGHT, small_button_width, line_width_button, program_name
+from src.core.configs import BUTTON_HEIGHT, small_button_width, width_wide_button, program_name
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.locales.translations_loader import translations
 
@@ -77,24 +77,24 @@ async def main_menu_program(page: ft.Page):
                                                     text=translations["ru"]["menu"]["edit_bio"],
                                                     on_click=lambda _: page.go("/bio_editing")), ]),
                           # 👁️‍🗨️ Накручиваем просмотры постов
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                          ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                             text=translations["ru"]["reactions_menu"]["we_are_winding_up_post_views"],
                                             on_click=lambda _: page.go("/viewing_posts_menu")),
                           # ⚙️ Настройки
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                          ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                             text=translations["ru"]["menu"]["settings"],
                                             on_click=lambda _: page.go("/settings")),
                           # 📖 Документация
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                          ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                             text=translations["ru"]["menu"]["documentation"],
                                             on_click=lambda _: page.go("/documentation")),
                           # 💬 Рассылка сообщений по чатам
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                          ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                             text=translations["ru"]["message_sending_menu"][
                                                 "sending_messages_via_chats"],
                                             on_click=lambda _: page.go("/sending_messages_files_via_chats")),
                           # 📋 Импорт списка от ранее спарсенных данных
-                          ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                          ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                             text=translations["ru"]["parsing_menu"]["importing_a_list_of_parsed_data"],
                                             on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
                       ]), ]))

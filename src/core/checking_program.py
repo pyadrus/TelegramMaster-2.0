@@ -23,16 +23,17 @@ class CheckingProgram:
         if len(await select_records_with_limit(table_name="writing_group_links", limit=limits)) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
 
-    @staticmethod
-    async def check_before_inviting(page: ft.Page):
-        """
-        ⛔ Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        """
-        if len(select_records_with_limit(limit=limits)) == 0:
-            await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
-        if len(await select_records_with_limit(table_name="links_inviting", limit=limits)) == 0:
-            await show_notification(page, "⛔ Не записана группа для инвайтинга")
+    # TODO улучшить проверку на наличие username, ссылок в базе данных для инвайтинга и так далее
+    # @staticmethod
+    # async def check_before_inviting(page: ft.Page):
+    #     """
+    #     ⛔ Проверка наличия пользователя в списке участников, наличия аккаунта, наличия ссылки в базе данных
+    #     :param page: Страница интерфейса Flet для отображения элементов управления.
+    #     """
+    #     if len(select_records_with_limit(limit=limits)) == 0:
+    #         await show_notification(page, "⛔ В таблице members нет пользователей для инвайтинга")
+    #     if len(await select_records_with_limit(table_name="links_inviting", limit=limits)) == 0:
+    #         await show_notification(page, "⛔ Не записана группа для инвайтинга")
 
     async def checking_sending_messages_via_chats_with_answering_machine(self, page: ft.Page):
         """

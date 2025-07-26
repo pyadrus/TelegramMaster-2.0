@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flet as ft
 
-from src.core.configs import BUTTON_HEIGHT, small_button_width, BUTTON_WIDTH, line_width_button
+from src.core.configs import BUTTON_HEIGHT, small_button_width, BUTTON_WIDTH, width_wide_button
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.locales.translations_loader import translations
 
@@ -211,7 +211,7 @@ async def viewing_posts_menu(page: ft.Page):
                                                                                   ft.Colors.PURPLE])), ), ), ], ),
                  ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                      # 👁️‍🗨️ Накручиваем просмотры постов
-                     ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                     ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                        text=translations["ru"]["reactions_menu"]["we_are_winding_up_post_views"],
                                        on_click=lambda _: page.go("/we_are_winding_up_post_views")),
                  ])]))

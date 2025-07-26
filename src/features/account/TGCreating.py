@@ -7,7 +7,7 @@ import flet as ft
 from loguru import logger
 from telethon import functions
 
-from src.core.configs import BUTTON_HEIGHT, line_width_button, path_accounts_folder
+from src.core.configs import BUTTON_HEIGHT, width_wide_button, path_accounts_folder
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.gui_elements import GUIProgram
@@ -105,14 +105,14 @@ class CreatingGroupsAndChats:
                                                                                            [ft.Colors.PINK,
                                                                                             ft.Colors.PURPLE])), ), ), ]),
                                    list_view, selected_files,
-                                   ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                   ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                                      text=translations["ru"]["create_groups_menu"][
                                                          "choose_session_files"],
                                                      on_click=lambda _: pick_files_dialog.pick_files(
                                                          allow_multiple=True)),
-                                   ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                   ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                                      text=translations["ru"]["buttons"]["start"], on_click=add_items),
-                                   ft.ElevatedButton(width=line_width_button, height=BUTTON_HEIGHT,
+                                   ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                                      text=translations["ru"]["buttons"]["back"],
                                                      on_click=lambda _: page.go("/"))]))
         page.update()

@@ -13,7 +13,7 @@ from telethon.errors import (AuthKeyDuplicatedError, AuthKeyUnregisteredError, B
                              UserNotMutualContactError, UserPrivacyRestrictedError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-from src.core.configs import (BUTTON_HEIGHT, BUTTON_WIDTH, ConfigReader, limits, line_width_button,
+from src.core.configs import (BUTTON_HEIGHT, BUTTON_WIDTH, ConfigReader, limits, width_wide_button,
                               path_accounts_folder, time_inviting_1, time_inviting_2)
 from src.core.sqlite_working_tools import select_records_with_limit, get_links_inviting
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
@@ -47,7 +47,7 @@ class InvitingToAGroup:
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         # Создаем выпадающий список с названиями групп
-        dropdown = ft.Dropdown(width=line_width_button, options=[ft.DropdownOption(link[0]) for link in links_inviting],
+        dropdown = ft.Dropdown(width=width_wide_button, options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
 
         async def inviting_without_limits(_):
@@ -119,21 +119,22 @@ class InvitingToAGroup:
                      list_view,  # Отображение логов 📝
                      ft.Text(value="📂 Выберите группу для инвайтинга"),  # Выбор группы для инвайтинга
                      dropdown,  # Выпадающий список с названиями групп
+
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🚀 Инвайтинг
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["inviting"],
                                            on_click=inviting_without_limits),
                          # ⏰ Инвайтинг 1 раз в час
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"],
                                            on_click=launching_an_invite_once_an_hour),
                          # 🕒 Инвайтинг в определенное время
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["invitation_at_a_certain_time"],
                                            on_click=schedule_invite),
                          # 📅 Инвайтинг каждый день
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["inviting_every_day"],
                                            on_click=launching_invite_every_day_certain_time),
                      ])]))
