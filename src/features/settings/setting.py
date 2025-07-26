@@ -7,7 +7,7 @@ import sys
 
 import flet as ft  # Импортируем библиотеку flet
 
-from src.core.configs import BUTTON_HEIGHT, width_wide_button
+from src.core.configs import BUTTON_HEIGHT, WIDTH_WIDE_BUTTON
 from src.core.sqlite_working_tools import cleaning_db, save_proxy_data_to_db
 from src.gui.gui import list_view, log_and_display
 from src.gui.notification import show_notification
@@ -125,11 +125,11 @@ class SettingPage:
         # Формирование представления
         controls = [
             text_to_send,
-            ft.ElevatedButton(text="Дозаписать данные в базу данных", width=width_wide_button, height=BUTTON_HEIGHT,
+            ft.ElevatedButton(text="Дозаписать данные в базу данных", width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                               on_click=on_append_click),
-            ft.ElevatedButton(text="Очистить данные и записать по новой", width=width_wide_button, height=BUTTON_HEIGHT,
+            ft.ElevatedButton(text="Очистить данные и записать по новой", width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                               on_click=on_clear_and_write_click),
-            ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=width_wide_button, height=BUTTON_HEIGHT,
+            ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                               on_click=on_back_click)
         ]
 
@@ -280,10 +280,10 @@ class SettingPage:
                     list_view,  # отображение логов 📝
                     ft.Column(
                         controls=fields + [
-                            ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                            ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                               text=translations["ru"]["buttons"]["done"],
                                               on_click=btn_click),
-                            ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                            ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                               text=translations["ru"]["buttons"]["back"],
                                               on_click=back_button_clicked)
                         ]
@@ -383,10 +383,10 @@ async def reaction_gui(page: ft.Page):
             controls=[
                 t,
                 ft.Column([ft.Row(checkboxes[i:i + 9]) for i in range(0, len(checkboxes), 9)]),  # Чекбоксы в колонках
-                ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                   text=translations["ru"]["buttons"]["done"],
                                   on_click=button_clicked),  # Кнопка "Готово",
-                ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                   text=translations["ru"]["buttons"]["back"],
                                   on_click=back_button_clicked),  # Кнопка "Назад"
             ]

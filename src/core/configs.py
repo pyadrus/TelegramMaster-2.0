@@ -141,21 +141,22 @@ class ConfigReader:
                                     'path_folder_database', fallback=None)
 
 
+# TODO - Все переменные должны быть с главных буквы
 """Размеры кнопок"""
-width_wide_button = ConfigReader().get_line_width_button()  # Получение ширины широкой кнопки (Широкая кнопка)
+WIDTH_WIDE_BUTTON = ConfigReader().get_line_width_button()  # Получение ширины широкой кнопки (Широкая кнопка)
 BUTTON_HEIGHT = ConfigReader().get_line_height_button()  # Получение ширины кнопки
-small_button_width = ConfigReader().get_small_button_width()  # Ширина малой кнопки
+SMALL_BUTTON_WIDTH = ConfigReader().get_small_button_width()  # Ширина малой кнопки
 BUTTON_WIDTH = ConfigReader().line_width()  # Ширина окна и ширина строки
 
 """Текст для пользователя"""
-program_name = ConfigReader().program_name()  # Имя программы
-program_version = ConfigReader().program_version()  # Версия программы
-date_of_program_change = ConfigReader().date_of_program_change()  # Версия программы
+PROGRAM_NAME = ConfigReader().program_name()  # Имя программы
+PROGRAM_VERSION = ConfigReader().program_version()  # Версия программы
+DATE_OF_PROGRAM_CHANGE = ConfigReader().date_of_program_change()  # Версия программы
 
 """Общие размеры программы"""
-window_width = ConfigReader().window_width()  # Ширина программы
-window_height = ConfigReader().window_height()  # Ширина программы
-window_resizable = ConfigReader().window_resizable()  # Ширина программы
+WINDOW_WIDTH = ConfigReader().window_width()  # Ширина программы
+WINDOW_HEIGHT = ConfigReader().window_height()  # Ширина программы
+WINDOW_RESIZABLE = ConfigReader().window_resizable()  # Ширина программы
 
 """Путь к папкам"""
 path_send_message_folder_answering_machine = ConfigReader().path_send_message_folder_answering_machine()  # Путь к папке для аккаунтов с автоответчиком
@@ -164,7 +165,7 @@ path_folder_with_messages = ConfigReader().path_folder_with_messages()  # Пут
 path_folder_database = ConfigReader().path_folder_database()  # Путь к папке с базой данных
 
 """Настройки времени, лимитов и прочего"""
-limits = ConfigReader().get_limits()  # Лимиты
+LIMITS = ConfigReader().get_limits()  # Лимиты
 time_activity_user_2 = ConfigReader().time_activity_user_2()
 time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_inviting()  # Время между сообщениями
 time_inviting_1, time_inviting_2 = ConfigReader().get_time_inviting()  # Время между инвайтингом, рассылка сообщений

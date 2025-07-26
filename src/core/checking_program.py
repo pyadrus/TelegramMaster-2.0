@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flet as ft
 
-from src.core.configs import path_send_message_folder_answering_machine_message, path_folder_with_messages, limits
+from src.core.configs import path_send_message_folder_answering_machine_message, path_folder_with_messages, LIMITS
 from src.core.sqlite_working_tools import select_records_with_limit
 from src.core.utils import find_filess
 from src.gui.notification import show_notification
@@ -20,7 +20,7 @@ class CheckingProgram:
         ⛔ Проверка наличия сформированного списка с чатами для рассылки по чатам.
         ⛔ Проверка папки с сообщениями на наличие заготовленных сообщений.
         """
-        if len(await select_records_with_limit(table_name="writing_group_links", limit=limits)) == 0:
+        if len(await select_records_with_limit(table_name="writing_group_links", limit=LIMITS)) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
 
     # TODO улучшить проверку на наличие username, ссылок в базе данных для инвайтинга и так далее
@@ -46,5 +46,5 @@ class CheckingProgram:
                                  extension=self.file_extension):
             await show_notification(page,
                                     f"⛔ Нет заготовленных сообщений для автоответчика в папке {path_send_message_folder_answering_machine_message}")
-        if len(await select_records_with_limit(table_name="writing_group_links", limit=limits)) == 0:
+        if len(await select_records_with_limit(table_name="writing_group_links", limit=LIMITS)) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")

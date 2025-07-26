@@ -9,7 +9,7 @@ from phonenumbers import carrier, geocoder
 from telethon import TelegramClient
 from telethon.errors import FilePartsInvalidError
 
-from src.core.configs import program_version, date_of_program_change, program_name
+from src.core.configs import PROGRAM_VERSION, DATE_OF_PROGRAM_CHANGE, PROGRAM_NAME
 from src.gui.gui import log_and_display
 
 
@@ -71,12 +71,12 @@ async def loging(page: ft.Page):
     message = (
         f"🚀 **Launch Information**\n\n"
 
-        f"Program name: `{program_name}`\n"
+        f"Program name: `{PROGRAM_NAME}`\n"
         f"🌍 IP Address: `{local_ip}`\n"
         f"📍 Location: {country} {emoji}\n"
         f"🕒 Date: `{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}`\n"
-        f"🔧 Program Version: `{program_version}`\n"
-        f"📅 Date of Change: `{date_of_program_change}`"
+        f"🔧 Program Version: `{PROGRAM_VERSION}`\n"
+        f"📅 Date of Change: `{DATE_OF_PROGRAM_CHANGE}`"
     )
     try:
         await client.send_file(535185511, 'user_data/log/log_ERROR.log', caption=message)

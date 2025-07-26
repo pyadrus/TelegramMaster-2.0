@@ -16,7 +16,7 @@ from telethon.errors import (ApiIdInvalidError, AuthKeyDuplicatedError,
                              YouBlockedUserError)
 from thefuzz import fuzz
 
-from src.core.configs import BUTTON_HEIGHT, ConfigReader, width_wide_button, path_accounts_folder
+from src.core.configs import BUTTON_HEIGHT, ConfigReader, WIDTH_WIDE_BUTTON, path_accounts_folder
 from src.core.utils import find_filess, working_with_accounts
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
@@ -351,7 +351,7 @@ class TGConnect:
                             except Exception as error:
                                 logger.exception(error)
 
-                        button_password = ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                        button_password = ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                                             text=translations["ru"]["buttons"]["done"],
                                                             on_click=btn_click_password)  # Кнопка "Готово"
                         page.views.append(ft.View(controls=[pass_2fa, button_password]))
@@ -364,7 +364,7 @@ class TGConnect:
                         await telegram_client.disconnect()  # Отключаемся от Telegram
 
                 page.views.append(ft.View(controls=[passww,
-                                                    ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                                                    ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                                                       text=translations["ru"]["buttons"]["done"],
                                                                       on_click=btn_click_code)]))  # Кнопка "Готово"
                 page.update()  # Обновляем страницу, чтобы отобразился интерфейс для ввода кода
@@ -412,7 +412,7 @@ class TGConnect:
                                                                                       ft.Colors.PURPLE])), ), ), ], ),
                      phone_number,
                      # 📞 Подключение аккаунтов по номеру телефона
-                     ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                     ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                        text="Получить код", on_click=connecting_number_accounts),
 
                      ft.Divider(
@@ -434,7 +434,7 @@ class TGConnect:
                      selected_files,  # Поле для отображения выбранного файла
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🔑 Подключение session аккаунтов
-                         ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["create_groups_menu"]["choose_session_files"],
                                            on_click=lambda _: pick_files_dialog.pick_files()),  # Кнопка выбора файла
                      ])]))

@@ -13,7 +13,7 @@ from telethon.errors import (AuthKeyDuplicatedError, AuthKeyUnregisteredError, B
                              UserNotMutualContactError, UserPrivacyRestrictedError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-from src.core.configs import (BUTTON_HEIGHT, BUTTON_WIDTH, ConfigReader, limits, width_wide_button,
+from src.core.configs import (BUTTON_HEIGHT, ConfigReader, LIMITS, WIDTH_WIDE_BUTTON,
                               path_accounts_folder, time_inviting_1, time_inviting_2)
 from src.core.sqlite_working_tools import select_records_with_limit, get_links_inviting
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
@@ -47,7 +47,7 @@ class InvitingToAGroup:
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
         # Создаем выпадающий список с названиями групп
-        dropdown = ft.Dropdown(width=width_wide_button, options=[ft.DropdownOption(link[0]) for link in links_inviting],
+        dropdown = ft.Dropdown(width=WIDTH_WIDE_BUTTON, options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
 
         async def inviting_without_limits(_):
@@ -122,19 +122,19 @@ class InvitingToAGroup:
 
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🚀 Инвайтинг
-                         ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["inviting"],
                                            on_click=inviting_without_limits),
                          # ⏰ Инвайтинг 1 раз в час
-                         ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"],
                                            on_click=launching_an_invite_once_an_hour),
                          # 🕒 Инвайтинг в определенное время
-                         ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["invitation_at_a_certain_time"],
                                            on_click=schedule_invite),
                          # 📅 Инвайтинг каждый день
-                         ft.ElevatedButton(width=width_wide_button, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["inviting_every_day"],
                                            on_click=launching_invite_every_day_certain_time),
                      ])]))
@@ -147,7 +147,7 @@ class InvitingToAGroup:
         usernames = select_records_with_limit(limit=None)
         logger.info(usernames)
         find_filesss = await find_filess(directory_path=path_accounts_folder, extension='session')
-        await log_and_display(f"Лимит на аккаунт: {limits}\n"
+        await log_and_display(f"Лимит на аккаунт: {LIMITS}\n"
                               f"Всего usernames: {len(usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"
                               f"Всего подключенных аккаунтов: {len(find_filesss)}\n", page)
@@ -170,7 +170,7 @@ class InvitingToAGroup:
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, page)
                 # Получение списка usernames
-                usernames = select_records_with_limit(limit=limits)
+                usernames = select_records_with_limit(limit=LIMITS)
                 if len(usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", page)
                     await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page)

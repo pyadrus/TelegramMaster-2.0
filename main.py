@@ -5,8 +5,8 @@ import flet as ft
 from loguru import logger
 
 from src.core.checking_program import CheckingProgram
-from src.core.configs import (program_name, program_version, date_of_program_change, window_width,
-                              window_height, window_resizable, time_sending_messages_1, time_sending_messages_2,
+from src.core.configs import (PROGRAM_NAME, PROGRAM_VERSION, DATE_OF_PROGRAM_CHANGE, WINDOW_WIDTH,
+                              WINDOW_HEIGHT, WINDOW_RESIZABLE, time_sending_messages_1, time_sending_messages_2,
                               time_inviting_1, time_inviting_2, time_changing_accounts_1, time_changing_accounts_2,
                               time_subscription_1, time_subscription_2)
 from src.core.sqlite_working_tools import create_database, open_and_read_data
@@ -42,10 +42,10 @@ async def main(page: ft.Page):
     """
     create_database()  # Создание базы данных
 
-    page.title = f"{program_name}: {program_version} (Дата изменения {date_of_program_change})"
-    page.window.width = window_width  # Ширина окна
-    page.window.height = window_height  # Высота окна
-    page.window.resizable = window_resizable  # Разрешение изменения размера окна
+    page.title = f"{PROGRAM_NAME}: {PROGRAM_VERSION} (Дата изменения {DATE_OF_PROGRAM_CHANGE})"
+    page.window.width = WINDOW_WIDTH  # Ширина окна
+    page.window.height = WINDOW_HEIGHT  # Высота окна
+    page.window.resizable = WINDOW_RESIZABLE  # Разрешение изменения размера окна
 
     async def route_change(_):
         page.views.clear()
