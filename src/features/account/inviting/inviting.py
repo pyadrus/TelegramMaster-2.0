@@ -46,6 +46,10 @@ class InvitingToAGroup:
         links_inviting = get_links_inviting()  # Получаем список ссылок на группы для инвайтинга из базы данных
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
+        # Поле ввода, для ссылок для инвайтинга
+        link_entry_field = ft.TextField(label="Введите ссылку на группу для инвайтинга",
+                                        label_style=ft.TextStyle(color=ft.Colors.GREY_400), )
+
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=WIDTH_WIDE_BUTTON, options=[ft.DropdownOption(link[0]) for link in links_inviting],
                                autofocus=True)
@@ -117,6 +121,7 @@ class InvitingToAGroup:
                                           gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                                ft.Colors.PURPLE])), ), ), ], ),
                      list_view,  # Отображение логов 📝
+                     link_entry_field,  # Поле для ввода ссылок на группы для инвайтинга
                      ft.Text(value="📂 Выберите группу для инвайтинга"),  # Выбор группы для инвайтинга
                      dropdown,  # Выпадающий список с названиями групп
 
