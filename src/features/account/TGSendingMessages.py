@@ -15,7 +15,7 @@ from telethon.errors import (ChannelPrivateError, ChatAdminRequiredError,
 
 from src.core.configs import (
     BUTTON_HEIGHT, ConfigReader, WIDTH_WIDE_BUTTON, path_accounts_folder,
-    path_folder_with_messages, path_send_message_folder_answering_machine,
+    path_folder_with_messages, PATH_SEND_MESSAGE_FOLDER_ANSWERING_MACHINE,
     path_send_message_folder_answering_machine_message,
     time_sending_messages_1, time_sending_messages_2, time_subscription_1,
     time_subscription_2)
@@ -168,10 +168,10 @@ class SendTelegramMessages:
 
         if checs == True:
             try:
-                for session_name in await find_filess(directory_path=path_send_message_folder_answering_machine,
+                for session_name in await find_filess(directory_path=PATH_SEND_MESSAGE_FOLDER_ANSWERING_MACHINE,
                                                       extension=self.account_extension):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                       account_directory=path_send_message_folder_answering_machine)
+                                                                       account_directory=PATH_SEND_MESSAGE_FOLDER_ANSWERING_MACHINE)
 
                     @client.on(events.NewMessage(incoming=True))  # Обработчик личных сообщений
                     async def handle_private_messages(event):
