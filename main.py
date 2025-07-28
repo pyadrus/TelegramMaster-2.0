@@ -108,8 +108,7 @@ async def main(page: ft.Page):
                 logger.info("▶️ Начало Формирования списка контактов")
                 open_and_read_data(table_name="contact", page=page)  # Удаление списка с контактами
                 # TODO миграция на PEEWEE
-                await SettingPage().output_the_input_field(page=page, label="Введите список номеров телефонов",
-                                                           table_name="contact",
+                await SettingPage().output_the_input_field(page=page, table_name="contact",
                                                            column_name="contact", route="/working_with_contacts",
                                                            into_columns="contact")
                 logger.info("🔚 Конец Формирования списка контактов")
@@ -168,18 +167,17 @@ async def main(page: ft.Page):
             elif page.route == "/account_limits":  # Лимиты на аккаунт
                 await SettingPage().record_setting(page, "account_limits", "Введите лимит на аккаунт")
             elif page.route == "/creating_username_list":  # Формирование списка username
-                await SettingPage().output_the_input_field(page, "Введите список username", "members",
+                await SettingPage().output_the_input_field(page, "members",
                                                            "username, id, access_hash, first_name, last_name, "
                                                            "user_phone, online_at, photos_id, user_premium",
                                                            "/settings", "members (username)")
             elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
-                await SettingPage().output_the_input_field(page, "Введите список ссылок на группы",
-                                                           "writing_group_links",
+                await SettingPage().output_the_input_field(page, "writing_group_links",
                                                            "writing_group_links", "/settings", "writing_group_links")
-            elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
-                await SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга",
-                                                           "links_inviting",
-                                                           "links_inviting", "/settings", "links_inviting")
+            # elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
+            #     await SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга",
+            #                                                "links_inviting",
+            #                                                "links_inviting", "/settings", "links_inviting")
             elif page.route == "/proxy_entry":  # Запись proxy
                 await SettingPage().creating_the_main_window_for_proxy_data_entry(page=page)
             elif page.route == "/message_recording":  # Запись сообщений

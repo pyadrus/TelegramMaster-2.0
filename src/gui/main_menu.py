@@ -85,9 +85,9 @@ async def main_menu_program(page: ft.Page):
                                             text=translations["ru"]["menu"]["settings"],
                                             on_click=lambda _: page.go("/settings")),
                           # 📖 Документация
-                          ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                                            text=translations["ru"]["menu"]["documentation"],
-                                            on_click=lambda _: page.go("/documentation")),
+                          # ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+                          #                   text=translations["ru"]["menu"]["documentation"],
+                          #                   on_click=lambda _: page.go("/documentation")),
                           # 💬 Рассылка сообщений по чатам
                           ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                             text=translations["ru"]["message_sending_menu"][

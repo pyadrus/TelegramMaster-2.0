@@ -160,7 +160,7 @@ WINDOW_RESIZABLE = ConfigReader().window_resizable()  # Ширина прогр�
 
 """Путь к папкам"""
 PATH_SEND_MESSAGE_FOLDER_ANSWERING_MACHINE = ConfigReader().path_send_message_folder_answering_machine()  # Путь к папке для аккаунтов с автоответчиком
-PATH_SEND_MESSAGE_FOLDER_ANSWERING_MACHINE_MESSAGE = ConfigReader().path_send_message_folder_answering_machine_message()  # Путь к папке c сообщениями для автоответчика
+path_send_message_folder_answering_machine_message = ConfigReader().path_send_message_folder_answering_machine_message()  # Путь к папке c сообщениями для автоответчика
 path_folder_with_messages = ConfigReader().path_folder_with_messages()  # Путь к папке с сообщениями
 path_folder_database = ConfigReader().path_folder_database()  # Путь к папке с базой данных
 

@@ -49,9 +49,9 @@ async def settings_menu(page: ft.Page):
                                            on_click=lambda _: page.go("/message_recording"))]),
                      ft.Row([
                          # 🔗 Запись ссылки для инвайтинга
-                         ft.ElevatedButton(width=SMALL_BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                           text=translations["ru"]["menu_settings"]["link_entry"],
-                                           on_click=lambda _: page.go("/link_entry")),
+                         # ft.ElevatedButton(width=SMALL_BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                         #                   text=translations["ru"]["menu_settings"]["link_entry"],
+                         #                   on_click=lambda _: page.go("/link_entry")),
                          # 📊 Лимиты на аккаунт
                          ft.ElevatedButton(width=SMALL_BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["menu_settings"]["account_limits"],

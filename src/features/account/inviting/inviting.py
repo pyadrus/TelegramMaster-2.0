@@ -15,7 +15,7 @@ from telethon.tl.functions.channels import InviteToChannelRequest
 
 from src.core.configs import (BUTTON_HEIGHT, ConfigReader, LIMITS, WIDTH_WIDE_BUTTON,
                               path_accounts_folder, time_inviting_1, time_inviting_2)
-from src.core.sqlite_working_tools import select_records_with_limit, get_links_inviting
+from src.core.sqlite_working_tools import select_records_with_limit, get_links_inviting, save_links_inviting
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
 from src.features.account.TGConnect import TGConnect
 from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
@@ -46,13 +46,26 @@ class InvitingToAGroup:
         links_inviting = get_links_inviting()  # Получаем список ссылок на группы для инвайтинга из базы данных
         await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
 
-        # Поле ввода, для ссылок для инвайтинга
-        link_entry_field = ft.TextField(label="Введите ссылку на группу для инвайтинга",
-                                        label_style=ft.TextStyle(color=ft.Colors.GREY_400), )
-
         # Создаем выпадающий список с названиями групп
-        dropdown = ft.Dropdown(width=WIDTH_WIDE_BUTTON, options=[ft.DropdownOption(link[0]) for link in links_inviting],
+        dropdown = ft.Dropdown(width=WIDTH_WIDE_BUTTON, options=[ft.DropdownOption(link) for link in links_inviting],
                                autofocus=True)
+
+        async def save(_):
+            """Запись ссылки для инвайтинга в базу данных"""
+            links = link_entry_field.value.strip().split()
+            logger.info(f"Пользователь ввел ссылку(и): {links}")
+            data_to_save = {
+                "links_inviting": links,
+            }
+            save_links_inviting(data_to_save)
+            logger.success(f"Сохранено в базу данных: {data_to_save}")
+            await log_and_display("✅ Ссылки успешно сохранены.", page)
+
+            # 🔄 Обновляем список в выпадающем списке
+            updated_links = get_links_inviting()
+            dropdown.options = [ft.dropdown.Option(link) for link in updated_links]
+            dropdown.value = links[0] if links else None  # Автоматически выбрать первую новую ссылку (если нужно)
+            page.update()  # Обновляем интерфейс
 
         async def inviting_without_limits(_):
             """
@@ -111,6 +124,12 @@ class InvitingToAGroup:
             while True:
                 await asyncio.sleep(1)
 
+        # Поле ввода, для ссылок для инвайтинга
+        link_entry_field = ft.TextField(label="Введите ссылку на группу для инвайтинга",
+                                        label_style=ft.TextStyle(color=ft.Colors.GREY_400), width=700
+                                        )
+        save_button = ft.IconButton(visible=True, icon=ft.Icons.SAVE, on_click=save, icon_size=50)
+
         page.views.append(
             ft.View("/inviting",
                     [await GUIProgram().key_app_bar(),
@@ -121,7 +140,12 @@ class InvitingToAGroup:
                                           gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                                ft.Colors.PURPLE])), ), ), ], ),
                      list_view,  # Отображение логов 📝
-                     link_entry_field,  # Поле для ввода ссылок на группы для инвайтинга
+
+                     ft.Row(
+                         controls=[link_entry_field, save_button],
+                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN  # или .START
+                     ),
+
                      ft.Text(value="📂 Выберите группу для инвайтинга"),  # Выбор группы для инвайтинга
                      dropdown,  # Выпадающий список с названиями групп
 

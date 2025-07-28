@@ -2,6 +2,7 @@
 import datetime
 
 import flet as ft
+import peewee
 from loguru import logger
 from peewee import (SqliteDatabase, Model, CharField, BigIntegerField, TextField, DateTimeField, BooleanField, fn,
                     IntegerField)
@@ -85,22 +86,6 @@ class MembersAdmin(Model):
     class Meta:
         database = db
         table_name = 'members_admin'
-
-
-class LinksInviting(Model):
-    links_inviting = CharField(unique=True)
-
-    class Meta:
-        database = db
-        table_name = 'links_inviting'
-
-
-def get_links_inviting():
-    """Получаем ссылки на группы из таблицы links_inviting"""
-    links_inviting = []
-    for link in LinksInviting.select(LinksInviting.links_inviting):
-        links_inviting.append(link.links_inviting)
-    return links_inviting
 
 
 def remove_duplicates():
@@ -351,5 +336,40 @@ async def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, 
 
 def open_and_read_data():
     pass
+
+
+"""Запись ссылки для инвайтинга"""
+
+
+class LinksInviting(Model):
+    links_inviting = CharField(unique=True)
+
+    class Meta:
+        database = db
+        table_name = 'links_inviting'
+
+
+def get_links_inviting():
+    """Получаем ссылки на группы из таблицы links_inviting"""
+    links_inviting = []
+    for link in LinksInviting.select(LinksInviting.links_inviting):
+        links_inviting.append(link.links_inviting)
+    logger.warning(links_inviting)
+    return links_inviting
+
+
+def save_links_inviting(data) -> None:
+    """
+    Запись данных links_inviting в базу данных. Добавлена проверка на уникальность ссылки. Дубликаты игнорируются и не
+    записываются.
+    """
+    links = data.get("links_inviting", [])
+
+    with db.atomic():
+        for link in links:
+            try:
+                LinksInviting.get_or_create(links_inviting=link)
+            except peewee.IntegrityError:
+                logger.warning(f"Ссылка уже существует в базе: {link}")
 
 # 458

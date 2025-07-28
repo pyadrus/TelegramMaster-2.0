@@ -8,7 +8,7 @@ import sys
 import flet as ft  # Импортируем библиотеку flet
 
 from src.core.configs import BUTTON_HEIGHT, WIDTH_WIDE_BUTTON
-from src.core.sqlite_working_tools import cleaning_db, save_proxy_data_to_db
+from src.core.sqlite_working_tools import cleaning_db, save_proxy_data_to_db, save_links_inviting
 from src.gui.gui import list_view, log_and_display
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
@@ -19,10 +19,77 @@ config.read("user_data/config/config.ini")
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 
-class SettingPage:
+class WriteDatabase:
 
     def __init__(self):
-        self.db_handler = DatabaseHandler()
+        table_name = "links_inviting"
+
+
+    async def wirite_to_database_links_inviting(self, data):
+        """Запись ссылки для инвайтинга в базу данных"""
+        save_links_inviting(data)
+
+    async def output_the_input_field(self, page: ft.Page, data, table_name: str, column_name: str, route: str,
+                                     into_columns: str) -> None:
+        """
+        Окно ввода для записи списка контактов telegram
+
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        :param table_name: Имя таблицы в базе данных.
+        :param column_name: Имя столбца в таблице.
+        :param route: Маршрут для перехода после записи данных.
+        :param into_columns: Имя столбца в таблице, в который будут записаны данные.
+        """
+
+        # text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
+        # records: list = await self.db_handler.select_records_with_limit(table_name=table_name, limit=None)
+        # await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page)
+
+        async def write_data(clear_before: bool = False) -> None:
+            """Запись данных в БД с опцией предварительной очистки"""
+
+            if clear_before:  # Проверяем, нужно ли очищать таблицу перед записью данных
+                cleaning_db(table_name=table_name)  # Очищаем таблицу перед записью данных
+
+            # data = text_to_send.value.split()
+            # Удаляем дубликаты
+            unique_records = list(set(data))
+            await self.db_handler.write_to_single_column_table(name_database=table_name, database_columns=column_name,
+                                                               into_columns=into_columns, recorded_data=unique_records)
+            await show_notification(page, "Данные успешно записаны!")
+            page.go(route)
+            page.update()
+
+        async def on_append_click(_: ft.ControlEvent) -> None:
+            """Запись данных в базу данных"""
+            await write_data(clear_before=False)
+
+        async def on_clear_and_write_click(_: ft.ControlEvent) -> None:
+            """Очистка данных и запись данных в базу данных"""
+            await write_data(clear_before=True)
+
+        async def on_back_click(_: ft.ControlEvent) -> None:
+            """Возврат на предыдущий экран"""
+            page.go(route)
+
+        # Формирование представления
+        # controls = [
+        #     text_to_send,
+        #     ft.ElevatedButton(text="Дозаписать данные в базу данных", width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+        #                       on_click=on_append_click),
+        #     ft.ElevatedButton(text="Очистить данные и записать по новой", width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+        #                       on_click=on_clear_and_write_click),
+        #     ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+        #                       on_click=on_back_click)
+        # ]
+        #
+        # page.views.append(ft.View(route, controls=[list_view, ft.Column(controls=controls)]))
+
+
+class SettingPage:
+
+    # def __init__(self):
+    #     self.db_handler = DatabaseHandler()
 
     async def creating_the_main_window_for_proxy_data_entry(self, page: ft.Page) -> None:
         """
@@ -78,62 +145,6 @@ class SettingPage:
             page.update()
 
         self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
-
-    async def output_the_input_field(self, page: ft.Page, label: str, table_name: str, column_name: str, route: str,
-                                     into_columns: str) -> None:
-        """
-        Окно ввода для записи списка контактов telegram
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param label: Текст для отображения в поле ввода.
-        :param table_name: Имя таблицы в базе данных.
-        :param column_name: Имя столбца в таблице.
-        :param route: Маршрут для перехода после записи данных.
-        :param into_columns: Имя столбца в таблице, в который будут записаны данные.
-        """
-        text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
-        records: list = await self.db_handler.select_records_with_limit(table_name=table_name, limit=None)
-        await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page)
-
-        async def write_data(clear_before: bool = False) -> None:
-            """Запись данных в БД с опцией предварительной очистки"""
-
-            if clear_before:  # Проверяем, нужно ли очищать таблицу перед записью данных
-                cleaning_db(table_name=table_name)  # Очищаем таблицу перед записью данных
-
-            data = text_to_send.value.split()
-            # Удаляем дубликаты
-            unique_records = list(set(data))
-            await self.db_handler.write_to_single_column_table(name_database=table_name, database_columns=column_name,
-                                                               into_columns=into_columns, recorded_data=unique_records)
-            await show_notification(page, "Данные успешно записаны!")
-            page.go(route)
-            page.update()
-
-        async def on_append_click(_: ft.ControlEvent) -> None:
-            """Запись данных в базу данных"""
-            await write_data(clear_before=False)
-
-        async def on_clear_and_write_click(_: ft.ControlEvent) -> None:
-            """Очистка данных и запись данных в базу данных"""
-            await write_data(clear_before=True)
-
-        async def on_back_click(_: ft.ControlEvent) -> None:
-            """Возврат на предыдущий экран"""
-            page.go(route)
-
-        # Формирование представления
-        controls = [
-            text_to_send,
-            ft.ElevatedButton(text="Дозаписать данные в базу данных", width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                              on_click=on_append_click),
-            ft.ElevatedButton(text="Очистить данные и записать по новой", width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                              on_click=on_clear_and_write_click),
-            ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                              on_click=on_back_click)
-        ]
-
-        page.views.append(ft.View(route, controls=[list_view, ft.Column(controls=controls)]))
 
     async def record_setting(self, page: ft.Page, limit_type: str, label: str):
         """

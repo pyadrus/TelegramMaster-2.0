@@ -49,7 +49,7 @@ ru:
     recording_api_id_api_hash: "📝 Запись api_id, api_hash"
     time_between_subscriptions: "⏰ Запись времени"
     message_recording: "✉️ Запись сообщений"
-    link_entry: "🔗 Запись ссылки для инвайтинга"
+#    link_entry: "🔗 Запись ссылки для инвайтинга"
     account_limits: "📊 Лимиты на аккаунт"
     message_limits: "📨 Лимиты на сообщения"
     time_between_subscriptionss: "⏳ Время между подпиской"
@@ -103,7 +103,7 @@ ru:
     create_groups: "👥 Создание групп (чатов)"
     edit_bio: "✏️ Редактирование BIO"
     settings: "⚙️ Настройки"
-    documentation: "📖 Документация"
+#    documentation: "📖 Документация"
 
   create_groups_menu:
     choose_session_files: "📂 Выбрать session файл(ы)"
