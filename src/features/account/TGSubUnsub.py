@@ -223,18 +223,23 @@ class SubscribeUnsubscribeTelegram:
         :param client: Телеграм клиент
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
+        logger.info(f"Отписываемся от группы: {group_link}")
         try:
             entity = await client.get_entity(group_link)
             if entity:
                 await client(LeaveChannelRequest(entity))
+            await client.disconnect()  # Разрываем соединение с Telegram
         except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
             await log_and_display(translations["ru"]["errors"]["channel_private"], page)
         except UserNotParticipantError:
             await log_and_display(translations["ru"]["errors"]["unsubscribe_not_member"], page)
-        except Exception as error:
-            logger.exception(error)
-        finally:
-            await client.disconnect()  # Разрываем соединение с Telegram
+        except SessionRevokedError:
+            await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], page)
+        # except Exception as error:
+        #     logger.exception(error)
+
+        # finally:
+        #     await client.disconnect()  # Разрываем соединение с Telegram
 
     async def subscribe_to_group_or_channel(self, client, groups_wr, page: ft.Page) -> None:
         """
