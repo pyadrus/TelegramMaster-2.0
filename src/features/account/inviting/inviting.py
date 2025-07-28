@@ -13,8 +13,8 @@ from telethon.errors import (AuthKeyDuplicatedError, AuthKeyUnregisteredError, B
                              UserNotMutualContactError, UserPrivacyRestrictedError)
 from telethon.tl.functions.channels import InviteToChannelRequest
 
-from src.core.configs import (BUTTON_HEIGHT, ConfigReader, LIMITS, WIDTH_WIDE_BUTTON,
-                              path_accounts_folder, time_inviting_1, time_inviting_2)
+from src.core.configs import (BUTTON_HEIGHT, ConfigReader, LIMITS, WIDTH_WIDE_BUTTON, path_accounts_folder,
+                              time_inviting_1, time_inviting_2)
 from src.core.sqlite_working_tools import select_records_with_limit, get_links_inviting, save_links_inviting
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
 from src.features.account.TGConnect import TGConnect

@@ -333,6 +333,20 @@ async def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, 
     deleted_count = query.execute()
     await log_and_display(f"{deleted_count} rows deleted", page)
 
+def get_proxy_database():
+    """Получает прокси из базы данных"""
+    proxy_data = []
+    for proxy in Proxy.select(Proxy.proxy_type, Proxy.addr, Proxy.port, Proxy.username, Proxy.password, Proxy.rdns):
+        proxy_data.append((
+            proxy.proxy_type,
+            proxy.addr,
+            proxy.port,
+            proxy.username,
+            proxy.password,
+            proxy.rdns
+        ))
+    logger.warning(proxy_data)
+    return proxy_data
 
 def open_and_read_data():
     pass

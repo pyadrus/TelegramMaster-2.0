@@ -5,22 +5,19 @@ import flet as ft
 import requests
 from loguru import logger
 
-from src.core.sqlite_working_tools import deleting_an_invalid_proxy
+from src.core.sqlite_working_tools import deleting_an_invalid_proxy, get_proxy_database
 from src.features.auth.logging_in import get_country_flag
 from src.gui.gui import log_and_display
 
 
-async def reading_proxy_data_from_the_database(db_handler, page: ft.Page):
+async def reading_proxy_data_from_the_database():
     """
     Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
     username - логин (например: username), password - пароль (например: password)
-
-    :param db_handler - объект класса DatabaseHandler
-    :param page: Страница интерфейса Flet для отображения элементов управления.
     """
     try:
-        proxy_random_list = random.choice(await db_handler.open_and_read_data(table_name="proxy", page=page))
+        proxy_random_list = random.choice(get_proxy_database())
         proxy = {'proxy_type': (proxy_random_list[0]), 'addr': proxy_random_list[1], 'port': int(proxy_random_list[2]),
                  'username': proxy_random_list[3], 'password': proxy_random_list[4], 'rdns': proxy_random_list[5]}
         return proxy
