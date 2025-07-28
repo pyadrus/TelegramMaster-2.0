@@ -276,10 +276,28 @@ class TGConnect:
                 api_id=self.api_id,
                 api_hash=self.api_hash,
                 system_version="4.16.30-vxCUSTOM",
-                proxy=await reading_proxy_data_from_the_database()
+                proxy=reading_proxy_data_from_the_database()
             )
             await telegram_client.connect()
+            me = await telegram_client.get_me()
+            logger.info(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
+            await log_and_display(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}", page)
+
+            # string_session = telegram_client.session.save()
+            # logger.info(f"📦 String session: {string_session}")
+
+            # if string_session is None:
+            #     telegram_client.disconnect()
+            #     working_with_accounts(f"{account_directory}/{session_name}.session",
+            #                           f"user_data/accounts/banned/{session_name}.session")
             return telegram_client
+
+        # except FloodWaitError as e:
+        #     logger.warning(f"[{session_name}] Слишком частые запросы. Ждем {e.seconds} сек.")
+        #     await log_and_display(f"⏳ FloodWait {e.seconds} секунд для {session_name}", page)
+        #     await asyncio.sleep(e.seconds)
+        #     return None
+
         except sqlite3.OperationalError:
             await log_and_display(message=f"❌ Аккаунт {session_name} поврежден.", page=page)
             return None
@@ -320,7 +338,7 @@ class TGConnect:
             telegram_client = TelegramClient(
                 f"user_data/accounts/{phone_number_value}",
                 api_id=self.api_id, api_hash=self.api_hash, system_version="4.16.30-vxCUSTOM",
-                proxy=await reading_proxy_data_from_the_database(db_handler=None))
+                proxy=reading_proxy_data_from_the_database())
             await telegram_client.connect()  # Подключаемся к Telegram
             if not await telegram_client.is_user_authorized():
                 await log_and_display(f"Пользователь не авторизован", page)

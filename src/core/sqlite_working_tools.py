@@ -23,6 +23,7 @@ class WritingGroupLinks(Model):
         database = db
         table_name = 'writing_group_links'
 
+
 def write_writing_group_links_to_db(data_to_save):
     """
     Запись данных writing_group_links в базу данных. Добавлена проверка на уникальность ссылки. Дубликаты игнорируются и не
@@ -36,6 +37,16 @@ def write_writing_group_links_to_db(data_to_save):
                 WritingGroupLinks.get_or_create(writing_group_links=link)
             except peewee.IntegrityError:
                 logger.warning(f"Ссылка уже существует в базе: {link}")
+
+
+def get_writing_group_links():
+    """Получаем ссылки на группы из таблицы writing_group_links"""
+    writing_group_links = []
+    for link in WritingGroupLinks.select(WritingGroupLinks.writing_group_links):
+        writing_group_links.append(link.writing_group_links)
+    logger.warning(writing_group_links)
+    return writing_group_links
+
 
 async def read_writing_group_links():
     """
@@ -347,6 +358,7 @@ async def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, 
     deleted_count = query.execute()
     await log_and_display(f"{deleted_count} rows deleted", page)
 
+
 def get_proxy_database():
     """Получает прокси из базы данных"""
     proxy_data = []
@@ -361,6 +373,7 @@ def get_proxy_database():
         ))
     logger.warning(proxy_data)
     return proxy_data
+
 
 def open_and_read_data():
     pass

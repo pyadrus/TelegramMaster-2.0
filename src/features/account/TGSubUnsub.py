@@ -15,7 +15,7 @@ from telethon.tl.functions.messages import ImportChatInviteRequest
 
 from src.core.configs import (BUTTON_HEIGHT, WIDTH_WIDE_BUTTON, path_accounts_folder, time_subscription_1,
                               time_subscription_2, BUTTON_WIDTH)
-from src.core.sqlite_working_tools import write_data_to_db, write_writing_group_links_to_db
+from src.core.sqlite_working_tools import write_data_to_db, write_writing_group_links_to_db, get_writing_group_links
 from src.core.utils import find_filess, record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.gui_elements import GUIProgram
@@ -87,11 +87,7 @@ class SubscribeUnsubscribeTelegram:
             write_writing_group_links_to_db(data_to_save)
             logger.info(f"Сохранение ссылок для подписки завершено")
 
-        # Поле ввода, для ссылок для подписки
-        # link_entry_field = ft.TextField(label="Введите ссылки для подписки на группы и каналы",
-        #                                 label_style=ft.TextStyle(color=ft.Colors.GREY_400), width=700
-        #                                 )
-        # save_button = ft.IconButton(visible=True, icon=ft.Icons.SAVE, on_click=save, icon_size=50)
+        # Поле ввода ссылок и кнопка сохранения для подписки
         link_entry_field, save_button = await InputFieldAndSave().create_input_and_save_button(save)
 
         page.views.append(
@@ -105,8 +101,7 @@ class SubscribeUnsubscribeTelegram:
                                  gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                       ft.Colors.PURPLE])), ), ), ], ),
 
-                     await InputFieldAndSave().build_input_row(link_entry_field,
-                                                               save_button),
+                     await InputFieldAndSave().build_input_row(link_entry_field, save_button),
 
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🔔 Подписка
@@ -177,6 +172,7 @@ class SubscribeUnsubscribeTelegram:
             elif link.startswith("https://t.me/"):
                 # Извлекаем имя пользователя или группы
                 username = link.split("/")[-1]
+
                 result = await client(functions.contacts.ResolveUsernameRequest(username=username))
                 chat = result.chats[0] if result.chats else None
                 if chat:
@@ -184,7 +180,11 @@ class SubscribeUnsubscribeTelegram:
                                           f"Количество участников: {chat.participants_count if hasattr(chat, 'participants_count') else 'Неизвестно'}, "
                                           f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}",
                                           page)
-                    await client(JoinChannelRequest(link))
+                    logger.info(f"Подписка на группу / канал по ссылке {link}")
+                    try:
+                        await client(JoinChannelRequest(link))
+                    except sqlite3.DatabaseError:
+                        logger.error("❌ Не удалось подписаться на канал / группу, так как файл аккаунта повреждён")
                 else:
                     await log_and_display(f"Не удалось найти публичный чат: {link}", page)
 
@@ -249,18 +249,26 @@ class SubscribeUnsubscribeTelegram:
         async def add_items(_):
             start = await start_time(page)
             for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
+                telegram_client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder)
+                if telegram_client is None:
+                    logger.error("❌ Не удалось подключиться к Telegram")
+                    # pass  # Пропустить аккаунт, если не удалось подключиться
+                # string_session = string_session.session.save()
+                # logger.info("📦 String session:", string_session)
                 # Получение ссылки
-                links_inviting: list = await db_handler.open_and_read_data(table_name="writing_group_links",
-                                                                           page=page)  # Открываем базу данных
+                links_inviting: list = get_writing_group_links()  # Открываем базу данных
                 await log_and_display(f"Ссылка для подписки и проверки:  {links_inviting}", page)
                 for link_tuple in links_inviting:
-                    link = link_tuple[0]
-                    await log_and_display(f"Ссылка для подписки и проверки:  {link}", page)
+                    # link = link_tuple[0]
+                    await log_and_display(f"Ссылка для подписки и проверки:  {link_tuple}", page)
                     # Проверка ссылок для подписки и подписка на группу или канал
-                    await self.checking_links(page, client, link)
-                await client.disconnect()
+                    logger.info(f"Работа с аккаунтом {session_name}")
+                    await self.checking_links(page, telegram_client, link_tuple)
+                try:
+                    await telegram_client.disconnect()
+                except sqlite3.DatabaseError:
+                    logger.error("❌ Не удалось подписаться на канал / группу, так как файл аккаунта повреждён")
             await end_time(start, page)
 
         async def back_button_clicked(_):

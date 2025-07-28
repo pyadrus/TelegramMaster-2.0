@@ -10,7 +10,7 @@ from src.features.auth.logging_in import get_country_flag
 from src.gui.gui import log_and_display
 
 
-async def reading_proxy_data_from_the_database():
+def reading_proxy_data_from_the_database():
     """
     Считываем данные для proxy c базы данных "software_database.db", таблица "proxy" где:
     proxy_type - тип proxy (например: SOCKS5), addr - адрес (например: 194.67.248.9), port - порт (например: 9795)
