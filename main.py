@@ -63,14 +63,14 @@ async def main(page: ft.Page):
             # __________________________________________________________________________________________________________
             elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
                 await SubscribeUnsubscribeTelegram().subscribe_and_unsubscribe_menu(page=page)
-            elif page.route == "/subscription_all":  # Подписка
-                await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
-            elif page.route == "/unsubscribe_all":  # Отписываемся
-                start = await start_time(page=page)
-                logger.info("▶️ Начало Отписка")
-                await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page)
-                logger.info("🔚 Конец Отписки")
-                await end_time(start, page=page)
+            # elif page.route == "/subscription_all":  # Подписка
+            #     await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
+            # elif page.route == "/unsubscribe_all":  # Отписываемся
+            #     start = await start_time(page=page)
+            #     logger.info("▶️ Начало Отписка")
+            #     await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page)
+            #     logger.info("🔚 Конец Отписки")
+            #     await end_time(start, page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
                 await reactions_menu(page=page)

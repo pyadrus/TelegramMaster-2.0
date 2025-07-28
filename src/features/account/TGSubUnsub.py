@@ -13,8 +13,8 @@ from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError, Chan
 from telethon.tl.functions.channels import JoinChannelRequest, LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-from src.core.configs import (BUTTON_HEIGHT, WIDTH_WIDE_BUTTON, path_accounts_folder, time_subscription_1,
-                              time_subscription_2, BUTTON_WIDTH)
+from src.core.configs import (BUTTON_HEIGHT, path_accounts_folder, time_subscription_1,
+                              time_subscription_2, WIDTH_WIDE_BUTTON)
 from src.core.sqlite_working_tools import write_data_to_db, write_writing_group_links_to_db, get_writing_group_links
 from src.core.utils import find_filess, record_and_interrupt
 from src.features.account.TGConnect import TGConnect
@@ -78,7 +78,56 @@ class SubscribeUnsubscribeTelegram:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
 
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
+        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
+
+        async def unsubscribe_all(_) -> None:
+            """
+            Отписываемся от групп, каналов, личных сообщений
+            """
+            start = await start_time(page)
+            try:
+                for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+                    client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                       account_directory=path_accounts_folder)
+                    dialogs = client.iter_dialogs()
+                    await log_and_display(f"Диалоги: {dialogs}", page)
+                    async for dialog in dialogs:
+                        await log_and_display(f"{dialog.name}, {dialog.id}", page)
+                        await client.delete_dialog(dialog)
+                    await client.disconnect()
+            except Exception as error:
+                logger.exception(error)
+            await end_time(start, page)
+
+        async def add_items(_):
+            """Подписываемся на группы и каналы"""
+            start = await start_time(page)
+            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+                telegram_client = await self.tg_connect.get_telegram_client(page, session_name,
+                                                                            account_directory=path_accounts_folder)
+                if telegram_client is None:
+                    logger.error("❌ Не удалось подключиться к Telegram")
+                    # pass  # Пропустить аккаунт, если не удалось подключиться
+                # string_session = string_session.session.save()
+                # logger.info("📦 String session:", string_session)
+                # Получение ссылки
+                links_inviting: list = get_writing_group_links()  # Открываем базу данных
+                await log_and_display(f"Ссылка для подписки и проверки:  {links_inviting}", page)
+                for link_tuple in links_inviting:
+                    # link = link_tuple[0]
+                    await log_and_display(f"Ссылка для подписки и проверки:  {link_tuple}", page)
+                    # Проверка ссылок для подписки и подписка на группу или канал
+                    logger.info(f"Работа с аккаунтом {session_name}")
+                    await self.checking_links(page, telegram_client, link_tuple)
+                try:
+                    await telegram_client.disconnect()
+                except sqlite3.DatabaseError:
+                    logger.error("❌ Не удалось подписаться на канал / группу, так как файл аккаунта повреждён")
+            await end_time(start, page)
+
         async def save(e):
+            """Сохраняет ссылки в базу данных в таблицу writing_group_links, для последующей подписки"""
             logger.info(f"Сохранение ссылок для подписки")
             writing_group_links = link_entry_field.value.strip().split()
             data_to_save = {
@@ -101,17 +150,18 @@ class SubscribeUnsubscribeTelegram:
                                  gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                       ft.Colors.PURPLE])), ), ), ], ),
 
+                     list_view,  # Отображение логов 📝
                      await InputFieldAndSave().build_input_row(link_entry_field, save_button),
 
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🔔 Подписка
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["subscribe_unsubscribe_menu"]["subscription"],
-                                           on_click=lambda _: page.go("/subscription_all")),
+                                           on_click=add_items),
                          # 🚫 Отписываемся
-                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["subscribe_unsubscribe_menu"]["unsubscribe"],
-                                           on_click=lambda _: page.go("/unsubscribe_all")),
+                                           on_click=unsubscribe_all),
                      ])]))
 
     @staticmethod
@@ -234,86 +284,40 @@ class SubscribeUnsubscribeTelegram:
             await log_and_display(translations["ru"]["errors"]["two_factor_required"], page)
             await asyncio.sleep(2)
 
-    async def subscribe_telegram(self, page: ft.Page) -> None:
-        """
-        Подписка на группы / каналы Telegram
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        """
-        # TODO реализовать проверку ссылок перед подпиской, что бы пользователи не подсовывали программе не рабочие
-        #  ссылки или ссылки которые не являются группой или каналом
-
-        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-
-        async def add_items(_):
-            start = await start_time(page)
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
-                telegram_client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_accounts_folder)
-                if telegram_client is None:
-                    logger.error("❌ Не удалось подключиться к Telegram")
-                    # pass  # Пропустить аккаунт, если не удалось подключиться
-                # string_session = string_session.session.save()
-                # logger.info("📦 String session:", string_session)
-                # Получение ссылки
-                links_inviting: list = get_writing_group_links()  # Открываем базу данных
-                await log_and_display(f"Ссылка для подписки и проверки:  {links_inviting}", page)
-                for link_tuple in links_inviting:
-                    # link = link_tuple[0]
-                    await log_and_display(f"Ссылка для подписки и проверки:  {link_tuple}", page)
-                    # Проверка ссылок для подписки и подписка на группу или канал
-                    logger.info(f"Работа с аккаунтом {session_name}")
-                    await self.checking_links(page, telegram_client, link_tuple)
-                try:
-                    await telegram_client.disconnect()
-                except sqlite3.DatabaseError:
-                    logger.error("❌ Не удалось подписаться на канал / группу, так как файл аккаунта повреждён")
-            await end_time(start, page)
-
-        async def back_button_clicked(_):
-            """
-            ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню подписки на группы / каналы Telegram.
-            """
-            page.go("/subscribe_unsubscribe")  # Переходим к основному меню подписки на группы / каналы Telegram. 🏠
-
-        # Добавляем кнопки и другие элементы управления на страницу
-        page.views.append(
-            ft.View(
-                "/subscription_all",
-                [
-                    ft.Text(value="Подписка на группы / каналы Telegram"),  # Выбор группы для инвайтинга
-                    list_view,  # Отображение логов 📝
-                    ft.Column(),  # Резерв для приветствия или других элементов интерфейса
-                    ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT, text="🚀 Начать подписку",
-                                      on_click=add_items),  # Кнопка "🚀 Начать подписку"
-                    ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                                      text=translations["ru"]["buttons"]["back"],
-                                      on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
-                ],
-            )
-        )
-
-        page.update()  # обновляем страницу после добавления элементов управления 🔄
-
-    async def unsubscribe_all(self, page: ft.Page) -> None:
-        """
-        Отписываемся от групп, каналов, личных сообщений
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        """
-        try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_accounts_folder)
-                dialogs = client.iter_dialogs()
-                await log_and_display(f"Диалоги: {dialogs}", page)
-                async for dialog in dialogs:
-                    await log_and_display(f"{dialog.name}, {dialog.id}", page)
-                    await client.delete_dialog(dialog)
-                await client.disconnect()
-        except Exception as error:
-            logger.exception(error)
+    # async def subscribe_telegram(self, page: ft.Page) -> None:
+    #     """
+    #     Подписка на группы / каналы Telegram
+    #
+    #     :param page: Страница интерфейса Flet для отображения элементов управления.
+    #     """
+    #
+    #     # TODO реализовать проверку ссылок перед подпиской, что бы пользователи не подсовывали программе не рабочие
+    #     #  ссылки или ссылки которые не являются группой или каналом
+    #
+    #     async def back_button_clicked(_):
+    #         """
+    #         ⬅️ Обрабатывает нажатие кнопки "Назад", возвращая в меню подписки на группы / каналы Telegram.
+    #         """
+    #         page.go("/subscribe_unsubscribe")  # Переходим к основному меню подписки на группы / каналы Telegram. 🏠
+    #
+    #     # Добавляем кнопки и другие элементы управления на страницу
+    #     page.views.append(
+    #         ft.View(
+    #             "/subscription_all",
+    #             [
+    #                 ft.Text(value="Подписка на группы / каналы Telegram"),  # Выбор группы для инвайтинга
+    #                 list_view,  # Отображение логов 📝
+    #                 ft.Column(),  # Резерв для приветствия или других элементов интерфейса
+    #                 # ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT, text="🚀 Начать подписку",
+    #                 #                   on_click=add_items),  # Кнопка "🚀 Начать подписку"
+    #                 ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+    #                                   text=translations["ru"]["buttons"]["back"],
+    #                                   on_click=back_button_clicked)  # Кнопка "⬅️ Назад"
+    #             ],
+    #         )
+    #     )
+    #
+    #     page.update()  # обновляем страницу после добавления элементов управления 🔄
 
     @staticmethod
     async def unsubscribe_from_the_group(client, group_link, page: ft.Page) -> None:
@@ -402,3 +406,5 @@ class SubscribeUnsubscribeTelegram:
                 page)
         # except Exception as error:
         #     logger.exception(error)
+
+# 409
