@@ -185,9 +185,10 @@ def select_records_with_limit(limit):
     query = MembersGroups.select(MembersGroups.username, MembersGroups.user_id)
     for row in query:
         if row.username == "":
-            logger.info(f"У пользователя User ID: {row.user_id} нет username", )
+            # logger.info(f"У пользователя User ID: {row.user_id} нет username", )
+            pass
         else:
-            logger.info(f"Username: {row.username}, User ID: {row.user_id}", )
+            # logger.info(f"Username: {row.username}, User ID: {row.user_id}", )
             usernames.append(row.username)
 
     if limit is None:  # Если limit не указан, возвращаем все записи
@@ -213,28 +214,28 @@ def read_parsed_chat_participants_from_db():
     return data
 
 
-def remove_duplicate_ids():
-    """Удаление дублирующихся id в таблице members"""
-    # Получаем все user_id, которые дублируются
-    duplicate_user_ids = (
-        MembersGroups.select(MembersGroups.user_id)
-        .group_by(MembersGroups.user_id)
-        .having(fn.COUNT(MembersGroups.user_id) > 1)
-    )
-
-    for user_id_row in duplicate_user_ids:
-        user_id = user_id_row.user_id
-
-        # Получаем все записи с этим user_id
-        duplicates = MembersGroups.select().where(MembersGroups.user_id == user_id)
-
-        # Сохраняем первую, остальные удаляем
-        first = True
-        for record in duplicates:
-            if first:
-                first = False
-                continue
-            record.delete_instance()
+# def remove_duplicate_ids():
+#     """Удаление дублирующихся id в таблице members"""
+#     # Получаем все user_id, которые дублируются
+#     duplicate_user_ids = (
+#         MembersGroups.select(MembersGroups.user_id)
+#         .group_by(MembersGroups.user_id)
+#         .having(fn.COUNT(MembersGroups.user_id) > 1)
+#     )
+#
+#     for user_id_row in duplicate_user_ids:
+#         user_id = user_id_row.user_id
+#
+#         # Получаем все записи с этим user_id
+#         duplicates = MembersGroups.select().where(MembersGroups.user_id == user_id)
+#
+#         # Сохраняем первую, остальные удаляем
+#         first = True
+#         for record in duplicates:
+#             if first:
+#                 first = False
+#                 continue
+#             record.delete_instance()
 
 
 def add_member_to_db(log_data):

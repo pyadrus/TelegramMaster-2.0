@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import random
-
+import sqlite3
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions, types
@@ -228,13 +228,19 @@ class SubscribeUnsubscribeTelegram:
             entity = await client.get_entity(group_link)
             if entity:
                 await client(LeaveChannelRequest(entity))
-            await client.disconnect()  # Разрываем соединение с Telegram
+            # await client.disconnect()  # Разрываем соединение с Telegram
         except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
             await log_and_display(translations["ru"]["errors"]["channel_private"], page)
         except UserNotParticipantError:
             await log_and_display(translations["ru"]["errors"]["unsubscribe_not_member"], page)
         except SessionRevokedError:
             await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], page)
+        except sqlite3.DatabaseError:
+            await log_and_display(
+                f"❌ Попытка подписки на группу / канал {group_link}. Ошибка базы данных, аккаунта или аккаунт заблокирован.",
+                page)
+        except ConnectionError:
+            await log_and_display("Ошибка соединения с Telegram", page)
         # except Exception as error:
         #     logger.exception(error)
 
@@ -289,5 +295,9 @@ class SubscribeUnsubscribeTelegram:
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения администратором на вступление в группу",
                 page)
-        except Exception as error:
-            logger.exception(error)
+        except sqlite3.DatabaseError:
+            await log_and_display(
+                f"❌ Попытка подписки на группу / канал {groups_wr}. Ошибка базы данных, аккаунта или аккаунт заблокирован.",
+                page)
+        # except Exception as error:
+        #     logger.exception(error)
