@@ -15,7 +15,7 @@ from telethon.tl.functions.messages import ImportChatInviteRequest
 
 from src.core.configs import (BUTTON_HEIGHT, WIDTH_WIDE_BUTTON, path_accounts_folder, time_subscription_1,
                               time_subscription_2, BUTTON_WIDTH)
-from src.core.sqlite_working_tools import write_data_to_db
+from src.core.sqlite_working_tools import write_data_to_db, write_writing_group_links_to_db
 from src.core.utils import find_filess, record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.gui_elements import GUIProgram
@@ -80,14 +80,19 @@ class SubscribeUnsubscribeTelegram:
 
         async def save(e):
             logger.info(f"Сохранение ссылок для подписки")
+            writing_group_links = link_entry_field.value.strip().split()
+            data_to_save = {
+                "writing_group_links": writing_group_links,
+            }
+            write_writing_group_links_to_db(data_to_save)
+            logger.info(f"Сохранение ссылок для подписки завершено")
 
         # Поле ввода, для ссылок для подписки
         # link_entry_field = ft.TextField(label="Введите ссылки для подписки на группы и каналы",
         #                                 label_style=ft.TextStyle(color=ft.Colors.GREY_400), width=700
         #                                 )
         # save_button = ft.IconButton(visible=True, icon=ft.Icons.SAVE, on_click=save, icon_size=50)
-        link_entry_field, save_button = await InputFieldAndSave().create_input_and_save_button(
-            save)
+        link_entry_field, save_button = await InputFieldAndSave().create_input_and_save_button(save)
 
         page.views.append(
             ft.View("/subscribe_unsubscribe",

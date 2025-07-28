@@ -53,6 +53,7 @@ class InvitingToAGroup:
         async def save(_):
             """Запись ссылки для инвайтинга в базу данных"""
             links = link_entry_field.value.strip().split()
+
             logger.info(f"Пользователь ввел ссылку(и): {links}")
             data_to_save = {
                 "links_inviting": links,

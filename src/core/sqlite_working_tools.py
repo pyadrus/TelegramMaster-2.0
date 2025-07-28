@@ -23,8 +23,19 @@ class WritingGroupLinks(Model):
         database = db
         table_name = 'writing_group_links'
 
-def write_writing_group_links_to_db(links: list[str]):
-    pass
+def write_writing_group_links_to_db(data_to_save):
+    """
+    Запись данных writing_group_links в базу данных. Добавлена проверка на уникальность ссылки. Дубликаты игнорируются и не
+    записываются.
+    """
+    writing_group_links = data_to_save.get("writing_group_links", [])
+
+    with db.atomic():
+        for link in writing_group_links:
+            try:
+                WritingGroupLinks.get_or_create(writing_group_links=link)
+            except peewee.IntegrityError:
+                logger.warning(f"Ссылка уже существует в базе: {link}")
 
 async def read_writing_group_links():
     """
