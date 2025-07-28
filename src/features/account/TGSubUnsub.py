@@ -2,6 +2,7 @@
 import asyncio
 import random
 import sqlite3
+
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions, types
@@ -13,18 +14,105 @@ from telethon.tl.functions.channels import JoinChannelRequest, LeaveChannelReque
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
 from src.core.configs import (BUTTON_HEIGHT, WIDTH_WIDE_BUTTON, path_accounts_folder, time_subscription_1,
-                              time_subscription_2)
+                              time_subscription_2, BUTTON_WIDTH)
 from src.core.sqlite_working_tools import write_data_to_db
 from src.core.utils import find_filess, record_and_interrupt
 from src.features.account.TGConnect import TGConnect
+from src.features.account.parsing.gui_elements import GUIProgram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
+
+
+class InputFieldAndSave:
+    """
+    Компонент Flet для отображения текстового поля ввода и кнопки сохранения.
+    Используется для ввода ссылок на Telegram-группы и каналы, на которые необходимо подписаться.
+    """
+
+    async def create_input_and_save_button(self, on_save_click):
+        """
+        Создаёт текстовое поле для ввода ссылок и кнопку сохранения.
+
+        :param on_save_click: Функция-обработчик, вызываемая при нажатии на кнопку сохранения.
+        :return: Кортеж из двух элементов: ft.TextField и ft.IconButton.
+        https://flet.dev/docs/controls/textfield/
+        """
+        # Поле ввода, для ссылок для подписки
+        link_entry_field = ft.TextField(
+            label="Введите ссылки для подписки на группы и каналы",
+            label_style=ft.TextStyle(color=ft.Colors.GREY_400),
+            width=700
+        )
+        save_button = ft.IconButton(
+            visible=True,
+            icon=ft.Icons.SAVE,
+            on_click=on_save_click,
+            icon_size=50
+        )
+        return link_entry_field, save_button
+
+    async def build_input_row(self, input_field: ft.TextField, save_button: ft.IconButton):
+        """
+        Создаёт горизонтальный контейнер (строку) с полем ввода и кнопкой.
+
+        :param input_field: Текстовое поле для ввода ссылок.
+        :param save_button: Кнопка сохранения.
+        :return: Компонент ft.Row с размещёнными элементами.
+        https://flet.dev/docs/cookbook/large-lists/#gridview
+        """
+        return ft.Row(
+            controls=[input_field, save_button],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+        )
 
 
 class SubscribeUnsubscribeTelegram:
 
     def __init__(self):
         self.tg_connect = TGConnect()
+
+    async def subscribe_and_unsubscribe_menu(self, page: ft.Page):
+        """
+        Меню подписка и отписка
+
+        :param page: Страница интерфейса Flet для отображения элементов управления.
+        """
+
+        async def save(e):
+            logger.info(f"Сохранение ссылок для подписки")
+
+        # Поле ввода, для ссылок для подписки
+        # link_entry_field = ft.TextField(label="Введите ссылки для подписки на группы и каналы",
+        #                                 label_style=ft.TextStyle(color=ft.Colors.GREY_400), width=700
+        #                                 )
+        # save_button = ft.IconButton(visible=True, icon=ft.Icons.SAVE, on_click=save, icon_size=50)
+        link_entry_field, save_button = await InputFieldAndSave().create_input_and_save_button(
+            save)
+
+        page.views.append(
+            ft.View("/subscribe_unsubscribe",
+                    [await GUIProgram().key_app_bar(),
+                     ft.Text(spans=[ft.TextSpan(
+                         translations["ru"]["menu"]["subscribe_unsubscribe"],
+                         ft.TextStyle(
+                             size=20, weight=ft.FontWeight.BOLD,
+                             foreground=ft.Paint(
+                                 gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
+                                                                                      ft.Colors.PURPLE])), ), ), ], ),
+
+                     await InputFieldAndSave().build_input_row(link_entry_field,
+                                                               save_button),
+
+                     ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                         # 🔔 Подписка
+                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                                           text=translations["ru"]["subscribe_unsubscribe_menu"]["subscription"],
+                                           on_click=lambda _: page.go("/subscription_all")),
+                         # 🚫 Отписываемся
+                         ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                                           text=translations["ru"]["subscribe_unsubscribe_menu"]["unsubscribe"],
+                                           on_click=lambda _: page.go("/unsubscribe_all")),
+                     ])]))
 
     @staticmethod
     async def extract_channel_id(link):

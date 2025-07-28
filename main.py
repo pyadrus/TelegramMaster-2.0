@@ -26,7 +26,7 @@ from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
 from src.gui.gui import end_time, start_time
 from src.gui.main_menu import main_menu_program
-from src.gui.menu import (bio_editing_menu, settings_menu, reactions_menu, subscribe_and_unsubscribe_menu,
+from src.gui.menu import (bio_editing_menu, settings_menu, reactions_menu,
                           viewing_posts_menu, working_with_contacts_menu)
 from src.gui.notification import show_notification
 
@@ -62,7 +62,7 @@ async def main(page: ft.Page):
                 await TGChek().account_verification_menu(page=page)
             # __________________________________________________________________________________________________________
             elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
-                await subscribe_and_unsubscribe_menu(page=page)
+                await SubscribeUnsubscribeTelegram().subscribe_and_unsubscribe_menu(page=page)
             elif page.route == "/subscription_all":  # Подписка
                 await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
             elif page.route == "/unsubscribe_all":  # Отписываемся
@@ -171,9 +171,14 @@ async def main(page: ft.Page):
                                                            "username, id, access_hash, first_name, last_name, "
                                                            "user_phone, online_at, photos_id, user_premium",
                                                            "/settings", "members (username)")
+
+
             elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
-                await SettingPage().output_the_input_field(page, "writing_group_links",
-                                                           "writing_group_links", "/settings", "writing_group_links")
+                await SettingPage().output_the_input_field(page, "writing_group_links", "writing_group_links",
+                                                           "/settings", "writing_group_links")
+
+
+
             # elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
             #     await SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга",
             #                                                "links_inviting",

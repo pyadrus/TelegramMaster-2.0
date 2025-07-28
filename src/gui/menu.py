@@ -217,29 +217,4 @@ async def viewing_posts_menu(page: ft.Page):
                  ])]))
 
 
-async def subscribe_and_unsubscribe_menu(page: ft.Page):
-    """
-    Меню подписка и отписка
 
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    """
-    page.views.append(
-        ft.View("/subscribe_unsubscribe",
-                [await GUIProgram().key_app_bar(),
-                 ft.Text(spans=[ft.TextSpan(
-                     translations["ru"]["menu"]["subscribe_unsubscribe"],
-                     ft.TextStyle(
-                         size=20, weight=ft.FontWeight.BOLD,
-                         foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
-                                                                                  ft.Colors.PURPLE])), ), ), ], ),
-                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     # 🔔 Подписка
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["subscribe_unsubscribe_menu"]["subscription"],
-                                       on_click=lambda _: page.go("/subscription_all")),
-                     # 🚫 Отписываемся
-                     ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["subscribe_unsubscribe_menu"]["unsubscribe"],
-                                       on_click=lambda _: page.go("/unsubscribe_all")),
-                 ])]))

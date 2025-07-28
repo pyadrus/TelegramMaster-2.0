@@ -23,6 +23,8 @@ class WritingGroupLinks(Model):
         database = db
         table_name = 'writing_group_links'
 
+def write_writing_group_links_to_db(links: list[str]):
+    pass
 
 async def read_writing_group_links():
     """

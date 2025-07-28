@@ -198,19 +198,29 @@ class InvitingToAGroup:
             await log_and_display(f"{dropdown.value}", page)
             # Подписка на группу для инвайтинга
             await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, page)
+            logger.info(f"Подписка на группу {dropdown.value} выполнена")
             # Получение списка usernames
             usernames = select_records_with_limit(limit=LIMITS)
+            logger.info(f"Список usernames: {usernames}")
             if len(usernames) == 0:
                 await log_and_display(f"В таблице members нет пользователей для инвайтинга", page)
                 await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page)
                 break  # Прерываем работу и меняем аккаунт
             for username in usernames:
+                logger.info(f"Пользователь: {username}")
                 await log_and_display(f"Пользователь username:{username}", page)
                 # Инвайтинг в группу по полученному списку
 
                 try:
                     await log_and_display(f"Попытка приглашения {username} в группу {dropdown.value}.", page)
-                    await client(InviteToChannelRequest(dropdown.value, [username]))
+                    # await log_and_display(f"[DEBUG] Попытка инвайта: {username}", page)
+                    # await client(InviteToChannelRequest(dropdown.value, [username]))
+                    # await asyncio.wait_for(
+                    logger.info(f"{dropdown.value}")
+                    client(InviteToChannelRequest(dropdown.value, [username]))
+                    # timeout=2  # 15 секунд — настрой по необходимости
+                    # )
+                    # await log_and_display(f"[DEBUG] Инвайт выполнен: {username}", page)
                     await log_and_display(f"Удачно! Спим 5 секунд", page)
                     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
                 # Ошибка инвайтинга продолжаем работу
