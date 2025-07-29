@@ -10,7 +10,7 @@ from telethon.tl.functions.messages import GetMessagesViewsRequest
 from src.core.configs import path_accounts_folder
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
-from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.gui.buttons import function_button_ready_viewing
 from src.gui.gui import log_and_display
 

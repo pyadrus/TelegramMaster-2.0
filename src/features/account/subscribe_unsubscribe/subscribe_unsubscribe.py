@@ -19,90 +19,12 @@ from src.core.sqlite_working_tools import write_data_to_db, write_writing_group_
 from src.core.utils import find_filess, record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.gui_elements import GUIProgram
+from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe_gui import (SubscriptionLinkInputSection,
+                                                                                  TimeIntervalInputSection)
 from src.features.settings.setting import writing_settings_to_a_file, recording_limits_file
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
-
-
-class TimeIntervalInputSection:
-
-    async def create_time_inputs_and_save_button(self, on_save_click):
-        """
-        Создаёт текстовое поле для ввода ссылок и кнопку сохранения.
-
-        :param on_save_click: Функция-обработчик, вызываемая при нажатии на кнопку сохранения.
-        :return: Кортеж из двух элементов: ft.TextField и ft.IconButton.
-        https://flet.dev/docs/controls/textfield/
-        """
-        min_time_input = ft.TextField(label="Время в секундах (меньшее)", autofocus=True, width=344)
-        max_time_input = ft.TextField(label="Время в секундах (большее)", autofocus=True, width=344)
-        save_button = ft.IconButton(
-            visible=True,
-            icon=ft.Icons.SAVE,
-            on_click=on_save_click,
-            icon_size=50
-        )
-        return min_time_input, max_time_input, save_button
-
-    async def build_time_input_row(self, min_time_input: ft.TextField, max_time_input: ft.TextField,
-                                   save_button: ft.IconButton):
-        """
-        Создаёт горизонтальный контейнер (строку) с полем ввода и кнопкой.
-
-        :param min_time_input: Текстовое поле для ввода минимального времени.
-        :param max_time_input: Текстовое поле для ввода максимального времени.
-        :param save_button: Кнопка сохранения.
-        :return: Компонент ft.Row с размещёнными элементами.
-        https://flet.dev/docs/cookbook/large-lists/#gridview
-        """
-        return ft.Row(
-            controls=[min_time_input, max_time_input, save_button],
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN  # или .START
-        )
-
-
-class SubscriptionLinkInputSection:
-    """
-    Компонент Flet для отображения текстового поля ввода и кнопки сохранения.
-    Используется для ввода ссылок на Telegram-группы и каналы, на которые необходимо подписаться.
-    """
-
-    async def create_link_input_and_save_button(self, on_save_click):
-        """
-        Создаёт текстовое поле для ввода ссылок и кнопку сохранения.
-
-        :param on_save_click: Функция-обработчик, вызываемая при нажатии на кнопку сохранения.
-        :return: Кортеж из двух элементов: ft.TextField и ft.IconButton.
-        https://flet.dev/docs/controls/textfield/
-        """
-        # Поле ввода, для ссылок для подписки
-        link_input = ft.TextField(
-            label="Введите ссылки для подписки на группы и каналы",
-            label_style=ft.TextStyle(color=ft.Colors.GREY_400),
-            width=700
-        )
-        save_button = ft.IconButton(
-            visible=True,
-            icon=ft.Icons.SAVE,
-            on_click=on_save_click,
-            icon_size=50
-        )
-        return link_input, save_button
-
-    async def build_link_input_row(self, link_input: ft.TextField, save_button: ft.IconButton):
-        """
-        Создаёт горизонтальный контейнер (строку) с полем ввода и кнопкой.
-
-        :param link_input: Текстовое поле для ввода ссылок.
-        :param save_button: Кнопка сохранения.
-        :return: Компонент ft.Row с размещёнными элементами.
-        https://flet.dev/docs/cookbook/large-lists/#gridview
-        """
-        return ft.Row(
-            controls=[link_input, save_button],
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-        )
 
 
 class SubscribeUnsubscribeTelegram:

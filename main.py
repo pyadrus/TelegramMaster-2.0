@@ -7,8 +7,7 @@ from loguru import logger
 from src.core.checking_program import CheckingProgram
 from src.core.configs import (PROGRAM_NAME, PROGRAM_VERSION, DATE_OF_PROGRAM_CHANGE, WINDOW_WIDTH,
                               WINDOW_HEIGHT, WINDOW_RESIZABLE, time_sending_messages_1, time_sending_messages_2,
-                              time_inviting_1, time_inviting_2, time_changing_accounts_1, time_changing_accounts_2,
-                              time_subscription_1, time_subscription_2)
+                              time_inviting_1, time_inviting_2, time_changing_accounts_1, time_changing_accounts_2)
 from src.core.sqlite_working_tools import create_database, open_and_read_data
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
@@ -17,7 +16,7 @@ from src.features.account.TGContact import TGContact
 from src.features.account.TGCreating import CreatingGroupsAndChats
 from src.features.account.TGReactions import WorkingWithReactions
 from src.features.account.TGSendingMessages import SendTelegramMessages
-from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.features.account.TGViewingPosts import ViewingPosts
 from src.features.account.inviting.inviting import InvitingToAGroup
 from src.features.account.parsing.parsing import ParsingGroupMembers

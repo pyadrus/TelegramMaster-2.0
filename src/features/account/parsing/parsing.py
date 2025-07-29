@@ -3,7 +3,7 @@ import asyncio
 import datetime
 import os
 import os.path
-
+import sqlite3
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
@@ -16,7 +16,7 @@ from telethon.tl.types import (ChannelParticipantsAdmins, ChannelParticipantsSea
 from src.core.configs import (WIDTH_WIDE_BUTTON, path_accounts_folder, time_activity_user_2, BUTTON_HEIGHT)
 from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, db, add_member_to_db)
 from src.features.account.TGConnect import TGConnect
-from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.parsing.switch_controller import ToggleController
 from src.features.account.parsing.user_info import UserInfo
@@ -128,6 +128,10 @@ async def parse_group(groups_wr, page) -> None:
                 break
             except AuthKeyUnregisteredError:
                 await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
+                await asyncio.sleep(2)
+                break
+            except sqlite3.DatabaseError:  # TODO Обработка ошибок базы данных (придумать универсальнео наименование)
+                await log_and_display("Ошибка дазы данных аккаунта", page)
                 await asyncio.sleep(2)
                 break
 

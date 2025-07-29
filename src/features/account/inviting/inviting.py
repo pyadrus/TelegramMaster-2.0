@@ -18,7 +18,7 @@ from src.core.configs import (BUTTON_HEIGHT, ConfigReader, LIMITS, WIDTH_WIDE_BU
 from src.core.sqlite_working_tools import select_records_with_limit, get_links_inviting, save_links_inviting
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
 from src.features.account.TGConnect import TGConnect
-from src.features.account.TGSubUnsub import SubscribeUnsubscribeTelegram
+from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification
@@ -218,7 +218,7 @@ class InvitingToAGroup:
                     # await client(InviteToChannelRequest(dropdown.value, [username]))
                     # await asyncio.wait_for(
                     logger.info(f"{dropdown.value}")
-                    client(InviteToChannelRequest(dropdown.value, [username]))
+                    await client(InviteToChannelRequest(dropdown.value, [username]))
                     # timeout=2  # 15 секунд — настрой по необходимости
                     # )
                     # await log_and_display(f"[DEBUG] Инвайт выполнен: {username}", page)
