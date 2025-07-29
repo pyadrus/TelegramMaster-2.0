@@ -19,8 +19,46 @@ from src.core.sqlite_working_tools import write_data_to_db, write_writing_group_
 from src.core.utils import find_filess, record_and_interrupt
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.gui_elements import GUIProgram
+from src.features.settings.setting import writing_settings_to_a_file, recording_limits_file
 from src.gui.gui import end_time, list_view, log_and_display, start_time
+from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
+
+
+class TwoInputFieldsAndSaveButton:
+
+    async def create_input_and_save_button(self, on_save_click):
+        """
+        Создаёт текстовое поле для ввода ссылок и кнопку сохранения.
+
+        :param on_save_click: Функция-обработчик, вызываемая при нажатии на кнопку сохранения.
+        :return: Кортеж из двух элементов: ft.TextField и ft.IconButton.
+        https://flet.dev/docs/controls/textfield/
+        """
+        smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True, width=344)
+        larger_timex = ft.TextField(label="Время в секундах (большее)", autofocus=True, width=344)
+        save_button_time = ft.IconButton(
+            visible=True,
+            icon=ft.Icons.SAVE,
+            on_click=on_save_click,
+            icon_size=50
+        )
+        return smaller_timex, larger_timex, save_button_time
+
+    async def build_input_row(self, smaller_timex: ft.TextField, larger_timex: ft.TextField,
+                              save_button_time: ft.IconButton):
+        """
+        Создаёт горизонтальный контейнер (строку) с полем ввода и кнопкой.
+
+        :param input_field: Текстовое поле для ввода ссылок.
+        :param save_button: Кнопка сохранения.
+        :return: Компонент ft.Row с размещёнными элементами.
+        https://flet.dev/docs/cookbook/large-lists/#gridview
+        """
+        return ft.Row(
+            controls=[smaller_timex, larger_timex, save_button_time],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN  # или .START
+        )
 
 
 class InputFieldAndSave:
@@ -136,15 +174,35 @@ class SubscribeUnsubscribeTelegram:
             write_writing_group_links_to_db(data_to_save)
             logger.info(f"Сохранение ссылок для подписки завершено")
 
-        time_range=[time_subscription_1, time_subscription_2]
-        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-        for time_range_message in time_range: list_view.controls.append(ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
-        smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
-        larger_timex = ft.TextField(label="Время в секундах (большее)")
+        async def btn_click(_) -> None:
+            """Обработчик клика по кнопке"""
+            try:
+                smaller_times = int(smaller_timex.value)
+                larger_times = int(larger_timex.value)
+                if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
+                    # Если условие прошло проверку, то возвращаем первое и второе время
+                    writing_settings_to_a_file(
+                        await recording_limits_file(str(smaller_times), str(larger_times), variable="time_subscription",
+                                                    page=page))
+                    list_view.controls.append(ft.Text("Данные успешно записаны!"))  # отображаем сообщение в ListView
+                    await show_notification(page, "Данные успешно записаны!")
+                    # page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+                else:
+                    list_view.controls.append(ft.Text("Ошибка: первое время должно быть меньше второго!"))
+            except ValueError:
+                list_view.controls.append(ft.Text("Ошибка: введите числовые значения!"))
+            page.update()  # обновляем страницу
 
+        time_range = [time_subscription_1, time_subscription_2]
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
+        for time_range_message in time_range: list_view.controls.append(
+            ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
 
         # Поле ввода ссылок и кнопка сохранения для подписки
         link_entry_field, save_button = await InputFieldAndSave().create_input_and_save_button(save)
+        # Два поля ввода для времени и кнопка сохранить
+        smaller_timex, larger_timex, save_button_time = await TwoInputFieldsAndSaveButton().create_input_and_save_button(
+            btn_click)
 
         page.views.append(
             ft.View("/subscribe_unsubscribe",
@@ -159,10 +217,7 @@ class SubscribeUnsubscribeTelegram:
 
                      list_view,  # Отображение логов 📝
 
-                     smaller_timex,
-                     larger_timex,
-
-
+                     await TwoInputFieldsAndSaveButton().build_input_row(smaller_timex, larger_timex, save_button_time),
                      await InputFieldAndSave().build_input_row(link_entry_field, save_button),
 
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
