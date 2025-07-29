@@ -25,9 +25,9 @@ from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
 
 
-class TwoInputFieldsAndSaveButton:
+class TimeIntervalInputSection:
 
-    async def create_input_and_save_button(self, on_save_click):
+    async def create_time_inputs_and_save_button(self, on_save_click):
         """
         Создаёт текстовое поле для ввода ссылок и кнопку сохранения.
 
@@ -35,39 +35,40 @@ class TwoInputFieldsAndSaveButton:
         :return: Кортеж из двух элементов: ft.TextField и ft.IconButton.
         https://flet.dev/docs/controls/textfield/
         """
-        smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True, width=344)
-        larger_timex = ft.TextField(label="Время в секундах (большее)", autofocus=True, width=344)
-        save_button_time = ft.IconButton(
+        min_time_input = ft.TextField(label="Время в секундах (меньшее)", autofocus=True, width=344)
+        max_time_input = ft.TextField(label="Время в секундах (большее)", autofocus=True, width=344)
+        save_button = ft.IconButton(
             visible=True,
             icon=ft.Icons.SAVE,
             on_click=on_save_click,
             icon_size=50
         )
-        return smaller_timex, larger_timex, save_button_time
+        return min_time_input, max_time_input, save_button
 
-    async def build_input_row(self, smaller_timex: ft.TextField, larger_timex: ft.TextField,
-                              save_button_time: ft.IconButton):
+    async def build_time_input_row(self, min_time_input: ft.TextField, max_time_input: ft.TextField,
+                                   save_button: ft.IconButton):
         """
         Создаёт горизонтальный контейнер (строку) с полем ввода и кнопкой.
 
-        :param input_field: Текстовое поле для ввода ссылок.
+        :param min_time_input: Текстовое поле для ввода минимального времени.
+        :param max_time_input: Текстовое поле для ввода максимального времени.
         :param save_button: Кнопка сохранения.
         :return: Компонент ft.Row с размещёнными элементами.
         https://flet.dev/docs/cookbook/large-lists/#gridview
         """
         return ft.Row(
-            controls=[smaller_timex, larger_timex, save_button_time],
+            controls=[min_time_input, max_time_input, save_button],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN  # или .START
         )
 
 
-class InputFieldAndSave:
+class SubscriptionLinkInputSection:
     """
     Компонент Flet для отображения текстового поля ввода и кнопки сохранения.
     Используется для ввода ссылок на Telegram-группы и каналы, на которые необходимо подписаться.
     """
 
-    async def create_input_and_save_button(self, on_save_click):
+    async def create_link_input_and_save_button(self, on_save_click):
         """
         Создаёт текстовое поле для ввода ссылок и кнопку сохранения.
 
@@ -76,7 +77,7 @@ class InputFieldAndSave:
         https://flet.dev/docs/controls/textfield/
         """
         # Поле ввода, для ссылок для подписки
-        link_entry_field = ft.TextField(
+        link_input = ft.TextField(
             label="Введите ссылки для подписки на группы и каналы",
             label_style=ft.TextStyle(color=ft.Colors.GREY_400),
             width=700
@@ -87,19 +88,19 @@ class InputFieldAndSave:
             on_click=on_save_click,
             icon_size=50
         )
-        return link_entry_field, save_button
+        return link_input, save_button
 
-    async def build_input_row(self, input_field: ft.TextField, save_button: ft.IconButton):
+    async def build_link_input_row(self, link_input: ft.TextField, save_button: ft.IconButton):
         """
         Создаёт горизонтальный контейнер (строку) с полем ввода и кнопкой.
 
-        :param input_field: Текстовое поле для ввода ссылок.
+        :param link_input: Текстовое поле для ввода ссылок.
         :param save_button: Кнопка сохранения.
         :return: Компонент ft.Row с размещёнными элементами.
         https://flet.dev/docs/cookbook/large-lists/#gridview
         """
         return ft.Row(
-            controls=[input_field, save_button],
+            controls=[link_input, save_button],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN
         )
 
@@ -199,9 +200,9 @@ class SubscribeUnsubscribeTelegram:
             ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
 
         # Поле ввода ссылок и кнопка сохранения для подписки
-        link_entry_field, save_button = await InputFieldAndSave().create_input_and_save_button(save)
+        link_entry_field, save_button = await SubscriptionLinkInputSection().create_link_input_and_save_button(save)
         # Два поля ввода для времени и кнопка сохранить
-        smaller_timex, larger_timex, save_button_time = await TwoInputFieldsAndSaveButton().create_input_and_save_button(
+        smaller_timex, larger_timex, save_button_time = await TimeIntervalInputSection().create_time_inputs_and_save_button(
             btn_click)
 
         page.views.append(
@@ -217,8 +218,8 @@ class SubscribeUnsubscribeTelegram:
 
                      list_view,  # Отображение логов 📝
 
-                     await TwoInputFieldsAndSaveButton().build_input_row(smaller_timex, larger_timex, save_button_time),
-                     await InputFieldAndSave().build_input_row(link_entry_field, save_button),
+                     await TimeIntervalInputSection().build_time_input_row(smaller_timex, larger_timex, save_button_time),
+                     await SubscriptionLinkInputSection().build_link_input_row(link_entry_field, save_button),
 
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🔔 Подписка
