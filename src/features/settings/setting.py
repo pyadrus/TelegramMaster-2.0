@@ -219,9 +219,7 @@ class SettingPage:
         """
 
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-        for time_range_message in time_range:
-            list_view.controls.append(
-                ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
+        for time_range_message in time_range: list_view.controls.append(ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
         smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
         larger_timex = ft.TextField(label="Время в секундах (большее)")
 

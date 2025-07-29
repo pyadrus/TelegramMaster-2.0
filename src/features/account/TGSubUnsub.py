@@ -136,6 +136,13 @@ class SubscribeUnsubscribeTelegram:
             write_writing_group_links_to_db(data_to_save)
             logger.info(f"Сохранение ссылок для подписки завершено")
 
+        time_range=[time_subscription_1, time_subscription_2]
+        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
+        for time_range_message in time_range: list_view.controls.append(ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
+        smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
+        larger_timex = ft.TextField(label="Время в секундах (большее)")
+
+
         # Поле ввода ссылок и кнопка сохранения для подписки
         link_entry_field, save_button = await InputFieldAndSave().create_input_and_save_button(save)
 
@@ -151,6 +158,11 @@ class SubscribeUnsubscribeTelegram:
                                                                                       ft.Colors.PURPLE])), ), ), ], ),
 
                      list_view,  # Отображение логов 📝
+
+                     smaller_timex,
+                     larger_timex,
+
+
                      await InputFieldAndSave().build_input_row(link_entry_field, save_button),
 
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.

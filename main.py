@@ -206,9 +206,10 @@ async def main(page: ft.Page):
                                                        time_range=[time_changing_accounts_1, time_changing_accounts_2])
             elif page.route == "/time_between_subscriptions":
                 await SettingPage().recording_the_time_to_launch_an_invite_every_day(page=page)
-            elif page.route == "/time_between_subscriptionss":  # Время между подпиской
-                await SettingPage().create_main_window(page=page, variable="time_subscription",
-                                                       time_range=[time_subscription_1, time_subscription_2])
+
+            # elif page.route == "/time_between_subscriptionss":  # Время между подпиской
+            #     await SettingPage().create_main_window(page=page, variable="time_subscription",
+            #                                            time_range=[time_subscription_1, time_subscription_2])
             elif page.route == "/errors":
                 # Пустая страница с уведомлением
                 page.views.append(ft.View("/errors", []))

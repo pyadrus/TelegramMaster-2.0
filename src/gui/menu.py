@@ -60,11 +60,11 @@ async def settings_menu(page: ft.Page):
                          # 📨 Лимиты на сообщения
                          ft.ElevatedButton(width=SMALL_BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["menu_settings"]["message_limits"],
-                                           on_click=lambda _: page.go("/message_limits")),
-                         # ⏳ Время между подпиской
-                         ft.ElevatedButton(width=SMALL_BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                           text=translations["ru"]["menu_settings"]["time_between_subscriptionss"],
-                                           on_click=lambda _: page.go("/time_between_subscriptionss")), ]),
+                                           on_click=lambda _: page.go("/message_limits")), ]),
+                     # ⏳ Время между подпиской
+                     # ft.ElevatedButton(width=SMALL_BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                     #                   text=translations["ru"]["menu_settings"]["time_between_subscriptionss"],
+                     #                   on_click=lambda _: page.go("/time_between_subscriptionss")), ]),
                      # 📋 Формирование списка username
                      ft.ElevatedButton(width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                        text=translations["ru"]["menu_settings"]["creating_username_list"],
@@ -215,6 +215,3 @@ async def viewing_posts_menu(page: ft.Page):
                                        text=translations["ru"]["reactions_menu"]["we_are_winding_up_post_views"],
                                        on_click=lambda _: page.go("/we_are_winding_up_post_views")),
                  ])]))
-
-
-
