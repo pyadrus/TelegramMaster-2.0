@@ -138,8 +138,7 @@ class InvitingToAGroup:
                 logger.info(f"Список usernames: {usernames}")
                 if len(usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", self.page)
-                    await SubscribeUnsubscribeTelegram(self.page).unsubscribe_from_the_group(client, dropdown.value,
-                                                                                             self.page)
+                    await SubscribeUnsubscribeTelegram(self.page).unsubscribe_from_the_group(client, dropdown.value)
                     break  # Прерываем работу и меняем аккаунт
                 for username in usernames:
                     logger.info(f"Пользователь: {username}")
@@ -149,8 +148,7 @@ class InvitingToAGroup:
                         await add_user_test(client, dropdown.value, username, self.page)
                     except KeyboardInterrupt:  # Закрытие окна программы
                         await log_and_display(translations["ru"]["errors"]["script_stopped"], self.page, level="error")
-                await SubscribeUnsubscribeTelegram(self.page).unsubscribe_from_the_group(client, dropdown.value,
-                                                                                         page=self.page)
+                await SubscribeUnsubscribeTelegram(self.page).unsubscribe_from_the_group(client, dropdown.value)
                 await log_and_display(f"[!] Инвайтинг окончен!", page=self.page)
             await end_time(start, page=self.page)
             await show_notification(self.page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю

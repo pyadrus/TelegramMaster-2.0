@@ -6,7 +6,7 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions, types
 from telethon.errors import (ChannelPrivateError, SessionRevokedError, InviteRequestSentError,
-                             FloodWaitError, AuthKeyUnregisteredError)
+                             FloodWaitError, AuthKeyUnregisteredError, ChannelsTooMuchError)
 from telethon.errors import (InviteHashExpiredError, InviteHashInvalidError,
                              SessionPasswordNeededError, UserNotParticipantError)
 from telethon.sessions import StringSession
@@ -20,7 +20,7 @@ from src.core.configs import (time_subscription_1,
 from src.core.sqlite_working_tools import write_writing_group_links_to_db, get_writing_group_links
 from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
-from src.features.account.inviting.inviting import get_string_session, getting_account_data
+from src.features.account.connect.connect import get_string_session, getting_account_data
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe_gui import (SubscriptionLinkInputSection,
                                                                                   TimeIntervalInputSection)
@@ -246,10 +246,10 @@ class SubscribeUnsubscribeTelegram:
                                           f"Мега-группа: {'Да' if getattr(chat, 'megagroup', False) else 'Нет'}",
                                           self.page)
                     logger.info(f"Подписка на группу / канал по ссылке {link}")
-                    # try:
-                    await client(JoinChannelRequest(link))
-                    # except sqlite3.DatabaseError:
-                    #     logger.error("❌ Не удалось подписаться на канал / группу, так как файл аккаунта повреждён")
+                    try:
+                        await client(JoinChannelRequest(link))
+                    except ChannelsTooMuchError:
+                        await log_and_display(translations["ru"]["errors"]["user_channels_too_much"], self.page)
                 else:
                     await log_and_display(f"Не удалось найти публичный чат: {link}", self.page)
 
@@ -334,14 +334,12 @@ class SubscribeUnsubscribeTelegram:
     #
     #     page.update()  # обновляем страницу после добавления элементов управления 🔄
 
-    @staticmethod
-    async def unsubscribe_from_the_group(client, group_link, page: ft.Page) -> None:
+    async def unsubscribe_from_the_group(self, client, group_link) -> None:
         """
         Отписываемся от группы.
 
         :param group_link: Группа или канал
         :param client: Телеграм клиент
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         logger.info(f"Отписываемся от группы: {group_link}")
         try:
@@ -350,17 +348,17 @@ class SubscribeUnsubscribeTelegram:
                 await client(LeaveChannelRequest(entity))
             # await client.disconnect()  # Разрываем соединение с Telegram
         except ChannelPrivateError:  # Аккаунт Telegram не может отписаться так как не имеет доступа
-            await log_and_display(translations["ru"]["errors"]["channel_private"], page)
+            await log_and_display(translations["ru"]["errors"]["channel_private"], self.page)
         except UserNotParticipantError:
-            await log_and_display(translations["ru"]["errors"]["unsubscribe_not_member"], page)
+            await log_and_display(translations["ru"]["errors"]["unsubscribe_not_member"], self.page)
         except SessionRevokedError:
-            await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], page)
+            await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], self.page)
         except sqlite3.DatabaseError:
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {group_link}. Ошибка базы данных, аккаунта или аккаунт заблокирован.",
-                page)
+                self.page)
         except ConnectionError:
-            await log_and_display("Ошибка соединения с Telegram", page)
+            await log_and_display("Ошибка соединения с Telegram", self.page)
         # except Exception as error:
         #     logger.exception(error)
 
