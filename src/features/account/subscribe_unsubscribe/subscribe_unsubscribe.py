@@ -388,9 +388,7 @@ class SubscribeUnsubscribeTelegram:
         except ChannelPrivateError:
             await log_and_display(translations["ru"]["errors"]["channel_private"], self.page)
         except (UsernameInvalidError, ValueError, TypeError):
-            await log_and_display(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}",
-                self.page)
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}", self.page)
             write_data_to_db(groups_wr)
         except PeerFloodError:
             await log_and_display(translations["ru"]["errors"]["peer_flood"], self.page, level="error")
@@ -401,13 +399,9 @@ class SubscribeUnsubscribeTelegram:
             # Прерываем работу и меняем аккаунт
             raise
         except InviteRequestSentError:
-            await log_and_display(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения администратором на вступление в группу",
-                self.page)
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения администратором на вступление в группу", self.page)
         except sqlite3.DatabaseError:
-            await log_and_display(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Ошибка базы данных, аккаунта или аккаунт заблокирован.",
-                self.page)
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Ошибка базы данных, аккаунта или аккаунт заблокирован.", self.page)
         # except Exception as error:
         #     logger.exception(error)
 

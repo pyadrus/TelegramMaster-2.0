@@ -117,8 +117,8 @@ class InvitingToAGroup:
 
     def __init__(self, page: ft.Page):
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram(page=page)
-        self.config_reader = ConfigReader()
-        self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
+        # self.config_reader = ConfigReader()
+        # self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
         self.scheduler = Scheduler()  # Создаем экземпляр планировщика
         self.page = page
         self.config_reader = ConfigReader()
