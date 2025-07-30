@@ -55,7 +55,7 @@ async def main(page: ft.Page):
         if page.route == "/inviting":  # Меню "🚀 Инвайтинг"
             # TODO миграция на Peewee. вернуть проверку на наличие аккаунтов, username, ссылки на инвайтинг
             # await CheckingProgram().check_before_inviting(page=page)
-            await InvitingToAGroup().inviting_menu(page=page)
+            await InvitingToAGroup(page=page).inviting_menu()
         # __________________________________________________________________________________________________________
         elif page.route == "/account_verification_menu":  # "Проверка аккаунтов"
             await TGChek().account_verification_menu(page=page)

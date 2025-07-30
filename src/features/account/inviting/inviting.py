@@ -29,56 +29,53 @@ from telethon import functions, types
 
 class InvitingToAGroup:
 
-    def __init__(self):
+    def __init__(self, page: ft.Page):
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
-        self.tg_connect = TGConnect()
+        self.connect = TGConnect()
         self.config_reader = ConfigReader()
         self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
         self.scheduler = Scheduler()  # Создаем экземпляр планировщика
+        self.page = page
 
-    async def inviting_menu(self, page: ft.Page):
+    async def inviting_menu(self):
         """
         Меню инвайтинг
 
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         list_view.controls.clear()  # ✅ Очистка логов перед новым запуском
-        page.controls.append(list_view)  # Добавляем ListView на страницу для отображения логов 📝
-        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
+        self.page.controls.append(list_view)  # Добавляем ListView на страницу для отображения логов 📝
+        self.page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
         links_inviting = get_links_inviting()  # Получаем список ссылок на группы для инвайтинга из базы данных
-        await self.data_for_inviting(page)  # Отображение информации о настройках инвайтинга
+        await self.data_for_inviting(self.page)  # Отображение информации о настройках инвайтинга
 
         async def general_invitation_to_the_group():
             """
             Основной метод для инвайтинга
-
-            :param page: Страница интерфейса Flet для отображения элементов управления.
-            :return:
             """
-            start = await start_time(page)
-            page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
+            start = await start_time(self.page)
+            self.page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
             # try:
             for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                   account_directory=path_accounts_folder)
-                await log_and_display(f"{dropdown.value}", page)
+                client = await self.connect.get_telegram_client(session_name=session_name, account_directory=path_accounts_folder)
+                await log_and_display(f"{dropdown.value}", self.page)
                 # Подписка на группу для инвайтинга
-                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, page)
+                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, self.page)
                 logger.info(f"Подписка на группу {dropdown.value} выполнена")
                 # Получение списка usernames
                 usernames = select_records_with_limit(limit=LIMITS)
                 logger.info(f"Список usernames: {usernames}")
                 if len(usernames) == 0:
-                    await log_and_display(f"В таблице members нет пользователей для инвайтинга", page)
-                    await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page)
+                    await log_and_display(f"В таблице members нет пользователей для инвайтинга", self.page)
+                    await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, self.page)
                     break  # Прерываем работу и меняем аккаунт
                 for username in usernames:
                     logger.info(f"Пользователь: {username}")
-                    await log_and_display(f"Пользователь username: {username}", page)
+                    await log_and_display(f"Пользователь username: {username}", self.page)
                     # Инвайтинг в группу по полученному списку
 
                     try:
-                        await log_and_display(f"Попытка приглашения {username} в группу {dropdown.value}.", page)
+                        await log_and_display(f"Попытка приглашения {username} в группу {dropdown.value}.", self.page)
                         # await log_and_display(f"[DEBUG] Попытка инвайта: {username}", page)
                         # channel = dropdown.value
                         # username_add = username
@@ -128,8 +125,8 @@ class InvitingToAGroup:
                         # else:
                         await log_and_display(
                             f"✅  Участник {username} добавлен, если не состоит в чате {dropdown.value}. Спим от {time_inviting_1} до {time_inviting_2}",
-                            page=page)
-                        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+                            page=self.page)
+                        await record_inviting_results(time_inviting_1, time_inviting_2, username, self.page)
                         # await record_inviting_results(time_inviting_1, time_inviting_2, username, page=page)
                     # Ошибка инвайтинга продолжаем работу
                     # except UserChannelsTooMuchError:
@@ -185,27 +182,27 @@ class InvitingToAGroup:
                     #     break  # Прерываем работу и меняем аккаунт
                     except KeyboardInterrupt:  # Закрытие окна программы
                         client.disconnect()  # Разрываем соединение telegram
-                        await log_and_display(translations["ru"]["errors"]["script_stopped"], page, level="error")
+                        await log_and_display(translations["ru"]["errors"]["script_stopped"], self.page, level="error")
                     # except sqlite3.DatabaseError:
                     #     await log_and_display(f"❌ Ошибка базы данных, аккаунта или аккаунт заблокирован.", page)
                     # except Exception as error:
                     #     logger.exception(error)
 
-                await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page=page)
-                await log_and_display(f"[!] Инвайтинг окончен!", page=page)
+                await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page=self.page)
+                await log_and_display(f"[!] Инвайтинг окончен!", page=self.page)
             # except Exception as error:
             #     logger.exception(error)
-            await end_time(start, page=page)
-            await show_notification(page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
-            page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
+            await end_time(start, page=self.page)
+            await show_notification(self.page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
+            self.page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
 
         async def invite_user(client, username, username_group):
             try:
-                await log_and_display(f"Попытка инвайта {username}", page)
+                await log_and_display(f"Попытка инвайта {username}", self.page)
                 await client(InviteToChannelRequest(username_group, [username]))
-                await log_and_display(f"✅ Успешно приглашён: {username}", page)
+                await log_and_display(f"✅ Успешно приглашён: {username}", self.page)
             except Exception as e:
-                await log_and_display(f"❌ Ошибка при инвайте {username}: {e}", page)
+                await log_and_display(f"❌ Ошибка при инвайте {username}: {e}", self.page)
 
         async def save(_):
             """Запись ссылки для инвайтинга в базу данных"""
@@ -217,13 +214,13 @@ class InvitingToAGroup:
             }
             save_links_inviting(data_to_save)
             logger.success(f"Сохранено в базу данных: {data_to_save}")
-            await log_and_display("✅ Ссылки успешно сохранены.", page)
+            await log_and_display("✅ Ссылки успешно сохранены.", self.page)
 
             # 🔄 Обновляем список в выпадающем списке
             updated_links = get_links_inviting()
             dropdown.options = [ft.dropdown.Option(link) for link in updated_links]
             dropdown.value = links[0] if links else None  # Автоматически выбрать первую новую ссылку (если нужно)
-            page.update()  # Обновляем интерфейс
+            self.page.update()  # Обновляем интерфейс
 
         async def inviting_without_limits(_):
             """
@@ -242,7 +239,7 @@ class InvitingToAGroup:
                 async def general_invitation_group_scheduler():
                     await general_invitation_to_the_group()
 
-                await log_and_display("Запуск программы в 00 минут каждого часа", page)
+                await log_and_display("Запуск программы в 00 минут каждого часа", self.page)
                 self.scheduler.hourly(dt.time(minute=00, second=00),
                                       general_invitation_group_scheduler)  # Асинхронная функция для выполнения
                 while True:
@@ -259,7 +256,7 @@ class InvitingToAGroup:
                 async def general_invitation_group_scheduler():
                     await general_invitation_to_the_group()
 
-                await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", page)
+                await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", self.page)
                 self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)),
                                     general_invitation_group_scheduler)
                 while True:
@@ -276,7 +273,7 @@ class InvitingToAGroup:
             async def general_invitation_group_scheduler():
                 await general_invitation_to_the_group()
 
-            await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", page)
+            await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", self.page)
             self.scheduler.daily(dt.time(hour=int(self.hour), minute=int(self.minutes)),
                                  general_invitation_group_scheduler)
             while True:
@@ -294,7 +291,7 @@ class InvitingToAGroup:
                                         )
         save_button = ft.IconButton(visible=True, icon=ft.Icons.SAVE, on_click=save, icon_size=50)
 
-        page.views.append(
+        self.page.views.append(
             ft.View("/inviting",
                     [await GUIProgram().key_app_bar(),
                      ft.Text(spans=[ft.TextSpan(
@@ -331,7 +328,7 @@ class InvitingToAGroup:
                                            text=translations["ru"]["inviting_menu"]["inviting_every_day"],
                                            on_click=launching_invite_every_day_certain_time),
                      ])]))
-        page.update()  # обновляем страницу после добавления элементов управления 🔄
+        self.page.update()  # обновляем страницу после добавления элементов управления 🔄
 
     async def data_for_inviting(self, page: ft.Page):
         """"
@@ -339,7 +336,7 @@ class InvitingToAGroup:
         """
         usernames = select_records_with_limit(limit=None)
         logger.info(usernames)
-        find_filesss = await find_filess(directory_path=path_accounts_folder, extension='session')
+        find_filesss = find_filess(directory_path=path_accounts_folder, extension='session')
         await log_and_display(f"Лимит на аккаунт: {LIMITS}\n"
                               f"Всего usernames: {len(usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"

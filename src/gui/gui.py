@@ -7,13 +7,13 @@ from loguru import logger
 list_view = ft.ListView(expand=10, spacing=1, padding=2, auto_scroll=True)
 
 
-async def start_time(page):
+async def start_time(page: ft.Page):
     start = datetime.datetime.now()  # фиксируем и выводим время старта работы кода
     await log_and_display('▶️ Время старта: ' + str(start), page)
     return start
 
 
-async def end_time(start, page):
+async def end_time(start, page: ft.Page):
     finish = datetime.datetime.now()  # фиксируем и выводим время окончания работы кода
     await log_and_display('Время окончания: ' + str(finish), page)
     await log_and_display('Время работы: ' + str(finish - start), page)

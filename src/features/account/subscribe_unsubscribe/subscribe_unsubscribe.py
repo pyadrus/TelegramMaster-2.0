@@ -65,9 +65,9 @@ class SubscribeUnsubscribeTelegram:
             """Подписываемся на группы и каналы"""
             start = await start_time(page)
             for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
-                telegram_client = await self.tg_connect.get_telegram_client(page, session_name,
+                client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                             account_directory=path_accounts_folder)
-                if telegram_client is None:
+                if client is None:
                     logger.error("❌ Не удалось подключиться к Telegram")
                     # pass  # Пропустить аккаунт, если не удалось подключиться
                 # string_session = string_session.session.save()
@@ -80,9 +80,9 @@ class SubscribeUnsubscribeTelegram:
                     await log_and_display(f"Ссылка для подписки и проверки:  {link_tuple}", page)
                     # Проверка ссылок для подписки и подписка на группу или канал
                     logger.info(f"Работа с аккаунтом {session_name}")
-                    await self.checking_links(page, telegram_client, link_tuple)
+                    await self.checking_links(page, client, link_tuple)
                 try:
-                    await telegram_client.disconnect()
+                    await client.disconnect()
                 except sqlite3.DatabaseError:
                     logger.error("❌ Не удалось подписаться на канал / группу, так как файл аккаунта повреждён")
             await end_time(start, page)
