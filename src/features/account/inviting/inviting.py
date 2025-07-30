@@ -6,7 +6,11 @@ import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from scheduler.asyncio import Scheduler
 from telethon.errors import (AuthKeyDuplicatedError, ChannelPrivateError, SessionRevokedError, TypeNotFoundError,
-                             UserBannedInChannelError, UserChannelsTooMuchError)
+                             UserBannedInChannelError, UserChannelsTooMuchError, UserNotMutualContactError,
+                             UserKickedError, UserDeactivatedBanError, UsernameInvalidError, UsernameNotOccupiedError,
+                             UserIdInvalidError, ChatAdminRequiredError, UserPrivacyRestrictedError,
+                             BotGroupsBlockedError, BadRequestError, ChatWriteForbiddenError, InviteRequestSentError,
+                             FloodWaitError, AuthKeyUnregisteredError, PeerFloodError)
 from telethon.sessions import StringSession
 from telethon.sync import TelegramClient
 from telethon.tl.functions.channels import InviteToChannelRequest
@@ -50,6 +54,7 @@ async def add_user_test(client, username_group, username, page):
     try:
         await log_and_display(f"Попытка приглашения {username} в группу {username_group}.", page)
         await client.connect()
+        # Выполняем приглашение
         await client(InviteToChannelRequest(username_group, [username]))
         await log_and_display(
             f"✅  Участник {username} добавлен, если не состоит в чате {username_group}. Спим от {time_inviting_1} до {time_inviting_2}",
@@ -63,7 +68,49 @@ async def add_user_test(client, username_group, username, page):
         await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], page)
         await record_and_interrupt(time_inviting_1, time_inviting_2, page)
         await client.disconnect()
-    logger.info("👥 Приглашение пользователя прошло успешно!")
+    except UserNotMutualContactError:
+        await log_and_display(translations["ru"]["errors"]["user_not_mutual_contact"], page)
+        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+    except (UserKickedError, UserDeactivatedBanError):
+        await log_and_display(translations["ru"]["errors"]["user_kicked_or_banned"], page)
+        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+    except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
+        await log_and_display(translations["ru"]["errors"]["invalid_username"], page)
+        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+    except ChatAdminRequiredError:
+        await log_and_display(translations["ru"]["errors"]["admin_rights_required"], page)
+        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+    except UserPrivacyRestrictedError:
+        await log_and_display(translations["ru"]["errors"]["user_privacy_restricted"], page)
+        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+    except BotGroupsBlockedError:
+        await log_and_display(translations["ru"]["errors"]["bot_group_blocked"], page)
+        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+    except (TypeError, UnboundLocalError):
+        await log_and_display(translations["ru"]["errors"]["type_or_scope"], page)
+    except BadRequestError:
+        await log_and_display(translations["ru"]["errors"]["chat_member_add_failed"], page)
+    # Ошибка инвайтинга прерываем работу
+    except ChatWriteForbiddenError:
+        await log_and_display(translations["ru"]["errors"]["chat_write_forbidden"], page)
+        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await client.disconnect()  # Прерываем работу и меняем аккаунт
+    except InviteRequestSentError:
+        await log_and_display(translations["ru"]["errors"]["invite_request_sent"], page)
+        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await client.disconnect()  # Прерываем работу и меняем аккаунт
+    except FloodWaitError as e:
+        await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
+        await record_and_interrupt(time_inviting_1, time_inviting_2, page)
+        await client.disconnect()  # Прерываем работу и меняем аккаунт
+    except AuthKeyUnregisteredError:
+        await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
+        await record_and_interrupt(time_inviting_1, time_inviting_2, page)
+        await client.disconnect()
+    except PeerFloodError:
+        await log_and_display(translations["ru"]["errors"]["peer_flood"], page, level="error")
+        await record_and_interrupt(time_inviting_1, time_inviting_2, page)
+        await client.disconnect()  # Прерываем работу и меняем аккаунт
 
 
 class InvitingToAGroup:
@@ -96,7 +143,6 @@ class InvitingToAGroup:
             """
             start = await start_time(self.page)
             self.page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
-            # try:
             for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                 session_string = await get_string_session(session_name)
                 # Создаем клиент, используя StringSession и вашу строку
@@ -107,15 +153,11 @@ class InvitingToAGroup:
                     system_version="4.16.30-vxCUSTOM",
                 )
                 await client.connect()
-
                 await getting_account_data(client, self.page)
-
                 await SubscribeUnsubscribeTelegram(self.page).subscribe_to_group_or_channel(client, dropdown.value)
                 logger.info(f"Подписка на группу {dropdown.value} выполнена")
-
                 await log_and_display(f"{dropdown.value}", self.page)
                 # Подписка на группу для инвайтинга
-
                 # Получение списка usernames
                 usernames = select_records_with_limit(limit=LIMITS)
                 logger.info(f"Список usernames: {usernames}")
@@ -128,86 +170,12 @@ class InvitingToAGroup:
                     await log_and_display(f"Пользователь username: {username}", self.page)
                     # Инвайтинг в группу по полученному списку
                     try:
-                        # await log_and_display(f"[DEBUG] Попытка инвайта: {username}", page)
                         await add_user_test(client, dropdown.value, username, self.page)
-                        # Выполняем приглашение
-                        # await log_and_display(f"✅ Участник {username} добавлен в {dropdown.value}.", page)
-                        # await client(functions.channels.InviteToChannelRequest(
-                        # channel=dropdown.value,
-                        # users=[username]
-                        # ))
-                        # input_user = await client.get_input_entity(username)
-                        # input_channel = await client.get_input_entity(username_group)
-                        # await client(InviteToChannelRequest(
-                        #     channel=input_channel,
-                        #     users=[input_user]
-                        # ))
-                        # await client(InviteToChannelRequest(username_group, [username]))
-                        # await client(AddChatUserRequest(
-                        #     chat_id=dropdown.value,
-                        #     user_to_add=username,
-                        #     fwd_limit=10  # Allow the user to see the 10 last messages
-                        # ))
-                        # timeout=2  # 15 секунд — настрой по необходимости
-                        # )
-                        # await log_and_display(f"[DEBUG] Инвайт выполнен: {username}", page)
-                        # await log_and_display(f"Удачно! Спим 5 секунд", page)
-                        # await record_inviting_results(time_inviting_1, time_inviting_2, username, page=page)
-                    # Ошибка инвайтинга продолжаем работу
-                    # except UserNotMutualContactError:
-                    #     await log_and_display(translations["ru"]["errors"]["user_not_mutual_contact"], page)
-                    #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
-                    # except (UserKickedError, UserDeactivatedBanError):
-                    #     await log_and_display(translations["ru"]["errors"]["user_kicked_or_banned"], page)
-                    #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
-                    # except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
-                    #     await log_and_display(translations["ru"]["errors"]["invalid_username"], page)
-                    #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
-                    # except ChatAdminRequiredError:
-                    #     await log_and_display(translations["ru"]["errors"]["admin_rights_required"], page)
-                    #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
-                    # except UserPrivacyRestrictedError:
-                    #     await log_and_display(translations["ru"]["errors"]["user_privacy_restricted"], page)
-                    #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
-                    # except BotGroupsBlockedError:
-                    #     await log_and_display(translations["ru"]["errors"]["bot_group_blocked"], page)
-                    #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
-                    # except (TypeError, UnboundLocalError):
-                    #     await log_and_display(translations["ru"]["errors"]["type_or_scope"], page)
-                    # except BadRequestError:
-                    #     await log_and_display(translations["ru"]["errors"]["chat_member_add_failed"], page)
-                    # Ошибка инвайтинга прерываем работу
-                    # except ChatWriteForbiddenError:
-                    #     await log_and_display(translations["ru"]["errors"]["chat_write_forbidden"], page)
-                    #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
-                    #     break  # Прерываем работу и меняем аккаунт
-                    # except InviteRequestSentError:
-                    #     await log_and_display(translations["ru"]["errors"]["invite_request_sent"], page)
-                    #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
-                    #     break  # Прерываем работу и меняем аккаунт
-                    # except FloodWaitError as e:
-                    #     await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
-                    #     await record_and_interrupt(time_inviting_1, time_inviting_2, page)
-                    #     break  # Прерываем работу и меняем аккаунт
-                    # except AuthKeyUnregisteredError:
-                    #     await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
-                    #     await record_and_interrupt(time_inviting_1, time_inviting_2, page)
-                    #     break
-                    # except PeerFloodError:
-                    #     await log_and_display(translations["ru"]["errors"]["peer_flood"], page, level="error")
-                    #     await record_and_interrupt(time_inviting_1, time_inviting_2, page)
-                    #     break  # Прерываем работу и меняем аккаунт
                     except KeyboardInterrupt:  # Закрытие окна программы
                         # client.disconnect()  # Разрываем соединение telegram
                         await log_and_display(translations["ru"]["errors"]["script_stopped"], self.page, level="error")
-                    # except sqlite3.DatabaseError:
-                    #     await log_and_display(f"❌ Ошибка базы данных, аккаунта или аккаунт заблокирован.", page)
-                    # except Exception as error:
-                    #     logger.exception(error)
                 # await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page=self.page)
                 await log_and_display(f"[!] Инвайтинг окончен!", page=self.page)
-            # except Exception as error:
-            #     logger.exception(error)
             await end_time(start, page=self.page)
             await show_notification(self.page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
             self.page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
