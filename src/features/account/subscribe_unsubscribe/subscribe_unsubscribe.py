@@ -370,7 +370,7 @@ class SubscribeUnsubscribeTelegram:
         try:
             await client(JoinChannelRequest(groups_wr))
             await log_and_display(f"Аккаунт подписался на группу / канал: {groups_wr}", self.page)
-            client.disconnect()
+            # client.disconnect()
         except SessionRevokedError:
             await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], self.page)
         except UserDeactivatedBanError:

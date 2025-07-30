@@ -1,52 +1,59 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import datetime as dt
-import sqlite3
-from telethon.tl.functions.messages import AddChatUserRequest
+
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from scheduler.asyncio import Scheduler
-from telethon.errors import (AuthKeyDuplicatedError, AuthKeyUnregisteredError, BadRequestError, BotGroupsBlockedError,
-                             ChannelPrivateError, ChatAdminRequiredError, ChatWriteForbiddenError, FloodWaitError,
-                             InviteRequestSentError, PeerFloodError, SessionRevokedError, TypeNotFoundError,
-                             UserBannedInChannelError, UserChannelsTooMuchError, UserDeactivatedBanError,
-                             UserIdInvalidError, UserKickedError, UsernameInvalidError, UsernameNotOccupiedError,
-                             UserNotMutualContactError, UserPrivacyRestrictedError)
+from telethon.errors import (AuthKeyDuplicatedError, ChannelPrivateError, SessionRevokedError, TypeNotFoundError,
+                             UserBannedInChannelError, UserChannelsTooMuchError)
+from telethon.sessions import StringSession
+from telethon.sync import TelegramClient
 from telethon.tl.functions.channels import InviteToChannelRequest
-import re
+
 from src.core.configs import (BUTTON_HEIGHT, ConfigReader, LIMITS, WIDTH_WIDE_BUTTON, path_accounts_folder,
                               time_inviting_1, time_inviting_2)
 from src.core.sqlite_working_tools import select_records_with_limit, get_links_inviting, save_links_inviting
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
-from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
-from src.features.proxy.checking_proxy import reading_proxy_data_from_the_database
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
-from telethon.sync import TelegramClient
-from telethon import functions, types
 
 
-async def add_user_test(username_group, session_name, username, page):
-    api_id = 7655060
-    api_hash = "cc1290cd733c1f1d407598e5a31be4a8"
+async def getting_account_data(client, page):
+    """Получаем данные аккаунта"""
+    me = await client.get_me()
+    logger.info(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
+    await log_and_display(
+        f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}", page)
+
+
+async def get_string_session(session_name):
+    """Получение строки сессии"""
 
     client = TelegramClient(
         session=f"{path_accounts_folder}/{session_name}",
-        api_id=api_id,
-        api_hash=api_hash,
+        api_id=7655060,
+        api_hash="cc1290cd733c1f1d407598e5a31be4a8",
         system_version="4.16.30-vxCUSTOM",
     )
     await client.connect()
-    me = await client.get_me()
-    logger.info(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
-    await log_and_display(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}", page)
-    await SubscribeUnsubscribeTelegram(page).subscribe_to_group_or_channel(client, username_group)
-    logger.info(f"Подписка на группу {username_group} выполнена")
+    logger.info(f"✨ STRING SESSION: {StringSession.save(client.session)}")
+    session_string = StringSession.save(client.session)
+    await client.disconnect()
+    return session_string
+
+
+async def add_user_test(client, username_group, username, page):
     try:
+        await log_and_display(f"Попытка приглашения {username} в группу {username_group}.", page)
+        await client.connect()
         await client(InviteToChannelRequest(username_group, [username]))
+        await log_and_display(
+            f"✅  Участник {username} добавлен, если не состоит в чате {username_group}. Спим от {time_inviting_1} до {time_inviting_2}",
+            page)
         await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
     except UserChannelsTooMuchError:
         await log_and_display(translations["ru"]["errors"]["user_channels_too_much"], page)
@@ -57,7 +64,6 @@ async def add_user_test(username_group, session_name, username, page):
         await record_and_interrupt(time_inviting_1, time_inviting_2, page)
         await client.disconnect()
     logger.info("👥 Приглашение пользователя прошло успешно!")
-    await client.disconnect()
 
 
 class InvitingToAGroup:
@@ -92,15 +98,21 @@ class InvitingToAGroup:
             self.page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
             # try:
             for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
-                client = await TGConnect(page=self.page).get_telegram_client(session_name=session_name,
-                                                                             account_directory=path_accounts_folder)
+                session_string = await get_string_session(session_name)
+                # Создаем клиент, используя StringSession и вашу строку
+                client = TelegramClient(
+                    StringSession(session_string),  # <-- Используем StringSession
+                    api_id=7655060,
+                    api_hash="cc1290cd733c1f1d407598e5a31be4a8",
+                    system_version="4.16.30-vxCUSTOM",
+                )
+                await client.connect()
 
-                # me = await client.get_me()
-                # logger.info(
-                #     f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
-                # await log_and_display(
-                #     f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}",
-                #     self.page)
+                await getting_account_data(client, self.page)
+
+                await SubscribeUnsubscribeTelegram(self.page).subscribe_to_group_or_channel(client, dropdown.value)
+                logger.info(f"Подписка на группу {dropdown.value} выполнена")
+
                 await log_and_display(f"{dropdown.value}", self.page)
                 # Подписка на группу для инвайтинга
 
@@ -109,54 +121,27 @@ class InvitingToAGroup:
                 logger.info(f"Список usernames: {usernames}")
                 if len(usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", self.page)
-                    await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, self.page)
+                    # await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, self.page)
                     break  # Прерываем работу и меняем аккаунт
                 for username in usernames:
                     logger.info(f"Пользователь: {username}")
                     await log_and_display(f"Пользователь username: {username}", self.page)
                     # Инвайтинг в группу по полученному списку
-
                     try:
-                        await log_and_display(f"Попытка приглашения {username} в группу {dropdown.value}.", self.page)
                         # await log_and_display(f"[DEBUG] Попытка инвайта: {username}", page)
-                        # channel = dropdown.value
-                        # username_add = username
-
-                        # Получаем InputChannel для группы
-                        # channel_entity = await client.get_input_entity(dropdown.value)
-                        # logger.info(f"Получен InputChannel для группы: {channel_entity}")
-                        # Получаем InputUser для пользователя
-                        # user_entity = await client.get_input_entity(f"@{username}")
-                        # logger.info(f"Получен InputUser для пользователя: {user_entity}")
-                        # Получаем объект канала (InputChannel)
-                        # channel = await client.get_input_entity(dropdown.value)  # dropdown.value = username или ID канала
-                        # username_groups = "https://t.me/asdasdasdasddddasd"
-                        # usernames = "EdwardGutierrez966"
-                        await add_user_test(dropdown.value, session_name, username, self.page)
+                        await add_user_test(client, dropdown.value, username, self.page)
                         # Выполняем приглашение
-                        # Выполняем приглашение
-                        # result = await client(InviteToChannelRequest(channel=channel_entity, users=[user_entity]))
                         # await log_and_display(f"✅ Участник {username} добавлен в {dropdown.value}.", page)
-
                         # await client(functions.channels.InviteToChannelRequest(
                         # channel=dropdown.value,
                         # users=[username]
                         # ))
-
-                        # await client(InviteToChannelRequest(dropdown.value, [username]))
-                        # match = re.search(r"(?:https?://)?t\.me/([^/?]+)", dropdown.value)
-                        # if match:
-                        #     username_group = match.group(1)
-                        #     logger.info(username_group)  # 👉 dsfsdfsdfsdfsee
-                        #
                         # input_user = await client.get_input_entity(username)
                         # input_channel = await client.get_input_entity(username_group)
-                        #
                         # await client(InviteToChannelRequest(
                         #     channel=input_channel,
                         #     users=[input_user]
                         # ))
-
                         # await client(InviteToChannelRequest(username_group, [username]))
                         # await client(AddChatUserRequest(
                         #     chat_id=dropdown.value,
@@ -167,15 +152,8 @@ class InvitingToAGroup:
                         # )
                         # await log_and_display(f"[DEBUG] Инвайт выполнен: {username}", page)
                         # await log_and_display(f"Удачно! Спим 5 секунд", page)
-
-                        # else:
-                        await log_and_display(
-                            f"✅  Участник {username} добавлен, если не состоит в чате {dropdown.value}. Спим от {time_inviting_1} до {time_inviting_2}",
-                            page=self.page)
-                        await record_inviting_results(time_inviting_1, time_inviting_2, username, self.page)
                         # await record_inviting_results(time_inviting_1, time_inviting_2, username, page=page)
                     # Ошибка инвайтинга продолжаем работу
-
                     # except UserNotMutualContactError:
                     #     await log_and_display(translations["ru"]["errors"]["user_not_mutual_contact"], page)
                     #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
@@ -207,7 +185,6 @@ class InvitingToAGroup:
                     #     await log_and_display(translations["ru"]["errors"]["invite_request_sent"], page)
                     #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
                     #     break  # Прерываем работу и меняем аккаунт
-
                     # except FloodWaitError as e:
                     #     await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
                     #     await record_and_interrupt(time_inviting_1, time_inviting_2, page)
@@ -221,14 +198,13 @@ class InvitingToAGroup:
                     #     await record_and_interrupt(time_inviting_1, time_inviting_2, page)
                     #     break  # Прерываем работу и меняем аккаунт
                     except KeyboardInterrupt:  # Закрытие окна программы
-                        client.disconnect()  # Разрываем соединение telegram
+                        # client.disconnect()  # Разрываем соединение telegram
                         await log_and_display(translations["ru"]["errors"]["script_stopped"], self.page, level="error")
                     # except sqlite3.DatabaseError:
                     #     await log_and_display(f"❌ Ошибка базы данных, аккаунта или аккаунт заблокирован.", page)
                     # except Exception as error:
                     #     logger.exception(error)
-
-                await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page=self.page)
+                # await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page=self.page)
                 await log_and_display(f"[!] Инвайтинг окончен!", page=self.page)
             # except Exception as error:
             #     logger.exception(error)
