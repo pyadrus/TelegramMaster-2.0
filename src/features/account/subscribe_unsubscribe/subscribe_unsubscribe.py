@@ -29,8 +29,9 @@ from src.locales.translations_loader import translations
 
 class SubscribeUnsubscribeTelegram:
 
-    def __init__(self):
-        self.tg_connect = TGConnect()
+    def __init__(self, page):
+        self.page = page  # Страница интерфейса Flet для отображения элементов управления.
+        self.tg_connect = TGConnect(page=page)
 
     async def subscribe_and_unsubscribe_menu(self, page: ft.Page):
         """
@@ -66,7 +67,7 @@ class SubscribeUnsubscribeTelegram:
             start = await start_time(page)
             for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
-                                                                            account_directory=path_accounts_folder)
+                                                                   account_directory=path_accounts_folder)
                 if client is None:
                     logger.error("❌ Не удалось подключиться к Telegram")
                     # pass  # Пропустить аккаунт, если не удалось подключиться

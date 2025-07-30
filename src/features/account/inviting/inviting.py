@@ -21,27 +21,48 @@ from src.core.utils import find_filess, record_and_interrupt, record_inviting_re
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
+from src.features.proxy.checking_proxy import reading_proxy_data_from_the_database
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
 from telethon.sync import TelegramClient
 from telethon import functions, types
 
+
+async def add_user_test(username_group, session_name, username):
+    api_id = 7655060
+    api_hash = "cc1290cd733c1f1d407598e5a31be4a8"
+
+    client = TelegramClient(
+        session=f"{path_accounts_folder}/{session_name}",
+        api_id=api_id,
+        api_hash=api_hash,
+        system_version="4.16.30-vxCUSTOM",
+    )
+    await client.connect()
+    await client(InviteToChannelRequest(username_group, [username]))
+    logger.info("👥 Приглашение пользователя прошло успешно!")
+    await client.disconnect()
+
+
+
 class InvitingToAGroup:
 
     def __init__(self, page: ft.Page):
-        self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
-        self.connect = TGConnect()
+        self.sub_unsub_tg = SubscribeUnsubscribeTelegram(page=page)
+        # self.connect = TGConnect(page=page)
         self.config_reader = ConfigReader()
         self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
         self.scheduler = Scheduler()  # Создаем экземпляр планировщика
         self.page = page
+        self.config_reader = ConfigReader()
+        self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
+        self.api_id = self.api_id_api_hash[0]
+        self.api_hash = self.api_id_api_hash[1]
 
     async def inviting_menu(self):
         """
         Меню инвайтинг
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         list_view.controls.clear()  # ✅ Очистка логов перед новым запуском
         self.page.controls.append(list_view)  # Добавляем ListView на страницу для отображения логов 📝
@@ -49,7 +70,9 @@ class InvitingToAGroup:
         links_inviting = get_links_inviting()  # Получаем список ссылок на группы для инвайтинга из базы данных
         await self.data_for_inviting(self.page)  # Отображение информации о настройках инвайтинга
 
-        async def general_invitation_to_the_group():
+
+
+        async def general_invitation_to_the_group(_):
             """
             Основной метод для инвайтинга
             """
@@ -57,7 +80,14 @@ class InvitingToAGroup:
             self.page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
             # try:
             for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
-                client = await self.connect.get_telegram_client(session_name=session_name, account_directory=path_accounts_folder)
+                client = await TGConnect(page=self.page).get_telegram_client(session_name=session_name, account_directory=path_accounts_folder)
+
+                me = await client.get_me()
+                logger.info(
+                    f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
+                await log_and_display(
+                    f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}",
+                    self.page)
                 await log_and_display(f"{dropdown.value}", self.page)
                 # Подписка на группу для инвайтинга
                 await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, self.page)
@@ -86,8 +116,12 @@ class InvitingToAGroup:
                         # Получаем InputUser для пользователя
                         # user_entity = await client.get_input_entity(f"@{username}")
                         # logger.info(f"Получен InputUser для пользователя: {user_entity}")
-
-                        await invite_user(client, username, dropdown.value)
+                        # Получаем объект канала (InputChannel)
+                        # channel = await client.get_input_entity(dropdown.value)  # dropdown.value = username или ID канала
+                        # username_groups = "https://t.me/asdasdasdasddddasd"
+                        # usernames = "EdwardGutierrez966"
+                        await add_user_test(dropdown.value, session_name, username)
+                        # Выполняем приглашение
                         # Выполняем приглашение
                         # result = await client(InviteToChannelRequest(channel=channel_entity, users=[user_entity]))
                         # await log_and_display(f"✅ Участник {username} добавлен в {dropdown.value}.", page)
@@ -196,13 +230,6 @@ class InvitingToAGroup:
             await show_notification(self.page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
             self.page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
 
-        async def invite_user(client, username, username_group):
-            try:
-                await log_and_display(f"Попытка инвайта {username}", self.page)
-                await client(InviteToChannelRequest(username_group, [username]))
-                await log_and_display(f"✅ Успешно приглашён: {username}", self.page)
-            except Exception as e:
-                await log_and_display(f"❌ Ошибка при инвайте {username}: {e}", self.page)
 
         async def save(_):
             """Запись ссылки для инвайтинга в базу данных"""
@@ -222,13 +249,13 @@ class InvitingToAGroup:
             dropdown.value = links[0] if links else None  # Автоматически выбрать первую новую ссылку (если нужно)
             self.page.update()  # Обновляем интерфейс
 
-        async def inviting_without_limits(_):
-            """
-            🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
-            🚀 Инвайтинг. Группа для инвайтинга выбирается из выпадающего списка. Информация о работе выводится
-            в графический интерфейс и записывается в лог файл.
-            """
-            await general_invitation_to_the_group()
+        # async def inviting_without_limits(_):
+        #     """
+        #     🚀 Запускает процесс инвайтинга групп и отображает статус в интерфейсе.
+        #     🚀 Инвайтинг. Группа для инвайтинга выбирается из выпадающего списка. Информация о работе выводится
+        #     в графический интерфейс и записывается в лог файл.
+        #     """
+        #     await general_invitation_to_the_group()
 
         async def launching_an_invite_once_an_hour(_):
             """
@@ -237,7 +264,7 @@ class InvitingToAGroup:
             """
             try:
                 async def general_invitation_group_scheduler():
-                    await general_invitation_to_the_group()
+                    await general_invitation_to_the_group(_)
 
                 await log_and_display("Запуск программы в 00 минут каждого часа", self.page)
                 self.scheduler.hourly(dt.time(minute=00, second=00),
@@ -254,7 +281,7 @@ class InvitingToAGroup:
             """
             try:
                 async def general_invitation_group_scheduler():
-                    await general_invitation_to_the_group()
+                    await general_invitation_to_the_group(_)
 
                 await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", self.page)
                 self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)),
@@ -271,7 +298,7 @@ class InvitingToAGroup:
             """
 
             async def general_invitation_group_scheduler():
-                await general_invitation_to_the_group()
+                await general_invitation_to_the_group(_)
 
             await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", self.page)
             self.scheduler.daily(dt.time(hour=int(self.hour), minute=int(self.minutes)),
@@ -314,7 +341,8 @@ class InvitingToAGroup:
                          # 🚀 Инвайтинг
                          ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["inviting"],
-                                           on_click=inviting_without_limits),
+                                           on_click=general_invitation_to_the_group  # Используем синхронную обёртку
+                         ),
                          # ⏰ Инвайтинг 1 раз в час
                          ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"],
