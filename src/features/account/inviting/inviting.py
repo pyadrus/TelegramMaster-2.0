@@ -29,7 +29,7 @@ from telethon.sync import TelegramClient
 from telethon import functions, types
 
 
-async def add_user_test(username_group, session_name, username):
+async def add_user_test(username_group, session_name, username, page):
     api_id = 7655060
     api_hash = "cc1290cd733c1f1d407598e5a31be4a8"
 
@@ -40,10 +40,24 @@ async def add_user_test(username_group, session_name, username):
         system_version="4.16.30-vxCUSTOM",
     )
     await client.connect()
-    await client(InviteToChannelRequest(username_group, [username]))
+    me = await client.get_me()
+    logger.info(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
+    await log_and_display(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}", page)
+    await SubscribeUnsubscribeTelegram(page).subscribe_to_group_or_channel(client, username_group)
+    logger.info(f"Подписка на группу {username_group} выполнена")
+    try:
+        await client(InviteToChannelRequest(username_group, [username]))
+        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+    except UserChannelsTooMuchError:
+        await log_and_display(translations["ru"]["errors"]["user_channels_too_much"], page)
+        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+    except (ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError, UserBannedInChannelError,
+            SessionRevokedError):
+        await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], page)
+        await record_and_interrupt(time_inviting_1, time_inviting_2, page)
+        await client.disconnect()
     logger.info("👥 Приглашение пользователя прошло успешно!")
     await client.disconnect()
-
 
 
 class InvitingToAGroup:
@@ -70,8 +84,6 @@ class InvitingToAGroup:
         links_inviting = get_links_inviting()  # Получаем список ссылок на группы для инвайтинга из базы данных
         await self.data_for_inviting(self.page)  # Отображение информации о настройках инвайтинга
 
-
-
         async def general_invitation_to_the_group(_):
             """
             Основной метод для инвайтинга
@@ -80,18 +92,18 @@ class InvitingToAGroup:
             self.page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
             # try:
             for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
-                client = await TGConnect(page=self.page).get_telegram_client(session_name=session_name, account_directory=path_accounts_folder)
+                client = await TGConnect(page=self.page).get_telegram_client(session_name=session_name,
+                                                                             account_directory=path_accounts_folder)
 
-                me = await client.get_me()
-                logger.info(
-                    f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
-                await log_and_display(
-                    f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}",
-                    self.page)
+                # me = await client.get_me()
+                # logger.info(
+                #     f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
+                # await log_and_display(
+                #     f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}",
+                #     self.page)
                 await log_and_display(f"{dropdown.value}", self.page)
                 # Подписка на группу для инвайтинга
-                await self.sub_unsub_tg.subscribe_to_group_or_channel(client, dropdown.value, self.page)
-                logger.info(f"Подписка на группу {dropdown.value} выполнена")
+
                 # Получение списка usernames
                 usernames = select_records_with_limit(limit=LIMITS)
                 logger.info(f"Список usernames: {usernames}")
@@ -120,7 +132,7 @@ class InvitingToAGroup:
                         # channel = await client.get_input_entity(dropdown.value)  # dropdown.value = username или ID канала
                         # username_groups = "https://t.me/asdasdasdasddddasd"
                         # usernames = "EdwardGutierrez966"
-                        await add_user_test(dropdown.value, session_name, username)
+                        await add_user_test(dropdown.value, session_name, username, self.page)
                         # Выполняем приглашение
                         # Выполняем приглашение
                         # result = await client(InviteToChannelRequest(channel=channel_entity, users=[user_entity]))
@@ -163,9 +175,7 @@ class InvitingToAGroup:
                         await record_inviting_results(time_inviting_1, time_inviting_2, username, self.page)
                         # await record_inviting_results(time_inviting_1, time_inviting_2, username, page=page)
                     # Ошибка инвайтинга продолжаем работу
-                    # except UserChannelsTooMuchError:
-                    #     await log_and_display(translations["ru"]["errors"]["user_channels_too_much"], page)
-                    #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+
                     # except UserNotMutualContactError:
                     #     await log_and_display(translations["ru"]["errors"]["user_not_mutual_contact"], page)
                     #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
@@ -197,11 +207,7 @@ class InvitingToAGroup:
                     #     await log_and_display(translations["ru"]["errors"]["invite_request_sent"], page)
                     #     await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
                     #     break  # Прерываем работу и меняем аккаунт
-                    # except (ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError, UserBannedInChannelError,
-                    #         SessionRevokedError):
-                    #     await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], page)
-                    #     await record_and_interrupt(time_inviting_1, time_inviting_2, page)
-                    #     break  # Прерываем работу и меняем аккаунт
+
                     # except FloodWaitError as e:
                     #     await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
                     #     await record_and_interrupt(time_inviting_1, time_inviting_2, page)
@@ -229,7 +235,6 @@ class InvitingToAGroup:
             await end_time(start, page=self.page)
             await show_notification(self.page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
             self.page.go("/inviting")  # переходим к основному меню инвайтинга 🏠
-
 
         async def save(_):
             """Запись ссылки для инвайтинга в базу данных"""
@@ -311,7 +316,6 @@ class InvitingToAGroup:
                                options=[ft.DropdownOption(link) for link in links_inviting],
                                autofocus=True)
 
-
         # Поле ввода, для ссылок для инвайтинга
         link_entry_field = ft.TextField(label="Введите ссылку на группу для инвайтинга",
                                         label_style=ft.TextStyle(color=ft.Colors.GREY_400), width=700
@@ -342,7 +346,7 @@ class InvitingToAGroup:
                          ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["inviting"],
                                            on_click=general_invitation_to_the_group  # Используем синхронную обёртку
-                         ),
+                                           ),
                          # ⏰ Инвайтинг 1 раз в час
                          ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"],
@@ -369,7 +373,3 @@ class InvitingToAGroup:
                               f"Всего usernames: {len(usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"
                               f"Всего подключенных аккаунтов: {len(find_filesss)}\n", page)
-
-
-
-

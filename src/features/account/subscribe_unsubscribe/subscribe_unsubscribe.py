@@ -357,58 +357,57 @@ class SubscribeUnsubscribeTelegram:
         # finally:
         #     await client.disconnect()  # Разрываем соединение с Telegram
 
-    async def subscribe_to_group_or_channel(self, client, groups_wr, page: ft.Page) -> None:
+    async def subscribe_to_group_or_channel(self, client, groups_wr) -> None:
         """
         Подписываемся на группу или канал
 
         :param groups_wr: Str - группа или канал
         :param client:    TelegramClient - объект клиента
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         # цикл for нужен для того, что бы сработала команда brake команда break в Python используется только для выхода из
         # цикла, а не выхода из программы в целом.
-        await log_and_display(f"Группа для подписки {groups_wr}", page)
+        await log_and_display(f"Группа для подписки {groups_wr}", self.page)
         try:
             await client(JoinChannelRequest(groups_wr))
-            await log_and_display(f"Аккаунт подписался на группу / канал: {groups_wr}", page)
+            await log_and_display(f"Аккаунт подписался на группу / канал: {groups_wr}", self.page)
             client.disconnect()
         except SessionRevokedError:
-            await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], page)
+            await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], self.page)
         except UserDeactivatedBanError:
-            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.", page)
+            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.", self.page)
         except ChannelsTooMuchError:
             """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
             async for dialog in client.iter_dialogs():
-                await log_and_display(f"{dialog.name}, {dialog.id}", page)
+                await log_and_display(f"{dialog.name}, {dialog.id}", self.page)
                 try:
                     await client.delete_dialog(dialog)
                     await client.disconnect()
                 except ConnectionError:
                     break
-            await log_and_display(f"❌  Список почистили, и в файл записали.", page)
+            await log_and_display(f"❌  Список почистили, и в файл записали.", self.page)
         except ChannelPrivateError:
-            await log_and_display(translations["ru"]["errors"]["channel_private"], page)
+            await log_and_display(translations["ru"]["errors"]["channel_private"], self.page)
         except (UsernameInvalidError, ValueError, TypeError):
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}",
-                page)
+                self.page)
             write_data_to_db(groups_wr)
         except PeerFloodError:
-            await log_and_display(translations["ru"]["errors"]["peer_flood"], page, level="error")
+            await log_and_display(translations["ru"]["errors"]["peer_flood"], self.page, level="error")
             await asyncio.sleep(random.randrange(50, 60))
         except FloodWaitError as e:
-            await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
-            await record_and_interrupt(time_subscription_1, time_subscription_2, page)
+            await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", self.page, level="error")
+            await record_and_interrupt(time_subscription_1, time_subscription_2, self.page)
             # Прерываем работу и меняем аккаунт
             raise
         except InviteRequestSentError:
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения администратором на вступление в группу",
-                page)
+                self.page)
         except sqlite3.DatabaseError:
             await log_and_display(
                 f"❌ Попытка подписки на группу / канал {groups_wr}. Ошибка базы данных, аккаунта или аккаунт заблокирован.",
-                page)
+                self.page)
         # except Exception as error:
         #     logger.exception(error)
 
