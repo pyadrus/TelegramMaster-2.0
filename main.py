@@ -115,24 +115,24 @@ async def main(page: ft.Page):
         elif page.route == "/show_list_contacts":  # Показать список контактов
             start = await start_time(page=page)
             logger.info("▶️ Начало Показа списка контактов")
-            await TGContact().show_account_contact_list(page=page)
+            await TGContact(page=page).show_account_contact_list()
             logger.info("🔚 Конец Показа списка контактов")
             await end_time(start, page=page)
         elif page.route == "/deleting_contacts":  # Удаление контактов
             start = await start_time(page=page)
             logger.info("▶️ Начало Удаления контактов")
-            await TGContact().delete_contact(page=page)
+            await TGContact(page=page).delete_contact()
             logger.info("🔚 Конец Удаления контактов")
             await end_time(start, page=page)
         elif page.route == "/adding_contacts":  # Добавление контактов
             start = await start_time(page=page)
             logger.info("▶️ Начало Добавления контактов")
-            await TGContact().inviting_contact(page=page)
+            await TGContact(page=page).inviting_contact()
             logger.info("🔚 Конец Добавления контактов")
             await end_time(start, page=page)
         # __________________________________________________________________________________________________________
         elif page.route == "/account_connection_menu":  # Подключение аккаунтов 'меню'.
-            await TGConnect().account_connection_menu(page=page)
+            await TGConnect(page=page).account_connection_menu()
         # __________________________________________________________________________________________________________
         elif page.route == "/creating_groups":  # Создание групп (чатов)
             await CreatingGroupsAndChats().creating_groups_and_chats(page=page)

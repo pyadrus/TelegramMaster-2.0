@@ -19,35 +19,13 @@ from src.core.configs import (BUTTON_HEIGHT, ConfigReader, LIMITS, WIDTH_WIDE_BU
                               time_inviting_1, time_inviting_2)
 from src.core.sqlite_working_tools import select_records_with_limit, get_links_inviting, save_links_inviting
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
+from src.features.account.connect.connect import get_string_session, getting_account_data
 from src.features.account.parsing.gui_elements import GUIProgram
+from src.features.account.subscribe_unsubscribe.subscribe import Subscribe
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
-
-
-async def getting_account_data(client, page):
-    """Получаем данные аккаунта"""
-    me = await client.get_me()
-    logger.info(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
-    await log_and_display(
-        f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}", page)
-
-
-async def get_string_session(session_name):
-    """Получение строки сессии"""
-
-    client = TelegramClient(
-        session=f"{path_accounts_folder}/{session_name}",
-        api_id=7655060,
-        api_hash="cc1290cd733c1f1d407598e5a31be4a8",
-        system_version="4.16.30-vxCUSTOM",
-    )
-    await client.connect()
-    logger.info(f"✨ STRING SESSION: {StringSession.save(client.session)}")
-    session_string = StringSession.save(client.session)
-    await client.disconnect()
-    return session_string
 
 
 async def add_user_test(client, username_group, username, page):
@@ -116,7 +94,7 @@ async def add_user_test(client, username_group, username, page):
 class InvitingToAGroup:
 
     def __init__(self, page: ft.Page):
-        self.sub_unsub_tg = SubscribeUnsubscribeTelegram(page=page)
+        # self.sub_unsub_tg = SubscribeUnsubscribeTelegram(page=page)
         # self.config_reader = ConfigReader()
         # self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
         self.scheduler = Scheduler()  # Создаем экземпляр планировщика
@@ -134,7 +112,7 @@ class InvitingToAGroup:
         self.page.controls.append(list_view)  # Добавляем ListView на страницу для отображения логов 📝
         self.page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
         links_inviting = get_links_inviting()  # Получаем список ссылок на группы для инвайтинга из базы данных
-        await self.data_for_inviting(self.page)  # Отображение информации о настройках инвайтинга
+        await self.data_for_inviting()  # Отображение информации о настройках инвайтинга
 
         async def general_invitation_to_the_group(_):
             """
@@ -153,14 +131,15 @@ class InvitingToAGroup:
                 )
                 await client.connect()
                 await getting_account_data(client, self.page)
-                await SubscribeUnsubscribeTelegram(self.page).subscribe_to_group_or_channel(client, dropdown.value)
+                await Subscribe(page=self.page).subscribe_to_group_or_channel(client, dropdown.value)
                 logger.info(f"Подписка на группу {dropdown.value} выполнена")
                 await log_and_display(f"{dropdown.value}", self.page)
                 usernames = select_records_with_limit(limit=LIMITS)
                 logger.info(f"Список usernames: {usernames}")
                 if len(usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", self.page)
-                    await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, self.page)
+                    await SubscribeUnsubscribeTelegram(self.page).unsubscribe_from_the_group(client, dropdown.value,
+                                                                                             self.page)
                     break  # Прерываем работу и меняем аккаунт
                 for username in usernames:
                     logger.info(f"Пользователь: {username}")
@@ -170,7 +149,8 @@ class InvitingToAGroup:
                         await add_user_test(client, dropdown.value, username, self.page)
                     except KeyboardInterrupt:  # Закрытие окна программы
                         await log_and_display(translations["ru"]["errors"]["script_stopped"], self.page, level="error")
-                await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page=self.page)
+                await SubscribeUnsubscribeTelegram(self.page).unsubscribe_from_the_group(client, dropdown.value,
+                                                                                         page=self.page)
                 await log_and_display(f"[!] Инвайтинг окончен!", page=self.page)
             await end_time(start, page=self.page)
             await show_notification(self.page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
@@ -294,7 +274,7 @@ class InvitingToAGroup:
                      ])]))
         self.page.update()  # обновляем страницу после добавления элементов управления 🔄
 
-    async def data_for_inviting(self, page: ft.Page):
+    async def data_for_inviting(self):
         """"
         Получение данных для инвайтинга
         """
@@ -304,4 +284,4 @@ class InvitingToAGroup:
         await log_and_display(f"Лимит на аккаунт: {LIMITS}\n"
                               f"Всего usernames: {len(usernames)}\n"
                               f"Подключенные аккаунты {find_filesss}\n"
-                              f"Всего подключенных аккаунтов: {len(find_filesss)}\n", page)
+                              f"Всего подключенных аккаунтов: {len(find_filesss)}\n", self.page)

@@ -1,23 +1,26 @@
 # -*- coding: utf-8 -*-
 import asyncio
-import random
 import sqlite3
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions, types
-from telethon.errors import (AuthKeyUnregisteredError, ChannelPrivateError, ChannelsTooMuchError, FloodWaitError,
-                             InviteHashExpiredError, InviteHashInvalidError, InviteRequestSentError, PeerFloodError,
-                             SessionPasswordNeededError, SessionRevokedError, UserDeactivatedBanError,
-                             UsernameInvalidError, UserNotParticipantError)
+from telethon.errors import (ChannelPrivateError, SessionRevokedError, InviteRequestSentError,
+                             FloodWaitError, AuthKeyUnregisteredError)
+from telethon.errors import (InviteHashExpiredError, InviteHashInvalidError,
+                             SessionPasswordNeededError, UserNotParticipantError)
+from telethon.sessions import StringSession
+from telethon.sync import TelegramClient
 from telethon.tl.functions.channels import JoinChannelRequest, LeaveChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-from src.core.configs import (BUTTON_HEIGHT, path_accounts_folder, time_subscription_1,
-                              time_subscription_2, WIDTH_WIDE_BUTTON)
-from src.core.sqlite_working_tools import write_data_to_db, write_writing_group_links_to_db, get_writing_group_links
-from src.core.utils import find_filess, record_and_interrupt
+from src.core.configs import (BUTTON_HEIGHT, WIDTH_WIDE_BUTTON, path_accounts_folder)
+from src.core.configs import (time_subscription_1,
+                              time_subscription_2)
+from src.core.sqlite_working_tools import write_writing_group_links_to_db, get_writing_group_links
+from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
+from src.features.account.inviting.inviting import get_string_session, getting_account_data
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe_gui import (SubscriptionLinkInputSection,
                                                                                   TimeIntervalInputSection)
@@ -64,8 +67,19 @@ class SubscribeUnsubscribeTelegram:
             """Подписываемся на группы и каналы"""
             start = await start_time(self.page)
             for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
-                client = await self.tg_connect.get_telegram_client(session_name,
-                                                                   account_directory=path_accounts_folder)
+                # client = await self.tg_connect.get_telegram_client(session_name,
+                #                                                    account_directory=path_accounts_folder)
+                session_string = await get_string_session(session_name)
+                # Создаем клиент, используя StringSession и вашу строку
+                client = TelegramClient(
+                    StringSession(session_string),  # <-- Используем StringSession
+                    api_id=7655060,
+                    api_hash="cc1290cd733c1f1d407598e5a31be4a8",
+                    system_version="4.16.30-vxCUSTOM",
+                )
+                await client.connect()
+                await getting_account_data(client, self.page)
+
                 if client is None:
                     logger.error("❌ Не удалось подключиться к Telegram")
                     # pass  # Пропустить аккаунт, если не удалось подключиться
@@ -352,59 +366,5 @@ class SubscribeUnsubscribeTelegram:
 
         # finally:
         #     await client.disconnect()  # Разрываем соединение с Telegram
-
-    async def subscribe_to_group_or_channel(self, client, groups_wr) -> None:
-        """
-        Подписываемся на группу или канал
-
-        :param groups_wr: Str - группа или канал
-        :param client:    TelegramClient - объект клиента
-        """
-        # цикл for нужен для того, что бы сработала команда brake команда break в Python используется только для выхода из
-        # цикла, а не выхода из программы в целом.
-        await log_and_display(f"Группа для подписки {groups_wr}", self.page)
-        try:
-            await client(JoinChannelRequest(groups_wr))
-            await log_and_display(f"Аккаунт подписался на группу / канал: {groups_wr}", self.page)
-            # client.disconnect()
-        except SessionRevokedError:
-            await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], self.page)
-        except UserDeactivatedBanError:
-            await log_and_display(f"❌ Попытка подписки на группу / канал {groups_wr}. Аккаунт заблокирован.", self.page)
-        except ChannelsTooMuchError:
-            """Если аккаунт подписан на множество групп и каналов, то отписываемся от них"""
-            async for dialog in client.iter_dialogs():
-                await log_and_display(f"{dialog.name}, {dialog.id}", self.page)
-                try:
-                    await client.delete_dialog(dialog)
-                    await client.disconnect()
-                except ConnectionError:
-                    break
-            await log_and_display(f"❌  Список почистили, и в файл записали.", self.page)
-        except ChannelPrivateError:
-            await log_and_display(translations["ru"]["errors"]["channel_private"], self.page)
-        except (UsernameInvalidError, ValueError, TypeError):
-            await log_and_display(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Не верное имя или cсылка {groups_wr} не является группой / каналом: {groups_wr}",
-                self.page)
-            write_data_to_db(groups_wr)
-        except PeerFloodError:
-            await log_and_display(translations["ru"]["errors"]["peer_flood"], self.page, level="error")
-            await asyncio.sleep(random.randrange(50, 60))
-        except FloodWaitError as e:
-            await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", self.page, level="error")
-            await record_and_interrupt(time_subscription_1, time_subscription_2, self.page)
-            # Прерываем работу и меняем аккаунт
-            raise
-        except InviteRequestSentError:
-            await log_and_display(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Действия будут доступны после одобрения администратором на вступление в группу",
-                self.page)
-        except sqlite3.DatabaseError:
-            await log_and_display(
-                f"❌ Попытка подписки на группу / канал {groups_wr}. Ошибка базы данных, аккаунта или аккаунт заблокирован.",
-                self.page)
-        # except Exception as error:
-        #     logger.exception(error)
 
 # 409

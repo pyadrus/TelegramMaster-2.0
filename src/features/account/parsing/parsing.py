@@ -4,6 +4,7 @@ import datetime
 import os
 import os.path
 import sqlite3
+
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
 from telethon import functions
@@ -16,10 +17,10 @@ from telethon.tl.types import (ChannelParticipantsAdmins, ChannelParticipantsSea
 from src.core.configs import (WIDTH_WIDE_BUTTON, path_accounts_folder, time_activity_user_2, BUTTON_HEIGHT)
 from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, db, add_member_to_db)
 from src.features.account.TGConnect import TGConnect
-from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.parsing.switch_controller import ToggleController
 from src.features.account.parsing.user_info import UserInfo
+from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
 
@@ -98,7 +99,7 @@ async def parse_group(groups_wr, page) -> None:
     """
     phone = page.session.get("selected_sessions") or []
     logger.debug(f"Аккаунт: {phone}")
-    client = await TGConnect().get_telegram_client(page, phone[0], account_directory=path_accounts_folder)
+    client = await TGConnect(page).get_telegram_client(phone[0], account_directory=path_accounts_folder)
     await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", page)
     try:
         all_participants: list = []
@@ -152,9 +153,10 @@ async def parse_group(groups_wr, page) -> None:
 class ParsingGroupMembers:
     """Класс для парсинга групп, на которые подписан аккаунт."""
 
-    def __init__(self):
-        self.tg_connect = TGConnect()
-        self.tg_subscription_manager = SubscribeUnsubscribeTelegram()
+    def __init__(self, page):
+        self.page = page
+        self.tg_connect = TGConnect(page)
+        self.tg_subscription_manager = SubscribeUnsubscribeTelegram(page)
 
     async def account_selection_menu(self, page):
 
@@ -285,9 +287,9 @@ class ParsingGroupMembers:
                     ft.Row([admin_switch, members_switch, account_groups_switch, ]),
                     ft.Row([account_group_selection_switch, active_switch, contacts_switch, ]),
                     chat_input,
-                    ft.Divider(), # Горизонтальная линия
+                    ft.Divider(),  # Горизонтальная линия
                     ft.Row([limit_active_user]),
-                    ft.Divider(), # Горизонтальная линия
+                    ft.Divider(),  # Горизонтальная линия
                     result_text,
                     dropdown,
                     parse_button,  # ⬅️ Кнопка для парсинга
@@ -300,13 +302,13 @@ class ParsingGroupMembers:
     async def start_group_parsing(self, page, dropdown, result_text):
         phone = await self.load_groups(page, dropdown, result_text)
         logger.warning(f"🔍 Аккаунт: {phone}")
-        client = await self.tg_connect.get_telegram_client(page, phone, path_accounts_folder)
+        client = await self.tg_connect.get_telegram_client(phone, path_accounts_folder)
         if not dropdown.value:
             await log_and_display("⚠️ Группа не выбрана", page)
             return
         await log_and_display(f"▶️ Парсинг группы: {dropdown.value}", page)
         logger.warning(f"🔍 Парсим группу: {dropdown.value}")
-        await parse_group(client, groups_wr, page)
+        await parse_group(dropdown.value, page)
         await client.disconnect()
         await log_and_display("🔚 Парсинг завершен", page)
 
@@ -338,7 +340,7 @@ class ParsingGroupMembers:
             session_path = selected[0]
             phone = os.path.splitext(os.path.basename(session_path))[0]
             logger.warning(f"🔍 Работаем с аккаунтом {phone}")
-            client = await self.tg_connect.get_telegram_client(page, phone, path_accounts_folder)
+            client = await self.tg_connect.get_telegram_client(phone, path_accounts_folder)
             result = await client(
                 GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
             groups = await self.filtering_groups(result.chats)
@@ -359,7 +361,7 @@ class ParsingGroupMembers:
             phone = page.session.get("selected_sessions") or []
             logger.debug(f"Аккаунт: {phone}")
             try:
-                client = await self.tg_connect.get_telegram_client(page, phone[0],
+                client = await self.tg_connect.get_telegram_client(phone[0],
                                                                    account_directory=path_accounts_folder)
                 await log_and_display(f"🔍 Парсинг группы: {groups}", page)
                 try:
@@ -421,7 +423,7 @@ class ParsingGroupMembers:
         # Обрабатываем все файлы сессий по очереди 📂
         phone = page.session.get("selected_sessions") or []
         logger.debug(f"🔍 Парсинг групп/каналов, в которых состоит аккаунт: {phone}")
-        client = await self.tg_connect.get_telegram_client(page, phone[0], account_directory=path_accounts_folder)
+        client = await self.tg_connect.get_telegram_client(phone[0], account_directory=path_accounts_folder)
         await log_and_display(
             f"🔗 Подключение к аккаунту: {phone}\n 🔄 Парсинг групп/каналов, на которые подписан аккаунт", page)
         await self.forming_a_list_of_groups(client, page)
@@ -431,9 +433,9 @@ class ParsingGroupMembers:
         Парсинг активных пользователей в чате.
         """
         try:
-            client = await self.tg_connect.get_telegram_client(page, phone_number,
+            client = await self.tg_connect.get_telegram_client(phone_number,
                                                                account_directory=path_accounts_folder)
-            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input, page)
+            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
             try:
                 await asyncio.sleep(int(time_activity_user_2 or 5))
             except TypeError:
