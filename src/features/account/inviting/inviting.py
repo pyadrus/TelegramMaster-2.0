@@ -117,7 +117,6 @@ class InvitingToAGroup:
 
     def __init__(self, page: ft.Page):
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram(page=page)
-        # self.connect = TGConnect(page=page)
         self.config_reader = ConfigReader()
         self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
         self.scheduler = Scheduler()  # Создаем экземпляр планировщика
@@ -157,13 +156,11 @@ class InvitingToAGroup:
                 await SubscribeUnsubscribeTelegram(self.page).subscribe_to_group_or_channel(client, dropdown.value)
                 logger.info(f"Подписка на группу {dropdown.value} выполнена")
                 await log_and_display(f"{dropdown.value}", self.page)
-                # Подписка на группу для инвайтинга
-                # Получение списка usernames
                 usernames = select_records_with_limit(limit=LIMITS)
                 logger.info(f"Список usernames: {usernames}")
                 if len(usernames) == 0:
                     await log_and_display(f"В таблице members нет пользователей для инвайтинга", self.page)
-                    # await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, self.page)
+                    await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, self.page)
                     break  # Прерываем работу и меняем аккаунт
                 for username in usernames:
                     logger.info(f"Пользователь: {username}")
@@ -172,9 +169,8 @@ class InvitingToAGroup:
                     try:
                         await add_user_test(client, dropdown.value, username, self.page)
                     except KeyboardInterrupt:  # Закрытие окна программы
-                        # client.disconnect()  # Разрываем соединение telegram
                         await log_and_display(translations["ru"]["errors"]["script_stopped"], self.page, level="error")
-                # await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page=self.page)
+                await self.sub_unsub_tg.unsubscribe_from_the_group(client, dropdown.value, page=self.page)
                 await log_and_display(f"[!] Инвайтинг окончен!", page=self.page)
             await end_time(start, page=self.page)
             await show_notification(self.page, "🔚 Конец инвайтинга")  # Выводим уведомление пользователю
