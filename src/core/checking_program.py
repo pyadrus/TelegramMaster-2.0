@@ -40,9 +40,9 @@ class CheckingProgram:
         ⛔ Проверка наличия аккаунта в папке с аккаунтами (Рассылка сообщений по чатам с автоответчиком)
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        if not await find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
+        if not find_filess(directory_path=path_folder_with_messages, extension=self.file_extension):
             await show_notification(page, f"⛔ Нет заготовленных сообщений в папке {path_folder_with_messages}")
-        if not await find_filess(directory_path=path_send_message_folder_answering_machine_message,
+        if not find_filess(directory_path=path_send_message_folder_answering_machine_message,
                                  extension=self.file_extension):
             await show_notification(page,
                                     f"⛔ Нет заготовленных сообщений для автоответчика в папке {path_send_message_folder_answering_machine_message}")

@@ -28,7 +28,7 @@ class TGContact:
         Показать список контактов аккаунтов и запись результатов в файл
         """
         try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder)
@@ -109,7 +109,7 @@ class TGContact:
         :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder)
@@ -124,7 +124,7 @@ class TGContact:
         """
         try:
             # Открываем базу данных для работы с аккаунтами user_data/software_database.db
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                 # Подключение к Telegram и вывод имя аккаунта в консоль / терминал
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory=path_accounts_folder)
@@ -140,7 +140,7 @@ class TGContact:
         :param page: Страница интерфейса
         """
         try:
-            records: list = await db_handler.open_and_read_data(table_name="contact", page=page)
+            records: list = await open_and_read_data(table_name="contact", page=page)
             await log_and_display(f"Всего номеров: {len(records)}", page)
             entities: list = []  # Создаем список сущностей
             for rows in records:

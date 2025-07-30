@@ -38,7 +38,7 @@ class ViewingPosts:
 
             async def btn_click(_) -> None:
 
-                for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+                for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_accounts_folder)
                     await log_and_display(f"[+] Работаем с каналом: {link_channel.value}", page)

@@ -48,7 +48,7 @@ class SubscribeUnsubscribeTelegram:
             """
             start = await start_time(page)
             try:
-                for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+                for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                     client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                        account_directory=path_accounts_folder)
                     dialogs = client.iter_dialogs()
@@ -64,7 +64,7 @@ class SubscribeUnsubscribeTelegram:
         async def add_items(_):
             """Подписываемся на группы и каналы"""
             start = await start_time(page)
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                 telegram_client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                             account_directory=path_accounts_folder)
                 if telegram_client is None:

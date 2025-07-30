@@ -38,7 +38,7 @@ def all_find_files(directory_path) -> list:
     return entities  # Возвращаем список файлов
 
 
-async def find_filess(directory_path, extension):
+def find_filess(directory_path, extension):
     """
     Поиск файлов с определенным расширением в директории. Расширение файла должно быть указанно без точки.
 
@@ -92,8 +92,8 @@ def working_with_accounts(account_folder, new_account_folder) -> None:
     except PermissionError as error:
         logger.error(f"❌ Ошибка: {error}")
         logger.error("❌ Не удалось перенести файлы в нужную папку")
-    except Exception as error:
-        logger.exception(error)
+    # except Exception as error:
+    #     logger.exception(error)
 
 
 async def record_inviting_results(time_range_1: int, time_range_2: int, username: str, page: ft.Page) -> None:

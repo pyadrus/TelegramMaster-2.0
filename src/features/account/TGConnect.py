@@ -101,7 +101,7 @@ class TGConnect:
         """
         try:
             start = await start_time(page)
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                 telegram_client: TelegramClient = await self.get_telegram_client(page=page, session_name=session_name,
                                                                                  account_directory=path_accounts_folder)
                 try:
@@ -161,6 +161,38 @@ class TGConnect:
                 except (AttributeError, AuthKeyUnregisteredError) as e:
                     await log_and_display(message=f"❌ Ошибка: {e}", page=page)
                     continue
+                except sqlite3.DatabaseError:
+                    await log_and_display(f"❌ Ошибка базы данных, аккаунта или аккаунт заблокирован.", page)
+                    # Отключаем клиент, игнорируя ошибки с SQLite
+                    try:
+                        await telegram_client.disconnect()
+                    except Exception as e:
+                        await log_and_display(f"⚠️ Не удалось корректно отключить {session_name}: {e}", page)
+
+                    # Перенос Telegram аккаунта в папку banned, если Telegram аккаунт в бане
+                    await log_and_display(message=f"{session_name}", page=page)
+                    # working_with_accounts(f"user_data/accounts/{session_name}.session",
+                    #                       f"user_data/accounts/banned/{session_name}.session")
+                    session_file = f"user_data/accounts/{session_name}.session"
+                    banned_dir = "user_data/accounts/banned"
+                    banned_file = os.path.join(banned_dir, f"{session_name}.session")
+                    # Удаляем связанный .session-journal, если он есть
+                    journal_file = session_file + "-journal"
+                    if os.path.exists(journal_file):
+                        try:
+                            os.remove(journal_file)
+                            await log_and_display(f"🗑 Удалён повреждённый журнал: {journal_file}", page)
+                        except Exception as e:
+                            await log_and_display(f"⚠️ Не удалось удалить session-journal: {e}", page)
+
+                    # Перемещаем основной .session файл
+                    try:
+                        shutil.move(session_file, banned_file)
+                        await log_and_display(f"🚫 Аккаунт {session_name} перемещён в папку banned.", page)
+                    except Exception as e:
+                        await log_and_display(f"❌ Не удалось переместить аккаунт: {e}", page)
+
+
             await end_time(start, page)
             await show_notification(page=page, message="🔚 Проверка аккаунтов завершена")
         except Exception as error:
@@ -176,7 +208,7 @@ class TGConnect:
             start = await start_time(page)
             await checking_the_proxy_for_work(page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
-            for session_file in await find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_file in find_filess(directory_path=path_accounts_folder, extension='session'):
                 await log_and_display(message=f"⚠️ Проверяемый аккаунт: {session_file}", page=page)
                 # Проверка аккаунтов
                 await self.verify_account(page=page, session_name=session_file)
@@ -196,7 +228,7 @@ class TGConnect:
             start = await start_time(page)
             await checking_the_proxy_for_work(page=page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
-            for session_name in await find_filess(directory_path=path_accounts_folder, extension='session'):
+            for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
                 await log_and_display(message=f"⚠️ Переименовываемый аккаунт: {session_name}", page=page)
                 # Переименовывание аккаунтов
                 telegram_client = await self.get_telegram_client(page=page, session_name=session_name,
@@ -281,7 +313,8 @@ class TGConnect:
             await telegram_client.connect()
             me = await telegram_client.get_me()
             logger.info(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
-            await log_and_display(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}", page)
+            await log_and_display(
+                f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}", page)
 
             # string_session = telegram_client.session.save()
             # logger.info(f"📦 String session: {string_session}")
