@@ -61,7 +61,7 @@ async def main(page: ft.Page):
             await TGChek().account_verification_menu(page=page)
         # __________________________________________________________________________________________________________
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
-            await SubscribeUnsubscribeTelegram().subscribe_and_unsubscribe_menu(page=page)
+            await SubscribeUnsubscribeTelegram(page=page).subscribe_and_unsubscribe_menu()
         # elif page.route == "/subscription_all":  # Подписка
         #     await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
         # elif page.route == "/unsubscribe_all":  # Отписываемся
