@@ -4,16 +4,18 @@ import flet as ft  # Импортируем библиотеку flet
 
 class TimeIntervalInputSection:
 
-    async def create_time_inputs_and_save_button(self, on_save_click):
+    async def create_time_inputs_and_save_button(self, on_save_click, label_min, label_max):
         """
-        Создаёт текстовое поле для ввода ссылок и кнопку сохранения.
+        Создаёт текстовое поле для ввода данных (ссылок, времени) и кнопку сохранения.
 
+        :param label_max: Выводимый текст на поле ввода
+        :param label_min: Выводимый текст на поле ввода
         :param on_save_click: Функция-обработчик, вызываемая при нажатии на кнопку сохранения.
         :return: Кортеж из двух элементов: ft.TextField и ft.IconButton.
         https://flet.dev/docs/controls/textfield/
         """
-        min_time_input = ft.TextField(label="Время в секундах (меньшее)", autofocus=True, width=344)
-        max_time_input = ft.TextField(label="Время в секундах (большее)", autofocus=True, width=344)
+        min_time_input = ft.TextField(label=label_min, autofocus=True, width=344)
+        max_time_input = ft.TextField(label=label_max, autofocus=True, width=344)
         save_button = ft.IconButton(
             visible=True,
             icon=ft.Icons.SAVE,

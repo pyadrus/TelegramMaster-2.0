@@ -23,6 +23,8 @@ from src.features.account.connect.connect import get_string_session, getting_acc
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.subscribe_unsubscribe.subscribe import Subscribe
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
+from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe_gui import TimeIntervalInputSection
+from src.features.settings.setting import SettingPage
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
@@ -95,8 +97,8 @@ class InvitingToAGroup:
 
     def __init__(self, page: ft.Page):
         # self.sub_unsub_tg = SubscribeUnsubscribeTelegram(page=page)
-        # self.config_reader = ConfigReader()
-        # self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
+        self.config_reader = ConfigReader()
+        self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
         self.scheduler = Scheduler()  # Создаем экземпляр планировщика
         self.page = page
         self.config_reader = ConfigReader()
@@ -198,8 +200,10 @@ class InvitingToAGroup:
                 async def general_invitation_group_scheduler():
                     await general_invitation_to_the_group(_)
 
-                await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", self.page)
-                self.scheduler.once(dt.time(hour=int(self.hour), minute=int(self.minutes)),
+                await log_and_display(
+                    f"Скрипт будет запускаться каждый день в {hour_textfield.value}:{minutes_textfield.value}",
+                    self.page)
+                self.scheduler.once(dt.time(hour=int(hour_textfield.value), minute=int(minutes_textfield.value)),
                                     general_invitation_group_scheduler)
                 while True:
                     await asyncio.sleep(1)
@@ -215,16 +219,29 @@ class InvitingToAGroup:
             async def general_invitation_group_scheduler():
                 await general_invitation_to_the_group(_)
 
-            await log_and_display(f"Скрипт будет запускаться каждый день в {self.hour}:{self.minutes}", self.page)
-            self.scheduler.daily(dt.time(hour=int(self.hour), minute=int(self.minutes)),
+            await log_and_display(f"Скрипт будет запускаться каждый день в {hour_textfield.value}:{self.minutes}",
+                                  self.page)
+            self.scheduler.daily(dt.time(hour=int(hour_textfield.value), minute=int(minutes_textfield.value)),
                                  general_invitation_group_scheduler)
             while True:
                 await asyncio.sleep(1)
+
+        async def write_tame_start_inviting(_):
+            """Записывает время запуска инвайтинга по времени. Час запуска и минуты запуска"""
+            await SettingPage(self.page).recording_the_time_to_launch_an_invite_every_day(hour_textfield,
+                                                                                          minutes_textfield)
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=WIDTH_WIDE_BUTTON,
                                options=[ft.DropdownOption(link) for link in links_inviting],
                                autofocus=True)
+
+        # Два поля ввода для времени и кнопка сохранить
+        hour_textfield, minutes_textfield, save_button_time = await TimeIntervalInputSection().create_time_inputs_and_save_button(
+            write_tame_start_inviting,
+            label_min="Час запуска приглашений (0-23):",
+            label_max="Минуты запуска приглашений (0-59):"
+        )
 
         # Поле ввода, для ссылок для инвайтинга
         link_entry_field = ft.TextField(label="Введите ссылку на группу для инвайтинга",
@@ -242,6 +259,10 @@ class InvitingToAGroup:
                                           gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                                ft.Colors.PURPLE])), ), ), ], ),
                      list_view,  # Отображение логов 📝
+
+                     # Запись времени для запуска инвайтинга по времени
+                     await TimeIntervalInputSection().build_time_input_row(hour_textfield, minutes_textfield,
+                                                                           save_button_time),
 
                      ft.Row(
                          controls=[link_entry_field, save_button],

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import (User, UserProfilePhoto,
-                               UserStatusEmpty, UserStatusLastMonth,
-                               UserStatusLastWeek, UserStatusOffline,
-                               UserStatusOnline, UserStatusRecently)
+from telethon.tl.types import (User, UserProfilePhoto, UserStatusEmpty, UserStatusLastMonth, UserStatusLastWeek,
+                               UserStatusOffline, UserStatusOnline, UserStatusRecently)
 
 
 class UserInfo:

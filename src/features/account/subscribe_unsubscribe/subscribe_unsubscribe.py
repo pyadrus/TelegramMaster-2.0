@@ -138,7 +138,10 @@ class SubscribeUnsubscribeTelegram:
         link_entry_field, save_button = await SubscriptionLinkInputSection().create_link_input_and_save_button(save)
         # Два поля ввода для времени и кнопка сохранить
         smaller_timex, larger_timex, save_button_time = await TimeIntervalInputSection().create_time_inputs_and_save_button(
-            btn_click)
+            btn_click,
+            label_min="Время в секундах (меньшее)",
+            label_max="Время в секундах (большее)"
+        )
 
         self.page.views.append(
             ft.View("/subscribe_unsubscribe",

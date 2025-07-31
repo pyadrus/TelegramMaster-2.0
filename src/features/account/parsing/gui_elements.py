@@ -35,6 +35,7 @@ class GUIProgram:
             ],
         )
 
+    # TODO: Применить во всем проекте, для одинакового оформления GUI программы
     @staticmethod
     async def diver_castom():
         """Разделительная линия"""

@@ -8,7 +8,7 @@ import sys
 import flet as ft  # Импортируем библиотеку flet
 
 from src.core.configs import BUTTON_HEIGHT, WIDTH_WIDE_BUTTON
-from src.core.sqlite_working_tools import cleaning_db, save_proxy_data_to_db, save_links_inviting
+from src.core.sqlite_working_tools import cleaning_db, save_proxy_data_to_db
 from src.gui.gui import list_view, log_and_display
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
@@ -24,16 +24,12 @@ class WriteDatabase:
     def __init__(self):
         table_name = "links_inviting"
 
-
-    async def wirite_to_database_links_inviting(self, data):
-        """Запись ссылки для инвайтинга в базу данных"""
-        save_links_inviting(data)
-
     async def output_the_input_field(self, page: ft.Page, data, table_name: str, column_name: str, route: str,
                                      into_columns: str) -> None:
         """
         Окно ввода для записи списка контактов telegram
 
+        :param data: Данные для записи в БД.
         :param page: Страница интерфейса Flet для отображения элементов управления.
         :param table_name: Имя таблицы в базе данных.
         :param column_name: Имя столбца в таблице.
@@ -88,8 +84,8 @@ class WriteDatabase:
 
 class SettingPage:
 
-    # def __init__(self):
-    #     self.db_handler = DatabaseHandler()
+    def __init__(self, page: ft.Page):
+        self.page = page
 
     async def creating_the_main_window_for_proxy_data_entry(self, page: ft.Page) -> None:
         """
@@ -174,41 +170,42 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [limits], btn_click)
 
-    async def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
-        """
-        Запись времени для запуска inviting в определенное время
+    # async def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
+    #     """
+    #     Запись времени для запуска inviting в определенное время
+    #
+    #     :param page: Страница интерфейса Flet для отображения элементов управления.
+    #     """
+    # page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
+    # list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
+    # hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
+    # minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
 
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        """
-        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-        list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
-        hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
-        minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
+    async def recording_the_time_to_launch_an_invite_every_day(self, hour_textfield, minutes_textfield) -> None:
+        """Записывает данные в файл config.ini"""
+        try:
+            hour = int(hour_textfield.value)
+            minutes = int(minutes_textfield.value)
+            if not 0 <= hour < 24:
+                await log_and_display(f"Введите часы в пределах от 0 до 23!", self.page)
+                return
+            if not 0 <= minutes < 60:
+                await log_and_display(f"Введите минуты в пределах от 0 до 59!", self.page)
+                return
+            # Предполагая, что config является объектом, похожим на словарь
+            config.get("hour_minutes_every_day", "hour")
+            config.set("hour_minutes_every_day", "hour", str(hour))
+            config.get("hour_minutes_every_day", "minutes")
+            config.set("hour_minutes_every_day", "minutes", str(minutes))
+            writing_settings_to_a_file(config)
+            await show_notification(self.page, "Данные успешно записаны!")
 
-        async def btn_click(_) -> None:
-            try:
-                hour = int(hour_textfield.value)
-                minutes = int(minutes_textfield.value)
-                if not 0 <= hour < 24:
-                    await log_and_display(f"Введите часы в пределах от 0 до 23!", page)
-                    return
-                if not 0 <= minutes < 60:
-                    await log_and_display(f"Введите минуты в пределах от 0 до 59!", page)
-                    return
-                # Предполагая, что config является объектом, похожим на словарь
-                config.get("hour_minutes_every_day", "hour")
-                config.set("hour_minutes_every_day", "hour", str(hour))
-                config.get("hour_minutes_every_day", "minutes")
-                config.set("hour_minutes_every_day", "minutes", str(minutes))
-                writing_settings_to_a_file(config)
-                await show_notification(page, "Данные успешно записаны!")
+            # self.page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+        except ValueError:
+            await log_and_display(f"Введите числовые значения для часов и минут!", self.page)
+        self.page.update()  # Обновляем страницу
 
-                page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-            except ValueError:
-                await log_and_display(f"Введите числовые значения для часов и минут!", page)
-            page.update()  # Обновляем страницу
-
-        self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click)
+        # self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click)
 
     async def create_main_window(self, page: ft.Page, variable, time_range) -> None:
         """
@@ -219,7 +216,8 @@ class SettingPage:
         """
 
         page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-        for time_range_message in time_range: list_view.controls.append(ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
+        for time_range_message in time_range: list_view.controls.append(
+            ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
         smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
         larger_timex = ft.TextField(label="Время в секундах (большее)")
 
