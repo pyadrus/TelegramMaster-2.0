@@ -16,10 +16,10 @@ from src.features.account.TGContact import TGContact
 from src.features.account.TGCreating import CreatingGroupsAndChats
 from src.features.account.TGReactions import WorkingWithReactions
 from src.features.account.TGSendingMessages import SendTelegramMessages
-from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.features.account.TGViewingPosts import ViewingPosts
 from src.features.account.inviting.inviting import InvitingToAGroup
 from src.features.account.parsing.parsing import ParsingGroupMembers
+from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.features.auth.logging_in import loging
 from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
@@ -58,7 +58,7 @@ async def main(page: ft.Page):
             await InvitingToAGroup(page=page).inviting_menu()
         # __________________________________________________________________________________________________________
         elif page.route == "/account_verification_menu":  # "Проверка аккаунтов"
-            await TGChek().account_verification_menu(page=page)
+            await TGChek(page=page).account_verification_menu()
         # __________________________________________________________________________________________________________
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             await SubscribeUnsubscribeTelegram(page=page).subscribe_and_unsubscribe_menu()
@@ -96,7 +96,7 @@ async def main(page: ft.Page):
             await end_time(start, page=page)
         # __________________________________________________________________________________________________________
         elif page.route == "/parsing":  # Меню "Парсинг"
-            await ParsingGroupMembers().account_selection_menu(page=page)
+            await ParsingGroupMembers(page=page).account_selection_menu()
         elif page.route == "/importing_a_list_of_parsed_data":  # 📋 Импорт списка от ранее спарсенных данных
             await ReceivingAndRecording().write_data_to_excel(file_name="user_data/parsed_chat_participants.xlsx")
         # __________________________________________________________________________________________________________
@@ -105,7 +105,7 @@ async def main(page: ft.Page):
         elif page.route == "/creating_contact_list":  # Формирование списка контактов
             start = await start_time(page=page)
             logger.info("▶️ Начало Формирования списка контактов")
-            open_and_read_data(table_name="contact", page=page)  # Удаление списка с контактами
+            open_and_read_data(table_name="contact")  # Удаление списка с контактами
             # TODO миграция на PEEWEE
             await SettingPage().output_the_input_field(page=page, table_name="contact",
                                                        column_name="contact", route="/working_with_contacts",
@@ -135,13 +135,13 @@ async def main(page: ft.Page):
             await TGConnect(page=page).account_connection_menu()
         # __________________________________________________________________________________________________________
         elif page.route == "/creating_groups":  # Создание групп (чатов)
-            await CreatingGroupsAndChats().creating_groups_and_chats(page=page)
+            await CreatingGroupsAndChats(page=page).creating_groups_and_chats()
         # __________________________________________________________________________________________________________
         elif page.route == "/sending_messages_files_via_chats":  # Рассылка сообщений по чатам
             await CheckingProgram().check_before_sending_messages_via_chats(page=page)
-            await SendTelegramMessages().sending_messages_files_via_chats(page=page)
+            await SendTelegramMessages(page=page).sending_messages_files_via_chats()
         elif page.route == "/sending_files_to_personal_account_with_limits":  # Отправка сообщений в личку
-            await SendTelegramMessages().send_files_to_personal_chats(page=page)
+            await SendTelegramMessages(page=page).send_files_to_personal_chats()
         # __________________________________________________________________________________________________________
         elif page.route == "/bio_editing":  # Меню "Редактирование_BIO"
             await bio_editing_menu(page=page)

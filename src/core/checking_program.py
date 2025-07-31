@@ -20,7 +20,7 @@ class CheckingProgram:
         ⛔ Проверка наличия сформированного списка с чатами для рассылки по чатам.
         ⛔ Проверка папки с сообщениями на наличие заготовленных сообщений.
         """
-        if len(await select_records_with_limit(table_name="writing_group_links", limit=LIMITS)) == 0:
+        if len(select_records_with_limit(limit=LIMITS)) == 0:
             await show_notification(page, "⛔ Не сформирован список для рассылки по чатам")
 
     # TODO улучшить проверку на наличие username, ссылок в базе данных для инвайтинга и так далее

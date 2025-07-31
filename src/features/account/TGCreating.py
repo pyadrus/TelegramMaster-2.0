@@ -20,52 +20,51 @@ class CreatingGroupsAndChats:
     Создание групп (чатов) в автоматическом режиме
     """
 
-    def __init__(self):
-        self.tg_connect = TGConnect()
+    def __init__(self, page: ft.Page):
+        self.page = page
+        self.tg_connect = TGConnect(page)
 
-    async def creating_groups_and_chats(self, page: ft.Page) -> None:
+    async def creating_groups_and_chats(self) -> None:
         """
         Создание групп (чатов) в автоматическом режиме
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         selected_sessions = []  # Список для хранения выбранных session файлов
         selected_files = ft.Text(value=translations["ru"]["notifications"]["files_not_selected"], selectable=True)
-        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-        page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
+        self.page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
+        self.page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
 
         async def add_items(_):
             """
             🚀 Запускает процесс создания групп и отображает статус в интерфейсе.
             """
-            start = await start_time(page)
-            page.update()
+            start = await start_time(self.page)
+            self.page.update()
 
             if not selected_sessions:
-                await log_and_display(translations["ru"]["errors"]["files_not_selected_warning"], page)
+                await log_and_display(translations["ru"]["errors"]["files_not_selected_warning"], self.page)
                 session_files = await find_filess(directory_path=path_accounts_folder, extension='session')
                 if not session_files:
-                    await log_and_display(translations["ru"]["errors"]["no_session_files"], page)
-                    page.update()
+                    await log_and_display(translations["ru"]["errors"]["no_session_files"], self.page)
+                    self.page.update()
                     return
             else:
                 session_files = selected_sessions
-                await log_and_display(translations["ru"]["notifications"]["start_creating"], page)
+                await log_and_display(translations["ru"]["notifications"]["start_creating"], self.page)
             try:
                 for session_name in session_files:
                     # Извлекаем только имя файла без расширения
                     session_name = os.path.splitext(os.path.basename(session_name))[0]
-                    client = await self.tg_connect.get_telegram_client(page, session_name,
+                    client = await self.tg_connect.get_telegram_client(self.page, session_name,
                                                                        account_directory=path_accounts_folder)
                     await client(functions.channels.CreateChannelRequest(title='My awesome title',
                                                                          about='Description for your group',
                                                                          megagroup=True))
-                    await log_and_display(translations["ru"]["notifications"]["notification_creating"], page)
+                    await log_and_display(translations["ru"]["notifications"]["notification_creating"], self.page)
             except TypeError:
                 pass
             except Exception as error:
                 logger.exception(error)
-            await end_time(start, page)
+            await end_time(start, self.page)
 
         async def btn_click(e: ft.FilePickerResultEvent) -> None:
             if e.files:
@@ -90,29 +89,31 @@ class CreatingGroupsAndChats:
                 selected_files.value = "Выбор файлов отменен"
                 selected_files.update()
 
-            page.update()
+            self.page.update()
 
         # Кнопка выбора session файлов
         pick_files_dialog = ft.FilePicker(on_result=btn_click)
-        page.overlay.append(pick_files_dialog)
+        self.page.overlay.append(pick_files_dialog)
 
         # Добавляем элементы интерфейса на страницу
-        page.views.append(ft.View("/creating_groups_and_chats_menu",
-                                  [await GUIProgram().key_app_bar(),
-                                   ft.Text(spans=[ft.TextSpan(translations["ru"]["menu"]["create_groups"], ft.TextStyle(
-                                       size=20, weight=ft.FontWeight.BOLD,
-                                       foreground=ft.Paint(gradient=ft.PaintLinearGradient((0, 20), (150, 20),
-                                                                                           [ft.Colors.PINK,
-                                                                                            ft.Colors.PURPLE])), ), ), ]),
-                                   list_view, selected_files,
-                                   ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                                                     text=translations["ru"]["create_groups_menu"][
-                                                         "choose_session_files"],
-                                                     on_click=lambda _: pick_files_dialog.pick_files(
-                                                         allow_multiple=True)),
-                                   ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                                                     text=translations["ru"]["buttons"]["start"], on_click=add_items),
-                                   ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                                                     text=translations["ru"]["buttons"]["back"],
-                                                     on_click=lambda _: page.go("/"))]))
-        page.update()
+        self.page.views.append(ft.View("/creating_groups_and_chats_menu",
+                                       [await GUIProgram().key_app_bar(),
+                                        ft.Text(spans=[
+                                            ft.TextSpan(translations["ru"]["menu"]["create_groups"], ft.TextStyle(
+                                                size=20, weight=ft.FontWeight.BOLD,
+                                                foreground=ft.Paint(gradient=ft.PaintLinearGradient((0, 20), (150, 20),
+                                                                                                    [ft.Colors.PINK,
+                                                                                                     ft.Colors.PURPLE])), ), ), ]),
+                                        list_view, selected_files,
+                                        ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+                                                          text=translations["ru"]["create_groups_menu"][
+                                                              "choose_session_files"],
+                                                          on_click=lambda _: pick_files_dialog.pick_files(
+                                                              allow_multiple=True)),
+                                        ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+                                                          text=translations["ru"]["buttons"]["start"],
+                                                          on_click=add_items),
+                                        ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+                                                          text=translations["ru"]["buttons"]["back"],
+                                                          on_click=lambda _: self.page.go("/"))]))
+        self.page.update()

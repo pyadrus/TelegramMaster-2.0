@@ -10,33 +10,32 @@ from src.locales.translations_loader import translations
 
 class TGChek:
 
-    def __init__(self):
-        self.TGConnect = TGConnect()
+    def __init__(self, page: ft.Page):
+        self.page = page
+        self.TGConnect = TGConnect(page)
 
-    async def account_verification_menu(self, page: ft.Page):
+    async def account_verification_menu(self):
         """
         Меню проверки аккаунтов
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
 
         async def validation_check(_) -> None:
             """Проверка валидности аккаунтов"""
-            await self.TGConnect.verify_all_accounts(page=page)
+            await self.TGConnect.verify_all_accounts(page=self.page)
 
         async def renaming_accounts(_):
             """Переименование аккаунтов"""
-            await self.TGConnect.get_account_details(page=page)
+            await self.TGConnect.get_account_details(page=self.page)
 
         async def checking_for_spam_bots(_):
             """Проверка на спам ботов"""
-            await self.TGConnect.check_for_spam(page=page)
+            await self.TGConnect.check_for_spam()
 
         async def full_verification(_):
             """Полная проверка аккаунтов"""
-            await self.TGConnect.checking_all_accounts(page=page)
+            await self.TGConnect.checking_all_accounts(page=self.page)
 
-        page.views.append(
+        self.page.views.append(
             ft.View("/account_verification_menu",
                     [await GUIProgram().key_app_bar(),
                      ft.Text(spans=[ft.TextSpan(

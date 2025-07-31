@@ -158,26 +158,26 @@ class ParsingGroupMembers:
         self.tg_connect = TGConnect(page)
         self.tg_subscription_manager = SubscribeUnsubscribeTelegram(page)
 
-    async def account_selection_menu(self, page):
+    async def account_selection_menu(self):
 
         async def btn_click_file_picker(e: ft.FilePickerResultEvent):
             if not e.files:
                 file_text.value = "❌ Файл не выбран"
                 file_text.color = ft.Colors.RED
-                page.update()
+                self.page.update()
                 return
 
             file = e.files[0]
             if not file.name.endswith(".session"):
                 file_text.value = f"❌ Неверный файл: {file.name}"
                 file_text.color = ft.Colors.RED
-                page.update()
+                self.page.update()
                 return
 
             # Просто сохраняем путь к session-файлу
             phone = os.path.splitext(os.path.basename(file.name))[0]  # например, "77076324730"
             # Сохраняем название session-файла
-            page.session.set("selected_sessions", [phone])
+            self.page.session.set("selected_sessions", [phone])
 
             # Показываем успешный выбор
             file_text.value = f"✅ Аккаунт выбран: {phone}"
@@ -195,12 +195,12 @@ class ParsingGroupMembers:
             dropdown.disabled = False
             parse_button.disabled = False
 
-            page.update()
+            self.page.update()
 
         # Создание элементов управления
         file_text = ft.Text(value="📂 Выберите .session файл", size=14)
         file_picker = ft.FilePicker(on_result=btn_click_file_picker)
-        page.overlay.append(file_picker)
+        self.page.overlay.append(file_picker)
         pick_button = ft.ElevatedButton(text="📁 Выбрать session файл", width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                         on_click=lambda _: file_picker.pick_files(allow_multiple=False))
 
@@ -215,7 +215,7 @@ class ParsingGroupMembers:
         contacts_switch = ft.CupertinoSwitch(label="Контакты", value=False, disabled=True)
 
         ToggleController(admin_switch, account_groups_switch, members_switch, account_group_selection_switch,
-                         active_switch).element_handler(page)
+                         active_switch).element_handler(self.page)
 
         async def add_items(_):
             """🚀 Запускает процесс парсинга групп и отображает статус в интерфейсе."""
@@ -223,23 +223,23 @@ class ParsingGroupMembers:
                 data = chat_input.value.split()
                 logger.info(f"Полученные данные: {data}")  # Отладка
                 # Удаляем дубликаты ссылок введенных пользователем
-                start = await start_time(page)
-                page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
+                start = await start_time(self.page)
+                self.page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
                 try:
                     if account_groups_switch.value:  # Парсинг групп, на которые подписан аккаунт
-                        await self.parsing_account_groups(page)
+                        await self.parsing_account_groups(self.page)
                     if admin_switch.value:  # Если выбрано парсить администраторов, выполняем парсинг администраторов 👤
                         for groups in data:
-                            await self.obtaining_administrators(groups, page)
+                            await self.obtaining_administrators(groups, self.page)
                     if members_switch.value:  # Парсинг участников
                         for groups in data:
-                            await parse_group(groups, page)
+                            await parse_group(groups, self.page)
                     if active_switch.value:  # Парсинг активных пользователей
-                        await self.start_active_parsing(page, limit_active_user)
+                        await self.start_active_parsing(self.page, limit_active_user)
                     if account_group_selection_switch.value:  # Парсинг выбранной группы
-                        await self.load_groups(page, dropdown, result_text)  # ⬅️ Подгружаем группы
-                        await self.start_group_parsing(page, dropdown, result_text)
-                    await end_time(start, page)
+                        await self.load_groups(self.page, dropdown, result_text)  # ⬅️ Подгружаем группы
+                        await self.start_group_parsing(self.page, dropdown, result_text)
+                    await end_time(start, self.page)
                 except Exception as error:
                     logger.exception(error)
             except Exception as error:
@@ -272,7 +272,7 @@ class ParsingGroupMembers:
         account_group_selection_switch.expand = True
         active_switch.expand = True
         contacts_switch.expand = True
-        page.update()
+        self.page.update()
 
         # Представление (View)
         view = ft.View(
@@ -296,8 +296,8 @@ class ParsingGroupMembers:
                 ])
             ]
         )
-        page.views.append(view)
-        page.update()
+        self.page.views.append(view)
+        self.page.update()
 
     async def start_group_parsing(self, page, dropdown, result_text):
         phone = await self.load_groups(page, dropdown, result_text)
