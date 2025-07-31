@@ -47,7 +47,7 @@ ru:
     proxy_entry: "🔐 Запись proxy"
     changing_accounts: "🔄 Смена аккаунтов"
     recording_api_id_api_hash: "📝 Запись api_id, api_hash"
-    time_between_subscriptions: "⏰ Запись времени"
+#    time_between_subscriptions: "⏰ Запись времени"
     message_recording: "✉️ Запись сообщений"
 #    link_entry: "🔗 Запись ссылки для инвайтинга"
     account_limits: "📊 Лимиты на аккаунт"

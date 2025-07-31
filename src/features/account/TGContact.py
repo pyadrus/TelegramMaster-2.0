@@ -156,7 +156,8 @@ class TGContact:
                     # После работы с номером телефона, программа удаляет номер со списка
                     await delete_row_db(table="contact", column="phone", value=user["phone"])
                 except ValueError:
-                    await log_and_display(translations["ru"]["errors"]["contact_not_registered_or_cannot_add"], self.page)
+                    await log_and_display(translations["ru"]["errors"]["contact_not_registered_or_cannot_add"],
+                                          self.page)
                     # После работы с номером телефона, программа удаляет номер со списка
                     await delete_row_db(table="contact", column="phone", value=user["phone"])
             client.disconnect()  # Разрываем соединение telegram

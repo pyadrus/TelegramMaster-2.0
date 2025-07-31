@@ -87,13 +87,11 @@ class SettingPage:
     def __init__(self, page: ft.Page):
         self.page = page
 
-    async def creating_the_main_window_for_proxy_data_entry(self, page: ft.Page) -> None:
+    async def creating_the_main_window_for_proxy_data_entry(self) -> None:
         """
         Создание главного окна для ввода дынных proxy
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
+        self.page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
 
         list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
 
@@ -113,11 +111,12 @@ class SettingPage:
                 "rdns": "True"
             }
             save_proxy_data_to_db(proxy=proxy)
-            await show_notification(page, "Данные успешно записаны!")
-            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-            page.update()
+            await show_notification(self.page, "Данные успешно записаны!")
+            self.page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            self.page.update()
 
-        self.add_view_with_fields_and_button(page, [proxy_type, addr_type, port_type, username_type, password_type],
+        self.add_view_with_fields_and_button(self.page,
+                                             [proxy_type, addr_type, port_type, username_type, password_type],
                                              btn_click)
 
     async def recording_text_for_sending_messages(self, page: ft.Page, label, unique_filename) -> None:

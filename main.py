@@ -107,9 +107,9 @@ async def main(page: ft.Page):
             logger.info("▶️ Начало Формирования списка контактов")
             open_and_read_data(table_name="contact")  # Удаление списка с контактами
             # TODO миграция на PEEWEE
-            await SettingPage().output_the_input_field(page=page, table_name="contact",
-                                                       column_name="contact", route="/working_with_contacts",
-                                                       into_columns="contact")
+            await SettingPage(page=page).output_the_input_field(page=page, table_name="contact",
+                                                                column_name="contact", route="/working_with_contacts",
+                                                                into_columns="contact")
             logger.info("🔚 Конец Формирования списка контактов")
             await end_time(start, page=page)
         elif page.route == "/show_list_contacts":  # Показать список контактов
@@ -160,21 +160,21 @@ async def main(page: ft.Page):
         elif page.route == "/settings":  # Меню "Настройки TelegramMaster"
             await settings_menu(page=page)
         elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash
-            await SettingPage().writing_api_id_api_hash(page=page)
+            await SettingPage(page=page).writing_api_id_api_hash(page=page)
         elif page.route == "/message_limits":  # Лимиты на сообщения
-            await SettingPage().record_setting(page, "message_limits", "Введите лимит на сообщения")
+            await SettingPage(page=page).record_setting(page, "message_limits", "Введите лимит на сообщения")
         elif page.route == "/account_limits":  # Лимиты на аккаунт
-            await SettingPage().record_setting(page, "account_limits", "Введите лимит на аккаунт")
+            await SettingPage(page=page).record_setting(page, "account_limits", "Введите лимит на аккаунт")
         elif page.route == "/creating_username_list":  # Формирование списка username
-            await SettingPage().output_the_input_field(page, "members",
-                                                       "username, id, access_hash, first_name, last_name, "
-                                                       "user_phone, online_at, photos_id, user_premium",
-                                                       "/settings", "members (username)")
+            await SettingPage(page=page).output_the_input_field(page, "members",
+                                                                "username, id, access_hash, first_name, last_name, "
+                                                                "user_phone, online_at, photos_id, user_premium",
+                                                                "/settings", "members (username)")
 
 
         elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
-            await SettingPage().output_the_input_field(page, "writing_group_links", "writing_group_links",
-                                                       "/settings", "writing_group_links")
+            await SettingPage(page=page).output_the_input_field(page, "writing_group_links", "writing_group_links",
+                                                                "/settings", "writing_group_links")
 
 
 
@@ -183,26 +183,28 @@ async def main(page: ft.Page):
         #                                                "links_inviting",
         #                                                "links_inviting", "/settings", "links_inviting")
         elif page.route == "/proxy_entry":  # Запись proxy
-            await SettingPage().creating_the_main_window_for_proxy_data_entry(page=page)
+            await SettingPage(page=page).creating_the_main_window_for_proxy_data_entry()
         elif page.route == "/message_recording":  # Запись сообщений
-            await SettingPage().recording_text_for_sending_messages(page, "Введите текст для сообщения",
-                                                                    get_unique_filename(
-                                                                        base_filename='user_data/message/message'))
+            await SettingPage(page=page).recording_text_for_sending_messages(page, "Введите текст для сообщения",
+                                                                             get_unique_filename(
+                                                                                 base_filename='user_data/message/message'))
         elif page.route == "/recording_reaction_link":  # Запись ссылки для реакций
-            await SettingPage().recording_text_for_sending_messages(page, "Введите ссылку для реакций",
-                                                                    'user_data/reactions/link_channel.json')
+            await SettingPage(page=page).recording_text_for_sending_messages(page, "Введите ссылку для реакций",
+                                                                             'user_data/reactions/link_channel.json')
         elif page.route == "/choice_of_reactions":  # Выбор реакций
             await reaction_gui(page=page)
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
 
-            await SettingPage().create_main_window(page=page, variable="time_sending_messages",
-                                                   time_range=[time_sending_messages_1, time_sending_messages_2])
+            await SettingPage(page=page).create_main_window(page=page, variable="time_sending_messages",
+                                                            time_range=[time_sending_messages_1,
+                                                                        time_sending_messages_2])
         elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
-            await SettingPage().create_main_window(page=page, variable="time_inviting",
-                                                   time_range=[time_inviting_1, time_inviting_2])
+            await SettingPage(page=page).create_main_window(page=page, variable="time_inviting",
+                                                            time_range=[time_inviting_1, time_inviting_2])
         elif page.route == "/changing_accounts":  # Смена аккаунтов
-            await SettingPage().create_main_window(page=page, variable="time_changing_accounts",
-                                                   time_range=[time_changing_accounts_1, time_changing_accounts_2])
+            await SettingPage(page=page).create_main_window(page=page, variable="time_changing_accounts",
+                                                            time_range=[time_changing_accounts_1,
+                                                                        time_changing_accounts_2])
         # elif page.route == "/time_between_subscriptions":
         #     await SettingPage().recording_the_time_to_launch_an_invite_every_day(page=page)
 

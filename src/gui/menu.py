@@ -40,9 +40,9 @@ async def settings_menu(page: ft.Page):
                                            on_click=lambda _: page.go("/recording_api_id_api_hash"))]),
                      ft.Row([
                          # ⏰ Запись времени
-                         ft.ElevatedButton(width=SMALL_BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                                           text=translations["ru"]["menu_settings"]["time_between_subscriptions"],
-                                           on_click=lambda _: page.go("/time_between_subscriptions")),
+                         # ft.ElevatedButton(width=SMALL_BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                         #                   text=translations["ru"]["menu_settings"]["time_between_subscriptions"],
+                         #                   on_click=lambda _: page.go("/time_between_subscriptions")),
                          # ✉️ Запись сообщений
                          ft.ElevatedButton(width=SMALL_BUTTON_WIDTH, height=BUTTON_HEIGHT,
                                            text=translations["ru"]["menu_settings"]["message_recording"],

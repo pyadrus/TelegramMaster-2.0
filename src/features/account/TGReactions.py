@@ -93,8 +93,8 @@ class WorkingWithReactions:
         """
         try:
             for session_name in find_filess(directory_path="user_data/accounts/reactions_list",
-                                                  # TODO переместить путь к файлу в конфиг файл
-                                                  extension='session'):
+                                            # TODO переместить путь к файлу в конфиг файл
+                                            extension='session'):
                 client = await self.tg_connect.get_telegram_client(page, session_name,
                                                                    account_directory="user_data/accounts/reactions_list")
                 await client(JoinChannelRequest(chat))  # Подписываемся на канал / группу
