@@ -280,21 +280,22 @@ class InvitingToAGroup:
                                                                                                ft.Colors.PURPLE])), ), ), ], ),
                      list_view,  # Отображение логов 📝
 
+                     await GUIProgram().diver_castom(),  # Горизонтальная линия
                      await SubscriptionLinkInputSection().build_link_input_row(limits, save_button_limit),
-
+                     await GUIProgram().diver_castom(),  # Горизонтальная линия
                      # Запись времени для запуска инвайтинга по времени
                      await TimeIntervalInputSection().build_time_input_row(hour_textfield, minutes_textfield,
                                                                            save_button_time),
-
+                     await GUIProgram().diver_castom(),  # Горизонтальная линия
                      # ft.Row(
                      #     controls=[link_entry_field, save_button],
                      #     alignment=ft.MainAxisAlignment.SPACE_BETWEEN  # или .START
                      # ),
                      await SubscriptionLinkInputSection().build_link_input_row(link_entry_field, save_button),
-
+                     await GUIProgram().diver_castom(),  # Горизонтальная линия
                      ft.Text(value="📂 Выберите группу для инвайтинга"),  # Выбор группы для инвайтинга
                      dropdown,  # Выпадающий список с названиями групп
-
+                     await GUIProgram().diver_castom(),  # Горизонтальная линия
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🚀 Инвайтинг
                          ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,

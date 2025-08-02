@@ -466,11 +466,7 @@ class TGConnect:
                      ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
                                        text="Получить код", on_click=connecting_number_accounts),
 
-                     ft.Divider(
-                         color="blue",  # Цвет линии
-                         height=10,  # Расстояние от предыдущего элемента
-                         thickness=1.5,  # Толщина линии
-                     ),
+                     await GUIProgram().diver_castom(),  # Горизонтальная линия
 
                      ft.Text(spans=[ft.TextSpan(
                          "Подключение session аккаунтов Telegram",

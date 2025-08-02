@@ -287,9 +287,9 @@ class ParsingGroupMembers:
                     ft.Row([admin_switch, members_switch, account_groups_switch, ]),
                     ft.Row([account_group_selection_switch, active_switch, contacts_switch, ]),
                     chat_input,
-                    ft.Divider(),  # Горизонтальная линия
+                    await GUIProgram().diver_castom(),  # Горизонтальная линия
                     ft.Row([limit_active_user]),
-                    ft.Divider(),  # Горизонтальная линия
+                    await GUIProgram().diver_castom(),  # Горизонтальная линия
                     result_text,
                     dropdown,
                     parse_button,  # ⬅️ Кнопка для парсинга
