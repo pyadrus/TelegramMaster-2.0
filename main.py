@@ -182,9 +182,6 @@ async def main(page: ft.Page):
             await SettingPage(page=page).create_main_window(variable="time_changing_accounts",
                                                             time_range=[time_changing_accounts_1,
                                                                         time_changing_accounts_2])
-        elif page.route == "/errors":
-            # Пустая страница с уведомлением
-            page.views.append(ft.View("/errors", []))
 
         page.update()
 
