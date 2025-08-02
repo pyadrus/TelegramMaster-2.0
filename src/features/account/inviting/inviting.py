@@ -276,12 +276,6 @@ class InvitingToAGroup:
         link_entry_field, save_button = await SubscriptionLinkInputSection().create_link_input_and_save_button(save,
                                                                                                                "Введите ссылку на группу для инвайтинга")
 
-        # Поле ввода, для ссылок для инвайтинга
-        # link_entry_field = ft.TextField(label="Введите ссылку на группу для инвайтинга",
-        #                                 label_style=ft.TextStyle(color=ft.Colors.GREY_400), width=700
-        #                                 )
-        # save_button = ft.IconButton(visible=True, icon=ft.Icons.SAVE, on_click=save, icon_size=50)
-
         self.page.views.append(
             ft.View("/inviting",
                     [await GUIProgram().key_app_bar(),
@@ -301,10 +295,6 @@ class InvitingToAGroup:
                      await TimeIntervalInputSection().build_time_input_row(hour_textfield, minutes_textfield,
                                                                            save_button_time),
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
-                     # ft.Row(
-                     #     controls=[link_entry_field, save_button],
-                     #     alignment=ft.MainAxisAlignment.SPACE_BETWEEN  # или .START
-                     # ),
                      await SubscriptionLinkInputSection().build_link_input_row(link_entry_field, save_button),
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
                      ft.Text(value="📂 Выберите группу для инвайтинга"),  # Выбор группы для инвайтинга
