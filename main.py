@@ -6,8 +6,8 @@ from loguru import logger
 
 from src.core.checking_program import CheckingProgram
 from src.core.configs import (PROGRAM_NAME, PROGRAM_VERSION, DATE_OF_PROGRAM_CHANGE, WINDOW_WIDTH,
-                              WINDOW_HEIGHT, WINDOW_RESIZABLE, time_sending_messages_1, time_sending_messages_2,
-                              time_inviting_1, time_inviting_2, time_changing_accounts_1, time_changing_accounts_2)
+                              WINDOW_HEIGHT, WINDOW_RESIZABLE, TIME_SENDING_MESSAGES_1, time_sending_messages_2,
+                              time_changing_accounts_1, time_changing_accounts_2)
 from src.core.sqlite_working_tools import create_database, open_and_read_data
 from src.features.account.TGAccountBIO import AccountBIO
 from src.features.account.TGChek import TGChek
@@ -195,14 +195,14 @@ async def main(page: ft.Page):
             await reaction_gui(page=page)
         elif page.route == "/recording_the_time_between_messages":  # Запись времени между сообщениями
 
-            await SettingPage(page=page).create_main_window(page=page, variable="time_sending_messages",
-                                                            time_range=[time_sending_messages_1,
+            await SettingPage(page=page).create_main_window(variable="time_sending_messages",
+                                                            time_range=[TIME_SENDING_MESSAGES_1,
                                                                         time_sending_messages_2])
-        elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
-            await SettingPage(page=page).create_main_window(page=page, variable="time_inviting",
-                                                            time_range=[time_inviting_1, time_inviting_2])
+        # elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
+        #     await SettingPage(page=page).create_main_window(page=page, variable="time_inviting",
+        #                                                     time_range=[TIME_INVITING_1, TIME_INVITING_2])
         elif page.route == "/changing_accounts":  # Смена аккаунтов
-            await SettingPage(page=page).create_main_window(page=page, variable="time_changing_accounts",
+            await SettingPage(page=page).create_main_window(variable="time_changing_accounts",
                                                             time_range=[time_changing_accounts_1,
                                                                         time_changing_accounts_2])
         # elif page.route == "/time_between_subscriptions":

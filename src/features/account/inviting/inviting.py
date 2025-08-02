@@ -16,15 +16,15 @@ from telethon.sync import TelegramClient
 from telethon.tl.functions.channels import InviteToChannelRequest
 
 from src.core.configs import (BUTTON_HEIGHT, ConfigReader, LIMITS, WIDTH_WIDE_BUTTON, path_accounts_folder,
-                              time_inviting_1, time_inviting_2)
+                              TIME_INVITING_1, TIME_INVITING_2)
 from src.core.sqlite_working_tools import select_records_with_limit, get_links_inviting, save_links_inviting
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
 from src.features.account.connect.connect import get_string_session, getting_account_data
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.subscribe_unsubscribe.subscribe import Subscribe
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
-from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe_gui import TimeIntervalInputSection, \
-    SubscriptionLinkInputSection
+from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe_gui import (TimeIntervalInputSection,
+                                                                                  SubscriptionLinkInputSection)
 from src.features.settings.setting import SettingPage
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification
@@ -38,35 +38,35 @@ async def add_user_test(client, username_group, username, page):
         # Выполняем приглашение
         await client(InviteToChannelRequest(username_group, [username]))
         await log_and_display(
-            f"✅  Участник {username} добавлен, если не состоит в чате {username_group}. Спим от {time_inviting_1} до {time_inviting_2}",
+            f"✅  Участник {username} добавлен, если не состоит в чате {username_group}. Спим от {TIME_INVITING_1} до {TIME_INVITING_2}",
             page)
-        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await record_inviting_results(TIME_INVITING_1, TIME_INVITING_2, username, page)
     except UserChannelsTooMuchError:
         await log_and_display(translations["ru"]["errors"]["user_channels_too_much"], page)
-        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await record_inviting_results(TIME_INVITING_1, TIME_INVITING_2, username, page)
     except (ChannelPrivateError, TypeNotFoundError, AuthKeyDuplicatedError, UserBannedInChannelError,
             SessionRevokedError):
         await log_and_display(translations["ru"]["errors"]["invalid_auth_session_terminated"], page)
-        await record_and_interrupt(time_inviting_1, time_inviting_2, page)
+        await record_and_interrupt(TIME_INVITING_1, TIME_INVITING_2, page)
         await client.disconnect()
     except UserNotMutualContactError:
         await log_and_display(translations["ru"]["errors"]["user_not_mutual_contact"], page)
-        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await record_inviting_results(TIME_INVITING_1, TIME_INVITING_2, username, page)
     except (UserKickedError, UserDeactivatedBanError):
         await log_and_display(translations["ru"]["errors"]["user_kicked_or_banned"], page)
-        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await record_inviting_results(TIME_INVITING_1, TIME_INVITING_2, username, page)
     except (UserIdInvalidError, UsernameNotOccupiedError, ValueError, UsernameInvalidError):
         await log_and_display(translations["ru"]["errors"]["invalid_username"], page)
-        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await record_inviting_results(TIME_INVITING_1, TIME_INVITING_2, username, page)
     except ChatAdminRequiredError:
         await log_and_display(translations["ru"]["errors"]["admin_rights_required"], page)
-        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await record_inviting_results(TIME_INVITING_1, TIME_INVITING_2, username, page)
     except UserPrivacyRestrictedError:
         await log_and_display(translations["ru"]["errors"]["user_privacy_restricted"], page)
-        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await record_inviting_results(TIME_INVITING_1, TIME_INVITING_2, username, page)
     except BotGroupsBlockedError:
         await log_and_display(translations["ru"]["errors"]["bot_group_blocked"], page)
-        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await record_inviting_results(TIME_INVITING_1, TIME_INVITING_2, username, page)
     except (TypeError, UnboundLocalError):
         await log_and_display(translations["ru"]["errors"]["type_or_scope"], page)
     except BadRequestError:
@@ -74,23 +74,23 @@ async def add_user_test(client, username_group, username, page):
     # Ошибка инвайтинга прерываем работу
     except ChatWriteForbiddenError:
         await log_and_display(translations["ru"]["errors"]["chat_write_forbidden"], page)
-        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await record_inviting_results(TIME_INVITING_1, TIME_INVITING_2, username, page)
         await client.disconnect()  # Прерываем работу и меняем аккаунт
     except InviteRequestSentError:
         await log_and_display(translations["ru"]["errors"]["invite_request_sent"], page)
-        await record_inviting_results(time_inviting_1, time_inviting_2, username, page)
+        await record_inviting_results(TIME_INVITING_1, TIME_INVITING_2, username, page)
         await client.disconnect()  # Прерываем работу и меняем аккаунт
     except FloodWaitError as e:
         await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", page, level="error")
-        await record_and_interrupt(time_inviting_1, time_inviting_2, page)
+        await record_and_interrupt(TIME_INVITING_1, TIME_INVITING_2, page)
         await client.disconnect()  # Прерываем работу и меняем аккаунт
     except AuthKeyUnregisteredError:
         await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
-        await record_and_interrupt(time_inviting_1, time_inviting_2, page)
+        await record_and_interrupt(TIME_INVITING_1, TIME_INVITING_2, page)
         await client.disconnect()
     except PeerFloodError:
         await log_and_display(translations["ru"]["errors"]["peer_flood"], page, level="error")
-        await record_and_interrupt(time_inviting_1, time_inviting_2, page)
+        await record_and_interrupt(TIME_INVITING_1, TIME_INVITING_2, page)
         await client.disconnect()  # Прерываем работу и меняем аккаунт
 
 
@@ -239,6 +239,11 @@ class InvitingToAGroup:
             await SettingPage(self.page).recording_the_time_to_launch_an_invite_every_day(hour_textfield,
                                                                                           minutes_textfield)
 
+        async def write_limit_account_inviting_timex(_):
+            """Записывает время между сном во время ивайтинга"""
+            await SettingPage(self.page).create_main_window(variable="time_inviting", smaller_timex=smaller_timex,
+                                                            larger_timex=larger_timex)
+
         async def write_limit_account_inviting(_):
             """Записывает лимит на аккаунт для инвайтинга"""
             await SettingPage(self.page).record_setting(limit_type="account_limits",
@@ -249,6 +254,14 @@ class InvitingToAGroup:
                                options=[ft.DropdownOption(link) for link in self.links_inviting],
                                autofocus=True)
 
+        # Два поля ввода для времени и кнопка сохранить
+        smaller_timex, larger_timex, save_button_timex = await TimeIntervalInputSection().create_time_inputs_and_save_button(
+            write_limit_account_inviting_timex,
+            label_min="Время в секундах (меньшее)",
+            label_max="Время в секундах (большее)"
+        )
+
+        # Поле ввода, для ссылок для инвайтинга
         limits, save_button_limit = await SubscriptionLinkInputSection().create_link_input_and_save_button(
             write_limit_account_inviting,
             "Введите лимит на аккаунт")
@@ -279,7 +292,8 @@ class InvitingToAGroup:
                                           gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                                ft.Colors.PURPLE])), ), ), ], ),
                      list_view,  # Отображение логов 📝
-
+                     await TimeIntervalInputSection().build_time_input_row(smaller_timex, larger_timex,
+                                                                           save_button_timex),
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
                      await SubscriptionLinkInputSection().build_link_input_row(limits, save_button_limit),
                      await GUIProgram().diver_castom(),  # Горизонтальная линия

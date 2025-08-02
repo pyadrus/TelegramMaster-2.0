@@ -17,7 +17,7 @@ from src.core.configs import (
     BUTTON_HEIGHT, ConfigReader, WIDTH_WIDE_BUTTON, path_accounts_folder,
     path_folder_with_messages, PATH_SEND_MESSAGE_FOLDER_ANSWERING_MACHINE,
     path_send_message_folder_answering_machine_message,
-    time_sending_messages_1, time_sending_messages_2, time_subscription_1,
+    TIME_SENDING_MESSAGES_1, time_sending_messages_2, time_subscription_1,
     time_subscription_2)
 from src.core.sqlite_working_tools import select_records_with_limit
 from src.core.utils import (all_find_files, find_files, find_filess,
@@ -50,7 +50,7 @@ class SendTelegramMessages:
 
         # Обработчик кнопки "Готово"
         async def button_clicked(_):
-            time_from = tb_time_from.value or time_sending_messages_1  # Получаем значение первого поля
+            time_from = tb_time_from.value or TIME_SENDING_MESSAGES_1  # Получаем значение первого поля
             time_to = tb_time_to.value or time_sending_messages_2  # Получаем значение второго поля
 
             # Получаем значение третьего поля и разделяем его на список по пробелам
@@ -277,7 +277,7 @@ class SendTelegramMessages:
                 db_chat_list = await db_handler.open_and_read_data(table_name="writing_group_links",
                                                                    page=self.page)
                 chat_list_fields = [group[0] for group in db_chat_list]  # Извлекаем только ссылки из кортежей
-            if tb_time_from.value or time_sending_messages_1 < tb_time_to.value or time_sending_messages_2:
+            if tb_time_from.value or TIME_SENDING_MESSAGES_1 < tb_time_to.value or time_sending_messages_2:
                 await self.performing_the_operation(c.value, chat_list_fields)
             else:
                 t.value = f"Время сна: Некорректный диапазон, введите корректные значения"
@@ -345,7 +345,7 @@ class SendTelegramMessages:
         Рандомный сон
         """
         try:
-            time_in_seconds = random.randrange(time_sending_messages_1, time_sending_messages_2)
+            time_in_seconds = random.randrange(TIME_SENDING_MESSAGES_1, time_sending_messages_2)
             await log_and_display(f"Спим {time_in_seconds} секунд...", self.page)
             await asyncio.sleep(time_in_seconds)  # Спим 1 секунду
         except Exception as error:

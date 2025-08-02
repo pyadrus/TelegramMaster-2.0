@@ -166,8 +166,8 @@ path_folder_database = ConfigReader().path_folder_database()  # Путь к па
 
 """Настройки времени, лимитов и прочего"""
 LIMITS = ConfigReader().get_limits()  # Лимиты
-time_activity_user_2 = ConfigReader().time_activity_user_2()
-time_sending_messages_1, time_sending_messages_2 = ConfigReader().get_time_inviting()  # Время между сообщениями
-time_inviting_1, time_inviting_2 = ConfigReader().get_time_inviting()  # Время между инвайтингом, рассылка сообщений
+TIME_ACTIVITY_USER_2 = ConfigReader().time_activity_user_2()
+TIME_SENDING_MESSAGES_1, time_sending_messages_2 = ConfigReader().get_time_inviting()  # Время между сообщениями
+TIME_INVITING_1, TIME_INVITING_2 = ConfigReader().get_time_inviting()  # Время между инвайтингом, рассылка сообщений
 time_changing_accounts_1, time_changing_accounts_2 = ConfigReader().get_config_time_changing_accounts()  # Время смены аккаунтов
 time_subscription_1, time_subscription_2 = ConfigReader().get_time_subscription()

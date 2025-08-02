@@ -202,40 +202,40 @@ class SettingPage:
 
         # self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click)
 
-    async def create_main_window(self, page: ft.Page, variable, time_range) -> None:
+    async def create_main_window(self, variable, smaller_timex, larger_timex) -> None:
         """
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         :param variable: Название переменной в файле config.ini
-        :param time_range: Имя файла, в который будут записаны данные
+        :param smaller_timex: Первое время
+        :param larger_timex: Второе время
         :return: None
         """
 
-        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-        for time_range_message in time_range: list_view.controls.append(
-            ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
-        smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
-        larger_timex = ft.TextField(label="Время в секундах (большее)")
+        # self.page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
+        # for time_range_message in time_range: list_view.controls.append(
+        #     ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
+        # smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
+        # larger_timex = ft.TextField(label="Время в секундах (большее)")
 
-        async def btn_click(_) -> None:
-            """Обработчик клика по кнопке"""
-            try:
-                smaller_times = int(smaller_timex.value)
-                larger_times = int(larger_timex.value)
-                if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
-                    # Если условие прошло проверку, то возвращаем первое и второе время
-                    writing_settings_to_a_file(
-                        await recording_limits_file(str(smaller_times), str(larger_times), variable=variable,
-                                                    page=page))
-                    list_view.controls.append(ft.Text("Данные успешно записаны!"))  # отображаем сообщение в ListView
-                    await show_notification(page, "Данные успешно записаны!")
-                    page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-                else:
-                    list_view.controls.append(ft.Text("Ошибка: первое время должно быть меньше второго!"))
-            except ValueError:
-                list_view.controls.append(ft.Text("Ошибка: введите числовые значения!"))
-            page.update()  # обновляем страницу
+        # async def btn_click(_) -> None:
+        #     """Обработчик клика по кнопке"""
+        try:
+            smaller_times = int(smaller_timex.value)
+            larger_times = int(larger_timex.value)
+            if smaller_times < larger_times:  # Проверяем, что первое время меньше второго
+                # Если условие прошло проверку, то возвращаем первое и второе время
+                writing_settings_to_a_file(
+                    await recording_limits_file(str(smaller_times), str(larger_times), variable=variable,
+                                                page=self.page))
+                list_view.controls.append(ft.Text("Данные успешно записаны!"))  # отображаем сообщение в ListView
+                await show_notification(self.page, "Данные успешно записаны!")
+                self.page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            else:
+                list_view.controls.append(ft.Text("Ошибка: первое время должно быть меньше второго!"))
+        except ValueError:
+            list_view.controls.append(ft.Text("Ошибка: введите числовые значения!"))
+        self.page.update()  # обновляем страницу
 
-        self.add_view_with_fields_and_button(page, [smaller_timex, larger_timex], btn_click)
+        # self.add_view_with_fields_and_button(self.page, [smaller_timex, larger_timex], btn_click)
 
     async def writing_api_id_api_hash(self, page: ft.Page):
         """

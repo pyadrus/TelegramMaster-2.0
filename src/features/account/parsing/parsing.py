@@ -14,7 +14,7 @@ from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import (ChannelParticipantsAdmins, ChannelParticipantsSearch, InputPeerEmpty, InputUser)
 
-from src.core.configs import (WIDTH_WIDE_BUTTON, path_accounts_folder, time_activity_user_2, BUTTON_HEIGHT)
+from src.core.configs import (WIDTH_WIDE_BUTTON, path_accounts_folder, TIME_ACTIVITY_USER_2, BUTTON_HEIGHT)
 from src.core.sqlite_working_tools import (GroupsAndChannels, MembersAdmin, db, add_member_to_db)
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.gui_elements import GUIProgram
@@ -437,7 +437,7 @@ class ParsingGroupMembers:
                                                                account_directory=path_accounts_folder)
             await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
             try:
-                await asyncio.sleep(int(time_activity_user_2 or 5))
+                await asyncio.sleep(int(TIME_ACTIVITY_USER_2 or 5))
             except TypeError:
                 await asyncio.sleep(5)
             # Все операции с Telegram API должны быть здесь
