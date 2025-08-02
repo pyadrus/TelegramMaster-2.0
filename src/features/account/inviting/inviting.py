@@ -106,6 +106,7 @@ class InvitingToAGroup:
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
+        self.links_inviting = get_links_inviting()  # Получаем список ссылок на группы для инвайтинга из базы данных
 
     async def inviting_menu(self):
         """
@@ -114,7 +115,7 @@ class InvitingToAGroup:
         list_view.controls.clear()  # ✅ Очистка логов перед новым запуском
         self.page.controls.append(list_view)  # Добавляем ListView на страницу для отображения логов 📝
         self.page.update()  # обновляем страницу, чтобы сразу показать ListView 🔄
-        links_inviting = get_links_inviting()  # Получаем список ссылок на группы для инвайтинга из базы данных
+
         await self.data_for_inviting()  # Отображение информации о настройках инвайтинга
 
         async def general_invitation_to_the_group(_):
@@ -137,6 +138,12 @@ class InvitingToAGroup:
                 await Subscribe(page=self.page).subscribe_to_group_or_channel(client, dropdown.value)
                 logger.info(f"Подписка на группу {dropdown.value} выполнена")
                 await log_and_display(f"{dropdown.value}", self.page)
+
+                if limits.value:
+                    LIMITS = int(limits.value)  # Преобразуем в число, если значение есть
+                else:
+                    pass  # Оставляем LIMITS без изменений
+
                 usernames = select_records_with_limit(limit=LIMITS)
                 logger.info(f"Список usernames: {usernames}")
                 if len(usernames) == 0:
@@ -239,7 +246,7 @@ class InvitingToAGroup:
 
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=WIDTH_WIDE_BUTTON,
-                               options=[ft.DropdownOption(link) for link in links_inviting],
+                               options=[ft.DropdownOption(link) for link in self.links_inviting],
                                autofocus=True)
 
         limits, save_button_limit = await SubscriptionLinkInputSection().create_link_input_and_save_button(
