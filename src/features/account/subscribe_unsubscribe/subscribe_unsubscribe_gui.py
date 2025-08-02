@@ -47,17 +47,18 @@ class SubscriptionLinkInputSection:
     Используется для ввода ссылок на Telegram-группы и каналы, на которые необходимо подписаться.
     """
 
-    async def create_link_input_and_save_button(self, on_save_click):
+    async def create_link_input_and_save_button(self, on_save_click, label_text):
         """
         Создаёт текстовое поле для ввода ссылок и кнопку сохранения.
 
+        :param label_text:  Текст, отображаемый над полем ввода.
         :param on_save_click: Функция-обработчик, вызываемая при нажатии на кнопку сохранения.
         :return: Кортеж из двух элементов: ft.TextField и ft.IconButton.
         https://flet.dev/docs/controls/textfield/
         """
         # Поле ввода, для ссылок для подписки
         link_input = ft.TextField(
-            label="Введите ссылки для подписки на группы и каналы",
+            label=label_text,
             label_style=ft.TextStyle(color=ft.Colors.GREY_400),
             width=700
         )

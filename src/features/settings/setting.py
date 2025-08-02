@@ -141,33 +141,29 @@ class SettingPage:
 
         self.add_view_with_fields_and_button(page, [text_to_send], btn_click)
 
-    async def record_setting(self, page: ft.Page, limit_type: str, label: str):
+    async def record_setting(self, limit_type: str, limits):
         """
         Запись лимитов на аккаунт или сообщение
 
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         :param limit_type: Тип лимита.
-        :param label: Текст для отображения в поле ввода.
+        :param limits: Текст для отображения в поле ввода.
         """
-        page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
 
-        list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
-
-        limits = ft.TextField(label=label, multiline=True, max_lines=19)
-
-        async def btn_click(_) -> None:
-            try:
-                config.get(limit_type, limit_type)
-                config.set(limit_type, limit_type, limits.value)
-                writing_settings_to_a_file(config)
-                await show_notification(page, "Данные успешно записаны!")
-            except configparser.NoSectionError as error:
-                await show_notification(page, "⚠️ Поврежден файл user_data/config/config.ini")
-                await log_and_display(f"Ошибка: {error}", page)
-            page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-            page.update()
-
-        self.add_view_with_fields_and_button(page, [limits], btn_click)
+        # page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
+        # list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
+        # limits = ft.TextField(label=label, multiline=True, max_lines=19)
+        # async def btn_click(_) -> None:
+        try:
+            config.get(limit_type, limit_type)
+            config.set(limit_type, limit_type, limits.value)
+            writing_settings_to_a_file(config)
+            await show_notification(self.page, "Данные успешно записаны!")
+        except configparser.NoSectionError as error:
+            await show_notification(self.page, "⚠️ Поврежден файл user_data/config/config.ini")
+            await log_and_display(f"Ошибка: {error}", self.page)
+            # page.go("/settings")  # Изменение маршрута в представлении существующих настроек
+            # page.update()
+        # self.add_view_with_fields_and_button(page, [limits], btn_click)
 
     # async def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
     #     """

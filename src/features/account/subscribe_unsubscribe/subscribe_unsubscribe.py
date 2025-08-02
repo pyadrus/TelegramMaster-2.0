@@ -135,7 +135,8 @@ class SubscribeUnsubscribeTelegram:
             ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
 
         # Поле ввода ссылок и кнопка сохранения для подписки
-        link_entry_field, save_button = await SubscriptionLinkInputSection().create_link_input_and_save_button(save)
+        link_entry_field, save_button = await SubscriptionLinkInputSection().create_link_input_and_save_button(save,
+                                                                                                               "Введите ссылки для подписки на группы и каналы")
         # Два поля ввода для времени и кнопка сохранить
         smaller_timex, larger_timex, save_button_time = await TimeIntervalInputSection().create_time_inputs_and_save_button(
             btn_click,
