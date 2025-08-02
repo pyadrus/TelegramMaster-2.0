@@ -23,8 +23,8 @@ from src.features.account.connect.connect import get_string_session, getting_acc
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.subscribe_unsubscribe.subscribe import Subscribe
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
-from src.features.account.subscribe_unsubscribe.ui_input_builders import (TimeInputRowBuilder,
-                                                                          LinkInputRowBuilder)
+from src.features.account.subscribe_unsubscribe.gui_input_builders import (TimeInputRowBuilder,
+                                                                           LinkInputRowBuilder)
 from src.features.settings.setting import SettingPage
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification

@@ -22,8 +22,8 @@ from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.connect.connect import get_string_session, getting_account_data
 from src.features.account.parsing.gui_elements import GUIProgram
-from src.features.account.subscribe_unsubscribe.ui_input_builders import (LinkInputRowBuilder,
-                                                                          TimeInputRowBuilder)
+from src.features.account.subscribe_unsubscribe.gui_input_builders import (LinkInputRowBuilder,
+                                                                           TimeInputRowBuilder)
 from src.features.settings.setting import writing_settings_to_a_file, recording_limits_file
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification
