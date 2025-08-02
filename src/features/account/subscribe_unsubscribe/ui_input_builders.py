@@ -2,9 +2,9 @@
 import flet as ft  # Импортируем библиотеку flet
 
 
-class TimeIntervalInputSection:
+class TimeInputRowBuilder:
 
-    async def create_time_inputs_and_save_button(self, on_save_click, label_min, label_max):
+    async def build_time_inputs_with_save_button(self, on_save_click, label_min, label_max):
         """
         Создаёт текстовое поле для ввода данных (ссылок, времени) и кнопку сохранения.
 
@@ -24,8 +24,8 @@ class TimeIntervalInputSection:
         )
         return min_time_input, max_time_input, save_button
 
-    async def build_time_input_row(self, min_time_input: ft.TextField, max_time_input: ft.TextField,
-                                   save_button: ft.IconButton):
+    async def compose_time_input_row(self, min_time_input: ft.TextField, max_time_input: ft.TextField,
+                                     save_button: ft.IconButton):
         """
         Создаёт горизонтальный контейнер (строку) с полем ввода и кнопкой.
 
@@ -41,13 +41,13 @@ class TimeIntervalInputSection:
         )
 
 
-class SubscriptionLinkInputSection:
+class LinkInputRowBuilder:
     """
     Компонент Flet для отображения текстового поля ввода и кнопки сохранения.
     Используется для ввода ссылок на Telegram-группы и каналы, на которые необходимо подписаться.
     """
 
-    async def create_link_input_and_save_button(self, on_save_click, label_text):
+    async def build_link_input_with_save_button(self, on_save_click, label_text):
         """
         Создаёт текстовое поле для ввода ссылок и кнопку сохранения.
 
@@ -70,7 +70,7 @@ class SubscriptionLinkInputSection:
         )
         return link_input, save_button
 
-    async def build_link_input_row(self, link_input: ft.TextField, save_button: ft.IconButton):
+    async def compose_link_input_row(self, link_input: ft.TextField, save_button: ft.IconButton):
         """
         Создаёт горизонтальный контейнер (строку) с полем ввода и кнопкой.
 

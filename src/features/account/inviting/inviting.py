@@ -23,8 +23,8 @@ from src.features.account.connect.connect import get_string_session, getting_acc
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.subscribe_unsubscribe.subscribe import Subscribe
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
-from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe_gui import (TimeIntervalInputSection,
-                                                                                  SubscriptionLinkInputSection)
+from src.features.account.subscribe_unsubscribe.ui_input_builders import (TimeInputRowBuilder,
+                                                                          LinkInputRowBuilder)
 from src.features.settings.setting import SettingPage
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification
@@ -255,25 +255,25 @@ class InvitingToAGroup:
                                autofocus=True)
 
         # Два поля ввода для времени и кнопка сохранить
-        smaller_timex, larger_timex, save_button_timex = await TimeIntervalInputSection().create_time_inputs_and_save_button(
+        smaller_timex, larger_timex, save_button_timex = await TimeInputRowBuilder().build_time_inputs_with_save_button(
             write_limit_account_inviting_timex,
             label_min="Время в секундах (меньшее)",
             label_max="Время в секундах (большее)"
         )
 
         # Поле ввода, для ссылок для инвайтинга
-        limits, save_button_limit = await SubscriptionLinkInputSection().create_link_input_and_save_button(
+        limits, save_button_limit = await LinkInputRowBuilder().build_link_input_with_save_button(
             write_limit_account_inviting,
             "Введите лимит на аккаунт")
 
         # Два поля ввода для времени и кнопка сохранить
-        hour_textfield, minutes_textfield, save_button_time = await TimeIntervalInputSection().create_time_inputs_and_save_button(
+        hour_textfield, minutes_textfield, save_button_time = await TimeInputRowBuilder().build_time_inputs_with_save_button(
             write_tame_start_inviting,
             label_min="Час запуска приглашений (0-23):",
             label_max="Минуты запуска приглашений (0-59):"
         )
 
-        link_entry_field, save_button = await SubscriptionLinkInputSection().create_link_input_and_save_button(save,
+        link_entry_field, save_button = await LinkInputRowBuilder().build_link_input_with_save_button(save,
                                                                                                                "Введите ссылку на группу для инвайтинга")
 
         self.page.views.append(
@@ -286,16 +286,16 @@ class InvitingToAGroup:
                                           gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
                                                                                                ft.Colors.PURPLE])), ), ), ], ),
                      list_view,  # Отображение логов 📝
-                     await TimeIntervalInputSection().build_time_input_row(smaller_timex, larger_timex,
-                                                                           save_button_timex),
+                     await TimeInputRowBuilder().compose_time_input_row(smaller_timex, larger_timex,
+                                                                        save_button_timex),
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
-                     await SubscriptionLinkInputSection().build_link_input_row(limits, save_button_limit),
+                     await LinkInputRowBuilder().compose_link_input_row(limits, save_button_limit),
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
                      # Запись времени для запуска инвайтинга по времени
-                     await TimeIntervalInputSection().build_time_input_row(hour_textfield, minutes_textfield,
-                                                                           save_button_time),
+                     await TimeInputRowBuilder().compose_time_input_row(hour_textfield, minutes_textfield,
+                                                                        save_button_time),
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
-                     await SubscriptionLinkInputSection().build_link_input_row(link_entry_field, save_button),
+                     await LinkInputRowBuilder().compose_link_input_row(link_entry_field, save_button),
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
                      ft.Text(value="📂 Выберите группу для инвайтинга"),  # Выбор группы для инвайтинга
                      dropdown,  # Выпадающий список с названиями групп

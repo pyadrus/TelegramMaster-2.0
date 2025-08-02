@@ -22,8 +22,8 @@ from src.core.utils import find_filess
 from src.features.account.TGConnect import TGConnect
 from src.features.account.connect.connect import get_string_session, getting_account_data
 from src.features.account.parsing.gui_elements import GUIProgram
-from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe_gui import (SubscriptionLinkInputSection,
-                                                                                  TimeIntervalInputSection)
+from src.features.account.subscribe_unsubscribe.ui_input_builders import (LinkInputRowBuilder,
+                                                                          TimeInputRowBuilder)
 from src.features.settings.setting import writing_settings_to_a_file, recording_limits_file
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.gui.notification import show_notification
@@ -135,10 +135,10 @@ class SubscribeUnsubscribeTelegram:
             ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
 
         # Поле ввода ссылок и кнопка сохранения для подписки
-        link_entry_field, save_button = await SubscriptionLinkInputSection().create_link_input_and_save_button(save,
+        link_entry_field, save_button = await LinkInputRowBuilder().build_link_input_with_save_button(save,
                                                                                                                "Введите ссылки для подписки на группы и каналы")
         # Два поля ввода для времени и кнопка сохранить
-        smaller_timex, larger_timex, save_button_time = await TimeIntervalInputSection().create_time_inputs_and_save_button(
+        smaller_timex, larger_timex, save_button_time = await TimeInputRowBuilder().build_time_inputs_with_save_button(
             btn_click,
             label_min="Время в секундах (меньшее)",
             label_max="Время в секундах (большее)"
@@ -164,15 +164,15 @@ class SubscribeUnsubscribeTelegram:
                                "🔁 затем продолжит подписку на следующую группу.",
                          size=14
                      ),
-                     await TimeIntervalInputSection().build_time_input_row(smaller_timex, larger_timex,
-                                                                           save_button_time),
+                     await TimeInputRowBuilder().compose_time_input_row(smaller_timex, larger_timex,
+                                                                        save_button_time),
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
                      ft.Text(
                          value="🔗 Укажите ссылки на группы или каналы для подписки.\n"
                                "📌 Если вы уже вводили их ранее — ввод не обязателен, данные сохранены в системе.",
                          size=14
                      ),
-                     await SubscriptionLinkInputSection().build_link_input_row(link_entry_field, save_button),
+                     await LinkInputRowBuilder().compose_link_input_row(link_entry_field, save_button),
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          # 🔔 Подписка
