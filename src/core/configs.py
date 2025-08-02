@@ -40,9 +40,9 @@ class ConfigReader:
         """   """
         return self.config.get('time_activity_user', 'time_activity_user_2', fallback=None)
 
-    def get_time_sending_messages(self):
-        return (self.config.getint('time_sending_messages', 'time_sending_messages_1', fallback=None),
-                self.config.getint('time_sending_messages', 'time_sending_messages_2', fallback=None))
+    # def get_time_sending_messages(self):
+    #     return (self.config.getint('time_sending_messages', 'time_sending_messages_1', fallback=None),
+    #             self.config.getint('time_sending_messages', 'time_sending_messages_2', fallback=None))
 
     def get_api_id_data_api_hash_data(self):
         return (self.config.get('telegram_settings', 'id', fallback=None),

@@ -54,7 +54,6 @@ async def main(page: ft.Page):
         # try:
         if page.route == "/inviting":  # Меню "🚀 Инвайтинг"
             # TODO миграция на Peewee. вернуть проверку на наличие аккаунтов, username, ссылки на инвайтинг
-            # await CheckingProgram().check_before_inviting(page=page)
             await InvitingToAGroup(page=page).inviting_menu()
         # __________________________________________________________________________________________________________
         elif page.route == "/account_verification_menu":  # "Проверка аккаунтов"
@@ -62,14 +61,6 @@ async def main(page: ft.Page):
         # __________________________________________________________________________________________________________
         elif page.route == "/subscribe_unsubscribe":  # Меню "Подписка и отписка"
             await SubscribeUnsubscribeTelegram(page=page).subscribe_and_unsubscribe_menu()
-        # elif page.route == "/subscription_all":  # Подписка
-        #     await SubscribeUnsubscribeTelegram().subscribe_telegram(page=page)
-        # elif page.route == "/unsubscribe_all":  # Отписываемся
-        #     start = await start_time(page=page)
-        #     logger.info("▶️ Начало Отписка")
-        #     await SubscribeUnsubscribeTelegram().unsubscribe_all(page=page)
-        #     logger.info("🔚 Конец Отписки")
-        #     await end_time(start, page=page)
         # __________________________________________________________________________________________________________
         elif page.route == "/working_with_reactions":  # Меню "Работа с реакциями"
             await reactions_menu(page=page)
@@ -163,25 +154,14 @@ async def main(page: ft.Page):
             await SettingPage(page=page).writing_api_id_api_hash(page=page)
         elif page.route == "/message_limits":  # Лимиты на сообщения
             await SettingPage(page=page).record_setting(page, "message_limits", "Введите лимит на сообщения")
-        # elif page.route == "/account_limits":  # Лимиты на аккаунт
-        #     await SettingPage(page=page).record_setting(page, "account_limits", "Введите лимит на аккаунт")
         elif page.route == "/creating_username_list":  # Формирование списка username
             await SettingPage(page=page).output_the_input_field(page, "members",
                                                                 "username, id, access_hash, first_name, last_name, "
                                                                 "user_phone, online_at, photos_id, user_premium",
                                                                 "/settings", "members (username)")
-
-
         elif page.route == "/forming_list_of_chats_channels":  # Формирование списка чатов / каналов
             await SettingPage(page=page).output_the_input_field(page, "writing_group_links", "writing_group_links",
                                                                 "/settings", "writing_group_links")
-
-
-
-        # elif page.route == "/link_entry":  # Запись ссылки для инвайтинга
-        #     await SettingPage().output_the_input_field(page, "Введите ссылку на группу для инвайтинга",
-        #                                                "links_inviting",
-        #                                                "links_inviting", "/settings", "links_inviting")
         elif page.route == "/proxy_entry":  # Запись proxy
             await SettingPage(page=page).creating_the_main_window_for_proxy_data_entry()
         elif page.route == "/message_recording":  # Запись сообщений
@@ -198,26 +178,15 @@ async def main(page: ft.Page):
             await SettingPage(page=page).create_main_window(variable="time_sending_messages",
                                                             time_range=[TIME_SENDING_MESSAGES_1,
                                                                         time_sending_messages_2])
-        # elif page.route == "/time_between_invites_sending_messages":  # Время между инвайтингом, рассылка сообщений
-        #     await SettingPage(page=page).create_main_window(page=page, variable="time_inviting",
-        #                                                     time_range=[TIME_INVITING_1, TIME_INVITING_2])
         elif page.route == "/changing_accounts":  # Смена аккаунтов
             await SettingPage(page=page).create_main_window(variable="time_changing_accounts",
                                                             time_range=[time_changing_accounts_1,
                                                                         time_changing_accounts_2])
-        # elif page.route == "/time_between_subscriptions":
-        #     await SettingPage().recording_the_time_to_launch_an_invite_every_day(page=page)
-
-        # elif page.route == "/time_between_subscriptionss":  # Время между подпиской
-        #     await SettingPage().create_main_window(page=page, variable="time_subscription",
-        #                                            time_range=[time_subscription_1, time_subscription_2])
         elif page.route == "/errors":
             # Пустая страница с уведомлением
             page.views.append(ft.View("/errors", []))
 
         page.update()
-        # except Exception as error:
-        #     logger.exception(error)
 
     def view_pop(_):
         page.views.pop()

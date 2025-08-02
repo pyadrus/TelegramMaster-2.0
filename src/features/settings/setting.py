@@ -8,7 +8,7 @@ import sys
 import flet as ft  # Импортируем библиотеку flet
 
 from src.core.configs import BUTTON_HEIGHT, WIDTH_WIDE_BUTTON
-from src.core.sqlite_working_tools import cleaning_db, save_proxy_data_to_db
+from src.core.sqlite_working_tools import save_proxy_data_to_db
 from src.gui.gui import list_view, log_and_display
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
@@ -17,69 +17,6 @@ config = configparser.ConfigParser(empty_lines_in_values=False, allow_no_value=T
 config.read("user_data/config/config.ini")
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-
-
-class WriteDatabase:
-
-    def __init__(self):
-        table_name = "links_inviting"
-
-    async def output_the_input_field(self, page: ft.Page, data, table_name: str, column_name: str, route: str,
-                                     into_columns: str) -> None:
-        """
-        Окно ввода для записи списка контактов telegram
-
-        :param data: Данные для записи в БД.
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :param table_name: Имя таблицы в базе данных.
-        :param column_name: Имя столбца в таблице.
-        :param route: Маршрут для перехода после записи данных.
-        :param into_columns: Имя столбца в таблице, в который будут записаны данные.
-        """
-
-        # text_to_send = ft.TextField(label=label, multiline=True, max_lines=19)
-        # records: list = await self.db_handler.select_records_with_limit(table_name=table_name, limit=None)
-        # await log_and_display(message=f"Количество данных в таблице {table_name}: {len(records)}", page=page)
-
-        async def write_data(clear_before: bool = False) -> None:
-            """Запись данных в БД с опцией предварительной очистки"""
-
-            if clear_before:  # Проверяем, нужно ли очищать таблицу перед записью данных
-                cleaning_db(table_name=table_name)  # Очищаем таблицу перед записью данных
-
-            # data = text_to_send.value.split()
-            # Удаляем дубликаты
-            unique_records = list(set(data))
-            await self.db_handler.write_to_single_column_table(name_database=table_name, database_columns=column_name,
-                                                               into_columns=into_columns, recorded_data=unique_records)
-            await show_notification(page, "Данные успешно записаны!")
-            page.go(route)
-            page.update()
-
-        async def on_append_click(_: ft.ControlEvent) -> None:
-            """Запись данных в базу данных"""
-            await write_data(clear_before=False)
-
-        async def on_clear_and_write_click(_: ft.ControlEvent) -> None:
-            """Очистка данных и запись данных в базу данных"""
-            await write_data(clear_before=True)
-
-        async def on_back_click(_: ft.ControlEvent) -> None:
-            """Возврат на предыдущий экран"""
-            page.go(route)
-
-        # Формирование представления
-        # controls = [
-        #     text_to_send,
-        #     ft.ElevatedButton(text="Дозаписать данные в базу данных", width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-        #                       on_click=on_append_click),
-        #     ft.ElevatedButton(text="Очистить данные и записать по новой", width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-        #                       on_click=on_clear_and_write_click),
-        #     ft.ElevatedButton(text=translations["ru"]["buttons"]["back"], width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-        #                       on_click=on_back_click)
-        # ]
-        #
-        # page.views.append(ft.View(route, controls=[list_view, ft.Column(controls=controls)]))
 
 
 class SettingPage:
@@ -148,11 +85,6 @@ class SettingPage:
         :param limit_type: Тип лимита.
         :param limits: Текст для отображения в поле ввода.
         """
-
-        # page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-        # list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
-        # limits = ft.TextField(label=label, multiline=True, max_lines=19)
-        # async def btn_click(_) -> None:
         try:
             config.get(limit_type, limit_type)
             config.set(limit_type, limit_type, limits.value)
@@ -161,20 +93,6 @@ class SettingPage:
         except configparser.NoSectionError as error:
             await show_notification(self.page, "⚠️ Поврежден файл user_data/config/config.ini")
             await log_and_display(f"Ошибка: {error}", self.page)
-            # page.go("/settings")  # Изменение маршрута в представлении существующих настроек
-            # page.update()
-        # self.add_view_with_fields_and_button(page, [limits], btn_click)
-
-    # async def recording_the_time_to_launch_an_invite_every_day(self, page: ft.Page) -> None:
-    #     """
-    #     Запись времени для запуска inviting в определенное время
-    #
-    #     :param page: Страница интерфейса Flet для отображения элементов управления.
-    #     """
-    # page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-    # list_view.controls.append(ft.Text(f"Введите данные для записи"))  # отображаем сообщение в ListView
-    # hour_textfield = ft.TextField(label="Час запуска приглашений (0-23):", autofocus=True, value="")
-    # minutes_textfield = ft.TextField(label="Минуты запуска приглашений (0-59):", value="")
 
     async def recording_the_time_to_launch_an_invite_every_day(self, hour_textfield, minutes_textfield) -> None:
         """Записывает данные в файл config.ini"""
@@ -195,12 +113,9 @@ class SettingPage:
             writing_settings_to_a_file(config)
             await show_notification(self.page, "Данные успешно записаны!")
 
-            # self.page.go("/settings")  # Изменение маршрута в представлении существующих настроек
         except ValueError:
             await log_and_display(f"Введите числовые значения для часов и минут!", self.page)
         self.page.update()  # Обновляем страницу
-
-        # self.add_view_with_fields_and_button(page, [hour_textfield, minutes_textfield], btn_click)
 
     async def create_main_window(self, variable, smaller_timex, larger_timex) -> None:
         """
@@ -209,15 +124,6 @@ class SettingPage:
         :param larger_timex: Второе время
         :return: None
         """
-
-        # self.page.controls.append(list_view)  # добавляем ListView на страницу для отображения логов 📝
-        # for time_range_message in time_range: list_view.controls.append(
-        #     ft.Text(f"Записанные данные в файле {time_range_message}"))  # отображаем сообщение в ListView
-        # smaller_timex = ft.TextField(label="Время в секундах (меньшее)", autofocus=True)
-        # larger_timex = ft.TextField(label="Время в секундах (большее)")
-
-        # async def btn_click(_) -> None:
-        #     """Обработчик клика по кнопке"""
         try:
             smaller_times = int(smaller_timex.value)
             larger_times = int(larger_timex.value)
@@ -234,8 +140,6 @@ class SettingPage:
         except ValueError:
             list_view.controls.append(ft.Text("Ошибка: введите числовые значения!"))
         self.page.update()  # обновляем страницу
-
-        # self.add_view_with_fields_and_button(self.page, [smaller_timex, larger_timex], btn_click)
 
     async def writing_api_id_api_hash(self, page: ft.Page):
         """
