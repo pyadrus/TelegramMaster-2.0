@@ -2,25 +2,30 @@
 import flet as ft  # Импортируем библиотеку flet
 
 
+# 344
+
 class TimeInputRowBuilder:
 
-    async def build_time_inputs_with_save_button(self, on_save_click, label_min, label_max):
+    async def build_time_inputs_with_save_button(self, on_save_click, label_min, label_max, width):
         """
-        Создаёт текстовое поле для ввода данных (ссылок, времени) и кнопку сохранения.
+        Создаёт текстовое поле для ввода данных (ссылок, времени и.т.д.) и кнопку сохранения.
 
         :param label_max: Выводимый текст на поле ввода
         :param label_min: Выводимый текст на поле ввода
         :param on_save_click: Функция-обработчик, вызываемая при нажатии на кнопку сохранения.
+        :param width: Ширина поля ввода.
         :return: Кортеж из двух элементов: ft.TextField и ft.IconButton.
         https://flet.dev/docs/controls/textfield/
         """
-        min_time_input = ft.TextField(label=label_min, autofocus=True, width=344)
-        max_time_input = ft.TextField(label=label_max, autofocus=True, width=344)
+        min_time_input = ft.TextField(label=label_min, label_style=ft.TextStyle(size=15), autofocus=True, width=width,
+                                      text_size=12)
+        max_time_input = ft.TextField(label=label_max, label_style=ft.TextStyle(size=15), autofocus=True, width=width,
+                                      text_size=12)
         save_button = ft.IconButton(
             visible=True,
             icon=ft.Icons.SAVE,
             on_click=on_save_click,
-            icon_size=50
+            icon_size=40
         )
         return min_time_input, max_time_input, save_button
 
@@ -47,7 +52,7 @@ class LinkInputRowBuilder:
     Используется для ввода ссылок на Telegram-группы и каналы, на которые необходимо подписаться.
     """
 
-    async def build_link_input_with_save_button(self, on_save_click, label_text):
+    async def build_link_input_with_save_button(self, on_save_click, label_text, width):
         """
         Создаёт текстовое поле для ввода ссылок и кнопку сохранения.
 
@@ -60,13 +65,13 @@ class LinkInputRowBuilder:
         link_input = ft.TextField(
             label=label_text,
             label_style=ft.TextStyle(color=ft.Colors.GREY_400),
-            width=700
+            width=width
         )
         save_button = ft.IconButton(
             visible=True,
             icon=ft.Icons.SAVE,
             on_click=on_save_click,
-            icon_size=50
+            icon_size=40
         )
         return link_input, save_button
 

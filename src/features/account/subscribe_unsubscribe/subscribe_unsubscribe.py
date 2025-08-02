@@ -136,12 +136,14 @@ class SubscribeUnsubscribeTelegram:
 
         # Поле ввода ссылок и кнопка сохранения для подписки
         link_entry_field, save_button = await LinkInputRowBuilder().build_link_input_with_save_button(save,
-                                                                                                               "Введите ссылки для подписки на группы и каналы")
+                                                                                                               "Введите ссылки для подписки на группы и каналы",
+                                                                                                      width=500)
         # Два поля ввода для времени и кнопка сохранить
         smaller_timex, larger_timex, save_button_time = await TimeInputRowBuilder().build_time_inputs_with_save_button(
             btn_click,
             label_min="Время в секундах (меньшее)",
-            label_max="Время в секундах (большее)"
+            label_max="Время в секундах (большее)",
+            width=344
         )
 
         self.page.views.append(
