@@ -79,7 +79,7 @@ async def main_menu_program(page: ft.Page):
                                                 text=translations["ru"]["parsing_menu"][
                                                     "importing_a_list_of_parsed_data"],
                                                 on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
-                          ], scroll=ft.ScrollMode.AUTO),  # Добавляем прокрутку, если кнопок много
+                          ], scroll=ft.ScrollMode.AUTO),
 
                           # Правая колонка — текст
                           ft.Column([
@@ -106,6 +106,7 @@ async def main_menu_program(page: ft.Page):
                                                          ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
                                                          url=translations["ru"]["main_menu_texts"]["text_2"], ), ], ),
                           ]),
-                      ], )
+
+                      ], vertical_alignment=ft.CrossAxisAlignment.START)  # <<<<<<<<< Вот это главное изменение
 
                       ]))
