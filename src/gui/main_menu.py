@@ -81,6 +81,13 @@ async def main_menu_program(page: ft.Page):
                                                 on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
                           ], scroll=ft.ScrollMode.AUTO),
 
+                          # Вертикальный разделитель - улучшенные параметры
+                          ft.VerticalDivider(
+                              width=20,           # Ширина контейнера
+                              thickness=2,        # Толщина линии
+                              color=ft.Colors.GREY_400  # Цвет линии
+                          ),
+
                           # Правая колонка — текст
                           ft.Column([
                               ft.Text(spans=[ft.TextSpan(
@@ -107,6 +114,6 @@ async def main_menu_program(page: ft.Page):
                                                          url=translations["ru"]["main_menu_texts"]["text_2"], ), ], ),
                           ]),
 
-                      ], vertical_alignment=ft.CrossAxisAlignment.START)  # <<<<<<<<< Вот это главное изменение
+                      ], vertical_alignment=ft.CrossAxisAlignment.START, expand=True)
 
                       ]))
