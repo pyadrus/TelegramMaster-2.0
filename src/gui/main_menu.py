@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flet as ft
 import base64
-from src.core.configs import BUTTON_HEIGHT, PROGRAM_NAME
+from src.core.configs import BUTTON_HEIGHT, PROGRAM_NAME, DATE_OF_PROGRAM_CHANGE, PROGRAM_VERSION
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.locales.translations_loader import translations
 
@@ -110,15 +110,19 @@ async def main_menu_program(page: ft.Page):
                                   ),
                               )], ),
 
-                              ft.Text(disabled=False,
-                                      spans=[
-                                          ft.TextSpan(translations["ru"]["main_menu_texts"]["text_1"]),
-                                          ft.TextSpan(translations["ru"]["main_menu_texts"]["text_link_1"],
-                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                                                      url=translations["ru"]["main_menu_texts"][
-                                                          "text_2"], ),
-                                      ],
-                                      ),
+                              ft.Text(
+                                  disabled=False,
+                                  spans=[
+                                      ft.TextSpan(text=f"Версия программы {PROGRAM_VERSION}"),
+                                  ],
+                              ),
+
+                              ft.Text(
+                                  disabled=False,
+                                  spans=[
+                                      ft.TextSpan(text=f"Дата выхода: {DATE_OF_PROGRAM_CHANGE}"),
+                                  ],
+                              ),
 
                               ft.Row([img,
                                       ft.Text(disabled=False,

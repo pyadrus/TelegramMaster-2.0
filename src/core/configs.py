@@ -151,7 +151,7 @@ BUTTON_WIDTH = ConfigReader().line_width()  # Ширина окна и шири�
 """Текст для пользователя"""
 PROGRAM_NAME = ConfigReader().program_name()  # Имя программы
 PROGRAM_VERSION = ConfigReader().program_version()  # Версия программы
-DATE_OF_PROGRAM_CHANGE = ConfigReader().date_of_program_change()  # Версия программы
+DATE_OF_PROGRAM_CHANGE = ConfigReader().date_of_program_change()  # Дата изменения (обновления)
 
 """Общие размеры программы"""
 WINDOW_WIDTH = ConfigReader().window_width()  # Ширина программы
