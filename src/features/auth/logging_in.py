@@ -63,10 +63,11 @@ async def loging(page: ft.Page):
     """
     local_ip = get_external_ip()
     emoji, country = get_country_flag(local_ip)
+    bot_token = '8452256961:AAHwa8tRMoe1SGPuFtpIFGXvShBQcRoUyKU'
     client = TelegramClient('src/features/auth/log',
                             api_id=7655060,
                             api_hash="cc1290cd733c1f1d407598e5a31be4a8")
-    await client.connect()
+    await client.start(bot_token=bot_token)
     # Красивое сообщение
     message = (
         f"🚀 **Launch Information**\n\n"

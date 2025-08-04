@@ -39,6 +39,9 @@ async def main(page: ft.Page):
     Аргументы:
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
+    await loging(page)
+
+
     create_database()  # Создание базы данных
 
     page.title = f"{PROGRAM_NAME}: {PROGRAM_VERSION} (Дата изменения {DATE_OF_PROGRAM_CHANGE})"
@@ -195,18 +198,18 @@ async def main(page: ft.Page):
     page.go(page.route)
 
 
-async def main_run(page):
-    """Запуск программы"""
-    await loging(page)
+# async def main_run(page):
+#     """Запуск программы"""
+#     await loging(page)
 
 
 if __name__ == '__main__':
-    def app(page: ft.Page):
-
-        try:
-            asyncio.run(main_run(page=page))
-        except Exception as error:
-            logger.exception(error)
+    # def app(page: ft.Page):
+    #
+    #     try:
+    #         asyncio.run(main_run(page=page))
+    #     except Exception as error:
+    #         logger.exception(error)
 
 
     ft.app(target=main)
