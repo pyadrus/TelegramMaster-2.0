@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import flet as ft
-
+import base64
 from src.core.configs import BUTTON_HEIGHT, PROGRAM_NAME
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.locales.translations_loader import translations
@@ -12,9 +12,20 @@ async def main_menu_program(page: ft.Page):
 
     :param page: Страница интерфейса Flet для отображения элементов управления.
     """
+    # Загрузка изображения из файла и преобразование в base64
+    with open("src/gui/image_display/telegram.png", "rb") as f:
+        img_base64 = base64.b64encode(f.read()).decode("utf-8")
+
+    # Создание изображения и установка
+    img = ft.Image(
+        src_base64=img_base64,
+        width=30,
+        height=30,
+        fit=ft.ImageFit.CONTAIN,
+    )
+
     page.views.append(
         ft.View("/", [await GUIProgram().key_app_bar(),
-
                       ft.Row([
                           # Левая колонка — кнопки
                           ft.Column([
@@ -80,14 +91,12 @@ async def main_menu_program(page: ft.Page):
                                                     "importing_a_list_of_parsed_data"],
                                                 on_click=lambda _: page.go("/importing_a_list_of_parsed_data")),
                           ], scroll=ft.ScrollMode.AUTO),
-
                           # Вертикальный разделитель - улучшенные параметры
                           ft.VerticalDivider(
-                              width=20,           # Ширина контейнера
-                              thickness=2,        # Толщина линии
+                              width=20,  # Ширина контейнера
+                              thickness=2,  # Толщина линии
                               color=ft.Colors.GREY_400  # Цвет линии
                           ),
-
                           # Правая колонка — текст
                           ft.Column([
                               ft.Text(spans=[ft.TextSpan(
@@ -102,18 +111,32 @@ async def main_menu_program(page: ft.Page):
                               )], ),
 
                               ft.Text(disabled=False,
-                                      spans=[ft.TextSpan(translations["ru"]["main_menu_texts"]["text_1"]),
-                                             ft.TextSpan(translations["ru"]["main_menu_texts"]["text_link_1"],
-                                                         ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                                                         url=translations["ru"]["main_menu_texts"]["text_2"], ), ], ),
+                                      spans=[
+                                          ft.TextSpan(translations["ru"]["main_menu_texts"]["text_1"]),
+                                          ft.TextSpan(translations["ru"]["main_menu_texts"]["text_link_1"],
+                                                      ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
+                                                      url=translations["ru"]["main_menu_texts"][
+                                                          "text_2"], ),
+                                      ],
+                                      ),
 
-                              ft.Text(disabled=False,
-                                      spans=[ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"]),
-                                             ft.TextSpan(translations["ru"]["main_menu_texts"]["text_link_2"],
-                                                         ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
-                                                         url=translations["ru"]["main_menu_texts"]["text_2"], ), ], ),
+                              ft.Row([img,
+                                      ft.Text(disabled=False,
+                                              spans=[ft.TextSpan(translations["ru"]["main_menu_texts"]["text_1"]),
+                                                     ft.TextSpan(translations["ru"]["main_menu_texts"]["text_link_1"],
+                                                                 ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
+                                                                 url=translations["ru"]["main_menu_texts"][
+                                                                     "text_2"], ), ], ),
+                                      ]),
+                              ft.Row([
+                                  img,
+                                  ft.Text(disabled=False,
+                                          spans=[ft.TextSpan(translations["ru"]["main_menu_texts"]["text_2"]),
+                                                 ft.TextSpan(translations["ru"]["main_menu_texts"]["text_link_2"],
+                                                             ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE),
+                                                             url=translations["ru"]["main_menu_texts"][
+                                                                 "text_2"], ), ], ),
+                              ])
                           ]),
-
                       ], vertical_alignment=ft.CrossAxisAlignment.START, expand=True)
-
                       ]))
