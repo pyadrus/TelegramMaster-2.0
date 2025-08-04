@@ -22,8 +22,7 @@ from src.core.utils import find_filess, record_and_interrupt, record_inviting_re
 from src.features.account.connect.connect import get_string_session, getting_account_data
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.parsing.switch_controller import ToggleController
-from src.features.account.subscribe_unsubscribe.gui_input_builders import (TimeInputRowBuilder,
-                                                                           LinkInputRowBuilder)
+from src.features.account.subscribe_unsubscribe.gui_input_builders import TimeInputRowBuilder, LinkInputRowBuilder
 from src.features.account.subscribe_unsubscribe.subscribe import Subscribe
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.features.settings.setting import SettingPage
@@ -291,12 +290,16 @@ class InvitingToAGroup:
                                                                                                       width=390)
 
         # Кнопки-переключатели
-        inviting_switch = ft.CupertinoSwitch(label="🚀 Инвайтинг", value=False, disabled=True)
-        inviting_1_time_per_hour_switch = ft.CupertinoSwitch(label="⏰ Инвайтинг 1 раз в час", value=False,
-                                                             disabled=True)
-        inviting_at_a_certain_time_switch = ft.CupertinoSwitch(label="🕒 Инвайтинг в определенное время", value=False,
-                                                               disabled=True)
-        inviting_every_day_switch = ft.CupertinoSwitch(label="📅 Инвайтинг каждый день", value=False, disabled=True)
+        inviting_switch = ft.CupertinoSwitch(label=translations["ru"]["inviting_menu"]["inviting"], value=False,
+                                             disabled=True)
+        inviting_1_time_per_hour_switch = ft.CupertinoSwitch(
+            label=translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"], value=False,
+            disabled=True)
+        inviting_at_a_certain_time_switch = ft.CupertinoSwitch(
+            label=translations["ru"]["inviting_menu"]["invitation_at_a_certain_time"], value=False,
+            disabled=True)
+        inviting_every_day_switch = ft.CupertinoSwitch(label=translations["ru"]["inviting_menu"]["inviting_every_day"],
+                                                       value=False, disabled=True)
         ToggleController(inviting_switch=inviting_switch,
                          inviting_1_time_per_hour_switch=inviting_1_time_per_hour_switch,
                          inviting_at_a_certain_time_switch=inviting_at_a_certain_time_switch,
@@ -349,23 +352,6 @@ class InvitingToAGroup:
 
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
                          start_inviting,
-                         # 🚀 Инвайтинг
-                         # ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                         #                   text=translations["ru"]["inviting_menu"]["inviting"],
-                         #                   on_click=general_invitation_to_the_group  # Используем синхронную обёртку
-                         #                   ),
-                         # ⏰ Инвайтинг 1 раз в час
-                         # ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                         #                   text=translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"],
-                         #                   on_click=launching_an_invite_once_an_hour),
-                         # 🕒 Инвайтинг в определенное время
-                         # ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                         #                   text=translations["ru"]["inviting_menu"]["invitation_at_a_certain_time"],
-                         #                   on_click=schedule_invite),
-                         # 📅 Инвайтинг каждый день
-                         # ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                         #                   text=translations["ru"]["inviting_menu"]["inviting_every_day"],
-                         #                   on_click=launching_invite_every_day_certain_time),
                      ])]))
         self.page.update()  # обновляем страницу после добавления элементов управления 🔄
 
