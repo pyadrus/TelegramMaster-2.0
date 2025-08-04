@@ -21,6 +21,7 @@ from src.core.sqlite_working_tools import select_records_with_limit, get_links_i
 from src.core.utils import find_filess, record_and_interrupt, record_inviting_results
 from src.features.account.connect.connect import get_string_session, getting_account_data
 from src.features.account.parsing.gui_elements import GUIProgram
+from src.features.account.parsing.switch_controller import ToggleController
 from src.features.account.subscribe_unsubscribe.gui_input_builders import (TimeInputRowBuilder,
                                                                            LinkInputRowBuilder)
 from src.features.account.subscribe_unsubscribe.subscribe import Subscribe
@@ -249,6 +250,17 @@ class InvitingToAGroup:
             await SettingPage(self.page).record_setting(limit_type="account_limits",
                                                         limits=limits)
 
+        async def start_inviting_grup(_):
+
+            if inviting_switch.value:  # Инвайтинг
+                await general_invitation_to_the_group(_)
+            if inviting_1_time_per_hour_switch.value:
+                await launching_an_invite_once_an_hour(_)
+            if inviting_at_a_certain_time_switch.value:  # Инвайтинг в определенное время
+                await schedule_invite(_)
+            if inviting_every_day_switch.value:  # Инвайтинг каждый день
+                await launching_invite_every_day_certain_time(_)
+
         # Создаем выпадающий список с названиями групп
         dropdown = ft.Dropdown(width=WIDTH_WIDE_BUTTON,
                                options=[ft.DropdownOption(link) for link in self.links_inviting],
@@ -278,6 +290,30 @@ class InvitingToAGroup:
                                                                                                       "Введите ссылку на группу для инвайтинга",
                                                                                                       width=390)
 
+        # Кнопки-переключатели
+        inviting_switch = ft.CupertinoSwitch(label="🚀 Инвайтинг", value=False, disabled=True)
+        inviting_1_time_per_hour_switch = ft.CupertinoSwitch(label="⏰ Инвайтинг 1 раз в час", value=False,
+                                                             disabled=True)
+        inviting_at_a_certain_time_switch = ft.CupertinoSwitch(label="🕒 Инвайтинг в определенное время", value=False,
+                                                               disabled=True)
+        inviting_every_day_switch = ft.CupertinoSwitch(label="📅 Инвайтинг каждый день", value=False, disabled=True)
+        ToggleController(inviting_switch=inviting_switch,
+                         inviting_1_time_per_hour_switch=inviting_1_time_per_hour_switch,
+                         inviting_at_a_certain_time_switch=inviting_at_a_certain_time_switch,
+                         inviting_every_day_switch=inviting_every_day_switch).element_handler_inviting(self.page)
+
+        start_inviting = ft.ElevatedButton(
+            width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+            text="Запуск",
+            on_click=start_inviting_grup  # Используем синхронную обёртку
+        )
+
+        inviting_switch.disabled = False
+        inviting_1_time_per_hour_switch.disabled = False
+        inviting_at_a_certain_time_switch.disabled = False
+        inviting_every_day_switch.disabled = False
+        start_inviting.disabled = False
+
         self.page.views.append(
             ft.View("/inviting",
                     [await GUIProgram().key_app_bar(),
@@ -289,12 +325,6 @@ class InvitingToAGroup:
                                                                                                ft.Colors.PURPLE])), ), ), ], ),
                      list_view,  # Отображение логов 📝
 
-                     # await TimeInputRowBuilder().compose_time_input_row(smaller_timex, larger_timex,
-                     #                                                    save_button_timex),
-                     # # Запись времени для запуска инвайтинга по времени
-                     # await TimeInputRowBuilder().compose_time_input_row(hour_textfield, minutes_textfield,
-                     #                                                    save_button_time),
-
                      ft.Row([await TimeInputRowBuilder().compose_time_input_row(smaller_timex, larger_timex,
                                                                                 save_button_timex),
                              await TimeInputRowBuilder().compose_time_input_row(hour_textfield, minutes_textfield,
@@ -303,30 +333,39 @@ class InvitingToAGroup:
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
 
                      ft.Row([await LinkInputRowBuilder().compose_link_input_row(limits, save_button_limit),
-                             await LinkInputRowBuilder().compose_link_input_row(link_entry_field, save_button),]),
+                             await LinkInputRowBuilder().compose_link_input_row(link_entry_field, save_button), ]),
 
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
                      ft.Text(value="📂 Выберите группу для инвайтинга"),  # Выбор группы для инвайтинга
                      dropdown,  # Выпадающий список с названиями групп
                      await GUIProgram().diver_castom(),  # Горизонтальная линия
+
+                     ft.Row([
+                         inviting_switch,
+                         inviting_1_time_per_hour_switch,
+                         inviting_at_a_certain_time_switch,
+                         inviting_every_day_switch
+                     ]),
+
                      ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
+                         start_inviting,
                          # 🚀 Инвайтинг
-                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                                           text=translations["ru"]["inviting_menu"]["inviting"],
-                                           on_click=general_invitation_to_the_group  # Используем синхронную обёртку
-                                           ),
+                         # ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+                         #                   text=translations["ru"]["inviting_menu"]["inviting"],
+                         #                   on_click=general_invitation_to_the_group  # Используем синхронную обёртку
+                         #                   ),
                          # ⏰ Инвайтинг 1 раз в час
-                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                                           text=translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"],
-                                           on_click=launching_an_invite_once_an_hour),
+                         # ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+                         #                   text=translations["ru"]["inviting_menu"]["invitation_1_time_per_hour"],
+                         #                   on_click=launching_an_invite_once_an_hour),
                          # 🕒 Инвайтинг в определенное время
-                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                                           text=translations["ru"]["inviting_menu"]["invitation_at_a_certain_time"],
-                                           on_click=schedule_invite),
+                         # ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+                         #                   text=translations["ru"]["inviting_menu"]["invitation_at_a_certain_time"],
+                         #                   on_click=schedule_invite),
                          # 📅 Инвайтинг каждый день
-                         ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                                           text=translations["ru"]["inviting_menu"]["inviting_every_day"],
-                                           on_click=launching_invite_every_day_certain_time),
+                         # ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
+                         #                   text=translations["ru"]["inviting_menu"]["inviting_every_day"],
+                         #                   on_click=launching_invite_every_day_certain_time),
                      ])]))
         self.page.update()  # обновляем страницу после добавления элементов управления 🔄
 

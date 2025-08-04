@@ -41,7 +41,7 @@ async def collect_user_log_data(user):
 
 async def save_group_channel_info(dialog, title, about, link, participants_count):
     """
-    Функция сохраняет или обновляет информацию о группе или канале в базе данных.
+    Cохраняет или обновляет информацию о группе или канале в базе данных.
 
     :param dialog: объект диалогового окна Telegram API
     :param title: заголовок группы или канала
@@ -91,7 +91,7 @@ async def administrators_entries_in_database(log_data):
 
 async def parse_group(groups_wr, page) -> None:
     """
-    Эта функция выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
+    Выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
     @handle_exceptions для отлавливания ошибок и записи их в базу данных user_data/software_database.db.
 
     :param groups_wr: ссылка на группу
@@ -109,8 +109,7 @@ async def parse_group(groups_wr, page) -> None:
         while while_condition:
             try:
                 logger.warning(f"🔍 Получаем участников группы: {groups_wr}")
-                participants = await client(
-                    GetParticipantsRequest(channel=groups_wr, offset=offset, filter=my_filter, limit=200, hash=0, ))
+                participants = await client(GetParticipantsRequest(channel=groups_wr, offset=offset, filter=my_filter, limit=200, hash=0, ))
                 all_participants.extend(participants.users)
                 offset += len(participants.users)
                 if len(participants.users) < 1:
@@ -284,8 +283,8 @@ class ParsingGroupMembers:
                 ft.Column([
                     file_text,
                     pick_button,
-                    ft.Row([admin_switch, members_switch, account_groups_switch, ]),
-                    ft.Row([account_group_selection_switch, active_switch, contacts_switch, ]),
+                    ft.Row([admin_switch, members_switch, account_groups_switch,]),
+                    ft.Row([account_group_selection_switch, active_switch, contacts_switch,]),
                     chat_input,
                     await GUIProgram().diver_castom(),  # Горизонтальная линия
                     ft.Row([limit_active_user]),
@@ -341,8 +340,7 @@ class ParsingGroupMembers:
             phone = os.path.splitext(os.path.basename(session_path))[0]
             logger.warning(f"🔍 Работаем с аккаунтом {phone}")
             client = await self.tg_connect.get_telegram_client(phone, path_accounts_folder)
-            result = await client(
-                GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+            result = await client(GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
             groups = await self.filtering_groups(result.chats)
             titles = await self.name_of_the_groups(groups)
             dropdown.options = [ft.dropdown.Option(t) for t in titles]
@@ -406,8 +404,7 @@ class ParsingGroupMembers:
                             await log_and_display(f"Это не группа, а канал: {entity.title}", page)
                             # Удаляем группу из списка после завершения парсинга 🗑️
                         except AttributeError:
-                            await log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}",
-                                                  page, )
+                            await log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}", page)
                 except UsernameInvalidError:
                     await log_and_display(translations["ru"]["errors"]["group_entity_error"], page)
                 except ValueError:
