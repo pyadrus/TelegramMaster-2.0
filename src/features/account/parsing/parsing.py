@@ -38,9 +38,6 @@ async def collect_user_log_data(user):
         "user_premium": await UserInfo().get_user_premium_status(user),
     }
 
-
-
-
 async def parse_group(groups_wr, page) -> None:
     """
     Выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
@@ -107,7 +104,7 @@ class ParsingGroupMembers:
     def __init__(self, page):
         self.page = page
         self.tg_connect = TGConnect(page)
-        self.tg_subscription_manager = SubscribeUnsubscribeTelegram(page)
+        # self.tg_subscription_manager = SubscribeUnsubscribeTelegram(page)
 
     async def account_selection_menu(self):
 
@@ -178,18 +175,18 @@ class ParsingGroupMembers:
                 self.page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
                 try:
                     if account_groups_switch.value:  # Парсинг групп, на которые подписан аккаунт
-                        await self.parsing_account_groups(self.page)
+                        await self.parsing_account_groups()
                     if admin_switch.value:  # Если выбрано парсить администраторов, выполняем парсинг администраторов 👤
                         for groups in data:
-                            await self.obtaining_administrators(groups, self.page)
+                            await self.obtaining_administrators(groups)
                     if members_switch.value:  # Парсинг участников
                         for groups in data:
                             await parse_group(groups, self.page)
                     if active_switch.value:  # Парсинг активных пользователей
                         await self.start_active_parsing(self.page, limit_active_user)
                     if account_group_selection_switch.value:  # Парсинг выбранной группы
-                        await self.load_groups(self.page, dropdown, result_text)  # ⬅️ Подгружаем группы
-                        await self.start_group_parsing(self.page, dropdown, result_text)
+                        await self.load_groups(dropdown, result_text)  # ⬅️ Подгружаем группы
+                        await self.start_group_parsing(dropdown, result_text)
                     await end_time(start, self.page)
                 except Exception as error:
                     logger.exception(error)
@@ -251,7 +248,7 @@ class ParsingGroupMembers:
         self.page.update()
 
     async def start_group_parsing(self, dropdown, result_text):
-        phone = await self.load_groups(self.page, dropdown, result_text)
+        phone = await self.load_groups(dropdown, result_text)
         logger.warning(f"🔍 Аккаунт: {phone}")
         client = await self.tg_connect.get_telegram_client(phone, path_accounts_folder)
         if not dropdown.value:
@@ -279,7 +276,7 @@ class ParsingGroupMembers:
             return
 
         await log_and_display(f"🔍 Сканируем чат: {chat} на {limit} сообщений", self.page)
-        await self.parse_active_users(chat, limit, self.page, phone[0])
+        await self.parse_active_users(chat, limit, phone[0])
 
     async def load_groups(self, dropdown, result_text):
         try:
@@ -375,7 +372,7 @@ class ParsingGroupMembers:
         client = await self.tg_connect.get_telegram_client(phone[0], account_directory=path_accounts_folder)
         await log_and_display(
             f"🔗 Подключение к аккаунту: {phone}\n 🔄 Парсинг групп/каналов, на которые подписан аккаунт", self.page)
-        await self.forming_a_list_of_groups(client, self.page)
+        await self.forming_a_list_of_groups(client)
 
     async def parse_active_users(self, chat_input, limit_active_user, phone_number) -> None:
         """
@@ -384,13 +381,13 @@ class ParsingGroupMembers:
         try:
             client = await self.tg_connect.get_telegram_client(phone_number,
                                                                account_directory=path_accounts_folder)
-            await self.tg_subscription_manager.subscribe_to_group_or_channel(client, chat_input)
+            await SubscribeUnsubscribeTelegram(self.page).subscribe_to_group_or_channel(client, chat_input)
             try:
                 await asyncio.sleep(int(TIME_ACTIVITY_USER_2 or 5))
             except TypeError:
                 await asyncio.sleep(5)
             # Все операции с Telegram API должны быть здесь
-            await self.get_active_users(client, chat_input, limit_active_user, self.page)
+            await self.get_active_users(client, chat_input, limit_active_user)
         except Exception as error:
             logger.exception(error)
 
@@ -401,7 +398,6 @@ class ParsingGroupMembers:
         :param client: Клиент Telegram
         :param chat: ссылка на чат
         :param limit_active_user: лимит активных участников
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             entity = await client.get_entity(chat)
@@ -465,7 +461,6 @@ class ParsingGroupMembers:
         и время последнего парсинга. Данные сохраняются в базу данных.
 
         :param client: Экземпляр клиента Telegram.
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             async for dialog in client.iter_dialogs():
