@@ -223,84 +223,77 @@ class TGConnect:
         except Exception as error:
             logger.exception(error)
 
-    async def verify_all_accounts(self, page: ft.Page) -> None:
+    async def verify_all_accounts(self) -> None:
         """
         Проверяет все аккаунты Telegram в указанной директории.
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            start = await start_time(page)
-            await checking_the_proxy_for_work(page=page)  # Проверка proxy
+            start = await start_time(self.page)
+            await checking_the_proxy_for_work(page=self.page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_file in find_filess(directory_path=path_accounts_folder, extension='session'):
-                await log_and_display(message=f"⚠️ Проверяемый аккаунт: {session_file}", page=page)
+                await log_and_display(message=f"⚠️ Проверяемый аккаунт: {session_file}", page=self.page)
                 # Проверка аккаунтов
                 await self.verify_account(session_name=session_file)
-            await log_and_display(message=f"Окончание проверки аккаунтов Telegram 📁", page=page)
-            await end_time(start, page)
-            await show_notification(page, "🔚 Проверка аккаунтов завершена")
+            await log_and_display(message=f"Окончание проверки аккаунтов Telegram 📁", page=self.page)
+            await end_time(start, self.page)
+            await show_notification(self.page, "🔚 Проверка аккаунтов завершена")
         except Exception as error:
             logger.exception(error)
 
-    async def get_account_details(self, page: ft.Page):
+    async def get_account_details(self):
         """
         Получает информацию о Telegram аккаунте.
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
-            start = await start_time(page)
-            await checking_the_proxy_for_work(page=page)  # Проверка proxy
+            start = await start_time(self.page)
+            await checking_the_proxy_for_work(page=self.page)  # Проверка proxy
             # Сканирование каталога с аккаунтами
             for session_name in find_filess(directory_path=path_accounts_folder, extension='session'):
-                await log_and_display(message=f"⚠️ Переименовываемый аккаунт: {session_name}", page=page)
+                await log_and_display(message=f"⚠️ Переименовываемый аккаунт: {session_name}", page=self.page)
                 # Переименовывание аккаунтов
                 client = await self.get_telegram_client(session_name=session_name,
                                                         account_directory=path_accounts_folder)
                 try:
                     me = await client.get_me()
-                    await self.rename_session_file(telegram_client=client, phone_old=session_name, phone=me.phone,
-                                                   page=page)
+                    await self.rename_session_file(telegram_client=client, phone_old=session_name, phone=me.phone)
                 except AttributeError:  # Если в get_me приходит NoneType (None)
                     pass
                 except TypeNotFoundError:
                     await client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
                     await log_and_display(
                         message=f"⛔ Битый файл или аккаунт banned: {session_name}.session. Возможно, запущен под другим IP",
-                        page=page)
+                        page=self.page)
                     working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
                                           new_account_folder=f"user_data/accounts/banned/{session_name}.session")
                 except AuthKeyUnregisteredError:
                     await client.disconnect()  # Разрываем соединение Telegram, для удаления session файла
-                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
+                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], self.page)
                     working_with_accounts(account_folder=f"user_data/accounts/{session_name}.session",
                                           new_account_folder=f"user_data/accounts/banned/{session_name}.session")
-            await end_time(start, page)
-            await show_notification(page=page, message="🔚 Проверка аккаунтов завершена")
+            await end_time(start, self.page)
+            await show_notification(page=self.page, message="🔚 Проверка аккаунтов завершена")
         except Exception as error:
             logger.exception(error)
 
-    async def checking_all_accounts(self, page: ft.Page) -> None:
+    async def checking_all_accounts(self) -> None:
         try:
-            start = await start_time(page)
-            await self.verify_all_accounts(page=page)  # Проверка валидности аккаунтов
-            await self.get_account_details(page=page)  # Переименование аккаунтов
+            start = await start_time(self.page)
+            await self.verify_all_accounts()  # Проверка валидности аккаунтов
+            await self.get_account_details()  # Переименование аккаунтов
             await self.check_for_spam()  # Проверка на спам ботов
-            await end_time(start, page)
-            await show_notification(page=page, message="🔚 Проверка аккаунтов завершена")
+            await end_time(start, self.page)
+            await show_notification(page=self.page, message="🔚 Проверка аккаунтов завершена")
         except Exception as error:
             logger.exception(error)
 
-    @staticmethod
-    async def rename_session_file(telegram_client, phone_old, phone, page: ft.Page) -> None:
+    async def rename_session_file(self, telegram_client, phone_old, phone) -> None:
         """
         Переименовывает session файлы.
 
         :param telegram_client: Клиент для работы с Telegram
         :param phone_old: Номер телефона для переименования
         :param phone: Номер телефона для переименования (новое название для session файла)
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         await telegram_client.disconnect()  # Отключаемся от аккаунта для освобождения session файла
         try:
@@ -313,7 +306,7 @@ class TGConnect:
         except Exception as error:
             logger.exception(error)
 
-        await getting_phone_number_data_by_phone_number(phone, page)  # Выводим информацию о номере телефона
+        await getting_phone_number_data_by_phone_number(phone, self.page)  # Выводим информацию о номере телефона
 
     async def get_telegram_client(self, session_name, account_directory):
         """

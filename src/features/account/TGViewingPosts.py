@@ -17,19 +17,17 @@ from src.gui.gui import log_and_display
 
 class ViewingPosts:
     """
-    Класс для накрутки просмотров постов
+    Накрутка просмотров постов
     """
 
-    def __init__(self):
-        self.tg_connect = TGConnect()
-        self.sub_unsub_tg = SubscribeUnsubscribeTelegram()
+    def __init__(self, page):
+        self.page = page
+        self.tg_connect = TGConnect(page=page)
+        self.sub_unsub_tg = SubscribeUnsubscribeTelegram(page=page)
 
-    async def viewing_posts_request(self, page: ft.Page) -> None:
+    async def viewing_posts_request(self) -> None:
         """
         Ставим реакции на сообщения
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
-        :return: None
         """
         try:
             # Поле для ввода ссылки на чат
@@ -60,7 +58,7 @@ class ViewingPosts:
         except Exception as error:
             logger.exception(error)
 
-    async def viewing_posts(self, client, link_post, number, link_channel, page: ft.Page) -> None:
+    async def viewing_posts(self, client, link_post, number, link_channel) -> None:
         """
         Накрутка просмотров постов
 

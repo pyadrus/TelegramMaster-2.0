@@ -30,7 +30,6 @@ class ParsingGroupMembers:
     def __init__(self, page):
         self.page = page
         self.tg_connect = TGConnect(page)
-        # self.tg_subscription_manager = SubscribeUnsubscribeTelegram(page)
 
     async def collect_user_log_data(self, user):
         return {

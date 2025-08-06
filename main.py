@@ -82,7 +82,7 @@ async def main(page: ft.Page):
         elif page.route == "/we_are_winding_up_post_views":  # ️‍🗨️ Накручиваем просмотры постов
             start = await start_time(page=page)
             logger.info("▶️ Начало Накрутки просмотров постов")
-            await ViewingPosts().viewing_posts_request(page=page)
+            await ViewingPosts(page=page).viewing_posts_request()
             logger.info("🔚 Конец Накрутки просмотров постов")
             await end_time(start, page=page)
         # __________________________________________________________________________________________________________
@@ -154,7 +154,7 @@ async def main(page: ft.Page):
         elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash
             await SettingPage(page=page).writing_api_id_api_hash(page=page)
         elif page.route == "/message_limits":  # Лимиты на сообщения
-            await SettingPage(page=page).record_setting(page, "message_limits", "Введите лимит на сообщения")
+            await SettingPage(page=page).record_setting( "message_limits", "Введите лимит на сообщения")
         elif page.route == "/creating_username_list":  # Формирование списка username
             await SettingPage(page=page).output_the_input_field(page, "members",
                                                                 "username, id, access_hash, first_name, last_name, "
