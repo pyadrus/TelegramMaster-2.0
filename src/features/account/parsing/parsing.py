@@ -24,80 +24,6 @@ from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import Sub
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
 
-
-async def collect_user_log_data(user):
-    return {
-        "username": await UserInfo().get_username(user),
-        "user_id": await UserInfo().get_user_id(user),
-        "access_hash": await UserInfo().get_access_hash(user),
-        "first_name": await UserInfo().get_first_name(user),
-        "last_name": await UserInfo().get_last_name(user),
-        "user_phone": await UserInfo().get_user_phone(user),
-        "online_at": await UserInfo().get_user_online_status(user),
-        "photos_id": await UserInfo().get_photo_status(user),
-        "user_premium": await UserInfo().get_user_premium_status(user),
-    }
-
-async def parse_group(groups_wr, page) -> None:
-    """
-    Выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
-    @handle_exceptions для отлавливания ошибок и записи их в базу данных user_data/software_database.db.
-
-    :param groups_wr: ссылка на группу
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    """
-    phone = page.session.get("selected_sessions") or []
-    logger.debug(f"Аккаунт: {phone}")
-    client = await TGConnect(page).get_telegram_client(phone[0], account_directory=path_accounts_folder)
-    await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", page)
-    try:
-        all_participants: list = []
-        while_condition = True
-        my_filter = ChannelParticipantsSearch("")
-        offset = 0
-        while while_condition:
-            try:
-                logger.warning(f"🔍 Получаем участников группы: {groups_wr}")
-                participants = await client(GetParticipantsRequest(channel=groups_wr, offset=offset, filter=my_filter, limit=200, hash=0, ))
-                all_participants.extend(participants.users)
-                offset += len(participants.users)
-                if len(participants.users) < 1:
-                    while_condition = False
-            except TypeError:
-                await log_and_display(f"❌ Ошибка: {groups_wr} не является группой / каналом.", page, level="error", )
-                await asyncio.sleep(2)
-                break
-            except ChatAdminRequiredError:
-                await log_and_display(translations["ru"]["errors"]["admin_rights_required"], page)
-                await asyncio.sleep(2)
-                break
-            except ChannelPrivateError:
-                await log_and_display(translations["ru"]["errors"]["channel_private"], page)
-                await asyncio.sleep(2)
-                break
-            except AuthKeyUnregisteredError:
-                await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
-                await asyncio.sleep(2)
-                break
-            except sqlite3.DatabaseError:  # TODO Обработка ошибок базы данных (придумать универсальнео наименование)
-                await log_and_display("Ошибка дазы данных аккаунта", page)
-                await asyncio.sleep(2)
-                break
-
-        for user in all_participants:
-            await log_and_display(f"Полученные данные: {user}", page)
-            logger.info(f"Полученные данные: {user}")
-            # user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
-            log_data = await collect_user_log_data(user)
-            add_member_to_db(log_data)
-
-    except TypeError as error:
-        logger.exception(f"❌ Ошибка: {error}")
-        return []  # Возвращаем пустой список в случае ошибки
-    except Exception as error:
-        logger.exception(error)
-
-
 class ParsingGroupMembers:
     """Класс для парсинга групп, на которые подписан аккаунт."""
 
@@ -105,6 +31,79 @@ class ParsingGroupMembers:
         self.page = page
         self.tg_connect = TGConnect(page)
         # self.tg_subscription_manager = SubscribeUnsubscribeTelegram(page)
+
+    async def collect_user_log_data(self, user):
+        return {
+            "username": await UserInfo().get_username(user),
+            "user_id": await UserInfo().get_user_id(user),
+            "access_hash": await UserInfo().get_access_hash(user),
+            "first_name": await UserInfo().get_first_name(user),
+            "last_name": await UserInfo().get_last_name(user),
+            "user_phone": await UserInfo().get_user_phone(user),
+            "online_at": await UserInfo().get_user_online_status(user),
+            "photos_id": await UserInfo().get_photo_status(user),
+            "user_premium": await UserInfo().get_user_premium_status(user),
+        }
+
+    async def parse_group(self, groups_wr) -> None:
+        """
+        Выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
+        @handle_exceptions для отлавливания ошибок и записи их в базу данных user_data/software_database.db.
+
+        :param groups_wr: ссылка на группу
+        """
+        phone = self.page.session.get("selected_sessions") or []
+        logger.debug(f"Аккаунт: {phone}")
+        client = await TGConnect(self.page).get_telegram_client(phone[0], account_directory=path_accounts_folder)
+        await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", self.page)
+        try:
+            all_participants: list = []
+            while_condition = True
+            my_filter = ChannelParticipantsSearch("")
+            offset = 0
+            while while_condition:
+                try:
+                    logger.warning(f"🔍 Получаем участников группы: {groups_wr}")
+                    participants = await client(
+                        GetParticipantsRequest(channel=groups_wr, offset=offset, filter=my_filter, limit=200, hash=0, ))
+                    all_participants.extend(participants.users)
+                    offset += len(participants.users)
+                    if len(participants.users) < 1:
+                        while_condition = False
+                except TypeError:
+                    await log_and_display(f"❌ Ошибка: {groups_wr} не является группой / каналом.", self.page,
+                                          level="error", )
+                    await asyncio.sleep(2)
+                    break
+                except ChatAdminRequiredError:
+                    await log_and_display(translations["ru"]["errors"]["admin_rights_required"], self.page)
+                    await asyncio.sleep(2)
+                    break
+                except ChannelPrivateError:
+                    await log_and_display(translations["ru"]["errors"]["channel_private"], self.page)
+                    await asyncio.sleep(2)
+                    break
+                except AuthKeyUnregisteredError:
+                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], self.page)
+                    await asyncio.sleep(2)
+                    break
+                except sqlite3.DatabaseError:  # TODO Обработка ошибок базы данных (придумать универсальнео наименование)
+                    await log_and_display("Ошибка дазы данных аккаунта", self.page)
+                    await asyncio.sleep(2)
+                    break
+
+            for user in all_participants:
+                await log_and_display(f"Полученные данные: {user}", self.page)
+                logger.info(f"Полученные данные: {user}")
+                # user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
+                log_data = await self.collect_user_log_data(user)
+                add_member_to_db(log_data)
+
+        except TypeError as error:
+            logger.exception(f"❌ Ошибка: {error}")
+            return []  # Возвращаем пустой список в случае ошибки
+        except Exception as error:
+            logger.exception(error)
 
     async def account_selection_menu(self):
 
