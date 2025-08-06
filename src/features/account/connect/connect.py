@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from loguru import logger
 from telethon.sessions import StringSession
 from telethon.sync import TelegramClient

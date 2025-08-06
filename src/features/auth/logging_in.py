@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 import json
 from urllib.request import urlopen  # Изменено с urllib2 на urllib.request
