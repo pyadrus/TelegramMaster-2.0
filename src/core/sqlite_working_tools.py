@@ -413,4 +413,55 @@ def save_links_inviting(data) -> None:
             except peewee.IntegrityError:
                 logger.warning(f"Ссылка уже существует в базе: {link}")
 
+
+def save_group_channel_info(dialog, title, about, link, participants_count):
+    """
+    Cохраняет или обновляет информацию о группе или канале в базе данных.
+
+    :param dialog: объект диалогового окна Telegram API
+    :param title: заголовок группы или канала
+    :param about: описание группы или канала
+    :param link: ссылка на группу или канал
+    :param participants_count: количество участников группы или канала
+    """
+    with db.atomic():
+        GroupsAndChannels.insert(
+            id=dialog.id,
+            title=title,
+            about=about,
+            link=link,
+            members_count=participants_count,
+            parsing_time=datetime.now()
+        ).on_conflict(
+            conflict_target=[GroupsAndChannels.id],
+            preserve=[GroupsAndChannels.id],
+            update={
+                GroupsAndChannels.title: title,
+                GroupsAndChannels.about: about,
+                GroupsAndChannels.link: link,
+                GroupsAndChannels.members_count: participants_count,
+                GroupsAndChannels.parsing_time: datetime.now(),
+            }
+        ).execute()
+
+
+
+def administrators_entries_in_database(log_data):
+    """Запись в базу данных всех администраторов."""
+    with db.atomic():
+        MembersAdmin.create(
+            username=log_data["username"],
+            user_id=log_data["user_id"],
+            access_hash=log_data["access_hash"],
+            first_name=log_data["first_name"],
+            last_name=log_data["last_name"],
+            phone=log_data["phone"],
+            online_at=log_data["online_at"],
+            photo_status=log_data["photo_status"],
+            premium_status=log_data["premium_status"],
+            user_status=log_data["user_status"],
+            bio=log_data["bio"],
+            group_name=log_data["group"],
+        )
+
 # 458
