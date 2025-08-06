@@ -113,7 +113,7 @@ async def main_menu_program(page: ft.Page):
                               ft.Text(
                                   disabled=False,
                                   spans=[
-                                      ft.TextSpan(text=f"Версия программы {PROGRAM_VERSION}"),
+                                      ft.TextSpan(text=f"Версия программы: {PROGRAM_VERSION}"),
                                   ],
                               ),
 

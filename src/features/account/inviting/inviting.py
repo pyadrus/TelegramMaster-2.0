@@ -97,12 +97,10 @@ async def add_user_test(client, username_group, username, page):
 class InvitingToAGroup:
 
     def __init__(self, page: ft.Page):
-        # self.sub_unsub_tg = SubscribeUnsubscribeTelegram(page=page)
+        self.page = page
         self.config_reader = ConfigReader()
         self.hour, self.minutes = self.config_reader.get_hour_minutes_every_day()
         self.scheduler = Scheduler()  # Создаем экземпляр планировщика
-        self.page = page
-        self.config_reader = ConfigReader()
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
@@ -246,10 +244,12 @@ class InvitingToAGroup:
 
         async def write_limit_account_inviting(_):
             """Записывает лимит на аккаунт для инвайтинга"""
-            await SettingPage(self.page).record_setting(limit_type="account_limits",
-                                                        limits=limits)
+            await SettingPage(self.page).record_setting(limit_type="account_limits", limits=limits)
 
         async def start_inviting_grup(_):
+            """
+            ⚙️ Метод для запуска инвайтинга
+            """
 
             if inviting_switch.value:  # Инвайтинг
                 await general_invitation_to_the_group(_)
@@ -264,30 +264,32 @@ class InvitingToAGroup:
         dropdown = ft.Dropdown(width=WIDTH_WIDE_BUTTON,
                                options=[ft.DropdownOption(link) for link in self.links_inviting],
                                autofocus=True)
+        width_tvo_input = 215
+        width_one_input = 440
 
         # Два поля ввода для времени и кнопка сохранить
         smaller_timex, larger_timex, save_button_timex = await TimeInputRowBuilder().build_time_inputs_with_save_button(
             write_limit_account_inviting_timex,
             label_min="Мин. задержка (сек)",
             label_max="Макс. задержка (сек)",
-            width=190
+            width=width_tvo_input
         )
         # Два поля ввода для времени и кнопка сохранить
         hour_textfield, minutes_textfield, save_button_time = await TimeInputRowBuilder().build_time_inputs_with_save_button(
             write_tame_start_inviting,
             label_min="Час запуска (0–23)",
             label_max="Минуты (0–59)",
-            width=190
+            width=width_tvo_input
         )
 
         # Поле ввода, для ссылок для инвайтинга
         limits, save_button_limit = await LinkInputRowBuilder().build_link_input_with_save_button(
             write_limit_account_inviting,
-            "Введите лимит на аккаунт", width=390)
+            "Введите лимит на аккаунт", width=width_one_input)
 
         link_entry_field, save_button = await LinkInputRowBuilder().build_link_input_with_save_button(save,
                                                                                                       "Введите ссылку на группу для инвайтинга",
-                                                                                                      width=390)
+                                                                                                      width=width_one_input)
 
         # Кнопки-переключатели
         inviting_switch = ft.CupertinoSwitch(label=translations["ru"]["inviting_menu"]["inviting"], value=False,
