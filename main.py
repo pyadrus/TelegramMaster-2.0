@@ -15,7 +15,7 @@ from src.features.account.TGCreating import CreatingGroupsAndChats
 from src.features.account.TGReactions import WorkingWithReactions
 from src.features.account.TGSendingMessages import SendTelegramMessages
 from src.features.account.TGViewingPosts import ViewingPosts
-from src.features.account.inviting.inviting import InvitingToAGroup
+from src.features.account.inviting import InvitingToAGroup
 from src.features.account.parsing.parsing import ParsingGroupMembers
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.features.auth.logging_in import loging
@@ -23,8 +23,7 @@ from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
 from src.gui.gui import end_time, start_time
 from src.gui.main_menu import main_menu_program
-from src.gui.menu import (bio_editing_menu, settings_menu, reactions_menu,
-                          viewing_posts_menu, working_with_contacts_menu)
+from src.gui.menu import bio_editing_menu, settings_menu, reactions_menu, viewing_posts_menu, working_with_contacts_menu
 from src.gui.notification import show_notification
 
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
@@ -196,18 +195,6 @@ async def main(page: ft.Page):
     page.go(page.route)
 
 
-# async def main_run(page):
-#     """Запуск программы"""
-#     await loging(page)
-
-
 if __name__ == '__main__':
-    # def app(page: ft.Page):
-    #
-    #     try:
-    #         asyncio.run(main_run(page=page))
-    #     except Exception as error:
-    #         logger.exception(error)
-
 
     ft.app(target=main)

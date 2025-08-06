@@ -7,33 +7,61 @@ import sqlite3
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
-from telethon import TelegramClient
 from telethon.errors import (ApiIdInvalidError, AuthKeyDuplicatedError,
                              AuthKeyNotFound, AuthKeyUnregisteredError,
                              PasswordHashInvalidError, PhoneNumberBannedError,
                              SessionPasswordNeededError, TimedOutError,
                              TypeNotFoundError, UserDeactivatedBanError,
                              YouBlockedUserError)
+from telethon.sessions import StringSession
+from telethon.sync import TelegramClient
 from thefuzz import fuzz
 
-from src.core.configs import BUTTON_HEIGHT, ConfigReader, WIDTH_WIDE_BUTTON, path_accounts_folder
+from src.core.configs import BUTTON_HEIGHT, ConfigReader, WIDTH_WIDE_BUTTON
+from src.core.configs import (path_accounts_folder)
 from src.core.utils import find_filess, working_with_accounts
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.auth.logging_in import getting_phone_number_data_by_phone_number
 from src.features.proxy.checking_proxy import checking_the_proxy_for_work, reading_proxy_data_from_the_database
-from src.gui.gui import end_time, log_and_display, start_time
+from src.gui.gui import end_time, start_time
+from src.gui.gui import log_and_display
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
+
+
+async def getting_account_data(client, page):
+    """Получаем данные аккаунта"""
+    me = await client.get_me()
+    logger.info(f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}")
+    await log_and_display(
+        f"🧾 Аккаунт: {me.first_name} {me.last_name} | @{me.username} | ID: {me.id} | Phone: {me.phone}", page)
+
+
+async def get_string_session(session_name):
+    """Получение строки сессии"""
+
+    client = TelegramClient(
+        session=f"{path_accounts_folder}/{session_name}",
+        api_id=7655060,
+        api_hash="cc1290cd733c1f1d407598e5a31be4a8",
+        system_version="4.16.30-vxCUSTOM",
+    )
+    await client.connect()
+    logger.info(f"✨ STRING SESSION: {StringSession.save(client.session)}")
+    session_string = StringSession.save(client.session)
+    await client.disconnect()
+    return session_string
 
 
 class TGConnect:
 
     def __init__(self, page):
+        self.page = page  # Страница интерфейса Flet для отображения элементов управления.
         self.config_reader = ConfigReader()
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
-        self.page = page  # Страница интерфейса Flet для отображения элементов управления.
+
 
     async def verify_account(self, session_name) -> None:
         """
