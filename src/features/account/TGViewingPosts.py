@@ -19,7 +19,7 @@ from src.locales.translations_loader import translations
 
 class ViewingPosts:
     """
-    Накрутка просмотров постов
+    Функционал для накрутки просмотров постов в Telegram.
     """
 
     def __init__(self, page):
@@ -28,9 +28,7 @@ class ViewingPosts:
         self.sub_unsub_tg = SubscribeUnsubscribeTelegram(page=page)
 
     async def viewing_posts_menu(self):
-        """
-        Меню работа с просмотрами
-        """
+        """Отображает меню работы с просмотрами."""
         self.page.views.append(
             ft.View("/viewing_posts_menu",
                     [await GUIProgram().key_app_bar(),
@@ -49,9 +47,7 @@ class ViewingPosts:
                      ])]))
 
     async def viewing_posts_request(self) -> None:
-        """
-        Ставим реакции на сообщения
-        """
+        """Окно с полями ввода и кнопками для накрутки просмотров."""
         try:
             # Поле для ввода ссылки на чат
             link_channel = ft.TextField(label="Введите ссылку на канал:", multiline=False, max_lines=1)
