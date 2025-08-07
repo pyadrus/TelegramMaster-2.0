@@ -193,25 +193,3 @@ async def reactions_menu(page: ft.Page):
                  ])]))
 
 
-async def viewing_posts_menu(page: ft.Page):
-    """
-    Меню работа с просмотрами
-
-    :param page: Страница интерфейса Flet для отображения элементов управления.
-    """
-    page.views.append(
-        ft.View("/viewing_posts_menu",
-                [await GUIProgram().key_app_bar(),
-                 ft.Text(spans=[ft.TextSpan(
-                     translations["ru"]["reactions_menu"]["we_are_winding_up_post_views"],
-                     ft.TextStyle(
-                         size=20, weight=ft.FontWeight.BOLD,
-                         foreground=ft.Paint(
-                             gradient=ft.PaintLinearGradient((0, 20), (150, 20), [ft.Colors.PINK,
-                                                                                  ft.Colors.PURPLE])), ), ), ], ),
-                 ft.Column([  # Добавляет все чекбоксы и кнопку на страницу (page) в виде колонок.
-                     # 👁️‍🗨️ Накручиваем просмотры постов
-                     ft.ElevatedButton(width=WIDTH_WIDE_BUTTON, height=BUTTON_HEIGHT,
-                                       text=translations["ru"]["reactions_menu"]["we_are_winding_up_post_views"],
-                                       on_click=lambda _: page.go("/we_are_winding_up_post_views")),
-                 ])]))

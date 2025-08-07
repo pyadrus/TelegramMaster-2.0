@@ -23,7 +23,7 @@ from src.features.recording.receiving_and_recording import ReceivingAndRecording
 from src.features.settings.setting import SettingPage, get_unique_filename, reaction_gui
 from src.gui.gui import end_time, start_time
 from src.gui.main_menu import main_menu_program
-from src.gui.menu import bio_editing_menu, settings_menu, reactions_menu, viewing_posts_menu, working_with_contacts_menu
+from src.gui.menu import bio_editing_menu, settings_menu, reactions_menu, working_with_contacts_menu
 from src.gui.notification import show_notification
 
 logger.add("user_data/log/log_ERROR.log", rotation="500 KB", compression="zip", level="ERROR")  # Логирование программы
@@ -77,14 +77,14 @@ async def main(page: ft.Page):
             logger.info("🔚 Конец Автоматического выставления реакций")
             await end_time(start, page=page)
         # __________________________________________________________________________________________________________
-        elif page.route == "/viewing_posts_menu":  # Автоматическое выставление просмотров меню
-            await viewing_posts_menu(page=page)
-        elif page.route == "/we_are_winding_up_post_views":  # ️‍🗨️ Накручиваем просмотры постов
-            start = await start_time(page=page)
-            logger.info("▶️ Начало Накрутки просмотров постов")
+        # elif page.route == "/viewing_posts_menu":  # Автоматическое выставление просмотров меню
+        #     await viewing_posts_menu(page=page)
+        elif page.route == "/viewing_posts_menu":  # ️‍🗨️ Накручиваем просмотры постов
+            # start = await start_time(page=page)
+            # logger.info("▶️ Начало Накрутки просмотров постов")
             await ViewingPosts(page=page).viewing_posts_request()
-            logger.info("🔚 Конец Накрутки просмотров постов")
-            await end_time(start, page=page)
+            # logger.info("🔚 Конец Накрутки просмотров постов")
+            # await end_time(start, page=page)
         # __________________________________________________________________________________________________________
         elif page.route == "/parsing":  # Меню "Парсинг"
             await ParsingGroupMembers(page=page).account_selection_menu()
