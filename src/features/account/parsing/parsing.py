@@ -21,7 +21,7 @@ from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.parsing.switch_controller import ToggleController
 from src.features.account.parsing.user_info import UserInfo
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
-from src.gui.gui import end_time, list_view, log_and_display, start_time
+from src.gui.gui import AppLogger, list_view
 from src.locales.translations_loader import translations
 
 
@@ -31,6 +31,7 @@ class ParsingGroupMembers:
     def __init__(self, page):
         self.page = page
         self.tg_connect = TGConnect(page)
+        self.app_logger = AppLogger(page)
 
     async def collect_user_log_data(self, user):
         return {
@@ -50,12 +51,12 @@ class ParsingGroupMembers:
         Выполняет парсинг групп, на которые пользователь подписался. Аргумент phone используется декоратором
         @handle_exceptions для отлавливания ошибок и записи их в базу данных user_data/software_database.db.
 
-        :param groups_wr: ссылка на группу
+        :param groups_wr: Ссылка на группу
         """
         phone = self.page.session.get("selected_sessions") or []
         logger.debug(f"Аккаунт: {phone}")
         client = await TGConnect(self.page).get_telegram_client(phone[0], account_directory=path_accounts_folder)
-        await log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...", self.page)
+        await self.app_logger.log_and_display("🔍 Ищем участников... 💾 Сохраняем в файл software_database.db...")
         try:
             all_participants: list = []
             while_condition = True
@@ -71,29 +72,28 @@ class ParsingGroupMembers:
                     if len(participants.users) < 1:
                         while_condition = False
                 except TypeError:
-                    await log_and_display(f"❌ Ошибка: {groups_wr} не является группой / каналом.", self.page,
-                                          level="error", )
+                    await self.app_logger.log_and_display(f"❌ Ошибка: {groups_wr} не является группой / каналом.", level="error")
                     await asyncio.sleep(2)
                     break
                 except ChatAdminRequiredError:
-                    await log_and_display(translations["ru"]["errors"]["admin_rights_required"], self.page)
+                    await self.app_logger.log_and_display(translations["ru"]["errors"]["admin_rights_required"])
                     await asyncio.sleep(2)
                     break
                 except ChannelPrivateError:
-                    await log_and_display(translations["ru"]["errors"]["channel_private"], self.page)
+                    await self.app_logger.log_and_display(translations["ru"]["errors"]["channel_private"])
                     await asyncio.sleep(2)
                     break
                 except AuthKeyUnregisteredError:
-                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], self.page)
+                    await self.app_logger.log_and_display(translations["ru"]["errors"]["auth_key_unregistered"])
                     await asyncio.sleep(2)
                     break
                 except sqlite3.DatabaseError:  # TODO Обработка ошибок базы данных (придумать универсальнео наименование)
-                    await log_and_display("Ошибка дазы данных аккаунта", self.page)
+                    await self.app_logger.log_and_display("Ошибка базы данных аккаунта")
                     await asyncio.sleep(2)
                     break
 
             for user in all_participants:
-                await log_and_display(f"Полученные данные: {user}", self.page)
+                await self.app_logger.log_and_display(f"Полученные данные: {user}")
                 logger.info(f"Полученные данные: {user}")
                 # user_premium = "Пользователь с premium" if user.premium else "Обычный пользователь"
                 log_data = await self.collect_user_log_data(user)
@@ -170,7 +170,7 @@ class ParsingGroupMembers:
                 data = chat_input.value.split()
                 logger.info(f"Полученные данные: {data}")  # Отладка
                 # Удаляем дубликаты ссылок введенных пользователем
-                start = await start_time(self.page)
+                start = await self.app_logger.start_time()
                 self.page.update()  # Обновите страницу, чтобы сразу показать сообщение 🔄
                 try:
                     if account_groups_switch.value:  # Парсинг групп, на которые подписан аккаунт
@@ -186,7 +186,7 @@ class ParsingGroupMembers:
                     if account_group_selection_switch.value:  # Парсинг выбранной группы
                         await self.load_groups(dropdown, result_text)  # ⬅️ Подгружаем группы
                         await self.start_group_parsing(dropdown, result_text)
-                    await end_time(start, self.page)
+                    await self.app_logger.end_time(start)
                 except Exception as error:
                     logger.exception(error)
             except Exception as error:
@@ -251,18 +251,18 @@ class ParsingGroupMembers:
         logger.warning(f"🔍 Аккаунт: {phone}")
         client = await self.tg_connect.get_telegram_client(phone, path_accounts_folder)
         if not dropdown.value:
-            await log_and_display("⚠️ Группа не выбрана", self.page)
+            await self.app_logger.log_and_display("⚠️ Группа не выбрана")
             return
-        await log_and_display(f"▶️ Парсинг группы: {dropdown.value}", self.page)
+        await self.app_logger.log_and_display(f"▶️ Парсинг группы: {dropdown.value}")
         logger.warning(f"🔍 Парсим группу: {dropdown.value}")
         await self.parse_group(dropdown.value)
         await client.disconnect()
-        await log_and_display("🔚 Парсинг завершен", self.page)
+        await self.app_logger.log_and_display("🔚 Парсинг завершен")
 
     async def start_active_parsing(self, chat_input_active, limit_active_user):
         selected = self.page.session.get("selected_sessions") or []
         if not selected:
-            await log_and_display("⚠️ Сначала выберите аккаунт", self.page)
+            await self.app_logger.log_and_display("⚠️ Сначала выберите аккаунт")
             return
 
         phone = self.page.session.get("selected_sessions") or []
@@ -271,17 +271,17 @@ class ParsingGroupMembers:
         try:
             limit = int(limit_active_user.value)
         except ValueError:
-            await log_and_display("⚠️ Некорректное число сообщений", self.page)
+            await self.app_logger.log_and_display("⚠️ Некорректное число сообщений")
             return
 
-        await log_and_display(f"🔍 Сканируем чат: {chat} на {limit} сообщений", self.page)
+        await self.app_logger.log_and_display(f"🔍 Сканируем чат: {chat} на {limit} сообщений")
         await self.parse_active_users(chat, limit, phone[0])
 
     async def load_groups(self, dropdown, result_text):
         try:
             selected = self.page.session.get("selected_sessions") or []
             if not selected:
-                await log_and_display("⚠️ Сначала выберите аккаунт", self.page)
+                await self.app_logger.log_and_display("⚠️ Сначала выберите аккаунт")
                 return
 
             session_path = selected[0]
@@ -310,7 +310,7 @@ class ParsingGroupMembers:
             try:
                 client = await self.tg_connect.get_telegram_client(phone[0],
                                                                    account_directory=path_accounts_folder)
-                await log_and_display(f"🔍 Парсинг группы: {groups}", self.page)
+                await self.app_logger.log_and_display(f"🔍 Парсинг группы: {groups}")
                 try:
                     entity = await client.get_entity(groups)  # Получаем сущность группы/канала
                     # Проверяем, является ли сущность супергруппой
@@ -339,29 +339,27 @@ class ParsingGroupMembers:
                             }
                             # Задержка для избежания ограничений Telegram API
                             await asyncio.sleep(0.5)
-                            await log_and_display(f"Полученные данные: {log_data}", self.page)
+                            await self.app_logger.log_and_display(f"Полученные данные: {log_data}")
 
                             existing_user = MembersAdmin.select().where(
                                 MembersAdmin.user_id == log_data["user_id"]).first()
                             if not existing_user:
                                 administrators_entries_in_database(log_data)
                             else:
-                                await log_and_display(
-                                    f"⚠️ Пользователь с user_id {log_data['user_id']} уже есть в базе. Пропущен.",
-                                    self.page)
+                                await self.app_logger.log_and_display(f"⚠️ Пользователь с user_id {log_data['user_id']} уже есть в базе. Пропущен.")
                     else:
                         try:
-                            await log_and_display(f"Это не группа, а канал: {entity.title}", self.page)
+                            await self.app_logger.log_and_display(f"Это не группа, а канал: {entity.title}")
                             # Удаляем группу из списка после завершения парсинга 🗑️
                         except AttributeError:
-                            await log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}", self.page)
+                            await self.app_logger.log_and_display(f"⚠️ Ошибка при получении сущности группы {groups[0]}")
                 except UsernameInvalidError:
-                    await log_and_display(translations["ru"]["errors"]["group_entity_error"], self.page)
+                    await self.app_logger.log_and_display(translations["ru"]["errors"]["group_entity_error"])
                 except ValueError:
-                    await log_and_display(translations["ru"]["errors"]["group_entity_error"], self.page)
+                    await self.app_logger.log_and_display(translations["ru"]["errors"]["group_entity_error"])
                 await client.disconnect()
             except FloodWaitError as e:
-                await log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", self.page, level="error", )
+                await self.app_logger.log_and_display(f"{translations["ru"]["errors"]["flood_wait"]}{e}", level="error")
                 await client.disconnect()
         except Exception as error:
             logger.exception(error)
@@ -371,8 +369,7 @@ class ParsingGroupMembers:
         phone = self.page.session.get("selected_sessions") or []
         logger.debug(f"🔍 Парсинг групп/каналов, в которых состоит аккаунт: {phone}")
         client = await self.tg_connect.get_telegram_client(phone[0], account_directory=path_accounts_folder)
-        await log_and_display(
-            f"🔗 Подключение к аккаунту: {phone}\n 🔄 Парсинг групп/каналов, на которые подписан аккаунт", self.page)
+        await self.app_logger.log_and_display(f"🔗 Подключение к аккаунту: {phone}\n 🔄 Парсинг групп/каналов, на которые подписан аккаунт")
         await self.forming_a_list_of_groups(client)
 
     async def parse_active_users(self, chat_input, limit_active_user, phone_number) -> None:
@@ -407,20 +404,19 @@ class ParsingGroupMembers:
                 if from_id:
                     user = await client.get_entity(from_id)
                     try:
-                        await log_and_display(f"{message.from_id}", self.page)
+                        await self.app_logger.log_and_display(f"{message.from_id}")
                         # Получаем входную сущность пользователя
                         from_user = InputUser(user_id=await UserInfo().get_user_id(user),
                                               access_hash=await UserInfo().get_access_hash(user))  # Создаем InputUser
-                        await log_and_display(f"{from_user}", self.page)
+                        await self.app_logger.log_and_display(f"{from_user}")
                         # Получаем данные о пользователе
                         log_data = await self.collect_user_log_data(user)
-                        await log_and_display(f"{log_data}", self.page)
+                        await self.app_logger.log_and_display(f"{log_data}")
                         await add_member_to_db(log_data)
                     except ValueError as e:
-                        await log_and_display(
-                            f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}", self.page, )
+                        await self.app_logger.log_and_display(f"❌ Не удалось найти сущность для пользователя {message.from_id.user_id}: {e}")
                 else:
-                    await log_and_display(f"Сообщение {message.id} не имеет действительного from_id.", self.page, )
+                    await self.app_logger.log_and_display(f"Сообщение {message.id} не имеет действительного from_id.")
         except Exception as error:
             logger.exception(error)
 
@@ -486,8 +482,7 @@ class ParsingGroupMembers:
                     title = entity.title or "Без названия"
                     about = getattr(chat, 'about', '')
                     # Логируем информацию
-                    await log_and_display(f"{dialog.id}, {title}, {link or 'без ссылки'}, {participants_count}",
-                                          self.page, )
+                    await self.app_logger.log_and_display(f"{dialog.id}, {title}, {link or 'без ссылки'}, {participants_count}")
                     await save_group_channel_info(dialog, title, about, link, participants_count)
                 except TypeError as te:
                     logger.warning(f"❌ TypeError при обработке диалога {dialog.id}: {te}")
