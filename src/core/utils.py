@@ -9,7 +9,7 @@ import flet as ft
 from loguru import logger
 
 from src.core.sqlite_working_tools import delete_row_db
-from src.gui.gui import log_and_display
+from src.gui.gui import AppLogger
 
 
 def read_json_file(filename):
@@ -69,7 +69,8 @@ async def find_files(directory_path, extension, page: ft.Page) -> list:
             file = os.path.splitext(x)[0]  # Разделяем имя файла на имя без расширения и расширение
             entities.append([file])  # Добавляем информацию о файле в список
 
-    await log_and_display(f"🔍 Найденные файлы: {entities}", page)
+    app_logger = AppLogger(page)
+    await app_logger.log_and_display(f"🔍 Найденные файлы: {entities}")
 
     return entities  # Возвращаем список json файлов
 
@@ -105,7 +106,8 @@ async def record_inviting_results(time_range_1: int, time_range_2: int, username
     :param username: - username аккаунта
     :param page: Страница для отображения информации.
     """
-    await log_and_display(f"Удаляем с базы данных username {username}", page)
+    app_logger = AppLogger(page)
+    await app_logger.log_and_display(f"Удаляем с базы данных username {username}")
 
     # Открываем базу с аккаунтами и с выставленными лимитами
     delete_row_db(username=username)
@@ -124,5 +126,6 @@ async def record_and_interrupt(time_range_1, time_range_2, page: ft.Page) -> Non
     """
     # Смена аккаунта через случайное количество секунд
     selected_shift_time = random.randrange(int(time_range_1), int(time_range_2))
-    await log_and_display(f"Переход к новому username через {selected_shift_time} секунд", page)
+    app_logger = AppLogger(page)
+    await app_logger.log_and_display(f"Переход к новому username через {selected_shift_time} секунд")
     await asyncio.sleep(selected_shift_time)
