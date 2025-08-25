@@ -180,7 +180,7 @@ class ParsingGroupMembers:
                             await self.obtaining_administrators(groups)
                     if members_switch.value:  # Парсинг участников
                         for groups in data:
-                            await parse_group(groups, self.page)
+                            await self.parse_group(groups)
                     if active_switch.value:  # Парсинг активных пользователей
                         await self.start_active_parsing(self.page, limit_active_user)
                     if account_group_selection_switch.value:  # Парсинг выбранной группы
@@ -255,7 +255,7 @@ class ParsingGroupMembers:
             return
         await log_and_display(f"▶️ Парсинг группы: {dropdown.value}", self.page)
         logger.warning(f"🔍 Парсим группу: {dropdown.value}")
-        await parse_group(dropdown.value, self.page)
+        await self.parse_group(dropdown.value)
         await client.disconnect()
         await log_and_display("🔚 Парсинг завершен", self.page)
 
@@ -413,7 +413,7 @@ class ParsingGroupMembers:
                                               access_hash=await UserInfo().get_access_hash(user))  # Создаем InputUser
                         await log_and_display(f"{from_user}", self.page)
                         # Получаем данные о пользователе
-                        log_data = await collect_user_log_data(user)
+                        log_data = await self.collect_user_log_data(user)
                         await log_and_display(f"{log_data}", self.page)
                         await add_member_to_db(log_data)
                     except ValueError as e:
