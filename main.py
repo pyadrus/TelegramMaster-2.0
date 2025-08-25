@@ -143,7 +143,7 @@ async def main(page: ft.Page):
         elif page.route == "/change_surname":  # Изменение фамилии
             await AccountBIO().change_last_name_profile_gui(page=page)
         elif page.route == "/edit_photo":  # Изменение фото
-            await AccountBIO().change_photo_profile_gui(page=page)
+            await AccountBIO().change_photo_profile_gui()
             await show_notification(page=page, message="🔚 Фото изменено")  # Выводим уведомление пользователю
         elif page.route == "/changing_username":  # Изменение username
             await AccountBIO().change_username_profile_gui(page=page)

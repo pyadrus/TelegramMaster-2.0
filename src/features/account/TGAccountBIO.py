@@ -9,7 +9,7 @@ from src.core.configs import path_accounts_folder
 from src.core.utils import find_files, find_filess
 from src.features.account.TGConnect import TGConnect
 from src.gui.buttons import function_button_ready
-from src.gui.gui import log_and_display
+from src.gui.gui import AppLogger
 from src.gui.notification import show_notification
 from src.locales.translations_loader import translations
 
@@ -47,19 +47,18 @@ class AccountBIO:
     Класс для управления изменениями данных аккаунта Telegram через графический интерфейс Flet.
     """
 
-    def __init__(self):
+    def __init__(self, page: ft.Page):
+        self.page = page
         self.extension = 'session'
-        self.tg_connect = TGConnect()
-        self.account_actions = AccountActions(path_accounts_folder, self.extension, self.tg_connect)
+        self.tg_connect = TGConnect(page)
+        self.account_actions = AccountActions(path_accounts_folder, self.extension, self.tg_connect, self.page)
         self.gui_manager = GUIManager()
 
-    async def change_photo_profile_gui(self, page: ft.Page) -> None:
+    async def change_photo_profile_gui(self) -> None:
         """
         Изменение фото профиля Telegram через интерфейс Flet.
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
-        await self.account_actions.change_photo_profile(page)
+        await self.account_actions.change_photo_profile()
 
     async def change_username_profile_gui(self, page: ft.Page) -> None:
         """
@@ -103,140 +102,136 @@ class AccountActions:
     Класс, отвечающий за выполнение действий над аккаунтом Telegram.
     """
 
-    def __init__(self, directory_path, extension, tg_connect):
+    def __init__(self, directory_path, extension, tg_connect, page: ft.Page):
+        self.page = page  # Страница интерфейса Flet
         self.directory_path = directory_path  # путь к папке с аккаунтами Telegram
         self.extension = extension  # расширение файла с аккаунтом Telegram (session)
         self.tg_connect = tg_connect  # объект класса TelegramConnect (подключение к Telegram аккаунту)
+        self.app_logger = AppLogger(page)
 
-    async def change_bio_profile(self, page: ft.Page, user_input):
+    async def change_bio_profile(self, user_input):
         """
         Изменение описания профиля Telegram аккаунта.
 
         :param user_input - новое описание профиля Telegram
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         :return: None
         """
         try:
-            await log_and_display(f"Запуск смены  описания профиля", page)
+            await self.app_logger.log_and_display(f"Запуск смены  описания профиля")
             for session_name in find_filess(directory_path=self.directory_path, extension='session'):
-                await log_and_display(f"{session_name}", page)
-                client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
+                await self.app_logger.log_and_display(f"{session_name}")
+                client = await self.tg_connect.get_telegram_client(self.page, session_name=session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 if len(user_input) > 70:
-                    await show_notification(page, f"❌ Описание профиля превышает 70 символов ({len(user_input)}).")
+                    await show_notification(self.page, f"❌ Описание профиля превышает 70 символов ({len(user_input)}).")
                     return
                 try:
                     result = await client(functions.account.UpdateProfileRequest(about=user_input))
-                    await log_and_display(f"{result}\nПрофиль успешно обновлен!", page)
+                    await self.app_logger.log_and_display(f"{result}\nПрофиль успешно обновлен!")
                 except AuthKeyUnregisteredError:
-                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
+                    await self.app_logger.log_and_display(translations["ru"]["errors"]["auth_key_unregistered"])
                 finally:
                     await client.disconnect()
 
         except Exception as error:
             logger.exception(error)
 
-        await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
-        page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
+        await show_notification(self.page, "Работа окончена")  # Выводим уведомление пользователю
+        self.page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
 
-    async def change_username_profile(self, page: ft.Page, user_input) -> None:
+    async def change_username_profile(self, user_input) -> None:
         """
         Изменение username профиля Telegram
 
         :param user_input  - новое имя пользователя
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             for session_name in find_filess(directory_path=self.directory_path, extension='session'):
-                await log_and_display(f"{session_name}", page)
-                client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
+                await self.app_logger.log_and_display(f"{session_name}")
+                client = await self.tg_connect.get_telegram_client(self.page, session_name=session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 try:
                     await client(functions.account.UpdateUsernameRequest(username=user_input))
-                    await show_notification(page, f'Работа окончена')  # Выводим уведомление пользователю
+                    await show_notification(self.page, f'Работа окончена')  # Выводим уведомление пользователю
                 except AuthKeyUnregisteredError:
-                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
+                    await self.app_logger.log_and_display(translations["ru"]["errors"]["auth_key_unregistered"])
                 except (UsernamePurchaseAvailableError, UsernameOccupiedError):
-                    await show_notification(page, "❌ Никнейм уже занят")  # Выводим уведомление пользователю
+                    await show_notification(self.page, "❌ Никнейм уже занят")  # Выводим уведомление пользователю
                 except UsernameInvalidError:
-                    await show_notification(page, "❌ Неверный никнейм")  # Выводим уведомление пользователю
+                    await show_notification(self.page, "❌ Неверный никнейм")  # Выводим уведомление пользователю
                 finally:
                     await client.disconnect()
         except Exception as error:
             logger.exception(error)
 
-    async def change_name_profile(self, page: ft.Page, user_input):
+    async def change_name_profile(self, user_input):
         """
         Изменение имени профиля
 
         :param user_input - новое имя пользователя
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             for session_name in find_filess(directory_path=self.directory_path, extension='session'):
-                await log_and_display(f"{session_name}", page)
-                client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
+                await self.app_logger.log_and_display(f"{session_name}")
+                client = await self.tg_connect.get_telegram_client(self.page, session_name=session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 try:
                     result = await client(functions.account.UpdateProfileRequest(first_name=user_input))
-                    await log_and_display(f"{result}\nИмя успешно обновлено!", page)
+                    await self.app_logger.log_and_display(f"{result}\nИмя успешно обновлено!")
                 except AuthKeyUnregisteredError:
-                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
+                    await self.app_logger.log_and_display(translations["ru"]["errors"]["auth_key_unregistered"])
                 finally:
                     await client.disconnect()
-                await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
-                page.go("/bio_editing")  # переходим к основному меню изменения имени профиля 🏠
+                await show_notification(self.page, "Работа окончена")  # Выводим уведомление пользователю
+                self.page.go("/bio_editing")  # переходим к основному меню изменения имени профиля 🏠
         except Exception as error:
             logger.exception(error)
 
-    async def change_last_name_profile(self, page: ft.Page, user_input):
+    async def change_last_name_profile(self, user_input):
         """
         Изменение фамилии профиля
 
         :param user_input - новое имя пользователя Telegram
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             for session_name in find_filess(directory_path=self.directory_path, extension='session'):
-                await log_and_display(f"{session_name}", page)
-                client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
+                await self.app_logger.log_and_display(f"{session_name}")
+                client = await self.tg_connect.get_telegram_client(self.page, session_name=session_name,
                                                                    account_directory=self.directory_path)
                 await client.connect()
                 try:
                     result = await client(functions.account.UpdateProfileRequest(last_name=user_input))
-                    await log_and_display(f"{result}\nФамилия успешно обновлена!", page)
+                    await self.app_logger.log_and_display(f"{result}\nФамилия успешно обновлена!")
                 except AuthKeyUnregisteredError:
-                    await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
+                    await self.app_logger.log_and_display(translations["ru"]["errors"]["auth_key_unregistered"])
                 finally:
                     await client.disconnect()
-                await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
+                await show_notification(self.page, "Работа окончена")  # Выводим уведомление пользователю
         except Exception as error:
             logger.exception(error)
 
-    async def change_photo_profile(self, page: ft.Page):
+    async def change_photo_profile(self):
         """Изменение фото профиля.
-
-        :param page: Страница интерфейса Flet для отображения элементов управления.
         """
         try:
             for session_name in find_filess(directory_path=self.directory_path, extension='session'):
-                await log_and_display(f"{session_name}", page)
-                client = await self.tg_connect.get_telegram_client(page, session_name=session_name,
+                await self.app_logger.log_and_display(f"{session_name}")
+                client = await self.tg_connect.get_telegram_client(self.page, session_name=session_name,
                                                                    account_directory=self.directory_path)
-                for photo_file in await find_files(directory_path="user_data/bio", extension='jpg', page=page):
+                for photo_file in await find_files(directory_path="user_data/bio", extension='jpg', page=self.page):
                     try:
                         await client.connect()
                         await client(functions.photos.UploadProfilePhotoRequest(
                             file=await client.upload_file(f"user_data/bio/{photo_file[0]}.jpg")))
                     except AuthKeyUnregisteredError:
-                        await log_and_display(translations["ru"]["errors"]["auth_key_unregistered"], page)
+                        await self.app_logger.log_and_display(translations["ru"]["errors"]["auth_key_unregistered"])
                     finally:
                         await client.disconnect()
         except Exception as error:
             logger.exception(error)
 
-        await show_notification(page, "Работа окончена")  # Выводим уведомление пользователю
-        page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
+        await show_notification(self.page, "Работа окончена")  # Выводим уведомление пользователю
+        self.page.go("/bio_editing")  # переходим к основному меню изменения описания профиля 🏠
