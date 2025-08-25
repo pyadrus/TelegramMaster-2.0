@@ -7,12 +7,9 @@ import sqlite3
 
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger
-from telethon.errors import (ApiIdInvalidError, AuthKeyDuplicatedError,
-                             AuthKeyNotFound, AuthKeyUnregisteredError,
-                             PasswordHashInvalidError, PhoneNumberBannedError,
-                             SessionPasswordNeededError, TimedOutError,
-                             TypeNotFoundError, UserDeactivatedBanError,
-                             YouBlockedUserError)
+from telethon.errors import (ApiIdInvalidError, AuthKeyDuplicatedError, AuthKeyNotFound, AuthKeyUnregisteredError,
+                             PasswordHashInvalidError, PhoneNumberBannedError, SessionPasswordNeededError,
+                             TimedOutError, TypeNotFoundError, UserDeactivatedBanError, YouBlockedUserError)
 from telethon.sessions import StringSession
 from telethon.sync import TelegramClient
 from thefuzz import fuzz
@@ -61,7 +58,6 @@ class TGConnect:
         self.api_id_api_hash = self.config_reader.get_api_id_data_api_hash_data()
         self.api_id = self.api_id_api_hash[0]
         self.api_hash = self.api_id_api_hash[1]
-
 
     async def verify_account(self, session_name) -> None:
         """

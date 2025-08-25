@@ -2,8 +2,7 @@
 import flet as ft  # Импортируем библиотеку flet
 from loguru import logger  # Импортируем библиотеку loguru
 from telethon import functions  # Импортируем библиотеку telethon
-from telethon.errors import (AuthKeyUnregisteredError, UsernameInvalidError,
-                             UsernameOccupiedError,
+from telethon.errors import (AuthKeyUnregisteredError, UsernameInvalidError, UsernameOccupiedError,
                              UsernamePurchaseAvailableError)
 
 from src.core.configs import path_accounts_folder

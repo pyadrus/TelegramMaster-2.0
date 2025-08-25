@@ -38,7 +38,6 @@ async def main(page: ft.Page):
     """
     await loging(page)
 
-
     create_database()  # Создание базы данных
 
     page.title = f"{PROGRAM_NAME}: {PROGRAM_VERSION} (Дата изменения {DATE_OF_PROGRAM_CHANGE})"
@@ -154,7 +153,7 @@ async def main(page: ft.Page):
         elif page.route == "/recording_api_id_api_hash":  # Запись api_id, api_hash
             await SettingPage(page=page).writing_api_id_api_hash(page=page)
         elif page.route == "/message_limits":  # Лимиты на сообщения
-            await SettingPage(page=page).record_setting( "message_limits", "Введите лимит на сообщения")
+            await SettingPage(page=page).record_setting("message_limits", "Введите лимит на сообщения")
         elif page.route == "/creating_username_list":  # Формирование списка username
             await SettingPage(page=page).output_the_input_field(page, "members",
                                                                 "username, id, access_hash, first_name, last_name, "
@@ -197,5 +196,4 @@ async def main(page: ft.Page):
 
 
 if __name__ == '__main__':
-
     ft.app(target=main)

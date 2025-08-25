@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flet as ft
 
-from src.core.configs import BUTTON_HEIGHT, SMALL_BUTTON_WIDTH, BUTTON_WIDTH, WIDTH_WIDE_BUTTON
+from src.core.configs import BUTTON_HEIGHT, SMALL_BUTTON_WIDTH, BUTTON_WIDTH
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.locales.translations_loader import translations
 

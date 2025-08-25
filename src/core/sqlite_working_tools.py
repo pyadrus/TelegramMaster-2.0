@@ -445,7 +445,6 @@ def save_group_channel_info(dialog, title, about, link, participants_count):
         ).execute()
 
 
-
 def administrators_entries_in_database(log_data):
     """Запись в базу данных всех администраторов."""
     with db.atomic():

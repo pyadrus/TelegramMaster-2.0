@@ -14,8 +14,8 @@ from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import ChannelParticipantsAdmins, ChannelParticipantsSearch, InputPeerEmpty, InputUser
 
 from src.core.configs import WIDTH_WIDE_BUTTON, path_accounts_folder, TIME_ACTIVITY_USER_2, BUTTON_HEIGHT
-from src.core.sqlite_working_tools import MembersAdmin, add_member_to_db, save_group_channel_info, \
-    administrators_entries_in_database
+from src.core.sqlite_working_tools import (MembersAdmin, add_member_to_db, save_group_channel_info,
+                                           administrators_entries_in_database)
 from src.features.account.TGConnect import TGConnect
 from src.features.account.parsing.gui_elements import GUIProgram
 from src.features.account.parsing.switch_controller import ToggleController
@@ -23,6 +23,7 @@ from src.features.account.parsing.user_info import UserInfo
 from src.features.account.subscribe_unsubscribe.subscribe_unsubscribe import SubscribeUnsubscribeTelegram
 from src.gui.gui import end_time, list_view, log_and_display, start_time
 from src.locales.translations_loader import translations
+
 
 class ParsingGroupMembers:
     """Класс для парсинга групп, на которые подписан аккаунт."""
@@ -230,8 +231,8 @@ class ParsingGroupMembers:
                 ft.Column([
                     file_text,
                     pick_button,
-                    ft.Row([admin_switch, members_switch, account_groups_switch,]),
-                    ft.Row([account_group_selection_switch, active_switch, contacts_switch,]),
+                    ft.Row([admin_switch, members_switch, account_groups_switch, ]),
+                    ft.Row([account_group_selection_switch, active_switch, contacts_switch, ]),
                     chat_input,
                     await GUIProgram().diver_castom(),  # Горизонтальная линия
                     ft.Row([limit_active_user]),
@@ -287,7 +288,8 @@ class ParsingGroupMembers:
             phone = os.path.splitext(os.path.basename(session_path))[0]
             logger.warning(f"🔍 Работаем с аккаунтом {phone}")
             client = await self.tg_connect.get_telegram_client(phone, path_accounts_folder)
-            result = await client(GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
+            result = await client(
+                GetDialogsRequest(offset_date=None, offset_id=0, offset_peer=InputPeerEmpty(), limit=200, hash=0))
             groups = await self.filtering_groups(result.chats)
             titles = await self.name_of_the_groups(groups)
             dropdown.options = [ft.dropdown.Option(t) for t in titles]
@@ -345,7 +347,8 @@ class ParsingGroupMembers:
                                 administrators_entries_in_database(log_data)
                             else:
                                 await log_and_display(
-                                    f"⚠️ Пользователь с user_id {log_data['user_id']} уже есть в базе. Пропущен.", self.page)
+                                    f"⚠️ Пользователь с user_id {log_data['user_id']} уже есть в базе. Пропущен.",
+                                    self.page)
                     else:
                         try:
                             await log_and_display(f"Это не группа, а канал: {entity.title}", self.page)
@@ -483,7 +486,8 @@ class ParsingGroupMembers:
                     title = entity.title or "Без названия"
                     about = getattr(chat, 'about', '')
                     # Логируем информацию
-                    await log_and_display(f"{dialog.id}, {title}, {link or 'без ссылки'}, {participants_count}", self.page, )
+                    await log_and_display(f"{dialog.id}, {title}, {link or 'без ссылки'}, {participants_count}",
+                                          self.page, )
                     await save_group_channel_info(dialog, title, about, link, participants_count)
                 except TypeError as te:
                     logger.warning(f"❌ TypeError при обработке диалога {dialog.id}: {te}")
