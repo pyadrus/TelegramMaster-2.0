@@ -8,7 +8,7 @@ from peewee import (SqliteDatabase, Model, CharField, BigIntegerField, TextField
                     IntegerField)
 
 from src.core.configs import path_folder_database
-from src.gui.gui import log_and_display
+from src.gui.gui import AppLogger
 
 db = SqliteDatabase(path_folder_database)
 
@@ -356,7 +356,8 @@ async def deleting_an_invalid_proxy(proxy_type, addr, port, username, password, 
         (Proxy.rdns == rdns)
     )
     deleted_count = query.execute()
-    await log_and_display(f"{deleted_count} rows deleted", page)
+    app_logger = AppLogger(page)
+    await app_logger.log_and_display(f"{deleted_count} rows deleted")
 
 
 def get_proxy_database():

@@ -35,3 +35,5 @@ class AppLogger:
         else:
             self.list_view.controls.append(ft.Text(message))
         self.page.update()
+
+
